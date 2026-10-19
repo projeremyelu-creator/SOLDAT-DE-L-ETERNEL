@@ -8,10 +8,18 @@ workers_dev = true
 directory = "./public"
 binding = "ASSETS"
 not_found_handling = "single-page-application"
-run_worker_first = ["/api/*", "/_blob/*"]
+run_worker_first = true
 
 [[routes]]
 pattern = "app.mouvement-sde.org"
+custom_domain = true
+
+[[routes]]
+pattern = "mouvement-sde.org"
+custom_domain = true
+
+[[routes]]
+pattern = "www.mouvement-sde.org"
 custom_domain = true
 
 [[d1_databases]]

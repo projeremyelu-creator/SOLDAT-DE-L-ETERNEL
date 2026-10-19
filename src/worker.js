@@ -283,6 +283,8 @@ export default {
   async fetch(req, env) {
     const url = new URL(req.url);
     const p = url.pathname;
+    if (url.hostname !== "app.mouvement-sde.org" && /(^|\.)mouvement-sde\.org$/.test(url.hostname))
+      return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
     if (p.startsWith("/_blob/")) {
       const r = await env.FICHIERS.getWithMetadata(p.slice(7), { type: "arrayBuffer" });
       if (!r || !r.value) return new Response("Introuvable", { status: 404 });
