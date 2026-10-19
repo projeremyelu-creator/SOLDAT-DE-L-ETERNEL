@@ -1,0 +1,33 @@
+# S.D.E. DIGITAL — configuration Cloudflare
+name = "sde-digital"
+main = "src/worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*", "/_blob/*"]
+
+[[routes]]
+pattern = "app.mouvement-sde.org"
+custom_domain = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sde-digital"
+database_id = "58ab0ca0-d8c6-4f2a-acc4-2761814c058b"
+
+[[kv_namespaces]]
+binding = "FICHIERS"
+id = "d6c94ba3274f47718a4cacbcab96e5a3"
+
+[vars]
+# Comptes Google propriétaires (tous les droits, ne peuvent pas être retirés depuis l'application)
+PROPRIETAIRES = "infosoldat@gmail.com, projeremyelu@gmail.com"
+# Identifiant client Google (public) pour le bouton « Se connecter avec Google »
+GOOGLE_CLIENT_ID = ""
+
+[observability]
+enabled = true

@@ -1,0 +1,71 @@
+/* ── Navigation : rail complet sur grand écran, onglet « Plus » sur téléphone ── */
+.nav-plus { display: none; }
+.nav-sep { display: none; }
+@media (max-width: 999px) {
+  .nav.compact .nav-x { display: none; }
+  .nav.compact .nav-plus { display: flex; }
+}
+@media (min-width: 1000px) {
+  .nav-sep { display: block; margin: 14px 14px 4px; font-family: var(--f-display); font-weight: 600; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
+}
+/* ── Tuiles des modules ── */
+.tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+.tile { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto auto; column-gap: 14px; row-gap: 2px; align-items: center; padding: 16px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); color: var(--ink); text-align: left; font: inherit; min-height: 96px; }
+.tile:hover { border-color: var(--gold-mark); }
+.tile-ico { grid-row: 1 / span 3; width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--night); color: var(--gold-on-night); }
+.tile-ico .ico { width: 24px; height: 24px; }
+.tile-t { font-family: var(--f-display); font-weight: 700; font-size: 18px; letter-spacing: .04em; text-transform: uppercase; line-height: 1.15; }
+.tile-d { font-size: 13.5px; color: var(--muted); }
+.tile-m { font-size: 13px; font-weight: 700; color: var(--gold); }
+/* ── Garnisons ── */
+.g-row { padding-left: calc(14px + var(--niv, 0) * 22px); }
+.g-ico, .r-ico { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--info-soft); color: var(--meter); }
+.g-ico .ico, .r-ico .ico { width: 20px; height: 20px; }
+.g-av { background: var(--night); color: var(--gold-on-night); }
+.g-av .ico { width: 28px; height: 28px; }
+.counter .hint { display: block; margin-top: 2px; font-size: 12px; }
+.counter-c small { font-family: var(--f-body); font-size: 14px; }
+/* ── Arsenal ── */
+.r-ico.lg { width: 60px; height: 60px; border-radius: 14px; }
+.r-ico.lg .ico { width: 28px; height: 28px; }
+.r-ico.t-livre { background: var(--warn-soft); color: var(--gold); }
+.r-ico.t-video { background: var(--out-soft); color: var(--out); }
+.r-ico.t-audio { background: var(--ok-soft); color: var(--ok); }
+.r-ico.t-document, .r-ico.t-image { background: var(--in-soft); color: var(--in); }
+.r-ico.t-lien { background: var(--surface-2); color: var(--muted); }
+/* ── Porte-Voix ── */
+.annonce { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--meter); border-radius: var(--r); padding: 14px 16px; display: grid; gap: 8px; }
+.annonce.epingle { border-left-color: var(--gold-mark); }
+.annonce.passee { opacity: .7; }
+.annonce-h { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+.annonce-h h3 { margin: 0; font-size: 17px; overflow-wrap: anywhere; }
+.annonce-t { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.annonce-mini { padding: 10px 0; border-top: 1px solid var(--line); }
+.annonce-mini:first-child { border-top: 0; padding-top: 0; }
+.annonce-mini b { display: block; overflow-wrap: anywhere; }
+.annonce-mini p { margin: 2px 0 0; font-size: 14px; color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.annonce-mini.epingle b::before { content: "★ "; color: var(--gold-mark); }
+.msgbox { margin: 0 0 12px; padding: 12px 14px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); white-space: pre-wrap; overflow-wrap: anywhere; font-size: 15px; }
+.row.envoye { background: var(--ok-soft); }
+.pick { max-height: 260px; overflow-y: auto; border: 1px solid var(--line-strong); border-radius: 10px; padding: 6px 10px; background: var(--surface); display: grid; }
+.pick-l { display: flex; align-items: center; gap: 8px; min-height: 40px; border-top: 1px solid var(--line); font-size: 14.5px; }
+.pick-l:first-child { border-top: 0; }
+.pick-l input { width: 18px; height: 18px; accent-color: var(--btn); flex: none; }
+.pick-l[hidden] { display: none; }
+/* ── Chambre Haute ── */
+.card.sujet { margin-bottom: 4px; }
+.sujet-t { margin: 0 0 6px; font-family: var(--f-display); font-weight: 700; font-size: 22px; line-height: 1.25; letter-spacing: .01em; overflow-wrap: anywhere; }
+.sujet-mini { margin: 2px 0 8px; font-weight: 700; overflow-wrap: anywhere; }
+.pr-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; border-top: 1px solid var(--line); }
+.pr-row:first-child { border-top: 0; }
+.pr-row.urgent { box-shadow: inset 4px 0 0 var(--danger); }
+.pr-main { min-width: 0; padding: 12px 6px 12px 14px; border: 0; background: none; color: inherit; font: inherit; text-align: left; }
+.pr-main:hover { background: var(--surface-2); }
+.pr-side { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding: 8px 12px 8px 0; }
+@media (max-width: 519px) { .pr-row { grid-template-columns: minmax(0, 1fr); } .pr-side { flex-direction: row; justify-content: flex-start; padding: 0 14px 12px; } }
+.cr-jour.auj { border-color: var(--gold-mark); box-shadow: inset 0 3px 0 var(--gold-mark); }
+.cr-row { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.cr-row:first-of-type { border-top: 0; }
+.cr-h { font-weight: 700; color: var(--gold); }
+.cr-n { overflow-wrap: anywhere; }
+.card.hero .chip { background: rgba(255, 255, 255, .12); color: var(--on-night); }

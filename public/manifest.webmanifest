@@ -1,0 +1,29 @@
+{
+ "name": "S.D.E. DIGITAL",
+ "short_name": "S.D.E.",
+ "lang": "fr",
+ "start_url": "/",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#0f1e3d",
+ "theme_color": "#0f1e3d",
+ "description": "Gestion du Mouvement Prophético-Apostolique Soldats de l’Éternel",
+ "icons": [
+  {
+   "src": "/icone-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "/icone-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "/icone-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

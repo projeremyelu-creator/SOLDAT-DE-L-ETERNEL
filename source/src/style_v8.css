@@ -1,0 +1,6 @@
+/* ——— v8 : matricules ——— */
+.mat-t td { padding-top: 4px; padding-bottom: 4px; }
+.mat-in { min-height: 40px; max-width: 220px; font-variant-numeric: tabular-nums; text-transform: uppercase; }
+.mat-t tr.chg .mat-in { border-color: var(--gold-mark); box-shadow: inset 0 0 0 1px var(--gold-mark); }
+.mat-t tr.dup .mat-in { border-color: var(--danger); box-shadow: inset 0 0 0 1px var(--danger); background: var(--danger-soft); }
+.t tr.chg td b { color: var(--ok); }
