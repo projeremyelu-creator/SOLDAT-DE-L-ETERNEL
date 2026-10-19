@@ -114,6 +114,80 @@
     list: async () => ({ assets: [], usage: {} }),
   };
 
+  /* Éliézer : même interface que l'IA de Claude (texte en continu, outils exécutés dans l'application) */
+  async function tourIA(messages, outils, rapide, signal, surTexte) {
+    let r;
+    try { r = await fetch("/api/ia", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ messages, tools: outils, rapide }), signal }); }
+    catch (e) { throw echec(e && e.name === "AbortError" ? "cancelled" : "unavailable", "Réseau indisponible"); }
+    if (!r.ok) { const j = await r.json().catch(() => ({})); throw echec(j.erreur || "unavailable", j.message); }
+    const lecteur = r.body.getReader(), dec = new TextDecoder();
+    const blocs = []; let tampon = "", arret = null, texte = "";
+    const traiter = (ev) => {
+      if (ev.type === "content_block_start") blocs[ev.index] = ev.content_block.type === "tool_use" ? { type: "tool_use", id: ev.content_block.id, name: ev.content_block.name, json: "" } : { type: ev.content_block.type, text: "" };
+      else if (ev.type === "content_block_delta") {
+        const b = blocs[ev.index]; if (!b) return;
+        if (ev.delta.type === "text_delta") { b.text += ev.delta.text; texte += ev.delta.text; surTexte(texte); }
+        else if (ev.delta.type === "input_json_delta") b.json += ev.delta.partial_json;
+      } else if (ev.type === "message_delta" && ev.delta && ev.delta.stop_reason) arret = ev.delta.stop_reason;
+      else if (ev.type === "error") throw echec(ev.error && ev.error.type === "overloaded_error" ? "rate_limited" : "unavailable", ev.error && ev.error.message);
+    };
+    try {
+      for (;;) {
+        const { done, value } = await lecteur.read();
+        if (done) break;
+        tampon += dec.decode(value, { stream: true });
+        let i;
+        while ((i = tampon.indexOf("\n\n")) >= 0) {
+          const bloc = tampon.slice(0, i); tampon = tampon.slice(i + 2);
+          const data = bloc.split("\n").filter((l) => l.startsWith("data:")).map((l) => l.slice(5).trim()).join("");
+          if (data) traiter(JSON.parse(data));
+        }
+      }
+    } catch (e) {
+      if (e && e.code) throw Object.assign(e, { text: texte });
+      throw Object.assign(echec(e && e.name === "AbortError" ? "cancelled" : "unavailable", "Réponse interrompue"), { text: texte });
+    }
+    const contenu = blocs.filter(Boolean).map((b) => b.type === "tool_use" ? { type: "tool_use", id: b.id, name: b.name, input: (() => { try { return b.json ? JSON.parse(b.json) : {}; } catch (e) { return {}; } })() } : b.type === "text" && b.text ? { type: "text", text: b.text } : null).filter(Boolean);
+    return { contenu, arret, texte };
+  }
+  async function echantillon(entree, o = {}) {
+    await pret;
+    const messages = (typeof entree === "string" ? [{ role: "user", content: entree }] : entree).map((m) => ({ role: m.role, content: m.content }));
+    const outils = Array.isArray(o.tools) ? o.tools.slice(0, 16) : [];
+    const defs = outils.map((t) => ({ name: t.name, description: t.description || "", input_schema: t.inputSchema || { type: "object", properties: {} } }));
+    const rapide = o.modelTier === "quick";
+    let final = "", tout = "";
+    for (let tour = 0; tour < 10; tour += 1) {
+      let r;
+      try { r = await tourIA(messages, defs, rapide, o.signal, (t) => { final = t; if (o.onText) o.onText({ text: t }); }); }
+      catch (e) { if (e && !e.text && tout) e.text = tout; throw e; }
+      if (!r.contenu.length) break;
+      messages.push({ role: "assistant", content: r.contenu });
+      if (r.arret !== "tool_use") return { text: r.texte || tout, truncated: r.arret === "max_tokens" };
+      if (r.texte.trim()) tout = (tout ? tout + "\n\n" : "") + r.texte.trim();
+      const resultats = [];
+      for (const b of r.contenu.filter((x) => x.type === "tool_use")) {
+        const t = outils.find((x) => x.name === b.name);
+        try {
+          if (!t) throw new Error("Outil inconnu : " + b.name);
+          const v = await t.execute(b.input || {});
+          resultats.push({ type: "tool_result", tool_use_id: b.id, content: JSON.stringify(v === undefined ? null : v).slice(0, 120000) });
+        } catch (e) { resultats.push({ type: "tool_result", tool_use_id: b.id, is_error: true, content: String((e && e.message) || e) }); }
+      }
+      messages.push({ role: "user", content: resultats });
+      final = "";
+    }
+    if (!(final || tout).trim()) throw echec("empty_completion", "Réponse vide");
+    return { text: final || tout, truncated: false };
+  }
+  echantillon.json = async (consigne, o = {}) => {
+    const r = await echantillon(String(consigne) + "\n\nRéponds uniquement avec un objet JSON valide, sans aucun texte autour.", { ...o, tools: undefined });
+    const t = r.text.replace(/^\s*```(?:json)?/i, "").replace(/```\s*$/, "").trim();
+    const a = t.indexOf("{"), z = t.lastIndexOf("}");
+    try { return JSON.parse(a >= 0 && z > a ? t.slice(a, z + 1) : t); } catch (e) { throw echec("invalid_json", "Réponse illisible"); }
+  };
+  echantillon.limits = async () => ({ tools: { maxCount: 16 } });
+
   window.SDE = {
     moi: MOI, pret,
     async connexion(credential) { await appel("/api/connexion", { credential }); location.reload(); },
@@ -129,6 +203,7 @@
       if (nom === "user") return user;
       if (nom === "downloads") return downloads;
       if (nom === "assets") return MOI.niveau >= 2 ? assets : null;
+      if (nom === "sample") return MOI.ia ? echantillon : null;
       return null;
     },
   };

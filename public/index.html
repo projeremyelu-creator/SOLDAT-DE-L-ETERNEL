@@ -8,6 +8,19 @@
 <meta name="description" content="Application de gestion du Mouvement Prophético-Apostolique Soldats de l’Éternel.">
 <link rel="icon" type="image/png" href="/icone-192.png">
 <link rel="apple-touch-icon" href="/icone-192.png">
+<link rel="canonical" href="https://app.mouvement-sde.org/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Soldats de l’Éternel">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://app.mouvement-sde.org/">
+<meta property="og:title" content="S.D.E. DIGITAL · Poste de commandement">
+<meta property="og:description" content="Agenda, annonces et espace soldat du Mouvement Prophético-Apostolique Soldats de l’Éternel.">
+<meta property="og:image" content="https://app.mouvement-sde.org/og-app.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Logo S.D.E. et verset d’Ézéchiel 37.10">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="noindex">
 <style>.hdr-compte .hdr-ini{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#e2c26a;color:#1a1405;font-weight:700;font-size:.8rem} .gsi-w{min-height:48px;margin:14px 0} .banner-l{color:inherit;font-weight:700} .compte-h{margin-bottom:16px} .inp-sm{padding:4px 8px;min-height:36px;width:auto}</style>
 <script>/* Pont S.D.E. DIGITAL : fournit à l'application la même interface que dans Claude
    (window.claude.use("db" | "user" | "downloads" | "assets")), branchée sur le serveur Cloudflare. */
@@ -125,6 +138,80 @@
     list: async () => ({ assets: [], usage: {} }),
   };
 
+  /* Éliézer : même interface que l'IA de Claude (texte en continu, outils exécutés dans l'application) */
+  async function tourIA(messages, outils, rapide, signal, surTexte) {
+    let r;
+    try { r = await fetch("/api/ia", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ messages, tools: outils, rapide }), signal }); }
+    catch (e) { throw echec(e && e.name === "AbortError" ? "cancelled" : "unavailable", "Réseau indisponible"); }
+    if (!r.ok) { const j = await r.json().catch(() => ({})); throw echec(j.erreur || "unavailable", j.message); }
+    const lecteur = r.body.getReader(), dec = new TextDecoder();
+    const blocs = []; let tampon = "", arret = null, texte = "";
+    const traiter = (ev) => {
+      if (ev.type === "content_block_start") blocs[ev.index] = ev.content_block.type === "tool_use" ? { type: "tool_use", id: ev.content_block.id, name: ev.content_block.name, json: "" } : { type: ev.content_block.type, text: "" };
+      else if (ev.type === "content_block_delta") {
+        const b = blocs[ev.index]; if (!b) return;
+        if (ev.delta.type === "text_delta") { b.text += ev.delta.text; texte += ev.delta.text; surTexte(texte); }
+        else if (ev.delta.type === "input_json_delta") b.json += ev.delta.partial_json;
+      } else if (ev.type === "message_delta" && ev.delta && ev.delta.stop_reason) arret = ev.delta.stop_reason;
+      else if (ev.type === "error") throw echec(ev.error && ev.error.type === "overloaded_error" ? "rate_limited" : "unavailable", ev.error && ev.error.message);
+    };
+    try {
+      for (;;) {
+        const { done, value } = await lecteur.read();
+        if (done) break;
+        tampon += dec.decode(value, { stream: true });
+        let i;
+        while ((i = tampon.indexOf("\n\n")) >= 0) {
+          const bloc = tampon.slice(0, i); tampon = tampon.slice(i + 2);
+          const data = bloc.split("\n").filter((l) => l.startsWith("data:")).map((l) => l.slice(5).trim()).join("");
+          if (data) traiter(JSON.parse(data));
+        }
+      }
+    } catch (e) {
+      if (e && e.code) throw Object.assign(e, { text: texte });
+      throw Object.assign(echec(e && e.name === "AbortError" ? "cancelled" : "unavailable", "Réponse interrompue"), { text: texte });
+    }
+    const contenu = blocs.filter(Boolean).map((b) => b.type === "tool_use" ? { type: "tool_use", id: b.id, name: b.name, input: (() => { try { return b.json ? JSON.parse(b.json) : {}; } catch (e) { return {}; } })() } : b.type === "text" && b.text ? { type: "text", text: b.text } : null).filter(Boolean);
+    return { contenu, arret, texte };
+  }
+  async function echantillon(entree, o = {}) {
+    await pret;
+    const messages = (typeof entree === "string" ? [{ role: "user", content: entree }] : entree).map((m) => ({ role: m.role, content: m.content }));
+    const outils = Array.isArray(o.tools) ? o.tools.slice(0, 16) : [];
+    const defs = outils.map((t) => ({ name: t.name, description: t.description || "", input_schema: t.inputSchema || { type: "object", properties: {} } }));
+    const rapide = o.modelTier === "quick";
+    let final = "", tout = "";
+    for (let tour = 0; tour < 10; tour += 1) {
+      let r;
+      try { r = await tourIA(messages, defs, rapide, o.signal, (t) => { final = t; if (o.onText) o.onText({ text: t }); }); }
+      catch (e) { if (e && !e.text && tout) e.text = tout; throw e; }
+      if (!r.contenu.length) break;
+      messages.push({ role: "assistant", content: r.contenu });
+      if (r.arret !== "tool_use") return { text: r.texte || tout, truncated: r.arret === "max_tokens" };
+      if (r.texte.trim()) tout = (tout ? tout + "\n\n" : "") + r.texte.trim();
+      const resultats = [];
+      for (const b of r.contenu.filter((x) => x.type === "tool_use")) {
+        const t = outils.find((x) => x.name === b.name);
+        try {
+          if (!t) throw new Error("Outil inconnu : " + b.name);
+          const v = await t.execute(b.input || {});
+          resultats.push({ type: "tool_result", tool_use_id: b.id, content: JSON.stringify(v === undefined ? null : v).slice(0, 120000) });
+        } catch (e) { resultats.push({ type: "tool_result", tool_use_id: b.id, is_error: true, content: String((e && e.message) || e) }); }
+      }
+      messages.push({ role: "user", content: resultats });
+      final = "";
+    }
+    if (!(final || tout).trim()) throw echec("empty_completion", "Réponse vide");
+    return { text: final || tout, truncated: false };
+  }
+  echantillon.json = async (consigne, o = {}) => {
+    const r = await echantillon(String(consigne) + "\n\nRéponds uniquement avec un objet JSON valide, sans aucun texte autour.", { ...o, tools: undefined });
+    const t = r.text.replace(/^\s*```(?:json)?/i, "").replace(/```\s*$/, "").trim();
+    const a = t.indexOf("{"), z = t.lastIndexOf("}");
+    try { return JSON.parse(a >= 0 && z > a ? t.slice(a, z + 1) : t); } catch (e) { throw echec("invalid_json", "Réponse illisible"); }
+  };
+  echantillon.limits = async () => ({ tools: { maxCount: 16 } });
+
   window.SDE = {
     moi: MOI, pret,
     async connexion(credential) { await appel("/api/connexion", { credential }); location.reload(); },
@@ -140,6 +227,7 @@
       if (nom === "user") return user;
       if (nom === "downloads") return downloads;
       if (nom === "assets") return MOI.niveau >= 2 ? assets : null;
+      if (nom === "sample") return MOI.ia ? echantillon : null;
       return null;
     },
   };
@@ -4445,7 +4533,7 @@ body.locked .fab-ia { display: none; }
     if (id === "academie") { const n = S.formations.filter((f) => etatFormation(f) === "encours").length; return S.pret.formations ? (n ? `${pluriel(n, "formation en cours", "formations en cours")}` : `${pluriel(S.formations.length, "formation", "formations")}`) : ""; }
     if (id === "portevoix") return S.pret.annonces ? pluriel(annoncesActives().length, "annonce active", "annonces actives") : "";
     if (id === "chambre") return S.pret.prieres ? pluriel(S.prieres.filter((p) => (p.statut || "En prière") === "En prière").length, "requête en prière", "requêtes en prière") : "";
-    if (id === "assistant") return S.sample ? "Questions, textes et synthèses" : "Disponible dans Claude";
+    if (id === "assistant") return S.sample ? "Questions, textes et synthèses" : "Réservé aux responsables";
     if (id === "projets") return S.pret.projets ? pluriel((S.projets || []).filter(estActifP).length, "projet en cours", "projets en cours") : "";
     if (id === "arsenal") return S.pret.ressources ? pluriel(S.ressources.length, "ressource", "ressources") : "";
     if (id === "secretariat") return S.pret.decisions ? pluriel(S.decisions.filter(enCours).length, "décision en cours", "décisions en cours") : "";
@@ -6365,12 +6453,12 @@ Garde le titre existant s’il est déjà rempli. Si tu n’es pas certain du te
   function messageIA(e) {
     const code = e && e.code;
     return ({
-      not_granted: "Éliézer n’est pas autorisé pour cette application. Autorisez l’accès à Claude dans le menu des permissions de l’application.",
+      not_granted: "Éliézer est réservé aux responsables connectés (contributeurs et administrateurs).",
       sampling_disabled: "L’assistant n’est pas disponible pour ce compte.",
       not_declared: "L’assistant n’est pas activé dans cette version de l’application.",
       capability_disabled: "L’assistant n’est pas disponible dans cette vue.",
       rate_limited: "Trop de demandes pour le moment, ou limite d’utilisation atteinte : réessayez un peu plus tard.",
-      session_expired: "Votre session a expiré : reconnectez-vous à Claude puis réessayez.",
+      session_expired: "Votre session a expiré : reconnectez-vous avec Google puis réessayez.",
       refused: "Éliézer ne peut pas répondre à cette demande telle qu’elle est formulée. Reformulez-la.",
       empty_completion: "Éliézer n’a rien répondu. Reformulez la demande plus simplement.",
       prompt_too_large: "La conversation est devenue trop longue : commencez une nouvelle conversation.",
@@ -6540,7 +6628,7 @@ Aujourd’hui : ${dateFr(aujourdhui())}. Personne qui écrit : ${S.me.name || "u
     let out = secHead("Éliézer", { eyebrow: "Assistant IA du mouvement", verset: ["Éternel, Dieu de mon seigneur Abraham, fais-moi, je te prie, rencontrer aujourd’hui ce que je désire.", "Genèse 24.12"], actions: IA.tours.length && !IA.enCours ? btn("ia-nouveau", "Nouvelle conversation", { ico: "i-plus" }) : "" });
     if (S.etat === "absent") return out + nonConnecte("L’assistant");
     if (S.etat === "connexion") return out + chargement("Préparation de l’assistant…");
-    if (!S.sample) return out + vide("i-spark", "L’assistant n’est pas disponible ici. Il fonctionne dans Claude, pour les personnes qui ont autorisé l’application à utiliser Claude.");
+    if (!S.sample) return out + vide("i-spark", "Éliézer est réservé aux responsables connectés. Connectez-vous avec Google ; s’il reste indisponible, il n’est pas encore activé sur le serveur du mouvement.");
     const fil = IA.tours.map((t, i) => t.role === "user"
       ? `<div class="ia-msg moi"><div class="ia-bulle">${esc(t.content).replace(/\n/g, "<br>")}</div></div>`
       : `<div class="ia-msg lui"><span class="ia-av" aria-hidden="true">${I("i-spark")}</span><div class="ia-bulle">${mdLeger(t.content)}${t.coupe ? `<p class="hint">Réponse incomplète.</p>` : ""}<div class="ia-act">${btn("ia-copier", "Copier", { ico: "i-copy", sm: true, data: `data-i="${i}"` })}${peutEcrire() ? btn("ia-annonce", "Annonce", { ico: "i-pin", sm: true, data: `data-i="${i}"` }) + btn("ia-message", "Message", { ico: "i-horn", sm: true, data: `data-i="${i}"` }) : ""}${btn("ia-affiche", "Affiche", { ico: "i-image", sm: true, data: `data-i="${i}"` })}</div></div></div>`).join("");

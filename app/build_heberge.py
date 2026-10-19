@@ -32,6 +32,11 @@ rep('Les données du mouvement s’affichent uniquement dans Claude, pour une pe
 rep('s’afficheront ici dès que l’application sera ouverte dans Claude par une personne connectée qui y a accès.', 's’afficheront ici dès que le serveur du mouvement répondra.')
 rep('.includes(o.id) ? accesRegistre() : o.id === "finances"', '.includes(o.id) ? accesRegistre() : o.id === "assistant" ? !!S.sample : o.id === "finances"')
 js = js.replace(" et connectez-vous à Claude si c’est demandé", "")
+# Éliézer passe par le serveur du mouvement (route /api/ia) : textes adaptés
+rep("Éliézer n’est pas autorisé pour cette application. Autorisez l’accès à Claude dans le menu des permissions de l’application.", "Éliézer est réservé aux responsables connectés (contributeurs et administrateurs).")
+rep("reconnectez-vous à Claude puis réessayez", "reconnectez-vous avec Google puis réessayez")
+rep("L’assistant n’est pas disponible ici. Il fonctionne dans Claude, pour les personnes qui ont autorisé l’application à utiliser Claude.", "Éliézer est réservé aux responsables connectés. Connectez-vous avec Google ; s’il reste indisponible, il n’est pas encore activé sur le serveur du mouvement.")
+rep("Disponible dans Claude", "Réservé aux responsables")
 js = js.replace("<b>Ajouter à l’écran d’accueil</b> (ou <b>Installer l’application</b>)", "<b>Installer l’application</b> (ou <b>Ajouter à l’écran d’accueil</b>)")
 
 pont = (APP / "pont.js").read_text()
@@ -41,6 +46,19 @@ tete = f'''<link rel="manifest" href="/manifest.webmanifest">
 <meta name="description" content="Application de gestion du Mouvement Prophético-Apostolique Soldats de l’Éternel.">
 <link rel="icon" type="image/png" href="/icone-192.png">
 <link rel="apple-touch-icon" href="/icone-192.png">
+<link rel="canonical" href="https://app.mouvement-sde.org/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Soldats de l’Éternel">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://app.mouvement-sde.org/">
+<meta property="og:title" content="S.D.E. DIGITAL · Poste de commandement">
+<meta property="og:description" content="Agenda, annonces et espace soldat du Mouvement Prophético-Apostolique Soldats de l’Éternel.">
+<meta property="og:image" content="https://app.mouvement-sde.org/og-app.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Logo S.D.E. et verset d’Ézéchiel 37.10">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="noindex">
 <style>.hdr-compte .hdr-ini{{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#e2c26a;color:#1a1405;font-weight:700;font-size:.8rem}} .gsi-w{{min-height:48px;margin:14px 0}} .banner-l{{color:inherit;font-weight:700}} .compte-h{{margin-bottom:16px}} .inp-sm{{padding:4px 8px;min-height:36px;width:auto}}</style>
 <script>{pont}</script>
 <script>if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {{}}));</script>

@@ -279,12 +279,88 @@ async function apiImport(req, env, u) {
   return json({ ok: true, importes: valides.length, ignores: docs.length - valides.length });
 }
 
+
+/* ───────── site vitrine : rendez-vous publics ───────── */
+const TYPES_PUBLICS = ["Culte", "Prière et intercession", "Formation", "Conférence", "Évangélisation"];
+async function apiPublic(env) {
+  const jour = new Date(Date.now()).toISOString().slice(0, 10);
+  const r = await env.DB.prepare("SELECT id, data FROM docs WHERE parent = 'evenements'").all();
+  const evts = (r.results || []).map((x) => ({ id: x.id, ...JSON.parse(x.data) }))
+    .filter((e) => e.date && e.date >= jour && TYPES_PUBLICS.includes(e.type) && e.prive !== true)
+    .sort((a, b) => (a.date + (a.heure || "")).localeCompare(b.date + (b.heure || "")))
+    .slice(0, 8)
+    .map((e) => ({ id: e.id, titre: String(e.titre || ""), type: e.type, date: e.date, heure: e.heure || "", fin: e.fin || "", lieu: String(e.lieu || ""), description: String(e.description || "").slice(0, 600) }));
+  return json({ evenements: evts }, 200, { "cache-control": "public, max-age=300" });
+}
+
+/* ───────── Éliézer : relais vers l'API Claude (clé gardée sur le serveur) ───────── */
+const IA_MAX_MESSAGES = 80, IA_MAX_OCTETS = 600000, IA_MAX_OUTILS = 16;
+function blocValide(b) {
+  if (!b || typeof b !== "object") return false;
+  if (b.type === "text") return typeof b.text === "string";
+  if (b.type === "tool_use") return typeof b.id === "string" && typeof b.name === "string" && b.input && typeof b.input === "object";
+  if (b.type === "tool_result") return typeof b.tool_use_id === "string" && (typeof b.content === "string" || Array.isArray(b.content));
+  return false;
+}
+async function apiIA(req, env, u) {
+  if (!env.ANTHROPIC_API_KEY) return erreur("sampling_disabled", "Éliézer n’est pas encore activé sur ce serveur.", 503);
+  if (u.niveau < 1) return erreur("not_granted", "Éliézer est réservé aux responsables connectés.", 403);
+  const brut = await req.text();
+  if (brut.length > IA_MAX_OCTETS) return erreur("prompt_too_large", "La conversation est trop longue.", 413);
+  let b;
+  try { b = JSON.parse(brut); } catch (e) { return erreur("invalid_argument", "Requête illisible."); }
+  const messages = Array.isArray(b.messages) ? b.messages : [];
+  if (!messages.length || messages.length > IA_MAX_MESSAGES) return erreur("invalid_argument", "Conversation invalide.");
+  for (const m of messages) {
+    if (!m || (m.role !== "user" && m.role !== "assistant")) return erreur("invalid_argument", "Message invalide.");
+    if (typeof m.content === "string") { if (!m.content.trim()) return erreur("invalid_argument", "Message vide."); continue; }
+    if (!Array.isArray(m.content) || !m.content.length || !m.content.every(blocValide)) return erreur("invalid_argument", "Message invalide.");
+  }
+  const outils = (Array.isArray(b.tools) ? b.tools : []).slice(0, IA_MAX_OUTILS)
+    .filter((t) => t && typeof t.name === "string" && /^[a-zA-Z0-9_-]{1,64}$/.test(t.name))
+    .map((t) => ({ name: t.name, description: String(t.description || "").slice(0, 2000), input_schema: t.input_schema && typeof t.input_schema === "object" ? t.input_schema : { type: "object", properties: {} } }));
+  // Garde-fou de consommation : nombre d'appels par personne et par jour
+  const limite = Number(env.IA_LIMITE_JOUR) || 300;
+  const cle = u.id + ":" + new Date().toISOString().slice(0, 10);
+  const c = await env.DB.prepare("INSERT INTO ia_conso (cle, n) VALUES (?, 1) ON CONFLICT(cle) DO UPDATE SET n = n + 1 RETURNING n").bind(cle).first();
+  if (c && c.n > limite) return erreur("rate_limited", "Limite quotidienne d’Éliézer atteinte. Réessayez demain.", 429);
+  const rapide = b.rapide === true;
+  const corps = {
+    model: rapide ? (env.IA_MODELE_RAPIDE || "claude-haiku-5-5") : (env.IA_MODELE || "claude-sonnet-5-5"),
+    max_tokens: rapide ? 2000 : 4096,
+    stream: true,
+    system: "Tu es Éliézer, l’assistant de l’application S.D.E. DIGITAL du Mouvement Prophético-Apostolique Soldats de l’Éternel. Suis les consignes données dans la conversation.",
+    messages,
+    ...(outils.length ? { tools: outils } : {}),
+  };
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
+    body: JSON.stringify(corps),
+  });
+  if (!r.ok) {
+    const t = await r.text().catch(() => "");
+    if (r.status === 429 || r.status === 529) return erreur("rate_limited", "Éliézer est très sollicité : réessayez dans un instant.", 429);
+    if (r.status === 401 || r.status === 403) return erreur("sampling_disabled", "La clé d’accès d’Éliézer est refusée.", 503);
+    if (/too long|too many tokens|prompt is too long/i.test(t)) return erreur("prompt_too_large", "La conversation est trop longue.", 413);
+    if (/credit|billing|balance/i.test(t)) return erreur("sampling_disabled", "Le crédit d’Éliézer est épuisé.", 503);
+    return erreur("unavailable", "Éliézer ne répond pas (" + r.status + ").", 502);
+  }
+  return new Response(r.body, { headers: { "content-type": "text/event-stream; charset=utf-8", "cache-control": "no-store", "x-accel-buffering": "no" } });
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
     const p = url.pathname;
-    if (url.hostname !== "app.mouvement-sde.org" && /(^|\.)mouvement-sde\.org$/.test(url.hostname))
-      return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
+    if (url.hostname === "www.mouvement-sde.org") return Response.redirect("https://mouvement-sde.org" + p + url.search, 301);
+    if (url.hostname === "mouvement-sde.org") {
+      if (p === "/" || p === "/index.html") return env.ASSETS.fetch(new Request(new URL("/vitrine/", url), req));
+      if (p === "/api/public") return apiPublic(env);
+      if (!/^\/(vitrine\/|og-sde\.png$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$)/.test(p))
+        return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
+      return env.ASSETS.fetch(req);
+    }
     if (p.startsWith("/_blob/")) {
       const r = await env.FICHIERS.getWithMetadata(p.slice(7), { type: "arrayBuffer" });
       if (!r || !r.value) return new Response("Introuvable", { status: 404 });
@@ -297,7 +373,9 @@ export default {
     }
     try {
       const u = await utilisateur(req, env);
-      if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, clientId: env.GOOGLE_CLIENT_ID || "" });
+      if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, clientId: env.GOOGLE_CLIENT_ID || "", ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
+      if (p === "/api/public") return apiPublic(env);
+      if (p === "/api/ia" && req.method === "POST") return apiIA(req, env, u);
       if (p === "/api/db" && req.method === "POST") return apiDb(req, env, u);
       if (p === "/api/sync" && req.method === "POST") return apiSync(req, env, u);
       if (p === "/api/profils" && req.method === "POST") return apiProfils(req, env);

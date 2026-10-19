@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mouvement-sde.org/sitemap.xml
