@@ -127,6 +127,7 @@
     async deconnexion() { try { await appel("/api/deconnexion", {}); } catch (e) { /* déjà déconnecté */ } location.reload(); },
     comptes: async () => { const r = await fetch("/api/comptes", { credentials: "same-origin" }); const j = await r.json(); if (!r.ok) throw echec(j.erreur, j.message); return j; },
     majCompte: (o) => appel("/api/comptes", o),
+    importer: (docs) => appel("/api/import", { docs }),
   };
   window.claude = {
     use: async (nom) => {
@@ -8253,7 +8254,8 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     if (CPT.err) return `<p class="note danger">${esc(CPT.err)}</p>`;
     if (!CPT.liste) return chargement("Chargement des comptes…");
     const opts = (r) => ROLES_H.filter(([k]) => k !== "admin" || m.niveau >= 3).map(([k, l]) => `<option value="${k}"${k === r ? " selected" : ""}>${esc(l.split(" :")[0])}</option>`).join("");
-    return `<p class="hint" style="margin-top:0">Ajoutez l’adresse Gmail d’un responsable avec son rôle : il pourra se connecter aussitôt. Une personne qui se connecte sans avoir été ajoutée apparaît « En attente ».</p>
+    const imp = m.niveau >= 3 ? `<details class="imp-h"><summary>Transférer des données (propriétaire)</summary><p class="hint">Choisissez le fichier de transfert (.json) préparé à partir de la version Claude. Les documents existants portant le même nom sont remplacés.</p><label class="btn btn-sm" for="imp-fichier">${I("i-up")}Choisir le fichier</label><input type="file" id="imp-fichier" accept=".json,application/json" hidden><p class="hint" id="imp-msg" role="status"></p></details>` : "";
+    return imp + `<p class="hint" style="margin-top:0">Ajoutez l’adresse Gmail d’un responsable avec son rôle : il pourra se connecter aussitôt. Une personne qui se connecte sans avoir été ajoutée apparaît « En attente ».</p>
       <form class="form compte-aj" id="f-compte" novalidate><div class="f2">${champ("cp-email", "Adresse Gmail", inp("cp-email", "email", "", 'type="email" autocomplete="off" placeholder="prenom.nom@gmail.com" required'))}${champ("cp-nom", "Nom", inp("cp-nom", "nom", "", 'autocomplete="off"'))}</div>${champ("cp-role", "Rôle", `<select class="inp" id="cp-role" name="role">${opts("contributeur")}</select>`)}<button class="btn btn-primary btn-sm" type="submit">${I("i-plus")}Ajouter ou mettre à jour</button></form>
       <div class="list" style="margin-top:14px">${CPT.liste.map((c) => `<div class="row nolead sp-row"><span class="row-main"><span class="row-t">${esc(c.nom || c.email)}</span><span class="row-m">${esc(c.email)}${c.derniere ? " · dernière connexion " + esc(fmtStamp(c.derniere)) : " · jamais connecté"}</span></span><span class="row-r">${c.role === "proprietaire" ? `<span class="chip ok">Propriétaire</span>` : `<label class="sr" for="cr-${esc(c.id)}">Rôle de ${esc(c.email)}</label><select class="inp inp-sm" id="cr-${esc(c.id)}" data-compte="${esc(c.email)}">${opts(c.role)}</select><button class="icon-btn" type="button" data-act="compte-suppr" data-email="${esc(c.email)}" aria-label="${esc("Retirer l’accès de " + c.email)}">${I("i-trash")}</button>`}</span></div>`).join("")}</div>`;
   }
@@ -8264,6 +8266,19 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   document.addEventListener("change", (ev) => {
     const t = ev.target;
     if (t && t.dataset && t.dataset.compte) majCompteH({ email: t.dataset.compte, role: t.value }, "Rôle mis à jour");
+  });
+  document.addEventListener("change", async (ev) => {
+    const t = ev.target;
+    if (!t || t.id !== "imp-fichier" || !t.files || !t.files[0]) return;
+    const msg = $("#imp-msg");
+    try {
+      const o = JSON.parse(await t.files[0].text());
+      const docs = o.docs || o;
+      if (msg) msg.textContent = `Transfert de ${Object.keys(docs).length} documents…`;
+      const r = await SDEH.importer(docs);
+      if (msg) msg.textContent = `${r.importes} documents transférés${r.ignores ? `, ${r.ignores} ignorés` : ""}. Rechargement…`;
+      setTimeout(() => location.reload(), 1500);
+    } catch (e) { if (msg) msg.textContent = "Transfert impossible : " + ((e && e.message) || "fichier illisible"); }
   });
   document.addEventListener("submit", (ev) => {
     if (!ev.target || ev.target.id !== "f-compte") return;

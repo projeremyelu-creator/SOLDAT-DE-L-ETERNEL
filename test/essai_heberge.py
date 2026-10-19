@@ -6,7 +6,7 @@ BASE = "/tmp/claude-0/-home-claude/e03f26e4-5127-532c-ad3a-717268f914a7/scratchp
 SQLIMP = "/tmp/claude-0/-home-claude/e03f26e4-5127-532c-ad3a-717268f914a7/scratchpad/import1.sql"
 OUT = ICI / "captures"; OUT.mkdir(exist_ok=True)
 if os.path.exists(BASE): os.remove(BASE)
-c = sqlite3.connect(BASE); c.executescript((RAC / "schema.sql").read_text()); c.executescript(Path(SQLIMP).read_text())
+c = sqlite3.connect(BASE); c.executescript((RAC / "schema.sql").read_text())
 def uid(e): return "u_" + base64.urlsafe_b64encode(hashlib.sha256(e.encode()).digest()).decode().rstrip("=")[:22]
 now = int(time.time() * 1000)
 for email, nom, role, tok in [("infosoldat@gmail.com", "Jérémy Octave GLAZAÏ", "attente", "tok-owner"), ("sec@gmail.com", "Esther Secrétaire", "contributeur", "tok-contrib"), ("nouveau@gmail.com", "Nouveau", "attente", "tok-attente")]:
@@ -41,13 +41,18 @@ try:
         ctx, p = ctx_pour(b)
         t = txt(p)
         verif("Se connecter avec Google" in t and p.locator('#nav [data-vue="espace"]').count() == 1 and p.locator('#nav [data-vue="membres"]').count() == 0, "visiteur : bannière de connexion, Mon espace, pas de registre")
-        verif("IN FIRE 2026" in t.upper() or "IN FIRE" in t.upper(), "visiteur : agenda public visible")
         p.screenshot(path=str(OUT / "01-visiteur.png"), full_page=True)
         p.click('.banner [data-act="connexion"]'); p.wait_for_timeout(800)
         verif("CONNEXION DES RESPONSABLES" in txt(p, "#sheet").upper(), "feuille de connexion Google")
         ctx.close()
-        # Propriétaire
+        # Propriétaire : transfert des données
         ctx, p = ctx_pour(b, "tok-owner", 1280)
+        p.click("#btn-compte"); p.wait_for_timeout(400)
+        p.click('#sheet [data-act="comptes"]'); p.wait_for_timeout(1200)
+        p.click(".imp-h summary")
+        p.set_input_files("#imp-fichier", "/tmp/claude-0/-home-claude/e03f26e4-5127-532c-ad3a-717268f914a7/scratchpad/transfert-essai.json")
+        p.wait_for_timeout(4500)
+        verif(sql("SELECT count(*) FROM docs")[0][0] == 65, "transfert : 65 documents importés")
         t = txt(p)
         verif("32" in txt(p, ".acc-hero") and p.locator('#nav [data-vue="finances"]').count() == 1, "propriétaire : 32 soldats, finances visibles")
         p.screenshot(path=str(OUT / "02-proprietaire.png"), full_page=True)

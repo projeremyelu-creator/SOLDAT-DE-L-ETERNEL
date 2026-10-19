@@ -264,6 +264,21 @@ async function apiFichiers(req, env, u, url) {
   return json({ id: nid, url: "/_blob/" + nid, sizeBytes: corps.byteLength, contentType: type });
 }
 
+async function apiImport(req, env, u) {
+  if (u.niveau < 3) return erreur("refuse", "Réservé au propriétaire.", 403);
+  const b = await req.json();
+  const docs = b && typeof b.docs === "object" && b.docs ? Object.entries(b.docs) : [];
+  const valides = docs.filter(([p, d]) => cheminValide(p, true) && d && typeof d === "object" && !Array.isArray(d));
+  if (!valides.length) return erreur("invalid_argument", "Aucun document valide dans le fichier.");
+  const maj = Date.now();
+  for (let i = 0; i < valides.length; i += 50) {
+    await env.DB.batch(valides.slice(i, i + 50).map(([p, d]) => env.DB.prepare("INSERT INTO docs (path, parent, id, data, version, maj) VALUES (?, ?, ?, ?, 1, ?) ON CONFLICT(path) DO UPDATE SET data = excluded.data, version = docs.version + 1, maj = excluded.maj").bind(p, parentDe(p), segs(p).pop(), JSON.stringify(d), maj)));
+  }
+  const parents = [...new Set(valides.map(([p]) => parentDe(p)))];
+  await env.DB.batch(parents.map((p) => bumpRev(env, p)));
+  return json({ ok: true, importes: valides.length, ignores: docs.length - valides.length });
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
@@ -291,6 +306,7 @@ export default {
       }
       if (p === "/api/comptes") return apiComptes(req, env, u);
       if (p.startsWith("/api/fichiers")) return apiFichiers(req, env, u, url);
+      if (p === "/api/import" && req.method === "POST") return apiImport(req, env, u);
       return erreur("introuvable", "Route inconnue.", 404);
     } catch (e) {
       return erreur("unavailable", "Erreur du serveur : " + (e && e.message), 500);
