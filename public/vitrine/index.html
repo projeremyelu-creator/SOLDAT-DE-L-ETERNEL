@@ -15,14 +15,15 @@
 <meta property="og:title" content="Soldats de l’Éternel · Le réveil spirituel des nations">
 <meta property="og:description" content="Soldats de l’Éternel (SDE), mouvement prophético-apostolique né à Abidjan, présent dans six pays. IN FIRE 2026 le 31 octobre, programmes, leadership et adhésion.">
 <meta property="og:url" content="https://mouvement-sde.org/">
-<meta property="og:image" content="https://mouvement-sde.org/og-sde.png">
+<meta property="og:image" content="https://mouvement-sde.org/og-sde.jpg">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Logo S.D.E., devise du mouvement et verset d’Ézéchiel 37.9">
+<meta property="og:image:alt" content="Soldats de l’Éternel : la Fire Génération réunie, devise du mouvement et verset d’Ézéchiel 37.9">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Soldats de l’Éternel · Le réveil spirituel des nations">
 <meta name="twitter:description" content="Soldats de l’Éternel (SDE), mouvement prophético-apostolique né à Abidjan, présent dans six pays. IN FIRE 2026 le 31 octobre, programmes, leadership et adhésion.">
-<meta name="twitter:image" content="https://mouvement-sde.org/og-sde.png">
+<meta name="twitter:image" content="https://mouvement-sde.org/og-sde.jpg">
 <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Organization", "name": "Soldats de l’Éternel (SDE)", "alternateName": "Mouvement Prophético-Apostolique Soldats de l’Éternel", "url": "https://mouvement-sde.org/", "logo": "https://mouvement-sde.org/vitrine/logo.png", "email": "infosoldat@gmail.com", "telephone": "+225 07 78 68 95 73", "slogan": "Réveiller · Restaurer · Former · Équiper · Envoyer", "address": {"@type": "PostalAddress", "addressLocality": "Cocody Deux-Plateaux, Abidjan", "addressCountry": "CI"}}, {"@context": "https://schema.org", "@type": "Event", "name": "IN FIRE 2026", "description": "Conférence internationale annuelle pour le réveil spirituel des nations. Thème : « La révélation des fils et filles de Dieu ».", "startDate": "2026-10-31T08:00:00+00:00", "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode", "location": {"@type": "Place", "name": "Église MADEG", "address": {"@type": "PostalAddress", "addressLocality": "Cocody Deux-Plateaux Agban, Abidjan", "addressCountry": "CI"}}, "organizer": {"@type": "Organization", "name": "Soldats de l’Éternel (SDE)", "url": "https://mouvement-sde.org/"}, "performer": [{"@type": "Person", "name": "Jérémy l’Élu GLAZAÏ"}, {"@type": "Person", "name": "Samuel ZEREOUE"}]}]</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -323,6 +324,7 @@ button.b-contour { background: transparent; }
 .if-prog ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
 .barre-if { position: fixed; z-index: 55; left: 10px; right: 10px; bottom: max(10px, env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 10px 10px 16px; border-radius: 16px; background: linear-gradient(120deg, #3a1208, var(--braise-2)); color: #fff; text-decoration: none; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); font-size: .92rem; }
 .barre-if .barre-b { flex: 0 0 auto; background: #ffb37a; color: #2a0d07; font-weight: 800; border-radius: 999px; padding: 10px 14px; }
+.barre-if[hidden] { display: none; }
 @media (min-width: 861px) { .barre-if { display: none !important; } }
 /* Formulaire : obligatoire / facultatif */
 .oblig, .facult { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; border-radius: 6px; padding: 1px 6px; vertical-align: 2px; margin-left: 4px; }
@@ -333,6 +335,13 @@ button.b-contour { background: transparent; }
 .champ .aide { color: var(--gris); font-size: .82rem; }
 .carte-acces .pour { font-family: var(--f-titre); font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: var(--or-texte); font-weight: 600; margin-bottom: 4px; }
 .carte-acces .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+/* Photo d’accueil : Fire Génération */
+.ouv-droite { display: grid; gap: 26px; align-self: center; min-width: 0; }
+.photo-fg { margin: 0; position: relative; border-radius: 20px; overflow: hidden; border: 2px solid rgba(226, 194, 106, .55); box-shadow: 0 24px 60px rgba(0, 0, 0, .45), 0 0 0 6px rgba(226, 194, 106, .08); transform: rotate(1.2deg); transition: transform .4s ease; }
+.photo-fg:hover { transform: rotate(0) scale(1.01); }
+.photo-fg img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
+@media (max-width: 860px) { .photo-fg { transform: none; max-width: 520px; } .ouv-droite { gap: 22px; } }
+@media (prefers-reduced-motion: reduce) { .photo-fg, .photo-fg:hover { transform: none; transition: none; } }
 /* Agenda public */
 .rdv .quand { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
 .rdv .jour { flex: 0 0 auto; width: 58px; text-align: center; border-radius: 12px; padding: 6px 0 7px; background: var(--nuit); color: #fff; line-height: 1.05; }
@@ -386,12 +395,17 @@ button.b-contour { background: transparent; }
         </div>
         <p class="devise" aria-label="Notre devise"><span>Réveiller</span><span>Restaurer</span><span>Former</span><span>Équiper</span><span>Envoyer</span></p>
       </div>
+      <div class="ouv-droite">
+      <figure class="photo-fg apparait" style="animation-delay:.1s">
+        <img src="/vitrine/fire-generation-1080.jpg" srcset="/vitrine/fire-generation-640.jpg 640w, /vitrine/fire-generation-1080.jpg 1080w" sizes="(max-width: 860px) 92vw, 460px" width="1080" height="1080" alt="Fire Génération by Soldats de l’Éternel : des soldats du mouvement réunis, en rouge et blanc, sous les palmiers" fetchpriority="high" decoding="async">
+      </figure>
       <figure class="verset apparait" style="margin:0;animation-delay:.15s" aria-label="Texte fondateur, Ézéchiel 37">
         <p class="surtitre" style="margin-bottom:12px">Texte fondateur · Ézéchiel 37</p>
         <blockquote id="verset-texte">« Et l’esprit entra en eux, et ils reprirent vie, et ils se tinrent sur leurs pieds : c’était une armée nombreuse, très nombreuse. »</blockquote>
         <cite id="verset-ref">Ézéchiel 37.10</cite>
         <div class="points-v" id="points-v" role="group" aria-label="Choisir un verset"></div>
       </figure>
+      </div>
     </div>
     <svg class="vallee" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120V62c120-26 230 22 360-4s210-36 340-8 240 28 360 6c60-11 100-14 140-12v76z"/><path d="M0 120V96c160-18 300 14 470-4s290-22 450 0c120 16 210 10 280 2v26z"/></svg>
   </section>

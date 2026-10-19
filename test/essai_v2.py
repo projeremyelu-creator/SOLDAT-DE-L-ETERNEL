@@ -39,13 +39,13 @@ def get(path, host):
 # Routage des domaines
 st, h, corps = get("/", "mouvement-sde.org")
 verif(st == 200 and "IN FIRE" in corps and "Ézéchiel 37" in corps and 'href="https://app.mouvement-sde.org/#inscription"' in corps, "mouvement-sde.org : site vitrine servi")
-verif('content="https://mouvement-sde.org/og-sde.png"' in corps and "summary_large_image" in corps and "sdedigital.org" not in corps, "vitrine : vignette de partage 1200×630")
+verif('content="https://mouvement-sde.org/og-sde.jpg"' in corps and "summary_large_image" in corps and "sdedigital.org" not in corps, "vitrine : vignette de partage 1200×630")
 st, h, _ = get("/membres?x=1", "mouvement-sde.org")
 verif(st == 301 and {k.lower(): v for k, v in h.items()}.get("location") == "https://app.mouvement-sde.org/membres?x=1", "mouvement-sde.org : autres chemins → application")
 st, h, _ = get("/", "www.mouvement-sde.org")
 verif(st == 301 and {k.lower(): v for k, v in h.items()}.get("location") == "https://mouvement-sde.org/", "www → mouvement-sde.org")
-st, h, _ = get("/og-sde.png", "mouvement-sde.org")
-verif(st == 200 and {k.lower(): v for k, v in h.items()}.get("content-type") == "image/png", "image de partage accessible")
+st, h, _ = get("/og-sde.jpg", "mouvement-sde.org")
+verif(st == 200 and {k.lower(): v for k, v in h.items()}.get("content-type") == "image/jpeg", "image de partage accessible")
 st, h, corps = get("/api/public", "mouvement-sde.org")
 j = json.loads(corps); titres = [e["titre"] for e in j["evenements"]]
 verif("Culte de réveil" in titres and "Réunion des responsables" not in titres and all("presences" not in e for e in j["evenements"]), "agenda public : cultes et conférences seulement, sans données internes")
@@ -73,6 +73,7 @@ try:
         # Vitrine sur téléphone
         ctx, p = ctx_pour("http://mouvement-sde.org/")
         verif(p.locator("#agenda").is_visible() and "Culte de réveil" in p.inner_text("#agenda") and "Réunion des responsables" not in p.inner_text("body"), "vitrine : agenda en direct affiché")
+        verif(p.evaluate("(() => { const i = document.querySelector('.photo-fg img'); return i && i.complete && i.naturalWidth > 200 && i.currentSrc.includes('fire-generation'); })()"), "accueil du site : photo Fire Génération affichée")
         verif(p.locator("#if-prog").is_visible() and "Accueil des délégations" in p.inner_text("#if-prog"), "IN FIRE : programme lu dans l’agenda de l’application")
         verif("WhatsApp" in p.inner_text("label.accord") and "jamais transmises" not in p.inner_text("body"), "consentement : envoi par WhatsApp ou e-mail expliqué")
         verif(p.locator("label[for=f-nom] .oblig").count() == 1 and p.locator("label[for=f-mail] .facult").count() == 1, "formulaire : champs obligatoires signalés")
@@ -85,6 +86,8 @@ try:
         verif("wa.me/2250778689573" in u and "Marc%20Yao" in u and "personnes%20%3A%203" in u, "confirmation IN FIRE : message WhatsApp prérempli")
         p.click("#b-yango"); p.wait_for_timeout(200)
         verif(p.locator("#yango-aide").is_visible(), "Yango : adresse copiée et marche à suivre")
+        p.evaluate("window.scrollTo(0, 0)"); p.wait_for_timeout(400)
+        verif(not p.locator("#barre-if").is_visible(), "téléphone : barre IN FIRE masquée en haut de page")
         p.evaluate("window.scrollTo(0, document.querySelector('#mouvement').offsetTop + 400)"); p.wait_for_timeout(600)
         verif(p.locator("#barre-if").is_visible(), "téléphone : barre « Je confirme » après l’ouverture")
         p.evaluate("window.scrollTo(0, 0)"); p.wait_for_timeout(300)

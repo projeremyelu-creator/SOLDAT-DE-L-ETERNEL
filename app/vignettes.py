@@ -92,7 +92,39 @@ def vignette(nom, sur_titre, titre, sous_titre, verset, ref, pied):
     img.convert("RGB").save(PUB / nom, "PNG", optimize=True)
     print("ok", nom)
 
-vignette("og-sde.png", "MOUVEMENT PROPHÉTICO-APOSTOLIQUE", "SOLDATS DE L’ÉTERNEL", "Réveiller · Restaurer · Former · Équiper · Envoyer",
-         "Esprit, viens des quatre vents, souffle sur ces morts, et qu’ils revivent !", "Ézéchiel 37.9", "mouvement-sde.org")
+def vignette_photo(nom, photo):
+    """Vignette du site : panneau du mouvement à gauche, photo « Fire Génération » à droite (JPEG léger pour WhatsApp)."""
+    img = fond()
+    ph = Image.open(photo).convert("RGB").resize((H, H), Image.LANCZOS)
+    masque = Image.new("L", (H, H), 255)
+    dm = ImageDraw.Draw(masque)
+    for x in range(90):
+        dm.line((x, 0, x, H), fill=int(255 * x / 90))
+    img.paste(ph, (W - H, 0), masque)
+    lg = LOGO.copy(); lg.thumbnail((112, 112), Image.LANCZOS)
+    img.alpha_composite(lg, (56, 48))
+    d = ImageDraw.Draw(img)
+    x, larg = 58, W - H - 58 - 30
+    y = 190
+    texte_large(d, (x, y), "MOUVEMENT PROPHÉTICO-APOSTOLIQUE", police("SairaCondensed-SemiBold.ttf", 26), OR, larg)
+    y += 40
+    ft = police("SairaCondensed-Bold.ttf", 74)
+    for li in ("SOLDATS DE", "L’ÉTERNEL"):
+        d.text((x, y), li, font=ft, fill=BLANC); y += 76
+    y += 6
+    fs = police("SairaCondensed-SemiBold.ttf", 30)
+    for li in ("Réveiller · Restaurer · Former", "Équiper · Envoyer"):
+        d.text((x, y), li, font=fs, fill=OR_CLAIR); y += 36
+    d.line((x, y + 14, x + 90, y + 14), fill=OR, width=3)
+    y += 34
+    fv = police("AtkinsonHyperlegible-Italic.ttf", 24)
+    for li in lignes(d, "« Esprit, viens des quatre vents ! »", fv, larg):
+        d.text((x, y), li, font=fv, fill=GRIS); y += 32
+    d.text((x, y + 2), "Ézéchiel 37.9", font=police("AtkinsonHyperlegible-Bold.ttf", 20), fill=OR)
+    d.text((x, H - 58), "mouvement-sde.org", font=police("SairaCondensed-SemiBold.ttf", 30), fill=OR_CLAIR)
+    img.convert("RGB").save(PUB / nom, "JPEG", quality=84, optimize=True, progressive=True)
+    print("ok", nom, (PUB / nom).stat().st_size)
+
+vignette_photo("og-sde.jpg", RACINE / "app" / "fire-generation-source.png")
 vignette("og-app.png", "SOLDATS DE L’ÉTERNEL", "MPA SDE", "Poste de commandement du mouvement",
          "Et l’esprit entra en eux, et ils reprirent vie, et ils se tinrent sur leurs pieds : c’était une armée nombreuse, très nombreuse.", "Ézéchiel 37.10", "app.mouvement-sde.org")

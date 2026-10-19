@@ -699,7 +699,7 @@ async function traiter(req, env) {
     if (url.hostname === "mouvement-sde.org") {
       if (p === "/" || p === "/index.html") return env.ASSETS.fetch(new Request(new URL("/vitrine/", url), req));
       if (p === "/api/public") return apiPublic(env);
-      if (!/^\/(vitrine\/|og-sde\.png$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$)/.test(p))
+      if (!/^\/(vitrine\/|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$)/.test(p))
         return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
       return env.ASSETS.fetch(req);
     }

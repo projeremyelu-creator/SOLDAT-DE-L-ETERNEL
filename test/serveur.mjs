@@ -31,7 +31,7 @@ const FICHIERS = {
   get: async (k, o) => { if (!kv.has(k)) return null; const b = kv.get(k).v; return (o && o.type === "arrayBuffer") || o === "arrayBuffer" ? b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) : b.toString("utf8"); },
   list: async ({ prefix = "" } = {}) => ({ keys: [...kv.entries()].filter(([k]) => k.startsWith(prefix)).map(([name, x]) => ({ name, metadata: x.m })) }),
 };
-const TYPES = { ".xml": "application/xml", ".txt": "text/plain", ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".png": "image/png", ".webmanifest": "application/manifest+json" };
+const TYPES = { ".jpg": "image/jpeg", ".xml": "application/xml", ".txt": "text/plain", ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".png": "image/png", ".webmanifest": "application/manifest+json" };
 const ASSETS = {
   fetch: async (req) => {
     let p = new URL(req.url).pathname;
