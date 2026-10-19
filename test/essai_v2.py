@@ -16,6 +16,7 @@ for email, nom, role, tok in [("infosoldat@gmail.com", "Jérémy Octave GLAZAÏ"
     c.execute("INSERT INTO sessions VALUES (?,?,?)", (tok, email, now + 864e5))
 docs = json.loads((TMP / "transfert-essai.json").read_text())
 docs = docs.get("docs", docs)
+docs["evenements/infire-2026"]["description"] += "\nProgramme :\n8 h : Accueil des délégations\n9 h : Louange et adoration"
 docs["evenements/culte-test"] = {"titre": "Culte de réveil", "type": "Culte", "date": "2026-11-15", "heure": "09:00", "lieu": "Siège, Cocody Deux-Plateaux", "description": "Ouvert à tous."}
 docs["evenements/reunion-privee"] = {"titre": "Réunion des responsables", "type": "Réunion", "date": "2026-11-16", "heure": "18:00", "lieu": "Bureau"}
 for path, d in docs.items():
@@ -37,7 +38,7 @@ def get(path, host):
     except urllib.error.HTTPError as e: return e.code, dict(e.headers), ""
 # Routage des domaines
 st, h, corps = get("/", "mouvement-sde.org")
-verif(st == 200 and "IN FIRE" in corps and "Ézéchiel 37" in corps and 'href="https://app.mouvement-sde.org/#espace"' in corps, "mouvement-sde.org : site vitrine servi")
+verif(st == 200 and "IN FIRE" in corps and "Ézéchiel 37" in corps and 'href="https://app.mouvement-sde.org/#inscription"' in corps, "mouvement-sde.org : site vitrine servi")
 verif('content="https://mouvement-sde.org/og-sde.png"' in corps and "summary_large_image" in corps and "sdedigital.org" not in corps, "vitrine : vignette de partage 1200×630")
 st, h, _ = get("/membres?x=1", "mouvement-sde.org")
 verif(st == 301 and {k.lower(): v for k, v in h.items()}.get("location") == "https://app.mouvement-sde.org/membres?x=1", "mouvement-sde.org : autres chemins → application")
@@ -50,6 +51,10 @@ j = json.loads(corps); titres = [e["titre"] for e in j["evenements"]]
 verif("Culte de réveil" in titres and "Réunion des responsables" not in titres and all("presences" not in e for e in j["evenements"]), "agenda public : cultes et conférences seulement, sans données internes")
 st, h, corps = get("/", "app.mouvement-sde.org")
 verif(st == 200 and 'og-app.png' in corps and 'noindex' in corps, "application : vignette dédiée, non indexée")
+hd = {k.lower(): v for k, v in get("/", "mouvement-sde.org")[1].items()}
+verif(hd.get("x-frame-options") == "DENY" and "max-age" in hd.get("strict-transport-security", "") and hd.get("x-content-type-options") == "nosniff", "en-têtes de sécurité")
+st, h, _ = get("/_blob/sauvegarde:2026-10-19", "app.mouvement-sde.org")
+verif(st == 404, "les sauvegardes ne sont pas accessibles par l’adresse des fichiers")
 st, h, corps = get("/api/moi", "app.mouvement-sde.org")
 verif(json.loads(corps)["ia"] is False, "visiteur : Éliézer non proposé")
 try:
@@ -68,6 +73,21 @@ try:
         # Vitrine sur téléphone
         ctx, p = ctx_pour("http://mouvement-sde.org/")
         verif(p.locator("#agenda").is_visible() and "Culte de réveil" in p.inner_text("#agenda") and "Réunion des responsables" not in p.inner_text("body"), "vitrine : agenda en direct affiché")
+        verif(p.locator("#if-prog").is_visible() and "Accueil des délégations" in p.inner_text("#if-prog"), "IN FIRE : programme lu dans l’agenda de l’application")
+        verif("WhatsApp" in p.inner_text("label.accord") and "jamais transmises" not in p.inner_text("body"), "consentement : envoi par WhatsApp ou e-mail expliqué")
+        verif(p.locator("label[for=f-nom] .oblig").count() == 1 and p.locator("label[for=f-mail] .facult").count() == 1, "formulaire : champs obligatoires signalés")
+        verif('app.mouvement-sde.org/#connexion' in p.inner_html("#membres") and 'app.mouvement-sde.org/#inscription' in p.inner_html("#membres"), "deux parcours : espace soldat et administration")
+        p.evaluate("window.__ouvert = []; window.open = (u) => { window.__ouvert.push(u); return null; }")
+        p.click("#f-venue [type=submit]"); p.wait_for_timeout(200)
+        verif(p.locator("#v-err").is_visible(), "confirmation IN FIRE : nom demandé")
+        p.fill("#v-nom", "Marc Yao"); p.select_option("#v-nb", "3"); p.click("#f-venue [type=submit]"); p.wait_for_timeout(200)
+        u = p.evaluate("window.__ouvert.filter(Boolean).join(' ')")
+        verif("wa.me/2250778689573" in u and "Marc%20Yao" in u and "personnes%20%3A%203" in u, "confirmation IN FIRE : message WhatsApp prérempli")
+        p.click("#b-yango"); p.wait_for_timeout(200)
+        verif(p.locator("#yango-aide").is_visible(), "Yango : adresse copiée et marche à suivre")
+        p.evaluate("window.scrollTo(0, document.querySelector('#mouvement').offsetTop + 400)"); p.wait_for_timeout(600)
+        verif(p.locator("#barre-if").is_visible(), "téléphone : barre « Je confirme » après l’ouverture")
+        p.evaluate("window.scrollTo(0, 0)"); p.wait_for_timeout(300)
         p.screenshot(path=str(OUT / "v2-vitrine-tel.png"), full_page=True)
         with p.expect_download() as dl: p.click('#infire [data-ics="infire"]')
         ics = Path(dl.value.path()).read_text()
@@ -95,6 +115,32 @@ try:
         r = p.evaluate("window.claude.use('sample').then(s => s.json('Propose un texte', {modelTier:'quick'}))")
         verif(r.get("surtitre") == "Grande soirée", "Éliézer : réponse JSON (affiches)")
         verif(json.loads(JOURNAL.read_text().splitlines()[-1])["model"] == "claude-haiku-5-5", "modèle rapide pour les affiches")
+        # Présences visibles seulement des responsables
+        r = p.evaluate("fetch('/api/db', {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({op:'get', path:'evenements/infire-2026'})}).then(r => r.json())")
+        verif("presents" in r["data"], "responsable : présences visibles")
+        ctx.close()
+        ctx, p = ctx_pour("http://app.mouvement-sde.org/", None, 390)
+        r = p.evaluate("fetch('/api/db', {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({op:'get', path:'evenements/infire-2026'})}).then(r => r.json())")
+        verif(r["exists"] and "presents" not in r["data"], "visiteur : liste des présents masquée")
+        r = p.evaluate("fetch('/api/profils', {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ids:['x']})}).then(r => r.json())")
+        verif(r == {}, "visiteur : noms des comptes non communiqués")
+        ctx.close()
+        # Sauvegardes (propriétaire)
+        ctx, p = ctx_pour("http://app.mouvement-sde.org/", "tok-owner", 1280)
+        r = p.evaluate("fetch('/api/sauvegardes', {method:'POST'}).then(r => r.json())")
+        l = p.evaluate("fetch('/api/sauvegardes').then(r => r.json())")
+        d = p.evaluate("fetch('/api/sauvegardes/' + new Date().toISOString().slice(0,10)).then(r => r.json())")
+        verif(r.get("ok") and len(l["sauvegardes"]) == 1 and "membres" in " ".join(d["docs"].keys()) and all("mdp" not in c for c in d["comptes"]), "sauvegarde : faite, listée, téléchargeable, sans mots de passe")
+        p.click("#btn-compte"); p.wait_for_timeout(400); p.click('#sheet [data-act="comptes"]'); p.wait_for_timeout(1500)
+        verif("Sauvegardes automatiques" in p.inner_text("#sheet"), "feuille Comptes et accès : sauvegardes")
+        ctx.close()
+        ctx, p = ctx_pour("http://app.mouvement-sde.org/", "tok-contrib", 390)
+        r = p.evaluate("fetch('/api/sauvegardes').then(r => r.status)")
+        verif(r == 403, "contributeur : pas d’accès aux sauvegardes")
+        ctx.close()
+        # Lien direct d’inscription depuis la vitrine
+        ctx, p = ctx_pour("http://app.mouvement-sde.org/#inscription")
+        verif(p.locator("#ci-prenoms").count() == 1, "lien #inscription : formulaire de création de compte ouvert")
         ctx.close()
         # Compte en attente : pas d'accès
         ctx, p = ctx_pour("http://app.mouvement-sde.org/", "tok-attente", 390)

@@ -166,9 +166,10 @@
   }
 
   /* — Comptes et accès (administrateurs) — */
-  const CPT = { liste: null, err: "", code: null };
+  const CPT = { liste: null, err: "", code: null, sauv: null };
   async function chargerComptes() {
     try { const r = await SDEH.comptes(); CPT.liste = r.comptes || []; CPT.err = ""; SYNC_C.comptes = null; } catch (e) { CPT.err = (e && e.message) || "Lecture impossible."; }
+    try { const r = await fetch("/api/sauvegardes", { credentials: "same-origin", cache: "no-store" }); CPT.sauv = r.ok ? (await r.json()).sauvegardes || [] : null; } catch (e) { CPT.sauv = null; }
     dernier.sheet = null; render();
   }
   function messageActivation(c) {
@@ -184,8 +185,10 @@
     const nomFiche = (id) => { const f = id && membre(id); return f ? `${nomComplet(f)}${f.matricule ? " · " + f.matricule : ""}` : ""; };
     const imp = m.niveau >= 3 ? `<details class="imp-h"><summary>Transférer des données (propriétaire)</summary><p class="hint">Choisissez le fichier de transfert (.json) préparé à partir de la version Claude. Les documents existants portant le même nom sont remplacés.</p><label class="btn btn-sm" for="imp-fichier">${I("i-up")}Choisir le fichier</label><input type="file" id="imp-fichier" accept=".json,application/json" hidden><p class="hint" id="imp-msg" role="status"></p></details>` : "";
     const code = CPT.code ? `<div class="note ok cpt-code" role="status"><p style="margin:0 0 6px"><b>Code d’activation pour ${esc(CPT.code.email)} : <span class="num esp-code">${esc(CPT.code.code)}</span></b></p><p class="hint" style="margin:0 0 8px">Transmettez-le à la personne : il n’est affiché qu’une fois, reste valable 14 jours et ne sert qu’une fois.</p><div class="btn-row"><a class="btn btn-sm btn-primary" href="${esc(lienWa("", messageActivation(CPT.code)))}" target="_blank" rel="noopener">${I("i-msg")}Envoyer par WhatsApp</a>${btn("cpt-copier", "Copier le message", { sm: true })}${btn("cpt-code-ok", "C’est transmis", { sm: true })}</div></div>` : "";
+    const tailleKo = (n) => (n > 1048576 ? (n / 1048576).toFixed(1).replace(".", ",") + " Mo" : Math.max(1, Math.round((n || 0) / 1024)) + " Ko");
+    const sauv = CPT.sauv ? `<details class="imp-h"><summary>Sauvegardes automatiques</summary><p class="hint">Toute la base (membres, agenda, caisse, comptes sans mots de passe) est sauvegardée chaque nuit à 2 h et gardée 35 jours. Pour restaurer, le propriétaire utilise « Transférer des données » avec le fichier téléchargé.</p><div class="btn-row">${btn("sauv-maintenant", "Sauvegarder maintenant", { ico: "i-down", sm: true })}</div>${CPT.sauv.length ? `<ul class="esp-l">${CPT.sauv.map((x) => `<li><span><b>${esc(fmtLong(x.jour))}</b><small>${esc(nb(x.documents || 0))} documents · ${esc(tailleKo(x.taille))}</small></span><a class="btn btn-sm" href="/api/sauvegardes/${esc(x.jour)}" download>${I("i-down")}Télécharger</a></li>`).join("")}</ul>` : `<p class="hint">Aucune sauvegarde pour l’instant : la première sera faite cette nuit.</p>`}</details>` : "";
     const etat = (c) => c.actif ? (c.derniere ? "dernière connexion " + fmtStamp(c.derniere) : "actif") : c.aActiver ? "en attente d’activation" : "sans mot de passe";
-    return imp + code + `<p class="hint" style="margin-top:0">Les soldats créent eux-mêmes leur compte et reçoivent un matricule à 6 chiffres. Pour un responsable, ajoutez son adresse avec son rôle : un code d’activation s’affiche, à lui transmettre pour qu’il choisisse son mot de passe.</p>
+    return imp + sauv + code + `<p class="hint" style="margin-top:0">Les soldats créent eux-mêmes leur compte et reçoivent un matricule à 6 chiffres. Pour un responsable, ajoutez son adresse avec son rôle : un code d’activation s’affiche, à lui transmettre pour qu’il choisisse son mot de passe.</p>
       <form class="form compte-aj" id="f-compte" novalidate><div class="f2">${champ("cp-email", "Adresse e-mail", inp("cp-email", "email", "", 'type="email" autocomplete="off" placeholder="prenom.nom@gmail.com" required'))}${champ("cp-nom", "Nom", inp("cp-nom", "nom", "", 'autocomplete="off"'))}</div>${champ("cp-role", "Rôle", `<select class="inp" id="cp-role" name="role">${opts("contributeur")}</select>`)}<button class="btn btn-primary btn-sm" type="submit">${I("i-plus")}Ajouter ou mettre à jour</button></form>
       <div class="list" style="margin-top:14px">${CPT.liste.map((c) => {
         const proprio = c.role === "proprietaire";
@@ -237,6 +240,13 @@
     comptes: () => ouvrirComptes(),
     "cpt-reinit": (t) => boutonArme(t, "Confirmer", () => majCompteH({ email: t.dataset.email, reinitialiser: true }, "Nouveau code créé : l’ancien mot de passe ne fonctionne plus")),
     "cpt-copier": () => { if (CPT.code) navigator.clipboard.writeText(messageActivation(CPT.code)).then(() => toast("Message copié"), () => toast("Copie impossible", "err")); },
+    "sauv-maintenant": async (t) => { t.disabled = true; try { const r = await fetch("/api/sauvegardes", { method: "POST", credentials: "same-origin" }); if (!r.ok) throw new Error(); toast("Sauvegarde faite"); } catch (e) { toast("La sauvegarde a échoué.", "err"); } await chargerComptes(); },
     "cpt-code-ok": () => { CPT.code = null; dernier.sheet = null; render(); },
     "compte-suppr": (t) => boutonArme(t, "Confirmer le retrait", () => majCompteH({ email: t.dataset.email, supprimer: true }, "Accès retiré")),
   });
+  /* Liens directs depuis le site vitrine : #connexion et #inscription ouvrent la feuille de connexion */
+  if (/^#(connexion|inscription)$/.test(location.hash)) {
+    const mode = location.hash.slice(1);
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { /* sans effet */ }
+    Promise.resolve(SDEH.pret).then(() => setTimeout(() => { if (moiH().connecte) allerA(moiH().membreId ? "espace" : "accueil"); else ouvrirConnexion(mode); }, 400));
+  }

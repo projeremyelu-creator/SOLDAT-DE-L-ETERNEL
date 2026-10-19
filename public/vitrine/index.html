@@ -300,6 +300,39 @@ p { margin: 0; }
 @media (max-width: 1100px) and (min-width: 981px) { .marque small { display: none; } }
 button.bouton { cursor: pointer; }
 button.b-contour { background: transparent; }
+
+/* IN FIRE : confirmation et itinéraire */
+.venue { display: grid; gap: 10px; margin: 4px 0 16px; }
+.decompte .venue-t { font-family: var(--f-titre); text-transform: none; letter-spacing: 0; font-size: 1.2rem; font-weight: 700; color: #fff; }
+.venue-champs { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 4px 10px; align-items: end; }
+.venue-champs label { font-size: .85rem; font-weight: 700; color: #ffe2cc; }
+.venue-champs label:nth-of-type(1) { grid-column: 1; grid-row: 1; } .venue-champs input { grid-column: 1; grid-row: 2; }
+.venue-champs label:nth-of-type(2) { grid-column: 2; grid-row: 1; } .venue-champs select { grid-column: 2; grid-row: 2; }
+.venue-champs input, .venue-champs select { width: 100%; min-height: 48px; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255, 179, 122, .55); background: rgba(0, 0, 0, .25); color: #fff; font: inherit; }
+.venue-champs select option { color: #111; }
+@media (max-width: 420px) { .venue-champs { grid-template-columns: 1fr; } .venue-champs label, .venue-champs input, .venue-champs select { grid-column: 1 !important; grid-row: auto !important; } }
+.venue .bouton { width: 100%; }
+.venue-aide { font-size: .88rem; color: #ffe2cc; line-height: 1.45; text-transform: none !important; letter-spacing: 0 !important; font-family: var(--f-texte) !important; }
+.venue-aide a { color: #fff; font-weight: 700; }
+.decompte .venue-err { text-transform: none; letter-spacing: 0; font-family: var(--f-texte); }
+.venue-err { background: rgba(255, 255, 255, .92); color: #8a1c0c; border-radius: 8px; padding: 8px 10px; font-weight: 700; font-size: .9rem; }
+.itineraire { display: flex; flex-wrap: wrap; gap: 8px; }
+.itineraire .bouton { flex: 1 1 auto; min-height: 44px; padding: 0 14px; font-size: .92rem; }
+.if-prog { margin-top: 20px; background: rgba(0, 0, 0, .22); border-radius: var(--r); padding: 16px 18px; }
+.if-prog h3 { font-size: 1.15rem; margin-bottom: 8px; color: #ffc89a; }
+.if-prog ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.barre-if { position: fixed; z-index: 55; left: 10px; right: 10px; bottom: max(10px, env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 10px 10px 16px; border-radius: 16px; background: linear-gradient(120deg, #3a1208, var(--braise-2)); color: #fff; text-decoration: none; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); font-size: .92rem; }
+.barre-if .barre-b { flex: 0 0 auto; background: #ffb37a; color: #2a0d07; font-weight: 800; border-radius: 999px; padding: 10px 14px; }
+@media (min-width: 861px) { .barre-if { display: none !important; } }
+/* Formulaire : obligatoire / facultatif */
+.oblig, .facult { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; border-radius: 6px; padding: 1px 6px; vertical-align: 2px; margin-left: 4px; }
+.oblig { background: rgba(184, 64, 28, .14); color: #a33a16; }
+.facult { background: rgba(127, 127, 127, .16); color: var(--gris); }
+.infire .oblig { background: rgba(255, 179, 122, .22); color: #ffd2ad; }
+.legende { font-size: .9rem; color: var(--gris); margin-bottom: 4px; }
+.champ .aide { color: var(--gris); font-size: .82rem; }
+.carte-acces .pour { font-family: var(--f-titre); font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: var(--or-texte); font-weight: 600; margin-bottom: 4px; }
+.carte-acces .actions { display: flex; flex-wrap: wrap; gap: 10px; }
 /* Agenda public */
 .rdv .quand { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
 .rdv .jour { flex: 0 0 auto; width: 58px; text-align: center; border-radius: 12px; padding: 6px 0 7px; background: var(--nuit); color: #fff; line-height: 1.05; }
@@ -338,6 +371,7 @@ button.b-contour { background: transparent; }
   </div>
 </header>
 
+<a class="barre-if" id="barre-if" href="#infire" hidden><span><b>IN FIRE 2026</b> · samedi 31 octobre, 8 h</span><span class="barre-b">Je confirme</span></a>
 <main id="accueil">
   <section class="ouverture" aria-labelledby="titre-principal">
     <canvas id="braises" aria-hidden="true"></canvas>
@@ -370,18 +404,32 @@ button.b-contour { background: transparent; }
         <p class="theme">« La révélation des fils et filles de Dieu »</p>
         <ul class="infos">
           <li><svg aria-hidden="true"><use href="#i-cal"/></svg><span><b>Samedi 31 octobre 2026</b>, à partir de 8 h</span></li>
-          <li><svg aria-hidden="true"><use href="#i-lieu"/></svg><span>Église MADEG, Cocody Deux-Plateaux Agban, carrefour Garage CFA (lieu à retrouver sur Yango)</span></li>
+          <li><svg aria-hidden="true"><use href="#i-lieu"/></svg><span><b>Église MADEG</b>, Cocody Deux-Plateaux Agban, Abidjan. Repère : carrefour Garage CFA. Dans Yango ou Google Maps, cherchez «&nbsp;Église MADEG Agban&nbsp;».</span></li>
           <li><svg aria-hidden="true"><use href="#i-voix"/></svg><span>Avec le Leader Jérémy l’Élu et Samuel ZEREOUE (Leader, Ambassade Prophétique)</span></li>
         </ul>
+        <div class="if-prog" id="if-prog" hidden><h3>Programme</h3><ul id="if-prog-l"></ul></div>
       </div>
       <div class="decompte" aria-live="off">
         <p id="decompte-titre">Ouverture des portes dans</p>
         <div class="cases" id="cases"><div><b id="c-j">–</b><small>jours</small></div><div><b id="c-h">–</b><small>heures</small></div><div><b id="c-m">–</b><small>minutes</small></div><div><b id="c-s">–</b><small>secondes</small></div></div>
-        <div class="actions">
-          <a class="bouton b-braise" id="lien-infire" href="https://wa.me/2250778689573?text=Shalom%20!%20Je%20serai%20pr%C3%A9sent(e)%20%C3%A0%20IN%20FIRE%202026%20le%20samedi%2031%20octobre.%20Nom%20%3A%20" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-msg"/></svg>Je confirme ma venue</a>
-          <a class="bouton b-contour" href="https://www.google.com/maps/search/?api=1&amp;query=%C3%89glise%20MADEG%20Cocody%20Deux-Plateaux%20Agban%20Abidjan" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-lieu"/></svg>Itinéraire</a>
+        <form class="venue" id="f-venue" novalidate>
+          <p class="venue-t">Je confirme ma venue</p>
+          <div class="venue-champs">
+            <label for="v-nom">Votre nom <span class="oblig">obligatoire</span></label>
+            <input id="v-nom" name="nom" autocomplete="name" autocapitalize="words" maxlength="80" required>
+            <label for="v-nb">Nous serons</label>
+            <select id="v-nb" name="nb"><option value="1">1 personne</option><option value="2">2 personnes</option><option value="3">3 personnes</option><option value="4">4 personnes</option><option value="5">5 personnes</option><option value="6">6 personnes ou plus</option></select>
+          </div>
+          <p class="venue-err" id="v-err" role="alert" hidden></p>
+          <button class="bouton b-braise" type="submit"><svg aria-hidden="true"><use href="#i-msg"/></svg>Confirmer par WhatsApp</button>
+          <p class="venue-aide">WhatsApp s’ouvre avec votre message déjà rédigé : il ne reste qu’à appuyer sur <b>Envoyer</b>. Pas de WhatsApp ? Appelez ou écrivez au <a href="tel:+2250778689573">+225 07 78 68 95 73</a>.</p>
+        </form>
+        <div class="actions itineraire">
+          <a class="bouton b-contour" href="https://www.google.com/maps/search/?api=1&amp;query=%C3%89glise%20MADEG%20Agban%20Cocody%20Deux-Plateaux%20Abidjan" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-lieu"/></svg>Itinéraire Google Maps</a>
+          <button class="bouton b-contour" type="button" id="b-yango"><svg aria-hidden="true"><use href="#i-lieu"/></svg>Y aller en Yango</button>
           <button class="bouton b-contour" type="button" data-ics="infire"><svg aria-hidden="true"><use href="#i-cal"/></svg>Ajouter à mon agenda</button>
         </div>
+        <p class="venue-aide" id="yango-aide" hidden>Adresse copiée. Ouvrez Yango, touchez « Où allez-vous ? » et collez-la : <b>Église MADEG, Cocody Deux-Plateaux Agban, Abidjan</b> (repère : carrefour Garage CFA).</p>
       </div>
     </div>
   </section>
@@ -552,20 +600,21 @@ button.b-contour { background: transparent; }
         </ol>
       </div>
       <form class="formulaire" id="f-rejoindre" novalidate>
+        <p class="legende">Les champs marqués <span class="oblig">obligatoire</span> sont nécessaires pour vous recontacter.</p>
         <div class="champs">
-          <div class="champ"><label for="f-nom">Nom et prénoms</label><input id="f-nom" name="nom" autocomplete="name" required></div>
-          <div class="champ"><label for="f-tel">Téléphone ou WhatsApp</label><input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="+225 07 00 00 00 00" required></div>
-          <div class="champ"><label for="f-mail">E-mail (facultatif)</label><input id="f-mail" name="mail" type="email" autocomplete="email"></div>
-          <div class="champ"><label for="f-ville">Ville et pays</label><input id="f-ville" name="ville" autocomplete="address-level2" placeholder="Abidjan, Côte d’Ivoire" required></div>
+          <div class="champ"><label for="f-nom">Nom et prénoms <span class="oblig">obligatoire</span></label><input id="f-nom" name="nom" autocomplete="name" autocapitalize="words" maxlength="120" required aria-required="true"></div>
+          <div class="champ"><label for="f-tel">Téléphone ou WhatsApp <span class="oblig">obligatoire</span></label><input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="07 00 00 00 00" maxlength="25" required aria-required="true" aria-describedby="f-tel-aide"><small class="aide" id="f-tel-aide">Avec l’indicatif si vous êtes hors de Côte d’Ivoire, par exemple +216 58 06 05 36.</small></div>
+          <div class="champ"><label for="f-mail">E-mail <span class="facult">facultatif</span></label><input id="f-mail" name="mail" type="email" autocomplete="email"></div>
+          <div class="champ"><label for="f-ville">Ville et pays <span class="oblig">obligatoire</span></label><input id="f-ville" name="ville" autocomplete="address-level2" placeholder="Abidjan, Côte d’Ivoire" maxlength="80" required aria-required="true"></div>
         </div>
         <div class="champ"><label for="f-objet">Votre demande</label><select id="f-objet" name="objet"><option>Devenir membre</option><option>Traversée Prophétique Mensuelle</option><option>IN FIRE</option><option>Soldiers Academy</option><option>HolyTalk &amp; HolyDay</option><option>Missions et actions solidaires</option><option>Holy Brunch</option><option>Demande de prière</option><option>Autre</option></select></div>
-        <div class="champ"><label for="f-msg">Quelques mots sur vous</label><textarea id="f-msg" name="msg" placeholder="Votre parcours, votre église, ce qui vous amène…"></textarea></div>
-        <label class="accord" for="f-accord"><input id="f-accord" name="accord" type="checkbox" required><span>J’accepte que le mouvement SDE utilise ces informations pour me recontacter. Elles ne sont jamais transmises à des tiers.</span></label>
+        <div class="champ"><label for="f-msg">Quelques mots sur vous <span class="facult">facultatif</span></label><textarea id="f-msg" name="msg" placeholder="Votre parcours, votre église, ce qui vous amène…"></textarea></div>
+        <label class="accord" for="f-accord"><input id="f-accord" name="accord" type="checkbox" required><span>J’accepte que ces informations soient envoyées au secrétariat du mouvement SDE pour me recontacter. L’envoi passe par l’application que je choisis à l’étape suivante (WhatsApp ou ma messagerie e-mail). Le mouvement ne vend ni ne cède ces informations à d’autres organisations. <span class="oblig">obligatoire</span></span></label>
         <p class="erreur" id="f-erreur" role="alert" hidden></p>
         <button class="bouton b-nuit" type="submit">Préparer ma demande <svg aria-hidden="true"><use href="#i-fleche"/></svg></button>
         <div class="envoi" id="envoi" hidden>
           <b>Votre demande est prête.</b>
-          <p style="color:var(--gris);font-size:.95rem">Envoyez-la par WhatsApp en un appui, ou copiez-la pour l’envoyer par e-mail à infosoldat@gmail.com.</p>
+          <p style="color:var(--gris);font-size:.95rem">Rien n’est encore envoyé. Touchez « Envoyer par WhatsApp » : WhatsApp s’ouvre avec votre message, il ne reste qu’à appuyer sur Envoyer. Ou copiez le texte pour l’envoyer par e-mail à infosoldat@gmail.com.</p>
           <pre id="envoi-texte"></pre>
           <div class="actions"><a class="bouton b-nuit" id="envoi-wa" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-msg"/></svg>Envoyer par WhatsApp</a><button class="bouton b-ligne" type="button" id="envoi-copier">Copier le texte</button></div>
         </div>
@@ -582,15 +631,18 @@ button.b-contour { background: transparent; }
       </div>
       <div class="acces">
         <div class="carte-acces">
-          <h3>Mon espace soldat</h3>
-          <ul><li>Ma carte de membre, à télécharger</li><li>Mes présences et mes cotisations</li><li>Les prochains rassemblements et les annonces</li><li>Une requête de prière à déposer</li></ul>
-          <a class="bouton b-nuit" href="https://app.mouvement-sde.org/#espace"><svg aria-hidden="true"><use href="#i-cle"/></svg>Créer mon compte ou me connecter</a>
-          <small style="color:var(--gris)">Déjà inscrit ? Connectez-vous avec votre adresse e-mail. Ancien membre avec un matricule (SDE-CI-…) ? Créez votre compte, puis prévenez le secrétariat : il le reliera à votre fiche et vous garderez votre matricule.</small>
+          <p class="pour">Pour tous les soldats</p>
+          <h3>Espace soldat</h3>
+          <ul><li>Ma carte de membre, à télécharger</li><li>Mon matricule, mes présences et mes cotisations</li><li>Les prochains rassemblements et les annonces</li><li>Une requête de prière à déposer</li></ul>
+          <div class="actions"><a class="bouton b-nuit" href="https://app.mouvement-sde.org/#inscription"><svg aria-hidden="true"><use href="#i-cle"/></svg>Créer mon compte</a><a class="bouton b-ligne" href="https://app.mouvement-sde.org/#connexion">Me connecter</a></div>
+          <small style="color:var(--gris)"><b>Nouveau :</b> adresse e-mail et mot de passe, matricule à 6 chiffres attribué aussitôt. <b>Ancien membre</b> (matricule SDE-CI-…) : créez votre compte puis prévenez le secrétariat, qui le relie à votre fiche. Vous avez reçu un code personnel ? Il fonctionne toujours dans « Mon espace ».</small>
         </div>
         <div class="carte-acces">
+          <p class="pour">Réservé aux responsables</p>
           <h3>Administration</h3>
-          <p style="color:var(--gris)">Réservé aux responsables, avec le compte ouvert par le secrétariat : registre, agenda et pointage, finances, projets, communication.</p>
-          <a class="bouton b-ligne" href="https://app.mouvement-sde.org/">Accéder à la gestion <svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
+          <p style="color:var(--gris)">Registre, agenda et pointage, finances, projets, communication. Chacun ne voit que ce que son rôle permet.</p>
+          <div class="actions"><a class="bouton b-ligne" href="https://app.mouvement-sde.org/#connexion">Connexion responsable <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></div>
+          <small style="color:var(--gris)">Connexion avec votre adresse e-mail et votre mot de passe. Première fois ? Le secrétariat vous remet un <b>code d’activation</b> : dans l’application, touchez « J’ai un code » et choisissez votre mot de passe.</small>
         </div>
       </div>
       <div class="contact" id="contact">
@@ -683,6 +735,31 @@ button.b-contour { background: transparent; }
   }
   decompte(); setInterval(decompte, 1000);
 
+
+  /* IN FIRE : confirmation guidée par WhatsApp */
+  const fv = document.getElementById("f-venue");
+  fv.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nom = fv.nom.value.trim(), nb = Number(fv.nb.value) || 1, err = document.getElementById("v-err");
+    if (nom.length < 2) { err.textContent = "Indiquez votre nom pour que l’équipe d’accueil vous attende."; err.hidden = false; fv.nom.focus(); return; }
+    err.hidden = true;
+    const texte = `Shalom ! Je confirme ma venue à IN FIRE 2026, le samedi 31 octobre à 8 h (Église MADEG, Cocody Deux-Plateaux Agban).\nNom : ${nom}\nNombre de personnes : ${nb >= 6 ? "6 ou plus" : nb}`;
+    window.open("https://wa.me/2250778689573?text=" + encodeURIComponent(texte), "_blank", "noopener");
+  });
+  document.getElementById("b-yango").addEventListener("click", () => {
+    const adr = "Église MADEG, Cocody Deux-Plateaux Agban, Abidjan";
+    const aide = document.getElementById("yango-aide");
+    const montrer = () => { aide.hidden = false; };
+    try { navigator.clipboard.writeText(adr).then(montrer, montrer); } catch (e) { montrer(); }
+  });
+  /* Barre d’appel sur téléphone, jusqu’à l’événement */
+  const barre = document.getElementById("barre-if"), secIf = document.getElementById("infire");
+  if (Date.now() < fin && "IntersectionObserver" in window) {
+    let vuIf = false, hautPasse = false;
+    const maj = () => { barre.hidden = vuIf || !hautPasse; };
+    new IntersectionObserver((l) => { vuIf = l[0].isIntersecting; maj(); }).observe(secIf);
+    new IntersectionObserver((l) => { hautPasse = !l[0].isIntersecting; maj(); }).observe(document.querySelector(".ouverture"));
+  }
   /* Formulaire « Rejoindre » : prépare un message WhatsApp ou e-mail */
   const f = document.getElementById("f-rejoindre"), err = document.getElementById("f-erreur");
   document.querySelectorAll("[data-sujet]").forEach((a) => a.addEventListener("click", () => { const s = document.getElementById("f-objet"); [...s.options].forEach((o) => { if (o.textContent === a.dataset.sujet) s.value = o.value; }); }));
@@ -735,6 +812,13 @@ button.b-contour { background: transparent; }
   const echap = (t) => String(t || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const heureFr = (t) => (t ? t.replace(/^0/, "").replace(":00", " h").replace(":", " h ") : "");
   fetch("/api/public", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then((j) => {
+    const inf = ((j && j.evenements) || []).find((e) => e.id === "infire-2026");
+    if (inf) {
+      const lignes = String(inf.description || "").split(/\n/);
+      const k = lignes.findIndex((x) => /^\s*programme\b/i.test(x));
+      const prog = k >= 0 ? lignes.slice(k + 1).map((x) => x.trim()).filter(Boolean) : [];
+      if (prog.length) { document.getElementById("if-prog-l").innerHTML = prog.map((x) => `<li>${echap(x.replace(/^[-•·]\s*/, ""))}</li>`).join(""); document.getElementById("if-prog").hidden = false; }
+    }
     const l = ((j && j.evenements) || []).filter((e) => e.id !== "infire-2026").slice(0, 6);
     if (!l.length) return;
     const box = document.getElementById("agenda-liste");

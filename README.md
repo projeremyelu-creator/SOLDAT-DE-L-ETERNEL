@@ -66,5 +66,13 @@ Les règles d’accès aux données sont vérifiées par le serveur (`REGLES` da
 
 ## Sauvegardes
 
-- Dans l’application : « Sauvegarde Excel » (Espace direction) chaque mois.
-- Base complète : Cloudflare › D1 › `sde-digital` › Time Travel permet de revenir à n’importe quel instant des 7 derniers jours (offre gratuite).
+- **Automatique, chaque nuit à 2 h** (déclencheur planifié du Worker) : toute la base (documents et comptes, sans mots de passe) est copiée dans l’espace `sde-fichiers` sous `sauvegarde:AAAA-MM-JJ` et gardée 35 jours.
+- Dans l’application : *Comptes et accès › Sauvegardes automatiques* (administrateurs) pour la liste, « Sauvegarder maintenant » et le téléchargement. Le fichier se restaure avec *Transférer des données* (propriétaire).
+- Ces copies ne sont jamais servies par l’adresse publique des fichiers (`/_blob/`).
+- En complément : « Sauvegarde Excel » mensuelle dans l’application, et Time Travel de D1 (retour à n’importe quel instant des 7 derniers jours).
+
+## Sécurité
+
+- Règles d’accès vérifiées par le serveur à chaque lecture et écriture (`REGLES`), synchronisation comprise.
+- Visiteurs et soldats ne reçoivent jamais la liste des présents d’un rassemblement, ni les noms des comptes.
+- En-têtes de sécurité sur toutes les réponses : HSTS, nosniff, interdiction d’intégration dans un autre site, Referrer-Policy.

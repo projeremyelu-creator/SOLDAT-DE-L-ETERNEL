@@ -28,6 +28,8 @@ const FICHIERS = {
   put: async (k, v, o) => kv.set(k, { v: Buffer.from(v), m: (o && o.metadata) || {} }),
   getWithMetadata: async (k) => (kv.has(k) ? { value: kv.get(k).v, metadata: kv.get(k).m } : { value: null }),
   delete: async (k) => kv.delete(k),
+  get: async (k) => (kv.has(k) ? kv.get(k).v.toString("utf8") : null),
+  list: async ({ prefix = "" } = {}) => ({ keys: [...kv.entries()].filter(([k]) => k.startsWith(prefix)).map(([name, x]) => ({ name, metadata: x.m })) }),
 };
 const TYPES = { ".xml": "application/xml", ".txt": "text/plain", ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".png": "image/png", ".webmanifest": "application/manifest+json" };
 const ASSETS = {

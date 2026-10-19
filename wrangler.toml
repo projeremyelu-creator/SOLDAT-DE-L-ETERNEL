@@ -32,10 +32,12 @@ binding = "FICHIERS"
 id = "d6c94ba3274f47718a4cacbcab96e5a3"
 
 [vars]
-# Comptes Google propriétaires (tous les droits, ne peuvent pas être retirés depuis l'application)
+# Adresses e-mail propriétaires (tous les droits ; elles ne peuvent servir à une inscription libre)
 PROPRIETAIRES = "infosoldat@gmail.com, projeremyelu@gmail.com"
-# Identifiant client Google (public) pour le bouton « Se connecter avec Google »
-GOOGLE_CLIENT_ID = "595872057692-v8if1cd3ilqsvipc68dbnbaoq6hj66fs.apps.googleusercontent.com"
 
 [observability]
 enabled = true
+
+# Sauvegarde automatique de toute la base, chaque nuit à 2 h (heure d'Abidjan), gardée 35 jours
+[triggers]
+crons = ["0 2 * * *"]

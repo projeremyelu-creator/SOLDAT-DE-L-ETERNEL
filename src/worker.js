@@ -168,6 +168,13 @@ async function ecrireDoc(env, op, path, data) {
   throw Object.assign(new Error("conflit"), { code: "aborted" });
 }
 
+/* Ce que voit une personne sans rôle de responsable : pas de liste de présences */
+function filtrer(u, path, data) {
+  if (u.niveau >= 1 || !data || segs(path)[0] !== "evenements") return data;
+  const { presents, ...reste } = data;
+  return reste;
+}
+
 /* ───────── API ───────── */
 async function apiDb(req, env, u) {
   const b = await req.json();
@@ -176,12 +183,12 @@ async function apiDb(req, env, u) {
     if (!cheminValide(path, true)) return erreur("invalid_argument", "chemin");
     if (!peutLire(u, path)) return json({ exists: false });
     const d = await lireDoc(env, path);
-    return json(d ? { exists: true, data: d.data } : { exists: false });
+    return json(d ? { exists: true, data: filtrer(u, path, d.data) } : { exists: false });
   }
   if (b.op === "query") {
     if (!cheminValide(path, false)) return erreur("invalid_argument", "chemin");
     if (!peutLire(u, path) || (segs(path)[0] === "espace" && u.niveau < 2)) return json({ docs: [] });
-    return json({ docs: await lireRequete(env, { path, order: b.order, limit: b.limit }) });
+    return json({ docs: (await lireRequete(env, { path, order: b.order, limit: b.limit })).map((x) => ({ id: x.id, data: filtrer(u, path + "/" + x.id, x.data) })) });
   }
   if (["set", "update", "delete"].includes(b.op)) {
     if (!cheminValide(path, true)) return erreur("invalid_argument", "chemin");
@@ -210,11 +217,11 @@ async function apiSync(req, env, u) {
     if (s.type === "doc") {
       if (!cheminValide(s.path, true)) continue;
       const d = peutLire(u, s.path) ? await lireDoc(env, s.path) : null;
-      out[s.k] = { rev, exists: !!d, data: d ? d.data : null };
+      out[s.k] = { rev, exists: !!d, data: d ? filtrer(u, s.path, d.data) : null };
     } else {
       if (!cheminValide(s.path, false)) continue;
       const ok = peutLire(u, s.path) && !(segs(s.path)[0] === "espace" && u.niveau < 2);
-      out[s.k] = { rev, docs: ok ? await lireRequete(env, s) : [] };
+      out[s.k] = { rev, docs: ok ? (await lireRequete(env, s)).map((x) => ({ id: x.id, data: filtrer(u, s.path + "/" + x.id, x.data) })) : [] };
     }
   }
   return json({ res: out });
@@ -385,7 +392,8 @@ async function apiPriere(req, env, u) {
   await ecrireDoc(env, "set", "prieres/" + idDoc(), { sujet: sujet.slice(0, 140), details: sujet.length > 140 ? sujet : "", categorie: "Personnelle", date: new Date(t).toISOString().slice(0, 10), pourId: u.membreId, pour: "", urgent: false, statut: "En prière", priants: {}, source: "espace", creePar: u.id, creeLe: t, modifiePar: u.id, modifieLe: t });
   return json({ ok: true });
 }
-async function apiProfils(req, env) {
+async function apiProfils(req, env, u) {
+  if (u.niveau < 1) return json({});
   const b = await req.json();
   const ids = (Array.isArray(b.ids) ? b.ids : []).slice(0, 64).map(String);
   const out = {};
@@ -397,8 +405,10 @@ async function apiProfils(req, env) {
   }
   return json(out);
 }
+const ID_FICHIER = /^[A-Za-z0-9_-]{16,64}$/;
 async function apiFichiers(req, env, u, url) {
   const id = url.pathname.split("/")[3];
+  if (id && !ID_FICHIER.test(id)) return erreur("introuvable", "Fichier inconnu.", 404);
   if (req.method === "DELETE") {
     if (u.niveau < 2 || !id) return erreur("refuse", "Réservé aux administrateurs.", 403);
     await env.FICHIERS.delete(id);
@@ -500,8 +510,48 @@ async function apiIA(req, env, u) {
   return new Response(r.body, { headers: { "content-type": "text/event-stream; charset=utf-8", "cache-control": "no-store", "x-accel-buffering": "no" } });
 }
 
+/* ───────── sauvegardes automatiques (chaque nuit, gardées 35 jours) ───────── */
+async function sauvegarder(env) {
+  const docs = (await env.DB.prepare("SELECT path, data FROM docs").all()).results || [];
+  const comptes = (await env.DB.prepare("SELECT email, id, nom, role, cree, derniere, membreId, matricule FROM comptes").all()).results || [];
+  const jour = new Date().toISOString().slice(0, 10);
+  const corps = JSON.stringify({ version: 1, date: jour, application: "S.D.E. DIGITAL", docs: Object.fromEntries(docs.map((d) => [d.path, JSON.parse(d.data)])), comptes });
+  await env.FICHIERS.put("sauvegarde:" + jour, corps, { expirationTtl: 35 * 86400, metadata: { type: "application/json", taille: corps.length, documents: docs.length, comptes: comptes.length, faite: Date.now() } });
+  return { jour, documents: docs.length, taille: corps.length };
+}
+async function apiSauvegardes(req, env, u, url) {
+  if (u.niveau < 2) return erreur("refuse", "Réservé aux administrateurs.", 403);
+  const jour = url.pathname.split("/")[3];
+  if (req.method === "POST") return json({ ok: true, ...(await sauvegarder(env)) });
+  if (jour) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(jour)) return erreur("invalid_argument", "Date invalide.");
+    const v = await env.FICHIERS.get("sauvegarde:" + jour);
+    if (!v) return erreur("introuvable", "Aucune sauvegarde à cette date.", 404);
+    return new Response(v, { headers: { "content-type": "application/json; charset=utf-8", "content-disposition": `attachment; filename="SDE-sauvegarde-${jour}.json"`, "cache-control": "no-store" } });
+  }
+  const l = await env.FICHIERS.list({ prefix: "sauvegarde:" });
+  return json({ sauvegardes: (l.keys || []).map((k) => ({ jour: k.name.slice(11), ...(k.metadata || {}) })).sort((a, b) => b.jour.localeCompare(a.jour)) });
+}
+
+/* ───────── en-têtes de sécurité ───────── */
+function securiser(r) {
+  const n = new Response(r.body, r);
+  n.headers.set("x-content-type-options", "nosniff");
+  n.headers.set("referrer-policy", "strict-origin-when-cross-origin");
+  n.headers.set("x-frame-options", "DENY");
+  n.headers.set("strict-transport-security", "max-age=31536000");
+  n.headers.set("permissions-policy", "geolocation=(self), camera=(self), microphone=()");
+  return n;
+}
+
 export default {
+  async scheduled(ev, env, ctx) { ctx.waitUntil(sauvegarder(env)); },
   async fetch(req, env) {
+    return securiser(await traiter(req, env));
+  },
+};
+async function traiter(req, env) {
+  {
     const url = new URL(req.url);
     const p = url.pathname;
     if (url.hostname === "www.mouvement-sde.org") return Response.redirect("https://mouvement-sde.org" + p + url.search, 301);
@@ -513,6 +563,7 @@ export default {
       return env.ASSETS.fetch(req);
     }
     if (p.startsWith("/_blob/")) {
+      if (!ID_FICHIER.test(p.slice(7))) return new Response("Introuvable", { status: 404 });
       const r = await env.FICHIERS.getWithMetadata(p.slice(7), { type: "arrayBuffer" });
       if (!r || !r.value) return new Response("Introuvable", { status: 404 });
       return new Response(r.value, { headers: { "content-type": (r.metadata && r.metadata.type) || "application/octet-stream", "cache-control": "private, max-age=86400", "x-content-type-options": "nosniff", "content-security-policy": "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; sandbox" } });
@@ -535,7 +586,7 @@ export default {
       if (p === "/api/ia" && req.method === "POST") return apiIA(req, env, u);
       if (p === "/api/db" && req.method === "POST") return apiDb(req, env, u);
       if (p === "/api/sync" && req.method === "POST") return apiSync(req, env, u);
-      if (p === "/api/profils" && req.method === "POST") return apiProfils(req, env);
+      if (p === "/api/profils" && req.method === "POST") return apiProfils(req, env, u);
       if (p === "/api/deconnexion" && req.method === "POST") {
         if (u.jeton) await env.DB.prepare("DELETE FROM sessions WHERE jeton = ?").bind(u.jeton).run();
         return json({ ok: true }, 200, { "set-cookie": "sde_s=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0" });
@@ -543,9 +594,10 @@ export default {
       if (p === "/api/comptes") return apiComptes(req, env, u);
       if (p.startsWith("/api/fichiers")) return apiFichiers(req, env, u, url);
       if (p === "/api/import" && req.method === "POST") return apiImport(req, env, u);
+      if (p === "/api/sauvegardes" || p.startsWith("/api/sauvegardes/")) return apiSauvegardes(req, env, u, url);
       return erreur("introuvable", "Route inconnue.", 404);
     } catch (e) {
       return erreur("unavailable", "Erreur du serveur : " + (e && e.message), 500);
     }
-  },
-};
+  }
+}
