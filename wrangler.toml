@@ -31,6 +31,12 @@ database_id = "58ab0ca0-d8c6-4f2a-acc4-2761814c058b"
 binding = "FICHIERS"
 id = "d6c94ba3274f47718a4cacbcab96e5a3"
 
+# Médiathèque : pour passer à 10 Go gratuits, activer R2 dans Cloudflare, créer le compartiment
+# « sde-medias », puis retirer les # des trois lignes suivantes. Les fichiers déjà envoyés restent lisibles.
+# [[r2_buckets]]
+# binding = "MEDIAS"
+# bucket_name = "sde-medias"
+
 [vars]
 # Adresses e-mail propriétaires (tous les droits ; elles ne peuvent servir à une inscription libre)
 PROPRIETAIRES = "infosoldat@gmail.com, projeremyelu@gmail.com"

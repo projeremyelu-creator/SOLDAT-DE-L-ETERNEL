@@ -25,10 +25,10 @@ const DB = {
 };
 const kv = new Map();
 const FICHIERS = {
-  put: async (k, v, o) => kv.set(k, { v: Buffer.from(v), m: (o && o.metadata) || {} }),
+  put: async (k, v, o) => kv.set(k, { v: Buffer.from(v instanceof ArrayBuffer ? new Uint8Array(v) : v), m: (o && o.metadata) || {} }),
   getWithMetadata: async (k) => (kv.has(k) ? { value: kv.get(k).v, metadata: kv.get(k).m } : { value: null }),
   delete: async (k) => kv.delete(k),
-  get: async (k) => (kv.has(k) ? kv.get(k).v.toString("utf8") : null),
+  get: async (k, o) => { if (!kv.has(k)) return null; const b = kv.get(k).v; return (o && o.type === "arrayBuffer") || o === "arrayBuffer" ? b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) : b.toString("utf8"); },
   list: async ({ prefix = "" } = {}) => ({ keys: [...kv.entries()].filter(([k]) => k.startsWith(prefix)).map(([name, x]) => ({ name, metadata: x.m })) }),
 };
 const TYPES = { ".xml": "application/xml", ".txt": "text/plain", ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".png": "image/png", ".webmanifest": "application/manifest+json" };

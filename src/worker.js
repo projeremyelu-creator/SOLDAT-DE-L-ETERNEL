@@ -510,12 +510,153 @@ async function apiIA(req, env, u) {
   return new Response(r.body, { headers: { "content-type": "text/event-stream; charset=utf-8", "cache-control": "no-store", "x-accel-buffering": "no" } });
 }
 
+
+/* ───────── médiathèque : vidéos, audios, photos et documents ─────────
+   Les fichiers sont découpés en morceaux de 8 Mo : dans R2 si le compartiment MEDIAS est relié
+   (10 Go gratuits), sinon dans l'espace KV (1 Go gratuit au total). La lecture accepte les requêtes
+   partielles (Range) pour que les vidéos et audios se lisent et s'avancent sur téléphone. */
+const MORCEAU = 8 * 1024 * 1024;
+const TYPES_MEDIA = {
+  mp4: ["video", "video/mp4"], m4v: ["video", "video/mp4"], mov: ["video", "video/quicktime"], webm: ["video", "video/webm"],
+  mp3: ["audio", "audio/mpeg"], m4a: ["audio", "audio/mp4"], aac: ["audio", "audio/aac"], wav: ["audio", "audio/wav"], ogg: ["audio", "audio/ogg"],
+  jpg: ["image", "image/jpeg"], jpeg: ["image", "image/jpeg"], png: ["image", "image/png"], webp: ["image", "image/webp"], gif: ["image", "image/gif"], heic: ["image", "image/heic"],
+  pdf: ["pdf", "application/pdf"],
+  doc: ["word", "application/msword"], docx: ["word", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+  ppt: ["powerpoint", "application/vnd.ms-powerpoint"], pptx: ["powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation"], pps: ["powerpoint", "application/vnd.ms-powerpoint"], ppsx: ["powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.slideshow"],
+  xls: ["excel", "application/vnd.ms-excel"], xlsx: ["excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"], csv: ["excel", "text/csv"],
+};
+const VISIBILITES = ["public", "membres", "responsables"];
+const ID_MEDIA = /^[a-z0-9]{20}$/;
+function stockage(env, type) {
+  if (type === "r2") return { put: (k, v) => env.MEDIAS.put(k, v), get: async (k) => { const o = await env.MEDIAS.get(k); return o ? o.arrayBuffer() : null; }, del: (k) => env.MEDIAS.delete(k) };
+  return { put: (k, v) => env.FICHIERS.put(k, v), get: (k) => env.FICHIERS.get(k, { type: "arrayBuffer" }), del: (k) => env.FICHIERS.delete(k) };
+}
+const limitesMedia = (env) => env.MEDIAS
+  ? { stockage: "r2", fichierMax: (Number(env.MEDIA_FICHIER_MAX_MO) || 2048) * 1048576, total: (Number(env.MEDIA_TOTAL_MO) || 9500) * 1048576 }
+  : { stockage: "kv", fichierMax: (Number(env.MEDIA_FICHIER_MAX_MO) || 200) * 1048576, total: (Number(env.MEDIA_TOTAL_MO) || 900) * 1048576 };
+const mediaVisible = (u, m) => m.visibilite === "public" || (m.visibilite === "membres" && u.connecte) || (m.visibilite === "responsables" && u.niveau >= 1);
+const peutGererMedia = (u, m) => u.niveau >= 2 || (u.niveau >= 1 && m.auteur === u.id);
+const CHAMPS_MEDIA = "id, titre, description, categorie, genre, nom, mime, taille, visibilite, miniature, auteur, auteurNom, cree, vues";
+async function supprimerMedia(env, m) {
+  const st = stockage(env, m.stockage);
+  for (let n = 0; n < m.morceaux; n += 1) { try { await st.del(`media:${m.id}:${n}`); } catch (e) { /* déjà absent */ } }
+  await env.DB.batch([env.DB.prepare("DELETE FROM medias WHERE id = ?").bind(m.id), env.DB.prepare("DELETE FROM media_morceaux WHERE id = ?").bind(m.id)]);
+}
+const propreMedia = (b, m = {}) => ({
+  titre: propre(b.titre ?? m.titre, 160), description: String(b.description ?? m.description ?? "").trim().slice(0, 2000),
+  categorie: propre(b.categorie ?? m.categorie, 60), visibilite: VISIBILITES.includes(b.visibilite) ? b.visibilite : (m.visibilite || "membres"),
+});
+async function apiMedias(req, env, u, url) {
+  const [, , , id, n] = url.pathname.split("/");
+  if (id && !ID_MEDIA.test(id)) return erreur("introuvable", "Média inconnu.", 404);
+  if (!id && req.method === "GET") {
+    const r = await env.DB.prepare(`SELECT ${CHAMPS_MEDIA} FROM medias WHERE fini = 1 ORDER BY cree DESC LIMIT 2000`).all();
+    const liste = (r.results || []).filter((m) => mediaVisible(u, m)).map((m) => ({ ...m, gerer: peutGererMedia(u, m) }));
+    const out = { medias: liste, peutAjouter: u.niveau >= 1 };
+    if (u.niveau >= 1) {
+      const t = await env.DB.prepare("SELECT COALESCE(SUM(taille), 0) AS total, COUNT(*) AS n FROM medias WHERE stockage = ?").bind(limitesMedia(env).stockage).first();
+      out.espace = { ...limitesMedia(env), utilise: t.total, nombre: t.n, morceau: MORCEAU };
+    }
+    return json(out);
+  }
+  if (u.niveau < 1) return erreur("refuse", "Réservé aux responsables connectés.", 403);
+  if (!id && req.method === "POST") {
+    const b = await req.json();
+    const nom = propre(b.nom, 180).replace(/[\\/:*?"<>|\u0000-\u001f]/g, "_");
+    const ext = (nom.match(/\.([a-z0-9]{2,5})$/i) || [, ""])[1].toLowerCase();
+    const type = TYPES_MEDIA[ext];
+    if (!type) return erreur("invalid_argument", "Type de fichier non accepté : vidéo MP4, audio MP3, photo, PDF, Word, PowerPoint ou Excel.");
+    const taille = Math.floor(Number(b.taille) || 0);
+    const lim = limitesMedia(env);
+    if (taille <= 0) return erreur("invalid_argument", "Fichier vide.");
+    if (taille > lim.fichierMax) return erreur("too_large", `Fichier trop lourd : ${Math.round(lim.fichierMax / 1048576)} Mo au maximum${lim.stockage === "kv" ? " (activez le stockage R2 pour les grosses vidéos)" : ""}.`, 413);
+    const t = await env.DB.prepare("SELECT COALESCE(SUM(taille), 0) AS total FROM medias WHERE stockage = ?").bind(lim.stockage).first();
+    if (t.total + taille > lim.total) return erreur("too_large", "L’espace de la médiathèque est plein : supprimez des fichiers ou activez un stockage plus grand.", 413);
+    const miniature = typeof b.miniature === "string" && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(b.miniature) && b.miniature.length < 160000 ? b.miniature : null;
+    const p = propreMedia(b);
+    const mid = idDoc();
+    await env.DB.prepare("INSERT INTO medias (id, titre, description, categorie, genre, nom, mime, taille, morceau, morceaux, stockage, visibilite, miniature, auteur, auteurNom, cree, fini) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)")
+      .bind(mid, p.titre || nom.replace(/\.[^.]+$/, ""), p.description, p.categorie, type[0], nom, type[1], taille, MORCEAU, Math.ceil(taille / MORCEAU), lim.stockage, p.visibilite, miniature, u.id, u.nom || u.email, Date.now()).run();
+    return json({ ok: true, id: mid, morceau: MORCEAU, morceaux: Math.ceil(taille / MORCEAU) });
+  }
+  const m = id ? await env.DB.prepare("SELECT * FROM medias WHERE id = ?").bind(id).first() : null;
+  if (!m) return erreur("introuvable", "Média inconnu.", 404);
+  if (!peutGererMedia(u, m)) return erreur("refuse", "Seuls l’auteur et les administrateurs peuvent modifier ce média.", 403);
+  if (req.method === "PUT" && n !== undefined) {
+    const k = Number(n);
+    if (m.fini || !Number.isInteger(k) || k < 0 || k >= m.morceaux) return erreur("invalid_argument", "Morceau invalide.");
+    const corps = await req.arrayBuffer();
+    const attendu = k === m.morceaux - 1 ? m.taille - k * m.morceau : m.morceau;
+    if (corps.byteLength !== attendu) return erreur("invalid_argument", `Morceau incomplet (${corps.byteLength} octets au lieu de ${attendu}).`);
+    await stockage(env, m.stockage).put(`media:${m.id}:${k}`, corps);
+    await env.DB.prepare("INSERT OR IGNORE INTO media_morceaux (id, n) VALUES (?, ?)").bind(m.id, k).run();
+    return json({ ok: true });
+  }
+  if (req.method === "POST" && n === "fin") {
+    const c = await env.DB.prepare("SELECT COUNT(*) AS n FROM media_morceaux WHERE id = ?").bind(m.id).first();
+    if (c.n !== m.morceaux) return erreur("invalid_argument", `Envoi incomplet : ${c.n} morceaux reçus sur ${m.morceaux}.`);
+    await env.DB.batch([env.DB.prepare("UPDATE medias SET fini = 1 WHERE id = ?").bind(m.id), env.DB.prepare("DELETE FROM media_morceaux WHERE id = ?").bind(m.id)]);
+    return json({ ok: true, url: `/m/${m.id}/${encodeURIComponent(m.nom)}` });
+  }
+  if (req.method === "POST" && !n) {
+    const p = propreMedia(await req.json(), m);
+    await env.DB.prepare("UPDATE medias SET titre = ?, description = ?, categorie = ?, visibilite = ? WHERE id = ?").bind(p.titre || m.titre, p.description, p.categorie, p.visibilite, m.id).run();
+    return json({ ok: true });
+  }
+  if (req.method === "DELETE" && !n) { await supprimerMedia(env, m); return json({ ok: true }); }
+  return erreur("invalid_argument", "Opération inconnue.");
+}
+/* Lecture d'un fichier : contrôle de visibilité, téléchargement par morceaux, requêtes partielles */
+async function servirMedia(req, env, u, id) {
+  if (!ID_MEDIA.test(id || "")) return new Response("Introuvable", { status: 404 });
+  const m = await env.DB.prepare("SELECT * FROM medias WHERE id = ? AND fini = 1").bind(id).first();
+  if (!m) return new Response("Ce média n’existe plus.", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });
+  if (!mediaVisible(u, m)) return new Response("Connectez-vous à S.D.E. DIGITAL pour ouvrir ce média.", { status: 403, headers: { "content-type": "text/plain; charset=utf-8" } });
+  let debut = 0, fin = m.taille - 1, partiel = false;
+  const r = /^bytes=(\d*)-(\d*)$/.exec(req.headers.get("range") || "");
+  if (r && (r[1] !== "" || r[2] !== "")) {
+    if (r[1] === "") debut = Math.max(0, m.taille - Number(r[2]));
+    else { debut = Number(r[1]); if (r[2] !== "") fin = Math.min(m.taille - 1, Number(r[2])); }
+    if (debut > fin || debut >= m.taille) return new Response(null, { status: 416, headers: { "content-range": `bytes */${m.taille}` } });
+    partiel = true;
+    fin = Math.min(fin, debut + 2 * MORCEAU - 1);
+  }
+  const st = stockage(env, m.stockage);
+  let k = Math.floor(debut / m.morceau);
+  const kFin = Math.floor(fin / m.morceau);
+  const flux = new ReadableStream({
+    async pull(c) {
+      if (k > kFin) { c.close(); return; }
+      const buf = await st.get(`media:${m.id}:${k}`);
+      if (!buf) { c.error(new Error("morceau manquant")); return; }
+      const base = k * m.morceau;
+      c.enqueue(new Uint8Array(buf.slice(Math.max(0, debut - base), Math.min(buf.byteLength, fin - base + 1))));
+      k += 1;
+    },
+  });
+  if (!partiel || debut === 0) env.DB.prepare("UPDATE medias SET vues = vues + 1 WHERE id = ?").bind(m.id).run().catch(() => {});
+  const enLigne = ["video", "audio", "image", "pdf"].includes(m.genre) && new URL(req.url).searchParams.get("telecharger") === null;
+  const h = {
+    "content-type": m.mime, "content-length": String(fin - debut + 1), "accept-ranges": "bytes",
+    "content-disposition": `${enLigne ? "inline" : "attachment"}; filename*=UTF-8''${encodeURIComponent(m.nom)}`,
+    "cache-control": m.visibilite === "public" ? "public, max-age=86400" : "private, max-age=3600",
+  };
+  if (m.genre !== "pdf") h["content-security-policy"] = "default-src 'none'; img-src 'self'; media-src 'self'; style-src 'unsafe-inline'; sandbox";
+  if (partiel) h["content-range"] = `bytes ${debut}-${fin}/${m.taille}`;
+  return new Response(req.method === "HEAD" ? null : flux, { status: partiel ? 206 : 200, headers: h });
+}
+async function nettoyerMedias(env) {
+  const r = await env.DB.prepare("SELECT * FROM medias WHERE fini = 0 AND cree < ?").bind(Date.now() - 86400e3).all();
+  for (const m of r.results || []) await supprimerMedia(env, m);
+}
+
 /* ───────── sauvegardes automatiques (chaque nuit, gardées 35 jours) ───────── */
 async function sauvegarder(env) {
   const docs = (await env.DB.prepare("SELECT path, data FROM docs").all()).results || [];
   const comptes = (await env.DB.prepare("SELECT email, id, nom, role, cree, derniere, membreId, matricule FROM comptes").all()).results || [];
+  const medias = (await env.DB.prepare("SELECT id, titre, description, categorie, genre, nom, mime, taille, stockage, visibilite, auteur, auteurNom, cree FROM medias WHERE fini = 1").all()).results || [];
   const jour = new Date().toISOString().slice(0, 10);
-  const corps = JSON.stringify({ version: 1, date: jour, application: "S.D.E. DIGITAL", docs: Object.fromEntries(docs.map((d) => [d.path, JSON.parse(d.data)])), comptes });
+  const corps = JSON.stringify({ version: 1, date: jour, application: "S.D.E. DIGITAL", docs: Object.fromEntries(docs.map((d) => [d.path, JSON.parse(d.data)])), comptes, medias });
   await env.FICHIERS.put("sauvegarde:" + jour, corps, { expirationTtl: 35 * 86400, metadata: { type: "application/json", taille: corps.length, documents: docs.length, comptes: comptes.length, faite: Date.now() } });
   return { jour, documents: docs.length, taille: corps.length };
 }
@@ -545,7 +686,7 @@ function securiser(r) {
 }
 
 export default {
-  async scheduled(ev, env, ctx) { ctx.waitUntil(sauvegarder(env)); },
+  async scheduled(ev, env, ctx) { ctx.waitUntil(Promise.all([sauvegarder(env), nettoyerMedias(env)])); },
   async fetch(req, env) {
     return securiser(await traiter(req, env));
   },
@@ -568,6 +709,7 @@ async function traiter(req, env) {
       if (!r || !r.value) return new Response("Introuvable", { status: 404 });
       return new Response(r.value, { headers: { "content-type": (r.metadata && r.metadata.type) || "application/octet-stream", "cache-control": "private, max-age=86400", "x-content-type-options": "nosniff", "content-security-policy": "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; sandbox" } });
     }
+    if (p.startsWith("/m/") && (req.method === "GET" || req.method === "HEAD")) return servirMedia(req, env, await utilisateur(req, env), p.split("/")[2]);
     if (!p.startsWith("/api/")) return env.ASSETS.fetch(req);
     if (req.method !== "GET") {
       const origine = req.headers.get("origin");
@@ -594,6 +736,7 @@ async function traiter(req, env) {
       if (p === "/api/comptes") return apiComptes(req, env, u);
       if (p.startsWith("/api/fichiers")) return apiFichiers(req, env, u, url);
       if (p === "/api/import" && req.method === "POST") return apiImport(req, env, u);
+      if (p === "/api/medias" || p.startsWith("/api/medias/")) return apiMedias(req, env, u, url);
       if (p === "/api/sauvegardes" || p.startsWith("/api/sauvegardes/")) return apiSauvegardes(req, env, u, url);
       return erreur("introuvable", "Route inconnue.", 404);
     } catch (e) {

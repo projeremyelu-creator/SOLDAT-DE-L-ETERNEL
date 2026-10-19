@@ -61,8 +61,19 @@ Les règles d’accès aux données sont vérifiées par le serveur (`REGLES` da
    python3 test/essai_heberge.py  # essais automatiques (Playwright)
    python3 test/essai_v2.py       # vitrine, partage, Éliézer (fausse API Claude)
    python3 test/essai_comptes.py  # inscription, matricule, connexion, codes d’activation
+   python3 test/essai_medias.py   # médiathèque : envoi, lecture partielle, visibilité
    ```
 4. Envoyer sur `main` : Cloudflare publie.
+
+## Médiathèque
+
+Onglet « Médiathèque » : vidéos (MP4, WebM, MOV), audios (MP3, M4A, WAV), photos (JPG, PNG, WebP), PDF, Word, PowerPoint et Excel.
+
+- **Ajout** : contributeurs et administrateurs, plusieurs fichiers à la fois, avec catégorie, description et visibilité (*Public*, *Membres connectés*, *Responsables*). Les fichiers partent par morceaux de 8 Mo (reprise automatique en cas de coupure) ; une miniature est créée pour les photos et les vidéos.
+- **Lecture** : vidéo et audio dans l’application avec avance rapide (requêtes partielles), photos en grand avec précédente/suivante, PDF affiché, documents Office téléchargeables. Lien de partage WhatsApp pour les médias publics.
+- **Droits** : la visibilité est vérifiée par le serveur à chaque ouverture (`/m/…`) ; l’auteur et les administrateurs modifient ou suppriment.
+- **Stockage** : au départ dans l’espace KV (1 Go gratuit, 200 Mo par fichier). Avec R2 relié (`MEDIAS`, voir `wrangler.toml`) : 10 Go gratuits, 2 Go par fichier. Réglages facultatifs : `MEDIA_FICHIER_MAX_MO`, `MEDIA_TOTAL_MO`.
+- Les envois abandonnés sont effacés chaque nuit ; la liste des médias figure dans la sauvegarde quotidienne (pas les fichiers eux-mêmes : gardez les originaux).
 
 ## Sauvegardes
 
