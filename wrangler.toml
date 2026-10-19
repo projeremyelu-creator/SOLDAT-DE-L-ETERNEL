@@ -1,5 +1,5 @@
 # S.D.E. DIGITAL — configuration Cloudflare
-name = "sde-digital"
+name = "sde"
 main = "src/worker.js"
 compatibility_date = "2026-10-01"
 workers_dev = true

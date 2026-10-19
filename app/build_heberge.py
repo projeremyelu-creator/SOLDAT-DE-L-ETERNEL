@@ -47,6 +47,8 @@ tete = f'''<link rel="manifest" href="/manifest.webmanifest">
 '''
 i = html.index("</title>") + len("</title>")
 html = html[:i] + "\n" + tete + html[i:]
+# Squelette de document : Claude l'ajoute à la publication, ici il faut l'écrire (encodage UTF-8 indispensable pour les accents)
+html = '<!doctype html>\n<html lang="fr">\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n' + html
 PUB.mkdir(exist_ok=True)
 (PUB / "index.html").write_text(html)
 
