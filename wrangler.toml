@@ -1,4 +1,4 @@
-# S.D.E. DIGITAL — configuration Cloudflare
+# MPA SDE — configuration Cloudflare
 name = "sde"
 main = "src/worker.js"
 compatibility_date = "2026-10-01"

@@ -15,7 +15,7 @@
     const email = champ("cx-email", "Adresse e-mail", inp("cx-email", "email", CNX.email, 'type="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" required' + (m !== "inscription" ? " autofocus" : "")), { req: true });
     let corps;
     if (m === "connexion") corps = `${email}${champMdp("cx-mdp", "Mot de passe", "current-password")}${voirMdp}
-      <p class="hint">Mot de passe oublié ? Un responsable vous donne un code pour en choisir un nouveau, à saisir dans « J’ai un code ».${telContact() ? ` <a class="link" href="${esc(lienWa(telContact(), "Shalom ! J’ai oublié mon mot de passe S.D.E. DIGITAL. Mon adresse e-mail : "))}" target="_blank" rel="noopener">Le demander par WhatsApp</a>` : ""}</p>${pied("Se connecter")}`;
+      <p class="hint">Mot de passe oublié ? Un responsable vous donne un code pour en choisir un nouveau, à saisir dans « J’ai un code ».${telContact() ? ` <a class="link" href="${esc(lienWa(telContact(), "Shalom ! J’ai oublié mon mot de passe MPA SDE. Mon adresse e-mail : "))}" target="_blank" rel="noopener">Le demander par WhatsApp</a>` : ""}</p>${pied("Se connecter")}`;
     else if (m === "inscription") corps = `<p class="hint" style="margin-top:0">Votre compte s’ouvre aussitôt et vous recevez votre <b>matricule à 6 chiffres</b>, votre carte de membre et votre espace soldat.</p>
       <div class="f2">${champ("ci-prenoms", "Prénoms", inp("ci-prenoms", "prenoms", "", 'autocomplete="given-name" required autofocus maxlength="80"'), { req: true })}${champ("ci-nom", "Nom", inp("ci-nom", "nom", "", 'autocomplete="family-name" required maxlength="80"'), { req: true })}</div>
       ${champ("ci-tel", "Téléphone (WhatsApp)", inp("ci-tel", "telephone", "", 'type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="07 00 00 00 00"'))}
@@ -173,7 +173,7 @@
     dernier.sheet = null; render();
   }
   function messageActivation(c) {
-    return `Shalom${c.nom ? " " + c.nom.split(/\s+/)[0] : ""} !\n\nTon accès à S.D.E. DIGITAL est prêt.\n1. Ouvre ${URL_APP_H}\n2. Touche le cadenas, puis « J’ai un code »\n3. Saisis ton adresse ${c.email}, le code ${c.code} et choisis ton mot de passe.\n\nLe code est valable 14 jours et ne sert qu’une fois.\n— ${cfg().nomCourt}`;
+    return `Shalom${c.nom ? " " + c.nom.split(/\s+/)[0] : ""} !\n\nTon accès à MPA SDE est prêt.\n1. Ouvre ${URL_APP_H}\n2. Touche le cadenas, puis « J’ai un code »\n3. Saisis ton adresse ${c.email}, le code ${c.code} et choisis ton mot de passe.\n\nLe code est valable 14 jours et ne sert qu’une fois.\n— ${cfg().nomCourt}`;
   }
   function ficheComptes() {
     const m = moiH();

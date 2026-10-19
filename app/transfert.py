@@ -12,5 +12,5 @@ for f in sorted(racine.rglob("*.json")):
         d = json.loads(f.read_text())
         if isinstance(d, dict):
             docs[rel] = d
-sortie.write_text(json.dumps({"application": "S.D.E. DIGITAL", "format": 1, "docs": docs}, ensure_ascii=False))
+sortie.write_text(json.dumps({"application": "MPA SDE", "format": 1, "docs": docs}, ensure_ascii=False))
 print(len(docs), "documents →", sortie)

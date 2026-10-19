@@ -1,4 +1,4 @@
-/* S.D.E. DIGITAL — serveur Cloudflare (Worker)
+/* MPA SDE — serveur Cloudflare (Worker)
    Sert l'application, garde les données dans D1, les fichiers dans KV,
    et reconnaît chacun par son adresse e-mail et son mot de passe.
    Les règles d'accès reprennent exactement celles de la version Claude. */
@@ -490,7 +490,7 @@ async function apiIA(req, env, u) {
     model: rapide ? (env.IA_MODELE_RAPIDE || "claude-haiku-5-5") : (env.IA_MODELE || "claude-sonnet-5-5"),
     max_tokens: rapide ? 2000 : 4096,
     stream: true,
-    system: "Tu es Éliézer, l’assistant de l’application S.D.E. DIGITAL du Mouvement Prophético-Apostolique Soldats de l’Éternel. Suis les consignes données dans la conversation.",
+    system: "Tu es Éliézer, l’assistant de l’application MPA SDE du Mouvement Prophético-Apostolique Soldats de l’Éternel. Suis les consignes données dans la conversation.",
     messages,
     ...(outils.length ? { tools: outils } : {}),
   };
@@ -611,7 +611,7 @@ async function servirMedia(req, env, u, id) {
   if (!ID_MEDIA.test(id || "")) return new Response("Introuvable", { status: 404 });
   const m = await env.DB.prepare("SELECT * FROM medias WHERE id = ? AND fini = 1").bind(id).first();
   if (!m) return new Response("Ce média n’existe plus.", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });
-  if (!mediaVisible(u, m)) return new Response("Connectez-vous à S.D.E. DIGITAL pour ouvrir ce média.", { status: 403, headers: { "content-type": "text/plain; charset=utf-8" } });
+  if (!mediaVisible(u, m)) return new Response("Connectez-vous à MPA SDE pour ouvrir ce média.", { status: 403, headers: { "content-type": "text/plain; charset=utf-8" } });
   let debut = 0, fin = m.taille - 1, partiel = false;
   const r = /^bytes=(\d*)-(\d*)$/.exec(req.headers.get("range") || "");
   if (r && (r[1] !== "" || r[2] !== "")) {
@@ -656,7 +656,7 @@ async function sauvegarder(env) {
   const comptes = (await env.DB.prepare("SELECT email, id, nom, role, cree, derniere, membreId, matricule FROM comptes").all()).results || [];
   const medias = (await env.DB.prepare("SELECT id, titre, description, categorie, genre, nom, mime, taille, stockage, visibilite, auteur, auteurNom, cree FROM medias WHERE fini = 1").all()).results || [];
   const jour = new Date().toISOString().slice(0, 10);
-  const corps = JSON.stringify({ version: 1, date: jour, application: "S.D.E. DIGITAL", docs: Object.fromEntries(docs.map((d) => [d.path, JSON.parse(d.data)])), comptes, medias });
+  const corps = JSON.stringify({ version: 1, date: jour, application: "MPA SDE", docs: Object.fromEntries(docs.map((d) => [d.path, JSON.parse(d.data)])), comptes, medias });
   await env.FICHIERS.put("sauvegarde:" + jour, corps, { expirationTtl: 35 * 86400, metadata: { type: "application/json", taille: corps.length, documents: docs.length, comptes: comptes.length, faite: Date.now() } });
   return { jour, documents: docs.length, taille: corps.length };
 }

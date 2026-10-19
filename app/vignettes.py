@@ -94,5 +94,5 @@ def vignette(nom, sur_titre, titre, sous_titre, verset, ref, pied):
 
 vignette("og-sde.png", "MOUVEMENT PROPHÉTICO-APOSTOLIQUE", "SOLDATS DE L’ÉTERNEL", "Réveiller · Restaurer · Former · Équiper · Envoyer",
          "Esprit, viens des quatre vents, souffle sur ces morts, et qu’ils revivent !", "Ézéchiel 37.9", "mouvement-sde.org")
-vignette("og-app.png", "SOLDATS DE L’ÉTERNEL", "S.D.E. DIGITAL", "Poste de commandement du mouvement",
+vignette("og-app.png", "SOLDATS DE L’ÉTERNEL", "MPA SDE", "Poste de commandement du mouvement",
          "Et l’esprit entra en eux, et ils reprirent vie, et ils se tinrent sur leurs pieds : c’était une armée nombreuse, très nombreuse.", "Ézéchiel 37.10", "app.mouvement-sde.org")

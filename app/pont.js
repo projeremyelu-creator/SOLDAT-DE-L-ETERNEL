@@ -1,4 +1,4 @@
-/* Pont S.D.E. DIGITAL : fournit à l'application la même interface que dans Claude
+/* Pont MPA SDE : fournit à l'application la même interface que dans Claude
    (window.claude.use("db" | "user" | "downloads" | "assets")), branchée sur le serveur Cloudflare. */
 (function () {
   "use strict";

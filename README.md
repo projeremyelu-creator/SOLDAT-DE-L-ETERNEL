@@ -1,4 +1,4 @@
-# S.D.E. DIGITAL
+# MPA SDE
 
 Application de gestion du **Mouvement Prophético-Apostolique Soldats de l’Éternel** (S.D.E.), Abidjan.
 Texte fondateur : Ézéchiel 37.

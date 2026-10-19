@@ -627,7 +627,7 @@ button.b-contour { background: transparent; }
       <div class="tete-section">
         <p class="surtitre">Espace membre</p>
         <h2 id="titre-membres">Votre espace soldat</h2>
-        <p class="chapo">Votre espace se trouve dans S.D.E. DIGITAL, l’application du mouvement. Créez votre compte avec votre adresse e-mail et un mot de passe : votre matricule à 6 chiffres vous est attribué aussitôt, sans attente.</p>
+        <p class="chapo">Votre espace se trouve dans MPA SDE, l’application du mouvement. Créez votre compte avec votre adresse e-mail et un mot de passe : votre matricule à 6 chiffres vous est attribué aussitôt, sans attente.</p>
       </div>
       <div class="acces">
         <div class="carte-acces">
@@ -806,7 +806,7 @@ button.b-contour { background: transparent; }
   const RDV = { infire: INFIRE };
   document.addEventListener("click", (ev) => { const b = ev.target.closest("[data-ics]"); if (b && RDV[b.dataset.ics]) ics(RDV[b.dataset.ics]); });
 
-  /* Agenda public, lu en direct dans S.D.E. DIGITAL */
+  /* Agenda public, lu en direct dans MPA SDE */
   const MOIS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
   const JOURS = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
   const echap = (t) => String(t || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);

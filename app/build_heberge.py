@@ -1,4 +1,4 @@
-"""Construit la version hébergée (Cloudflare) de S.D.E. DIGITAL à partir de la version Claude.
+"""Construit la version hébergée (Cloudflare) de MPA SDE à partir de la version Claude.
 
 Usage : python3 app/build_heberge.py <chemin de sde-gestion.html>
 Produit public/index.html, public/sw.js, public/manifest.webmanifest et les icônes.
@@ -23,6 +23,8 @@ def rep(a, b, n=1):
     js = js.replace(a, b)
 
 js = js.replace(ANCIEN, URL_APP)
+# Nom de l’application : MPA SDE
+js = js.replace("S.D.E. DIGITAL", "MPA SDE")
 rep("  /* ════════════════════════ Démarrage", (APP / "m9_heberge.js").read_text() + (APP / "m10_mediatheque.js").read_text() + "\n  /* ════════════════════════ Démarrage")
 # Médiathèque : nouvel onglet après l’Arsenal
 rep('    { id: "arsenal", ico: "i-shelf", court: "Arsenal", long: "Arsenal", desc: "Médias et bibliothèque" },\n', '    { id: "arsenal", ico: "i-shelf", court: "Arsenal", long: "Arsenal", desc: "Médias et bibliothèque" },\n    { id: "mediatheque", ico: "i-play", court: "Médias", long: "Médiathèque", desc: "Vidéos, audios, photos et documents" },\n')
@@ -46,6 +48,7 @@ js = js.replace("<b>Ajouter à l’écran d’accueil</b> (ou <b>Installer l’a
 
 pont = (APP / "pont.js").read_text()
 html = src[:debut] + js + src[fin:]
+html = html.replace("<title>S.D.E. DIGITAL</title>", "<title>MPA SDE</title>")
 tete = f'''<link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#0f1e3d">
 <meta name="description" content="Application de gestion du Mouvement Prophético-Apostolique Soldats de l’Éternel.">
@@ -56,7 +59,7 @@ tete = f'''<link rel="manifest" href="/manifest.webmanifest">
 <meta property="og:site_name" content="Soldats de l’Éternel">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:url" content="https://app.mouvement-sde.org/">
-<meta property="og:title" content="S.D.E. DIGITAL · Poste de commandement">
+<meta property="og:title" content="MPA SDE · Poste de commandement">
 <meta property="og:description" content="Agenda, annonces et espace soldat du Mouvement Prophético-Apostolique Soldats de l’Éternel.">
 <meta property="og:image" content="https://app.mouvement-sde.org/og-app.png">
 <meta property="og:image:width" content="1200">
@@ -85,7 +88,7 @@ for t in (192, 512):
     fond.alpha_composite(l, ((t - l.width) // 2, (t - l.height) // 2))
     fond.convert("RGB").save(PUB / f"icone-{t}.png", optimize=True)
 (PUB / "manifest.webmanifest").write_text(json.dumps({
-    "name": "S.D.E. DIGITAL", "short_name": "S.D.E.", "lang": "fr", "start_url": "/", "scope": "/", "display": "standalone",
+    "name": "MPA SDE", "short_name": "MPA SDE", "lang": "fr", "start_url": "/", "scope": "/", "display": "standalone",
     "background_color": "#0f1e3d", "theme_color": "#0f1e3d",
     "description": "Gestion du Mouvement Prophético-Apostolique Soldats de l’Éternel",
     "icons": [{"src": "/icone-192.png", "sizes": "192x192", "type": "image/png"}, {"src": "/icone-512.png", "sizes": "512x512", "type": "image/png"}, {"src": "/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}],
