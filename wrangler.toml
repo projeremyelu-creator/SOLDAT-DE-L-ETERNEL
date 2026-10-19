@@ -27,7 +27,7 @@ id = "d6c94ba3274f47718a4cacbcab96e5a3"
 # Comptes Google propriétaires (tous les droits, ne peuvent pas être retirés depuis l'application)
 PROPRIETAIRES = "infosoldat@gmail.com, projeremyelu@gmail.com"
 # Identifiant client Google (public) pour le bouton « Se connecter avec Google »
-GOOGLE_CLIENT_ID = ""
+GOOGLE_CLIENT_ID = "595872057692-v8if1cd3ilqsvipc68dbnbaoq6hj66fs.apps.googleusercontent.com"
 
 [observability]
 enabled = true
