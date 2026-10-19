@@ -47,4 +47,4 @@ Les règles d’accès aux données sont vérifiées par le serveur (`REGLES` da
 ## Sauvegardes
 
 - Dans l’application : « Sauvegarde Excel » (Espace direction) chaque mois.
-- Base complète : Cloudflare › D1 › `sde-digital` › Time Travel permet de revenir à n’importe quel instant des 30 derniers jours.
+- Base complète : Cloudflare › D1 › `sde-digital` › Time Travel permet de revenir à n’importe quel instant des 7 derniers jours (offre gratuite).
