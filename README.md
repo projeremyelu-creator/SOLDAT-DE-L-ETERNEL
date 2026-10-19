@@ -14,7 +14,7 @@ En ligne :
 | `public/` | Cloudflare (fichiers statiques) | L’application telle que la voient les utilisateurs |
 | `public/vitrine/` | Cloudflare | Le site vitrine (page unique, modifiable directement) |
 | `public/og-*.png` | Cloudflare | Vignettes de partage WhatsApp/Facebook (`python3 app/vignettes.py`) |
-| `src/worker.js` | Cloudflare Worker | API des données, connexion Google, fichiers, règles d’accès |
+| `src/worker.js` | Cloudflare Worker | API des données, comptes (e-mail + mot de passe), fichiers, règles d’accès |
 | Base `sde-digital` | Cloudflare D1 | Toutes les données (membres, agenda, caisse, projets…) |
 | Espace `sde-fichiers` | Cloudflare KV | Photos et fichiers |
 | `source/` | Ici | Code source de l’application et ses tests |
@@ -24,12 +24,14 @@ Chaque envoi sur la branche `main` est publié automatiquement par Cloudflare en
 
 ## Accès
 
-- **Visiteurs et soldats** : agenda, annonces, et « Mon espace » avec leur code personnel. Aucun compte nécessaire.
-- **Responsables** : bouton « Se connecter avec Google ». Le rôle est donné par un administrateur dans « Mon compte › Comptes et accès » :
+- **Visiteurs** : agenda, annonces, site vitrine.
+- **Soldats** : « Créer mon compte » avec adresse e-mail et mot de passe. Le compte s’ouvre aussitôt (rôle *Soldat*), une fiche est ajoutée au registre avec un **matricule aléatoire à 6 chiffres**, et l’espace soldat s’affiche : carte de membre, présences, cotisations, requête de prière. Un ancien membre (matricule SDE-CI-…) crée son compte, puis un administrateur le relie à sa fiche dans « Comptes et accès » : il garde son matricule et la fiche automatique est retirée.
+- **Responsables** : un administrateur ajoute leur adresse avec un rôle ; un **code d’activation** (valable 14 jours, à usage unique) s’affiche, à transmettre par WhatsApp. Ils le saisissent dans « J’ai un code » et choisissent leur mot de passe. Mot de passe oublié : « Nouveau code » dans « Comptes et accès ».
   - *Contributeur* : registre, agenda, pointage, Porte-Voix, sans les finances ;
-  - *Administrateur* : tout, finances comprises ;
+  - *Administrateur* : tout, finances comprises (nommé par le propriétaire) ;
   - *Lecture seule* ; *En attente* (aucun accès interne).
-- **Propriétaires** (variable `PROPRIETAIRES` dans `wrangler.toml`) : tous les droits.
+- **Propriétaires** (variable `PROPRIETAIRES` dans `wrangler.toml`) : tous les droits ; leur adresse ne peut pas servir à une inscription libre.
+- **Sécurité** : mots de passe hachés (PBKDF2-SHA256, sel propre à chacun), sessions de 30 jours en cookie protégé, 8 essais manqués bloquent l’adresse un quart d’heure. Le résumé de chaque compte (présences, cotisations) est publié par l’application d’un administrateur (`espace_membre/`), lisible seulement par la personne concernée.
 
 Les règles d’accès aux données sont vérifiées par le serveur (`REGLES` dans `src/worker.js`), pas seulement par l’écran.
 
@@ -58,6 +60,7 @@ Les règles d’accès aux données sont vérifiées par le serveur (`REGLES` da
    node test/serveur.mjs          # http://localhost:8787
    python3 test/essai_heberge.py  # essais automatiques (Playwright)
    python3 test/essai_v2.py       # vitrine, partage, Éliézer (fausse API Claude)
+   python3 test/essai_comptes.py  # inscription, matricule, connexion, codes d’activation
    ```
 4. Envoyer sur `main` : Cloudflare publie.
 

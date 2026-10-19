@@ -26,8 +26,8 @@ js = js.replace(ANCIEN, URL_APP)
 rep("  /* ════════════════════════ Démarrage", (APP / "m9_heberge.js").read_text() + "\n  /* ════════════════════════ Démarrage")
 rep('''    else if (S.etat === "pret" && S.peutEcrire === false) html = `<div class="banner info"><span>Accès en lecture : vous consultez l’agenda, les annonces et l’Arsenal.</span></div>`;''',
     '''    else if (S.etat === "pret" && S.peutEcrire === false) html = moiH().connecte
-      ? `<div class="banner info"><span>${moiH().role === "attente" ? `Bienvenue ${esc(moiH().nom || moiH().email)} : votre compte attend qu’un administrateur vous attribue un rôle.` : "Accès en lecture : agenda, annonces et espace soldat."}</span></div>`
-      : `<div class="banner info"><span>Agenda, annonces et espace soldat. Responsable du mouvement ? <button class="link banner-l" type="button" data-act="connexion">Se connecter avec Google</button></span></div>`;''')
+      ? `<div class="banner info"><span>${moiH().role === "attente" ? `Bienvenue ${esc(moiH().nom || moiH().email)} : votre compte attend qu’un administrateur vous attribue un rôle.` : moiH().role === "soldat" ? `Shalom ${esc(String(moiH().nom || "").split(/\\s+/)[0])} ! Votre espace soldat, l’agenda et les annonces vous attendent.` : "Accès en lecture : agenda, annonces et espace soldat."}</span></div>`
+      : `<div class="banner info"><span>Soldat du mouvement ? <button class="link banner-l" type="button" data-act="inscription">Créez votre compte</button> et recevez votre matricule, ou <button class="link banner-l" type="button" data-act="connexion">connectez-vous</button>.</span></div>`;''')
 rep('Les données du mouvement s’affichent uniquement dans Claude, pour une personne connectée qui a accès à cette application.', 'Le serveur du mouvement ne répond pas pour le moment. Vérifiez la connexion puis rechargez la page.')
 rep('s’afficheront ici dès que l’application sera ouverte dans Claude par une personne connectée qui y a accès.', 's’afficheront ici dès que le serveur du mouvement répondra.')
 rep('.includes(o.id) ? accesRegistre() : o.id === "finances"', '.includes(o.id) ? accesRegistre() : o.id === "assistant" ? !!S.sample : o.id === "finances"')
@@ -37,6 +37,9 @@ rep("Éliézer n’est pas autorisé pour cette application. Autorisez l’accè
 rep("reconnectez-vous à Claude puis réessayez", "reconnectez-vous avec Google puis réessayez")
 rep("L’assistant n’est pas disponible ici. Il fonctionne dans Claude, pour les personnes qui ont autorisé l’application à utiliser Claude.", "Éliézer est réservé aux responsables connectés. Connectez-vous avec Google ; s’il reste indisponible, il n’est pas encore activé sur le serveur du mouvement.")
 rep("Disponible dans Claude", "Réservé aux responsables")
+# Comptes : résumé publié pour chaque compte relié à une fiche, requête de prière directe
+rep("    planifierSynchro();\n", "    planifierSynchro(); planifierSynchroComptes();\n")
+rep('"Votre requête part par WhatsApp vers la direction, qui la confie aux intercesseurs."', '(moiH().membreId ? "Votre requête rejoint la Chambre Haute, où les intercesseurs prient pour vous. Confidentielle, elle part par WhatsApp vers la direction." : "Votre requête part par WhatsApp vers la direction, qui la confie aux intercesseurs.")')
 js = js.replace("<b>Ajouter à l’écran d’accueil</b> (ou <b>Installer l’application</b>)", "<b>Installer l’application</b> (ou <b>Ajouter à l’écran d’accueil</b>)")
 
 pont = (APP / "pont.js").read_text()
@@ -59,7 +62,7 @@ tete = f'''<link rel="manifest" href="/manifest.webmanifest">
 <meta property="og:image:alt" content="Logo S.D.E. et verset d’Ézéchiel 37.10">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="noindex">
-<style>.hdr-compte .hdr-ini{{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#e2c26a;color:#1a1405;font-weight:700;font-size:.8rem}} .gsi-w{{min-height:48px;margin:14px 0}} .banner-l{{color:inherit;font-weight:700}} .compte-h{{margin-bottom:16px}} .inp-sm{{padding:4px 8px;min-height:36px;width:auto}}</style>
+<style>.hdr-compte .hdr-ini{{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#e2c26a;color:#1a1405;font-weight:700;font-size:.8rem}} .gsi-w{{min-height:48px;margin:14px 0}} .banner-l{{color:inherit;font-weight:700}} .compte-h{{margin-bottom:16px}} .inp-sm{{padding:4px 8px;min-height:36px;width:auto}} .cnx-onglets{{display:flex;gap:4px;padding:4px;border-radius:999px;background:var(--surface-2,rgba(127,127,127,.12));margin:0 0 16px}} .cnx-o{{flex:1;border:0;background:transparent;border-radius:999px;padding:10px 6px;font:inherit;font-weight:700;font-size:.9rem;color:inherit;cursor:pointer;min-height:44px}} .cnx-o.on{{background:#0f1e3d;color:#fff}} .cnx-voir{{margin:-4px 0 6px}} .esp-compte{{margin-bottom:12px}} .esp-ou{{margin:14px 0 8px}} .cpt-fiche{{margin-top:6px;max-width:100%}} .cpt-row .row-main{{min-width:0}} .cpt-code{{margin-bottom:14px}}</style>
 <script>{pont}</script>
 <script>if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {{}}));</script>
 '''

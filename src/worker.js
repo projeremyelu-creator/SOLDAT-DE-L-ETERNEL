@@ -1,11 +1,11 @@
 /* S.D.E. DIGITAL — serveur Cloudflare (Worker)
    Sert l'application, garde les données dans D1, les fichiers dans KV,
-   et reconnaît les responsables par leur compte Google.
+   et reconnaît chacun par son adresse e-mail et son mot de passe.
    Les règles d'accès reprennent exactement celles de la version Claude. */
 
 const NIVEAUX = { view: 0, interact: 1, admin: 2, owner: 3 };
-const ROLES = { attente: 0, lecture: 0, contributeur: 1, admin: 2, proprietaire: 3 };
-const LIB_ROLES = { attente: "En attente", lecture: "Lecture seule", contributeur: "Contributeur", admin: "Administrateur", proprietaire: "Propriétaire" };
+const ROLES = { attente: 0, soldat: 0, lecture: 0, contributeur: 1, admin: 2, proprietaire: 3 };
+const LIB_ROLES = { attente: "En attente", soldat: "Soldat", lecture: "Lecture seule", contributeur: "Contributeur", admin: "Administrateur", proprietaire: "Propriétaire" };
 const REGLES = [
   { path: "", read: "interact", write: "interact" },
   { path: "evenements", read: "view", write: "interact" },
@@ -22,6 +22,7 @@ const REGLES = [
   { path: "projets_fin", read: "admin", write: "admin" },
   { path: "acces", read: "admin", write: "admin" },
   { path: "espace", read: "view", write: "admin" },
+  { path: "espace_membre", read: "admin", write: "admin" },
 ];
 const SESSION_JOURS = 30;
 const SEG = /^[A-Za-z0-9_\-.~:@+]{1,200}$/;
@@ -64,41 +65,64 @@ function regle(path, action) {
 const peutLire = (u, path) => u.niveau >= regle(path, "read");
 const peutEcrire = (u, path) => u.niveau >= Math.max(1, regle(path, "write"));
 
-/* ───────── identité ───────── */
-let certsCache = { t: 0, keys: [] };
-async function clesGoogle() {
-  if (Date.now() - certsCache.t < 3600e3 && certsCache.keys.length) return certsCache.keys;
-  const r = await fetch("https://www.googleapis.com/oauth2/v3/certs");
-  const j = await r.json();
-  certsCache = { t: Date.now(), keys: j.keys || [] };
-  return certsCache.keys;
+/* ───────── identité : e-mail et mot de passe ───────── */
+const ITERATIONS = 60000;
+const EMAIL_OK = /^[^@\s]{1,64}@[^@\s]{1,190}\.[^@\s]{2,24}$/;
+const normEmail = (e) => String(e || "").trim().toLowerCase();
+async function deriverMdp(mdp, sel, iter) {
+  const cle = await crypto.subtle.importKey("raw", new TextEncoder().encode(String(mdp)), "PBKDF2", false, ["deriveBits"]);
+  return new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: sel, iterations: iter }, cle, 256));
 }
-async function verifierJetonGoogle(jwt, clientId) {
-  const [h, p, sig] = String(jwt || "").split(".");
-  if (!h || !p || !sig) throw new Error("jeton");
-  const entete = JSON.parse(new TextDecoder().decode(deB64url(h)));
-  const charge = JSON.parse(new TextDecoder().decode(deB64url(p)));
-  const jwk = (await clesGoogle()).find((k) => k.kid === entete.kid);
-  if (!jwk || entete.alg !== "RS256") throw new Error("cle");
-  const cle = await crypto.subtle.importKey("jwk", jwk, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["verify"]);
-  const ok = await crypto.subtle.verify("RSASSA-PKCS1-v1_5", cle, deB64url(sig), new TextEncoder().encode(h + "." + p));
-  if (!ok) throw new Error("signature");
-  if (!["accounts.google.com", "https://accounts.google.com"].includes(charge.iss)) throw new Error("emetteur");
-  if (charge.aud !== clientId) throw new Error("audience");
-  if (!charge.exp || charge.exp * 1000 < Date.now()) throw new Error("expire");
-  if (!charge.email || charge.email_verified === false) throw new Error("email");
-  return charge;
+async function empreinteMdp(mdp) {
+  const sel = crypto.getRandomValues(new Uint8Array(16));
+  return `pbkdf2$${ITERATIONS}$${b64url(sel)}$${b64url(await deriverMdp(mdp, sel, ITERATIONS))}`;
+}
+function egaux(a, b) { if (a.length !== b.length) return false; let d = 0; for (let i = 0; i < a.length; i += 1) d |= a[i] ^ b[i]; return d === 0; }
+async function verifierMdp(mdp, stocke) {
+  const [type, iter, sel, h] = String(stocke || "").split("$");
+  if (type !== "pbkdf2" || !sel || !h) return false;
+  return egaux(await deriverMdp(mdp, deB64url(sel), Number(iter) || ITERATIONS), deB64url(h));
+}
+const sha = async (t) => b64url(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)));
+const ALPHA_CODE = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
+function nouveauCode() { const a = crypto.getRandomValues(new Uint8Array(8)); const t = [...a].map((x) => ALPHA_CODE[x % ALPHA_CODE.length]).join(""); return t.slice(0, 4) + "-" + t.slice(4); }
+const normCode = (c) => String(c || "").toUpperCase().replace(/[^0-9A-Z]/g, "");
+const CODE_JOURS = 14;
+const empreinteCode = async (email, code) => sha("activation:" + email + ":" + normCode(code));
+function mdpValide(m) { return typeof m === "string" && m.length >= 8 && m.length <= 200; }
+
+/* Freins contre les essais répétés (par adresse et par réseau) */
+const FENETRE = 15 * 60e3;
+async function bloque(env, cle, max) {
+  const r = await env.DB.prepare("SELECT n, depuis FROM tentatives WHERE cle = ?").bind(cle).first();
+  return !!(r && r.n >= max && Date.now() - r.depuis < FENETRE);
+}
+function compter(env, cle) {
+  const t = Date.now();
+  return env.DB.prepare("INSERT INTO tentatives (cle, n, depuis) VALUES (?, 1, ?) ON CONFLICT(cle) DO UPDATE SET n = CASE WHEN ? - tentatives.depuis > ? THEN 1 ELSE tentatives.n + 1 END, depuis = CASE WHEN ? - tentatives.depuis > ? THEN ? ELSE tentatives.depuis END").bind(cle, t, t, FENETRE, t, FENETRE, t).run();
+}
+const effacer = (env, cle) => env.DB.prepare("DELETE FROM tentatives WHERE cle = ?").bind(cle).run();
+const ipDe = (req) => req.headers.get("cf-connecting-ip") || "local";
+
+async function ouvrirSession(env, email) {
+  const jeton = jetonAleatoire(), t = Date.now();
+  await env.DB.batch([
+    env.DB.prepare("DELETE FROM sessions WHERE expire < ?").bind(t),
+    env.DB.prepare("INSERT INTO sessions (jeton, email, expire) VALUES (?, ?, ?)").bind(jeton, email, t + SESSION_JOURS * 864e5),
+    env.DB.prepare("UPDATE comptes SET derniere = ? WHERE email = ?").bind(t, email),
+  ]);
+  return `sde_s=${jeton}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_JOURS * 86400}`;
 }
 const proprietaires = (env) => String(env.PROPRIETAIRES || "").toLowerCase().split(/[\s,;]+/).filter(Boolean);
 async function utilisateur(req, env) {
   const jeton = cookies(req).sde_s;
   const anonyme = { connecte: false, niveau: 0, role: "visiteur", id: null, email: null, nom: "" };
   if (!jeton) return anonyme;
-  const s = await env.DB.prepare("SELECT s.email, s.expire, c.id, c.nom, c.photo, c.role FROM sessions s LEFT JOIN comptes c ON c.email = s.email WHERE s.jeton = ?").bind(jeton).first();
+  const s = await env.DB.prepare("SELECT s.email, s.expire, c.id, c.nom, c.photo, c.role, c.membreId, c.matricule FROM sessions s LEFT JOIN comptes c ON c.email = s.email WHERE s.jeton = ?").bind(jeton).first();
   if (!s || s.expire < Date.now()) return anonyme;
   let role = s.role || "attente";
   if (proprietaires(env).includes(String(s.email).toLowerCase())) role = "proprietaire";
-  return { connecte: true, niveau: ROLES[role] ?? 0, role, id: s.id, email: s.email, nom: s.nom || "", photo: s.photo || "", jeton };
+  return { connecte: true, niveau: ROLES[role] ?? 0, role, id: s.id || (await idDeEmail(s.email)), email: s.email, nom: s.nom || "", photo: s.photo || "", membreId: s.membreId || null, matricule: s.matricule || "", jeton };
 }
 
 /* ───────── documents ───────── */
@@ -195,43 +219,170 @@ async function apiSync(req, env, u) {
   }
   return json({ res: out });
 }
-async function apiConnexion(req, env) {
-  if (!env.GOOGLE_CLIENT_ID) return erreur("indisponible", "La connexion Google n’est pas encore configurée.", 503);
+/* ───────── comptes ───────── */
+const ALPHA_ID = "abcdefghijklmnopqrstuvwxyz0123456789";
+const idDoc = () => [...crypto.getRandomValues(new Uint8Array(20))].map((x) => ALPHA_ID[x % 36]).join("");
+async function nouveauMatricule(env) {
+  for (let i = 0; i < 40; i += 1) {
+    const n = String(100000 + (crypto.getRandomValues(new Uint32Array(1))[0] % 900000));
+    const pris = await env.DB.prepare("SELECT 1 FROM comptes WHERE matricule = ? UNION SELECT 1 FROM docs WHERE parent = 'membres' AND json_extract(data, '$.matricule') = ? LIMIT 1").bind(n, n).first();
+    if (!pris) return n;
+  }
+  throw new Error("Aucun matricule libre.");
+}
+const propre = (t, n) => String(t || "").replace(/\s+/g, " ").trim().slice(0, n);
+async function apiInscription(req, env) {
+  const ip = ipDe(req);
+  if (await bloque(env, "insc:" + ip, 12)) return erreur("rate_limited", "Trop d’inscriptions depuis ce réseau : réessayez dans un quart d’heure.", 429);
   const b = await req.json();
-  let p;
-  try { p = await verifierJetonGoogle(b.credential, env.GOOGLE_CLIENT_ID); } catch (e) { return erreur("refuse", "Connexion Google refusée (" + e.message + ").", 401); }
-  const email = String(p.email).toLowerCase();
-  const id = await idDeEmail(email);
-  const maintenant = Date.now();
-  await env.DB.prepare("INSERT INTO comptes (email, id, nom, photo, role, cree, derniere) VALUES (?, ?, ?, ?, 'attente', ?, ?) ON CONFLICT(email) DO UPDATE SET nom = COALESCE(NULLIF(comptes.nom, ''), excluded.nom), photo = excluded.photo, derniere = excluded.derniere")
-    .bind(email, id, p.name || "", p.picture || "", maintenant, maintenant).run();
-  const jeton = jetonAleatoire();
+  const email = normEmail(b.email), prenoms = propre(b.prenoms, 80), nom = propre(b.nom, 80).toUpperCase(), telephone = propre(b.telephone, 30);
+  if (!EMAIL_OK.test(email)) return erreur("invalid_argument", "Adresse e-mail invalide.");
+  if (!prenoms || !nom) return erreur("invalid_argument", "Indiquez votre nom et vos prénoms.");
+  if (!mdpValide(b.motDePasse)) return erreur("invalid_argument", "Le mot de passe doit compter au moins 8 caractères.");
+  if (telephone && telephone.replace(/\D/g, "").length < 8) return erreur("invalid_argument", "Numéro de téléphone invalide.");
+  const existe = await env.DB.prepare("SELECT email FROM comptes WHERE email = ?").bind(email).first();
+  if (existe || proprietaires(env).includes(email)) return erreur("existe", "Un compte existe déjà avec cette adresse. Connectez-vous, ou utilisez le code d’activation reçu du secrétariat.", 409);
+  await compter(env, "insc:" + ip);
+  const id = await idDeEmail(email), t = Date.now(), membreId = idDoc(), matricule = await nouveauMatricule(env);
+  const fiche = { nom, prenoms, telephone, telephone2: "", email, matricule, statut: "Nouveau venu", actif: true, adhesion: new Date(t).toISOString().slice(0, 10), source: "inscription", compteId: id, creeLe: t, creePar: id, modifieLe: t, modifiePar: id };
+  try {
+    await env.DB.batch([
+      env.DB.prepare("INSERT INTO comptes (email, id, nom, role, cree, derniere, mdp, membreId, matricule) VALUES (?, ?, ?, 'soldat', ?, ?, ?, ?, ?)").bind(email, id, prenoms + " " + nom, t, t, await empreinteMdp(b.motDePasse), membreId, matricule),
+      env.DB.prepare("INSERT INTO docs (path, parent, id, data, version, maj) VALUES (?, 'membres', ?, ?, 1, ?)").bind("membres/" + membreId, membreId, JSON.stringify(fiche), t),
+      bumpRev(env, "membres"),
+    ]);
+  } catch (e) { return erreur("existe", "Un compte existe déjà avec cette adresse.", 409); }
+  return json({ ok: true, matricule }, 200, { "set-cookie": await ouvrirSession(env, email) });
+}
+async function apiConnexionMdp(req, env) {
+  const b = await req.json();
+  const email = normEmail(b.email), ip = ipDe(req);
+  if (await bloque(env, "e:" + email, 8) || await bloque(env, "ip:" + ip, 40)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure avant de réessayer.", 429);
+  const c = EMAIL_OK.test(email) ? await env.DB.prepare("SELECT email, mdp, activation FROM comptes WHERE email = ?").bind(email).first() : null;
+  if (!c || !c.mdp || !(await verifierMdp(b.motDePasse, c.mdp))) {
+    await compter(env, "e:" + email); await compter(env, "ip:" + ip);
+    if (c && !c.mdp && c.activation) return erreur("activation", "Ce compte n’est pas encore activé : choisissez « J’ai un code d’activation ».", 401);
+    return erreur("refuse", "Adresse e-mail ou mot de passe incorrect.", 401);
+  }
+  await effacer(env, "e:" + email);
+  return json({ ok: true }, 200, { "set-cookie": await ouvrirSession(env, email) });
+}
+async function apiActivation(req, env) {
+  const b = await req.json();
+  const email = normEmail(b.email), ip = ipDe(req);
+  if (await bloque(env, "e:" + email, 8) || await bloque(env, "ip:" + ip, 40)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure avant de réessayer.", 429);
+  if (!mdpValide(b.motDePasse)) return erreur("invalid_argument", "Le mot de passe doit compter au moins 8 caractères.");
+  const c = EMAIL_OK.test(email) ? await env.DB.prepare("SELECT email, activation FROM comptes WHERE email = ?").bind(email).first() : null;
+  const [h, exp] = String((c && c.activation) || "").split("|");
+  if (!c || !h || Number(exp) < Date.now() || h !== (await empreinteCode(email, b.code))) {
+    await compter(env, "e:" + email); await compter(env, "ip:" + ip);
+    return erreur("refuse", "Adresse ou code d’activation incorrect, ou code expiré : demandez-en un nouveau au secrétariat.", 401);
+  }
+  await env.DB.prepare("UPDATE comptes SET mdp = ?, activation = NULL WHERE email = ?").bind(await empreinteMdp(b.motDePasse), email).run();
+  await effacer(env, "e:" + email);
+  return json({ ok: true }, 200, { "set-cookie": await ouvrirSession(env, email) });
+}
+async function apiMotDePasse(req, env, u) {
+  if (!u.connecte) return erreur("refuse", "Connectez-vous d’abord.", 401);
+  const b = await req.json();
+  if (!mdpValide(b.nouveau)) return erreur("invalid_argument", "Le nouveau mot de passe doit compter au moins 8 caractères.");
+  if (await bloque(env, "e:" + u.email, 8)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure.", 429);
+  const c = await env.DB.prepare("SELECT mdp FROM comptes WHERE email = ?").bind(u.email).first();
+  if (c && c.mdp && !(await verifierMdp(b.ancien, c.mdp))) { await compter(env, "e:" + u.email); return erreur("refuse", "Mot de passe actuel incorrect.", 401); }
   await env.DB.batch([
-    env.DB.prepare("DELETE FROM sessions WHERE expire < ?").bind(maintenant),
-    env.DB.prepare("INSERT INTO sessions (jeton, email, expire) VALUES (?, ?, ?)").bind(jeton, email, maintenant + SESSION_JOURS * 864e5),
+    env.DB.prepare("UPDATE comptes SET mdp = ? WHERE email = ?").bind(await empreinteMdp(b.nouveau), u.email),
+    env.DB.prepare("DELETE FROM sessions WHERE email = ? AND jeton <> ?").bind(u.email, u.jeton),
   ]);
-  return json({ ok: true }, 200, { "set-cookie": `sde_s=${jeton}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_JOURS * 86400}` });
+  return json({ ok: true });
+}
+async function poserCode(env, email) {
+  const code = nouveauCode();
+  await env.DB.prepare("UPDATE comptes SET activation = ? WHERE email = ?").bind((await empreinteCode(email, code)) + "|" + (Date.now() + CODE_JOURS * 864e5), email).run();
+  return code;
 }
 async function apiComptes(req, env, u) {
   if (u.niveau < 2) return erreur("refuse", "Réservé aux administrateurs.", 403);
+  const props = proprietaires(env);
   if (req.method === "GET") {
-    const r = await env.DB.prepare("SELECT email, id, nom, role, cree, derniere FROM comptes ORDER BY derniere DESC").all();
-    const props = proprietaires(env);
-    return json({ comptes: (r.results || []).map((c) => ({ ...c, role: props.includes(c.email) ? "proprietaire" : c.role })), roles: LIB_ROLES, proprietaires: props });
+    const r = await env.DB.prepare("SELECT email, id, nom, role, cree, derniere, membreId, matricule, mdp IS NOT NULL AS actif, activation IS NOT NULL AS aActiver FROM comptes ORDER BY derniere DESC").all();
+    return json({ comptes: (r.results || []).map((c) => ({ ...c, actif: !!c.actif, aActiver: !!c.aActiver, role: props.includes(c.email) ? "proprietaire" : c.role })), roles: LIB_ROLES, proprietaires: props });
   }
   const b = await req.json();
-  const email = String(b.email || "").trim().toLowerCase();
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return erreur("invalid_argument", "Adresse e-mail invalide.");
-  if (proprietaires(env).includes(email)) return erreur("refuse", "Le compte propriétaire ne peut pas être modifié ici.", 403);
+  const email = normEmail(b.email);
+  if (!EMAIL_OK.test(email)) return erreur("invalid_argument", "Adresse e-mail invalide.");
+  const cible = await env.DB.prepare("SELECT * FROM comptes WHERE email = ?").bind(email).first();
+  const roleCible = props.includes(email) ? "proprietaire" : cible ? cible.role : null;
+  if (roleCible === "proprietaire" && !(u.niveau >= 3 && b.reinitialiser && email === u.email)) return erreur("refuse", "Le compte propriétaire ne peut pas être modifié ici.", 403);
+  if (roleCible === "admin" && u.niveau < 3) return erreur("refuse", "Seul le propriétaire modifie un administrateur.", 403);
   if (b.supprimer) {
     await env.DB.batch([env.DB.prepare("DELETE FROM comptes WHERE email = ?").bind(email), env.DB.prepare("DELETE FROM sessions WHERE email = ?").bind(email)]);
     return json({ ok: true });
   }
+  if (b.reinitialiser) {
+    if (!cible) return erreur("invalid_argument", "Compte introuvable.");
+    await env.DB.batch([env.DB.prepare("UPDATE comptes SET mdp = NULL WHERE email = ?").bind(email), env.DB.prepare("DELETE FROM sessions WHERE email = ?").bind(email)]);
+    return json({ ok: true, code: await poserCode(env, email) });
+  }
+  if (b.membreId !== undefined) {
+    if (!cible) return erreur("invalid_argument", "Compte introuvable.");
+    const mid = String(b.membreId || "");
+    if (!mid) { await env.DB.prepare("UPDATE comptes SET membreId = NULL, matricule = NULL WHERE email = ?").bind(email).run(); return json({ ok: true }); }
+    if (!cheminValide("membres/" + mid, true)) return erreur("invalid_argument", "Fiche invalide.");
+    const f = await lireDoc(env, "membres/" + mid);
+    if (!f) return erreur("invalid_argument", "Fiche introuvable.");
+    const deja = await env.DB.prepare("SELECT email FROM comptes WHERE membreId = ? AND email <> ?").bind(mid, email).first();
+    if (deja) return erreur("invalid_argument", "Cette fiche est déjà reliée au compte " + deja.email + ".");
+    let matricule = f.data.matricule || "";
+    if (!matricule) { matricule = await nouveauMatricule(env); }
+    await ecrireDoc(env, "update", "membres/" + mid, { matricule, compteId: cible.id, ...(f.data.email ? {} : { email }), modifieLe: Date.now(), modifiePar: u.id });
+    // La fiche créée automatiquement à l'inscription est retirée : la personne garde sa fiche d'origine
+    if (cible.membreId && cible.membreId !== mid) {
+      const auto = await lireDoc(env, "membres/" + cible.membreId);
+      if (auto && auto.data.source === "inscription" && auto.data.compteId === cible.id) await ecrireDoc(env, "delete", "membres/" + cible.membreId);
+    }
+    await env.DB.prepare("UPDATE comptes SET membreId = ?, matricule = ? WHERE email = ?").bind(mid, matricule, email).run();
+    return json({ ok: true, matricule });
+  }
   const role = String(b.role || "");
-  if (!["attente", "lecture", "contributeur", "admin"].includes(role)) return erreur("invalid_argument", "Rôle inconnu.");
+  if (!["attente", "soldat", "lecture", "contributeur", "admin"].includes(role)) return erreur("invalid_argument", "Rôle inconnu.");
   if (role === "admin" && u.niveau < 3) return erreur("refuse", "Seul le propriétaire nomme les administrateurs.", 403);
-  await env.DB.prepare("INSERT INTO comptes (email, id, nom, role, cree) VALUES (?, ?, ?, ?, ?) ON CONFLICT(email) DO UPDATE SET role = excluded.role, nom = COALESCE(NULLIF(excluded.nom, ''), comptes.nom)")
-    .bind(email, await idDeEmail(email), String(b.nom || "").slice(0, 120), role, Date.now()).run();
+  const nom = propre(b.nom, 120);
+  if (cible) {
+    await env.DB.prepare("UPDATE comptes SET role = ?, nom = COALESCE(NULLIF(?, ''), nom) WHERE email = ?").bind(role, nom, email).run();
+    return json({ ok: true });
+  }
+  await env.DB.prepare("INSERT INTO comptes (email, id, nom, role, cree) VALUES (?, ?, ?, ?, ?)").bind(email, await idDeEmail(email), nom, role, Date.now()).run();
+  return json({ ok: true, nouveau: true, code: await poserCode(env, email) });
+}
+
+/* ───────── espace personnel d'un compte relié à une fiche ───────── */
+const CHAMPS_FICHE = ["nom", "prenoms", "matricule", "statut", "fonction", "pole", "eglise", "garnisonId", "photoId", "anniv", "adhesion", "telephone", "email", "sexe"];
+async function apiMonEspace(env, u) {
+  if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 404);
+  const f = await lireDoc(env, "membres/" + u.membreId);
+  if (!f) return erreur("refuse", "Fiche introuvable.", 404);
+  const m = { id: u.membreId };
+  for (const k of CHAMPS_FICHE) m[k] = f.data[k] ?? "";
+  const gs = [];
+  let gid = f.data.garnisonId;
+  while (gid && gs.length < 4 && cheminValide("garnisons/" + gid, true)) {
+    const g = await lireDoc(env, "garnisons/" + gid);
+    if (!g) break;
+    gs.push({ id: gid, nom: g.data.nom || "", type: g.data.type || "", pays: g.data.pays || "", ville: g.data.ville || "", parentId: g.data.parentId || "" });
+    gid = g.data.parentId;
+  }
+  const r = await lireDoc(env, "espace_membre/" + u.membreId);
+  return json({ membre: m, garnisons: gs, resume: r ? r.data.resume || null : null, majLe: r ? r.data.majLe || null : null });
+}
+async function apiPriere(req, env, u) {
+  if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 403);
+  const b = await req.json();
+  const sujet = String(b.sujet || "").trim().slice(0, 2000);
+  if (!sujet) return erreur("invalid_argument", "Écrivez votre sujet de prière.");
+  if (await bloque(env, "priere:" + u.email, 10)) return erreur("rate_limited", "Vous avez déposé beaucoup de requêtes : réessayez un peu plus tard.", 429);
+  await compter(env, "priere:" + u.email);
+  const t = Date.now();
+  await ecrireDoc(env, "set", "prieres/" + idDoc(), { sujet: sujet.slice(0, 140), details: sujet.length > 140 ? sujet : "", categorie: "Personnelle", date: new Date(t).toISOString().slice(0, 10), pourId: u.membreId, pour: "", urgent: false, statut: "En prière", priants: {}, source: "espace", creePar: u.id, creeLe: t, modifiePar: u.id, modifieLe: t });
   return json({ ok: true });
 }
 async function apiProfils(req, env) {
@@ -373,13 +524,18 @@ export default {
     }
     try {
       const u = await utilisateur(req, env);
-      if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, clientId: env.GOOGLE_CLIENT_ID || "", ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
+      if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
+      if (p === "/api/inscription" && req.method === "POST") return apiInscription(req, env);
+      if (p === "/api/connexion" && req.method === "POST") return apiConnexionMdp(req, env);
+      if (p === "/api/activation" && req.method === "POST") return apiActivation(req, env);
+      if (p === "/api/mot-de-passe" && req.method === "POST") return apiMotDePasse(req, env, u);
+      if (p === "/api/mon-espace") return apiMonEspace(env, u);
+      if (p === "/api/priere" && req.method === "POST") return apiPriere(req, env, u);
       if (p === "/api/public") return apiPublic(env);
       if (p === "/api/ia" && req.method === "POST") return apiIA(req, env, u);
       if (p === "/api/db" && req.method === "POST") return apiDb(req, env, u);
       if (p === "/api/sync" && req.method === "POST") return apiSync(req, env, u);
       if (p === "/api/profils" && req.method === "POST") return apiProfils(req, env);
-      if (p === "/api/connexion" && req.method === "POST") return apiConnexion(req, env);
       if (p === "/api/deconnexion" && req.method === "POST") {
         if (u.jeton) await env.DB.prepare("DELETE FROM sessions WHERE jeton = ?").bind(u.jeton).run();
         return json({ ok: true }, 200, { "set-cookie": "sde_s=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0" });

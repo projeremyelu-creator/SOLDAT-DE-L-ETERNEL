@@ -2,7 +2,7 @@
    (window.claude.use("db" | "user" | "downloads" | "assets")), branchée sur le serveur Cloudflare. */
 (function () {
   "use strict";
-  const MOI = { connecte: false, id: null, nom: "", email: null, role: "visiteur", libRole: "Visiteur", niveau: 0, clientId: "" };
+  const MOI = { connecte: false, id: null, nom: "", email: null, role: "visiteur", libRole: "Visiteur", niveau: 0, membreId: null, matricule: "" };
   const pret = fetch("/api/moi", { credentials: "same-origin", cache: "no-store" })
     .then((r) => r.json()).then((m) => Object.assign(MOI, m)).catch(() => MOI);
   const segs = (p) => String(p).split("/").filter(Boolean);
@@ -190,7 +190,12 @@
 
   window.SDE = {
     moi: MOI, pret,
-    async connexion(credential) { await appel("/api/connexion", { credential }); location.reload(); },
+    connexion: (email, motDePasse) => appel("/api/connexion", { email, motDePasse }),
+    inscription: (o) => appel("/api/inscription", o),
+    activation: (o) => appel("/api/activation", o),
+    motDePasse: (o) => appel("/api/mot-de-passe", o),
+    priere: (o) => appel("/api/priere", o),
+    monEspace: async () => { const r = await fetch("/api/mon-espace", { credentials: "same-origin", cache: "no-store" }); const j = await r.json().catch(() => ({})); if (!r.ok) throw echec(j.erreur || "unavailable", j.message); return j; },
     async deconnexion() { try { await appel("/api/deconnexion", {}); } catch (e) { /* déjà déconnecté */ } location.reload(); },
     comptes: async () => { const r = await fetch("/api/comptes", { credentials: "same-origin" }); const j = await r.json(); if (!r.ok) throw echec(j.erreur, j.message); return j; },
     majCompte: (o) => appel("/api/comptes", o),

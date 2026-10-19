@@ -40,10 +40,10 @@ try:
         # Visiteur
         ctx, p = ctx_pour(b)
         t = txt(p)
-        verif("Se connecter avec Google" in t and p.locator('#nav [data-vue="espace"]').count() == 1 and p.locator('#nav [data-vue="membres"]').count() == 0, "visiteur : bannière de connexion, Mon espace, pas de registre")
+        verif("Créez votre compte" in t and p.locator('#nav [data-vue="espace"]').count() == 1 and p.locator('#nav [data-vue="membres"]').count() == 0, "visiteur : bannière de connexion, Mon espace, pas de registre")
         p.screenshot(path=str(OUT / "01-visiteur.png"), full_page=True)
         p.click('.banner [data-act="connexion"]'); p.wait_for_timeout(800)
-        verif("CONNEXION DES RESPONSABLES" in txt(p, "#sheet").upper(), "feuille de connexion Google")
+        verif("MOT DE PASSE" in txt(p, "#sheet").upper(), "feuille de connexion par e-mail")
         ctx.close()
         # Propriétaire : transfert des données
         ctx, p = ctx_pour(b, "tok-owner", 1280)
