@@ -62,8 +62,18 @@ Les règles d’accès aux données sont vérifiées par le serveur (`REGLES` da
    python3 test/essai_v2.py       # vitrine, partage, Éliézer (fausse API Claude)
    python3 test/essai_comptes.py  # inscription, matricule, connexion, codes d’activation
    python3 test/essai_medias.py   # médiathèque : envoi, lecture partielle, visibilité
+   python3 test/essai_veille.py   # veille pastorale : voyants cliquables, tendances, dimensions
    ```
 4. Envoyer sur `main` : Cloudflare publie.
+
+## Veille pastorale
+
+Registre des membres › *Voyants* (direction seulement ; les données `suivi/` ne sont jamais lues par les autres rôles).
+
+- Quatre voyants calculés (implication, assiduité, cotisations, discipline) et des voyants d’observation pastorale : santé physique, moral et émotionnel, vie spirituelle, situation financière, vie professionnelle ou études, famille et couple, relations et intégration.
+- Cinq niveaux : Au vert, Fragile, Difficile, Critique, Non évalué. **Un toucher sur un voyant** (tableau ou fiche) ouvre le choix du niveau, enregistré aussitôt avec l’observation ; une flèche indique l’évolution depuis l’évaluation précédente, l’historique s’affiche par dimension.
+- Résumé par état, compteur de difficultés par dimension (cliquable pour filtrer), recherche, suivis à échéance.
+- *Dimensions suivies* : la direction ajoute, renomme ou masque des dimensions (enregistrées dans `config/general.veilleDims`).
 
 ## Médiathèque
 

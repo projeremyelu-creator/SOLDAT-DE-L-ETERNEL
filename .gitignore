@@ -2,3 +2,4 @@ node_modules/
 .wrangler/
 test/captures/
 *.db
+source/sde-gestion.html

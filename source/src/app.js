@@ -3519,8 +3519,24 @@
   /* ════════════════════════ Voyants du membre ════════════════════════ */
   /* Niveaux : 0 non évalué (gris), 1 vert, 2 jaune, 3 orange, 4 rouge. */
   const NIV_CLS = ["off", "g", "y", "o", "r"];
-  const NIV_SANTE = ["Non évaluée", "Bonne", "Fragile", "Préoccupante", "Critique"];
-  const DIM_SANTE = [["physique", "Santé physique"], ["moral", "Santé morale"], ["spirituel", "Santé spirituelle"], ["financier", "Santé financière"]];
+  const NIV_SANTE = ["Non évalué", "Au vert", "Fragile", "Difficile", "Critique"];
+  /* Dimensions de la veille pastorale : modifiables par la direction (Réglages de la veille). */
+  const COURT_VEILLE = { physique: "Physique", moral: "Moral", spirituel: "Spirituel", financier: "Finances", professionnel: "Travail", familial: "Famille", relationnel: "Relations" };
+  const DIM_VEILLE_DEFAUT = [["physique", "Santé physique"], ["moral", "Moral et émotionnel"], ["spirituel", "Vie spirituelle"], ["financier", "Situation financière"], ["professionnel", "Vie professionnelle ou études"], ["familial", "Famille et couple"], ["relationnel", "Relations et intégration"]];
+  DEFAUTS.veilleDims = DIM_VEILLE_DEFAUT.map(([k, l]) => ({ k, l, actif: true }));
+  const dimsSante = () => {
+    const c = cfg().veilleDims;
+    const l = (Array.isArray(c) ? c : []).filter((d) => d && d.k && d.l && d.actif !== false).map((d) => [String(d.k), String(d.l)]);
+    return l.length ? l : DIM_VEILLE_DEFAUT;
+  };
+  /* Tendance d’un voyant : comparaison avec l’évaluation précédente */
+  function tendance(s, k, n) {
+    if (!s || !s.historique || !n) return 0;
+    const h = Object.entries(s.historique).sort((a, b) => Number(b[0]) - Number(a[0])).map(([, x]) => Number(((x || {}).niveaux || {})[k]) || 0).filter((x) => x > 0);
+    const prec = h.length > 1 ? h[1] : 0;
+    return !prec || prec === n ? 0 : n < prec ? 1 : -1;
+  }
+  const fleche = (t) => (t > 0 ? `<span class="vy-tend up" title="En amélioration" aria-label="En amélioration">▲</span>` : t < 0 ? `<span class="vy-tend down" title="En dégradation" aria-label="En dégradation">▼</span>` : "");
   const ETAT_GLOBAL = ["Non évalué", "Au vert", "À surveiller", "Préoccupant", "Alerte"];
   const suiviDe = (mid) => (S.suivi || []).find((d) => d.id === mid) || null;
   function implication(m) {
@@ -3594,10 +3610,10 @@
     const sante = [];
     if (s || (accesDirection() && S.pret.suivi)) {
       const sv = s || {};
-      for (const [k, l] of DIM_SANTE) {
+      for (const [k, l] of dimsSante()) {
         const v = sv[k] || {};
         const n = Math.max(0, Math.min(4, Number(v.n) || 0));
-        sante.push([k, l, { n, lib: NIV_SANTE[n], detail: v.note || "" }]);
+        sante.push([k, l, { n, lib: NIV_SANTE[n], detail: v.note || "", tend: tendance(s, k, n), sante: true }]);
       }
     }
     // L’état général suit l’implication, l’assiduité, la discipline et la santé ; un retard de cotisation garde son propre voyant.
@@ -3608,8 +3624,8 @@
   }
   const led = (n, grand) => `<span class="led ${NIV_CLS[n] || "off"}${grand ? " lg" : ""}" aria-hidden="true"></span>`;
   function tuileVoyant([k, l, v], mid) {
-    const corps = `${led(v.n)}<span class="vy-x"><span class="vy-l">${esc(l)}${v.force ? `<span class="vy-f">ajusté</span>` : ""}</span><b class="vy-v">${esc(v.lib)}</b>${v.detail ? `<span class="vy-d">${esc(v.detail)}</span>` : ""}</span>`;
-    if (mid && peutAdmin() && S.pret.suivi) return `<button class="vy-t edit" type="button" data-act="evaluer-membre" data-id="${esc(mid)}" data-k="${esc(k)}" aria-label="${esc(`Modifier le voyant ${l} : ${v.lib}`)}">${corps}${I("i-edit", "ico vy-e")}</button>`;
+    const corps = `${led(v.n)}<span class="vy-x"><span class="vy-l">${esc(l)}${v.force ? `<span class="vy-f">ajusté</span>` : ""}</span><b class="vy-v">${esc(v.lib)}${fleche(v.tend)}</b>${v.detail ? `<span class="vy-d">${esc(v.detail)}</span>` : ""}</span>`;
+    if (mid && peutAdmin() && S.pret.suivi) return `<button class="vy-t edit" type="button" data-act="${v.sante ? "veille-niveau" : "evaluer-membre"}" data-id="${esc(mid)}" data-k="${esc(k)}" aria-label="${esc(`Modifier le voyant ${l} : ${v.lib}`)}">${corps}${I("i-edit", "ico vy-e")}</button>`;
     return `<div class="vy-t" data-k="${esc(k)}">${corps}</div>`;
   }
   function blocVoyants(m) {
@@ -3624,11 +3640,11 @@
     if (accesDirection()) {
       if (!S.pret.suivi) out += chargement("Lecture du suivi pastoral…");
       else {
-        out += `<p class="vy-sep">${I("i-lock")}Santé du soldat · visible par la direction seulement</p><div class="vy-grid">${v.sante.map((x) => tuileVoyant(x, m.id)).join("")}</div>`;
+        out += `<p class="vy-sep">${I("i-lock")}Veille pastorale · visible par la direction seulement${adm ? " · touchez un voyant pour le changer" : ""}</p><div class="vy-grid">${v.sante.map((x) => tuileVoyant(x, m.id)).join("")}</div>`;
         if (s && s.besoin) out += `<p class="note" style="margin:10px 0 0"><b>Accompagnement :</b> ${esc(s.besoin)}</p>`;
         if (s && s.evalueLe) out += `<p class="hint" style="margin-top:8px">Mis à jour le ${esc(fmtStamp(s.evalueLe))}${s.evaluePar ? ` par ${esc(nomDe(s.evaluePar))}` : ""}.</p>`;
         const hist = s && s.historique ? Object.entries(s.historique).sort((a, b) => Number(b[0]) - Number(a[0])).slice(1, 6) : [];
-        if (hist.length) out += `<details class="vy-hist"><summary>Évaluations précédentes (${nb(hist.length)})</summary><ul>${hist.map(([ts, h]) => `<li><span>${esc(fmtJour(h.date || isoJour(new Date(Number(ts)))))}</span><span class="vy-mini">${DIM_SANTE.map(([k, l]) => `<span title="${esc(`${l} : ${NIV_SANTE[(h.niveaux || {})[k] || 0]}`)}">${led((h.niveaux || {})[k] || 0)}</span>`).join("")}</span></li>`).join("")}</ul></details>`;
+        if (hist.length) out += `<details class="vy-hist"><summary>Évaluations précédentes (${nb(hist.length)})</summary><ul>${hist.map(([ts, h]) => `<li><span>${esc(fmtJour(h.date || isoJour(new Date(Number(ts)))))}</span><span class="vy-mini">${dimsSante().map(([k, l]) => `<span title="${esc(`${l} : ${NIV_SANTE[(h.niveaux || {})[k] || 0]}`)}">${led((h.niveaux || {})[k] || 0)}</span>`).join("")}</span></li>`).join("")}</ul></details>`;
         if (adm) out += `<div class="btn-row" style="margin-top:12px">${btn("evaluer-membre", s ? "Mettre à jour les voyants" : "Évaluer l’état du soldat", { ico: "i-edit", sm: true, data: `data-id="${esc(m.id)}"` })}</div>`;
       }
     }
@@ -3661,9 +3677,9 @@
         ${inp("e-f-global", "f_globalNote", fg ? fg.note : "", 'autocomplete="off" placeholder="Motif de l’ajustement (facultatif)" aria-label="Motif : état général"')}</fieldset>
       <h3 class="h3">Voyants calculés</h3>
       ${DIM_AUTO.map(ligneAuto).join("")}
-      <h3 class="h3">Santé du soldat</h3>
-      <p class="hint">Observations pastorales, pas de diagnostic médical.</p>
-      ${DIM_SANTE.map(ligneSante).join("")}
+      <h3 class="h3">Veille pastorale</h3>
+      <p class="hint">Observations pastorales, pas de diagnostic médical ni de jugement : elles servent à accompagner le soldat.</p>
+      ${dimsSante().map(ligneSante).join("")}
       ${champ("e-besoin", "Accompagnement prévu", zone("e-besoin", "besoin", s.besoin || "", 'rows="3" placeholder="Visite, prière, aide matérielle, orientation…"'))}
       ${champ("e-suivi", "Prochain suivi", inp("e-suivi", "prochainSuivi", s.prochainSuivi || "", 'type="date"'), { hint: "Le tableau de bord rappelle les suivis arrivés à échéance." })}
       ${pied("Enregistrer les voyants")}
@@ -3685,7 +3701,7 @@
     const data = {};
     const niveaux = {};
     const borne = (x) => Math.max(0, Math.min(4, Number(x) || 0));
-    for (const [k] of DIM_SANTE) {
+    for (const [k] of dimsSante()) {
       const n = borne(fd.get(k));
       niveaux[k] = n;
       data[k] = { n, note: String(fd.get(k + "Note") || "").trim() };
@@ -3710,6 +3726,56 @@
     if (!ok) { form.querySelector("[type=submit]").disabled = false; return; }
     ouvrirMembre(mid);
   }
+  /* Évaluation rapide d’un voyant de veille : un toucher sur un niveau l’enregistre */
+  const VR = { retour: false };
+  function ouvrirVeilleRapide(mid, k) {
+    const m = membre(mid);
+    const d = dimsSante().find(([x]) => x === k);
+    if (!m || !d) return;
+    const s = suiviDe(mid) || {};
+    const v = s[k] || {};
+    const cur = Number(v.n) || 0;
+    const hist = s.historique ? Object.entries(s.historique).sort((a, b) => Number(b[0]) - Number(a[0])).map(([ts, h]) => ({ ts: Number(ts), n: Number(((h || {}).niveaux || {})[k]) || 0, note: ((h || {}).notes || {})[k] || "" })).filter((x) => x.n > 0).slice(0, 8) : [];
+    const html = `<div class="ident">${avatar(m)}<div><h3>${esc(nomUsuel(m))}</h3><p>${esc(d[1])}</p></div></div>
+      <p class="hint">Touchez un niveau : il est enregistré aussitôt, avec l’observation ci-dessous.</p>
+      ${champ("vr-note", "Observation (facultatif)", zone("vr-note", "note", v.note || "", 'rows="2" maxlength="400" placeholder="Ce que vous avez constaté, ce qui est prévu…"'))}
+      <div class="vr-niveaux" role="group" aria-label="Niveau">${[1, 2, 3, 4, 0].map((n) => `<button class="vr-n ${NIV_CLS[n]}${n === cur ? " on" : ""}" type="button" data-act="veille-choisir" data-id="${esc(mid)}" data-k="${esc(k)}" data-n="${n}" aria-pressed="${n === cur}">${led(n, true)}<b>${esc(NIV_SANTE[n])}</b></button>`).join("")}</div>
+      ${hist.length ? `<details class="vy-hist" open><summary>Évolution (${nb(hist.length)})</summary><div class="vr-courbe">${hist.slice().reverse().map((x) => `<span title="${esc(`${fmtJour(isoJour(new Date(x.ts)))} : ${NIV_SANTE[x.n]}${x.note ? " · " + x.note : ""}`)}">${led(x.n)}<small>${esc(fmtCourt(isoJour(new Date(x.ts))))}</small></span>`).join("")}</div></details>` : ""}
+      <div class="btn-row" style="margin-top:12px">${btn("evaluer-membre", "Évaluation complète", { ico: "i-edit", sm: true, data: `data-id="${esc(mid)}" data-k="${esc(k)}"` })}</div>`;
+    VR.retour = !$("#sheet").hidden && !!document.querySelector("#sheet .voyants");
+    ouvrir({ titre: "Veille pastorale", html });
+  }
+  async function enregistrerVeilleRapide(mid, k, n) {
+    const s = suiviDe(mid) || {};
+    const note = String(($("#vr-note") || {}).value || "").trim();
+    const niveaux = {};
+    for (const [x] of dimsSante()) niveaux[x] = x === k ? n : Number((s[x] || {}).n) || 0;
+    const ts = String(Date.now());
+    const data = { [k]: { n, note }, membreId: mid, evalueLe: Date.now(), evaluePar: S.me.id || null, historique: { [ts]: { date: aujourdhui(), niveaux, notes: { [k]: note }, par: S.me.id || null, rapide: k } } };
+    document.querySelectorAll(".vr-n").forEach((b) => { b.disabled = true; });
+    const ok = await ecrire(() => upsert("suivi/" + mid, data), `${(dimsSante().find(([x]) => x === k) || ["", "Voyant"])[1]} : ${NIV_SANTE[n]}`);
+    if (ok) { if (VR.retour) ouvrirMembre(mid); else fermer(); } else document.querySelectorAll(".vr-n").forEach((b) => { b.disabled = false; });
+  }
+  /* Réglages de la veille : dimensions suivies (ajouter, renommer, masquer) */
+  function ficheDimsVeille() {
+    const c = cfg().veilleDims;
+    const l = Array.isArray(c) && c.length ? c : DIM_VEILLE_DEFAUT.map(([k, x]) => ({ k, l: x, actif: true }));
+    return `<form class="form" id="f-dims-veille" novalidate><p class="hint" style="margin-top:0">Ces dimensions apparaissent dans la fiche de chaque membre et dans le tableau de veille. Une dimension masquée garde son historique.</p>
+      <div class="list">${l.map((d, i) => `<div class="row nolead dv-row"><label class="check"><input type="checkbox" name="actif_${i}"${d.actif !== false ? " checked" : ""}> <span class="sr">Suivre</span></label><input type="hidden" name="k_${i}" value="${esc(d.k)}"><label class="sr" for="dv-${i}">Nom de la dimension</label><input class="inp" id="dv-${i}" name="l_${i}" value="${esc(d.l)}" maxlength="60" required></div>`).join("")}</div>
+      ${champ("dv-nouv", "Ajouter une dimension", inp("dv-nouv", "nouvelle", "", 'maxlength="60" placeholder="Par exemple : Logement, Santé mentale, Ministère…"'))}
+      <input type="hidden" name="n" value="${l.length}">${pied("Enregistrer les dimensions")}</form>`;
+  }
+  async function enregistrerDimsVeille(fd) {
+    const n = Number(fd.get("n")) || 0;
+    const l = [];
+    for (let i = 0; i < n; i += 1) { const lib = String(fd.get("l_" + i) || "").trim(); if (lib) l.push({ k: String(fd.get("k_" + i)), l: lib.slice(0, 60), actif: fd.get("actif_" + i) === "on" }); }
+    const nouv = String(fd.get("nouvelle") || "").trim();
+    if (nouv) l.push({ k: "d" + Date.now().toString(36), l: nouv.slice(0, 60), actif: true });
+    if (!l.some((d) => d.actif)) { erreurForm("Gardez au moins une dimension suivie."); return; }
+    const ok = await ecrire(() => S.db.doc("config/general").update({ veilleDims: l, ...tampon() }), "Dimensions de la veille enregistrées");
+    if (ok) fermer();
+  }
+
   /* Pastille d’état dans les listes (direction) */
   function pastilleEtat(m) {
     if (!accesDirection() || !S.pret.suivi) return "";
@@ -3736,22 +3802,39 @@
   function vueVoyants() {
     if (!S.pret.suivi) return chargement("Lecture des voyants…");
     const f = S.f.voyants;
+    const adm = peutAdmin();
+    const dims = dimsSante();
     const actifs = membresActifs();
     const lignes = actifs.map((m) => ({ m, v: voyantsDe(m), s: suiviDe(m.id) }));
-    const filt = lignes.filter((x) => (f.filtre === "alerte" ? x.v.global >= 2 : f.filtre === "nonevalue" ? !(x.s && x.s.evalueLe) : f.filtre === "echus" ? x.s && x.s.prochainSuivi && x.s.prochainSuivi <= aujourdhui() : true))
-      .sort((a, b) => b.v.global - a.v.global || parNom(a.m, b.m));
-    const cols = [["implication", "Implic."], ["assiduite", "Assid."], ["cotis", "Cotis."], ["discipline", "Discip."], ["physique", "Phys."], ["moral", "Moral"], ["spirituel", "Spirit."], ["financier", "Financ."]];
-    const titres = { implication: "Implication", assiduite: "Assiduité", cotis: "Cotisations", discipline: "Discipline", physique: "Santé physique", moral: "Santé morale", spirituel: "Santé spirituelle", financier: "Santé financière" };
-    let out = `<p class="note">${I("i-lock")} Tableau réservé à la direction. Les quatre premiers voyants se calculent seuls à partir des présences, des engagements, des cotisations et de la discipline ; les quatre voyants de santé viennent de l’évaluation pastorale saisie dans chaque fiche.</p>
-      <div class="filters"><div class="chips" role="group" aria-label="Filtrer">${[["tous", "Tous"], ["alerte", "À surveiller et plus"], ["nonevalue", "Non évalués"], ["echus", "Suivis à faire"]].map(([id, l]) => `<button class="chip-btn${f.filtre === id ? " on" : ""}" type="button" data-act="voyants-filtre" data-v="${id}" aria-pressed="${f.filtre === id}">${l}</button>`).join("")}</div></div>
-      <div class="legend" style="margin:-4px 0 10px">${[1, 2, 3, 4, 0].map((n) => `<span>${led(n)}${esc(n ? ETAT_GLOBAL[n] : "Non évalué")}</span>`).join("")}</div>`;
+    const q = norm(f.q || "");
+    const val = (x, k) => (x.v.auto.concat(x.v.sante).find((y) => y[0] === k) || [, , { n: 0 }])[2].n;
+    const filt = lignes.filter((x) => (f.filtre === "alerte" ? x.v.global >= 2 : f.filtre === "nonevalue" ? !(x.s && x.s.evalueLe) : f.filtre === "echus" ? x.s && x.s.prochainSuivi && x.s.prochainSuivi <= aujourdhui() : true)
+      && (!f.dim || val(x, f.dim) >= 3) && (!q || norm(`${nomComplet(x.m)} ${x.m.matricule || ""}`).includes(q)))
+      .sort((a, b) => (f.dim ? val(b, f.dim) - val(a, f.dim) : 0) || b.v.global - a.v.global || parNom(a.m, b.m));
+    const cols = [["implication", "Implic.", "Implication"], ["assiduite", "Assid.", "Assiduité"], ["cotis", "Cotis.", "Cotisations"], ["discipline", "Discip.", "Discipline"]].concat(dims.map(([k, l]) => [k, COURT_VEILLE[k] || (l.length > 10 ? l.slice(0, 9) + "." : l), l]));
+    const alertes = dims.map(([k, l]) => ({ k, l, n: lignes.filter((x) => val(x, k) >= 3).length }));
+    const cpt = [0, 0, 0, 0, 0]; lignes.forEach((x) => { cpt[x.v.global] += 1; });
+    let out = `<p class="note">${I("i-lock")} Veille pastorale réservée à la direction. Les quatre premiers voyants se calculent seuls (présences, engagements, cotisations, discipline) ; les autres viennent de l’observation pastorale.${adm ? " <b>Touchez un voyant pour le changer</b> : il est enregistré aussitôt." : ""}</p>
+      <div class="vw-resume">${[4, 3, 2, 1, 0].map((n) => `<div class="vw-c ${NIV_CLS[n]}">${led(n, true)}<b>${nb(cpt[n])}</b><span>${esc(ETAT_GLOBAL[n])}</span></div>`).join("")}</div>
+      <div class="vw-dims" role="group" aria-label="Difficultés par dimension">${alertes.map((a) => `<button class="chip-btn${f.dim === a.k ? " on" : ""}${a.n ? " vw-a" : ""}" type="button" data-act="veille-dim" data-k="${esc(a.k)}" aria-pressed="${f.dim === a.k}">${esc(a.l)} <b>${nb(a.n)}</b></button>`).join("")}${f.dim ? `<button class="link" type="button" data-act="veille-dim" data-k="">Toutes les dimensions</button>` : ""}</div>
+      <div class="filters"><div class="chips" role="group" aria-label="Filtrer">${[["tous", "Tous"], ["alerte", "À surveiller et plus"], ["nonevalue", "Non évalués"], ["echus", "Suivis à faire"]].map(([id, l]) => `<button class="chip-btn${f.filtre === id ? " on" : ""}" type="button" data-act="voyants-filtre" data-v="${id}" aria-pressed="${f.filtre === id}">${l}</button>`).join("")}</div><label class="sr" for="vw-q">Rechercher un membre</label><input class="inp vw-q" id="vw-q" type="search" placeholder="Rechercher un membre…" value="${esc(f.q || "")}" autocomplete="off">${adm ? btn("veille-dims", "Dimensions suivies", { ico: "i-sliders", sm: true }) : ""}</div>
+      <div class="legend" style="margin:-4px 0 10px">${[1, 2, 3, 4, 0].map((n) => `<span>${led(n)}${esc(n ? NIV_SANTE[n] : "Non évalué")}</span>`).join("")}<span><span class="vy-tend up">▲</span> en mieux</span><span><span class="vy-tend down">▼</span> en baisse</span></div>`;
     if (!filt.length) return out + vide("i-check", "Aucun membre ne correspond.");
-    out += `<div class="table-wrap"><table class="t vy-table"><thead><tr><th scope="col">Membre</th><th scope="col" title="État général">État</th>${cols.map(([k, l]) => `<th scope="col" title="${esc(titres[k])}">${esc(l)}</th>`).join("")}</tr></thead><tbody>${filt.map(({ m, v }) => {
+    out += `<div class="table-wrap"><table class="t vy-table"><thead><tr><th scope="col">Membre</th><th scope="col" title="État général">État</th>${cols.map(([k, c, l]) => `<th scope="col" title="${esc(l)}"${f.dim === k ? ' class="vw-on"' : ""}>${esc(c)}</th>`).join("")}</tr></thead><tbody>${filt.map(({ m, v }) => {
       const tous = Object.fromEntries(v.auto.concat(v.sante).map(([k, , x]) => [k, x]));
-      return `<tr><th scope="row"><button class="link" type="button" data-act="voir-membre" data-id="${esc(m.id)}">${esc(nomComplet(m))}</button></th><td title="${esc(ETAT_GLOBAL[v.global])}">${led(v.global)}<span class="sr">${esc(ETAT_GLOBAL[v.global])}</span></td>${cols.map(([k]) => { const x = tous[k]; return x ? `<td title="${esc(`${titres[k]} : ${x.lib}${x.detail ? " · " + x.detail : ""}`)}">${led(x.n)}<span class="sr">${esc(`${titres[k]} : ${x.lib}`)}</span></td>` : `<td class="na">–</td>`; }).join("")}</tr>`;
+      return `<tr><th scope="row"><button class="link" type="button" data-act="voir-membre" data-id="${esc(m.id)}">${esc(nomComplet(m))}</button></th><td title="${esc(ETAT_GLOBAL[v.global])}">${led(v.global)}<span class="sr">${esc(ETAT_GLOBAL[v.global])}</span></td>${cols.map(([k, , l]) => {
+        const x = tous[k];
+        if (!x) return `<td class="na">–</td>`;
+        const t = esc(`${l} : ${x.lib}${x.detail ? " · " + x.detail : ""}`);
+        const contenu = `${led(x.n)}${fleche(x.tend)}<span class="sr">${t}</span>`;
+        return adm ? `<td><button class="vw-cell" type="button" data-act="${x.sante ? "veille-niveau" : "evaluer-membre"}" data-id="${esc(m.id)}" data-k="${esc(k)}" title="${t}" aria-label="${t}">${contenu}</button></td>` : `<td title="${t}">${contenu}</td>`;
+      }).join("")}</tr>`;
     }).join("")}</tbody></table></div>`;
     return out;
   }
+  document.addEventListener("input", (ev) => {
+    if (ev.target && ev.target.id === "vw-q") { S.f.voyants.q = ev.target.value; const pos = ev.target.selectionStart; render(); const el = $("#vw-q"); if (el) { el.focus(); try { el.setSelectionRange(pos, pos); } catch (e) { /* sans effet */ } } }
+  });
   /* ════════════════════════ Points SDE et cartographie ════════════════════════ */
   const TYPE_POINT = "Point SDE";
   const PAYS_SDE = ["Côte d’Ivoire", "Tunisie", "Burkina Faso", "Italie", "Canada", "États-Unis"];
@@ -6791,6 +6874,10 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     "evaluer-membre": (t) => ouvrirEvaluation(t.dataset.id, t.dataset.k || ""),
     "aller-veille": () => { S.sous.membres = "voyants"; allerA("membres"); },
     "voyants-filtre": (t) => { S.f.voyants.filtre = t.dataset.v; render(); },
+    "veille-niveau": (t) => ouvrirVeilleRapide(t.dataset.id, t.dataset.k),
+    "veille-choisir": (t) => enregistrerVeilleRapide(t.dataset.id, t.dataset.k, Number(t.dataset.n) || 0),
+    "veille-dim": (t) => { S.f.voyants.dim = S.f.voyants.dim === t.dataset.k ? "" : t.dataset.k; render(); },
+    "veille-dims": () => ouvrir({ titre: "Dimensions de la veille", html: ficheDimsVeille(), onSubmit: enregistrerDimsVeille }),
     /* Cartographie */
     "carte-point": (t) => {
       S.carteSel = t.dataset.id; render();

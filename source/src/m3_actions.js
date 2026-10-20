@@ -7,6 +7,10 @@
     "evaluer-membre": (t) => ouvrirEvaluation(t.dataset.id, t.dataset.k || ""),
     "aller-veille": () => { S.sous.membres = "voyants"; allerA("membres"); },
     "voyants-filtre": (t) => { S.f.voyants.filtre = t.dataset.v; render(); },
+    "veille-niveau": (t) => ouvrirVeilleRapide(t.dataset.id, t.dataset.k),
+    "veille-choisir": (t) => enregistrerVeilleRapide(t.dataset.id, t.dataset.k, Number(t.dataset.n) || 0),
+    "veille-dim": (t) => { S.f.voyants.dim = S.f.voyants.dim === t.dataset.k ? "" : t.dataset.k; render(); },
+    "veille-dims": () => ouvrir({ titre: "Dimensions de la veille", html: ficheDimsVeille(), onSubmit: enregistrerDimsVeille }),
     /* Cartographie */
     "carte-point": (t) => {
       S.carteSel = t.dataset.id; render();
