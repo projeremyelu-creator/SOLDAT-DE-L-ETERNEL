@@ -41,6 +41,9 @@ rep("Éliézer n’est pas autorisé pour cette application. Autorisez l’accè
 rep("reconnectez-vous à Claude puis réessayez", "reconnectez-vous avec Google puis réessayez")
 rep("L’assistant n’est pas disponible ici. Il fonctionne dans Claude, pour les personnes qui ont autorisé l’application à utiliser Claude.", "Éliézer est réservé aux responsables connectés. Connectez-vous avec Google ; s’il reste indisponible, il n’est pas encore activé sur le serveur du mouvement.")
 rep("Disponible dans Claude", "Réservé aux responsables")
+# Appellation des leaders : « Serviteur de DIEU » (sans titre d’apôtre)
+rep('placeholder="Apôtre Jérémy Octave GLAZAÏ…"', 'placeholder="Jérémy Octave GLAZAÏ, serviteur de DIEU…"')
+rep("Le leader du mouvement est l’Apôtre Jérémy Octave GLAZAÏ (« Jérémy l’Élu »)", "Le leader du mouvement est Jérémy Octave GLAZAÏ (« Jérémy l’Élu »), serviteur de DIEU, qui le conduit avec son épouse, Amy Berté GLAZAÏ, servante de DIEU. N’emploie pas pour eux les titres d’apôtre ou de prophétesse")
 # Comptes : résumé publié pour chaque compte relié à une fiche, requête de prière directe
 rep("    planifierSynchro();\n", "    planifierSynchro(); planifierSynchroComptes();\n")
 rep('"Votre requête part par WhatsApp vers la direction, qui la confie aux intercesseurs."', '(moiH().membreId ? "Votre requête rejoint la Chambre Haute, où les intercesseurs prient pour vous. Confidentielle, elle part par WhatsApp vers la direction." : "Votre requête part par WhatsApp vers la direction, qui la confie aux intercesseurs.")')
