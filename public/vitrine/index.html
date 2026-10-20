@@ -24,7 +24,7 @@
 <meta name="twitter:title" content="Soldats de l’Éternel · Le réveil spirituel des nations">
 <meta name="twitter:description" content="Soldats de l’Éternel (SDE), mouvement prophético-apostolique né à Abidjan, présent dans six pays. IN FIRE 2026 le 31 octobre, programmes, leadership et adhésion.">
 <meta name="twitter:image" content="https://mouvement-sde.org/og-sde.jpg">
-<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Organization", "name": "Soldats de l’Éternel (SDE)", "alternateName": "Mouvement Prophético-Apostolique Soldats de l’Éternel", "url": "https://mouvement-sde.org/", "logo": "https://mouvement-sde.org/vitrine/logo.png", "email": "infosoldat@gmail.com", "telephone": "+225 07 78 68 95 73", "slogan": "Réveiller · Restaurer · Former · Équiper · Envoyer", "address": {"@type": "PostalAddress", "addressLocality": "Cocody Deux-Plateaux, Abidjan", "addressCountry": "CI"}}, {"@context": "https://schema.org", "@type": "Event", "name": "IN FIRE 2026", "description": "Conférence internationale annuelle pour le réveil spirituel des nations. Thème : « La révélation des fils et filles de Dieu ».", "startDate": "2026-10-31T08:00:00+00:00", "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode", "location": {"@type": "Place", "name": "Église MADEG", "address": {"@type": "PostalAddress", "addressLocality": "Cocody Deux-Plateaux Agban, Abidjan", "addressCountry": "CI"}}, "organizer": {"@type": "Organization", "name": "Soldats de l’Éternel (SDE)", "url": "https://mouvement-sde.org/"}, "performer": [{"@type": "Person", "name": "Jérémy l’Élu GLAZAÏ"}, {"@type": "Person", "name": "Samuel ZEREOUE"}]}]</script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Organization", "name": "Mouvement Prophético-Apostolique Soldats de l’Éternel (MPA SDE)", "alternateName": ["Soldats de l’Éternel", "SDE", "MPA SDE"], "url": "https://mouvement-sde.org/", "logo": "https://mouvement-sde.org/vitrine/logo.png", "email": "infosoldat@gmail.com", "telephone": "+225 07 78 68 95 73", "slogan": "Réveiller · Restaurer · Former · Équiper · Envoyer", "address": {"@type": "PostalAddress", "addressLocality": "Cocody Deux-Plateaux, Abidjan", "addressCountry": "CI"}, "description": "Mouvement chrétien prophético-apostolique christocentrique né à Abidjan, présent en Côte d’Ivoire, en Tunisie, au Burkina Faso, en Italie, au Canada et aux États-Unis. Texte fondateur : Ézéchiel 37.", "founder": [{"@type": "Person", "name": "Jérémy Octave GLAZAÏ", "alternateName": "Jérémy l’Élu", "jobTitle": "Apôtre, leader du mouvement"}, {"@type": "Person", "name": "Amy Berté GLAZAÏ", "jobTitle": "Prophétesse, cofondatrice et secrétaire générale"}]}, {"@context": "https://schema.org", "@type": "Event", "name": "IN FIRE 2026", "description": "Conférence internationale annuelle pour le réveil spirituel des nations. Thème : « La révélation des fils et filles de Dieu ».", "startDate": "2026-10-31T08:00:00+00:00", "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode", "location": {"@type": "Place", "name": "Église MADEG", "address": {"@type": "PostalAddress", "addressLocality": "Cocody Deux-Plateaux Agban, Abidjan", "addressCountry": "CI"}}, "organizer": {"@type": "Organization", "name": "Soldats de l’Éternel (SDE)", "url": "https://mouvement-sde.org/"}, "performer": [{"@type": "Person", "name": "Jérémy l’Élu GLAZAÏ"}, {"@type": "Person", "name": "Samuel ZEREOUE"}]}]</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@500;600;700;800&family=Saira+Stencil+One&display=swap">
@@ -342,6 +342,38 @@ button.b-contour { background: transparent; }
 .photo-fg img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
 @media (max-width: 860px) { .photo-fg { transform: none; max-width: 520px; } .ouv-droite { gap: 22px; } }
 @media (prefers-reduced-motion: reduce) { .photo-fg, .photo-fg:hover { transform: none; transition: none; } }
+/* Qui sommes-nous enrichi */
+.vmi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: clamp(40px, 6vw, 64px); }
+@media (max-width: 900px) { .vmi { grid-template-columns: 1fr; } }
+.vmi article { background: var(--surface); border: 1px solid var(--trait); border-top: 4px solid var(--or); border-radius: var(--r); padding: 22px; }
+.vmi-n { display: block; font-family: var(--f-titre); font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: var(--or-texte); font-weight: 600; margin-bottom: 6px; }
+.vmi h3 { margin-bottom: 8px; } .vmi p { color: var(--gris); }
+.nom-sde { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(24px, 4vw, 48px); margin-top: clamp(40px, 6vw, 64px); align-items: center; }
+@media (max-width: 860px) { .nom-sde { grid-template-columns: 1fr; } }
+.nom-sde h3 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 10px; } .nom-sde p + p { margin-top: 12px; } .nom-sde p { color: var(--gris); }
+.nom-versets { display: grid; gap: 14px; }
+.nom-versets blockquote { margin: 0; background: var(--nuit); color: #fff; border-radius: var(--r); padding: 18px 20px; font-family: var(--f-titre); font-size: 1.15rem; line-height: 1.35; }
+.nom-versets cite { display: block; margin-top: 8px; font-style: normal; color: var(--or); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; }
+.h3-grand { font-size: clamp(1.6rem, 3.4vw, 2.2rem); text-transform: uppercase; }
+.valeurs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 1000px) { .valeurs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .valeurs { grid-template-columns: 1fr; } }
+.valeurs article { background: var(--surface); border: 1px solid var(--trait); border-radius: var(--r); padding: 16px 18px; }
+.valeurs b { display: block; font-family: var(--f-titre); font-size: 1.1rem; margin-bottom: 4px; }
+.valeurs p { color: var(--gris); font-size: .95rem; }
+/* Biographies du couple leader */
+.bios { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
+@media (max-width: 900px) { .bios { grid-template-columns: 1fr; } }
+.bio { background: var(--surface); border: 1px solid var(--trait); border-radius: var(--r); padding: clamp(20px, 3vw, 30px); box-shadow: var(--ombre); }
+.bio header { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: center; margin-bottom: 14px; }
+.bio header h3 { font-size: clamp(1.3rem, 2.4vw, 1.6rem); }
+.bio .role { color: var(--or-texte); font-weight: 700; font-size: .88rem; letter-spacing: .06em; margin: 4px 0 8px; }
+.bio .tags { display: flex; flex-wrap: wrap; gap: 6px; } .bio .tags span { font-size: .78rem; font-weight: 700; border: 1px solid var(--trait); border-radius: 999px; padding: 2px 10px; color: var(--gris); }
+.bio-accroche { font-family: var(--f-titre); font-size: 1.2rem; line-height: 1.35; border-left: 3px solid var(--or); padding-left: 14px; margin-bottom: 14px; }
+.bio-texte p { color: var(--gris); } .bio-texte p + p { margin-top: 12px; }
+.bio-devise { margin-top: 16px; font-family: var(--f-titre); text-transform: uppercase; letter-spacing: .14em; font-size: .85rem; color: var(--or-texte); font-weight: 700; }
+.bio .mono { width: 72px; height: 72px; font-size: 1.5rem; }
+.bio-invit { margin-top: 20px; color: var(--gris); } .bio-invit a { color: var(--or-texte); font-weight: 700; }
 /* Agenda public */
 .rdv .quand { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
 .rdv .jour { flex: 0 0 auto; width: 58px; text-align: center; border-radius: 12px; padding: 6px 0 7px; background: var(--nuit); color: #fff; line-height: 1.05; }
@@ -373,7 +405,7 @@ button.b-contour { background: transparent; }
       <a href="#agenda" id="menu-agenda" hidden>Agenda</a>
       <a href="#programmes">Programmes</a>
       <a href="#presence">Présence</a>
-      <a href="#responsables">Leadership</a>
+      <a href="#responsables">Couple leader</a>
       <a href="#membres">Espace membre</a>
       <a class="bouton b-or" href="#rejoindre">Rejoindre SDE</a>
     </nav>
@@ -460,26 +492,63 @@ button.b-contour { background: transparent; }
   </section>
 
   <section class="section" id="mouvement" aria-labelledby="titre-mouvement">
-    <div class="enveloppe grille-2">
-      <div>
-        <p class="surtitre">Qui sommes-nous</p>
-        <h2 id="titre-mouvement">Une armée relevée par le souffle de Dieu</h2>
-        <div class="texte chapo">
-          <p>Soldats de l’Éternel (SDE) est un mouvement prophético-apostolique christocentrique né à Abidjan. Nous croyons que la foi doit transformer chaque domaine de la vie : la prière, le caractère, la famille, le travail et le service.</p>
-          <p>Notre ancrage est à Cocody Deux-Plateaux, notre horizon est celui des nations. Nous formons des disciples et des leaders qui portent le réveil là où Dieu les envoie.</p>
+    <div class="enveloppe">
+      <div class="grille-2">
+        <div>
+          <p class="surtitre">Qui sommes-nous</p>
+          <h2 id="titre-mouvement">Une armée relevée par le souffle de Dieu</h2>
+          <div class="texte chapo">
+            <p>Le <b>Mouvement Prophético-Apostolique Soldats de l’Éternel</b> (MPA SDE) est un mouvement chrétien christocentrique, enraciné dans les Écritures et attentif au Saint-Esprit. Né à Abidjan, il a son siège à Cocody Deux-Plateaux et rassemble aujourd’hui des soldats en Côte d’Ivoire, en Tunisie, au Burkina Faso, en Italie, au Canada et aux États-Unis.</p>
+            <p>Nous croyons que la foi ne se limite pas au temps du culte : elle doit transformer chaque domaine de la vie, la prière, le caractère, la famille, le travail et le service. C’est pourquoi nous formons des disciples et des leaders qui portent le réveil là où Dieu les envoie, dans leur maison, leur métier, leur ville et les nations.</p>
+            <p>Notre ancrage est à Abidjan, notre horizon est celui des nations. Notre conviction tient en une image, celle de la vallée des ossements desséchés : ce que les hommes déclarent fini, la Parole de Dieu et le souffle de son Esprit peuvent le relever en une armée nombreuse.</p>
+          </div>
+          <div class="faits">
+            <div><b>6</b><span>pays où le mouvement est implanté</span></div>
+            <div><b>5</b><span>pôles qui organisent la mission</span></div>
+            <div><b>6</b><span>programmes réguliers</span></div>
+          </div>
         </div>
-        <div class="faits">
-          <div><b>6</b><span>pays où le mouvement est implanté</span></div>
-          <div><b>5</b><span>pôles qui organisent la mission</span></div>
-          <div><b>6</b><span>programmes réguliers</span></div>
+        <aside class="encadre" aria-label="Notre texte fondateur">
+          <p class="surtitre">Notre texte fondateur</p>
+          <h3>La vallée des ossements desséchés</h3>
+          <blockquote>« Ossements desséchés, écoutez la parole de l’Éternel ! Voici, je vais faire entrer en vous un esprit, et vous vivrez. »</blockquote>
+          <p>Ézéchiel 37.4-5. Ce passage porte notre vision : là où tout semble mort, la Parole prononcée et le souffle de l’Esprit font se lever une armée nombreuse. C’est ce réveil que nous servons, dans les vies, les familles et les nations.</p>
+        </aside>
+      </div>
+
+      <div class="vmi">
+        <article><span class="vmi-n">Notre identité</span><h3>Prophétique et apostolique</h3><p>Prophétique, parce que nous voulons entendre ce que Dieu dit aujourd’hui et le déclarer avec fidélité. Apostolique, parce que nous sommes envoyés pour bâtir, fonder et étendre l’œuvre de Dieu. Christocentrique, parce que tout commence et s’accomplit en Jésus-Christ.</p></article>
+        <article><span class="vmi-n">Notre vision</span><h3>Une armée debout dans les nations</h3><p>Voir se lever, dans chaque nation où Dieu nous envoie, une armée de croyants revivifiés par la Parole et par l’Esprit : une génération transformée, formée, équipée et envoyée, qui porte le réveil dans tous les domaines de la société.</p></article>
+        <article><span class="vmi-n">Notre mission</span><h3>Cinq temps pour un soldat</h3><p>Réveiller les cœurs à la présence de Dieu, restaurer les vies et les familles blessées, former des disciples enracinés dans la Parole, équiper des serviteurs pour le ministère, et les envoyer dans les villes et les nations.</p></article>
+      </div>
+
+      <div class="nom-sde">
+        <div>
+          <p class="surtitre">Notre nom</p>
+          <h3>Pourquoi « Soldats de l’Éternel » ?</h3>
+          <p>Le soldat n’est pas un homme de violence : c’est un homme d’engagement, de discipline et de fidélité à son chef. Nous empruntons cette image à l’apôtre Paul, qui exhortait Timothée à tenir bon comme un bon soldat de Jésus-Christ.</p>
+          <p>Notre combat n’est dirigé contre aucune personne. Il est spirituel : il se mène par la prière, la Parole, la sainteté et l’amour, sous l’autorité de Jésus-Christ. Être soldat de l’Éternel, c’est se tenir à son poste, servir sans chercher sa propre gloire et ne pas abandonner les siens dans l’épreuve.</p>
+        </div>
+        <div class="nom-versets">
+          <blockquote>« Souffre avec moi, comme un bon soldat de Jésus-Christ. »<cite>2 Timothée 2.3</cite></blockquote>
+          <blockquote>« Car nous n’avons pas à lutter contre la chair et le sang, mais contre les dominations, contre les autorités, contre les princes de ce monde de ténèbres, contre les esprits méchants dans les lieux célestes. »<cite>Éphésiens 6.12</cite></blockquote>
         </div>
       </div>
-      <aside class="encadre" aria-label="Notre texte fondateur">
-        <p class="surtitre">Notre texte fondateur</p>
-        <h3>La vallée des ossements desséchés</h3>
-        <blockquote>« Ossements desséchés, écoutez la parole de l’Éternel ! Voici, je vais faire entrer en vous un esprit, et vous vivrez. »</blockquote>
-        <p>Ézéchiel 37.4-5. Ce passage porte notre vision : là où tout semble mort, la Parole prononcée et le souffle de l’Esprit font se lever une armée nombreuse. C’est ce réveil que nous servons, dans les vies, les familles et les nations.</p>
-      </aside>
+
+      <div class="tete-section" style="margin-top:clamp(40px,6vw,64px)">
+        <p class="surtitre">Ce qui nous tient à cœur</p>
+        <h3 class="h3-grand">Nos convictions</h3>
+      </div>
+      <div class="valeurs">
+        <article><b>Jésus-Christ au centre</b><p>Il est le chef de l’Église, le fondement de notre foi et la mesure de tout enseignement.</p></article>
+        <article><b>La Parole de Dieu</b><p>L’Écriture est notre fondement. Nous l’enseignons avec rigueur et la citons dans la version Louis Segond.</p></article>
+        <article><b>Le Saint-Esprit</b><p>Sa présence, ses dons et sa puissance sont pour aujourd’hui. Nous voulons les accueillir avec ferveur et discernement.</p></article>
+        <article><b>La prière et l’intercession</b><p>L’autel avant l’action : veilles, chaînes de prière et intercession pour les vies, les familles et les nations.</p></article>
+        <article><b>L’autorité et le discernement</b><p>Former des croyants lucides, qui discernent les temps, les voix et les esprits et exercent l’autorité reçue en Christ.</p></article>
+        <article><b>Le caractère</b><p>Le don ne remplace pas le caractère. Nous recherchons la sainteté, l’intégrité et la fidélité dans la durée.</p></article>
+        <article><b>La famille</b><p>Des foyers solides et des relations restaurées sont le socle d’une génération debout.</p></article>
+        <article><b>Le service et l’impact</b><p>Évangélisation, missions, action sociale et accompagnement concret de ceux qui sont dans le besoin.</p></article>
+      </div>
     </div>
   </section>
 
@@ -539,13 +608,35 @@ button.b-contour { background: transparent; }
   <section class="section" id="responsables" aria-labelledby="titre-responsables">
     <div class="enveloppe">
       <div class="tete-section">
-        <p class="surtitre">Leadership</p>
-        <h2 id="titre-responsables">Ceux qui conduisent le mouvement</h2>
+        <p class="surtitre">Le couple leader</p>
+        <h2 id="titre-responsables">Apôtre Jérémy Octave &amp; Prophétesse Amy Berté GLAZAÏ</h2>
+        <p class="chapo">Mari et femme, ils ont cofondé le Mouvement Prophético-Apostolique Soldats de l’Éternel et le conduisent ensemble depuis Abidjan. Leur alliance est au cœur de la vision : un même appel, une même passion pour Jésus-Christ et pour le réveil des nations.</p>
       </div>
-      <div class="responsables">
-        <article class="responsable"><span class="mono" aria-hidden="true">JG</span><div><h3>Jérémy l’Élu GLAZAÏ</h3><p class="role">Leader du mouvement</p><p>Il porte la vision d’ensemble, la direction spirituelle et stratégique, et conduit les grands projets et programmes du mouvement.</p></div></article>
-        <article class="responsable"><span class="mono" aria-hidden="true">AG</span><div><h3>Amy GLAZAÏ</h3><p class="role">Secrétaire générale</p><p>Elle assure la coordination administrative, le suivi des décisions et des projets, et la bonne circulation de l’information.</p></div></article>
+      <div class="bios">
+        <article class="bio" id="bio-jeremy">
+          <header><span class="mono" aria-hidden="true">JG</span><div><h3>Apôtre Jérémy Octave GLAZAÏ</h3><p class="role">« Jérémy l’Élu » · Cofondateur et Leader du mouvement</p><p class="tags"><span>Leader</span><span>Professionnel de santé</span><span>Auteur</span><span>Conférencier</span></p></div></header>
+          <p class="bio-accroche">Apôtre et enseignant de la Parole, il porte avec son épouse la vision d’ensemble et la direction spirituelle et stratégique du mouvement.</p>
+          <div class="bio-texte">
+            <p>L’Apôtre Jérémy Octave GLAZAÏ, que beaucoup connaissent sous le nom de « Jérémy l’Élu », est apôtre et enseignant de la Parole. Cofondateur du Mouvement Prophético-Apostolique Soldats de l’Éternel, il en est le leader et conduit ses grands projets et programmes.</p>
+            <p>Leader, professionnel de santé, auteur et conférencier, il se tient à plusieurs portes de la cité : celle de l’autel, celle de la santé et celle de l’enseignement. Sa vie est consacrée à l’édification des hommes, au leadership et à l’impact des générations.</p>
+            <p>Son ministère s’étend au réveil spirituel, à la formation de disciples, notamment à travers la Soldier’s Academy et la Love School, et à la diffusion d’enseignements prophético-apostoliques. Il est l’un des orateurs de la conférence internationale annuelle IN FIRE.</p>
+            <p>Son enseignement, résolument christocentrique, unit la rigueur exégétique à la déclaration prophétique. Il met l’accent sur l’autorité spirituelle, le discernement des esprits, l’intercession et le gouvernement du Royaume de Dieu. Sa parole se veut fondée sur l’Écriture, brûlante dans l’Esprit et, lorsque la vérité l’exige, franchement confrontante.</p>
+            <p>Auteur de nombreux ouvrages d’enseignement biblique et prophétique, parmi lesquels <i>Le Pouvoir de la femme</i> et <i>L’Œil du Soldat : le discernement des esprits</i>, il initie également Impact Santé pour Christ, un mouvement autonome qui rassemble des agents de santé chrétiens.</p>
+          </div>
+          <p class="bio-devise">Foi. Leadership. Santé. Impact.</p>
+        </article>
+        <article class="bio" id="bio-amy">
+          <header><span class="mono" aria-hidden="true">AG</span><div><h3>Prophétesse Amy Berté GLAZAÏ</h3><p class="role">Cofondatrice et co-leader · Secrétaire générale</p><p class="tags"><span>Prophétesse</span><span>Co-visionnaire</span><span>Coordination</span></p></div></header>
+          <p class="bio-accroche">Cofondatrice du mouvement, elle conduit l’œuvre aux côtés de son époux et veille sur la coordination de la mission.</p>
+          <div class="bio-texte">
+            <p>La Prophétesse Amy Berté GLAZAÏ est cofondatrice du Mouvement Prophético-Apostolique Soldats de l’Éternel, qu’elle conduit aux côtés de son époux, l’Apôtre Jérémy Octave GLAZAÏ. Co-visionnaire du mouvement, elle porte avec lui la vision de l’armée relevée d’Ézéchiel 37.</p>
+            <p>Son ministère prophétique accompagne la vie du mouvement : écoute de la voix de Dieu, discernement et édification des croyants. Elle est associée à la co-vision des enseignements du mouvement, notamment sur les songes, les visions et la vie prophétique.</p>
+            <p>Secrétaire générale, elle assure la coordination administrative, le suivi des décisions et des projets, et la bonne circulation de l’information entre la direction, les pôles et les points SDE dans les nations.</p>
+          </div>
+          <p class="bio-devise">Un même appel, une même vision.</p>
+        </article>
       </div>
+      <p class="bio-invit">Pour une invitation à prêcher, une conférence ou une rencontre avec le couple leader, écrivez au secrétariat : <a href="mailto:infosoldat@gmail.com">infosoldat@gmail.com</a> ou <a href="https://wa.me/2250778689573?text=Shalom%20!%20Je%20souhaite%20adresser%20une%20invitation%20au%20couple%20leader%20du%20MPA%20SDE." target="_blank" rel="noopener">WhatsApp</a>.</p>
     </div>
   </section>
 
@@ -674,7 +765,7 @@ button.b-contour { background: transparent; }
       <a class="marque" href="#accueil"><span class="logo" aria-hidden="true"></span><span><b>S.D.E.</b><small>Soldats de l’Éternel</small></span></a>
       <p>Mouvement prophético-apostolique pour le réveil spirituel des nations. Réveiller · Restaurer · Former · Équiper · Envoyer.</p>
     </div>
-    <div><h3>Le mouvement</h3><ul><li><a href="#mouvement">Qui sommes-nous</a></li><li><a href="#histoire">Notre histoire</a></li><li><a href="#responsables">Leadership</a></li><li><a href="#poles">Pôles</a></li><li><a href="#presence">Présence internationale</a></li></ul></div>
+    <div><h3>Le mouvement</h3><ul><li><a href="#mouvement">Qui sommes-nous</a></li><li><a href="#histoire">Notre histoire</a></li><li><a href="#responsables">Couple leader</a></li><li><a href="#poles">Pôles</a></li><li><a href="#presence">Présence internationale</a></li></ul></div>
     <div><h3>Participer</h3><ul><li><a href="#infire">IN FIRE 2026</a></li><li><a href="#programmes">Programmes</a></li><li><a href="#rejoindre">Rejoindre SDE</a></li><li><a href="#membres">Espace membre</a></li><li><a href="#contact">Contact</a></li></ul></div>
   </div>
   <div class="mention"><div class="enveloppe"><span>© <span id="annee">2026</span> Soldats de l’Éternel · Abidjan, Côte d’Ivoire</span><span>« Esprit, viens des quatre vents ! » Ézéchiel 37.9</span></div></div>
