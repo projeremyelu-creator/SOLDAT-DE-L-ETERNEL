@@ -206,11 +206,74 @@ p { margin: 0; }
 .poles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 1000px) { .poles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .poles { grid-template-columns: 1fr; } }
-.pole { border-top: 4px solid var(--nuit); background: var(--surface); border-radius: 0 0 var(--r) var(--r); padding: 18px; box-shadow: var(--ombre); }
-:root[data-theme="dark"] .pole { border-top-color: var(--or-fonce); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pole { border-top-color: var(--or-fonce); } }
-.pole .num { font-family: var(--f-titre); color: var(--or-texte); font-weight: 700; letter-spacing: .1em; font-size: .85rem; }
-.pole h3 { font-size: 1.2rem; margin-top: 6px; }
+.intro-poles { color: var(--gris); margin: -6px 0 18px; display: flex; gap: 8px; align-items: center; }
+.intro-poles::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--or-fonce); box-shadow: 0 0 0 0 rgba(226,194,106,.6); animation: pouls 2s infinite; flex: none; }
+@keyframes pouls { 70% { box-shadow: 0 0 0 10px rgba(226,194,106,0); } 100% { box-shadow: 0 0 0 0 rgba(226,194,106,0); } }
+.pole { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; background: var(--surface); border-radius: var(--r); overflow: hidden; box-shadow: var(--ombre); border: 1px solid var(--trait); transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s, border-color .25s; position: relative; -webkit-tap-highlight-color: transparent; }
+.pole:hover, .pole:focus-visible { transform: translateY(-6px); border-color: var(--or-fonce); box-shadow: 0 18px 40px rgba(15,30,61,.22); }
+.pole:focus-visible { outline: 3px solid var(--or-fonce); outline-offset: 3px; }
+.pole:active { transform: scale(.97); }
+.pole-img { display: block; aspect-ratio: 2 / 1; overflow: hidden; background: var(--nuit); }
+.pole-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+.pole:hover .pole-img img { transform: scale(1.08); }
+.pole-corps { display: flex; flex-direction: column; gap: 6px; padding: 16px 16px 18px; flex: 1; }
+.pole .num { font-family: var(--f-titre); color: var(--or-texte); font-weight: 700; letter-spacing: .1em; font-size: .85rem; text-transform: uppercase; }
+.pole-titre { font-family: var(--f-titre); font-weight: 700; font-size: 1.2rem; line-height: 1.15; color: var(--encre); }
+.pole-acc { color: var(--gris); font-size: .92rem; flex: 1; }
+.pole-plus { margin-top: 6px; font-weight: 700; font-size: .9rem; color: var(--encre); display: inline-flex; gap: 6px; align-items: center; }
+.pole-plus svg { width: 15px; height: 15px; transition: transform .25s; }
+.pole:hover .pole-plus svg { transform: translateX(4px); }
+.pole::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: linear-gradient(90deg, var(--or-fonce), #e4692c); transform: scaleX(0); transform-origin: left; transition: transform .35s; }
+.pole:hover::after, .pole:focus-visible::after { transform: scaleX(1); }
+@media (max-width: 1000px) { .pole-titre { font-size: 1.1rem; } }
+/* Fiche d’un pôle */
+.fiche-pole { border: 0; padding: 0; background: transparent; width: min(760px, calc(100vw - 24px)); max-width: none; max-height: calc(100dvh - 24px); color: var(--encre); overflow: visible; }
+.fiche-pole::backdrop { background: rgba(6,11,26,.72); backdrop-filter: blur(4px); }
+.fiche-pole[open] { animation: fp-entre .35s cubic-bezier(.2,.8,.2,1); }
+.fiche-pole[open]::backdrop { animation: fp-fond .35s ease; }
+@keyframes fp-entre { from { opacity: 0; transform: translateY(30px) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes fp-fond { from { opacity: 0; } }
+.fp-boite { background: var(--surface); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; max-height: calc(100dvh - 24px); box-shadow: 0 30px 80px rgba(0,0,0,.4); }
+.fp-image { position: relative; aspect-ratio: 2.4 / 1; background: var(--nuit); flex: none; }
+.fp-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fp-image::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 45%, rgba(6,11,26,.55)); pointer-events: none; }
+.fp-fermer { position: absolute; top: 10px; right: 10px; z-index: 2; width: 42px; height: 42px; border-radius: 50%; border: 0; background: rgba(6,11,26,.6); color: #fff; font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.fp-fermer:hover { background: rgba(6,11,26,.85); }
+.fp-corps { padding: 20px 24px 8px; overflow-y: auto; overscroll-behavior: contain; }
+.fp-corps.change { animation: fp-glisse .35s ease; }
+@keyframes fp-glisse { from { opacity: 0; transform: translateX(var(--dx, 20px)); } }
+.fp-corps .num { font-family: var(--f-titre); color: var(--or-texte); font-weight: 700; letter-spacing: .1em; font-size: .85rem; text-transform: uppercase; }
+.fp-corps h2 { font-size: clamp(1.5rem, 4vw, 2rem); margin: 4px 0 8px; text-transform: none; }
+.fp-corps .fp-chapo { color: var(--gris); font-size: 1.02rem; }
+.fp-corps h3 { font-size: 1rem; text-transform: uppercase; letter-spacing: .08em; color: var(--or-texte); margin: 20px 0 10px; }
+.fp-liste { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.fp-liste li { display: flex; gap: 10px; align-items: flex-start; }
+.fp-liste li::before { content: ""; flex: none; width: 8px; height: 8px; margin-top: .55em; border-radius: 50%; background: var(--or-fonce); }
+.fp-depts { display: flex; flex-wrap: wrap; gap: 8px; }
+.fp-depts span { background: var(--fond-2, rgba(226,194,106,.14)); border: 1px solid var(--trait); border-radius: 999px; padding: 6px 12px; font-size: .9rem; font-weight: 600; }
+.fp-projets { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.fp-projet { border: 1px solid var(--trait); border-left: 4px solid var(--or-fonce); border-radius: 10px; padding: 12px 14px; }
+.fp-projet b { display: block; font-family: var(--f-titre); font-size: 1.05rem; }
+.fp-projet small { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--or-texte); margin-bottom: 2px; }
+.fp-projet p { color: var(--gris); font-size: .92rem; margin: 4px 0 0; }
+.fp-verset { margin: 20px 0 6px; padding: 12px 16px; border-left: 3px solid var(--or-fonce); font-style: italic; color: var(--gris); }
+.fp-verset cite { display: block; font-style: normal; font-weight: 700; color: var(--or-texte); font-size: .85rem; margin-top: 4px; }
+.fp-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 14px; }
+.fp-nav { display: flex; justify-content: space-between; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--trait); flex: none; }
+.fp-nav button { border: 0; background: none; color: var(--encre); font-weight: 700; cursor: pointer; padding: 8px 10px; border-radius: 8px; font-size: .9rem; max-width: 48%; text-align: left; }
+.fp-nav button:last-child { text-align: right; }
+.fp-nav button:hover { background: rgba(226,194,106,.15); }
+@media (max-width: 600px) { .fiche-pole { width: 100%; max-height: 100dvh; margin: auto 0 0; inset: auto 0 0 0; } .fp-boite { border-radius: 18px 18px 0 0; max-height: 92dvh; } .fiche-pole[open] { animation-name: fp-monte; } .fp-corps { padding: 16px 16px 6px; } }
+@keyframes fp-monte { from { transform: translateY(100%); } }
+/* Illustrations des programmes */
+.programme { overflow: hidden; }
+.prog-img { display: block; width: calc(100% + 44px); max-width: none; margin: -22px -22px 6px; height: auto; aspect-ratio: 600 / 260; object-fit: cover; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+.programme:hover .prog-img { transform: scale(1.05); }
+/* Apparition au défilement */
+html.anim .revele { opacity: 0; transform: translateY(26px); transition: opacity .7s ease var(--d, 0s), transform .7s cubic-bezier(.2,.8,.2,1) var(--d, 0s); }
+html.anim .revele.vu { opacity: 1; transform: none; }
+html.anim .pole.revele.vu:hover { transform: translateY(-6px); transition-delay: 0s; }
+@media (prefers-reduced-motion: reduce) { html.anim .revele { opacity: 1; transform: none; transition: none; } .pole, .pole-img img, .prog-img, .fp-corps.change, .fiche-pole[open], .intro-poles::before { transition: none; animation: none; } }
 
 /* Programmes */
 .programmes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
@@ -483,7 +546,7 @@ button.b-contour { background: transparent; }
 
   <section class="section" id="agenda" aria-labelledby="titre-agenda" hidden>
     <div class="enveloppe">
-      <div class="tete-section">
+      <div class="tete-section revele">
         <p class="surtitre">Agenda</p>
         <h2 id="titre-agenda">Nos prochains rendez-vous</h2>
         <p class="chapo">Cultes, temps de prière, formations et missions ouverts à tous. Le programme est tenu à jour par le secrétariat du mouvement.</p>
@@ -504,9 +567,9 @@ button.b-contour { background: transparent; }
             <p>Notre ancrage est à Abidjan, notre horizon est celui des nations. Notre conviction tient en une image, celle de la vallée des ossements desséchés : ce que les hommes déclarent fini, la Parole de Dieu et le souffle de son Esprit peuvent le relever en une armée nombreuse.</p>
           </div>
           <div class="faits">
-            <div><b>6</b><span>pays où le mouvement est implanté</span></div>
-            <div><b>5</b><span>pôles qui organisent la mission</span></div>
-            <div><b>6</b><span>programmes réguliers</span></div>
+            <div><b data-compte="6">6</b><span>pays où le mouvement est implanté</span></div>
+            <div><b data-compte="5">5</b><span>pôles qui organisent la mission</span></div>
+            <div><b data-compte="6">6</b><span>programmes réguliers</span></div>
           </div>
         </div>
         <aside class="encadre" aria-label="Notre texte fondateur">
@@ -555,7 +618,7 @@ button.b-contour { background: transparent; }
 
   <section class="section" aria-labelledby="titre-devise">
     <div class="enveloppe">
-      <div class="tete-section">
+      <div class="tete-section revele">
         <p class="surtitre">Notre devise, notre chemin</p>
         <h2 id="titre-devise">Cinq temps pour un soldat</h2>
         <p class="chapo">Chaque soldat suit le même chemin, de la rencontre avec Dieu jusqu’à l’envoi en mission.</p>
@@ -572,7 +635,7 @@ button.b-contour { background: transparent; }
 
   <section class="section" id="histoire" aria-labelledby="titre-histoire">
     <div class="enveloppe">
-      <div class="tete-section">
+      <div class="tete-section revele">
         <p class="surtitre">Notre histoire</p>
         <h2 id="titre-histoire">D’une prière dans une maison à un mouvement</h2>
         <p class="chapo">SDE est né d’une prière dans un foyer, puis a grandi étape par étape.</p>
@@ -590,7 +653,7 @@ button.b-contour { background: transparent; }
 
   <section class="section" id="presence" aria-labelledby="titre-presence">
     <div class="enveloppe">
-      <div class="tete-section">
+      <div class="tete-section revele">
         <p class="surtitre">Présence internationale</p>
         <h2 id="titre-presence">Six points SDE dans le monde</h2>
         <p class="chapo">Le siège est à Abidjan. Les points SDE rassemblent les soldats de chaque pays pour la prière, la formation et la mission.</p>
@@ -608,7 +671,7 @@ button.b-contour { background: transparent; }
 
   <section class="section" id="responsables" aria-labelledby="titre-responsables">
     <div class="enveloppe">
-      <div class="tete-section">
+      <div class="tete-section revele">
         <p class="surtitre">Le couple leader</p>
         <h2 id="titre-responsables">Jérémy Octave &amp; Amy Berté GLAZAÏ</h2>
         <p class="chapo">Mari et femme, ils ont cofondé le Mouvement Prophético-Apostolique Soldats de l’Éternel et le conduisent ensemble depuis Abidjan. Leur alliance est au cœur de la vision : un même appel, une même passion pour Jésus-Christ et pour le réveil des nations.</p>
@@ -643,34 +706,50 @@ button.b-contour { background: transparent; }
 
   <section class="section" id="poles" aria-labelledby="titre-poles">
     <div class="enveloppe">
-      <div class="tete-section">
+      <div class="tete-section revele">
         <p class="surtitre">Pôles et départements</p>
         <h2 id="titre-poles">Cinq pôles au service de la mission</h2>
       </div>
+      <p class="intro-poles">Touchez un pôle pour découvrir sa mission, ses départements et ses projets.</p>
       <div class="poles">
-        <div class="pole"><span class="num">Pôle 1</span><h3>Réveil, évangélisation et missions</h3></div>
-        <div class="pole"><span class="num">Pôle 2</span><h3>Impact social et humanitaire</h3></div>
-        <div class="pole"><span class="num">Pôle 3</span><h3>Logistique et organisation</h3></div>
-        <div class="pole"><span class="num">Pôle 4</span><h3>Communication, médias et digital</h3></div>
-        <div class="pole"><span class="num">Pôle 5</span><h3>Formation et développement intégral</h3></div>
+        <button type="button" class="pole revele" data-pole="1" aria-haspopup="dialog" style="--d:0.00s">
+          <span class="pole-img"><img src="/vitrine/illus/pole-1.svg" alt="" width="1200" height="600" loading="lazy"></span>
+          <span class="pole-corps"><span class="num">Pôle 1</span><span class="pole-titre">Réveil, évangélisation et missions</span><span class="pole-acc">Allumer le feu et le porter aux nations</span><span class="pole-plus">Découvrir le pôle <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span>
+        </button>
+        <button type="button" class="pole revele" data-pole="2" aria-haspopup="dialog" style="--d:0.08s">
+          <span class="pole-img"><img src="/vitrine/illus/pole-2.svg" alt="" width="1200" height="600" loading="lazy"></span>
+          <span class="pole-corps"><span class="num">Pôle 2</span><span class="pole-titre">Impact social et humanitaire</span><span class="pole-acc">L’amour de Dieu rendu visible et concret</span><span class="pole-plus">Découvrir le pôle <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span>
+        </button>
+        <button type="button" class="pole revele" data-pole="3" aria-haspopup="dialog" style="--d:0.16s">
+          <span class="pole-img"><img src="/vitrine/illus/pole-3.svg" alt="" width="1200" height="600" loading="lazy"></span>
+          <span class="pole-corps"><span class="num">Pôle 3</span><span class="pole-titre">Logistique et organisation</span><span class="pole-acc">Tout préparer pour que Dieu agisse</span><span class="pole-plus">Découvrir le pôle <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span>
+        </button>
+        <button type="button" class="pole revele" data-pole="4" aria-haspopup="dialog" style="--d:0.24s">
+          <span class="pole-img"><img src="/vitrine/illus/pole-4.svg" alt="" width="1200" height="600" loading="lazy"></span>
+          <span class="pole-corps"><span class="num">Pôle 4</span><span class="pole-titre">Communication, médias et digital</span><span class="pole-acc">Faire entendre le message partout</span><span class="pole-plus">Découvrir le pôle <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span>
+        </button>
+        <button type="button" class="pole revele" data-pole="5" aria-haspopup="dialog" style="--d:0.32s">
+          <span class="pole-img"><img src="/vitrine/illus/pole-5.svg" alt="" width="1200" height="600" loading="lazy"></span>
+          <span class="pole-corps"><span class="num">Pôle 5</span><span class="pole-titre">Formation et développement intégral</span><span class="pole-acc">Former des disciples et des leaders complets</span><span class="pole-plus">Découvrir le pôle <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span>
+        </button>
       </div>
     </div>
   </section>
 
   <section class="section" id="programmes" aria-labelledby="titre-programmes">
     <div class="enveloppe">
-      <div class="tete-section">
+      <div class="tete-section revele">
         <p class="surtitre">Programmes et projets</p>
         <h2 id="titre-programmes">Des rendez-vous pour grandir ensemble</h2>
         <p class="chapo">Chaque programme a son équipe. Écrivez-nous pour y participer ou le soutenir.</p>
       </div>
       <div class="programmes">
-        <article class="programme"><span class="rythme">Chaque mois</span><h3>Traversée Prophétique Mensuelle</h3><p>Un temps de prière et de consécration pour entrer dans le mois avec Dieu.</p><a href="#rejoindre" data-sujet="Traversée Prophétique Mensuelle">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme feu"><span class="rythme">Chaque année</span><h3>IN FIRE</h3><p>La conférence internationale pour le réveil spirituel des nations : réveil, enseignement et formation.</p><a href="#infire">Voir l’édition 2026 <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme"><span class="rythme">Parcours</span><h3>Soldiers Academy</h3><p>Un parcours pour former des disciples solides et des leaders au service du Royaume.</p><a href="#rejoindre" data-sujet="Soldiers Academy">S’inscrire <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme"><span class="rythme">Partage et célébration</span><h3>HolyTalk &amp; HolyDay</h3><p>Des espaces d’échange sur la foi et la vie, et des journées de célébration.</p><a href="#rejoindre" data-sujet="HolyTalk &amp; HolyDay">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme"><span class="rythme">Sur le terrain</span><h3>Missions et actions solidaires</h3><p>Évangélisation, visites et soutien concret aux personnes dans le besoin.</p><a href="#rejoindre" data-sujet="Missions et actions solidaires">S’engager <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme"><span class="rythme">Communion fraternelle</span><h3>Holy Brunch</h3><p>Un moment convivial pour se rencontrer, partager un repas et fortifier les liens.</p><a href="#rejoindre" data-sujet="Holy Brunch">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
+        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-traversee.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Chaque mois</span><h3>Traversée Prophétique Mensuelle</h3><p>Un temps de prière et de consécration pour entrer dans le mois avec Dieu.</p><a href="#rejoindre" data-sujet="Traversée Prophétique Mensuelle">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
+        <article class="programme revele feu"><img class="prog-img" src="/vitrine/illus/prog-infire.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Chaque année</span><h3>IN FIRE</h3><p>La conférence internationale pour le réveil spirituel des nations : réveil, enseignement et formation.</p><a href="#infire">Voir l’édition 2026 <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
+        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-academy.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Parcours</span><h3>Soldiers Academy</h3><p>Un parcours pour former des disciples solides et des leaders au service du Royaume.</p><a href="#rejoindre" data-sujet="Soldiers Academy">S’inscrire <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
+        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-holytalk.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Partage et célébration</span><h3>HolyTalk &amp; HolyDay</h3><p>Des espaces d’échange sur la foi et la vie, et des journées de célébration.</p><a href="#rejoindre" data-sujet="HolyTalk &amp; HolyDay">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
+        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-missions.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Sur le terrain</span><h3>Missions et actions solidaires</h3><p>Évangélisation, visites et soutien concret aux personnes dans le besoin.</p><a href="#rejoindre" data-sujet="Missions et actions solidaires">S’engager <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
+        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-brunch.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Communion fraternelle</span><h3>Holy Brunch</h3><p>Un moment convivial pour se rencontrer, partager un repas et fortifier les liens.</p><a href="#rejoindre" data-sujet="Holy Brunch">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
       </div>
     </div>
   </section>
@@ -713,7 +792,7 @@ button.b-contour { background: transparent; }
           <div class="champ"><label for="f-mail">E-mail <span class="facult">facultatif</span></label><input id="f-mail" name="mail" type="email" autocomplete="email"></div>
           <div class="champ"><label for="f-ville">Ville et pays <span class="oblig">obligatoire</span></label><input id="f-ville" name="ville" autocomplete="address-level2" placeholder="Abidjan, Côte d’Ivoire" maxlength="80" required aria-required="true"></div>
         </div>
-        <div class="champ"><label for="f-objet">Votre demande</label><select id="f-objet" name="objet"><option>Devenir membre</option><option>Traversée Prophétique Mensuelle</option><option>IN FIRE</option><option>Soldiers Academy</option><option>HolyTalk &amp; HolyDay</option><option>Missions et actions solidaires</option><option>Holy Brunch</option><option>Demande de prière</option><option>Autre</option></select></div>
+        <div class="champ"><label for="f-objet">Votre demande</label><select id="f-objet" name="objet"><option>Devenir membre</option><option>Traversée Prophétique Mensuelle</option><option>IN FIRE</option><option>Soldiers Academy</option><option>HolyTalk &amp; HolyDay</option><option>Missions et actions solidaires</option><option>Holy Brunch</option><option>Servir dans un pôle</option><option>Demande de prière</option><option>Autre</option></select></div>
         <div class="champ"><label for="f-msg">Quelques mots sur vous <span class="facult">facultatif</span></label><textarea id="f-msg" name="msg" placeholder="Votre parcours, votre église, ce qui vous amène…"></textarea></div>
         <label class="accord" for="f-accord"><input id="f-accord" name="accord" type="checkbox" required><span>J’accepte que ces informations soient envoyées au secrétariat du mouvement SDE pour me recontacter. L’envoi passe par l’application que je choisis à l’étape suivante (WhatsApp ou ma messagerie e-mail). Le mouvement ne vend ni ne cède ces informations à d’autres organisations. <span class="oblig">obligatoire</span></span></label>
         <p class="erreur" id="f-erreur" role="alert" hidden></p>
@@ -730,7 +809,7 @@ button.b-contour { background: transparent; }
 
   <section class="section" id="membres" aria-labelledby="titre-membres">
     <div class="enveloppe">
-      <div class="tete-section">
+      <div class="tete-section revele">
         <p class="surtitre">Espace membre</p>
         <h2 id="titre-membres">Votre espace soldat</h2>
         <p class="chapo">Votre espace se trouve dans MPA SDE, l’application du mouvement. Créez votre compte avec votre adresse e-mail et un mot de passe : votre matricule à 6 chiffres vous est attribué aussitôt, sans attente.</p>
@@ -771,6 +850,14 @@ button.b-contour { background: transparent; }
   </div>
   <div class="mention"><div class="enveloppe"><span>© <span id="annee">2026</span> Soldats de l’Éternel · Abidjan, Côte d’Ivoire</span><span>« Esprit, viens des quatre vents ! » Ézéchiel 37.9</span></div></div>
 </footer>
+
+<dialog id="fiche-pole" class="fiche-pole" aria-labelledby="fp-titre">
+  <div class="fp-boite">
+    <div class="fp-image"><img id="fp-img" src="/vitrine/illus/pole-1.svg" alt="" width="1200" height="600"><button type="button" class="fp-fermer" data-fp="fermer" aria-label="Fermer">×</button></div>
+    <div class="fp-corps" id="fp-corps"></div>
+    <div class="fp-nav"><button type="button" data-fp="prec" aria-label="Pôle précédent">‹ <span id="fp-prec"></span></button><button type="button" data-fp="suiv" aria-label="Pôle suivant"><span id="fp-suiv"></span> ›</button></div>
+  </div>
+</dialog>
 
 <script>
 (() => {
@@ -938,6 +1025,90 @@ button.b-contour { background: transparent; }
     document.getElementById("menu-agenda").hidden = false;
   }).catch(() => {});
   document.getElementById("annee").textContent = new Date().getFullYear();
+
+  /* Apparition au défilement et chiffres animés */
+  if ("IntersectionObserver" in window && !reduit) {
+    document.documentElement.classList.add("anim");
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("vu"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px", threshold: .08 });
+    document.querySelectorAll(".revele").forEach((el) => io.observe(el));
+    const ic = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return; ic.unobserve(e.target);
+      const b = e.target, fin = +b.dataset.compte, t0 = performance.now();
+      const pas = (t) => { const k = Math.min(1, (t - t0) / 1200); b.textContent = Math.round(fin * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(pas); };
+      b.textContent = "0"; requestAnimationFrame(pas);
+    }), { threshold: .6 });
+    document.querySelectorAll("[data-compte]").forEach((b) => ic.observe(b));
+  }
+
+  /* Pôles : fiche détaillée au toucher */
+  const POLES = {
+    1: { t: "Réveil, évangélisation et missions", chapo: "Le cœur battant du mouvement : la prière, la proclamation de l’Évangile et l’envoi de soldats vers les villes et les nations.",
+      fait: ["Organise les temps de prière, de jeûne et d’intercession du mouvement", "Conduit les campagnes d’évangélisation dans les quartiers, les universités et les marchés", "Prépare et envoie des équipes en mission en Côte d’Ivoire et à l’étranger", "Accompagne les nouveaux convertis vers une vie de disciple"],
+      depts: ["Intercession", "Évangélisation", "Missions", "Louange et adoration", "Suivi des nouveaux convertis"],
+      projets: [["Chaque année", "IN FIRE", "La conférence internationale pour le réveil spirituel des nations."], ["Chaque mois", "Traversée Prophétique Mensuelle", "Entrer dans chaque mois par la prière et la consécration."], ["Sur le terrain", "Campagnes d’évangélisation", "Porter l’Évangile là où les gens vivent, étudient et travaillent."]],
+      verset: ["Allez par tout le monde, et prêchez la bonne nouvelle à toute la création.", "Marc 16.15"] },
+    2: { t: "Impact social et humanitaire", chapo: "La foi qui se voit : visiter, soutenir et relever concrètement les personnes et les familles dans le besoin.",
+      fait: ["Visite les malades, les personnes âgées et les familles éprouvées", "Organise des collectes de vivres, de vêtements et de fournitures", "Accompagne les familles et les jeunes dans les moments difficiles", "Mène des actions solidaires lors des missions sur le terrain"],
+      depts: ["Actions solidaires", "Visites et accompagnement", "Famille", "Entraide entre membres"],
+      projets: [["Sur le terrain", "Missions et actions solidaires", "Soutien concret aux personnes dans le besoin."], ["Toute l’année", "Accompagnement des familles", "Écoute, conseil et soutien des foyers."], ["Ponctuel", "Collectes et dons", "Vivres, vêtements et fournitures scolaires pour ceux qui en manquent."]],
+      verset: ["Toutes les fois que vous avez fait ces choses à l’un de ces plus petits de mes frères, c’est à moi que vous les avez faites.", "Matthieu 25.40"] },
+    3: { t: "Logistique et organisation", chapo: "Les bâtisseurs de l’ombre : ils préparent les lieux, le matériel et l’accueil pour que chaque rassemblement se déroule dans l’ordre.",
+      fait: ["Prépare les salles, l’installation et le matériel de chaque rassemblement", "Assure l’accueil, le placement et la sécurité des participants", "Gère le transport, l’intendance et le matériel du mouvement", "Coordonne l’organisation des grands événements comme IN FIRE"],
+      depts: ["Protocole et accueil", "Sonorisation et technique", "Intendance", "Transport", "Sécurité"],
+      projets: [["En cours", "Logistique d’IN FIRE 2026", "Lieu, accueil, son, restauration et sécurité de la conférence."], ["Équipement", "Achat de sonorisation", "Doter le mouvement d’un système de son de qualité pour ses rassemblements."], ["Toute l’année", "Organisation des cultes et rencontres", "Installer, accueillir et ranger à chaque rendez-vous."]],
+      verset: ["Mais que tout se fasse avec bienséance et avec ordre.", "1 Corinthiens 14.40"] },
+    4: { t: "Communication, médias et digital", chapo: "La voix du mouvement : faire connaître le message, les événements et les témoignages, en ligne comme sur le terrain.",
+      fait: ["Réalise les affiches, visuels et vidéos des événements", "Anime les réseaux sociaux et les groupes WhatsApp du mouvement", "Filme, photographie et diffuse les cultes et conférences", "Fait vivre le site mouvement-sde.org et l’application MPA SDE"],
+      depts: ["Graphisme", "Photo et vidéo", "Réseaux sociaux", "Digital (site et application)", "Rédaction"],
+      projets: [["En service", "Application MPA SDE", "Le poste de commandement des membres et des responsables."], ["Nouveau", "Médiathèque", "Enseignements, vidéos, audios et documents du mouvement réunis en un lieu."], ["Chaque événement", "Couverture médias", "Affiches, diffusion en direct, photos et résumés."]],
+      verset: ["Ce que je vous dis dans les ténèbres, dites-le en plein jour ; et ce qui vous est dit à l’oreille, prêchez-le sur les toits.", "Matthieu 10.27"] },
+    5: { t: "Formation et développement intégral", chapo: "Former l’homme tout entier : l’esprit, le caractère, la famille, le métier et le leadership, pour des soldats solides et utiles.",
+      fait: ["Conduit les parcours de formation des disciples et des leaders", "Organise des enseignements sur le couple, la famille et la vie chrétienne", "Accompagne le développement personnel, professionnel et financier", "Prépare les responsables qui serviront dans les pôles"],
+      depts: ["Soldiers Academy", "Enseignement biblique", "Couple et famille", "Leadership", "Développement personnel et professionnel"],
+      projets: [["Parcours", "Soldiers Academy", "Former des disciples solides et des leaders au service du Royaume."], ["Partage", "HolyTalk & HolyDay", "Des espaces d’échange sur la foi et la vie, et des journées de célébration."], ["Communion", "Holy Brunch", "Se rencontrer, partager un repas et fortifier les liens."]],
+      verset: ["Ce que tu as entendu de moi, confie-le à des hommes fidèles, qui soient capables de l’enseigner aussi à d’autres.", "2 Timothée 2.2"] },
+  };
+  const fp = document.getElementById("fiche-pole"), fpc = document.getElementById("fp-corps");
+  let polActif = 1, dernierBouton = null;
+  function afficherPole(n, sens) {
+    polActif = n; const P = POLES[n];
+    document.getElementById("fp-img").src = "/vitrine/illus/pole-" + n + ".svg";
+    const msg = "Bonjour, je souhaite servir dans le Pôle " + n + " (" + P.t + ") du Mouvement Soldats de l’Éternel.";
+    fpc.innerHTML = `<span class="num">Pôle ${n} sur 5</span><h2 id="fp-titre">${P.t}</h2><p class="fp-chapo">${P.chapo}</p>
+      <h3>Ce que fait le pôle</h3><ul class="fp-liste">${P.fait.map((x) => `<li>${x}</li>`).join("")}</ul>
+      <h3>Départements</h3><div class="fp-depts">${P.depts.map((x) => `<span>${x}</span>`).join("")}</div>
+      <h3>Projets et initiatives</h3><div class="fp-projets">${P.projets.map(([r, t, d]) => `<div class="fp-projet"><small>${r}</small><b>${t}</b><p>${d}</p></div>`).join("")}</div>
+      <blockquote class="fp-verset">« ${P.verset[0]} »<cite>${P.verset[1]}</cite></blockquote>
+      <div class="fp-actions"><a class="bouton b-or" href="https://wa.me/2250778689573?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Servir dans ce pôle</a><a class="bouton b-ligne" href="#rejoindre" data-fp="contact">Écrire au mouvement</a></div>`;
+    const prec = n === 1 ? 5 : n - 1, suiv = n === 5 ? 1 : n + 1;
+    document.getElementById("fp-prec").textContent = POLES[prec].t; document.getElementById("fp-suiv").textContent = POLES[suiv].t;
+    fpc.scrollTop = 0;
+    if (sens && !reduit) { fpc.classList.remove("change"); fpc.style.setProperty("--dx", sens > 0 ? "30px" : "-30px"); void fpc.offsetWidth; fpc.classList.add("change"); }
+    try { history.replaceState(null, "", "#pole-" + n); } catch (e) {}
+  }
+  function ouvrirPole(n, bouton) {
+    dernierBouton = bouton || null; afficherPole(n);
+    if (fp.showModal) fp.showModal(); else fp.setAttribute("open", "");
+    document.body.style.overflow = "hidden";
+  }
+  function fermerPole() { if (fp.open) fp.close(); }
+  fp.addEventListener("close", () => { document.body.style.overflow = ""; try { history.replaceState(null, "", "#poles"); } catch (e) {} if (dernierBouton) dernierBouton.focus({ preventScroll: true }); });
+  document.querySelectorAll(".pole[data-pole]").forEach((b) => b.addEventListener("click", () => ouvrirPole(+b.dataset.pole, b)));
+  fp.addEventListener("click", (e) => {
+    if (e.target === fp) return fermerPole();
+    const a = e.target.closest("[data-fp]"); if (!a) return;
+    const k = a.dataset.fp;
+    if (k === "fermer") fermerPole();
+    else if (k === "prec") afficherPole(polActif === 1 ? 5 : polActif - 1, -1);
+    else if (k === "suiv") afficherPole(polActif === 5 ? 1 : polActif + 1, 1);
+    else if (k === "contact") { fermerPole(); const s = document.getElementById("f-objet"); [...s.options].forEach((o) => { if (o.textContent === "Servir dans un pôle") s.value = o.value; }); const m = document.querySelector("#rejoindre textarea"); if (m && !m.value) m.value = "Je souhaite servir dans le Pôle " + polActif + " (" + POLES[polActif].t + ")."; }
+  });
+  fp.addEventListener("keydown", (e) => { if (e.key === "ArrowRight") afficherPole(polActif === 5 ? 1 : polActif + 1, 1); if (e.key === "ArrowLeft") afficherPole(polActif === 1 ? 5 : polActif - 1, -1); });
+  let x0 = null;
+  fpc.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  fpc.addEventListener("touchend", (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 70) afficherPole(dx < 0 ? (polActif === 5 ? 1 : polActif + 1) : (polActif === 1 ? 5 : polActif - 1), dx < 0 ? 1 : -1); }, { passive: true });
+  const mh = location.hash.match(/^#pole-([1-5])$/);
+  if (mh) { document.getElementById("poles").scrollIntoView(); ouvrirPole(+mh[1]); }
 })();
 </script>
 </body>

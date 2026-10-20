@@ -47,6 +47,10 @@ Les règles d’accès aux données sont vérifiées par le serveur (`REGLES` da
 
 `public/vitrine/index.html` est servi sur mouvement-sde.org. La section « Nos prochains rendez-vous » lit en direct les rassemblements de type Culte, Prière et intercession, Formation, Conférence et Évangélisation (route publique `/api/public`, sans données internes) ; elle reste masquée s’il n’y en a aucun.
 
+**Pôles** : chaque carte s’ouvre au toucher sur une fiche (mission, départements, projets, verset, bouton « Servir dans ce pôle » vers WhatsApp) ; on passe d’un pôle à l’autre par les flèches ou en glissant. Le contenu des fiches se modifie dans l’objet `POLES` du script de la page. Lien direct : `mouvement-sde.org/#pole-3`.
+
+**Illustrations** : `public/vitrine/illus/*.svg`, générées par `python3 app/illustrations.py` (légères, animées). Pour mettre une vraie photo à la place, déposer l’image dans `public/vitrine/` et changer le `src` correspondant.
+
 ## Mettre à jour l’application
 
 1. Modifier les sources dans `source/src/` (voir `source/patch_v5.py`, qui assemble les modules).
