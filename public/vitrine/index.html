@@ -98,7 +98,8 @@ p { margin: 0; }
 .marque small { display: block; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--sur-nuit-2); margin-top: 3px; white-space: nowrap; }
 .menu { margin-left: auto; display: flex; align-items: center; gap: 4px; }
 .menu a { color: var(--sur-nuit); text-decoration: none; font-weight: 700; font-size: .95rem; padding: 10px 12px; border-radius: 999px; }
-.menu a:hover { color: var(--or); }
+.menu a:hover, .menu a.act { color: var(--or); }
+.menu a.act { background: rgba(226,194,106,.1); }
 .menu .bouton { margin-left: 8px; min-height: 42px; padding: 0 18px; }
 .burger { display: none; margin-left: auto; width: 46px; height: 46px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, .3); background: transparent; color: #fff; cursor: pointer; }
 .burger svg { width: 22px; height: 22px; }
@@ -132,6 +133,27 @@ p { margin: 0; }
 .points-v button { width: 30px; height: 30px; border: 0; background: none; cursor: pointer; position: relative; padding: 0; }
 .points-v button::after { content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: rgba(255, 255, 255, .35); transition: width .25s, margin .25s, background .25s; }
 .points-v button[aria-pressed="true"]::after { width: 22px; margin-left: -11px; border-radius: 4px; background: var(--or); }
+
+/* Églises partenaires */
+.eglises { background: linear-gradient(135deg, var(--nuit) 0%, #162a52 50%, #1a3160 100%); color: #fff; position: relative; overflow: hidden; }
+.eglises::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 80% 20%, rgba(226,194,106,.08) 0%, transparent 70%); pointer-events: none; }
+.eglises .enveloppe { padding-block: clamp(48px, 7vw, 80px); position: relative; z-index: 1; }
+.eg-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(226,194,106,.12); border: 1px solid rgba(226,194,106,.25); border-radius: 100px; padding: 8px 20px; font: 700 .85rem/1 var(--f-titre); color: var(--or); text-transform: uppercase; letter-spacing: .14em; margin-bottom: 28px; backdrop-filter: blur(6px); }
+.eg-icone { font-size: 1.1em; }
+.eg-contenu { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(28px, 5vw, 56px); align-items: start; }
+@media (max-width: 900px) { .eg-contenu { grid-template-columns: 1fr; } }
+.eg-texte h2 { font-family: var(--f-titre); font-size: clamp(1.7rem, 4vw, 2.6rem); line-height: 1.15; color: #fff; margin: 0 0 18px; }
+.eg-texte h2::after { content: ''; display: block; width: 60px; height: 3px; background: var(--or); margin-top: 14px; border-radius: 3px; }
+.eg-texte .chapo { color: var(--sur-nuit-2); font-size: 1.05rem; line-height: 1.65; margin: 0; }
+.eg-grille { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 560px) { .eg-grille { grid-template-columns: 1fr; } }
+.eg-carte { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: var(--r); padding: clamp(18px, 3vw, 26px); transition: transform .35s cubic-bezier(.22,1,.36,1), border-color .3s, background .3s; animation-delay: var(--d, 0s); }
+.eg-carte:hover { transform: translateY(-4px); border-color: rgba(226,194,106,.35); background: rgba(226,194,106,.06); }
+.eg-num { display: block; font: 700 .8rem var(--f-titre); color: var(--or); letter-spacing: .08em; margin-bottom: 8px; opacity: .6; }
+.eg-carte h3 { font-family: var(--f-titre); font-size: 1.1rem; color: #fff; margin: 0 0 6px; }
+.eg-carte p { color: var(--sur-nuit-2); font-size: .92rem; margin: 0; line-height: 1.45; }
+.eg-appel { text-align: center; margin: clamp(28px, 4vw, 44px) 0 0; padding: 22px 28px; background: rgba(226,194,106,.07); border: 1px solid rgba(226,194,106,.18); border-radius: var(--r); font-size: 1.08rem; line-height: 1.6; color: var(--sur-nuit-2); }
+.eg-appel strong { color: var(--or); }
 
 /* IN FIRE */
 .infire { background: linear-gradient(120deg, #2a0d07 0%, #5a1a0b 45%, var(--braise-2) 100%); color: #fff; }
@@ -465,6 +487,7 @@ button.b-contour { background: transparent; }
     <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
     <nav class="menu" id="menu" aria-label="Menu principal">
       <a href="#mouvement">Le mouvement</a>
+      <a href="#eglises">Églises</a>
       <a href="#infire">IN FIRE</a>
       <a href="#agenda" id="menu-agenda" hidden>Agenda</a>
       <a href="#programmes">Programmes</a>
@@ -484,7 +507,7 @@ button.b-contour { background: transparent; }
       <div class="apparait">
         <p class="surtitre">Mouvement prophético-apostolique · Abidjan</p>
         <h1 id="titre-principal">Le réveil spirituel <em>des nations</em></h1>
-        <p class="chapo">Soldats de l’Éternel est un mouvement chrétien christocentrique, enraciné dans les Écritures et attentif au Saint-Esprit. Nous relevons une génération transformée, formée, équipée et envoyée.</p>
+        <p class="chapo">Pas une église. <strong>Une plateforme interconfessionnelle</strong> qui rassemble des églises et des croyants pour le réveil spirituel des nations. Une génération transformée, formée, équipée et envoyée.</p>
         <div class="actions">
           <a class="bouton b-or" href="#rejoindre">Rejoindre le mouvement <svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
           <a class="bouton b-contour" href="#infire">IN FIRE 2026 · 31 octobre</a>
@@ -504,6 +527,25 @@ button.b-contour { background: transparent; }
       </div>
     </div>
     <svg class="vallee" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120V62c120-26 230 22 360-4s210-36 340-8 240 28 360 6c60-11 100-14 140-12v76z"/><path d="M0 120V96c160-18 300 14 470-4s290-22 450 0c120 16 210 10 280 2v26z"/></svg>
+  </section>
+
+  <section class="eglises" id="eglises" aria-labelledby="titre-eglises">
+    <div class="enveloppe">
+      <div class="eg-badge revele"><span class="eg-icone" aria-hidden="true">✦</span> Plateforme interconfessionnelle</div>
+      <div class="eg-contenu">
+        <div class="eg-texte revele">
+          <h2 id="titre-eglises">SDE n'est pas une église</h2>
+          <p class="chapo">Le Mouvement Prophético-Apostolique <b>Soldats de l'Éternel</b> est une <strong>plateforme interconfessionnelle</strong> pour le réveil spirituel des nations. Nous rassemblons des églises, des ministères et des croyants de différentes dénominations autour d'une même vision : voir se lever une armée de Dieu dans chaque nation.</p>
+        </div>
+        <div class="eg-grille">
+          <article class="eg-carte revele" style="--d:.05s"><span class="eg-num">01</span><h3>Réveil</h3><p>Église du Réveil</p></article>
+          <article class="eg-carte revele" style="--d:.12s"><span class="eg-num">02</span><h3>Pentecôte International</h3><p>Église de Pentecôte Internationale</p></article>
+          <article class="eg-carte revele" style="--d:.19s"><span class="eg-num">03</span><h3>Vase d'honneur</h3><p>Ministère Vase d'Honneur</p></article>
+          <article class="eg-carte revele" style="--d:.26s"><span class="eg-num">04</span><h3>Assemblée de Dieu</h3><p>Assemblées de Dieu</p></article>
+        </div>
+      </div>
+      <p class="eg-appel revele" style="--d:.3s">Quelle que soit votre église, si vous brûlez pour le réveil des nations, <strong>votre place est parmi nous</strong>.</p>
+    </div>
   </section>
 
   <section class="infire" id="infire" aria-labelledby="titre-infire">
@@ -562,8 +604,8 @@ button.b-contour { background: transparent; }
           <p class="surtitre">Qui sommes-nous</p>
           <h2 id="titre-mouvement">Une armée relevée par le souffle de Dieu</h2>
           <div class="texte chapo">
-            <p>Le <b>Mouvement Prophético-Apostolique Soldats de l’Éternel</b> (MPA SDE) est un mouvement chrétien christocentrique, enraciné dans les Écritures et attentif au Saint-Esprit. Né à Abidjan, il a son siège à Cocody Deux-Plateaux et rassemble aujourd’hui des soldats en Côte d’Ivoire, en Tunisie, au Burkina Faso, en Italie, au Canada et aux États-Unis.</p>
-            <p>Nous croyons que la foi ne se limite pas au temps du culte : elle doit transformer chaque domaine de la vie, la prière, le caractère, la famille, le travail et le service. C’est pourquoi nous formons des disciples et des leaders qui portent le réveil là où Dieu les envoie, dans leur maison, leur métier, leur ville et les nations.</p>
+            <p>Le <b>Mouvement Prophético-Apostolique Soldats de l’Éternel</b> (MPA SDE) <strong>n’est pas une église</strong> : c’est une <strong>plateforme interconfessionnelle</strong> pour le réveil spirituel des nations. Né à Abidjan avec son siège à Cocody Deux-Plateaux, le mouvement rassemble des croyants de différentes dénominations — Réveil, Pentecôte International, Vase d’Honneur, Assemblée de Dieu — autour d’une même vision christocentrique, enracinée dans les Écritures et attentive au Saint-Esprit.</p>
+            <p>SDE fédère des soldats en Côte d’Ivoire, en Tunisie, au Burkina Faso, en Italie, au Canada et aux États-Unis. Nous croyons que la foi ne se limite pas au temps du culte : elle doit transformer chaque domaine de la vie. C’est pourquoi nous formons des disciples et des leaders qui portent le réveil là où Dieu les envoie, quelle que soit leur église locale.</p>
             <p>Notre ancrage est à Abidjan, notre horizon est celui des nations. Notre conviction tient en une image, celle de la vallée des ossements desséchés : ce que les hommes déclarent fini, la Parole de Dieu et le souffle de son Esprit peuvent le relever en une armée nombreuse.</p>
           </div>
           <div class="faits">
@@ -1109,6 +1151,20 @@ button.b-contour { background: transparent; }
   fpc.addEventListener("touchend", (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 70) afficherPole(dx < 0 ? (polActif === 5 ? 1 : polActif + 1) : (polActif === 1 ? 5 : polActif - 1), dx < 0 ? 1 : -1); }, { passive: true });
   const mh = location.hash.match(/^#pole-([1-5])$/);
   if (mh) { document.getElementById("poles").scrollIntoView(); ouvrirPole(+mh[1]); }
+
+  /* Surlignage actif de la navigation */
+  const menuLiens = document.querySelectorAll(".menu a[href^='#']");
+  const sections = [...menuLiens].map(a => document.getElementById(a.getAttribute("href").slice(1))).filter(Boolean);
+  if (sections.length && "IntersectionObserver" in window) {
+    const actif = new IntersectionObserver((es) => {
+      es.forEach(e => {
+        if (!e.isIntersecting) return;
+        const id = e.target.id;
+        menuLiens.forEach(a => { a.classList.toggle("act", a.getAttribute("href") === "#" + id); });
+      });
+    }, { rootMargin: "-30% 0px -60% 0px", threshold: 0 });
+    sections.forEach(s => actif.observe(s));
+  }
 })();
 </script>
 </body>
