@@ -4,7 +4,7 @@
   const LIB_ROLE_H = { attente: "En attente", soldat: "Soldat", lecture: "Lecture seule", contributeur: "Contributeur", admin: "Administrateur", proprietaire: "Propriétaire", visiteur: "Visiteur" };
   const ROLES_H = [["soldat", "Soldat : son espace, l’agenda et les annonces"], ["contributeur", "Contributeur : registre, agenda, pointage, sans les finances"], ["admin", "Administrateur : tout, finances comprises"], ["lecture", "Lecture seule"], ["attente", "En attente (aucun accès interne)"]];
   const URL_APP_H = "https://app.mouvement-sde.org";
-  const champMdp = (id, label, auto, hint) => champ(id, label, `<input class="inp" id="${id}" name="${id.replace(/^c[a-z]+-/, "")}" type="password" autocomplete="${auto}" minlength="8" maxlength="200" required>`, { req: true, hint });
+  const champMdp = (id, label, auto, hint) => champ(id, label, `<input class="inp" id="${id}" name="${id.replace(/^c[a-z]+-/, "")}" type="password" autocomplete="${auto}" minlength="4" maxlength="200" required>`, { req: true, hint });
   const voirMdp = `<label class="check cnx-voir"><input type="checkbox" data-voir-mdp> Afficher le mot de passe</label>`;
 
   /* — Feuille de connexion : se connecter, créer son compte, activer un compte — */
@@ -19,11 +19,11 @@
     else if (m === "inscription") corps = `<p class="hint" style="margin-top:0">Votre compte s’ouvre aussitôt et vous recevez votre <b>matricule à 6 chiffres</b>, votre carte de membre et votre espace soldat.</p>
       <div class="f2">${champ("ci-prenoms", "Prénoms", inp("ci-prenoms", "prenoms", "", 'autocomplete="given-name" required autofocus maxlength="80"'), { req: true })}${champ("ci-nom", "Nom", inp("ci-nom", "nom", "", 'autocomplete="family-name" required maxlength="80"'), { req: true })}</div>
       ${champ("ci-tel", "Téléphone (WhatsApp)", inp("ci-tel", "telephone", "", 'type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="07 00 00 00 00"'))}
-      ${email}${champMdp("ci-mdp", "Choisissez un mot de passe", "new-password", "Au moins 8 caractères.")}${champMdp("ci-mdp2", "Confirmez le mot de passe", "new-password")}${voirMdp}
+      ${email}${champMdp("ci-mdp", "Choisissez un mot de passe", "new-password", "Au moins 4 caractères.")}${champMdp("ci-mdp2", "Confirmez le mot de passe", "new-password")}${voirMdp}
       <p class="hint">Déjà membre avec un matricule (par exemple SDE-CI-013) ? Inscrivez-vous puis prévenez le secrétariat : il reliera votre compte à votre fiche et vous garderez votre matricule.</p>${pied("Créer mon compte")}`;
     else corps = `<p class="hint" style="margin-top:0">Le secrétariat vous a remis un code d’activation (par exemple K7PM-Q2XD) pour ouvrir votre compte ou choisir un nouveau mot de passe.</p>${email}
       ${champ("ca-code", "Code d’activation", inp("ca-code", "code", "", 'autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="12" required placeholder="K7PM-Q2XD"'), { req: true })}
-      ${champMdp("ca-mdp", "Nouveau mot de passe", "new-password", "Au moins 8 caractères.")}${champMdp("ca-mdp2", "Confirmez le mot de passe", "new-password")}${voirMdp}${pied("Activer et me connecter")}`;
+      ${champMdp("ca-mdp", "Nouveau mot de passe", "new-password", "Au moins 4 caractères.")}${champMdp("ca-mdp2", "Confirmez le mot de passe", "new-password")}${voirMdp}${pied("Activer et me connecter")}`;
     return `<div class="cnx-onglets" role="group" aria-label="Choix">${onglets}</div><form class="form cnx-form" id="f-cnx" data-mode="${m}" novalidate>${corps}</form>`;
   }
   function ouvrirConnexion(mode) {
@@ -36,7 +36,7 @@
     CNX.email = email;
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { erreurForm("Indiquez une adresse e-mail valide."); return; }
     const mdp = String(fd.get("mdp") || "");
-    if (mdp.length < 8) { erreurForm("Le mot de passe doit compter au moins 8 caractères."); return; }
+    if (mdp.length < 4) { erreurForm("Le mot de passe doit compter au moins 4 caractères."); return; }
     if (mode !== "connexion" && mdp !== String(fd.get("mdp2") || "")) { erreurForm("Les deux mots de passe ne sont pas identiques."); return; }
     if (mode === "inscription" && (!g("prenoms") || !g("nom"))) { erreurForm("Indiquez votre nom et vos prénoms."); return; }
     if (mode === "activation" && g("code").replace(/[^0-9a-z]/gi, "").length !== 8) { erreurForm("Le code d’activation compte 8 caractères, par exemple K7PM-Q2XD."); return; }
@@ -60,10 +60,10 @@
 
   /* — Changer son mot de passe — */
   function ouvrirMotDePasse() {
-    ouvrir({ titre: "Changer mon mot de passe", html: `<form class="form" id="f-mdp" novalidate>${champ("cm-ancien", "Mot de passe actuel", '<input class="inp" id="cm-ancien" name="ancien" type="password" autocomplete="current-password" required autofocus>', { req: true })}${champ("cm-nouveau", "Nouveau mot de passe", '<input class="inp" id="cm-nouveau" name="nouveau" type="password" autocomplete="new-password" minlength="8" required>', { req: true, hint: "Au moins 8 caractères." })}${champ("cm-nouveau2", "Confirmez le nouveau mot de passe", '<input class="inp" id="cm-nouveau2" name="nouveau2" type="password" autocomplete="new-password" required>', { req: true })}${voirMdp}${pied("Enregistrer")}</form>`,
+    ouvrir({ titre: "Changer mon mot de passe", html: `<form class="form" id="f-mdp" novalidate>${champ("cm-ancien", "Mot de passe actuel", '<input class="inp" id="cm-ancien" name="ancien" type="password" autocomplete="current-password" required autofocus>', { req: true })}${champ("cm-nouveau", "Nouveau mot de passe", '<input class="inp" id="cm-nouveau" name="nouveau" type="password" autocomplete="new-password" minlength="4" required>', { req: true, hint: "Au moins 4 caractères." })}${champ("cm-nouveau2", "Confirmez le nouveau mot de passe", '<input class="inp" id="cm-nouveau2" name="nouveau2" type="password" autocomplete="new-password" required>', { req: true })}${voirMdp}${pied("Enregistrer")}</form>`,
       onSubmit: async (fd, form) => {
         const n = String(fd.get("nouveau") || "");
-        if (n.length < 8) { erreurForm("Le nouveau mot de passe doit compter au moins 8 caractères."); return; }
+        if (n.length < 4) { erreurForm("Le nouveau mot de passe doit compter au moins 4 caractères."); return; }
         if (n !== String(fd.get("nouveau2") || "")) { erreurForm("Les deux mots de passe ne sont pas identiques."); return; }
         try { await SDEH.motDePasse({ ancien: String(fd.get("ancien") || ""), nouveau: n }); fermer(); toast("Mot de passe modifié. Vos autres appareils sont déconnectés."); }
         catch (e) { erreurForm((e && e.message) || "Modification impossible."); }
