@@ -89,7 +89,7 @@ function nouveauCode() { const a = crypto.getRandomValues(new Uint8Array(8)); co
 const normCode = (c) => String(c || "").toUpperCase().replace(/[^0-9A-Z]/g, "");
 const CODE_JOURS = 14;
 const empreinteCode = async (email, code) => sha("activation:" + email + ":" + normCode(code));
-function mdpValide(m) { return typeof m === "string" && m.length >= 8 && m.length <= 200; }
+function mdpValide(m) { return typeof m === "string" && m.length >= 4 && m.length <= 200; }
 
 /* Freins contre les essais répétés (par adresse et par réseau) */
 const FENETRE = 15 * 60e3;
@@ -245,7 +245,7 @@ async function apiInscription(req, env) {
   const email = normEmail(b.email), prenoms = propre(b.prenoms, 80), nom = propre(b.nom, 80).toUpperCase(), telephone = propre(b.telephone, 30);
   if (!EMAIL_OK.test(email)) return erreur("invalid_argument", "Adresse e-mail invalide.");
   if (!prenoms || !nom) return erreur("invalid_argument", "Indiquez votre nom et vos prénoms.");
-  if (!mdpValide(b.motDePasse)) return erreur("invalid_argument", "Le mot de passe doit compter au moins 8 caractères.");
+  if (!mdpValide(b.motDePasse)) return erreur("invalid_argument", "Le mot de passe doit compter au moins 4 caractères.");
   if (telephone && telephone.replace(/\D/g, "").length < 8) return erreur("invalid_argument", "Numéro de téléphone invalide.");
   const existe = await env.DB.prepare("SELECT email FROM comptes WHERE email = ?").bind(email).first();
   if (existe || proprietaires(env).includes(email)) return erreur("existe", "Un compte existe déjà avec cette adresse. Connectez-vous, ou utilisez le code d’activation reçu du secrétariat.", 409);
@@ -278,7 +278,7 @@ async function apiActivation(req, env) {
   const b = await req.json();
   const email = normEmail(b.email), ip = ipDe(req);
   if (await bloque(env, "e:" + email, 8) || await bloque(env, "ip:" + ip, 40)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure avant de réessayer.", 429);
-  if (!mdpValide(b.motDePasse)) return erreur("invalid_argument", "Le mot de passe doit compter au moins 8 caractères.");
+  if (!mdpValide(b.motDePasse)) return erreur("invalid_argument", "Le mot de passe doit compter au moins 4 caractères.");
   const c = EMAIL_OK.test(email) ? await env.DB.prepare("SELECT email, activation FROM comptes WHERE email = ?").bind(email).first() : null;
   const [h, exp] = String((c && c.activation) || "").split("|");
   if (!c || !h || Number(exp) < Date.now() || h !== (await empreinteCode(email, b.code))) {
@@ -292,7 +292,7 @@ async function apiActivation(req, env) {
 async function apiMotDePasse(req, env, u) {
   if (!u.connecte) return erreur("refuse", "Connectez-vous d’abord.", 401);
   const b = await req.json();
-  if (!mdpValide(b.nouveau)) return erreur("invalid_argument", "Le nouveau mot de passe doit compter au moins 8 caractères.");
+  if (!mdpValide(b.nouveau)) return erreur("invalid_argument", "Le nouveau mot de passe doit compter au moins 4 caractères.");
   if (await bloque(env, "e:" + u.email, 8)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure.", 429);
   const c = await env.DB.prepare("SELECT mdp FROM comptes WHERE email = ?").bind(u.email).first();
   if (c && c.mdp && !(await verifierMdp(b.ancien, c.mdp))) { await compter(env, "e:" + u.email); return erreur("refuse", "Mot de passe actuel incorrect.", 401); }
