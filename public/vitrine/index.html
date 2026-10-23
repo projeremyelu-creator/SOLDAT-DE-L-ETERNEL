@@ -211,7 +211,7 @@ html.anim .ouv-bas { opacity: 0; animation: ouv-monte .8s cubic-bezier(.2,.8,.2,
 .infire { background: radial-gradient(ellipse 120% 140% at 50% 0%, #2a1400 0%, var(--nuit) 70%); color: #fff; position: relative; overflow: hidden; }
 .infire::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle 400px at 50% 60%, rgba(228,105,44,.12), transparent 70%); pointer-events: none; }
 .if-halo { position: absolute; top: 20%; left: 50%; width: 600px; height: 600px; margin-left: -300px; border-radius: 50%; background: radial-gradient(circle, rgba(228,105,44,.08) 0%, transparent 70%); pointer-events: none; }
-.infire .enveloppe { position: relative; z-index: 1; padding-block: clamp(56px, 8vw, 96px); }
+.infire .enveloppe { position: relative; z-index: 1; padding-block: clamp(36px, 5vw, 56px); }
 .if-badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(228,105,44,.12); border: 1px solid rgba(228,105,44,.3); border-radius: 100px; padding: 8px 20px; font: 700 .8rem/1 var(--f-titre); color: var(--braise); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 20px; }
 .if-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 48px); align-items: start; margin-top: 32px; }
 @media (max-width: 740px) { .if-grid { grid-template-columns: 1fr; } }
@@ -237,6 +237,8 @@ html.anim .ouv-bas { opacity: 0; animation: ouv-monte .8s cubic-bezier(.2,.8,.2,
 .f-venue input, .f-venue select { width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,.15); border-radius: 10px; background: rgba(255,255,255,.06); color: #fff; font: 400 1rem/1.4 var(--f-texte); margin-bottom: 14px; }
 .f-venue input:focus, .f-venue select:focus { border-color: var(--or); outline: 0; }
 .f-venue .bouton { width: 100%; }
+.b-itineraire { border-color: rgba(255,255,255,.7); color: #fff; background: rgba(255,255,255,.1); }
+.b-itineraire:hover { border-color: var(--or); color: var(--or); background: rgba(226,194,106,.1); }
 /* Barre IN FIRE mobile */
 .barre-if { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: var(--braise); color: #fff; padding: env(safe-area-inset-bottom, 0px); }
 .barre-if .enveloppe { display: flex; align-items: center; justify-content: space-between; min-height: 52px; }
@@ -259,7 +261,8 @@ html.anim .ouv-bas { opacity: 0; animation: ouv-monte .8s cubic-bezier(.2,.8,.2,
 .vmi .vmi-n { font: 600 .8rem/1 var(--f-titre); text-transform: uppercase; letter-spacing: .1em; color: var(--or-texte); display: block; margin-bottom: 10px; }
 .vmi h3 { font-size: 1.1rem; margin-bottom: 10px; }
 .vmi p { color: var(--gris); font-size: .93rem; }
-@media (max-width: 740px) { .vmi { grid-template-columns: 1fr; } }
+@media (max-width: 960px) { .vmi { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .vmi { grid-template-columns: 1fr; } }
 /* Nom SDE */
 .nom-sde { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 48px); margin-top: clamp(40px, 6vw, 64px); }
 .nom-versets blockquote { margin: 0 0 16px; border-left: 3px solid var(--or); padding: 8px 0 8px 18px; font-family: var(--f-titre); font-weight: 500; font-size: 1.05rem; line-height: 1.35; }
@@ -354,6 +357,8 @@ html.anim .ouv-bas { opacity: 0; animation: ouv-monte .8s cubic-bezier(.2,.8,.2,
 
 /* Agenda public */
 .agenda-pub[hidden] { display: none; }
+.rdv[hidden] { display: none; }
+.ressource-carte[hidden] { display: none; }
 .agenda-pub .rdv { background: var(--surface); border: 1px solid var(--trait); border-radius: var(--r); padding: 20px; margin-bottom: 14px; }
 .quand { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
 .jour { display: flex; flex-direction: column; align-items: center; background: var(--or); color: var(--nuit); border-radius: 10px; padding: 8px 12px; line-height: 1; }
@@ -413,6 +418,11 @@ html.anim .ouv-bas { opacity: 0; animation: ouv-monte .8s cubic-bezier(.2,.8,.2,
 .res-filtres { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
 .res-filtres button { padding: 8px 16px; border-radius: 100px; border: 1px solid var(--trait); background: var(--surface); color: var(--encre); font: 600 .85rem/1 var(--f-texte); cursor: pointer; }
 .res-filtres button.actif, .res-filtres button:hover { background: var(--or); color: var(--nuit); border-color: var(--or); }
+.ressource-carte { cursor: pointer; transition: border-color .2s, transform .15s; }
+.ressource-carte:hover { border-color: var(--or); transform: translateY(-2px); }
+.res-dispo { color: var(--or-texte); font-weight: 700; }
+.res-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--nuit); color: #fff; padding: 14px 28px; border-radius: var(--r); font-size: .9rem; font-weight: 700; z-index: 200; box-shadow: 0 8px 32px rgba(0,0,0,.3); opacity: 0; transition: opacity .3s; pointer-events: none; }
+.res-toast.visible { opacity: 1; }
 
 /* ═══════════ Parcours guidé (Point 7) ═══════════ */
 .parcours-rejoindre { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 40px; }
@@ -519,7 +529,7 @@ html.anim .ouv-bas { opacity: 0; animation: ouv-monte .8s cubic-bezier(.2,.8,.2,
 .fiche-pole::backdrop { background: rgba(0,0,0,.65); }
 .fp-boite { display: flex; flex-direction: column; max-height: 92vh; background: var(--surface); border-radius: var(--r); overflow: hidden; }
 .fp-image { position: relative; }
-.fp-image img { width: 100%; aspect-ratio: 2/1; object-fit: cover; }
+.fp-image img { width: 100%; aspect-ratio: 3/1; object-fit: cover; max-height: 180px; }
 .fp-fermer { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: rgba(0,0,0,.4); color: #fff; font-size: 1.4rem; cursor: pointer; backdrop-filter: blur(6px); }
 .fp-corps { padding: clamp(20px, 4vw, 32px); overflow-y: auto; flex: 1; }
 .fp-corps .num { font: 600 .78rem/1 var(--f-titre); text-transform: uppercase; letter-spacing: .08em; color: var(--or-texte); }
@@ -599,8 +609,8 @@ svg:not(:root) { overflow: hidden; }
       <div class="nav-rubrique" data-rubrique>
         <button class="nav-lien" type="button" aria-expanded="false">Programmes <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
         <div class="sous-menu">
-          <a href="#infire">IN FIRE 2026</a>
           <a href="#agenda">Agenda</a>
+          <a href="#infire">IN FIRE 2026</a>
           <a href="#programmes">Tous les programmes</a>
         </div>
       </div>
@@ -609,16 +619,18 @@ svg:not(:root) { overflow: hidden; }
         <div class="sous-menu">
           <a href="#ressources">Enseignements</a>
           <a href="#galerie">Galerie photos</a>
-          <a href="#projets">Projets</a>
+          <a href="#faq">Questions fréquentes</a>
         </div>
       </div>
       <div class="nav-rubrique" data-rubrique>
-        <button class="nav-lien" type="button" aria-expanded="false">Nous rejoindre <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+        <button class="nav-lien" type="button" aria-expanded="false">S'engager <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
         <div class="sous-menu">
-          <a href="#rejoindre">Adhésion</a>
-          <a href="#soutenir">Soutenir un projet</a>
+          <a href="#rejoindre">Rejoindre SDE</a>
+          <a href="#poles" data-sujet="Servir dans un pôle">Servir dans un pôle</a>
+          <a href="#contact">Demander la prière</a>
+          <a href="#projets">Projets et soutien</a>
+          <a href="#soutenir">Soutenir</a>
           <a href="#contact">Contact</a>
-          <a href="#faq">Questions fréquentes</a>
         </div>
       </div>
       <a class="bouton b-or btn-membre" href="https://app.mouvement-sde.org/#connexion"><svg aria-hidden="true"><use href="#i-cle"/></svg>Espace membre</a>
@@ -717,7 +729,7 @@ svg:not(:root) { overflow: hidden; }
           </div>
           <div class="actions" style="margin-top:18px">
             <button class="bouton b-or" type="button" data-ics="infire">Ajouter à mon agenda</button>
-            <button class="bouton b-contour" type="button" id="b-yango">Itinéraire (copier l'adresse)</button>
+            <button class="bouton b-contour b-itineraire" type="button" id="b-yango">📍 Itinéraire (copier l'adresse)</button>
           </div>
           <p id="yango-aide" hidden style="margin-top:10px;font-size:.88rem;color:var(--sur-nuit-2)">Adresse copiée ! Collez-la dans Yango, Google Maps ou votre application de transport.</p>
         </div>
@@ -750,7 +762,7 @@ svg:not(:root) { overflow: hidden; }
   </div>
 
   <!-- ═══════════ AGENDA PUBLIC (Point 5 : enrichi avec filtres) ═══════════ -->
-  <section class="section agenda-pub" id="agenda" aria-labelledby="titre-agenda" hidden>
+  <section class="section agenda-pub" id="agenda" aria-labelledby="titre-agenda">
     <div class="enveloppe">
       <div class="tete-section revele">
         <p class="surtitre">Prochains rendez-vous</p>
@@ -763,7 +775,35 @@ svg:not(:root) { overflow: hidden; }
         <button data-filtre="formation">Formation</button>
         <button data-filtre="rencontre">Rencontre</button>
       </div>
-      <div id="agenda-liste"></div>
+      <div id="agenda-liste">
+        <!-- Événements statiques de secours (remplacés par l'API si disponible) -->
+        <article class="programme rdv" data-type="rencontre">
+          <div class="quand"><span class="jour"><b>31</b><small>oct.</small></span><span><span class="rythme">Rencontre</span><br><span>Samedi · 8 h — 18 h</span></span></div>
+          <h3>IN FIRE 2026 — « La révélation des fils et filles de Dieu »</h3>
+          <p class="lieu">Église MADEG · Cocody Deux-Plateaux Agban, Abidjan</p>
+          <div class="rdv-actions">
+            <a href="#infire">En savoir plus <svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
+            <button type="button" data-ics="infire">Ajouter à mon agenda</button>
+          </div>
+        </article>
+        <article class="programme rdv" data-type="priere">
+          <div class="quand"><span class="jour"><b>☽</b><small>mensuel</small></span><span><span class="rythme">Prière</span><br><span>Chaque mois</span></span></div>
+          <h3>Traversée Prophétique Mensuelle</h3>
+          <p class="lieu">Entrer dans chaque mois par la prière et la consécration</p>
+          <div class="rdv-actions">
+            <a href="https://wa.me/2250778689573?text=Shalom%20!%20Je%20souhaite%20participer%20%C3%A0%20la%20Travers%C3%A9e%20Proph%C3%A9tique." target="_blank" rel="noopener">Je participe <svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
+          </div>
+        </article>
+        <article class="programme rdv" data-type="formation">
+          <div class="quand"><span class="jour"><b>📖</b><small>continu</small></span><span><span class="rythme">Formation</span><br><span>Programme continu</span></span></div>
+          <h3>Soldiers Academy</h3>
+          <p class="lieu">Parcours de formation des disciples · En ligne et en présentiel</p>
+          <div class="rdv-actions">
+            <a href="https://wa.me/2250778689573?text=Shalom%20!%20Je%20souhaite%20m'inscrire%20%C3%A0%20la%20Soldiers%20Academy." target="_blank" rel="noopener">S'inscrire <svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
+          </div>
+        </article>
+      </div>
+      <p class="agenda-note" style="text-align:center;margin-top:20px;color:var(--gris);font-size:.9rem">Les dates sont mises à jour régulièrement. Contactez-nous pour vérifier un rendez-vous.</p>
     </div>
   </section>
 
@@ -985,19 +1025,20 @@ svg:not(:root) { overflow: hidden; }
         <h2 id="titre-ressources">Enseignements et documents</h2>
         <p class="chapo">Retrouvez les enseignements, prédications et documents du mouvement. Cette bibliothèque s'enrichit au fil du temps.</p>
       </div>
-      <div class="res-filtres">
-        <button class="actif">Tout</button>
-        <button>Enseignements</button>
-        <button>Prédications</button>
-        <button>Documents</button>
+      <div class="res-filtres" id="res-filtres">
+        <button class="actif" data-filtre="tous">Tout</button>
+        <button data-filtre="enseignement">Enseignements</button>
+        <button data-filtre="predication">Prédications</button>
+        <button data-filtre="document">Documents</button>
       </div>
-      <div class="ressources-grille">
-        <article class="ressource-carte revele"><div class="res-type"><span class="res-icone">📖</span> Livre</div><h3>Le Pouvoir de la femme</h3><p class="res-auteur">Jérémy Octave GLAZAÏ</p><p class="res-meta"><span>Livre</span></p></article>
-        <article class="ressource-carte revele"><div class="res-type"><span class="res-icone">📖</span> Livre</div><h3>L'Œil du Soldat : le discernement des esprits</h3><p class="res-auteur">Jérémy Octave GLAZAÏ</p><p class="res-meta"><span>Enseignement</span></p></article>
-        <article class="ressource-carte revele"><div class="res-type"><span class="res-icone">🎤</span> Conférence</div><h3>La révélation des fils et filles de Dieu</h3><p class="res-auteur">Thème IN FIRE 2026</p><p class="res-meta"><span>À venir</span></p></article>
-        <article class="ressource-carte revele"><div class="res-type"><span class="res-icone">📋</span> Formation</div><h3>Soldiers Academy</h3><p class="res-auteur">Parcours de formation des disciples</p><p class="res-meta"><span>Programme</span></p></article>
-        <article class="ressource-carte revele"><div class="res-type"><span class="res-icone">💒</span> Prédication</div><h3>Traversée Prophétique</h3><p class="res-auteur">Enseignements mensuels</p><p class="res-meta"><span>Audio/Vidéo</span></p></article>
-        <article class="ressource-carte revele"><div class="res-type"><span class="res-icone">📖</span> Enseignement</div><h3>L'autorité spirituelle</h3><p class="res-auteur">Jérémy Octave GLAZAÏ</p><p class="res-meta"><span>Série</span></p></article>
+      <p class="res-compteur" id="res-compteur" style="font-size:.85rem;color:var(--gris);margin-bottom:14px" aria-live="polite">6 ressources</p>
+      <div class="ressources-grille" id="ressources-grille">
+        <article class="ressource-carte revele" data-type="enseignement"><div class="res-type"><span class="res-icone">📖</span> Livre</div><h3>Le Pouvoir de la femme</h3><p class="res-auteur">Jérémy Octave GLAZAÏ</p><p class="res-meta"><span>Livre</span><span class="res-dispo">Bientôt disponible</span></p></article>
+        <article class="ressource-carte revele" data-type="enseignement"><div class="res-type"><span class="res-icone">📖</span> Livre</div><h3>L'Œil du Soldat : le discernement des esprits</h3><p class="res-auteur">Jérémy Octave GLAZAÏ</p><p class="res-meta"><span>Enseignement</span><span class="res-dispo">Bientôt disponible</span></p></article>
+        <article class="ressource-carte revele" data-type="predication"><div class="res-type"><span class="res-icone">🎤</span> Conférence</div><h3>La révélation des fils et filles de Dieu</h3><p class="res-auteur">Thème IN FIRE 2026</p><p class="res-meta"><span>À venir</span></p></article>
+        <article class="ressource-carte revele" data-type="document"><div class="res-type"><span class="res-icone">📋</span> Formation</div><h3>Soldiers Academy</h3><p class="res-auteur">Parcours de formation des disciples</p><p class="res-meta"><span>Programme</span><span class="res-dispo">Bientôt disponible</span></p></article>
+        <article class="ressource-carte revele" data-type="predication"><div class="res-type"><span class="res-icone">💒</span> Prédication</div><h3>Traversée Prophétique</h3><p class="res-auteur">Enseignements mensuels</p><p class="res-meta"><span>Audio/Vidéo</span><span class="res-dispo">Bientôt disponible</span></p></article>
+        <article class="ressource-carte revele" data-type="enseignement"><div class="res-type"><span class="res-icone">📖</span> Enseignement</div><h3>L'autorité spirituelle</h3><p class="res-auteur">Jérémy Octave GLAZAÏ</p><p class="res-meta"><span>Série</span><span class="res-dispo">Bientôt disponible</span></p></article>
       </div>
       <p style="text-align:center;margin-top:28px;color:var(--gris)">D'autres ressources seront ajoutées prochainement. Écrivez-nous pour demander un enseignement en particulier.</p>
     </div>
@@ -1215,6 +1256,8 @@ svg:not(:root) { overflow: hidden; }
     </div>
   </section>
 </main>
+
+<div class="res-toast" id="res-toast">📖 Ce contenu sera bientôt disponible en lecture et en téléchargement.</div>
 
 <footer class="pied">
   <div class="enveloppe">
@@ -1455,16 +1498,27 @@ svg:not(:root) { overflow: hidden; }
       if (prog.length) { document.getElementById("if-prog-l").innerHTML = prog.map((x) => `<li>${echap(x.replace(/^[-•·]\s*/, ""))}</li>`).join(""); document.getElementById("if-prog").hidden = false; }
     }
     const l = ((j && j.evenements) || []).filter((e) => e.id !== "infire-2026").slice(0, 8);
-    if (!l.length) return;
-    const box = document.getElementById("agenda-liste");
-    box.innerHTML = l.map((e) => {
-      RDV[e.id] = e;
-      const d = new Date(e.date + "T12:00:00Z");
-      const texte = "Shalom ! Je souhaite participer à « " + e.titre + " » le " + JOURS[d.getUTCDay()] + " " + d.getUTCDate() + " " + MOIS[d.getUTCMonth()] + ". Nom : ";
-      return `<article class="programme rdv" data-type="${echap(e.type || '')}"><div class="quand"><span class="jour"><b>${d.getUTCDate()}</b><small>${MOIS[d.getUTCMonth()]}</small></span><span><span class="rythme">${echap(e.type)}</span><br><span>${echap(JOURS[d.getUTCDay()].replace(/^./, (c) => c.toUpperCase()))}${e.heure ? " · " + echap(heureFr(e.heure)) : ""}</span></span></div><h3>${echap(e.titre)}</h3>${e.lieu ? `<p class="lieu">${echap(e.lieu)}</p>` : ""}<div class="rdv-actions"><a href="https://wa.me/2250778689573?text=${encodeURIComponent(texte)}" target="_blank" rel="noopener">Je viens <svg aria-hidden="true"><use href="#i-fleche"/></svg></a><button type="button" data-ics="${echap(e.id)}">Ajouter à mon agenda</button></div></article>`;
-    }).join("");
-    document.getElementById("agenda").hidden = false;
+    if (l.length) {
+      const box = document.getElementById("agenda-liste");
+      box.innerHTML = l.map((e) => {
+        RDV[e.id] = e;
+        const d = new Date(e.date + "T12:00:00Z");
+        const texte = "Shalom ! Je souhaite participer à « " + e.titre + " » le " + JOURS[d.getUTCDay()] + " " + d.getUTCDate() + " " + MOIS[d.getUTCMonth()] + ". Nom : ";
+        return `<article class="programme rdv" data-type="${echap(e.type || '')}"><div class="quand"><span class="jour"><b>${d.getUTCDate()}</b><small>${MOIS[d.getUTCMonth()]}</small></span><span><span class="rythme">${echap(e.type)}</span><br><span>${echap(JOURS[d.getUTCDay()].replace(/^./, (c) => c.toUpperCase()))}${e.heure ? " · " + echap(heureFr(e.heure)) : ""}</span></span></div><h3>${echap(e.titre)}</h3>${e.lieu ? `<p class="lieu">${echap(e.lieu)}</p>` : ""}<div class="rdv-actions"><a href="https://wa.me/2250778689573?text=${encodeURIComponent(texte)}" target="_blank" rel="noopener">Je viens <svg aria-hidden="true"><use href="#i-fleche"/></svg></a><button type="button" data-ics="${echap(e.id)}">Ajouter à mon agenda</button></div></article>`;
+      }).join("");
+    }
   }).catch(() => {});
+  /* Filtres agenda */
+  document.getElementById("agenda-filtres").addEventListener("click", (ev) => {
+    const btn = ev.target.closest("[data-filtre]");
+    if (!btn) return;
+    document.querySelectorAll("#agenda-filtres button").forEach((b) => b.classList.remove("actif"));
+    btn.classList.add("actif");
+    const f = btn.dataset.filtre;
+    document.querySelectorAll("#agenda-liste .rdv").forEach((c) => {
+      c.hidden = f !== "tous" && c.dataset.type !== f;
+    });
+  });
   document.getElementById("annee").textContent = new Date().getFullYear();
 
   /* Apparition au défilement et chiffres animés */
@@ -1582,6 +1636,39 @@ svg:not(:root) { overflow: hidden; }
     lb.addEventListener("touchstart", (e) => { tx = e.changedTouches[0].clientX; }, { passive: true });
     lb.addEventListener("touchend", (e) => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) lbNav(dx < 0 ? 1 : -1); }, { passive: true });
   }
+
+  /* Filtres ressources */
+  const resFiltres = document.getElementById("res-filtres");
+  const resGrille = document.getElementById("ressources-grille");
+  const resCompteur = document.getElementById("res-compteur");
+  if (resFiltres && resGrille) {
+    const majCompteur = () => {
+      const vis = resGrille.querySelectorAll(".ressource-carte:not([hidden])").length;
+      resCompteur.textContent = vis + " ressource" + (vis > 1 ? "s" : "");
+    };
+    resFiltres.addEventListener("click", (ev) => {
+      const btn = ev.target.closest("[data-filtre]");
+      if (!btn) return;
+      resFiltres.querySelectorAll("button").forEach((b) => b.classList.remove("actif"));
+      btn.classList.add("actif");
+      const f = btn.dataset.filtre;
+      resGrille.querySelectorAll(".ressource-carte").forEach((c) => {
+        c.hidden = f !== "tous" && c.dataset.type !== f;
+      });
+      majCompteur();
+    });
+  }
+
+  /* Cartes ressources — toast « bientôt disponible » */
+  const rToast = document.getElementById("res-toast");
+  let rToastT = 0;
+  document.querySelectorAll(".ressource-carte").forEach((c) => {
+    c.addEventListener("click", () => {
+      clearTimeout(rToastT);
+      rToast.classList.add("visible");
+      rToastT = setTimeout(() => rToast.classList.remove("visible"), 2800);
+    });
+  });
 })();
 </script>
 </body>
