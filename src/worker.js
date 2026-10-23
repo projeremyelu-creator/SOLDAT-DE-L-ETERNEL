@@ -4,8 +4,8 @@
    Les règles d'accès reprennent exactement celles de la version Claude. */
 
 const NIVEAUX = { view: 0, interact: 1, admin: 2, owner: 3 };
-const ROLES = { attente: 0, soldat: 0, lecture: 0, contributeur: 1, admin: 2, proprietaire: 3 };
-const LIB_ROLES = { attente: "En attente", soldat: "Soldat", lecture: "Lecture seule", contributeur: "Contributeur", admin: "Administrateur", proprietaire: "Propriétaire" };
+const ROLES = { attente: 0, soldat: 0, lecture: 0, membre_actif: 0, contributeur: 1, admin: 2, proprietaire: 3 };
+const LIB_ROLES = { attente: "En attente", soldat: "Soldat", lecture: "Lecture seule", membre_actif: "Membre actif", contributeur: "Contributeur", admin: "Administrateur", proprietaire: "Propriétaire" };
 const REGLES = [
   { path: "", read: "interact", write: "interact" },
   { path: "evenements", read: "view", write: "interact" },
@@ -392,6 +392,106 @@ async function apiPriere(req, env, u) {
   await ecrireDoc(env, "set", "prieres/" + idDoc(), { sujet: sujet.slice(0, 140), details: sujet.length > 140 ? sujet : "", categorie: "Personnelle", date: new Date(t).toISOString().slice(0, 10), pourId: u.membreId, pour: "", urgent: false, statut: "En prière", priants: {}, source: "espace", creePar: u.id, creeLe: t, modifiePar: u.id, modifieLe: t });
   return json({ ok: true });
 }
+
+/* ───────── historique complet (presences, cotisations, prières) ───────── */
+async function apiMonHistorique(req, env, u) {
+  if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 404);
+  const r = await lireDoc(env, "espace_membre/" + u.membreId);
+  const resume = r ? r.data.resume || null : null;
+  /* Presences complètes : chercher tous les événements contenant le membre */
+  const evts = await lireRequete(env, "evenements");
+  const presences = [];
+  for (const e of evts) {
+    if (!e.data || !e.data.presents) continue;
+    const v = e.data.presents[u.membreId];
+    if (v !== undefined) {
+      presences.push({ date: e.data.date || "", titre: e.data.titre || "Rassemblement", etat: v === true ? "P" : v === "retard" ? "R" : v === "excuse" ? "E" : "A" });
+    }
+  }
+  presences.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  /* Prières déposées par le membre */
+  const prieres = (await lireRequete(env, "prieres")).filter((p) => p.data && p.data.pourId === u.membreId).map((p) => ({ date: p.data.date || "", sujet: (p.data.sujet || "").slice(0, 60), statut: p.data.statut || "" })).sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  return json({ presences, prieres: prieres.slice(0, 50), resume });
+}
+
+/* ───────── profil modifiable par le membre ───────── */
+const CHAMPS_MODIFIABLES = ["telephone", "quartier", "email", "situation"];
+async function apiMonProfil(req, env, u) {
+  if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 404);
+  if (req.method !== "PATCH") return erreur("invalid_argument", "Utilisez PATCH.");
+  const b = await req.json();
+  const f = await lireDoc(env, "membres/" + u.membreId);
+  if (!f) return erreur("refuse", "Fiche introuvable.", 404);
+  const maj = {};
+  for (const k of CHAMPS_MODIFIABLES) {
+    if (b[k] !== undefined) maj[k] = String(b[k]).trim().slice(0, 200);
+  }
+  if (b.photoId && /^[A-Za-z0-9_-]{16,64}$/.test(b.photoId)) maj.photoId = b.photoId;
+  if (!Object.keys(maj).length) return erreur("invalid_argument", "Rien à modifier.");
+  maj.modifiePar = u.id;
+  maj.modifieLe = Date.now();
+  await ecrireDoc(env, "merge", "membres/" + u.membreId, maj);
+  return json({ ok: true });
+}
+
+/* ───────── demande d'absence ───────── */
+async function apiAbsence(req, env, u) {
+  if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 403);
+  if (req.method !== "POST") return erreur("invalid_argument", "Utilisez POST.");
+  const b = await req.json();
+  const dateDebut = String(b.dateDebut || "").trim();
+  const dateFin = String(b.dateFin || "").trim();
+  const motif = String(b.motif || "").trim().slice(0, 500);
+  if (!dateDebut || !motif) return erreur("invalid_argument", "La date de début et le motif sont requis.");
+  if (await bloque(env, "absence:" + u.email, 5)) return erreur("rate_limited", "Trop de demandes d'absence récentes.", 429);
+  await compter(env, "absence:" + u.email);
+  const t = Date.now();
+  await ecrireDoc(env, "set", "absences/" + idDoc(), { membreId: u.membreId, nom: u.nom || u.email, dateDebut, dateFin: dateFin || dateDebut, motif, statut: "en_attente", creePar: u.id, creeLe: t, modifiePar: u.id, modifieLe: t });
+  return json({ ok: true });
+}
+
+/* ───────── notifications push (VAPID) ───────── */
+async function apiPushSubscription(req, env, u) {
+  if (!u.connecte) return erreur("refuse", "Connectez-vous.", 403);
+  if (req.method === "POST") {
+    const b = await req.json();
+    if (!b.endpoint || !b.keys) return erreur("invalid_argument", "Abonnement invalide.");
+    await env.DB.prepare("INSERT OR REPLACE INTO push_subs (userId, endpoint, p256dh, auth, cree) VALUES (?, ?, ?, ?, ?)").bind(u.id, b.endpoint, b.keys.p256dh || "", b.keys.auth || "", Date.now()).run();
+    return json({ ok: true });
+  }
+  if (req.method === "DELETE") {
+    const b = await req.json();
+    if (b.endpoint) await env.DB.prepare("DELETE FROM push_subs WHERE userId = ? AND endpoint = ?").bind(u.id, b.endpoint).run();
+    else await env.DB.prepare("DELETE FROM push_subs WHERE userId = ?").bind(u.id).run();
+    return json({ ok: true });
+  }
+  return erreur("invalid_argument", "POST ou DELETE attendu.");
+}
+
+/* ───────── export calendrier .ics ───────── */
+async function apiCalendrier(env) {
+  const evts = await lireRequete(env, "evenements");
+  const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
+  let ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//MPA SDE//Agenda//FR\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nX-WR-CALNAME:Agenda MPA SDE\r\n";
+  for (const e of evts) {
+    if (!e.data || !e.data.date) continue;
+    const d = e.data;
+    const dt = String(d.date).replace(/-/g, "");
+    const h = String(d.heure || "08:00").replace(":", "") + "00";
+    const uid = (e.id || "").replace(/[^a-z0-9]/gi, "") + "@mouvement-sde.org";
+    const duree = Number(d.duree) || 120;
+    const fin = new Date(new Date(`${d.date}T${d.heure || "08:00"}:00`).getTime() + duree * 60000);
+    const dtFin = fin.toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "").slice(0, 15);
+    ics += `BEGIN:VEVENT\r\nUID:${uid}\r\nDTSTAMP:${now}\r\nDTSTART:${dt}T${h}\r\nDTEND:${dtFin}\r\nSUMMARY:${icsEsc(d.titre || "Rassemblement")}\r\n`;
+    if (d.lieu) ics += `LOCATION:${icsEsc(d.lieu)}\r\n`;
+    if (d.description) ics += `DESCRIPTION:${icsEsc(d.description)}\r\n`;
+    ics += `END:VEVENT\r\n`;
+  }
+  ics += "END:VCALENDAR\r\n";
+  return new Response(ics, { headers: { "content-type": "text/calendar; charset=utf-8", "content-disposition": 'attachment; filename="agenda-sde.ics"', "cache-control": "public, max-age=3600" } });
+}
+function icsEsc(s) { return String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\n/g, "\\n"); }
+
 async function apiProfils(req, env, u) {
   if (u.niveau < 1) return json({});
   const b = await req.json();
@@ -674,6 +774,115 @@ async function apiSauvegardes(req, env, u, url) {
   return json({ sauvegardes: (l.keys || []).map((k) => ({ jour: k.name.slice(11), ...(k.metadata || {}) })).sort((a, b) => b.jour.localeCompare(a.jour)) });
 }
 
+/* ───────── sync cron espace_membre (nuit, sans admin connecté) ───────── */
+async function syncEspacesMembres(env) {
+  const comptes = (await env.DB.prepare("SELECT id, email, nom, membreId, role FROM comptes WHERE membreId IS NOT NULL AND membreId != ''").all()).results || [];
+  if (!comptes.length) return { syncs: 0 };
+  const docs = (await env.DB.prepare("SELECT path, data FROM docs").all()).results || [];
+  const parPath = Object.fromEntries(docs.map((d) => [d.path, JSON.parse(d.data)]));
+  const cfg = parPath["config/config"] || {};
+  const an = new Date().getFullYear();
+  const mensuel = Number(cfg.cotisationMensuelle) || 0;
+  const moisDus = [];
+  const MOIS = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+  const moisActuel = new Date().getMonth();
+  for (let i = 0; i <= moisActuel; i++) moisDus.push(MOIS[i]);
+  const membres = {};
+  const garnisons = {};
+  const evenements = [];
+  const cotisations = [];
+  const speciales = [];
+  const offrandes = [];
+  const projets = [];
+  const projetsFin = [];
+  for (const [p, d] of Object.entries(parPath)) {
+    const s = p.split("/");
+    if (s[0] === "membres" && s.length === 2) membres[s[1]] = { id: s[1], ...d };
+    else if (s[0] === "garnisons" && s.length === 2) garnisons[s[1]] = { id: s[1], ...d };
+    else if (s[0] === "evenements" && s.length === 2) evenements.push({ id: s[1], ...d });
+    else if (s[0] === "cotisations" && s.length === 2) cotisations.push({ id: s[1], ...d });
+    else if (s[0] === "cotis_speciales" && s.length === 2) speciales.push({ id: s[1], ...d });
+    else if (s[0] === "offrandes" && s.length === 2) offrandes.push({ id: s[1], ...d });
+    else if (s[0] === "projets" && s.length === 2) projets.push({ id: s[1], ...d });
+    else if (s[0] === "projets_fin" && s.length === 2) projetsFin.push({ id: s[1], ...d });
+  }
+  function chaineGarnisons(gid) {
+    const gs = [];
+    let id = gid;
+    while (id && gs.length < 4 && garnisons[id]) {
+      const g = garnisons[id];
+      gs.push({ id, nom: g.nom || "", type: g.type || "", pays: g.pays || "", ville: g.ville || "", parentId: g.parentId || "" });
+      id = g.parentId;
+    }
+    return gs;
+  }
+  function resumeCron(m) {
+    const gs = chaineGarnisons(m.garnisonId);
+    const evsPasses = evenements.filter((e) => e.date && e.date <= new Date().toISOString().slice(0, 10) && e.presents);
+    const evs3m = evsPasses.filter((e) => { const d = new Date(e.date); const il3m = new Date(); il3m.setMonth(il3m.getMonth() - 3); return d >= il3m; });
+    let p = 0, r = 0, x = 0, a = 0;
+    for (const e of evs3m) {
+      const v = e.presents[m.id];
+      if (v === true) p++;
+      else if (v === "retard") r++;
+      else if (v === "excuse") x++;
+      else if (v !== undefined) a++;
+      else a++;
+    }
+    const n = evs3m.length;
+    const taux = n > 0 ? (p + r) / n : null;
+    const presListe = evsPasses.filter((e) => e.presents[m.id] !== undefined).slice(0, 30).map((e) => {
+      const v = e.presents[m.id];
+      return { date: e.date, titre: e.titre || "Rassemblement", etat: v === true ? "P" : v === "retard" ? "R" : v === "excuse" ? "E" : "A" };
+    });
+    const cotisAn = cotisations.filter((c) => c.membreId === m.id && String(c.date || "").startsWith(String(an)));
+    const payes = {};
+    for (const c of cotisAn) { const mo = String(c.mois || ""); if (mo) payes[mo] = { montant: Number(c.montant) || 0 }; }
+    const dus = moisDus.filter((mo) => !payes[mo]);
+    const retard = dus.slice();
+    const verse = cotisAn.reduce((t, c) => t + (Number(c.montant) || 0), 0);
+    const exempt = !!m.exemptCotisation;
+    const sps = speciales.map((sp) => {
+      const versements = cotisations.filter((c) => c.specialeId === sp.id && c.membreId === m.id);
+      const verse = versements.reduce((t, c) => t + (Number(c.montant) || 0), 0);
+      if (!verse && !(sp.statut !== "cloturee")) return null;
+      return { titre: sp.titre || "Cotisation spéciale", attendu: Number(sp.montant) || 0, verse, ouverte: sp.statut !== "cloturee" };
+    }).filter(Boolean);
+    const pjs = projets.map((pj) => {
+      const pf = projetsFin.find((f) => f.projetId === pj.id) || {};
+      const versements = cotisations.filter((c) => c.projetId === pj.id && c.membreId === m.id);
+      const verse = versements.reduce((t, c) => t + (Number(c.montant) || 0), 0);
+      if (!verse) return null;
+      return { titre: pj.titre || "Projet", attendu: Number(pf.montantParMembre) || 0, verse };
+    }).filter(Boolean);
+    const os = offrandes.filter((o) => o.membreId === m.id && !o.annule && String(o.date || "").startsWith(String(an)));
+    return {
+      v: 1,
+      m: { id: m.id, nom: m.nom || "", prenoms: m.prenoms || "", matricule: m.matricule || "", statut: m.statut || "", fonction: m.fonction || "", pole: m.pole || "", eglise: m.eglise || "", garnisonId: m.garnisonId || "", photoId: m.photoId || "", anniv: m.anniv || "", adhesion: m.adhesion || "" },
+      garnisons: gs,
+      presences: { taux, p, r, x, a, n, liste: presListe },
+      cotis: { annee: an, mensuel, payes, dus, retard, verse, exempt },
+      speciales: sps, projets: pjs,
+      offrandes: { annee: an, total: os.reduce((t, o) => t + (Number(o.montant) || 0), 0), n: os.length },
+    };
+  }
+  let syncs = 0;
+  for (const c of comptes) {
+    const m = membres[c.membreId];
+    if (!m) continue;
+    try {
+      const r = resumeCron(m);
+      const emp = JSON.stringify(r);
+      const existant = await env.DB.prepare("SELECT data FROM docs WHERE path = ?").bind("espace_membre/" + m.id).first();
+      const old = existant ? JSON.parse(existant.data) : {};
+      if (JSON.stringify(old.resume) === JSON.stringify(r)) continue;
+      await ecrireDoc(env, "set", "espace_membre/" + m.id, { resume: r, empreinte: emp.length.toString(36), majLe: Date.now() });
+      syncs++;
+    } catch (e) { /* continuer avec le suivant */ }
+  }
+  return { syncs };
+}
+
 /* ───────── en-têtes de sécurité ───────── */
 function securiser(r) {
   const n = new Response(r.body, r);
@@ -686,7 +895,7 @@ function securiser(r) {
 }
 
 export default {
-  async scheduled(ev, env, ctx) { ctx.waitUntil(Promise.all([sauvegarder(env), nettoyerMedias(env)])); },
+  async scheduled(ev, env, ctx) { ctx.waitUntil(Promise.all([sauvegarder(env), nettoyerMedias(env), syncEspacesMembres(env)])); },
   async fetch(req, env) {
     return securiser(await traiter(req, env));
   },
@@ -723,7 +932,12 @@ async function traiter(req, env) {
       if (p === "/api/activation" && req.method === "POST") return apiActivation(req, env);
       if (p === "/api/mot-de-passe" && req.method === "POST") return apiMotDePasse(req, env, u);
       if (p === "/api/mon-espace") return apiMonEspace(env, u);
+      if (p === "/api/mon-historique") return apiMonHistorique(req, env, u);
+      if (p === "/api/mon-profil" && req.method === "PATCH") return apiMonProfil(req, env, u);
       if (p === "/api/priere" && req.method === "POST") return apiPriere(req, env, u);
+      if (p === "/api/absence" && req.method === "POST") return apiAbsence(req, env, u);
+      if (p === "/api/push" && (req.method === "POST" || req.method === "DELETE")) return apiPushSubscription(req, env, u);
+      if (p === "/api/calendrier.ics") return apiCalendrier(env);
       if (p === "/api/public") return apiPublic(env);
       if (p === "/api/ia" && req.method === "POST") return apiIA(req, env, u);
       if (p === "/api/db" && req.method === "POST") return apiDb(req, env, u);

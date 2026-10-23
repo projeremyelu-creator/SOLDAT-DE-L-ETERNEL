@@ -36,9 +36,9 @@
   const nouvelId = () => { const a = new Uint8Array(20); crypto.getRandomValues(a); return [...a].map((x) => ALPHA[x % 36]).join(""); };
   const echec = (code, message) => Object.assign(new Error(message || code), { code });
 
-  async function appel(url, corps) {
+  async function appel(url, corps, methode) {
     let r;
-    try { r = await fetch(url, { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify(corps) }); }
+    try { r = await fetch(url, { method: methode || "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify(corps) }); }
     catch (e) { throw echec("unavailable", "Réseau indisponible"); }
     const j = await r.json().catch(() => ({}));
     if (!r.ok) throw echec(j.erreur || (r.status === 403 ? "invalid_argument" : "unavailable"), j.message);
@@ -224,6 +224,11 @@
     comptes: async () => { const r = await fetch("/api/comptes", { credentials: "same-origin" }); const j = await r.json(); if (!r.ok) throw echec(j.erreur, j.message); return j; },
     majCompte: (o) => appel("/api/comptes", o),
     importer: (docs) => appel("/api/import", { docs }),
+    monHistorique: async () => { const r = await fetch("/api/mon-historique", { credentials: "same-origin", cache: "no-store" }); const j = await r.json().catch(() => ({})); if (!r.ok) throw echec(j.erreur || "unavailable", j.message); return j; },
+    monProfil: (o) => appel("/api/mon-profil", o, "PATCH"),
+    absence: (o) => appel("/api/absence", o),
+    pushSub: (o) => appel("/api/push", o),
+    pushUnsub: (o) => { return fetch("/api/push", { method: "DELETE", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify(o) }).then((r) => r.json()); },
   };
   window.claude = {
     use: async (nom) => {
@@ -1165,6 +1170,23 @@ body.locked .fab-ia { display: none; }
 .esp-l b { font-size: .92rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .esp-l small { color: var(--muted); }
 .esp-pied { margin-top: 18px; }
+.esp-plus { margin-top: 8px; }
+.esp-plus summary { cursor: pointer; font-size: .88rem; }
+.badges-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.badge-item { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 12px; border-radius: 10px; background: var(--bg2); min-width: 72px; text-align: center; }
+.badge-ico { font-size: 1.6rem; }
+.badge-item small { font-size: .75rem; font-weight: 600; color: var(--gold); }
+.heatmap { display: flex; gap: 2px; overflow-x: auto; padding: 4px 0; }
+.hm-sem { display: flex; flex-direction: column; gap: 2px; }
+.hm-j { width: 12px; height: 12px; border-radius: 2px; }
+.hm-j.futur { opacity: .2; }
+.hm-leg { display: flex; gap: 12px; margin-top: 6px; flex-wrap: wrap; }
+.hm-l { display: flex; align-items: center; gap: 4px; font-size: .75rem; color: var(--muted); }
+.hm-c { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.temoin { margin: 0 0 12px; padding: 12px 16px; border-left: 3px solid var(--or); background: var(--bg2); border-radius: 0 8px 8px 0; font-style: italic; }
+.temoin p { margin: 0 0 6px; line-height: 1.5; }
+.temoin footer { font-style: normal; font-size: .85rem; color: var(--muted); }
 .check { display: flex; gap: 8px; align-items: center; font-size: .9rem; margin: 4px 0 10px; }
 .dir-outils { margin-top: 4px; flex-wrap: wrap; }
 .inst-lien { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 8px 0 12px; }
@@ -1473,7 +1495,7 @@ body.locked .fab-ia { display: none; }
   const accesDirection = () => accesFinances();
   const peutEcrire = () => !!S.db && S.peutEcrire !== false && S.etat === "pret";
   const peutAdmin = () => !!S.db && (S.estAdmin || S.estProprio) && S.etat === "pret";
-  const ongletsVisibles = () => ONGLETS.filter((o) => (["membres", "secretariat", "garnisons", "academie", "portevoix", "chambre", "projets"].includes(o.id) ? accesRegistre() : o.id === "assistant" ? !!S.sample : o.id === "finances" ? accesFinances() || (S.etat === "connexion" && S.vue === "finances") : true));
+  const ongletsVisibles = () => ONGLETS.filter((o) => (["membres", "secretariat", "garnisons", "chambre", "projets"].includes(o.id) ? accesRegistre() : o.id === "academie" ? accesRegistre() || (S.user && S.user.membreId) : ["portevoix", "arsenal"].includes(o.id) ? accesRegistre() || S.user !== null : o.id === "assistant" ? !!S.sample : o.id === "finances" ? accesFinances() || (S.etat === "connexion" && S.vue === "finances") : true));
 
   /* Membres */
   const nomComplet = (m) => (m ? [String(m.nom || "").toUpperCase(), m.prenoms || ""].filter(Boolean).join(" ").trim() || "Sans nom" : "");
@@ -3692,6 +3714,8 @@ body.locked .fab-ia { display: none; }
     const ecr = peutEcrire();
     let out = secHead("Académie", { eyebrow: "Formations", verset: VERSETS.academie, actions: ecr ? btn("ajout-formation", "Nouvelle formation", { ico: "i-plus", cls: "btn-primary" }) : "" });
     if (S.etat === "absent") return out + nonConnecte("Les formations et les parcours des membres");
+    /* Membres connectés sans accès registre : pas de données formations */
+    if (!accesRegistre()) return out + vide("i-cap", "Les formations du mouvement seront bientôt accessibles depuis votre espace. Rapprochez-vous de votre responsable de garnison pour connaître les prochaines sessions.");
     if (!S.pret.formations || !S.pret.membres) return out + chargement("Lecture des formations…");
     const par = { avenir: [], encours: [], terminee: [] };
     S.formations.forEach((f) => par[etatFormation(f)].push(f));
@@ -3985,7 +4009,7 @@ body.locked .fab-ia { display: none; }
   }
 
   /* ════════════════════════ Porte-Voix ════════════════════════ */
-  const annoncesActives = () => S.annonces.filter((a) => !a.expireLe || a.expireLe >= aujourdhui()).sort((a, b) => (!!b.epingle - !!a.epingle) || (b.creeLe || 0) - (a.creeLe || 0));
+  const annoncesActives = () => S.annonces.filter((a) => a.type !== "temoignage" && (!a.expireLe || a.expireLe >= aujourdhui())).sort((a, b) => (!!b.epingle - !!a.epingle) || (b.creeLe || 0) - (a.creeLe || 0));
   function blocAnnonce(a, ecr) {
     const expiree = a.expireLe && a.expireLe < aujourdhui();
     return `<article class="annonce${a.epingle ? " epingle" : ""}${expiree ? " passee" : ""}"><div class="annonce-h"><h3>${esc(a.titre)}</h3><span class="btn-row">${a.epingle ? `<span class="chip gold">${I("i-pin")}Épinglée</span>` : ""}${expiree ? `<span class="chip">Expirée</span>` : a.expireLe ? `<span class="chip">Jusqu’au ${esc(fmtCourt(a.expireLe))}</span>` : ""}</span></div>
@@ -4000,20 +4024,35 @@ body.locked .fab-ia { display: none; }
     const corps = actives.length ? actives.slice(0, 3).map((a) => `<div class="annonce-mini${a.epingle ? " epingle" : ""}"><b>${esc(a.titre)}</b><p>${esc(a.texte)}</p></div>`).join("") : `<p class="hint">Aucune annonce en cours. Publiez la prochaine depuis le Porte-Voix : elle s’affichera ici pour tous.</p>`;
     return carte("Annonces", corps, { cls: "span2", actions: ecr ? btn("ajout-annonce", "Publier", { ico: "i-plus", sm: true }) : "", pied: accesRegistre() ? `<button class="link" type="button" data-act="aller-annonces">Ouvrir le Porte-Voix</button>` : "" });
   }
-  function ouvrirFormAnnonce(id) {
+  function ouvrirFormAnnonce(id, type) {
     const a = id ? S.annonces.find((x) => x.id === id) : {};
     if (id && !a) return;
-    const html = `<form class="form" id="f-annonce" novalidate>
-      ${champ("an-titre", "Titre", inp("an-titre", "titre", a.titre, 'autocomplete="off" required autofocus maxlength="120"'), { req: true })}
-      ${champ("an-texte", "Texte", zone("an-texte", "texte", a.texte, 'rows="6" required'), { req: true })}
-      <div class="f2">${champ("an-exp", "Visible jusqu’au", inp("an-exp", "expireLe", a.expireLe, 'type="date"'), { hint: "Facultatif : l’annonce disparaît de l’accueil après cette date." })}<div class="field"><span class="lab">Mise en avant</span><label class="check"><input type="checkbox" name="epingle" value="1"${a.epingle ? " checked" : ""}> Épingler en tête</label></div></div>
+    const estTem = type === "temoignage" || (a && a.type === "temoignage");
+    const html = estTem ? `<form class="form" id="f-annonce" novalidate>
+      <input type="hidden" name="type" value="temoignage">
+      ${champ("an-titre", "Votre prénom ou initiales", inp("an-titre", "auteur", a.auteur || (S.me.name || "").split(/\s+/)[0] || "", ‘autocomplete="off" required autofocus maxlength="60"’), { req: true })}
+      ${champ("an-texte", "Votre témoignage", zone("an-texte", "contenu", a.contenu || a.texte || "", ‘rows="6" required placeholder="Ce que Dieu a fait pour vous…"’), { req: true })}
+      <p class="hint">Votre témoignage sera visible par tous les membres sur l’accueil de l’application.</p>
+      ${pied(id ? "Enregistrer" : "Publier mon témoignage")}
+    </form>` : `<form class="form" id="f-annonce" novalidate>
+      ${champ("an-titre", "Titre", inp("an-titre", "titre", a.titre, ‘autocomplete="off" required autofocus maxlength="120"’), { req: true })}
+      ${champ("an-texte", "Texte", zone("an-texte", "texte", a.texte, ‘rows="6" required’), { req: true })}
+      <div class="f2">${champ("an-exp", "Visible jusqu’au", inp("an-exp", "expireLe", a.expireLe, ‘type="date"’), { hint: "Facultatif : l’annonce disparaît de l’accueil après cette date." })}<div class="field"><span class="lab">Mise en avant</span><label class="check"><input type="checkbox" name="epingle" value="1"${a.epingle ? " checked" : ""}> Épingler en tête</label></div></div>
       <p class="hint">Les annonces s’affichent sur l’accueil de toutes les personnes qui ont accès à l’application, y compris en lecture seule.</p>
       ${pied(id ? "Enregistrer" : "Publier l’annonce")}
     </form>`;
     ouvrir({
-      titre: id ? "Modifier l’annonce" : "Nouvelle annonce", html,
+      titre: estTem ? (id ? "Modifier le témoignage" : "Publier un témoignage") : (id ? "Modifier l’annonce" : "Nouvelle annonce"), html,
       onSubmit: async (fd, form) => {
         const g = (k) => String(fd.get(k) || "").trim();
+        if (estTem) {
+          if (!g("contenu")) { erreurForm("Écrivez votre témoignage."); return; }
+          const data = { type: "temoignage", auteur: g("auteur") || "Un soldat", contenu: g("contenu"), texte: g("contenu"), titre: "Témoignage", publie: true };
+          form.querySelector("[type=submit]").disabled = true;
+          const ok = await ecrire(async () => { if (id) await S.db.doc("annonces/" + id).update({ ...data, ...tampon() }); else await S.db.collection("annonces").doc().set({ ...data, ...creation() }); }, id ? "Témoignage modifié" : "Témoignage publié, gloire à Dieu !");
+          if (ok) fermer(); else form.querySelector("[type=submit]").disabled = false;
+          return;
+        }
         if (!g("titre") || !g("texte")) { erreurForm("Indiquez le titre et le texte de l’annonce."); return; }
         if (g("expireLe") && g("expireLe") < aujourdhui()) { erreurForm("La date de fin est déjà passée."); return; }
         const data = { titre: g("titre"), texte: g("texte"), expireLe: g("expireLe"), epingle: fd.get("epingle") === "1" };
@@ -4181,7 +4220,14 @@ body.locked .fab-ia { display: none; }
     const ecr = peutEcrire();
     let out = secHead("Porte-Voix", { eyebrow: "Communication", verset: VERSETS.portevoix, actions: (ecr ? btn("ajout-annonce", "Nouvelle annonce", { ico: "i-plus" }) : "") + btn("nouvelle-affiche", "Nouvelle affiche", { ico: "i-image", data: 'data-modele="evenement"' }) + (ecr ? btn("ecrire", "Nouveau message", { ico: "i-horn", cls: "btn-primary" }) : "") });
     if (S.etat === "absent") return out + nonConnecte("Les annonces et les messages du mouvement");
-    if (!S.pret.annonces || !S.pret.diffusions || !S.pret.membres) return out + chargement("Lecture des communications…");
+    if (!S.pret.annonces) return out + chargement("Lecture des annonces…");
+    /* Membres connectés sans accès registre : vue limitée aux annonces */
+    if (!accesRegistre()) {
+      const actives = annoncesActives();
+      if (!actives.length) return out + vide("i-pin", "Aucune annonce en cours. Les annonces du mouvement s'affichent ici dès leur publication.");
+      return out + `<div class="col">${actives.map((a) => blocAnnonce(a, false)).join("")}</div>`;
+    }
+    if (!S.pret.diffusions || !S.pret.membres) return out + chargement("Lecture des communications…");
     const actives = annoncesActives();
     out += sousOnglets("portevoix", [["annonces", "Annonces", actives.length], ["messages", "Messages ciblés", S.diffusions.length], ["affiches", "Affiches", (S.affiches || []).length || null], ["rappels", "Rappels du jour", rappelsEnAttente() || null]]);
     if (S.sous.portevoix === "rappels") return out + vueRappels();
@@ -6980,6 +7026,16 @@ Aujourd’hui : ${dateFr(aujourdhui())}. Personne qui écrit : ${S.me.name || "u
     }
     return `<div class="aujourdhui">${tuiles.join("")}</div>`;
   }
+  /* ── Mur de témoignages (accueil) ── */
+  function murTemoignages() {
+    if (!S.pret.annonces) return "";
+    const tems = (S.annonces || []).filter((a) => a.type === "temoignage" && a.publie !== false).sort((a, b) => (b.creeLe || 0) - (a.creeLe || 0)).slice(0, 4);
+    if (!tems.length) return "";
+    return `<section class="card" style="margin-top:16px"><p class="eyebrow">${I("i-flame")} Témoignages</p><div class="col">${tems.map((t) => `<blockquote class="temoin"><p>${esc(String(t.contenu || t.texte || "").slice(0, 250))}${(t.contenu || t.texte || "").length > 250 ? "…" : ""}</p><footer>— ${esc(t.auteur || "Un soldat")}</footer></blockquote>`).join("")}</div>${peutEcrire() ? `<div class="btn-row" style="margin-top:8px">${btn("ajout-temoignage", "Publier un témoignage", { ico: "i-plus", sm: true })}</div>` : ""}</section>`;
+  }
+  /* Anniversaires accueil : déjà traités dans bandeauAujourdhui pour registre */
+  function anniversairesAccueil() { return ""; }
+
   VUES.accueil = function () {
     const c = cfg();
     const h = new Date().getHours();
@@ -7017,6 +7073,8 @@ Aujourd’hui : ${dateFr(aujourdhui())}. Personne qui écrit : ${S.me.name || "u
     if (accesDirection()) cartes.push(carteVeille());
     if (accesRegistre()) { cartes.push(carteDecisions()); cartes.push(carteEffectif()); cartes.push(carteSuivi()); }
     out += `<h2 class="h3 acc-sec">La vie du mouvement</h2><div class="grid g3">${cartes.join("")}</div>`;
+    out += murTemoignages();
+    out += anniversairesAccueil();
     if (accesFinances()) out += `<details class="direction" id="esp-direction"${S.accDirOuvert ? " open" : ""}><summary>${I("i-lock")}<span>Espace direction · caisse et cotisations</span>${I("i-right", "ico dir-f")}</summary><div class="btn-row dir-outils">${btn("sauvegarde-excel", "Sauvegarde Excel", { ico: "i-down", sm: true })}${btn("espaces", "Espaces soldats", { ico: "i-card", sm: true })}${btn("copie-poche", "Copie de poche", { ico: "i-down", sm: true })}</div><div class="grid g3" style="margin-top:12px">${carteCaisse()}${carteCotis()}</div></details>`;
     return out;
   };
@@ -7431,7 +7489,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
       v: 1,
       m: { id: m.id, nom: m.nom || "", prenoms: m.prenoms || "", matricule: m.matricule || "", statut: m.statut || "", fonction: m.fonction || "", pole: m.pole || "", eglise: m.eglise || "", garnisonId: m.garnisonId || "", photoId: m.photoId || "", anniv: m.anniv || "", adhesion: m.adhesion || "" },
       garnisons: gs,
-      presences: { taux: s3.taux, p: s3.p, r: s3.r, x: s3.x, a: s3.a, n: s3.n, liste: evs.slice(0, 15).map((e) => { const v = presentsEffectifs(e)[m.id]; return { date: e.date, titre: e.titre || "Rassemblement", etat: v === true ? "P" : v === "retard" ? "R" : v === "excuse" ? "E" : "A" }; }) },
+      presences: { taux: s3.taux, p: s3.p, r: s3.r, x: s3.x, a: s3.a, n: s3.n, liste: evs.slice(0, 30).map((e) => { const v = presentsEffectifs(e)[m.id]; return { date: e.date, titre: e.titre || "Rassemblement", etat: v === true ? "P" : v === "retard" ? "R" : v === "excuse" ? "E" : "A" }; }) },
       cotis: { annee: an, mensuel: Number(cfg().cotisationMensuelle) || 0, payes, dus: ec.dus, retard: ec.retard, verse: ec.verse, exempt: ec.exempt },
       speciales: sps, projets: pjs,
       offrandes: { annee: an, total: os.reduce((t, o) => t + (Number(o.montant) || 0), 0), n: os.length },
@@ -7556,13 +7614,135 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
         <div class="esp-cartes" id="esp-cartes" aria-label="Ma carte de membre"><div class="esp-cv-w"><canvas id="esp-recto" aria-label="Recto de la carte"></canvas></div><div class="esp-cv-w"><canvas id="esp-verso" aria-label="Verso de la carte"></canvas></div></div>
         <div class="btn-row">${btn("esp-carte", "Recto (image)", { ico: "i-down", sm: true, data: 'data-face="recto"' })}${btn("esp-carte", "Verso (image)", { ico: "i-down", sm: true, data: 'data-face="verso"' })}${btn("esp-carte", "Carte en PDF", { ico: "i-down", sm: true, data: 'data-face="pdf"' })}</div></section>
       <div class="grid g3 esp-grid">
-        <section class="card"><p class="eyebrow">Mes présences</p><p class="esp-big">${pr.taux == null ? "—" : Math.round(pr.taux * 100) + " %"}</p><p class="hint" style="margin-top:0">${pr.taux == null ? "Pas encore de rassemblement pointé ces trois derniers mois." : `d’assiduité sur trois mois · ${pluriel((pr.p || 0) + (pr.r || 0), "présence", "présences")}`}</p>${(pr.liste || []).length ? `<ul class="esp-l">${pr.liste.slice(0, 8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul>` : ""}</section>
+        <section class="card"><p class="eyebrow">Mes présences</p><p class="esp-big">${pr.taux == null ? "—" : Math.round(pr.taux * 100) + " %"}</p><p class="hint" style="margin-top:0">${pr.taux == null ? "Pas encore de rassemblement pointé ces trois derniers mois." : `d’assiduité sur trois mois · ${pluriel((pr.p || 0) + (pr.r || 0), "présence", "présences")}`}</p>${(pr.liste || []).length ? `<ul class="esp-l">${pr.liste.slice(0, 8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul>${pr.liste.length > 8 ? `<details class="esp-plus"><summary class="link">Voir les ${pr.liste.length} présences</summary><ul class="esp-l">${pr.liste.slice(8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul></details>` : ""}` : ""}</section>
         <section class="card"><p class="eyebrow">Mes cotisations ${esc(String(c.annee || ""))}</p>${cellulesCotis(ec, c.annee || new Date().getFullYear(), true)}${cot}${c.verse ? `<p class="hint">Versé cette année : <b>${esc(fcfa(c.verse))}</b></p>` : ""}${autres.length ? `<ul class="esp-l">${autres.map(([t, v, a]) => `<li><span><b>${esc(t)}</b><small>${esc(a ? `${fcfa(v)} sur ${fcfa(a)}` : fcfa(v) + " versés")}</small></span>${a ? `<span class="chip ${v >= a ? "ok" : "warn"}">${v >= a ? "Soldé" : "En cours"}</span>` : ""}</li>`).join("")}</ul>` : ""}${d.offrandes && d.offrandes.total ? `<p class="hint">Offrandes, dîmes et dons ${esc(String(d.offrandes.annee))} : <b>${esc(fcfa(d.offrandes.total))}</b></p>` : ""}</section>
         <section class="card"><p class="eyebrow">Requête de prière</p><form class="form" id="f-esp-priere" novalidate>${champ("esp-sujet", "Pour quoi souhaitez-vous que l’on prie ?", `<textarea class="inp" id="esp-sujet" name="sujet" rows="4" maxlength="800" placeholder="Votre sujet de prière…"></textarea>`)}<label class="check"><input type="checkbox" name="conf" value="1"> Confidentielle : seule la direction la lira</label><button class="btn btn-primary" type="submit"${ESP.envoi ? " disabled" : ""}>${I("i-flame")}Déposer ma requête</button></form><p class="hint" style="margin-top:8px">${peutEcrire() && accesRegistre() ? "Votre requête rejoint la Chambre Haute. Les requêtes confidentielles partent par WhatsApp vers la direction." : (moiH().membreId ? "Votre requête rejoint la Chambre Haute, où les intercesseurs prient pour vous. Confidentielle, elle part par WhatsApp vers la direction." : "Votre requête part par WhatsApp vers la direction, qui la confie aux intercesseurs.")}</p></section>
       </div>
+      ${badgesSoldat(m, pr, c)}
+      ${heatmapPresences(pr)}
       ${prochains.length ? `<h2 class="h3 acc-sec">Prochains rassemblements</h2><div class="list">${prochains.map(rowEvt).join("")}</div>` : ""}
-      <p class="hint esp-pied">Résumé publié par la direction${ESP.t ? `, ouvert ${esc(relLong(isoJour(new Date(ESP.t))))}` : ""}. <button class="link" type="button" data-act="esp-quitter">Fermer mon espace sur cet appareil</button></p>`;
+      ${formAbsence()}
+      ${liensPaiement(c)}
+      ${formProfil(m)}
+      ${sectionPush()}
+      ${annuaireGarnison(m)}
+      ${anniversairesSoldat()}
+      <p class="hint esp-pied">Résumé publié par la direction${ESP.t ? `, ouvert ${esc(relLong(isoJour(new Date(ESP.t))))}` : ""}. <button class="link" type="button" data-act="esp-quitter">Fermer mon espace sur cet appareil</button> · <a class="link" href="/api/calendrier.ics" download>Exporter l'agenda (.ics)</a></p>`;
   }
+  /* ── Badges de fidélité ── */
+  function badgesSoldat(m, pr, c) {
+    const badges = [];
+    const taux = pr.taux;
+    if (taux != null && taux >= 0.9) badges.push({ ico: "🏅", nom: "Fidèle", desc: "Assiduité ≥ 90 %" });
+    else if (taux != null && taux >= 0.7) badges.push({ ico: "⭐", nom: "Assidu", desc: "Assiduité ≥ 70 %" });
+    if (c && !c.exempt && c.retard && c.retard.length === 0 && (c.dus || []).length > 0) badges.push({ ico: "💎", nom: "À jour", desc: "Cotisations réglées" });
+    const adh = m.adhesion || "";
+    if (adh) {
+      const annees = Math.floor((Date.now() - new Date(adh).getTime()) / (365.25 * 86400000));
+      if (annees >= 5) badges.push({ ico: "🎖️", nom: "Ancien", desc: `${annees} ans de service` });
+      else if (annees >= 2) badges.push({ ico: "🔰", nom: "Vétéran", desc: `${annees} ans de service` });
+    }
+    const nbPrieres = (pr.liste || []).length;
+    if (nbPrieres >= 10) badges.push({ ico: "🔥", nom: "Intercesseur", desc: `${nbPrieres} présences enregistrées` });
+    if (!badges.length) return "";
+    return `<section class="card"><p class="eyebrow">Mes distinctions</p><div class="badges-row">${badges.map((b) => `<span class="badge-item" title="${esc(b.desc)}"><span class="badge-ico">${b.ico}</span><small>${esc(b.nom)}</small></span>`).join("")}</div></section>`;
+  }
+
+  /* ── Heatmap d'assiduité (6 derniers mois) ── */
+  function heatmapPresences(pr) {
+    const liste = pr.liste || [];
+    if (liste.length < 3) return "";
+    const parDate = {};
+    for (const x of liste) parDate[x.date] = x.etat;
+    const aujourdhuiStr = new Date().toISOString().slice(0, 10);
+    const il6m = new Date(); il6m.setMonth(il6m.getMonth() - 6);
+    const semaines = [];
+    let d = new Date(il6m);
+    d.setDate(d.getDate() - d.getDay());
+    while (d.toISOString().slice(0, 10) <= aujourdhuiStr) {
+      const sem = [];
+      for (let j = 0; j < 7; j++) {
+        const iso = d.toISOString().slice(0, 10);
+        const etat = parDate[iso];
+        sem.push({ date: iso, etat: etat || null, futur: iso > aujourdhuiStr });
+        d.setDate(d.getDate() + 1);
+      }
+      semaines.push(sem);
+    }
+    const couleurs = { P: "var(--ok)", R: "var(--warn)", E: "var(--info)", A: "var(--danger)" };
+    return `<section class="card"><p class="eyebrow">Calendrier d'assiduité</p><div class="heatmap" role="img" aria-label="Assiduité sur 6 mois">${semaines.map((s) => `<div class="hm-sem">${s.map((j) => `<div class="hm-j${j.futur ? " futur" : ""}" style="background:${j.etat ? couleurs[j.etat] : "var(--bg3)"}" title="${j.date}${j.etat ? " · " + (ETAT_PRES[j.etat] || [""])[0] : ""}"></div>`).join("")}</div>`).join("")}</div><div class="hm-leg"><span class="hm-l"><span class="hm-c" style="background:var(--ok)"></span>Présent</span><span class="hm-l"><span class="hm-c" style="background:var(--warn)"></span>Retard</span><span class="hm-l"><span class="hm-c" style="background:var(--info)"></span>Excusé</span><span class="hm-l"><span class="hm-c" style="background:var(--danger)"></span>Absent</span></div></section>`;
+  }
+
+  /* ── Formulaire de demande d'absence ── */
+  function formAbsence() {
+    return `<section class="card"><p class="eyebrow">Demander une absence</p><form class="form" id="f-absence" novalidate>
+      <div class="g2">${champ("abs-debut", "Du", '<input class="inp" id="abs-debut" name="dateDebut" type="date" required>')}${champ("abs-fin", "Au", '<input class="inp" id="abs-fin" name="dateFin" type="date">')}</div>
+      ${champ("abs-motif", "Motif", '<textarea class="inp" id="abs-motif" name="motif" rows="2" maxlength="500" placeholder="Voyage, maladie, empêchement…" required></textarea>')}
+      <button class="btn btn-sm" type="submit">${I("i-cal")}Envoyer la demande</button></form></section>`;
+  }
+
+  /* ── Liens de paiement mobile ── */
+  function liensPaiement(c) {
+    if (c && c.exempt) return "";
+    const retard = (c && c.retard || []).length;
+    if (!retard) return "";
+    const montant = retard * (c.mensuel || 0);
+    if (!montant) return "";
+    return `<section class="card"><p class="eyebrow">Régulariser mes cotisations</p><p class="hint">Montant dû : <b>${esc(fcfa(montant))}</b> (${retard} mois)</p>
+      <div class="btn-row"><a class="btn btn-sm" href="https://pay.wave.com" target="_blank" rel="noopener">${I("i-wallet")}Wave</a><a class="btn btn-sm" href="https://www.orange.cm/fr/orange-money.html" target="_blank" rel="noopener">${I("i-wallet")}Orange Money</a><a class="btn btn-sm" href="https://mtn.cm/momo" target="_blank" rel="noopener">${I("i-wallet")}MTN MoMo</a></div>
+      <p class="hint" style="margin-top:6px">Effectuez le paiement puis informez le secrétariat pour l'enregistrement.</p></section>`;
+  }
+
+  /* ── Formulaire de modification du profil (comptes reliés) ── */
+  function formProfil(m) {
+    const h = moiH();
+    if (!h.connecte || !h.membreId) return "";
+    return `<section class="card"><p class="eyebrow">Modifier mes coordonnées</p><form class="form" id="f-profil" novalidate>
+      <div class="g2">${champ("prof-tel", "Téléphone", `<input class="inp" id="prof-tel" name="telephone" type="tel" maxlength="30" value="${esc(m.telephone || "")}">`)}${champ("prof-quartier", "Quartier", `<input class="inp" id="prof-quartier" name="quartier" type="text" maxlength="100" value="${esc(m.quartier || "")}">`)}</div>
+      <div class="g2">${champ("prof-email", "E-mail de contact", `<input class="inp" id="prof-email" name="email" type="email" maxlength="200" value="${esc(m.email || "")}">`)}${champ("prof-situation", "Situation", `<select class="inp" id="prof-situation" name="situation"><option value="">—</option>${["Célibataire", "Marié(e)", "Veuf/veuve", "Autre"].map((s) => `<option${m.situation === s ? " selected" : ""}>${s}</option>`).join("")}</select>`)}</div>
+      <button class="btn btn-sm" type="submit">${I("i-check")}Enregistrer</button></form></section>`;
+  }
+
+  /* ── Notifications push ── */
+  function sectionPush() {
+    if (!("Notification" in window) || !("serviceWorker" in navigator)) return "";
+    const perm = Notification.permission;
+    if (perm === "denied") return `<section class="card"><p class="eyebrow">${I("i-bell")} Notifications</p><p class="note warn">Les notifications sont bloquées sur cet appareil. Pour les recevoir, autorisez-les dans les paramètres de votre navigateur.</p></section>`;
+    if (perm === "granted") return `<section class="card"><p class="eyebrow">${I("i-bell")} Notifications</p><p class="note ok">Les notifications sont activées sur cet appareil.</p><button class="btn btn-sm btn-ghost" type="button" data-act="push-desactiver">${I("i-x")}Désactiver</button></section>`;
+    return `<section class="card"><p class="eyebrow">${I("i-bell")} Notifications</p><p>Recevez les annonces et rappels directement sur cet appareil.</p><button class="btn btn-sm btn-primary" type="button" data-act="push-activer">${I("i-bell")}Activer les notifications</button></section>`;
+  }
+
+  /* ── Annuaire de ma garnison ── */
+  function annuaireGarnison(m) {
+    if (!accesRegistre() || !S.pret.membres || !S.pret.garnisons) return "";
+    const gId = m.garnisonId;
+    if (!gId) return "";
+    const g = garnison(gId);
+    if (!g) return "";
+    const camarades = membresActifs().filter((mb) => mb.garnisonId === gId && mb.id !== m.id).sort(parNom);
+    if (!camarades.length) return "";
+    return `<section class="card"><p class="eyebrow">${I("i-users")} Ma garnison · ${esc(g.nom)}</p><div class="list">${camarades.slice(0, 20).map((c) => `<div class="row nolead"><span class="row-main"><span class="row-t">${esc(nomComplet(c))}</span><span class="row-m">${esc([c.telephone ? telAffiche(c.telephone) : "", c.quartier || ""].filter(Boolean).join(" · "))}</span></span>${c.telephone ? `<span class="row-r"><a class="btn btn-sm btn-ghost" href="tel:${esc(telChiffres(c.telephone))}" aria-label="Appeler ${esc(prenomUsuel(c))}">${I("i-phone")}</a>${telChiffres(c.telephone) ? `<a class="btn btn-sm btn-ghost" href="https://wa.me/${esc(telChiffres(c.telephone))}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(prenomUsuel(c))}">${I("i-msg")}</a>` : ""}</span>` : ""}</div>`).join("")}${camarades.length > 20 ? `<p class="hint">${camarades.length - 20} autres membres…</p>` : ""}</div></section>`;
+  }
+
+  /* ── Anniversaires proches (données du registre) ── */
+  function anniversairesSoldat() {
+    const src = accesRegistre() && S.pret.membres ? membresActifs() : [];
+    if (!src.length) return "";
+    const now = new Date();
+    const aujourdhuiMD = (now.getMonth() + 1).toString().padStart(2, "0") + "-" + now.getDate().toString().padStart(2, "0");
+    const j7 = new Date(Date.now() + 7 * 86400000);
+    const dans7MD = (j7.getMonth() + 1).toString().padStart(2, "0") + "-" + j7.getDate().toString().padStart(2, "0");
+    const annivs = [];
+    for (const m of src) {
+      const dn = m.dateNaissance || "";
+      if (!dn || dn.length < 10) continue;
+      const md = dn.slice(5, 10);
+      if (md >= aujourdhuiMD && md <= dans7MD) annivs.push({ nom: prenomUsuel(m), date: md, jour: md === aujourdhuiMD ? "aujourd'hui" : fmtCourt(now.getFullYear() + "-" + md) });
+    }
+    if (!annivs.length) return "";
+    return `<section class="card"><p class="eyebrow">🎂 Anniversaires cette semaine</p><ul class="esp-l">${annivs.map((a) => `<li><span><b>${esc(a.nom)}</b></span><span class="chip info">${esc(a.jour)}</span></li>`).join("")}</ul></section>`;
+  }
+
   VUES.espace = function () {
     let out = secHead("Mon espace soldat", { eyebrow: "Espace personnel", verset: ["Je mettrai mon esprit en vous, et vous vivrez.", "Ézéchiel 37.14"] });
     if (ESP.charge) return out + chargement("Ouverture de votre espace…");
@@ -7622,11 +7802,36 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     form.reset();
     toast("WhatsApp s’ouvre avec votre requête : il reste à l’envoyer.");
   }
+  async function enregistrerProfil(fd, form) {
+    const m = moiH();
+    if (!m.connecte || !m.membreId) { toast("Connectez-vous à votre compte pour modifier votre profil.", "err"); return; }
+    const champs = {};
+    for (const k of ["telephone", "quartier", "email", "situation"]) { const v = fd.get(k); if (v != null) champs[k] = v; }
+    if (!Object.keys(champs).length) { toast("Aucune modification.", "err"); return; }
+    try { await SDEH.monProfil(champs); toast("Profil mis à jour."); if (ESPC.demande) { ESPC.demande = false; chargerEspaceCompte(); } }
+    catch (e) { toast((e && e.message) || "La modification n'a pas pu être enregistrée.", "err"); }
+  }
   document.addEventListener("submit", (ev) => {
     const f = ev.target;
     if (f.id === "f-esp") { ev.preventDefault(); ouvrirEspace(new FormData(f).get("code"), false); }
     else if (f.id === "f-esp-priere") { ev.preventDefault(); deposerPriere(new FormData(f), f); }
+    else if (f.id === "f-absence") { ev.preventDefault(); envoyerAbsence(new FormData(f), f); }
+    else if (f.id === "f-profil") { ev.preventDefault(); enregistrerProfil(new FormData(f), f); }
   });
+  async function envoyerAbsence(fd, form) {
+    const dateDebut = fd.get("dateDebut"), motif = String(fd.get("motif") || "").trim();
+    if (!dateDebut || !motif) { toast("Remplissez la date et le motif.", "err"); return; }
+    const m = moiH();
+    if (m.connecte && m.membreId) {
+      try { await SDEH.absence({ dateDebut, dateFin: fd.get("dateFin") || dateDebut, motif }); form.reset(); toast("Demande d'absence envoyée."); }
+      catch (e) { toast((e && e.message) || "La demande n'a pas pu être envoyée.", "err"); }
+    } else {
+      const tel = telContact();
+      const texte = `Demande d'absence\nDu ${dateDebut} au ${fd.get("dateFin") || dateDebut}\nMotif : ${motif}`;
+      window.open(lienWa(tel, texte), "_blank", "noopener");
+      form.reset(); toast("WhatsApp s'ouvre avec votre demande.");
+    }
+  }
   chargerEspaceLocal();
 
   /* ════════════════════════ Import et export ════════════════════════ */
@@ -8039,6 +8244,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     /* Porte-Voix */
     "aller-annonces": () => allerA("portevoix", "annonces"),
     "ajout-annonce": () => ouvrirFormAnnonce(null),
+    "ajout-temoignage": () => ouvrirFormAnnonce(null, "temoignage"),
     "editer-annonce": (t) => ouvrirFormAnnonce(t.dataset.id),
     "supprimer-annonce": (t) => boutonArme(t, "Confirmer", () => ecrire(() => S.db.doc("annonces/" + t.dataset.id).delete(), "Annonce supprimée")),
     "partager-annonce": (t) => { const a = S.annonces.find((x) => x.id === t.dataset.id); if (a) ouvrirTexte("Partager l’annonce", `${a.titre}\n\n${a.texte}\n\n— ${cfg().nomCourt}`, { wa: "" }); },
@@ -8328,6 +8534,33 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     "esp-copier": (t) => { const m = membre(t.dataset.id), a = accesDe(t.dataset.id); if (m && a) ouvrirTexte("Code de l’espace soldat", messageCode(m, a.code), { wa: m.telephone || "", intro: "Message prêt à envoyer au soldat." }); },
     "esp-carte": (t) => telechargerCarteEspace(t.dataset.face),
     "esp-quitter": () => quitterEspace(),
+    "push-activer": async () => {
+      try {
+        const perm = await Notification.requestPermission();
+        if (perm !== "granted") { toast("Autorisation refusée par le navigateur.", "err"); rendu(); return; }
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: new Uint8Array([4]) });
+        const j = sub.toJSON();
+        const h = moiH();
+        if (h.connecte) await SDEH.pushSub({ endpoint: j.endpoint, p256dh: (j.keys && j.keys.p256dh) || "", auth: (j.keys && j.keys.auth) || "" });
+        toast("Notifications activées !");
+      } catch (e) { toast("Impossible d'activer les notifications : " + (e.message || e), "err"); }
+      rendu();
+    },
+    "push-desactiver": async () => {
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.getSubscription();
+        if (sub) {
+          const j = sub.toJSON();
+          const h = moiH();
+          if (h.connecte) await SDEH.pushUnsub({ endpoint: j.endpoint });
+          await sub.unsubscribe();
+        }
+        toast("Notifications désactivées.");
+      } catch (e) { toast("Erreur : " + (e.message || e), "err"); }
+      rendu();
+    },
   });
 
   document.addEventListener("click", (ev) => {
@@ -8508,7 +8741,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     if (ESPC.charge && !ESPC.data) return out + chargement("Ouverture de votre espace…");
     if (!ESPC.data) return out + `<p class="note danger">${esc(ESPC.err)}</p><div class="btn-row">${btn("esp-recharger", "Réessayer", { ico: "i-undo" })}</div>`;
     const accueil = !ESPC.majLe ? `<p class="note info"><b>Bienvenue dans l’armée, ${esc(String(ESPC.data.m.prenoms || "").split(/\s+/)[0] || "soldat")} !</b> Votre matricule est <b class="num">${esc(ESPC.data.m.matricule || m.matricule)}</b>. Vos présences et vos cotisations s’afficheront ici dès la prochaine mise à jour du secrétariat.</p>` : "";
-    return out + accueil + espaceSoldat(ESPC.data).replace(/<p class="hint esp-pied">[\s\S]*?<\/p>\s*$/, `<p class="hint esp-pied">${ESPC.majLe ? `Présences et cotisations mises à jour ${esc(relLong(isoJour(new Date(ESPC.majLe))))}. ` : ""}Matricule attribué à l’inscription. <button class="link" type="button" data-act="mot-de-passe">Changer mon mot de passe</button> · <button class="link" type="button" data-act="deconnexion">Se déconnecter</button></p>`);
+    return out + accueil + espaceSoldat(ESPC.data).replace(/<p class="hint esp-pied">[\s\S]*?<\/p>\s*$/, `<p class="hint esp-pied">${ESPC.majLe ? `Présences et cotisations mises à jour ${esc(relLong(isoJour(new Date(ESPC.majLe))))}. ` : ""}Matricule attribué à l’inscription. <button class="link" type="button" data-act="mot-de-passe">Changer mon mot de passe</button> · <button class="link" type="button" data-act="deconnexion">Se déconnecter</button> · <a class="link" href="/api/calendrier.ics" download>Exporter l’agenda (.ics)</a></p>`);
   };
   /* Requête de prière d’un compte : enregistrée directement dans la Chambre Haute */
   const deposerPriereOrigH = deposerPriere;
