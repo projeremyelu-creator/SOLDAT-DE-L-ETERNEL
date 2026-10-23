@@ -76,8 +76,9 @@ p { margin: 0; }
 .section { padding-block: clamp(64px, 9vw, 112px); }
 .section + .section { border-top: 1px solid var(--trait); }
 .tete-section { margin-bottom: clamp(28px, 4vw, 44px); max-width: 760px; }
-.bouton { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 999px; font: 700 1rem/1 var(--f-texte); text-decoration: none; border: 2px solid transparent; cursor: pointer; transition: transform .15s, background .15s, border-color .15s, color .15s; }
+.bouton { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 999px; font: 700 1rem/1 var(--f-texte); text-decoration: none; border: 2px solid transparent; cursor: pointer; transition: transform .15s, background .2s, border-color .2s, color .2s, box-shadow .2s; }
 .bouton:hover { transform: translateY(-1px); }
+.bouton:active { transform: scale(.96); transition-duration: .08s; }
 .bouton svg { width: 18px; height: 18px; flex: 0 0 auto; }
 .b-or { background: var(--or); color: var(--nuit); }
 .b-or:hover { background: #ecd185; }
@@ -344,7 +345,7 @@ html.anim .revele.vu .frise-num { box-shadow: 0 0 0 6px rgba(226, 194, 106, .15)
 .prog-img { display: block; width: calc(100% + 44px); max-width: none; margin: -22px -22px 6px; height: auto; aspect-ratio: 600 / 260; object-fit: cover; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
 .programme:hover .prog-img { transform: scale(1.05); }
 /* Apparition au défilement */
-html.anim .revele { opacity: 0; transform: translateY(26px); transition: opacity .7s ease var(--d, 0s), transform .7s cubic-bezier(.2,.8,.2,1) var(--d, 0s); }
+html.anim .revele { opacity: 0; transform: translateY(26px); transition: opacity .85s ease var(--d, 0s), transform .85s cubic-bezier(.2,.8,.2,1) var(--d, 0s); }
 html.anim .revele.vu { opacity: 1; transform: none; }
 html.anim .pole.revele.vu:hover { transform: translateY(-6px); transition-delay: 0s; }
 html.anim .pole.revele.vu:active { transform: scale(.96); transition-delay: 0s; }
