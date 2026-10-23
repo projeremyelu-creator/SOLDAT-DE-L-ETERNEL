@@ -350,6 +350,26 @@ html.anim .pole.revele.vu:hover { transform: translateY(-6px); transition-delay:
 html.anim .pole.revele.vu:active { transform: scale(.96); transition-delay: 0s; }
 @media (prefers-reduced-motion: reduce) { html.anim .revele { opacity: 1; transform: none; transition: none; } .pole, .pole-img img, .prog-img, .fp-corps.change, .fiche-pole[open], .intro-poles::before { transition: none; animation: none; } }
 
+/* Galerie photos */
+.galerie { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; list-style: none; margin: 0; padding: 0; }
+.galerie li { position: relative; border-radius: var(--r); overflow: hidden; cursor: pointer; aspect-ratio: 4 / 3; background: var(--nuit); }
+.galerie img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+.galerie li:hover img, .galerie li:active img { transform: scale(1.06); }
+.galerie figcaption { position: absolute; bottom: 0; left: 0; right: 0; padding: 28px 14px 12px; background: linear-gradient(transparent, rgba(15, 30, 61, .75)); color: #fff; font-size: .9rem; font-weight: 500; pointer-events: none; }
+/* Lightbox */
+.lightbox { position: fixed; inset: 0; z-index: 1000; background: rgba(6, 11, 26, .92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+.lightbox.active { opacity: 1; pointer-events: auto; }
+.lightbox img { max-width: 92vw; max-height: 85vh; border-radius: 10px; box-shadow: 0 20px 60px rgba(0, 0, 0, .5); object-fit: contain; transition: transform .3s ease; user-select: none; -webkit-user-select: none; }
+.lightbox-caption { position: absolute; bottom: clamp(16px, 4vw, 40px); left: 50%; transform: translateX(-50%); color: #fff; font-size: 1rem; font-weight: 500; text-align: center; max-width: 80vw; }
+.lightbox-fermer { position: absolute; top: 16px; right: 16px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .15); color: #fff; font-size: 1.5rem; cursor: pointer; display: grid; place-items: center; }
+.lightbox-fermer:hover { background: rgba(255, 255, 255, .25); }
+.lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .12); color: #fff; font-size: 1.4rem; cursor: pointer; display: grid; place-items: center; }
+.lightbox-nav:hover { background: rgba(255, 255, 255, .22); }
+.lightbox-prev { left: 16px; }
+.lightbox-next { right: 16px; }
+@media (max-width: 640px) { .lightbox-nav { width: 36px; height: 36px; } .lightbox-prev { left: 8px; } .lightbox-next { right: 8px; } }
+@media (prefers-reduced-motion: reduce) { .lightbox { transition: none; } .galerie img { transition: none; } }
+
 /* Programmes */
 .programmes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 @media (max-width: 960px) { .programmes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -894,6 +914,30 @@ button.b-contour { background: transparent; }
     </div>
   </section>
 
+  <section class="section" id="galerie" aria-labelledby="titre-galerie">
+    <div class="enveloppe">
+      <div class="tete-section revele">
+        <p class="surtitre">En images</p>
+        <h2 id="titre-galerie">Moments de grâce</h2>
+        <p class="chapo">Prière, formation, communion fraternelle et actions solidaires : quelques instants captés au fil du mouvement.</p>
+      </div>
+      <ul class="galerie" id="galerie-liste">
+        <li class="revele" style="--d:0s"><figure style="margin:0"><img src="/vitrine/fire-generation-1080.jpg" srcset="/vitrine/fire-generation-640.jpg 640w, /vitrine/fire-generation-1080.jpg 1080w" sizes="(max-width: 640px) 100vw, 33vw" alt="Soldats réunis lors de Fire Génération" loading="lazy" decoding="async"><figcaption>Fire Génération · Communion fraternelle</figcaption></figure></li>
+        <li class="revele" style="--d:.08s"><figure style="margin:0"><img src="/vitrine/fire-generation-640.jpg" alt="Temps de prière collective" loading="lazy" decoding="async"><figcaption>Prière collective · Chercher la face de Dieu</figcaption></figure></li>
+        <li class="revele" style="--d:.16s"><figure style="margin:0"><img src="/vitrine/fire-generation-1080.jpg" alt="Formation et enseignement" loading="lazy" decoding="async"><figcaption>Formation · Enracinés dans la Parole</figcaption></figure></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Lightbox galerie -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo agrandie">
+    <button class="lightbox-fermer" id="lb-fermer" aria-label="Fermer">✕</button>
+    <button class="lightbox-nav lightbox-prev" id="lb-prev" aria-label="Photo précédente">‹</button>
+    <img id="lb-img" src="" alt="">
+    <button class="lightbox-nav lightbox-next" id="lb-next" aria-label="Photo suivante">›</button>
+    <p class="lightbox-caption" id="lb-caption"></p>
+  </div>
+
   <section class="section" id="rejoindre" aria-labelledby="titre-rejoindre">
     <div class="enveloppe rejoindre">
       <div>
@@ -1244,6 +1288,48 @@ button.b-contour { background: transparent; }
       });
     }, { rootMargin: "-30% 0px -60% 0px", threshold: 0 });
     sections.forEach(s => actif.observe(s));
+  }
+
+  /* Lightbox galerie */
+  const lb = document.getElementById("lightbox");
+  if (lb) {
+    const lbImg = document.getElementById("lb-img");
+    const lbCap = document.getElementById("lb-caption");
+    const photos = [];
+    let lbIdx = 0;
+    document.querySelectorAll(".galerie li").forEach((li, i) => {
+      const img = li.querySelector("img");
+      const cap = li.querySelector("figcaption");
+      if (img) {
+        photos.push({ src: img.src, alt: img.alt, caption: cap ? cap.textContent : "" });
+        li.addEventListener("click", () => { lbIdx = i; lbOuvrir(); });
+      }
+    });
+    function lbOuvrir() {
+      if (!photos.length) return;
+      lbImg.src = photos[lbIdx].src; lbImg.alt = photos[lbIdx].alt;
+      lbCap.textContent = photos[lbIdx].caption;
+      lb.classList.add("active"); document.body.style.overflow = "hidden";
+    }
+    function lbFermer() { lb.classList.remove("active"); document.body.style.overflow = ""; }
+    function lbNav(d) { lbIdx = (lbIdx + d + photos.length) % photos.length; lbImg.src = photos[lbIdx].src; lbImg.alt = photos[lbIdx].alt; lbCap.textContent = photos[lbIdx].caption; }
+    document.getElementById("lb-fermer").addEventListener("click", lbFermer);
+    document.getElementById("lb-prev").addEventListener("click", () => lbNav(-1));
+    document.getElementById("lb-next").addEventListener("click", () => lbNav(1));
+    lb.addEventListener("click", (e) => { if (e.target === lb) lbFermer(); });
+    document.addEventListener("keydown", (e) => {
+      if (!lb.classList.contains("active")) return;
+      if (e.key === "Escape") lbFermer();
+      else if (e.key === "ArrowLeft") lbNav(-1);
+      else if (e.key === "ArrowRight") lbNav(1);
+    });
+    /* Swipe tactile */
+    let tx = 0;
+    lb.addEventListener("touchstart", (e) => { tx = e.changedTouches[0].clientX; }, { passive: true });
+    lb.addEventListener("touchend", (e) => {
+      const dx = e.changedTouches[0].clientX - tx;
+      if (Math.abs(dx) > 50) lbNav(dx < 0 ? 1 : -1);
+    }, { passive: true });
   }
 })();
 </script>
