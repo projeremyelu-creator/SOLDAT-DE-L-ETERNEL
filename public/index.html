@@ -1134,7 +1134,130 @@ body.locked .fab-ia { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .btn-souffle, .auj, .hero-v p { animation: none; }
   .hero-v, .rapide, .chiffre { transition: none; }
+  .view, .nav-btn, .tile, .card, .prio-i, .chiffre, .rapide { animation: none !important; transition: none !important; }
+  .ripple { display: none !important; }
 }
+
+/* ═══════════ v11 · Interface dynamique ═══════════ */
+
+/* ── Ripple tactile ── */
+.ripple-host { position: relative; overflow: hidden; }
+.ripple { position: absolute; border-radius: 50%; background: var(--gold-mark); opacity: .18; transform: scale(0); pointer-events: none; animation: ripple-out .55s ease-out forwards; }
+@keyframes ripple-out { to { transform: scale(2.5); opacity: 0; } }
+
+/* ── Transitions de vues ── */
+.view { animation: view-in .32s ease-out both; }
+@keyframes view-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* ── Navigation améliorée ── */
+.nav-btn { transition: color .2s, background .2s, transform .12s; position: relative; overflow: hidden; }
+.nav-btn:active { transform: scale(.92); }
+.nav-btn.on { position: relative; }
+.nav-btn.on::after { content: ""; position: absolute; bottom: 0; left: 50%; width: 20px; height: 3px; margin-left: -10px; border-radius: 3px; background: var(--gold-mark); animation: nav-dot .25s ease-out; }
+@keyframes nav-dot { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (min-width: 1000px) {
+  .nav-btn.on::after { bottom: auto; top: 50%; left: 0; width: 3px; height: 20px; margin: -10px 0 0 0; }
+  .nav-btn:hover:not(.on) { background: var(--surface-2); transform: translateX(4px); }
+}
+
+/* ── Cartes interactives ── */
+.card { transition: border-color .2s, box-shadow .2s, transform .2s; }
+.card:hover { border-color: color-mix(in srgb, var(--gold-mark) 45%, var(--line)); box-shadow: 0 4px 20px rgba(15, 30, 61, .08); }
+button.card:hover, a.card:hover, .card.clickable:hover { transform: translateY(-2px); }
+
+/* ── Tiles modules animées ── */
+.tile { transition: transform .2s, border-color .2s, box-shadow .2s; position: relative; overflow: hidden; }
+.tile:active { transform: scale(.97); }
+.tiles .tile { animation: tile-in .35s ease-out both; }
+.tiles .tile:nth-child(2) { animation-delay: .04s; }
+.tiles .tile:nth-child(3) { animation-delay: .08s; }
+.tiles .tile:nth-child(4) { animation-delay: .12s; }
+.tiles .tile:nth-child(5) { animation-delay: .16s; }
+.tiles .tile:nth-child(6) { animation-delay: .20s; }
+.tiles .tile:nth-child(7) { animation-delay: .24s; }
+.tiles .tile:nth-child(8) { animation-delay: .28s; }
+.tiles .tile:nth-child(n+9) { animation-delay: .32s; }
+@keyframes tile-in { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
+.tile:hover { transform: translateY(-3px); border-color: var(--gold-mark); box-shadow: 0 8px 24px rgba(15, 30, 61, .12); }
+.tile:hover .tile-ico { background: var(--gold); color: var(--night); }
+.tile-ico { transition: background .25s, color .25s; }
+.tile-m { transition: color .2s; }
+.tile:hover .tile-m { color: var(--ink); }
+
+/* ── Grille accueil : entrée échelonnée ── */
+.grid .card { animation: card-rise .4s ease-out both; }
+.grid .card:nth-child(2) { animation-delay: .05s; }
+.grid .card:nth-child(3) { animation-delay: .1s; }
+.grid .card:nth-child(4) { animation-delay: .15s; }
+.grid .card:nth-child(5) { animation-delay: .2s; }
+.grid .card:nth-child(6) { animation-delay: .25s; }
+.grid .card:nth-child(n+7) { animation-delay: .3s; }
+@keyframes card-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* ── Priorités slide-in ── */
+.prio-i { transition: background .15s, transform .15s, box-shadow .15s; position: relative; overflow: hidden; }
+.prio-i:hover { transform: translateX(4px); box-shadow: 0 2px 12px rgba(15, 30, 61, .08); }
+.prio-i:active { transform: translateX(2px) scale(.98); }
+.prio-l .prio-i { animation: prio-slide .35s ease-out both; }
+.prio-l .prio-i:nth-child(2) { animation-delay: .06s; }
+.prio-l .prio-i:nth-child(3) { animation-delay: .12s; }
+.prio-l .prio-i:nth-child(4) { animation-delay: .18s; }
+.prio-l .prio-i:nth-child(5) { animation-delay: .24s; }
+.prio-l .prio-i:nth-child(6) { animation-delay: .3s; }
+@keyframes prio-slide { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: none; } }
+
+/* ── Compteurs : entrée échelonnée ── */
+.chiffres .chiffre { animation: chiffre-pop .4s ease-out both; }
+.chiffres .chiffre:nth-child(2) { animation-delay: .06s; }
+.chiffres .chiffre:nth-child(3) { animation-delay: .12s; }
+.chiffres .chiffre:nth-child(4) { animation-delay: .18s; }
+.chiffres .chiffre:nth-child(5) { animation-delay: .24s; }
+.chiffres .chiffre:nth-child(6) { animation-delay: .3s; }
+@keyframes chiffre-pop { from { opacity: 0; transform: scale(.85) translateY(8px); } to { opacity: 1; transform: none; } }
+.chiffre:active { transform: scale(.95); }
+
+/* ── Actions rapides : rebond ── */
+.rapide { position: relative; overflow: hidden; }
+.rapide:active { transform: scale(.93) !important; }
+.rapide-i { transition: transform .2s; }
+.rapide:hover .rapide-i { transform: scale(1.15); }
+
+/* ── Boutons : feedback ── */
+.btn { transition: background .15s, transform .1s, box-shadow .15s; }
+.btn:active:not([disabled]) { transform: scale(.96); }
+.btn-primary:hover:not([disabled]) { box-shadow: 0 4px 14px color-mix(in srgb, var(--btn) 35%, transparent); }
+
+/* ── Listes : lignes interactives ── */
+button.row { transition: background .15s, transform .12s; }
+button.row:active { transform: scale(.98); background: var(--surface-2); }
+
+/* ── Sub-tabs : meilleur feedback ── */
+.subtab { transition: background .15s, border-color .15s, transform .1s, box-shadow .15s; }
+.subtab:hover:not(.on) { border-color: var(--gold-mark); transform: translateY(-1px); }
+.subtab:active { transform: scale(.95); }
+.subtab.on { box-shadow: 0 2px 8px color-mix(in srgb, var(--btn) 30%, transparent); }
+
+/* ── Direction détails ── */
+.direction > summary { transition: color .2s; }
+.direction > summary:hover { color: var(--ink); }
+
+/* ── Links ── */
+.link { transition: color .15s, text-decoration-color .15s; }
+.link:hover { color: var(--gold-mark); text-decoration-color: var(--gold-mark); }
+
+/* ── Sheet (modal) amélioré ── */
+@media (max-width: 999px) {
+  .sheet:not([hidden]) { animation: sheet-up .28s ease-out; }
+  @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
+}
+
+/* ── Espace soldat : sections ── */
+.esp-promo { transition: border-color .2s, box-shadow .2s; cursor: pointer; }
+.esp-promo:hover { border-color: var(--gold-mark); box-shadow: 0 4px 18px rgba(15, 30, 61, .1); }
+
+/* ── Icon-btn : feedback ── */
+.icon-btn { transition: background .12s, transform .1s; }
+.icon-btn:active:not([disabled]) { transform: scale(.88); }
 
 /* ═══════════ v10 · Rappels, espace soldat, installation ═══════════ */
 .rap-g { margin-bottom: 18px; }
@@ -1871,7 +1994,7 @@ body.locked .fab-ia { display: none; }
     try { localStorage.setItem("sde-vue", v); } catch (e) { /* stockage indisponible */ }
     if (v === "finances") abonnerMois(S.mois);
     render();
-    if (change) { window.scrollTo(0, 0); $("#main").focus({ preventScroll: true }); }
+    if (change) { window.scrollTo({ top: 0, behavior: "instant" }); $("#main").focus({ preventScroll: true }); }
   }
 
   /* Petits gabarits */
@@ -5361,7 +5484,46 @@ body.locked .fab-ia { display: none; }
     if (w) S.carteLargeur = w;
     const svg = $("#carte-svg");
     if (svg && S.carteV) disposerMarques(svg);
+    /* v11 : compteurs animés */
+    animerCompteurs();
   }
+  /* ── v11 : compteurs animés ── */
+  function animerCompteurs() {
+    const reduit = matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.querySelectorAll("[data-compte]").forEach((el) => {
+      if (el.dataset.compteAnime) return;
+      const fin = parseInt(el.dataset.compte, 10);
+      if (isNaN(fin) || fin === 0 || reduit) { el.dataset.compteAnime = "1"; return; }
+      el.dataset.compteAnime = "1";
+      const suf = el.dataset.suf || "";
+      const dur = Math.min(800, Math.max(300, fin * 8));
+      const t0 = performance.now();
+      const step = (t) => {
+        const p = Math.min(1, (t - t0) / dur);
+        const ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = nb(Math.round(fin * ease)) + suf;
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  /* ── v11 : effet ripple tactile ── */
+  document.addEventListener("pointerdown", (ev) => {
+    const reduit = matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduit) return;
+    const cible = ev.target.closest(".nav-btn, .rapide, .tile, .prio-i, .chiffre, .subtab, .btn");
+    if (!cible) return;
+    cible.classList.add("ripple-host");
+    const rect = cible.getBoundingClientRect();
+    const taille = Math.max(rect.width, rect.height) * 2;
+    const rip = document.createElement("span");
+    rip.className = "ripple";
+    rip.style.width = rip.style.height = taille + "px";
+    rip.style.left = (ev.clientX - rect.left - taille / 2) + "px";
+    rip.style.top = (ev.clientY - rect.top - taille / 2) + "px";
+    cible.appendChild(rip);
+    rip.addEventListener("animationend", () => rip.remove());
+  }, { passive: true });
   document.addEventListener("pointerdown", (ev) => {
     const svg = ev.target.closest && ev.target.closest("#carte-svg");
     if (!svg || (ev.pointerType === "mouse" && ev.button !== 0)) return;
