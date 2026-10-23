@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hors connexion — Soldats de l'Éternel</title>
+<style>
+:root{--nuit:#10121B;--or:#C8A451;--or-lum:#E7C878;--ivoire:#F7F4ED;--bordeaux:#641D2D}
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;background:var(--nuit);color:var(--ivoire);font-family:Inter,system-ui,sans-serif;text-align:center;padding:2rem}
+.icon{width:80px;height:80px;margin-bottom:1.5rem;opacity:.7}
+h1{font-family:Cinzel,Georgia,serif;font-size:clamp(1.4rem,4vw,2rem);color:var(--or);margin-bottom:.75rem;letter-spacing:.04em}
+p{font-size:1rem;line-height:1.6;max-width:28rem;margin-bottom:1.5rem;opacity:.85}
+button{background:linear-gradient(135deg,var(--or),var(--or-lum));color:var(--nuit);border:none;padding:.75rem 2rem;border-radius:8px;font-family:Cinzel,Georgia,serif;font-size:.95rem;font-weight:700;cursor:pointer;letter-spacing:.03em;transition:transform .2s,box-shadow .2s}
+button:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(200,164,81,.35)}
+button:active{transform:translateY(0)}
+.verse{margin-top:2rem;font-style:italic;font-size:.85rem;opacity:.6;max-width:24rem}
+</style>
+</head>
+<body>
+<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l22 22"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.56 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>
+<h1>Hors connexion</h1>
+<p>Vous n'êtes pas connecté à Internet. Vérifiez votre connexion et réessayez.</p>
+<button onclick="location.reload()">Réessayer</button>
+<p class="verse">« Car je connais les projets que j'ai formés sur vous, dit l'Éternel, projets de paix et non de malheur, afin de vous donner un avenir et de l'espérance. » — Jérémie 29:11</p>
+</body>
+</html>
