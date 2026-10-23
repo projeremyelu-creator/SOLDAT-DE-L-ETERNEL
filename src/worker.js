@@ -910,7 +910,14 @@ async function traiter(req, env) {
       if (p === "/api/public") return apiPublic(env);
       if (!/^\/(vitrine\/|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$)/.test(p))
         return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
-      return env.ASSETS.fetch(req);
+      const r = await env.ASSETS.fetch(req);
+      // Images de la vitrine : gardées 7 jours par le navigateur (visites suivantes plus rapides)
+      if (r.ok && /^\/vitrine\/.+\.(jpe?g|png|webp|svg)$/.test(p)) {
+        const n = new Response(r.body, r);
+        n.headers.set("cache-control", "public, max-age=604800");
+        return n;
+      }
+      return r;
     }
     if (p.startsWith("/_blob/")) {
       if (!ID_FICHIER.test(p.slice(7))) return new Response("Introuvable", { status: 404 });
