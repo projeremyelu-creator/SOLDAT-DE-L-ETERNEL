@@ -15,7 +15,6 @@
 <meta property="og:site_name" content="Soldats de l'Éternel">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://mouvement-sde.org">
-<link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/icone-192.png" type="image/png">
 <link rel="apple-touch-icon" href="/icone-512.png">
 <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","name":"Mouvement Prophético-Apostolique Soldats de l'Éternel","alternateName":"MPA SDE","url":"https://mouvement-sde.org","logo":"https://mouvement-sde.org/vitrine/logo.png","description":"Mouvement chrétien prophético-apostolique pour le réveil spirituel des nations.","founder":[{"@type":"Person","name":"Jérémy Octave GLAZAÏ"},{"@type":"Person","name":"Amy Berté GLAZAÏ"}],"address":{"@type":"PostalAddress","addressLocality":"Abidjan","addressRegion":"Cocody Deux-Plateaux","addressCountry":"CI"},"contactPoint":{"@type":"ContactPoint","telephone":"+225-07-78-68-95-73","contactType":"customer service","availableLanguage":"French"},"sameAs":[]},{"@context":"https://schema.org","@type":"Event","name":"IN FIRE 2026","startDate":"2026-10-31T08:00:00+00:00","endDate":"2026-10-31T18:00:00+00:00","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name":"Église MADEG","address":{"@type":"PostalAddress","streetAddress":"Cocody Deux-Plateaux Agban","addressLocality":"Abidjan","addressCountry":"CI"}},"organizer":{"@type":"Organization","name":"MPA SDE","url":"https://mouvement-sde.org"},"performer":[{"@type":"Person","name":"Jérémy l'Élu GLAZAÏ"},{"@type":"Person","name":"Samuel ZEREOUE"}],"description":"Conférence internationale annuelle pour le réveil spirituel des nations. Thème : La révélation des fils et filles de Dieu.","isAccessibleForFree":true},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Qu'est-ce que le mouvement Soldats de l'Éternel ?","acceptedAnswer":{"@type":"Answer","text":"SDE est un mouvement chrétien prophético-apostolique fondé à Abidjan par Jérémy Octave et Amy Berté GLAZAÏ. Il rassemble des croyants autour de cinq axes : réveiller, restaurer, former, équiper et envoyer."}},{"@type":"Question","name":"Comment rejoindre SDE ?","acceptedAnswer":{"@type":"Answer","text":"Remplissez le formulaire sur cette page ou écrivez au secrétariat via WhatsApp au +225 07 78 68 95 73."}}]}]</script>
@@ -160,6 +159,9 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.35rem); }
 .nav-rubrique { position: relative; }
 .nav-rubrique > button { padding: 8px 14px; font-size: .88rem; font-weight: 600; color: rgba(255,255,255,.65); border-radius: var(--r); transition: all var(--duree) var(--ease); display: flex; align-items: center; gap: 4px; }
 .nav-rubrique > button:hover, .nav-rubrique > button.act { color: var(--or-lum); }
+.nav-rubrique > button, .nav-principal .nav-lien-direct { white-space: nowrap; }
+.nav-principal .nav-lien-direct { color: rgba(255,255,255,.72) !important; }
+.nav-principal .nav-lien-direct:hover, .nav-principal .nav-lien-direct:focus-visible { color: var(--or-lum) !important; }
 .nav-rubrique > button .chevron { width: 12px; height: 12px; transition: transform .25s var(--ease); }
 .nav-rubrique.ouvert > button .chevron { transform: rotate(180deg); }
 
@@ -363,6 +365,7 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.35rem); }
 .bio { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--r-lg); padding: 28px 24px; }
 .bio header { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
 .bio .mono { width: 52px; height: 52px; border-radius: 50%; background: var(--grad-or); color: var(--nuit); display: flex; align-items: center; justify-content: center; font-family: var(--f-titre); font-weight: 700; font-size: 1.1rem; flex-shrink: 0; }
+.bio img.mono { width: 72px; height: 72px; object-fit: cover; border: 2px solid var(--or); box-shadow: 0 0 0 4px rgba(226,194,106,.15); }
 .bio h3 { font-size: 1.1rem; margin-bottom: 2px; }
 .bio .titre-sd { color: var(--or); font-size: .85rem; font-weight: 600; }
 .bio .role { font-size: .85rem; color: var(--texte-2); }
@@ -435,10 +438,15 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.35rem); }
 .res-dispo { background: rgba(184,144,31,.1); color: var(--or); padding: 2px 8px; border-radius: 4px; }
 
 /* ═══════════ GALERIE ═══════════ */
-.galerie { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.galerie { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 900px) { .galerie { grid-template-columns: repeat(2, 1fr); } }
 .galerie li { cursor: pointer; overflow: hidden; border-radius: var(--r-lg); }
-.galerie img { width: 100%; height: 220px; object-fit: cover; transition: transform var(--duree) var(--ease); }
-.galerie li:hover img { transform: scale(1.04); }
+.galerie li:focus-visible { outline: 3px solid var(--or); outline-offset: 3px; }
+.galerie figure { margin: 0; height: 100%; display: flex; flex-direction: column; }
+.galerie img { width: 100%; height: 240px; object-fit: cover; transition: transform var(--duree) var(--ease); }
+@media (max-width: 640px) { .galerie img { height: 170px; } .galerie figcaption { font-size: .76rem; padding: 8px 10px; } }
+.galerie li:hover img, .galerie li:focus-visible img { transform: scale(1.04); }
+.galerie figcaption { flex: 1; }
 .galerie figcaption { font-size: .82rem; color: var(--texte-2); padding: 10px 12px; background: var(--surface); }
 
 /* Lightbox */
@@ -757,7 +765,7 @@ html.anim .section { animation: section-in .5s ease-out both; }
   <!-- ═══════════ HERO ═══════════ -->
   <section class="hero" id="accueil" aria-label="Accueil">
     <div class="hero-fond">
-      <img src="/vitrine/fire-generation-1080.jpg" srcset="/vitrine/fire-generation-640.jpg 640w, /vitrine/fire-generation-1080.jpg 1080w" sizes="100vw" alt="" width="1080" height="720" fetchpriority="high">
+      <img src="/vitrine/photos/hero-sde-1280.jpg" srcset="/vitrine/photos/hero-sde-640.jpg 640w, /vitrine/photos/hero-sde-1280.jpg 1280w" sizes="100vw" alt="" width="1280" height="853" fetchpriority="high">
     </div>
     <div class="hero-voile"></div>
     <canvas id="braises" aria-hidden="true"></canvas>
@@ -1057,19 +1065,19 @@ html.anim .section { animation: section-in .5s ease-out both; }
       </div>
       <div class="bios">
         <article class="bio revele" id="bio-jeremy">
-          <header><span class="mono" aria-hidden="true">JG</span><div><h3>Jérémy Octave GLAZAÏ</h3><p class="titre-sd">Serviteur de DIEU</p><p class="role">« Jérémy l'Élu » · Cofondateur et Leader du mouvement</p><p class="tags"><span>Leader</span><span>Professionnel de santé</span><span>Auteur</span><span>Conférencier</span></p></div></header>
+          <header><img class="mono" src="/vitrine/photos/jeremy-glazai.jpg" alt="" width="72" height="72" loading="lazy" decoding="async"><div><h3>Jérémy Octave GLAZAÏ</h3><p class="titre-sd">Serviteur de DIEU</p><p class="role">« Jérémy l'Élu » · Cofondateur et Leader du mouvement</p><p class="tags"><span>Leader</span><span>Professionnel de santé</span><span>Auteur</span><span>Conférencier</span></p></div></header>
           <p class="bio-accroche">Serviteur de DIEU et enseignant de la Parole, il porte avec son épouse la vision d'ensemble et la direction spirituelle et stratégique du mouvement.</p>
           <div class="bio-texte">
             <p>Jérémy Octave GLAZAÏ, que beaucoup connaissent sous le nom de « Jérémy l'Élu », est serviteur de DIEU et enseignant de la Parole. Cofondateur du Mouvement Prophético-Apostolique Soldats de l'Éternel, il en est le leader et conduit ses grands projets et programmes.</p>
             <p>Leader, professionnel de santé, auteur et conférencier, il se tient à plusieurs portes de la cité : celle de l'autel, celle de la santé et celle de l'enseignement. Sa vie est consacrée à l'édification des hommes, au leadership et à l'impact des générations.</p>
-            <p>Son ministère s'étend au réveil spirituel, à la formation de disciples, notamment à travers la Soldier's Academy et la Love School, et à la diffusion d'enseignements prophético-apostoliques. Il est l'un des orateurs de la conférence internationale annuelle IN FIRE.</p>
+            <p>Son ministère s'étend au réveil spirituel, à la formation de disciples, notamment à travers Soldiers Academy et la Love School, et à la diffusion d'enseignements prophético-apostoliques. Il est l'un des orateurs de la conférence internationale annuelle IN FIRE.</p>
             <p>Son enseignement, résolument christocentrique, unit la rigueur exégétique à la déclaration prophétique. Il met l'accent sur l'autorité spirituelle, le discernement des esprits, l'intercession et le gouvernement du Royaume de Dieu.</p>
             <p>Auteur de nombreux ouvrages d'enseignement biblique et prophétique, parmi lesquels <i>Le Pouvoir de la femme</i> et <i>L'Œil du Soldat : le discernement des esprits</i>, il initie également Impact Santé pour Christ, un mouvement autonome qui rassemble des agents de santé chrétiens.</p>
           </div>
           <p class="bio-devise">Foi. Leadership. Santé. Impact.</p>
         </article>
         <article class="bio revele" style="--d:.1s" id="bio-amy">
-          <header><span class="mono" aria-hidden="true">AG</span><div><h3>Amy Berté GLAZAÏ</h3><p class="titre-sd">Servante de DIEU</p><p class="role">Cofondatrice et co-leader · Secrétaire générale</p><p class="tags"><span>Servante de DIEU</span><span>Co-visionnaire</span><span>Coordination</span></p></div></header>
+          <header><img class="mono" src="/vitrine/photos/amy-glazai.jpg" alt="" width="72" height="72" loading="lazy" decoding="async"><div><h3>Amy Berté GLAZAÏ</h3><p class="titre-sd">Servante de DIEU</p><p class="role">Cofondatrice et co-leader · Secrétaire générale</p><p class="tags"><span>Servante de DIEU</span><span>Co-visionnaire</span><span>Coordination</span></p></div></header>
           <p class="bio-accroche">Cofondatrice du mouvement, elle conduit l'œuvre aux côtés de son époux et veille sur la coordination de la mission.</p>
           <div class="bio-texte">
             <p>Servante de DIEU, Amy Berté GLAZAÏ est cofondatrice du Mouvement Prophético-Apostolique Soldats de l'Éternel, qu'elle conduit aux côtés de son époux, Jérémy Octave GLAZAÏ. Co-visionnaire du mouvement, elle porte avec lui la vision de l'armée relevée d'Ézéchiel 37.</p>
@@ -1177,9 +1185,15 @@ html.anim .section { animation: section-in .5s ease-out both; }
         <p class="chapo">Prière, formation, communion fraternelle et actions solidaires : quelques instants captés au fil du mouvement.</p>
       </div>
       <ul class="galerie" id="galerie-liste">
-        <li class="revele" style="--d:0s"><figure><img src="/vitrine/fire-generation-1080.jpg" srcset="/vitrine/fire-generation-640.jpg 640w, /vitrine/fire-generation-1080.jpg 1080w" sizes="(max-width:640px) 100vw, 33vw" alt="Soldats réunis lors de Fire Génération" loading="lazy" decoding="async"><figcaption>Fire Génération · Communion fraternelle · Abidjan</figcaption></figure></li>
-        <li class="revele" style="--d:.08s"><figure><img src="/vitrine/fire-generation-640.jpg" alt="Temps de prière collective" loading="lazy" decoding="async"><figcaption>Prière collective · Chercher la face de Dieu · Abidjan</figcaption></figure></li>
-        <li class="revele" style="--d:.16s"><figure><img src="/vitrine/fire-generation-1080.jpg" alt="Formation et enseignement" loading="lazy" decoding="async"><figcaption>Formation · Enracinés dans la Parole · Abidjan</figcaption></figure></li>
+        <li class="revele" style="--d:0.00s"><figure><img src="/vitrine/fire-generation-1080.jpg" alt="Soldats réunis lors de Fire Génération" loading="lazy" decoding="async" width="900" height="600"><figcaption>Fire Génération · Communion fraternelle · Abidjan</figcaption></figure></li>
+        <li class="revele" style="--d:0.08s"><figure><img src="/vitrine/photos/imposition.jpg" alt="Prière avec imposition des mains pendant une rencontre" loading="lazy" decoding="async" width="900" height="600"><figcaption>Prière et imposition des mains</figcaption></figure></li>
+        <li class="revele" style="--d:0.16s"><figure><img src="/vitrine/photos/intercession.jpg" alt="Une Soldate en intercession pendant un culte" loading="lazy" decoding="async" width="900" height="600"><figcaption>Intercession · Chercher la face de Dieu</figcaption></figure></li>
+        <li class="revele" style="--d:0.00s"><figure><img src="/vitrine/photos/chorale.jpg" alt="L'équipe de louange en tenue blanche et orange" loading="lazy" decoding="async" width="900" height="600"><figcaption>Louange et adoration</figcaption></figure></li>
+        <li class="revele" style="--d:0.08s"><figure><img src="/vitrine/photos/communion.jpg" alt="Soldats partageant un repas en plein air" loading="lazy" decoding="async" width="900" height="600"><figcaption>Communion fraternelle · Repas partagé</figcaption></figure></li>
+        <li class="revele" style="--d:0.16s"><figure><img src="/vitrine/photos/orphelinat.jpg" alt="Visite et dons à l'orphelinat Tomorrow Hope" loading="lazy" decoding="async" width="900" height="600"><figcaption>Orphelinat Tomorrow Hope · Daloa</figcaption></figure></li>
+        <li class="revele" style="--d:0.00s"><figure><img src="/vitrine/photos/veuves.jpg" alt="Remise de dons à des femmes veuves" loading="lazy" decoding="async" width="900" height="600"><figcaption>Soutien aux femmes veuves · Abidjan Cocody</figcaption></figure></li>
+        <li class="revele" style="--d:0.08s"><figure><img src="/vitrine/photos/dons.jpg" alt="Vivres et produits rassemblés pour une distribution" loading="lazy" decoding="async" width="900" height="600"><figcaption>Collecte et distribution de dons</figcaption></figure></li>
+        <li class="revele" style="--d:0.16s"><figure><img src="/vitrine/photos/leaders.jpg" alt="Le couple leader lors d'un événement du mouvement" loading="lazy" decoding="async" width="900" height="600"><figcaption>Le couple leader en mission</figcaption></figure></li>
       </ul>
     </div>
   </section>
@@ -1781,12 +1795,18 @@ html.anim .section { animation: section-in .5s ease-out both; }
     let lbIdx = 0;
     document.querySelectorAll(".galerie li").forEach((li, i) => {
       const img = li.querySelector("img"), cap = li.querySelector("figcaption");
-      if (img) { photos.push({ src: img.src, alt: img.alt, caption: cap ? cap.textContent : "" }); li.addEventListener("click", () => { lbIdx = i; lbOuvrir(); }); }
+      if (img) {
+        photos.push({ src: img.src, alt: img.alt, caption: cap ? cap.textContent : "" });
+        li.tabIndex = 0; li.setAttribute("role", "button"); li.setAttribute("aria-label", "Agrandir : " + (cap ? cap.textContent : img.alt));
+        li.addEventListener("click", () => { lbIdx = i; lbOuvrir(); });
+        li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); lbIdx = i; lbOuvrir(); } });
+      }
     });
     const lbCompt = document.getElementById("lb-compteur");
     function lbMaj() { lbImg.src = photos[lbIdx].src; lbImg.alt = photos[lbIdx].alt; lbCap.textContent = photos[lbIdx].caption; lbCompt.textContent = (lbIdx + 1) + " / " + photos.length; }
-    function lbOuvrir() { if (!photos.length) return; lbMaj(); lb.classList.add("active"); document.body.style.overflow = "hidden"; }
-    function lbFermer() { lb.classList.remove("active"); document.body.style.overflow = ""; }
+    let lbRetour = null;
+    function lbOuvrir() { if (!photos.length) return; lbRetour = document.activeElement; lbMaj(); lb.classList.add("active"); document.body.style.overflow = "hidden"; document.getElementById("lb-fermer").focus(); }
+    function lbFermer() { lb.classList.remove("active"); document.body.style.overflow = ""; if (lbRetour && lbRetour.focus) lbRetour.focus(); }
     function lbNav(d) { lbIdx = (lbIdx + d + photos.length) % photos.length; lbMaj(); }
     document.getElementById("lb-fermer").addEventListener("click", lbFermer);
     document.getElementById("lb-prev").addEventListener("click", () => lbNav(-1));
@@ -1847,10 +1867,9 @@ html.anim .section { animation: section-in .5s ease-out both; }
     });
   }
 
-  /* ═══════ Service Worker ═══════ */
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/sw.js").catch(() => {});
-  }
+  /* Pas de Service Worker sur la vitrine : /sw.js appartient à l'application
+     (app.mouvement-sde.org) et mouvement-sde.org le redirige, ce qui faisait
+     échouer l'enregistrement à chaque visite. */
 })();
 </script>
 </body>
