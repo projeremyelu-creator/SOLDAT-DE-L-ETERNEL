@@ -453,6 +453,8 @@ async function apiAbsence(req, env, u) {
 /* ───────── notifications push (VAPID) ───────── */
 async function apiPushSubscription(req, env, u) {
   if (!u.connecte) return erreur("refuse", "Connectez-vous.", 403);
+  // La table n'existe pas encore dans la base en ligne : on la crée au premier usage
+  await env.DB.prepare("CREATE TABLE IF NOT EXISTS push_subs (userId TEXT NOT NULL, endpoint TEXT NOT NULL, p256dh TEXT, auth TEXT, cree INTEGER, PRIMARY KEY (userId, endpoint))").run();
   if (req.method === "POST") {
     const b = await req.json();
     if (!b.endpoint || !b.keys) return erreur("invalid_argument", "Abonnement invalide.");

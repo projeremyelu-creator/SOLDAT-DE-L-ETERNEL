@@ -360,6 +360,7 @@ svg { flex: none; }
 .sync.off i { background: var(--sync-off); }
 .hdr-btn { width: 42px; height: 42px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .2); background: transparent; color: var(--on-night); display: grid; place-items: center; }
 .hdr-btn:hover { border-color: var(--gold-on-night); color: var(--gold-on-night); }
+.hdr-site { text-decoration: none; }
 @media (max-width: 400px) { .sync-t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } }
 
 /* ── Bandeaux d’information ── */
@@ -1145,9 +1146,6 @@ body.locked .fab-ia { display: none; }
 .ripple { position: absolute; border-radius: 50%; background: var(--gold-mark); opacity: .18; transform: scale(0); pointer-events: none; animation: ripple-out .55s ease-out forwards; }
 @keyframes ripple-out { to { transform: scale(2.5); opacity: 0; } }
 
-/* ── Transitions de vues ── */
-.view { animation: view-in .32s ease-out both; }
-@keyframes view-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
 /* ── Navigation améliorée ── */
 .nav-btn { transition: color .2s, background .2s, transform .12s; position: relative; overflow: hidden; }
@@ -1168,52 +1166,18 @@ button.card:hover, a.card:hover, .card.clickable:hover { transform: translateY(-
 /* ── Tiles modules animées ── */
 .tile { transition: transform .2s, border-color .2s, box-shadow .2s; position: relative; overflow: hidden; }
 .tile:active { transform: scale(.97); }
-.tiles .tile { animation: tile-in .35s ease-out both; }
-.tiles .tile:nth-child(2) { animation-delay: .04s; }
-.tiles .tile:nth-child(3) { animation-delay: .08s; }
-.tiles .tile:nth-child(4) { animation-delay: .12s; }
-.tiles .tile:nth-child(5) { animation-delay: .16s; }
-.tiles .tile:nth-child(6) { animation-delay: .20s; }
-.tiles .tile:nth-child(7) { animation-delay: .24s; }
-.tiles .tile:nth-child(8) { animation-delay: .28s; }
-.tiles .tile:nth-child(n+9) { animation-delay: .32s; }
-@keyframes tile-in { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
 .tile:hover { transform: translateY(-3px); border-color: var(--gold-mark); box-shadow: 0 8px 24px rgba(15, 30, 61, .12); }
 .tile:hover .tile-ico { background: var(--gold); color: var(--night); }
 .tile-ico { transition: background .25s, color .25s; }
 .tile-m { transition: color .2s; }
 .tile:hover .tile-m { color: var(--ink); }
 
-/* ── Grille accueil : entrée échelonnée ── */
-.grid .card { animation: card-rise .4s ease-out both; }
-.grid .card:nth-child(2) { animation-delay: .05s; }
-.grid .card:nth-child(3) { animation-delay: .1s; }
-.grid .card:nth-child(4) { animation-delay: .15s; }
-.grid .card:nth-child(5) { animation-delay: .2s; }
-.grid .card:nth-child(6) { animation-delay: .25s; }
-.grid .card:nth-child(n+7) { animation-delay: .3s; }
-@keyframes card-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
 /* ── Priorités slide-in ── */
 .prio-i { transition: background .15s, transform .15s, box-shadow .15s; position: relative; overflow: hidden; }
 .prio-i:hover { transform: translateX(4px); box-shadow: 0 2px 12px rgba(15, 30, 61, .08); }
 .prio-i:active { transform: translateX(2px) scale(.98); }
-.prio-l .prio-i { animation: prio-slide .35s ease-out both; }
-.prio-l .prio-i:nth-child(2) { animation-delay: .06s; }
-.prio-l .prio-i:nth-child(3) { animation-delay: .12s; }
-.prio-l .prio-i:nth-child(4) { animation-delay: .18s; }
-.prio-l .prio-i:nth-child(5) { animation-delay: .24s; }
-.prio-l .prio-i:nth-child(6) { animation-delay: .3s; }
-@keyframes prio-slide { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: none; } }
 
-/* ── Compteurs : entrée échelonnée ── */
-.chiffres .chiffre { animation: chiffre-pop .4s ease-out both; }
-.chiffres .chiffre:nth-child(2) { animation-delay: .06s; }
-.chiffres .chiffre:nth-child(3) { animation-delay: .12s; }
-.chiffres .chiffre:nth-child(4) { animation-delay: .18s; }
-.chiffres .chiffre:nth-child(5) { animation-delay: .24s; }
-.chiffres .chiffre:nth-child(6) { animation-delay: .3s; }
-@keyframes chiffre-pop { from { opacity: 0; transform: scale(.85) translateY(8px); } to { opacity: 1; transform: none; } }
 .chiffre:active { transform: scale(.95); }
 
 /* ── Actions rapides : rebond ── */
@@ -1328,6 +1292,7 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
       <span class="brand-txt"><span class="brand-mark" id="brand-mark">S.D.E.</span><span class="brand-sub" id="brand-sub">Gestion du mouvement</span></span>
     </button>
     <span class="sync wait" id="sync" role="status"><i></i><span class="sync-t" id="sync-t">Connexion…</span></span>
+    <a class="hdr-btn hdr-site" href="https://mouvement-sde.org/" aria-label="Site du mouvement (mouvement-sde.org)" title="Site du mouvement"><svg class="ico"><use href="#i-globe"/></svg></a>
     <button class="hdr-btn" id="btn-reglages" type="button" aria-label="Réglages et données"><svg class="ico"><use href="#i-sliders"/></svg></button>
   </div>
 </header>
@@ -1347,6 +1312,7 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
 <input type="file" id="photo-input" accept="image/*" hidden>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.5 3.5 5.3 3.5 8.5s-1.1 6-3.5 8.5c-2.4-2.5-3.5-5.3-3.5-8.5s1.1-6 3.5-8.5z"/></symbol>
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></symbol>
   <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8"/><path d="M18 14.8c1.9.7 3.1 2.5 3.5 5.2"/></symbol>
   <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3.5 7.5A2.5 2.5 0 0 1 6 5h11.5v2.5"/><rect x="3.5" y="7.5" width="17" height="12" rx="2.5"/><path d="M15.5 13.5h2"/></symbol>
@@ -4153,14 +4119,14 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
     const estTem = type === "temoignage" || (a && a.type === "temoignage");
     const html = estTem ? `<form class="form" id="f-annonce" novalidate>
       <input type="hidden" name="type" value="temoignage">
-      ${champ("an-titre", "Votre prénom ou initiales", inp("an-titre", "auteur", a.auteur || (S.me.name || "").split(/\s+/)[0] || "", ‘autocomplete="off" required autofocus maxlength="60"’), { req: true })}
-      ${champ("an-texte", "Votre témoignage", zone("an-texte", "contenu", a.contenu || a.texte || "", ‘rows="6" required placeholder="Ce que Dieu a fait pour vous…"’), { req: true })}
+      ${champ("an-titre", "Votre prénom ou initiales", inp("an-titre", "auteur", a.auteur || (S.me.name || "").split(/\s+/)[0] || "", 'autocomplete="off" required autofocus maxlength="60"'), { req: true })}
+      ${champ("an-texte", "Votre témoignage", zone("an-texte", "contenu", a.contenu || a.texte || "", 'rows="6" required placeholder="Ce que Dieu a fait pour vous…"'), { req: true })}
       <p class="hint">Votre témoignage sera visible par tous les membres sur l’accueil de l’application.</p>
       ${pied(id ? "Enregistrer" : "Publier mon témoignage")}
     </form>` : `<form class="form" id="f-annonce" novalidate>
-      ${champ("an-titre", "Titre", inp("an-titre", "titre", a.titre, ‘autocomplete="off" required autofocus maxlength="120"’), { req: true })}
-      ${champ("an-texte", "Texte", zone("an-texte", "texte", a.texte, ‘rows="6" required’), { req: true })}
-      <div class="f2">${champ("an-exp", "Visible jusqu’au", inp("an-exp", "expireLe", a.expireLe, ‘type="date"’), { hint: "Facultatif : l’annonce disparaît de l’accueil après cette date." })}<div class="field"><span class="lab">Mise en avant</span><label class="check"><input type="checkbox" name="epingle" value="1"${a.epingle ? " checked" : ""}> Épingler en tête</label></div></div>
+      ${champ("an-titre", "Titre", inp("an-titre", "titre", a.titre, 'autocomplete="off" required autofocus maxlength="120"'), { req: true })}
+      ${champ("an-texte", "Texte", zone("an-texte", "texte", a.texte, 'rows="6" required'), { req: true })}
+      <div class="f2">${champ("an-exp", "Visible jusqu’au", inp("an-exp", "expireLe", a.expireLe, 'type="date"'), { hint: "Facultatif : l’annonce disparaît de l’accueil après cette date." })}<div class="field"><span class="lab">Mise en avant</span><label class="check"><input type="checkbox" name="epingle" value="1"${a.epingle ? " checked" : ""}> Épingler en tête</label></div></div>
       <p class="hint">Les annonces s’affichent sur l’accueil de toutes les personnes qui ont accès à l’application, y compris en lecture seule.</p>
       ${pied(id ? "Enregistrer" : "Publier l’annonce")}
     </form>`;
@@ -5484,11 +5450,8 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
     if (w) S.carteLargeur = w;
     const svg = $("#carte-svg");
     if (svg && S.carteV) disposerMarques(svg);
-    /* v11 : compteurs animés */
-    animerCompteurs();
   }
-  /* ── v11 : compteurs animés ── */
-  function animerCompteurs() {
+  function animerCompteursV11() {
     const reduit = matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
     document.querySelectorAll("[data-compte]").forEach((el) => {
       if (el.dataset.compteAnime) return;
