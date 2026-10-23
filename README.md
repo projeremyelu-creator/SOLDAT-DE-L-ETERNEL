@@ -68,7 +68,10 @@ Les règles d’accès aux données sont vérifiées par le serveur (`REGLES` da
    python3 test/essai_medias.py   # médiathèque : envoi, lecture partielle, visibilité
    python3 test/essai_veille.py   # veille pastorale : voyants cliquables, tendances, dimensions
    ```
-4. Envoyer sur `main` : Cloudflare publie.
+4. Avant tout envoi : `node test/verifier.mjs` (vérifie que chaque script de l’application et du site est valide). Cette vérification tourne aussi automatiquement sur GitHub pour chaque demande de fusion (onglet *Actions*).
+5. Envoyer sur `main` : Cloudflare publie.
+
+> **Attention :** depuis le 23 octobre 2026 (espaces membres enrichis, v11), plusieurs changements ont été faits directement dans `public/index.html` sans passer par `source/src/`. Reconstruire l’application avec les commandes ci-dessus effacerait ces changements. Tant que les sources ne sont pas remises à jour, modifier directement `public/index.html` puis lancer `node test/verifier.mjs`.
 
 ## Veille pastorale
 

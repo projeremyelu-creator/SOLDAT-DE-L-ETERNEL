@@ -210,20 +210,21 @@ async function apiSync(req, env, u) {
     for (const x of r.results || []) revs[x.parent] = x.rev;
   }
   const out = {};
-  for (const s of subs) {
+  // Les lectures partent toutes en même temps (au lieu de l'une après l'autre) : premier chargement plus rapide
+  await Promise.all(subs.map(async (s) => {
     const parent = s.type === "doc" ? parentDe(s.path) : s.path;
     const rev = revs[parent] || 0;
-    if (s.rev === rev) continue;
+    if (s.rev === rev) return;
     if (s.type === "doc") {
-      if (!cheminValide(s.path, true)) continue;
+      if (!cheminValide(s.path, true)) return;
       const d = peutLire(u, s.path) ? await lireDoc(env, s.path) : null;
       out[s.k] = { rev, exists: !!d, data: d ? filtrer(u, s.path, d.data) : null };
     } else {
-      if (!cheminValide(s.path, false)) continue;
+      if (!cheminValide(s.path, false)) return;
       const ok = peutLire(u, s.path) && !(segs(s.path)[0] === "espace" && u.niveau < 2);
       out[s.k] = { rev, docs: ok ? (await lireRequete(env, s)).map((x) => ({ id: x.id, data: filtrer(u, s.path + "/" + x.id, x.data) })) : [] };
     }
-  }
+  }));
   return json({ res: out });
 }
 /* ───────── comptes ───────── */

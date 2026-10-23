@@ -1296,7 +1296,7 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
     <button class="hdr-btn" id="btn-reglages" type="button" aria-label="Réglages et données"><svg class="ico"><use href="#i-sliders"/></svg></button>
   </div>
 </header>
-<div id="banner"></div>
+<div id="banner" role="region" aria-label="Informations"></div>
 <div class="shell">
   <nav class="nav" id="nav" aria-label="Sections"></nav>
   <main class="main" id="main" tabindex="-1">
@@ -1307,7 +1307,7 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
   </main>
 </div>
 <div class="scrim" id="scrim" hidden></div>
-<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Fenêtre" hidden></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <input type="file" id="photo-input" accept="image/*" hidden>
 
@@ -2301,7 +2301,7 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
     const corps = refresh ? refresh() : html;
     if (corps === null) { fermer(); return; }
     dernier.sheet = corps;
-    sheet.innerHTML = `<div class="sheet-h"><h2 class="sheet-t" id="sheet-title">${esc(titre)}</h2><button class="icon-btn" type="button" data-act="fermer" aria-label="Fermer">${I("i-x")}</button></div><div class="sheet-b" id="sheet-b">${corps}</div>`;
+    sheet.setAttribute("aria-labelledby", "sheet-title"); sheet.removeAttribute("aria-label"); sheet.innerHTML = `<div class="sheet-h"><h2 class="sheet-t" id="sheet-title">${esc(titre)}</h2><button class="icon-btn" type="button" data-act="fermer" aria-label="Fermer">${I("i-x")}</button></div><div class="sheet-b" id="sheet-b">${corps}</div>`;
     sheet.hidden = false;
     $("#scrim").hidden = false;
     document.body.classList.add("locked");
@@ -7147,7 +7147,7 @@ Aujourd’hui : ${dateFr(aujourdhui())}. Personne qui écrit : ${S.me.name || "u
     }
     if (accesRegistre() && S.pret.chaine) {
       const ch = chaine();
-      tuiles.push(`<section class="auj auj-priere" aria-label="Chambre Haute"><p class="auj-k">${I("i-flame")}Sujet de la semaine</p><h2 class="auj-t">${esc(ch.sujetSemaine || "Que l’Esprit souffle sur les nations")}</h2>${ch.versetSemaine ? `<p class="auj-m"><i>${esc(ch.versetSemaine)}</i></p>` : ""}<div class="btn-row">${btn("aller-chambre", "Entrer dans la Chambre Haute", { ico: "i-flame", sm: true })}</div></section>`);
+      tuiles.push(`<section class="auj auj-priere" aria-label="Sujet de prière de la semaine"><p class="auj-k">${I("i-flame")}Sujet de la semaine</p><h2 class="auj-t">${esc(ch.sujetSemaine || "Que l’Esprit souffle sur les nations")}</h2>${ch.versetSemaine ? `<p class="auj-m"><i>${esc(ch.versetSemaine)}</i></p>` : ""}<div class="btn-row">${btn("aller-chambre", "Entrer dans la Chambre Haute", { ico: "i-flame", sm: true })}</div></section>`);
     }
     return `<div class="aujourdhui">${tuiles.join("")}</div>`;
   }
@@ -7687,7 +7687,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     return `<p class="hint" style="margin-top:0">Chaque soldat ouvre son espace avec un code personnel, depuis le lien de l’application, rubrique « Mon espace ». Son résumé (carte, présences, cotisations) se met à jour tout seul quand un administrateur utilise l’application.</p>
       <p class="tally"><span><b>${nb(avec.length)}</b> soldats avec un code</span><span>${pluriel(sans.length, "sans code", "sans code")}</span></p>
       ${sans.length ? `<div class="btn-row" style="margin-bottom:12px">${btn("esp-creer-tous", `Créer les ${pluriel(sans.length, "code manquant", "codes manquants")}`, { ico: "i-plus", cls: "btn-primary", sm: true })}</div>` : ""}
-      <div class="list">${actifs.map((m) => { const a = accesDe(m.id); return `<div class="row nolead sp-row"><span class="row-main"><span class="row-t">${esc(nomComplet(m))}</span><span class="row-m">${esc([m.matricule, a ? "Code " + a.code : "Pas de code", m.telephone ? telAffiche(m.telephone) : "Pas de numéro"].filter(Boolean).join(" · "))}</span></span><span class="row-r">${a ? `<a class="btn btn-sm" href="${esc(lienWa(m.telephone, messageCode(m, a.code)))}" target="_blank" rel="noopener" aria-label="${esc(`Envoyer son code à ${nomComplet(m)} par WhatsApp`)}">${I("i-msg")}<span class="hide-s">WhatsApp</span></a>` : btn("esp-creer", "Créer", { sm: true, data: `data-id="${esc(m.id)}"` })}</span></div>`; }).join("")}</div>`;
+      <div class="list">${actifs.map((m) => { const a = accesDe(m.id); return `<div class="row nolead sp-row"><span class="row-main"><span class="row-t">${esc(nomComplet(m))}</span><span class="row-m">${esc([m.matricule, a ? "Code " + a.code : "Pas de code", m.telephone ? telAffiche(m.telephone) : "Pas de numéro"].filter(Boolean).join(" · "))}</span></span><span class="row-r">${a ? `<a class="btn btn-sm btn-ghost" href="${esc(lienWa(m.telephone, messageCode(m, a.code)))}" target="_blank" rel="noopener" aria-label="${esc(`Envoyer son code à ${nomComplet(m)} par WhatsApp`)}">${I("i-msg")}<span class="hide-s">WhatsApp</span></a>` : btn("esp-creer", "Créer", { sm: true, data: `data-id="${esc(m.id)}"` })}</span></div>`; }).join("")}</div>`;
   }
   const ouvrirEspaces = () => ouvrir({ titre: "Espaces soldats", refresh: surveiller(() => ficheEspaces()), wide: true });
 
@@ -7803,7 +7803,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     return `<section class="card"><p class="eyebrow">Demander une absence</p><form class="form" id="f-absence" novalidate>
       <div class="g2">${champ("abs-debut", "Du", '<input class="inp" id="abs-debut" name="dateDebut" type="date" required>')}${champ("abs-fin", "Au", '<input class="inp" id="abs-fin" name="dateFin" type="date">')}</div>
       ${champ("abs-motif", "Motif", '<textarea class="inp" id="abs-motif" name="motif" rows="2" maxlength="500" placeholder="Voyage, maladie, empêchement…" required></textarea>')}
-      <button class="btn btn-sm" type="submit">${I("i-cal")}Envoyer la demande</button></form></section>`;
+      <button class="btn btn-sm btn-primary" type="submit">${I("i-cal")}Envoyer la demande</button></form></section>`;
   }
 
   /* ── Liens de paiement mobile ── */
@@ -7814,8 +7814,8 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     const montant = retard * (c.mensuel || 0);
     if (!montant) return "";
     return `<section class="card"><p class="eyebrow">Régulariser mes cotisations</p><p class="hint">Montant dû : <b>${esc(fcfa(montant))}</b> (${retard} mois)</p>
-      <div class="btn-row"><a class="btn btn-sm" href="https://pay.wave.com" target="_blank" rel="noopener">${I("i-wallet")}Wave</a><a class="btn btn-sm" href="https://www.orange.cm/fr/orange-money.html" target="_blank" rel="noopener">${I("i-wallet")}Orange Money</a><a class="btn btn-sm" href="https://mtn.cm/momo" target="_blank" rel="noopener">${I("i-wallet")}MTN MoMo</a></div>
-      <p class="hint" style="margin-top:6px">Effectuez le paiement puis informez le secrétariat pour l'enregistrement.</p></section>`;
+      <div class="btn-row"><a class="btn btn-sm btn-primary" href="${esc(lienWa("2250778689573", `Shalom ! Je souhaite régulariser mes cotisations : ${fcfa(montant)} (${retard} mois). Pouvez-vous m'indiquer le numéro Wave, Orange Money ou MTN MoMo de la trésorerie ?`))}" target="_blank" rel="noopener">${I("i-wallet")}Contacter la trésorerie</a></div>
+      <p class="hint" style="margin-top:6px">La trésorerie vous indique le numéro de paiement (Wave, Orange Money, MTN MoMo), puis enregistre votre versement.</p></section>`;
   }
 
   /* ── Formulaire de modification du profil (comptes reliés) ── */
@@ -7825,7 +7825,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     return `<section class="card"><p class="eyebrow">Modifier mes coordonnées</p><form class="form" id="f-profil" novalidate>
       <div class="g2">${champ("prof-tel", "Téléphone", `<input class="inp" id="prof-tel" name="telephone" type="tel" maxlength="30" value="${esc(m.telephone || "")}">`)}${champ("prof-quartier", "Quartier", `<input class="inp" id="prof-quartier" name="quartier" type="text" maxlength="100" value="${esc(m.quartier || "")}">`)}</div>
       <div class="g2">${champ("prof-email", "E-mail de contact", `<input class="inp" id="prof-email" name="email" type="email" maxlength="200" value="${esc(m.email || "")}">`)}${champ("prof-situation", "Situation", `<select class="inp" id="prof-situation" name="situation"><option value="">—</option>${["Célibataire", "Marié(e)", "Veuf/veuve", "Autre"].map((s) => `<option${m.situation === s ? " selected" : ""}>${s}</option>`).join("")}</select>`)}</div>
-      <button class="btn btn-sm" type="submit">${I("i-check")}Enregistrer</button></form></section>`;
+      <button class="btn btn-sm btn-primary" type="submit">${I("i-check")}Enregistrer</button></form></section>`;
   }
 
   /* ── Notifications push ── */
@@ -9074,11 +9074,11 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     const i = photos.findIndex((x) => x.id === m.id);
     const nav = m.genre === "image" && photos.length > 1 ? `<div class="btn-row med-nav">${btn("med-ouvrir", "Précédente", { ico: "i-left", sm: true, data: `data-id="${esc(photos[(i - 1 + photos.length) % photos.length].id)}"` })}<span class="hint">${i + 1} / ${photos.length}</span>${btn("med-ouvrir", "Suivante", { ico: "i-right", sm: true, data: `data-id="${esc(photos[(i + 1) % photos.length].id)}"` })}</div>` : "";
     const lien = location.origin + urlMedia(m);
-    const partage = m.visibilite === "public" ? `<a class="btn btn-sm" href="${esc(lienWa("", `${m.titre}\n${lien}\n— ${cfg().nomCourt}`))}" target="_blank" rel="noopener">${I("i-msg")}Partager sur WhatsApp</a>` : "";
+    const partage = m.visibilite === "public" ? `<a class="btn btn-sm btn-ghost" href="${esc(lienWa("", `${m.titre}\n${lien}\n— ${cfg().nomCourt}`))}" target="_blank" rel="noopener">${I("i-msg")}Partager sur WhatsApp</a>` : "";
     return `${lecteurMedia(m)}${nav}
       ${m.description ? `<p class="med-desc">${esc(m.description).replace(/\n/g, "<br>")}</p>` : ""}
       <p class="hint">${esc([GENRES_MED[m.genre] ? GENRES_MED[m.genre][0] : "", m.categorie, octets(m.taille), "ajouté le " + fmtCourt(isoJour(new Date(m.cree))), m.auteurNom ? "par " + m.auteurNom : "", MED.peutAjouter ? `${LIB_VIS_MED[m.visibilite]} · ${pluriel(m.vues || 0, "ouverture", "ouvertures")}` : ""].filter(Boolean).join(" · "))}</p>
-      <div class="btn-row" style="margin-top:12px"><a class="btn btn-sm btn-primary" href="${esc(urlMedia(m, true))}" download="${esc(m.nom)}">${I("i-down")}Télécharger</a><a class="btn btn-sm" href="${esc(urlMedia(m))}" target="_blank" rel="noopener">${I("i-link")}Ouvrir</a>${partage}${btn("med-copier", "Copier le lien", { ico: "i-copy", sm: true, data: `data-lien="${esc(lien)}"` })}${m.gerer ? btn("med-modifier", "Modifier", { ico: "i-edit", sm: true, data: `data-id="${esc(m.id)}"` }) + btn("med-suppr", "Supprimer", { ico: "i-trash", sm: true, cls: "btn-danger", data: `data-id="${esc(m.id)}"` }) : ""}</div>
+      <div class="btn-row" style="margin-top:12px"><a class="btn btn-sm btn-primary" href="${esc(urlMedia(m, true))}" download="${esc(m.nom)}">${I("i-down")}Télécharger</a><a class="btn btn-sm btn-ghost" href="${esc(urlMedia(m))}" target="_blank" rel="noopener">${I("i-link")}Ouvrir</a>${partage}${btn("med-copier", "Copier le lien", { ico: "i-copy", sm: true, data: `data-lien="${esc(lien)}"` })}${m.gerer ? btn("med-modifier", "Modifier", { ico: "i-edit", sm: true, data: `data-id="${esc(m.id)}"` }) + btn("med-suppr", "Supprimer", { ico: "i-trash", sm: true, cls: "btn-danger", data: `data-id="${esc(m.id)}"` }) : ""}</div>
       ${m.visibilite !== "public" ? `<p class="hint" style="margin-top:8px">Lien réservé : il ne s’ouvre que pour les ${m.visibilite === "responsables" ? "responsables" : "membres"} connectés.</p>` : ""}`;
   }
   const ouvrirMedia = (id) => { const m = (MED.liste || []).find((x) => x.id === id); if (m) ouvrir({ titre: m.titre, html: ficheMedia(m), wide: true }); };
