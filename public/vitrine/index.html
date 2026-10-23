@@ -17,7 +17,7 @@
 <link rel="canonical" href="https://mouvement-sde.org">
 <link rel="icon" href="/icone-192.png" type="image/png">
 <link rel="apple-touch-icon" href="/icone-512.png">
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","name":"Mouvement Prophético-Apostolique Soldats de l'Éternel","alternateName":"MPA SDE","url":"https://mouvement-sde.org","logo":"https://mouvement-sde.org/vitrine/logo.png","description":"Mouvement chrétien prophético-apostolique pour le réveil spirituel des nations.","founder":[{"@type":"Person","name":"Jérémy Octave GLAZAÏ"},{"@type":"Person","name":"Amy Berté GLAZAÏ"}],"address":{"@type":"PostalAddress","addressLocality":"Abidjan","addressRegion":"Cocody Deux-Plateaux","addressCountry":"CI"},"contactPoint":{"@type":"ContactPoint","telephone":"+225-07-78-68-95-73","contactType":"customer service","availableLanguage":"French"},"sameAs":[]},{"@context":"https://schema.org","@type":"Event","name":"IN FIRE 2026","startDate":"2026-10-31T08:00:00+00:00","endDate":"2026-10-31T18:00:00+00:00","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name":"Église MADEG","address":{"@type":"PostalAddress","streetAddress":"Cocody Deux-Plateaux Agban","addressLocality":"Abidjan","addressCountry":"CI"}},"organizer":{"@type":"Organization","name":"MPA SDE","url":"https://mouvement-sde.org"},"performer":[{"@type":"Person","name":"Jérémy l'Élu GLAZAÏ"},{"@type":"Person","name":"Samuel ZEREOUE"}],"description":"Conférence internationale annuelle pour le réveil spirituel des nations. Thème : La révélation des fils et filles de Dieu.","isAccessibleForFree":true},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Qu'est-ce que le mouvement Soldats de l'Éternel ?","acceptedAnswer":{"@type":"Answer","text":"SDE est un mouvement chrétien prophético-apostolique fondé à Abidjan par Jérémy Octave et Amy Berté GLAZAÏ. Il rassemble des croyants autour de cinq axes : réveiller, restaurer, former, équiper et envoyer."}},{"@type":"Question","name":"Comment rejoindre SDE ?","acceptedAnswer":{"@type":"Answer","text":"Remplissez le formulaire sur cette page ou écrivez au secrétariat via WhatsApp au +225 07 78 68 95 73."}}]}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","name":"Mouvement Prophético-Apostolique Soldats de l'Éternel","alternateName":"MPA SDE","url":"https://mouvement-sde.org","logo":"https://mouvement-sde.org/vitrine/logo.png","description":"Mouvement chrétien prophético-apostolique pour le réveil spirituel des nations.","founder":[{"@type":"Person","name":"Jérémy Octave GLAZAÏ"},{"@type":"Person","name":"Amy Berté GLAZAÏ"}],"address":{"@type":"PostalAddress","addressLocality":"Abidjan","addressRegion":"Cocody Deux-Plateaux","addressCountry":"CI"},"contactPoint":{"@type":"ContactPoint","telephone":"+225-07-78-68-95-73","contactType":"customer service","availableLanguage":"French"},"sameAs":[]},{"@context":"https://schema.org","@type":"Event","name":"IN FIRE 2026","image":"https://mouvement-sde.org/vitrine/fire-generation-1080.jpg","startDate":"2026-10-31T08:00:00+00:00","endDate":"2026-10-31T18:00:00+00:00","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name":"Église MADEG","address":{"@type":"PostalAddress","streetAddress":"Cocody Deux-Plateaux Agban","addressLocality":"Abidjan","addressCountry":"CI"}},"organizer":{"@type":"Organization","name":"MPA SDE","url":"https://mouvement-sde.org"},"performer":[{"@type":"Person","name":"Jérémy l'Élu GLAZAÏ"},{"@type":"Person","name":"Samuel ZEREOUE"}],"description":"Conférence internationale annuelle pour le réveil spirituel des nations. Thème : La révélation des fils et filles de Dieu.","isAccessibleForFree":true},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Qu'est-ce que le mouvement Soldats de l'Éternel ?","acceptedAnswer":{"@type":"Answer","text":"SDE est un mouvement chrétien prophético-apostolique fondé à Abidjan par Jérémy Octave et Amy Berté GLAZAÏ. Il rassemble des croyants autour de cinq axes : réveiller, restaurer, former, équiper et envoyer."}},{"@type":"Question","name":"Comment rejoindre SDE ?","acceptedAnswer":{"@type":"Answer","text":"Remplissez le formulaire sur cette page ou écrivez au secrétariat via WhatsApp au +225 07 78 68 95 73."}}]}]</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@400;500;600;700;800;900&family=Saira+Stencil+One&display=swap" rel="stylesheet">
@@ -441,12 +441,12 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.35rem); }
 .galerie { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 @media (max-width: 900px) { .galerie { grid-template-columns: repeat(2, 1fr); } }
 .galerie li { cursor: pointer; overflow: hidden; border-radius: var(--r-lg); }
-.galerie li:focus-visible { outline: 3px solid var(--or); outline-offset: 3px; }
-.galerie figure { margin: 0; height: 100%; display: flex; flex-direction: column; }
+.galerie-ouvrir { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; height: 100%; display: flex; flex-direction: column; border-radius: var(--r-lg); overflow: hidden; }
+.galerie-ouvrir:focus-visible { outline: 3px solid var(--or); outline-offset: 3px; }
+.galerie-legende { flex: 1; display: block; font-size: .82rem; color: var(--texte-2); padding: 10px 12px; background: var(--surface); }
 .galerie img { width: 100%; height: 240px; object-fit: cover; transition: transform var(--duree) var(--ease); }
-@media (max-width: 640px) { .galerie img { height: 170px; } .galerie figcaption { font-size: .76rem; padding: 8px 10px; } }
-.galerie li:hover img, .galerie li:focus-visible img { transform: scale(1.04); }
-.galerie figcaption { flex: 1; }
+@media (max-width: 640px) { .galerie img { height: 170px; } .galerie-legende { font-size: .76rem; padding: 8px 10px; } }
+.galerie li:hover img, .galerie-ouvrir:focus-visible img { transform: scale(1.04); }
 .galerie figcaption { font-size: .82rem; color: var(--texte-2); padding: 10px 12px; background: var(--surface); }
 
 /* Lightbox */
@@ -649,6 +649,24 @@ html.anim .section { animation: section-in .5s ease-out both; }
   html.anim .revele { opacity: 1; transform: none; }
   .ripple { display: none !important; }
 }
+/* ═══════════ ACCESSIBILITÉ ═══════════ */
+.masque-visuel { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+/* Liens au milieu d'un texte : soulignés, pas seulement colorés */
+.resume-carte p a, .bio-invit a, .chapo a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+/* Thème clair : les zones restées bleu nuit (en-tête, cap, pied de page) gardent les couleurs du thème sombre */
+:root[data-theme="light"] :is(.entete, .cap, .pied) { --or: #e2c26a; --or-lum: #e2c26a; --texte: #e8ebf4; --texte-2: #b8c1d8; --gris: #b8c1d8; }
+:root[data-theme="light"] :is(.agenda-filtres button.actif, .res-filtres button.actif, .rdv .jour) { color: #fff; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) :is(.entete, .cap, .pied) { --or: #e2c26a; --or-lum: #e2c26a; --texte: #e8ebf4; --texte-2: #b8c1d8; --gris: #b8c1d8; }
+  :root:not([data-theme="dark"]) :is(.agenda-filtres button.actif, .res-filtres button.actif, .rdv .jour) { color: #fff; }
+}
+/* …sauf le grand menu déroulant sur ordinateur, posé sur fond clair */
+@media (min-width: 1025px) {
+  :root[data-theme="light"] .entete .mega-menu { --or: #85650f; --or-lum: #b8901f; --texte: #161e35; --texte-2: #535c75; --gris: #535c75; }
+}
+@media (min-width: 1025px) and (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .entete .mega-menu { --or: #85650f; --or-lum: #b8901f; --texte: #161e35; --texte-2: #535c75; --gris: #535c75; }
+}
 </style>
 </head>
 <body>
@@ -702,7 +720,7 @@ html.anim .section { animation: section-in .5s ease-out both; }
           <div class="mega-menu-cols">
             <a href="#agenda" role="menuitem"><span class="mm-icone">📅</span><span><span class="mm-label">Agenda</span><span class="mm-desc">Calendrier des rassemblements</span></span></a>
             <a href="#infire" role="menuitem"><span class="mm-icone">🔥</span><span><span class="mm-label">IN FIRE 2026</span><span class="mm-desc">Conférence internationale</span></span></a>
-            <a href="#programmes" role="menuitem"><span class="mm-icone">📋</span><span><span class="mm-label">Tous les programmes</span><span class="mm-desc">Traversée, Academy, HolyTalk…</span></span></a>
+            <a href="#programmes" role="menuitem"><span class="mm-icone">📋</span><span><span class="mm-label">Tous les programmes</span><span class="mm-desc">Traversée, Academy, Holy Talk…</span></span></a>
           </div>
         </div>
       </div>
@@ -787,8 +805,9 @@ html.anim .section { animation: section-in .5s ease-out both; }
   </section>
 
   <!-- ═══════════ BENTO GRID ═══════════ -->
-  <section class="bento" aria-label="Accès rapides">
+  <section class="bento" aria-labelledby="titre-acces">
     <div class="enveloppe">
+      <h2 class="masque-visuel" id="titre-acces">Accès rapides</h2>
       <div class="bento-grille">
         <a class="bento-carte grand revele" href="#programmes" style="--d:0s">
           <span class="bento-icone">🔥</span>
@@ -831,8 +850,9 @@ html.anim .section { animation: section-in .5s ease-out both; }
   </section>
 
   <!-- ═══════════ RÉSUMÉ ═══════════ -->
-  <section class="section" aria-label="En bref">
+  <section class="section" aria-labelledby="titre-bref">
     <div class="enveloppe">
+      <h2 class="masque-visuel" id="titre-bref">En bref</h2>
       <div class="resume">
         <div class="resume-carte revele">
           <div class="rc-icone" aria-hidden="true">✦</div>
@@ -842,7 +862,7 @@ html.anim .section { animation: section-in .5s ease-out both; }
         <div class="resume-carte revele" style="--d:.08s">
           <div class="rc-icone" aria-hidden="true">🔥</div>
           <h3>Prochain rendez-vous</h3>
-          <p><b>IN FIRE 2026</b> — samedi 31 octobre · Église MADEG, Cocody Deux-Plateaux Agban, Abidjan. <a href="#infire">En savoir plus →</a></p>
+          <p id="rc-rdv"><b>IN FIRE 2026</b> — samedi 31 octobre · Église MADEG, Cocody Deux-Plateaux Agban, Abidjan. <a href="#infire">En savoir plus →</a></p>
         </div>
         <div class="resume-carte revele" style="--d:.16s">
           <div class="rc-icone" aria-hidden="true">🤝</div>
@@ -989,14 +1009,19 @@ html.anim .section { animation: section-in .5s ease-out both; }
 
       <div class="tete-section"><h3>Nos valeurs</h3></div>
       <div class="valeurs-grille">
-        <div class="valeur revele">La prière</div>
-        <div class="valeur revele" style="--d:.04s">La Parole de Dieu</div>
-        <div class="valeur revele" style="--d:.08s">L'unité</div>
-        <div class="valeur revele" style="--d:.12s">Le service</div>
-        <div class="valeur revele" style="--d:.16s">L'intégrité</div>
-        <div class="valeur revele" style="--d:.2s">L'excellence</div>
-        <div class="valeur revele" style="--d:.24s">L'amour</div>
-        <div class="valeur revele" style="--d:.28s">La mission</div>
+        <div class="valeur revele">Jésus-Christ</div>
+        <div class="valeur revele" style="--d:0.04s">L'amour</div>
+        <div class="valeur revele" style="--d:0.08s">La sainteté</div>
+        <div class="valeur revele" style="--d:0.12s">L'honneur</div>
+        <div class="valeur revele" style="--d:0.16s">Le service</div>
+        <div class="valeur revele" style="--d:0.20s">L'excellence</div>
+        <div class="valeur revele" style="--d:0.24s">La discipline</div>
+        <div class="valeur revele" style="--d:0.28s">L'unité</div>
+        <div class="valeur revele" style="--d:0.32s">La compassion</div>
+        <div class="valeur revele" style="--d:0.36s">L'intégrité</div>
+        <div class="valeur revele" style="--d:0.40s">L'impact</div>
+        <div class="valeur revele" style="--d:0.44s">La redevabilité</div>
+      </div>
       </div>
     </div>
   </section>
@@ -1077,12 +1102,12 @@ html.anim .section { animation: section-in .5s ease-out both; }
           <p class="bio-devise">Foi. Leadership. Santé. Impact.</p>
         </article>
         <article class="bio revele" style="--d:.1s" id="bio-amy">
-          <header><img class="mono" src="/vitrine/photos/amy-glazai.jpg" alt="" width="72" height="72" loading="lazy" decoding="async"><div><h3>Amy Berté GLAZAÏ</h3><p class="titre-sd">Servante de DIEU</p><p class="role">Cofondatrice et co-leader · Secrétaire générale</p><p class="tags"><span>Servante de DIEU</span><span>Co-visionnaire</span><span>Coordination</span></p></div></header>
+          <header><img class="mono" src="/vitrine/photos/amy-glazai.jpg" alt="" width="72" height="72" loading="lazy" decoding="async"><div><h3>Amy Berté GLAZAÏ</h3><p class="titre-sd">Servante de DIEU</p><p class="role">Cofondatrice et co-leader · Secrétaire générale et Trésorière générale</p><p class="tags"><span>Servante de DIEU</span><span>Co-visionnaire</span><span>Coordination</span></p></div></header>
           <p class="bio-accroche">Cofondatrice du mouvement, elle conduit l'œuvre aux côtés de son époux et veille sur la coordination de la mission.</p>
           <div class="bio-texte">
             <p>Servante de DIEU, Amy Berté GLAZAÏ est cofondatrice du Mouvement Prophético-Apostolique Soldats de l'Éternel, qu'elle conduit aux côtés de son époux, Jérémy Octave GLAZAÏ. Co-visionnaire du mouvement, elle porte avec lui la vision de l'armée relevée d'Ézéchiel 37.</p>
             <p>Son ministère accompagne la vie du mouvement : écoute de la voix de Dieu, discernement et édification des croyants. Elle est associée à la co-vision des enseignements du mouvement, notamment sur les songes, les visions et la vie prophétique.</p>
-            <p>Secrétaire générale, elle assure la coordination administrative, le suivi des décisions et des projets, et la bonne circulation de l'information entre la direction, les pôles et les points SDE dans les nations.</p>
+            <p>Secrétaire générale et Trésorière générale, elle assure la coordination administrative, la gestion des ressources, le suivi des décisions et des projets, et la bonne circulation de l'information entre la direction, les pôles et les points SDE dans les nations.</p>
           </div>
           <p class="bio-devise">Un même appel, une même vision.</p>
         </article>
@@ -1121,11 +1146,11 @@ html.anim .section { animation: section-in .5s ease-out both; }
         <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-traversee.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Chaque mois</span><h3>Traversée Prophétique Mensuelle</h3><p>Un temps de prière et de consécration pour entrer dans le mois avec Dieu.</p><a href="#rejoindre" data-sujet="Traversée Prophétique Mensuelle">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
         <article class="programme revele feu"><img class="prog-img" src="/vitrine/illus/prog-infire.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Chaque année</span><h3>IN FIRE</h3><p>La conférence internationale pour le réveil spirituel des nations.</p><a href="#infire">Voir l'édition 2026 <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
         <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-academy.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Parcours</span><h3>Soldiers Academy</h3><p>Un parcours pour former des disciples solides et des leaders au service du Royaume.</p><a href="#rejoindre" data-sujet="Soldiers Academy">S'inscrire <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-holytalk.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Partage et célébration</span><h3>HolyTalk &amp; HolyDay</h3><p>Des espaces d'échange sur la foi et la vie, et des journées de célébration.</p><a href="#rejoindre" data-sujet="HolyTalk &amp; HolyDay">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
+        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-holytalk.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Partage et célébration</span><h3>Holy Talk &amp; Holy Day</h3><p>Des espaces d'échange sur la foi et la vie, et des journées de célébration.</p><a href="#rejoindre" data-sujet="Holy Talk &amp; Holy Day">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
         <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-missions.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Sur le terrain</span><h3>Missions et actions solidaires</h3><p>Évangélisation, visites et soutien concret aux personnes dans le besoin.</p><a href="#rejoindre" data-sujet="Missions et actions solidaires">S'engager <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
         <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-brunch.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Communion fraternelle</span><h3>Holy Brunch</h3><p>Un moment convivial pour se rencontrer, partager un repas et fortifier les liens.</p><a href="#rejoindre" data-sujet="Holy Brunch">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme revele feu"><img class="prog-img" src="/vitrine/illus/prog-aleph12.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Début d'année</span><h3>ALEPH 12</h3><p>12 jours de prières et de jeûnes : déclarations et orientations prophétiques pour posséder et recommander l'année à Dieu.</p><a href="#rejoindre" data-sujet="ALEPH 12">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-humanitaire.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Sur le terrain · Daloa</span><h3>Missions humanitaires</h3><p>Actions solidaires avec l'ONG Tomorrow Hope : soutien aux veuves et aux femmes démunies à Daloa.</p><a href="#rejoindre" data-sujet="Missions humanitaires">S'engager <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
+        <article class="programme revele feu"><img class="prog-img" src="/vitrine/illus/prog-aleph12.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Début d'année</span><h3>ALEPH 12</h3><p>12 jours de prière et de jeûne : déclarations et orientations prophétiques pour posséder et recommander l'année à Dieu.</p><a href="#rejoindre" data-sujet="ALEPH 12">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
+        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-humanitaire.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Sur le terrain · Daloa et Cocody</span><h3>Missions humanitaires</h3><p>Dons à l'orphelinat Tomorrow Hope de Daloa et soutien aux femmes veuves à Abidjan Cocody.</p><a href="#rejoindre" data-sujet="Missions humanitaires (Daloa, Cocody)">S'engager <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
       </div>
     </div>
   </section>
@@ -1185,15 +1210,15 @@ html.anim .section { animation: section-in .5s ease-out both; }
         <p class="chapo">Prière, formation, communion fraternelle et actions solidaires : quelques instants captés au fil du mouvement.</p>
       </div>
       <ul class="galerie" id="galerie-liste">
-        <li class="revele" style="--d:0.00s"><figure><img src="/vitrine/fire-generation-1080.jpg" alt="Soldats réunis lors de Fire Génération" loading="lazy" decoding="async" width="900" height="600"><figcaption>Fire Génération · Communion fraternelle · Abidjan</figcaption></figure></li>
-        <li class="revele" style="--d:0.08s"><figure><img src="/vitrine/photos/imposition.jpg" alt="Prière avec imposition des mains pendant une rencontre" loading="lazy" decoding="async" width="900" height="600"><figcaption>Prière et imposition des mains</figcaption></figure></li>
-        <li class="revele" style="--d:0.16s"><figure><img src="/vitrine/photos/intercession.jpg" alt="Une Soldate en intercession pendant un culte" loading="lazy" decoding="async" width="900" height="600"><figcaption>Intercession · Chercher la face de Dieu</figcaption></figure></li>
-        <li class="revele" style="--d:0.00s"><figure><img src="/vitrine/photos/chorale.jpg" alt="L'équipe de louange en tenue blanche et orange" loading="lazy" decoding="async" width="900" height="600"><figcaption>Louange et adoration</figcaption></figure></li>
-        <li class="revele" style="--d:0.08s"><figure><img src="/vitrine/photos/communion.jpg" alt="Soldats partageant un repas en plein air" loading="lazy" decoding="async" width="900" height="600"><figcaption>Communion fraternelle · Repas partagé</figcaption></figure></li>
-        <li class="revele" style="--d:0.16s"><figure><img src="/vitrine/photos/orphelinat.jpg" alt="Visite et dons à l'orphelinat Tomorrow Hope" loading="lazy" decoding="async" width="900" height="600"><figcaption>Orphelinat Tomorrow Hope · Daloa</figcaption></figure></li>
-        <li class="revele" style="--d:0.00s"><figure><img src="/vitrine/photos/veuves.jpg" alt="Remise de dons à des femmes veuves" loading="lazy" decoding="async" width="900" height="600"><figcaption>Soutien aux femmes veuves · Abidjan Cocody</figcaption></figure></li>
-        <li class="revele" style="--d:0.08s"><figure><img src="/vitrine/photos/dons.jpg" alt="Vivres et produits rassemblés pour une distribution" loading="lazy" decoding="async" width="900" height="600"><figcaption>Collecte et distribution de dons</figcaption></figure></li>
-        <li class="revele" style="--d:0.16s"><figure><img src="/vitrine/photos/leaders.jpg" alt="Le couple leader lors d'un événement du mouvement" loading="lazy" decoding="async" width="900" height="600"><figcaption>Le couple leader en mission</figcaption></figure></li>
+        <li class="revele" style="--d:0.00s"><button type="button" class="galerie-ouvrir" aria-label="Agrandir la photo : Fire Génération · Communion fraternelle · Abidjan"><img src="/vitrine/fire-generation-1080.jpg" alt="Soldats réunis lors de Fire Génération" loading="lazy" decoding="async" width="900" height="600"><span class="galerie-legende">Fire Génération · Communion fraternelle · Abidjan</span></button></li>
+        <li class="revele" style="--d:0.08s"><button type="button" class="galerie-ouvrir" aria-label="Agrandir la photo : Prière et imposition des mains"><img src="/vitrine/photos/imposition.jpg" alt="Prière avec imposition des mains pendant une rencontre" loading="lazy" decoding="async" width="900" height="600"><span class="galerie-legende">Prière et imposition des mains</span></button></li>
+        <li class="revele" style="--d:0.16s"><button type="button" class="galerie-ouvrir" aria-label="Agrandir la photo : Intercession · Chercher la face de Dieu"><img src="/vitrine/photos/intercession.jpg" alt="Une Soldate en intercession pendant un culte" loading="lazy" decoding="async" width="900" height="600"><span class="galerie-legende">Intercession · Chercher la face de Dieu</span></button></li>
+        <li class="revele" style="--d:0.00s"><button type="button" class="galerie-ouvrir" aria-label="Agrandir la photo : Louange et adoration"><img src="/vitrine/photos/chorale.jpg" alt="L'équipe de louange en tenue blanche et orange" loading="lazy" decoding="async" width="900" height="600"><span class="galerie-legende">Louange et adoration</span></button></li>
+        <li class="revele" style="--d:0.08s"><button type="button" class="galerie-ouvrir" aria-label="Agrandir la photo : Communion fraternelle · Repas partagé"><img src="/vitrine/photos/communion.jpg" alt="Soldats partageant un repas en plein air" loading="lazy" decoding="async" width="900" height="600"><span class="galerie-legende">Communion fraternelle · Repas partagé</span></button></li>
+        <li class="revele" style="--d:0.16s"><button type="button" class="galerie-ouvrir" aria-label="Agrandir la photo : Orphelinat Tomorrow Hope · Daloa"><img src="/vitrine/photos/orphelinat.jpg" alt="Visite et dons à l'orphelinat Tomorrow Hope" loading="lazy" decoding="async" width="900" height="600"><span class="galerie-legende">Orphelinat Tomorrow Hope · Daloa</span></button></li>
+        <li class="revele" style="--d:0.00s"><button type="button" class="galerie-ouvrir" aria-label="Agrandir la photo : Soutien aux femmes veuves · Abidjan Cocody"><img src="/vitrine/photos/veuves.jpg" alt="Remise de dons à des femmes veuves" loading="lazy" decoding="async" width="900" height="600"><span class="galerie-legende">Soutien aux femmes veuves · Abidjan Cocody</span></button></li>
+        <li class="revele" style="--d:0.08s"><button type="button" class="galerie-ouvrir" aria-label="Agrandir la photo : Collecte et distribution de dons"><img src="/vitrine/photos/dons.jpg" alt="Vivres et produits rassemblés pour une distribution" loading="lazy" decoding="async" width="900" height="600"><span class="galerie-legende">Collecte et distribution de dons</span></button></li>
+        <li class="revele" style="--d:0.16s"><button type="button" class="galerie-ouvrir" aria-label="Agrandir la photo : Le couple leader en mission"><img src="/vitrine/photos/leaders.jpg" alt="Le couple leader lors d'un événement du mouvement" loading="lazy" decoding="async" width="900" height="600"><span class="galerie-legende">Le couple leader en mission</span></button></li>
       </ul>
     </div>
   </section>
@@ -1231,8 +1256,8 @@ html.anim .section { animation: section-in .5s ease-out both; }
         </article>
         <article class="projet-carte revele" style="--d:.16s">
           <span class="pj-statut pj-realise">Réalisé</span>
-          <h3>Missions humanitaires Daloa</h3>
-          <p>Soutien aux veuves et aux femmes démunies à Daloa en partenariat avec l'ONG Tomorrow Hope. Distribution de vivres et accompagnement.</p>
+          <h3>Orphelinat et veuves</h3>
+          <p>Dons à l'orphelinat Tomorrow Hope de Daloa et soutien aux femmes veuves à Abidjan Cocody : vivres, produits de première nécessité et accompagnement.</p>
         </article>
         <article class="projet-carte revele" style="--d:.24s">
           <span class="pj-statut pj-realise">Réalisé</span>
@@ -1307,7 +1332,7 @@ html.anim .section { animation: section-in .5s ease-out both; }
             <div class="champ"><label for="f-mail">E-mail <span class="facult">facultatif</span></label><input id="f-mail" name="mail" type="email" autocomplete="email"></div>
             <div class="champ"><label for="f-ville">Ville et pays <span class="oblig">obligatoire</span></label><input id="f-ville" name="ville" autocomplete="address-level2" placeholder="Abidjan, Côte d'Ivoire" maxlength="80" required aria-required="true"></div>
           </div>
-          <div class="champ"><label for="f-objet">Votre demande</label><select id="f-objet" name="objet"><option>Découvrir le mouvement</option><option>Devenir membre</option><option>Traversée Prophétique Mensuelle</option><option>IN FIRE</option><option>Soldiers Academy</option><option>HolyTalk &amp; HolyDay</option><option>Missions et actions solidaires</option><option>ALEPH 12</option><option>Missions humanitaires (Daloa)</option><option>Holy Brunch</option><option>Servir dans un pôle</option><option>Rejoindre une formation</option><option>Demande de prière</option><option>Autre</option></select></div>
+          <div class="champ"><label for="f-objet">Votre demande</label><select id="f-objet" name="objet"><option>Découvrir le mouvement</option><option>Devenir membre</option><option>Traversée Prophétique Mensuelle</option><option>IN FIRE</option><option>Soldiers Academy</option><option>Holy Talk &amp; Holy Day</option><option>Missions et actions solidaires</option><option>ALEPH 12</option><option>Missions humanitaires (Daloa, Cocody)</option><option>Holy Brunch</option><option>Servir dans un pôle</option><option>Rejoindre une formation</option><option>Demande de prière</option><option>Autre</option></select></div>
           <div class="champ"><label for="f-msg">Quelques mots sur vous <span class="facult">facultatif</span></label><textarea id="f-msg" name="msg" placeholder="Votre parcours, votre église, ce qui vous amène…"></textarea></div>
           <label class="accord" for="f-accord"><input id="f-accord" name="accord" type="checkbox" required><span>J'accepte que ces informations soient envoyées au secrétariat du mouvement SDE pour me recontacter. L'envoi passe par l'application que je choisis à l'étape suivante (WhatsApp ou ma messagerie e-mail). Le mouvement ne vend ni ne cède ces informations à d'autres organisations. <span class="oblig">obligatoire</span></span></label>
           <p class="erreur" id="f-erreur" role="alert" hidden></p>
@@ -1392,9 +1417,9 @@ html.anim .section { animation: section-in .5s ease-out both; }
       </div>
     </div>
   </section>
+  <div class="res-toast" id="res-toast" role="status">📖 Ce contenu sera bientôt disponible en lecture et en téléchargement.</div>
 </main>
 
-<div class="res-toast" id="res-toast">📖 Ce contenu sera bientôt disponible en lecture et en téléchargement.</div>
 
 <!-- ═══════════ FOOTER ═══════════ -->
 <footer class="pied">
@@ -1573,6 +1598,8 @@ html.anim .section { animation: section-in .5s ease-out both; }
   /* ═══════ Compte à rebours IN FIRE 2026 ═══════ */
   const cible = Date.UTC(2026, 9, 31, 8, 0, 0), fin = Date.UTC(2026, 9, 31, 20, 0, 0);
   const pad = (n) => String(n).padStart(2, "0");
+  /* Après la conférence, la carte « Prochain rendez-vous » renvoie vers l'agenda */
+  if (Date.now() > fin) { const rc = document.getElementById("rc-rdv"); if (rc) rc.innerHTML = "<b>IN FIRE 2026</b> a eu lieu le 31 octobre. Merci à tous ! Prochain rendez-vous : la <b>Traversée Prophétique</b> du mois. <a href=\"#agenda\">Voir l'agenda →</a>"; }
   function decompte() {
     const now = Date.now(), ms = cible - now;
     const titre = document.getElementById("decompte-titre");
@@ -1715,12 +1742,12 @@ html.anim .section { animation: section-in .5s ease-out both; }
     1: { t: "Réveil, évangélisation et missions", chapo: "Le cœur battant du mouvement : la prière, la proclamation de l'Évangile et l'envoi de soldats vers les villes et les nations.",
       fait: ["Organise les temps de prière, de jeûne et d'intercession du mouvement", "Conduit les campagnes d'évangélisation dans les quartiers, les universités et les marchés", "Prépare et envoie des équipes en mission en Côte d'Ivoire et à l'étranger", "Accompagne les nouveaux convertis vers une vie de disciple"],
       depts: ["Intercession", "Évangélisation", "Missions", "Louange et adoration", "Suivi des nouveaux convertis"],
-      projets: [["Chaque année", "IN FIRE", "La conférence internationale pour le réveil spirituel des nations."], ["Chaque mois", "Traversée Prophétique Mensuelle", "Entrer dans chaque mois par la prière et la consécration."], ["Début d'année", "ALEPH 12", "12 jours de prières et de jeûnes pour posséder et recommander l'année à Dieu."], ["Sur le terrain", "Campagnes d'évangélisation", "Porter l'Évangile là où les gens vivent, étudient et travaillent."]],
+      projets: [["Chaque année", "IN FIRE", "La conférence internationale pour le réveil spirituel des nations."], ["Chaque mois", "Traversée Prophétique Mensuelle", "Entrer dans chaque mois par la prière et la consécration."], ["Début d'année", "ALEPH 12", "12 jours de prière et de jeûne pour posséder et recommander l'année à Dieu."], ["Sur le terrain", "Campagnes d'évangélisation", "Porter l'Évangile là où les gens vivent, étudient et travaillent."]],
       verset: ["Allez par tout le monde, et prêchez la bonne nouvelle à toute la création.", "Marc 16.15"] },
     2: { t: "Impact social et humanitaire", chapo: "La foi qui se voit : visiter, soutenir et relever concrètement les personnes et les familles dans le besoin.",
       fait: ["Visite les malades, les personnes âgées et les familles éprouvées", "Organise des collectes de vivres, de vêtements et de fournitures", "Accompagne les familles et les jeunes dans les moments difficiles", "Mène des actions solidaires lors des missions sur le terrain"],
       depts: ["Actions solidaires", "Visites et accompagnement", "Famille", "Entraide entre membres"],
-      projets: [["Sur le terrain", "Missions et actions solidaires", "Soutien concret aux personnes dans le besoin."], ["Daloa", "Missions humanitaires · ONG Tomorrow Hope", "Soutien aux veuves et aux femmes démunies à Daloa."], ["Toute l'année", "Accompagnement des familles", "Écoute, conseil et soutien des foyers."], ["Ponctuel", "Collectes et dons", "Vivres, vêtements et fournitures scolaires pour ceux qui en manquent."]],
+      projets: [["Sur le terrain", "Missions et actions solidaires", "Soutien concret aux personnes dans le besoin."], ["Daloa · Cocody", "Missions humanitaires", "Dons à l'orphelinat Tomorrow Hope de Daloa et soutien aux femmes veuves à Abidjan Cocody."], ["Toute l'année", "Accompagnement des familles", "Écoute, conseil et soutien des foyers."], ["Ponctuel", "Collectes et dons", "Vivres, vêtements et fournitures scolaires pour ceux qui en manquent."]],
       verset: ["Toutes les fois que vous avez fait ces choses à l'un de ces plus petits de mes frères, c'est à moi que vous les avez faites.", "Matthieu 25.40"] },
     3: { t: "Logistique et organisation", chapo: "Les bâtisseurs de l'ombre : ils préparent les lieux, le matériel et l'accueil pour que chaque rassemblement se déroule dans l'ordre.",
       fait: ["Prépare les salles, l'installation et le matériel de chaque rassemblement", "Assure l'accueil, le placement et la sécurité des participants", "Gère le transport, l'intendance et le matériel du mouvement", "Coordonne l'organisation des grands événements comme IN FIRE"],
@@ -1735,7 +1762,7 @@ html.anim .section { animation: section-in .5s ease-out both; }
     5: { t: "Formation et développement intégral", chapo: "Former l'homme tout entier : l'esprit, le caractère, la famille, le métier et le leadership, pour des soldats solides et utiles.",
       fait: ["Conduit les parcours de formation des disciples et des leaders", "Organise des enseignements sur le couple, la famille et la vie chrétienne", "Accompagne le développement personnel, professionnel et financier", "Prépare les responsables qui serviront dans les pôles"],
       depts: ["Soldiers Academy", "Enseignement biblique", "Couple et famille", "Leadership", "Développement personnel et professionnel"],
-      projets: [["Parcours", "Soldiers Academy", "Former des disciples solides et des leaders au service du Royaume."], ["Partage", "HolyTalk & HolyDay", "Des espaces d'échange sur la foi et la vie, et des journées de célébration."], ["Communion", "Holy Brunch", "Se rencontrer, partager un repas et fortifier les liens."]],
+      projets: [["Parcours", "Soldiers Academy", "Former des disciples solides et des leaders au service du Royaume."], ["Partage", "Holy Talk & Holy Day", "Des espaces d'échange sur la foi et la vie, et des journées de célébration."], ["Communion", "Holy Brunch", "Se rencontrer, partager un repas et fortifier les liens."]],
       verset: ["Ce que tu as entendu de moi, confie-le à des hommes fidèles, qui soient capables de l'enseigner aussi à d'autres.", "2 Timothée 2.2"] },
   };
   const fp = document.getElementById("fiche-pole"), fpc = document.getElementById("fp-corps");
@@ -1794,13 +1821,9 @@ html.anim .section { animation: section-in .5s ease-out both; }
     const photos = [];
     let lbIdx = 0;
     document.querySelectorAll(".galerie li").forEach((li, i) => {
-      const img = li.querySelector("img"), cap = li.querySelector("figcaption");
-      if (img) {
-        photos.push({ src: img.src, alt: img.alt, caption: cap ? cap.textContent : "" });
-        li.tabIndex = 0; li.setAttribute("role", "button"); li.setAttribute("aria-label", "Agrandir : " + (cap ? cap.textContent : img.alt));
-        li.addEventListener("click", () => { lbIdx = i; lbOuvrir(); });
-        li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); lbIdx = i; lbOuvrir(); } });
-      }
+      const img = li.querySelector("img"), cap = li.querySelector(".galerie-legende, figcaption");
+      const btn = li.querySelector(".galerie-ouvrir") || li;
+      if (img) { photos.push({ src: img.src, alt: img.alt, caption: cap ? cap.textContent : "" }); btn.addEventListener("click", () => { lbIdx = i; lbOuvrir(); }); }
     });
     const lbCompt = document.getElementById("lb-compteur");
     function lbMaj() { lbImg.src = photos[lbIdx].src; lbImg.alt = photos[lbIdx].alt; lbCap.textContent = photos[lbIdx].caption; lbCompt.textContent = (lbIdx + 1) + " / " + photos.length; }
