@@ -91,14 +91,26 @@ p { margin: 0; }
 .b-ligne { border-color: var(--trait); color: var(--encre); background: var(--surface); }
 .b-ligne:hover { border-color: var(--or-fonce); }
 
+/* Aller au contenu (skip link) */
+.aller-contenu { position: absolute; left: -999px; top: 4px; z-index: 100; background: var(--or); color: var(--nuit); padding: 10px 22px; border-radius: 999px; font-weight: 700; font-family: var(--f-texte); text-decoration: none; font-size: .95rem; }
+.aller-contenu:focus { left: 16px; }
+/* Bouton retour en haut */
+.retour-haut { position: fixed; bottom: max(24px, env(safe-area-inset-bottom, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); z-index: 45; width: 48px; height: 48px; border-radius: 50%; background: var(--nuit-2); color: var(--or); border: 2px solid rgba(226,194,106,.35); cursor: pointer; display: grid; place-items: center; box-shadow: 0 4px 16px rgba(0,0,0,.25); opacity: 0; pointer-events: none; transform: translateY(12px); transition: opacity .3s, transform .3s; }
+.retour-haut.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.retour-haut:hover { background: var(--or); color: var(--nuit); }
+.retour-haut svg { width: 20px; height: 20px; }
+
 /* ═══════════ En-tête avec sous-menus (Point 2) ═══════════ */
-.entete { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: rgba(15,30,61,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--sur-nuit); border-bottom: 1px solid rgba(226,194,106,.35); transition: box-shadow .3s; }
-.entete.compact { box-shadow: 0 2px 18px rgba(0,0,0,.25); }
+.entete { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: rgba(15,30,61,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--sur-nuit); border-bottom: 1px solid rgba(226,194,106,.35); transition: box-shadow .3s, background .3s; }
+.entete.compact { box-shadow: 0 2px 18px rgba(0,0,0,.25); background: rgba(15,30,61,.97); }
+.logo { transition: width .3s, height .3s; }
+.entete.compact .logo { width: 36px; height: 36px; }
+.entete.compact .marque small { font-size: .65rem; }
 .entete .enveloppe { display: flex; align-items: center; gap: 16px; min-height: var(--entete-h); }
 .marque { display: flex; align-items: center; gap: 12px; text-decoration: none; min-width: 0; flex-shrink: 0; }
 .logo { width: 44px; height: 44px; flex: 0 0 auto; background: url(/vitrine/logo.png) center / contain no-repeat; }
 .marque b { font-family: var(--f-marque); font-weight: 400; font-size: 1.35rem; letter-spacing: .06em; color: var(--or); line-height: 1; }
-.marque small { display: block; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--sur-nuit-2); margin-top: 3px; white-space: nowrap; }
+.marque small { display: block; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--sur-nuit-2); margin-top: 3px; white-space: nowrap; transition: font-size .3s; }
 /* Nav desktop */
 .nav-principal { margin-left: auto; display: flex; align-items: center; gap: 2px; }
 .nav-rubrique { position: relative; }
@@ -108,10 +120,10 @@ p { margin: 0; }
 .nav-lien .chevron { width: 12px; height: 12px; transition: transform .25s; fill: currentColor; }
 .nav-rubrique.ouvert .chevron { transform: rotate(180deg); }
 /* Sous-menu desktop */
-.sous-menu { display: none; position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); min-width: 220px; background: var(--nuit-2); border: 1px solid rgba(226,194,106,.2); border-radius: var(--r); padding: 8px 0; box-shadow: 0 12px 32px rgba(0,0,0,.3); }
-.nav-rubrique.ouvert .sous-menu { display: block; }
+.sous-menu { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%) translateY(6px); min-width: 220px; background: var(--nuit-2); border: 1px solid rgba(226,194,106,.2); border-radius: var(--r); padding: 8px 0; box-shadow: 0 12px 32px rgba(0,0,0,.3); opacity: 0; visibility: hidden; transition: opacity .2s, transform .2s, visibility .2s; }
+.nav-rubrique.ouvert .sous-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 .sous-menu a { display: block; padding: 11px 20px; color: var(--sur-nuit); text-decoration: none; font-size: .93rem; font-weight: 600; }
-.sous-menu a:hover { background: rgba(226,194,106,.1); color: var(--or); }
+.sous-menu a:hover, .sous-menu a:focus-visible { background: rgba(226,194,106,.1); color: var(--or); }
 /* Bouton Espace membre */
 .btn-membre { margin-left: 10px; min-height: 42px; padding: 0 18px; }
 /* Burger */
@@ -120,11 +132,13 @@ p { margin: 0; }
 /* Mobile nav (Point 11 : grandes lignes tactiles) */
 @media (max-width: 980px) {
   .burger { display: grid; place-items: center; }
-  .nav-principal { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; align-items: stretch; gap: 0; background: var(--nuit); padding: 8px max(16px, env(safe-area-inset-right, 0px)) 18px max(16px, env(safe-area-inset-left, 0px)); border-bottom: 1px solid rgba(226,194,106,.35); max-height: calc(100dvh - var(--entete-h)); overflow-y: auto; -webkit-overflow-scrolling: touch; }
-  .nav-principal.ouvert { display: flex; }
+  .nav-principal { display: flex; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; align-items: stretch; gap: 0; background: var(--nuit); padding: 8px max(16px, env(safe-area-inset-right, 0px)) 18px max(16px, env(safe-area-inset-left, 0px)); border-bottom: 1px solid rgba(226,194,106,.35); max-height: calc(100dvh - var(--entete-h)); overflow-y: auto; -webkit-overflow-scrolling: touch; clip-path: inset(0 0 100% 0); transition: clip-path .35s cubic-bezier(.4,0,.2,1); pointer-events: none; }
+  .nav-principal.ouvert { clip-path: inset(0 0 0 0); pointer-events: auto; }
   .nav-rubrique { border-bottom: 1px solid rgba(255,255,255,.08); }
   .nav-lien { padding: 16px 6px; border-radius: 0; font-size: 1.05rem; width: 100%; justify-content: space-between; }
-  .sous-menu { position: static; transform: none; border: 0; box-shadow: none; background: rgba(0,0,0,.15); border-radius: 0; padding: 0 0 4px 16px; min-width: 0; }
+  .sous-menu { position: static; transform: none; border: 0; box-shadow: none; background: rgba(0,0,0,.15); border-radius: 0; padding: 0 0 4px 16px; min-width: 0; opacity: 1; visibility: visible; display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s ease, padding .3s, opacity .2s; overflow: hidden; padding: 0 0 0 16px; }
+  .nav-rubrique.ouvert .sous-menu { grid-template-rows: 1fr; padding: 0 0 4px 16px; }
+  .sous-menu > * { overflow: hidden; }
   .sous-menu a { padding: 13px 12px; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,.05); }
   .btn-membre { margin: 14px 0 0; border-radius: 999px; width: 100%; }
 }
@@ -371,6 +385,7 @@ html.anim .ouv-bas { opacity: 0; animation: ouv-monte .8s cubic-bezier(.2,.8,.2,
 .galerie li { cursor: pointer; border-radius: var(--r); overflow: hidden; }
 .galerie figure { margin: 0; position: relative; }
 .galerie img { width: 100%; aspect-ratio: 4/3; object-fit: cover; transition: transform .35s; }
+.galerie li { cursor: pointer; }
 .galerie li:hover img { transform: scale(1.04); }
 .galerie figcaption { position: absolute; bottom: 0; left: 0; right: 0; padding: 28px 14px 10px; background: linear-gradient(transparent, rgba(0,0,0,.65)); color: #fff; font-size: .82rem; font-weight: 700; }
 
@@ -383,6 +398,7 @@ html.anim .ouv-bas { opacity: 0; animation: ouv-monte .8s cubic-bezier(.2,.8,.2,
 .lightbox-prev { left: 16px; }
 .lightbox-next { right: 16px; }
 .lightbox-caption { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.8); font-size: .9rem; text-align: center; max-width: 80vw; }
+.lightbox-compteur { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.6); font-size: .85rem; font-weight: 700; font-family: var(--f-titre); letter-spacing: .08em; }
 
 /* ═══════════ Ressources / bibliothèque (Point 6) ═══════════ */
 .ressources-grille { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
@@ -418,7 +434,9 @@ html.anim .ouv-bas { opacity: 0; animation: ouv-monte .8s cubic-bezier(.2,.8,.2,
 .projet-carte h3 { font-size: 1.05rem; margin-bottom: 8px; }
 .projet-carte p { color: var(--gris); font-size: .9rem; }
 .pj-barre { height: 6px; background: var(--surface-2); border-radius: 3px; margin-top: 14px; overflow: hidden; }
-.pj-barre div { height: 100%; background: var(--or); border-radius: 3px; }
+.pj-barre div { height: 100%; background: linear-gradient(90deg, var(--or-fonce), var(--or)); border-radius: 3px; transition: width 1s cubic-bezier(.4,0,.2,1); }
+.anim .pj-barre div { width: 0 !important; }
+.anim .pj-barre.vu div { width: var(--cible) !important; }
 
 /* ═══════════ Soutenir (Point 10) ═══════════ */
 .soutenir-grille { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -555,6 +573,7 @@ svg:not(:root) { overflow: hidden; }
 </svg>
 </head>
 <body>
+<a class="aller-contenu" href="#accueil">Aller au contenu</a>
 
 <header class="entete" id="entete">
   <div class="enveloppe">
@@ -1007,6 +1026,7 @@ svg:not(:root) { overflow: hidden; }
     <img id="lb-img" src="" alt="">
     <button class="lightbox-nav lightbox-next" id="lb-next" aria-label="Photo suivante">›</button>
     <p class="lightbox-caption" id="lb-caption"></p>
+    <span class="lightbox-compteur" id="lb-compteur" aria-live="polite"></span>
   </div>
 
   <!-- ═══════════ PROJETS ET RÉSULTATS (Point 9) ═══════════ -->
@@ -1022,13 +1042,13 @@ svg:not(:root) { overflow: hidden; }
           <span class="pj-statut pj-encours">En cours</span>
           <h3>IN FIRE 2026</h3>
           <p>Organiser la conférence internationale du 31 octobre 2026 à Abidjan : lieu, orateurs, logistique, communication et accueil.</p>
-          <div class="pj-barre"><div style="width:65%"></div></div>
+          <div class="pj-barre" style="--cible:65%"><div style="width:65%"></div></div>
         </article>
         <article class="projet-carte revele">
           <span class="pj-statut pj-encours">En cours</span>
           <h3>Médiathèque numérique</h3>
           <p>Réunir les enseignements, vidéos et documents du mouvement dans un espace accessible à tous les membres.</p>
-          <div class="pj-barre"><div style="width:30%"></div></div>
+          <div class="pj-barre" style="--cible:30%"><div style="width:30%"></div></div>
         </article>
         <article class="projet-carte revele">
           <span class="pj-statut pj-realise">Réalisé</span>
@@ -1208,6 +1228,11 @@ svg:not(:root) { overflow: hidden; }
   <div class="mention"><div class="enveloppe"><span>© <span id="annee">2026</span> Soldats de l'Éternel · Abidjan, Côte d'Ivoire</span><span>« Esprit, viens des quatre vents ! » Ézéchiel 37.9</span></div></div>
 </footer>
 
+<!-- Bouton retour en haut -->
+<button class="retour-haut" id="retour-haut" type="button" aria-label="Retour en haut de page">
+  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16V4M4 10l6-6 6 6"/></svg>
+</button>
+
 <!-- Dialog fiche pole -->
 <dialog id="fiche-pole" class="fiche-pole" aria-labelledby="fp-titre">
   <div class="fp-boite">
@@ -1238,7 +1263,19 @@ svg:not(:root) { overflow: hidden; }
     });
   });
   document.addEventListener("click", (e) => { if (!e.target.closest(".nav-rubrique")) fermerTousMenus(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { fermerTousMenus(); nav.classList.remove("ouvert"); burger.setAttribute("aria-expanded", "false"); } });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { fermerTousMenus(); nav.classList.remove("ouvert"); burger.setAttribute("aria-expanded", "false"); }
+    /* Navigation fléchée dans les sous-menus */
+    const rubOuvert = document.querySelector(".nav-rubrique.ouvert");
+    if (rubOuvert && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+      const liens = [...rubOuvert.querySelectorAll(".sous-menu a")];
+      if (!liens.length) return;
+      e.preventDefault();
+      const idx = liens.indexOf(document.activeElement);
+      const next = e.key === "ArrowDown" ? (idx + 1) % liens.length : (idx <= 0 ? liens.length - 1 : idx - 1);
+      liens[next].focus();
+    }
+  });
   // En-tête compact au scroll (Point 2)
   const entete = document.getElementById("entete");
   let dernierScroll = 0;
@@ -1306,6 +1343,15 @@ svg:not(:root) { overflow: hidden; }
   for (let i = 0; i < 80; i += 1) parts.push(naitre(true));
   if (reduit) dessiner(); else raf = requestAnimationFrame(boucle);
   window.addEventListener("resize", () => { taille(); parts = parts.map(() => naitre(true)); dessiner(); });
+  /* Pause canvas quand le héros est hors viewport */
+  if ("IntersectionObserver" in window) {
+    let cvVisible = true;
+    new IntersectionObserver(([e]) => {
+      cvVisible = e.isIntersecting;
+      if (cvVisible && !raf && !reduit) raf = requestAnimationFrame(boucle);
+      if (!cvVisible && raf) { cancelAnimationFrame(raf); raf = 0; }
+    }, { threshold: 0 }).observe(document.querySelector(".ouverture"));
+  }
 
   /* Compte à rebours IN FIRE 2026 */
   const cible = Date.UTC(2026, 9, 31, 8, 0, 0), fin = Date.UTC(2026, 9, 31, 20, 0, 0);
@@ -1501,6 +1547,17 @@ svg:not(:root) { overflow: hidden; }
   const mh = location.hash.match(/^#pole-([1-5])$/);
   if (mh) { document.getElementById("poles").scrollIntoView(); ouvrirPole(+mh[1]); }
 
+  /* Bouton retour en haut */
+  const rh = document.getElementById("retour-haut");
+  window.addEventListener("scroll", () => { rh.classList.toggle("visible", window.scrollY > 600); }, { passive: true });
+  rh.addEventListener("click", () => { window.scrollTo({ top: 0, behavior: reduit ? "auto" : "smooth" }); });
+
+  /* Barres de progression animées */
+  if ("IntersectionObserver" in window && !reduit) {
+    const ib = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("vu"); ib.unobserve(e.target); } }), { threshold: .5 });
+    document.querySelectorAll(".pj-barre").forEach((b) => ib.observe(b));
+  }
+
   /* Lightbox galerie */
   const lb = document.getElementById("lightbox");
   if (lb) {
@@ -1511,9 +1568,11 @@ svg:not(:root) { overflow: hidden; }
       const img = li.querySelector("img"), cap = li.querySelector("figcaption");
       if (img) { photos.push({ src: img.src, alt: img.alt, caption: cap ? cap.textContent : "" }); li.addEventListener("click", () => { lbIdx = i; lbOuvrir(); }); }
     });
-    function lbOuvrir() { if (!photos.length) return; lbImg.src = photos[lbIdx].src; lbImg.alt = photos[lbIdx].alt; lbCap.textContent = photos[lbIdx].caption; lb.classList.add("active"); document.body.style.overflow = "hidden"; }
+    const lbCompt = document.getElementById("lb-compteur");
+    function lbMaj() { lbImg.src = photos[lbIdx].src; lbImg.alt = photos[lbIdx].alt; lbCap.textContent = photos[lbIdx].caption; lbCompt.textContent = (lbIdx + 1) + " / " + photos.length; }
+    function lbOuvrir() { if (!photos.length) return; lbMaj(); lb.classList.add("active"); document.body.style.overflow = "hidden"; }
     function lbFermer() { lb.classList.remove("active"); document.body.style.overflow = ""; }
-    function lbNav(d) { lbIdx = (lbIdx + d + photos.length) % photos.length; lbImg.src = photos[lbIdx].src; lbImg.alt = photos[lbIdx].alt; lbCap.textContent = photos[lbIdx].caption; }
+    function lbNav(d) { lbIdx = (lbIdx + d + photos.length) % photos.length; lbMaj(); }
     document.getElementById("lb-fermer").addEventListener("click", lbFermer);
     document.getElementById("lb-prev").addEventListener("click", () => lbNav(-1));
     document.getElementById("lb-next").addEventListener("click", () => lbNav(1));
