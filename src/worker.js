@@ -558,6 +558,79 @@ async function apiPublic(env) {
 }
 
 /* ───────── Formulaire public : collecte d'infos + bilan 2026 ───────── */
+/* ───────── Demandes d'engagement (public) ─────────
+   Petit formulaire accessible depuis chaque pôle, programme ou point SDE.
+   Remplace les redirections WhatsApp par un enregistrement centralisé
+   que le secrétariat peut consulter depuis l'app, et un e-mail de secours
+   vers infosoldat@gmail.com. */
+async function apiEngager(req, env) {
+  if (req.method !== "POST") return erreur("methode", "POST uniquement.", 405);
+  let b;
+  try {
+    const ct = req.headers.get("content-type") || "";
+    if (ct.includes("application/json")) b = await req.json();
+    else { const fd = await req.formData(); b = {}; for (const [k, v] of fd.entries()) b[k] = typeof v === "string" ? v : ""; }
+  } catch { return erreur("invalid", "Données du formulaire invalides."); }
+
+  const champ = (n, max = 500) => String(b[n] || "").trim().slice(0, max);
+  const nom = champ("nom", 120);
+  const tel = champ("tel", 30);
+  const email = champ("email", 160);
+  const ville = champ("ville", 120);
+  const objet = champ("objet", 160) || "Prise de contact";
+  const pole = champ("pole", 160);
+  const message = champ("message", 2000);
+  const source = champ("source", 160);
+
+  if (!nom) return erreur("champ_manquant", "Votre nom est obligatoire.");
+  if (!tel && !email) return erreur("champ_manquant", "Indiquez au moins un téléphone ou un e-mail pour que l'équipe vous recontacte.");
+  if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return erreur("email_invalide", "Adresse e-mail invalide.");
+  if (tel && tel.replace(/\D/g, "").length < 7) return erreur("tel_invalide", "Numéro de téléphone trop court.");
+
+  /* Table auto-provisionnée pour ne pas dépendre d'une migration */
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS engagements (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cree INTEGER NOT NULL,
+    objet TEXT, pole TEXT, source TEXT,
+    nom TEXT NOT NULL, tel TEXT, email TEXT, ville TEXT,
+    message TEXT,
+    traite INTEGER NOT NULL DEFAULT 0,
+    note TEXT
+  )`).run();
+  await env.DB.prepare(`CREATE INDEX IF NOT EXISTS engagements_cree ON engagements(traite, cree)`).run();
+
+  await env.DB.prepare(`INSERT INTO engagements (cree, objet, pole, source, nom, tel, email, ville, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+    .bind(Date.now(), objet, pole, source, nom, tel, email, ville, message)
+    .run();
+
+  return json({ ok: true, message: "Votre demande a bien été transmise au secrétariat du mouvement. Nous vous recontacterons sous peu." });
+}
+
+/* Liste des demandes d'engagement (réservé admin + propriétaires) */
+async function apiEngagerAdmin(req, env, u) {
+  if (!u.connecte || u.niveau < 3) return erreur("refuse", "Réservé à l'équipe administrative.", 403);
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS engagements (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cree INTEGER NOT NULL,
+    objet TEXT, pole TEXT, source TEXT,
+    nom TEXT NOT NULL, tel TEXT, email TEXT, ville TEXT,
+    message TEXT,
+    traite INTEGER NOT NULL DEFAULT 0,
+    note TEXT
+  )`).run();
+  const url = new URL(req.url);
+  if (req.method === "PATCH") {
+    let b; try { b = await req.json(); } catch { return erreur("invalid", "Corps JSON invalide."); }
+    const id = parseInt(b.id, 10);
+    if (!id) return erreur("invalid", "id requis.");
+    await env.DB.prepare(`UPDATE engagements SET traite = ?, note = ? WHERE id = ?`).bind(b.traite ? 1 : 0, String(b.note || "").slice(0, 1000), id).run();
+    return json({ ok: true });
+  }
+  const limite = Math.min(200, parseInt(url.searchParams.get("limite") || "100", 10));
+  const r = await env.DB.prepare(`SELECT id, cree, objet, pole, source, nom, tel, email, ville, message, traite, note FROM engagements ORDER BY traite ASC, cree DESC LIMIT ?`).bind(limite).all();
+  return json({ ok: true, engagements: r.results || [] });
+}
+
 async function apiFormulaire(req, env) {
   if (req.method !== "POST") return erreur("methode", "POST uniquement.", 405);
   let fd;
@@ -1040,6 +1113,7 @@ async function traiter(req, env) {
       if (p === "/" || p === "/index.html") return env.ASSETS.fetch(new Request(new URL("/vitrine/", url), req));
       if (p === "/api/public") return apiPublic(env);
       if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env);
+      if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env);
       if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env);
       if (!/^\/(vitrine\/|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$)/.test(p))
         return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
@@ -1065,6 +1139,7 @@ async function traiter(req, env) {
       if (origine && origine !== url.origin) return erreur("refuse", "Origine refusée.", 403);
     }
     if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env);
+    if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env);
     if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env);
     try {
       const u = await utilisateur(req, env);
@@ -1095,6 +1170,7 @@ async function traiter(req, env) {
       if (p === "/api/medias" || p.startsWith("/api/medias/")) return apiMedias(req, env, u, url);
       if (p === "/api/sauvegardes" || p.startsWith("/api/sauvegardes/")) return apiSauvegardes(req, env, u, url);
       if (p === "/api/formulaire-admin") return apiFormulaireAdmin(req, env, u);
+      if (p === "/api/engager-admin") return apiEngagerAdmin(req, env, u);
       if (p === "/api/preinscription-academy-admin") return apiPreinscriptionAcademyAdmin(req, env, u);
       return erreur("introuvable", "Route inconnue.", 404);
     } catch (e) {

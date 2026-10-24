@@ -11,3 +11,5 @@ CREATE TABLE IF NOT EXISTS medias (id TEXT PRIMARY KEY, titre TEXT NOT NULL, des
 CREATE INDEX IF NOT EXISTS medias_cree ON medias(fini, cree);
 CREATE TABLE IF NOT EXISTS media_morceaux (id TEXT NOT NULL, n INTEGER NOT NULL, PRIMARY KEY (id, n));
 CREATE TABLE IF NOT EXISTS push_subs (userId TEXT NOT NULL, endpoint TEXT NOT NULL, p256dh TEXT, auth TEXT, cree INTEGER, PRIMARY KEY (userId, endpoint));
+CREATE TABLE IF NOT EXISTS engagements (id INTEGER PRIMARY KEY AUTOINCREMENT, cree INTEGER NOT NULL, objet TEXT, pole TEXT, source TEXT, nom TEXT NOT NULL, tel TEXT, email TEXT, ville TEXT, message TEXT, traite INTEGER NOT NULL DEFAULT 0, note TEXT);
+CREATE INDEX IF NOT EXISTS engagements_cree ON engagements(traite, cree);

@@ -589,3 +589,135 @@ a.ticket:hover, a.ticket:focus-visible { color: inherit; cursor: pointer; }
   content: ''; flex: 1; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(226,194,106,.3), transparent);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   TOUCHE MILITAIRE — Soldats de l'Éternel
+
+   Accents stencil, chevrons, bandes diagonales, langage opérationnel
+   discret. S'applique au-dessus des styles existants sans dépendre d'une
+   classe sur le body : les surtitres gagnent naturellement en gravité.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Surtitre : barre latérale dorée façon galon */
+.tete-section .surtitre {
+  position: relative;
+  padding-left: 14px;
+  display: inline-block;
+  color: var(--or, #e2c26a);
+}
+.tete-section { max-width: 850px; margin-inline: auto; }
+.tete-section .surtitre::before {
+  content: '';
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 14px;
+  background: linear-gradient(180deg, #e2c26a, #85650f);
+  border-radius: 1px;
+}
+
+/* Chevrons triples façon galon de grade — à appliquer librement */
+.galon {
+  display: inline-flex; gap: 2px;
+  color: var(--or, #e2c26a);
+}
+.galon::before, .galon::after, .galon > span {
+  content: '>';
+  font-family: 'DMMono', 'GeistMono-Regular', ui-monospace, monospace;
+  font-weight: 700; font-size: .72em;
+  letter-spacing: -.1em;
+  opacity: .7;
+}
+.galon::after { opacity: 1; }
+
+/* Bannière opérationnelle — en tête de section stratégique */
+.op-banniere {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 6px 14px 6px 10px;
+  background: linear-gradient(90deg, rgba(226,194,106,.14), transparent);
+  border-left: 3px solid var(--or, #e2c26a);
+  border-radius: 2px;
+  font-family: 'DMMono', 'GeistMono-Regular', ui-monospace, monospace;
+  font-size: .68rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--or, #e2c26a);
+  margin-bottom: 10px;
+}
+.op-banniere b { color: var(--texte, #e8ebf4); font-weight: 700; }
+
+/* Rayures militaires diagonales — accent décoratif discret */
+.rayures-mil {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(226,194,106,.08) 0,
+    rgba(226,194,106,.08) 4px,
+    transparent 4px,
+    transparent 10px
+  );
+}
+
+/* Badge « grade » minimal — pour une étape, un pôle, une étape de parcours */
+.grade {
+  display: inline-grid; place-items: center;
+  width: 32px; height: 32px;
+  background: linear-gradient(145deg, #0f1e3d, #1b2f5b);
+  border: 2px solid var(--or, #e2c26a);
+  color: var(--or, #e2c26a);
+  font-family: 'DMMono', 'GeistMono-Regular', ui-monospace, monospace;
+  font-weight: 700; font-size: .78rem;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(226,194,106,.2), 0 2px 4px rgba(0,0,0,.3);
+  position: relative;
+}
+.grade::before, .grade::after {
+  content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+  width: 60%; height: 1px; background: rgba(226,194,106,.4);
+}
+.grade::before { top: 4px; }
+.grade::after { bottom: 4px; }
+
+/* ─── Menu dynamique : bouton d'action flottant « COMMANDEMENT » ─── */
+.fab-cmd {
+  position: fixed;
+  right: 20px; bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 18px 12px 14px;
+  background: linear-gradient(145deg, #e2c26a, #85650f);
+  color: #0f1e3d;
+  border: 2px solid rgba(226,194,106,.6);
+  border-radius: 999px;
+  font-family: var(--f-titre, inherit);
+  font-size: .78rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+  box-shadow: 0 6px 18px rgba(0,0,0,.4), 0 0 0 4px rgba(226,194,106,.12);
+  text-decoration: none;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.fab-cmd:hover, .fab-cmd:focus-visible {
+  color: #0f1e3d;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,.5), 0 0 0 6px rgba(226,194,106,.2);
+}
+.fab-cmd svg { width: 16px; height: 16px; flex-shrink: 0; }
+.fab-cmd .pt {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #0f1e3d; display: inline-block;
+  animation: pulse-doux 2s ease-in-out infinite;
+}
+@media (max-width: 720px) {
+  .fab-cmd { bottom: calc(72px + env(safe-area-inset-bottom, 0px)); right: 14px; padding: 10px 14px 10px 12px; font-size: .72rem; }
+  .fab-cmd .lbl { display: none; }
+  .fab-cmd { gap: 0; }
+}
+
+/* ─── Dog-tag (identifiant discret pour les points SDE, pôles, etc.) ─── */
+.dog-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 8px 4px 10px;
+  background: rgba(10,15,29,.6);
+  border: 1px solid rgba(226,194,106,.3);
+  border-left: 3px solid var(--or, #e2c26a);
+  border-radius: 2px;
+  font-family: 'DMMono', 'GeistMono-Regular', ui-monospace, monospace;
+  font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--texte-2, #a4adc4);
+}
+.dog-tag b { color: var(--or, #e2c26a); font-weight: 700; }
+:root[data-theme="light"] .dog-tag { background: rgba(255,255,255,.6); }

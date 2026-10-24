@@ -1146,12 +1146,12 @@ html.anim .section { animation: section-in .5s ease-out both; }
         <p class="chapo">Le siège est à Abidjan. Chaque point SDE rassemble les soldats de son pays pour la prière, la formation et la mission.</p>
       </div>
       <div class="points">
-        <div class="point siege"><span class="iso">CI</span><span><b>Côte d'Ivoire</b><small>Siège · Abidjan, Cocody Deux-Plateaux</small><span class="pt-contact">Contact : +225 07 78 68 95 73</span></span></div>
-        <div class="point"><span class="iso">TN</span><span><b>Tunisie</b><small>Point SDE · Tunis</small><span class="pt-contact">Contact : infosoldat@gmail.com</span></span></div>
-        <div class="point"><span class="iso">BF</span><span><b>Burkina Faso</b><small>Point SDE · Ouagadougou</small><span class="pt-contact">Contact : infosoldat@gmail.com</span></span></div>
-        <div class="point"><span class="iso">IT</span><span><b>Italie</b><small>Point SDE</small><span class="pt-contact">Contact : infosoldat@gmail.com</span></span></div>
-        <div class="point"><span class="iso">CA</span><span><b>Canada</b><small>Point SDE</small><span class="pt-contact">Contact : infosoldat@gmail.com</span></span></div>
-        <div class="point"><span class="iso">US</span><span><b>États-Unis</b><small>Point SDE</small><span class="pt-contact">Contact : infosoldat@gmail.com</span></span></div>
+        <div class="point siege"><span class="iso">CI</span><span><b>Côte d'Ivoire</b><small>Siège · Abidjan, Cocody Deux-Plateaux</small><span class="pt-contact">Contact : +225 07 78 68 95 73</span><span class="dog-tag" style="margin-top:8px"><b>PT-01</b> · SIÈGE</span></span></div>
+        <div class="point"><span class="iso">TN</span><span><b>Tunisie</b><small>Point SDE · Tunis</small><span class="pt-contact">Contact : infosoldat@gmail.com</span><span class="dog-tag" style="margin-top:8px"><b>PT-02</b> · Maghreb</span></span></div>
+        <div class="point"><span class="iso">BF</span><span><b>Burkina Faso</b><small>Point SDE · Ouagadougou</small><span class="pt-contact">Contact : infosoldat@gmail.com</span><span class="dog-tag" style="margin-top:8px"><b>PT-03</b> · Sahel</span></span></div>
+        <div class="point"><span class="iso">IT</span><span><b>Italie</b><small>Point SDE</small><span class="pt-contact">Contact : infosoldat@gmail.com</span><span class="dog-tag" style="margin-top:8px"><b>PT-04</b> · Europe sud</span></span></div>
+        <div class="point"><span class="iso">CA</span><span><b>Canada</b><small>Point SDE</small><span class="pt-contact">Contact : infosoldat@gmail.com</span><span class="dog-tag" style="margin-top:8px"><b>PT-05</b> · Amérique nord</span></span></div>
+        <div class="point"><span class="iso">US</span><span><b>États-Unis</b><small>Point SDE</small><span class="pt-contact">Contact : infosoldat@gmail.com</span><span class="dog-tag" style="margin-top:8px"><b>PT-06</b> · Amérique nord</span></span></div>
       </div>
     </div>
   </section>
@@ -1528,14 +1528,17 @@ html.anim .section { animation: section-in .5s ease-out both; }
           </div>
           <div class="champ"><label for="f-objet">Votre demande</label><select id="f-objet" name="objet"><option>Découvrir le mouvement</option><option>Devenir membre</option><option>Traversée Prophétique Mensuelle</option><option>IN FIRE</option><option>Soldiers Academy</option><option>Holy Talk &amp; Holy Day</option><option>Missions et actions solidaires</option><option>ALEPH 12</option><option>Missions humanitaires (Daloa, Cocody)</option><option>Holy Brunch</option><option>Servir dans un pôle</option><option>Rejoindre une formation</option><option>Demande de prière</option><option>Autre</option></select></div>
           <div class="champ"><label for="f-msg">Quelques mots sur vous <span class="facult">facultatif</span></label><textarea id="f-msg" name="msg" placeholder="Votre parcours, votre église, ce qui vous amène…"></textarea></div>
-          <label class="accord" for="f-accord"><input id="f-accord" name="accord" type="checkbox" required><span>J'accepte que ces informations soient envoyées au secrétariat du mouvement SDE pour me recontacter. L'envoi passe par l'application que je choisis à l'étape suivante (WhatsApp ou ma messagerie e-mail). Le mouvement ne vend ni ne cède ces informations à d'autres organisations. <span class="oblig">obligatoire</span></span></label>
+          <label class="accord" for="f-accord"><input id="f-accord" name="accord" type="checkbox" required><span>J'accepte que ces informations soient enregistrées par le secrétariat du mouvement SDE (infosoldat@gmail.com) pour me recontacter. Le mouvement ne vend ni ne cède ces informations à d'autres organisations. <span class="oblig">obligatoire</span></span></label>
           <p class="erreur" id="f-erreur" role="alert" hidden></p>
-          <button class="bouton b-or" type="submit">Préparer ma demande <svg aria-hidden="true"><use href="#i-fleche"/></svg></button>
+          <button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-fleche"/></svg>Envoyer au secrétariat</button>
           <div class="envoi" id="envoi" hidden>
-            <b>Votre demande est prête.</b>
-            <p style="color:var(--gris);font-size:.95rem">Rien n'est encore envoyé. Touchez « Envoyer par WhatsApp » : WhatsApp s'ouvre avec votre message, il ne reste qu'à appuyer sur Envoyer. Ou copiez le texte pour l'envoyer par e-mail à infosoldat@gmail.com.</p>
+            <b id="envoi-titre">Votre demande a bien été reçue.</b>
+            <p id="envoi-msg" style="color:var(--gris);font-size:.95rem">Le secrétariat du mouvement a reçu votre message et vous recontactera sous peu. Un e-mail de confirmation peut être envoyé en complément.</p>
             <pre id="envoi-texte"></pre>
-            <div class="actions"><a class="bouton b-or" id="envoi-wa" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-msg"/></svg>Envoyer par WhatsApp</a><button class="bouton b-contour" type="button" id="envoi-copier">Copier le texte</button></div>
+            <div class="actions">
+              <a class="bouton b-contour" id="envoi-mail" href="#"><svg aria-hidden="true"><use href="#i-msg"/></svg>Doubler par e-mail</a>
+              <button class="bouton b-contour" type="button" id="envoi-copier">Copier le texte</button>
+            </div>
           </div>
         </form>
       </div>
@@ -1643,6 +1646,13 @@ html.anim .section { animation: section-in .5s ease-out both; }
 </dialog>
 
 <!-- ═══════════ NAVIGATION MOBILE (PWA) ═══════════ -->
+<!-- Bouton d'action flottant « Commandement » : accès rapide à l'engagement -->
+<a href="#rejoindre" class="fab-cmd" aria-label="Me poster — rejoindre le mouvement">
+  <span class="pt" aria-hidden="true"></span>
+  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3"/></svg>
+  <span class="lbl">Me poster</span>
+</a>
+
 <nav class="nav-mobile" aria-label="Navigation mobile">
   <ul>
     <li><a href="#accueil" class="act"><svg aria-hidden="true"><use href="#i-accueil"/></svg>Accueil</a></li>
@@ -1803,15 +1813,43 @@ html.anim .section { animation: section-in .5s ease-out both; }
   }
   decompte(); setInterval(decompte, 1000);
 
-  /* IN FIRE : confirmation WhatsApp */
+  /* IN FIRE : confirmation envoyée au secrétariat */
   const fv = document.getElementById("f-venue");
-  fv.addEventListener("submit", (e) => {
+  fv.addEventListener("submit", async (e) => {
     e.preventDefault();
     const nom = fv.nom.value.trim(), nb = Number(fv.nb.value) || 1, verr = document.getElementById("v-err");
     if (nom.length < 2) { verr.textContent = "Indiquez votre nom pour que l'équipe d'accueil vous attende."; verr.hidden = false; fv.nom.focus(); return; }
     verr.hidden = true;
-    const texte = `Shalom ! Je confirme ma venue à IN FIRE 2026, le samedi 31 octobre à 8h30 (Église MADEG, Cocody Deux-Plateaux Agban).\nNom : ${nom}\nNombre de personnes : ${nb >= 6 ? "6 ou plus" : nb}`;
-    window.open("https://wa.me/2250778689573?text=" + encodeURIComponent(texte), "_blank", "noopener");
+    const btn = fv.querySelector('button[type="submit"]');
+    const originalHTML = btn.innerHTML;
+    btn.disabled = true; btn.textContent = "Envoi en cours…";
+    const nbTexte = nb >= 6 ? "6 ou plus" : String(nb);
+    try {
+      const r = await fetch("/api/engager", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          objet: "IN FIRE 2026 — Confirmation de venue",
+          nom: nom,
+          message: `Nombre de personnes : ${nbTexte}`,
+          source: "mouvement-sde.org/#infire"
+        })
+      });
+      const j = await r.json();
+      if (r.ok && j.ok) {
+        verr.style.color = "var(--vert, #7ED8A8)";
+        verr.textContent = `✓ Merci ${nom.split(" ")[0]} ! Votre venue (${nbTexte}) est confirmée au secrétariat. Rendez-vous le 31 octobre à 8h30 à l'Église MADEG.`;
+        verr.hidden = false;
+        fv.reset();
+      } else {
+        const texte = `Je confirme ma venue à IN FIRE 2026 (31 oct., 8h30, Église MADEG).\nNom : ${nom}\nNombre de personnes : ${nbTexte}`;
+        window.location.href = `mailto:infosoldat@gmail.com?subject=${encodeURIComponent("IN FIRE 2026 — Confirmation de " + nom)}&body=${encodeURIComponent(texte)}`;
+      }
+    } catch {
+      const texte = `Je confirme ma venue à IN FIRE 2026 (31 oct., 8h30, Église MADEG).\nNom : ${nom}\nNombre de personnes : ${nbTexte}`;
+      window.location.href = `mailto:infosoldat@gmail.com?subject=${encodeURIComponent("IN FIRE 2026 — Confirmation de " + nom)}&body=${encodeURIComponent(texte)}`;
+    }
+    btn.disabled = false; btn.innerHTML = originalHTML;
   });
   document.getElementById("b-yango").addEventListener("click", () => {
     const adr = "Église MADEG, Cocody Deux-Plateaux Agban, Abidjan";
@@ -1829,10 +1867,10 @@ html.anim .section { animation: section-in .5s ease-out both; }
     new IntersectionObserver((l) => { hautPasse = !l[0].isIntersecting; maj(); }).observe(document.querySelector(".hero"));
   }
 
-  /* ═══════ Formulaire « Rejoindre » ═══════ */
+  /* ═══════ Formulaire « Rejoindre » — envoi direct au secrétariat ═══════ */
   const f = document.getElementById("form-rejoindre"), err = document.getElementById("f-erreur");
   document.querySelectorAll("[data-sujet]").forEach((a) => a.addEventListener("click", () => { const s = document.getElementById("f-objet"); [...s.options].forEach((o) => { if (o.textContent === a.dataset.sujet) s.value = o.value; }); }));
-  f.addEventListener("submit", (e) => {
+  f.addEventListener("submit", async (e) => {
     e.preventDefault();
     const d = new FormData(f), g = (k) => String(d.get(k) || "").trim();
     const manque = [];
@@ -1843,9 +1881,36 @@ html.anim .section { animation: section-in .5s ease-out both; }
     if (manque.length) { err.textContent = "Il manque " + manque.join(", ") + "."; err.hidden = false; return; }
     err.hidden = true;
     const texte = `Shalom ! Demande depuis mouvement-sde.org\n\nObjet : ${g("objet")}\nNom : ${g("nom")}\nTéléphone : ${g("tel")}${g("mail") ? "\nE-mail : " + g("mail") : ""}\nVille : ${g("ville")}${g("msg") ? "\n\n" + g("msg") : ""}`;
-    document.getElementById("envoi-texte").textContent = texte;
-    document.getElementById("envoi-wa").href = "https://wa.me/2250778689573?text=" + encodeURIComponent(texte);
     const box = document.getElementById("envoi");
+    const titre = document.getElementById("envoi-titre");
+    const msgEl = document.getElementById("envoi-msg");
+    document.getElementById("envoi-texte").textContent = texte;
+    const sujetMail = `Demande SDE — ${g("objet")} (${g("nom")})`;
+    document.getElementById("envoi-mail").href = `mailto:infosoldat@gmail.com?subject=${encodeURIComponent(sujetMail)}&body=${encodeURIComponent(texte)}`;
+    const btn = f.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = "Envoi en cours…";
+    try {
+      const r = await fetch("/api/engager", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          objet: g("objet"), nom: g("nom"), tel: g("tel"), email: g("mail"),
+          ville: g("ville"), message: g("msg"), source: "mouvement-sde.org/#rejoindre"
+        })
+      });
+      const j = await r.json();
+      if (r.ok && j.ok) {
+        titre.textContent = "✓ Votre demande a bien été transmise au secrétariat.";
+        msgEl.textContent = "Elle est enregistrée et un responsable vous recontactera sous peu via votre téléphone ou e-mail. Vous pouvez aussi doubler par e-mail ci-dessous si vous souhaitez conserver une trace de votre côté.";
+      } else {
+        titre.textContent = "⚠ L'envoi au serveur n'a pas abouti.";
+        msgEl.textContent = (j && j.message) || "Vous pouvez quand même adresser votre demande par e-mail au secrétariat :";
+      }
+    } catch {
+      titre.textContent = "⚠ Connexion impossible au serveur.";
+      msgEl.textContent = "Vous pouvez adresser votre demande par e-mail au secrétariat :";
+    }
+    btn.disabled = false; btn.innerHTML = '<svg aria-hidden="true"><use href="#i-fleche"/></svg>Envoyer au secrétariat';
     box.hidden = false;
     box.scrollIntoView({ behavior: reduit ? "auto" : "smooth", block: "nearest" });
   });
@@ -1958,13 +2023,32 @@ html.anim .section { animation: section-in .5s ease-out both; }
   function afficherPole(n, sens) {
     polActif = n; const P = POLES[n];
     document.getElementById("fp-img").src = "/vitrine/illus/pole-" + n + ".svg";
-    const msg = "Bonjour, je souhaite servir dans le Pôle " + n + " (" + P.t + ") du Mouvement Soldats de l'Éternel.";
     fpc.innerHTML = `<span class="num">Pôle ${n} sur 5</span><h2 id="fp-titre">${P.t}</h2><p class="fp-chapo">${P.chapo}</p>
       <h3>Ce que fait le pôle</h3><ul class="fp-liste">${P.fait.map((x) => `<li>${x}</li>`).join("")}</ul>
       <h3>Départements</h3><div class="fp-depts">${P.depts.map((x) => `<span>${x}</span>`).join("")}</div>
       <h3>Projets et initiatives</h3><div class="fp-projets">${P.projets.map(([r, t, d]) => `<div class="fp-projet"><small>${r}</small><b>${t}</b><p>${d}</p></div>`).join("")}</div>
       <blockquote class="fp-verset">« ${P.verset[0]} »<cite>${P.verset[1]}</cite></blockquote>
-      <div class="fp-actions"><a class="bouton b-or" href="https://wa.me/2250778689573?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Servir dans ce pôle</a><a class="bouton b-contour" href="#rejoindre" data-fp="contact">Écrire au mouvement</a></div>`;
+      <div class="fp-actions"><button type="button" class="bouton b-or" data-fp="servir">Servir dans ce pôle <svg aria-hidden="true"><use href="#i-fleche"/></svg></button><button type="button" class="bouton b-contour" data-fp="contact">Écrire au mouvement</button></div>`;
+    /* Les boutons amènent au formulaire interne #rejoindre avec le pôle pré-rempli,
+       plutôt que de rediriger vers WhatsApp. Les demandes sont enregistrées côté
+       secrétariat (infosoldat@gmail.com) via /api/engager. */
+    fpc.querySelector('[data-fp="servir"]').addEventListener("click", () => {
+      fp.close ? fp.close() : fp.removeAttribute("open");
+      document.body.style.overflow = "";
+      const s = document.getElementById("f-objet");
+      [...s.options].forEach((o) => { if (o.value === "Servir dans un pôle") s.value = o.value; });
+      const msg = document.getElementById("f-msg");
+      const preambule = `Pôle ${n} — ${P.t}\n\n`;
+      if (!msg.value.includes("Pôle ")) msg.value = preambule + msg.value;
+      document.getElementById("f-rejoindre").scrollIntoView({ behavior: reduit ? "auto" : "smooth" });
+      setTimeout(() => document.getElementById("f-nom").focus(), 400);
+    });
+    fpc.querySelector('[data-fp="contact"]').addEventListener("click", () => {
+      fp.close ? fp.close() : fp.removeAttribute("open");
+      document.body.style.overflow = "";
+      document.getElementById("f-rejoindre").scrollIntoView({ behavior: reduit ? "auto" : "smooth" });
+      setTimeout(() => document.getElementById("f-nom").focus(), 400);
+    });
     const prec = n === 1 ? 5 : n - 1, suiv = n === 5 ? 1 : n + 1;
     document.getElementById("fp-prec").textContent = POLES[prec].t; document.getElementById("fp-suiv").textContent = POLES[suiv].t;
     fpc.scrollTop = 0;
