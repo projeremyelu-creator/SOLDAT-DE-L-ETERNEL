@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="fr" dir="ltr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Formulaire Bilan 2026 & Projets 2027 · Soldats de l'Éternel</title>
+<meta name="description" content="Formulaire de collecte d'informations et sondage : bilan des activités SDE 2026 et propositions de projets pour 2027.">
+<meta name="theme-color" content="#0f1e3d">
+<link rel="icon" href="/icone-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@400;500;600;700;800;900&family=Saira+Stencil+One&display=swap" rel="stylesheet">
+<style>
+/* ═══════════ DESIGN SYSTEM SDE ═══════════ */
+:root {
+  --nuit: #0f1e3d;
+  --nuit-2: #1b2f5b;
+  --nuit-3: #2c4377;
+  --or: #e2c26a;
+  --or-lum: #e2c26a;
+  --or-marque: #b8901f;
+  --or-sombre: #85650f;
+  --ivoire: #eef0f5;
+  --bordeaux: #641D2D;
+  --fond: #0a0f1d;
+  --surface: #121a2e;
+  --surface-2: #19233b;
+  --texte: #e8ebf4;
+  --texte-2: #a4adc4;
+  --bordure: rgba(43,67,119,.4);
+  --voile: rgba(10,15,29,.85);
+  --grad-or: linear-gradient(135deg, #b8901f, #e2c26a);
+  --ombre: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.5);
+  --ombre-carte: 0 2px 12px rgba(0,0,0,.3);
+  --f-titre: "Saira Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-texte: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --f-marque: "Saira Stencil One", "Saira Condensed", Impact, sans-serif;
+  --r: 10px;
+  --gutter: 16px;
+  --max: 800px;
+  --ease: cubic-bezier(.4,0,.2,1);
+  --duree: .35s;
+}
+:root[data-theme="light"] {
+  --or: #85650f; --or-lum: #b8901f;
+  --fond: #eef0f5; --surface: #ffffff; --surface-2: #f3f5f9;
+  --texte: #161e35; --texte-2: #535c75;
+  --bordure: rgba(221,225,234,.6); --voile: rgba(238,240,245,.85);
+  --ombre: 0 1px 2px rgba(15,30,61,.06), 0 12px 32px rgba(15,30,61,.14);
+  --ombre-carte: 0 2px 12px rgba(15,30,61,.08);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --or: #85650f; --or-lum: #b8901f;
+    --fond: #eef0f5; --surface: #ffffff; --surface-2: #f3f5f9;
+    --texte: #161e35; --texte-2: #535c75;
+    --bordure: rgba(221,225,234,.6); --voile: rgba(238,240,245,.85);
+    --ombre: 0 1px 2px rgba(15,30,61,.06), 0 12px 32px rgba(15,30,61,.14);
+    --ombre-carte: 0 2px 12px rgba(15,30,61,.08);
+  }
+}
+
+/* ═══════════ BASE ═══════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { font-family: var(--f-texte); font-size: 16px; line-height: 1.7; color: var(--texte); background: var(--fond); -webkit-font-smoothing: antialiased; overflow-x: hidden; transition: background var(--duree) var(--ease), color var(--duree) var(--ease); min-height: 100dvh; display: flex; flex-direction: column; }
+a { color: var(--or); text-decoration: none; }
+button { font: inherit; border: none; cursor: pointer; background: none; color: inherit; }
+h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.15; letter-spacing: .04em; text-transform: uppercase; }
+
+/* ═══════════ HEADER ═══════════ */
+.entete { position: sticky; top: 0; z-index: 1000; background: rgba(15,30,61,.95); backdrop-filter: blur(16px) saturate(1.6); border-bottom: 2px solid var(--or-marque); color: var(--ivoire); }
+.entete .enveloppe { display: flex; align-items: center; justify-content: space-between; min-height: 62px; max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
+.marque { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+.marque .logo { width: 36px; height: 36px; background: url(/vitrine/logo.png) center/contain no-repeat; flex-shrink: 0; }
+.marque b { font-family: var(--f-marque); color: var(--or); font-size: 1.1rem; letter-spacing: .06em; }
+.marque small { display: block; font-size: .65rem; color: rgba(255,255,255,.55); }
+.entete-actions { display: flex; align-items: center; gap: 8px; }
+.btn-theme { width: 42px; height: 42px; border-radius: var(--r); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.65); background: transparent; border: 1px solid rgba(255,255,255,.2); transition: all .2s var(--ease); }
+.btn-theme:hover { color: var(--or-lum); border-color: var(--or-lum); }
+
+/* ═══════════ LAYOUT ═══════════ */
+.contenu { flex: 1; }
+.enveloppe { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+
+/* ═══════════ HERO COMPACT ═══════════ */
+.hero-form { text-align: center; padding: 48px 0 32px; }
+.hero-form h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); color: var(--or); margin-bottom: 8px; }
+.hero-form .sous-titre { color: var(--texte-2); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+.hero-form .badge-annee { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px; padding: 6px 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--or-marque); font-family: var(--f-titre); font-weight: 700; font-size: .85rem; color: var(--or); letter-spacing: .06em; text-transform: uppercase; }
+
+/* ═══════════ FORMULAIRE ═══════════ */
+.form-carte { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--r); padding: 32px 28px; margin-bottom: 32px; box-shadow: var(--ombre-carte); }
+.form-section { margin-bottom: 28px; }
+.form-section:last-child { margin-bottom: 0; }
+.form-section-titre { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; color: var(--or); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--bordure); }
+.form-section-titre svg { width: 22px; height: 22px; flex-shrink: 0; color: var(--or-marque); }
+.grille { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .grille { grid-template-columns: 1fr; } }
+.champ { display: flex; flex-direction: column; gap: 5px; }
+.champ.plein { grid-column: 1 / -1; }
+.champ label { font-size: .88rem; font-weight: 600; color: var(--texte); }
+.champ label .req { color: var(--or-marque); margin-left: 2px; }
+.champ input, .champ select, .champ textarea {
+  padding: 10px 14px; border-radius: var(--r); border: 1px solid var(--bordure);
+  background: var(--surface-2); color: var(--texte); font-size: 1rem;
+  font-family: var(--f-texte); min-height: 44px; transition: border-color .2s var(--ease);
+}
+.champ input:focus, .champ select:focus, .champ textarea:focus {
+  outline: 2px solid var(--or); outline-offset: 2px; border-color: var(--or);
+}
+.champ textarea { min-height: 100px; resize: vertical; }
+.champ input[type="file"] { padding: 8px; font-size: .9rem; }
+.champ input[type="date"] { appearance: none; -webkit-appearance: none; }
+.champ .aide { font-size: .78rem; color: var(--texte-2); margin-top: 2px; }
+.champ.erreur input, .champ.erreur select, .champ.erreur textarea { border-color: var(--bordeaux); }
+.champ.erreur .msg-erreur { color: var(--bordeaux); font-size: .8rem; font-weight: 600; }
+
+/* Photo preview */
+.photo-zone { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.photo-apercu { width: 100px; height: 100px; border-radius: var(--r); border: 2px dashed var(--bordure); display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--surface-2); transition: border-color .2s var(--ease); flex-shrink: 0; }
+.photo-apercu img { width: 100%; height: 100%; object-fit: cover; }
+.photo-apercu.has-img { border-style: solid; border-color: var(--or-marque); }
+.photo-input-wrap { flex: 1; min-width: 180px; }
+
+/* Satisfaction (étoiles) */
+.etoiles { display: flex; gap: 6px; margin-top: 4px; }
+.etoiles input { display: none; }
+.etoiles label { font-size: 2rem; cursor: pointer; color: var(--bordure); transition: color .15s var(--ease), transform .1s var(--ease); user-select: none; }
+.etoiles label:hover, .etoiles label.lit { color: var(--or); }
+.etoiles label:hover { transform: scale(1.15); }
+
+/* Domaines (chips) */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--bordure); background: var(--surface-2); color: var(--texte-2); font-size: .88rem; font-weight: 500; cursor: pointer; transition: all .2s var(--ease); user-select: none; }
+.chip:hover { border-color: var(--or); color: var(--or); }
+.chip.sel { background: var(--or-marque); color: #fff; border-color: var(--or-marque); }
+.chip input { display: none; }
+
+/* Submit */
+.bouton-envoyer {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 14px 28px; border-radius: var(--r);
+  background: var(--grad-or); color: var(--nuit); font-family: var(--f-titre);
+  font-weight: 700; font-size: 1.1rem; letter-spacing: .06em; text-transform: uppercase;
+  border: none; cursor: pointer; transition: all .2s var(--ease); min-height: 52px;
+}
+.bouton-envoyer:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(184,144,31,.4); }
+.bouton-envoyer:disabled { opacity: .5; cursor: wait; transform: none; filter: none; box-shadow: none; }
+.bouton-envoyer svg { width: 20px; height: 20px; }
+
+/* Spinner */
+.spinner { width: 20px; height: 20px; border: 3px solid rgba(15,30,61,.2); border-top-color: var(--nuit); border-radius: 50%; animation: spin .6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Toast */
+.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px); z-index: 9999; padding: 14px 24px; border-radius: var(--r); font-weight: 600; font-size: .95rem; box-shadow: var(--ombre); opacity: 0; transition: all .35s var(--ease); pointer-events: none; max-width: calc(100% - 32px); text-align: center; }
+.toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast.succes { background: #0f5132; color: #d1e7dd; border: 1px solid #198754; }
+.toast.erreur { background: #641D2D; color: #f8d7da; border: 1px solid #842029; }
+
+/* Progression */
+.progression { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
+.etape { display: flex; align-items: center; gap: 8px; }
+.etape-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--f-titre); font-weight: 700; font-size: .9rem; border: 2px solid var(--bordure); color: var(--texte-2); transition: all .3s var(--ease); }
+.etape.act .etape-num { background: var(--or-marque); color: #fff; border-color: var(--or-marque); }
+.etape.fait .etape-num { background: #198754; color: #fff; border-color: #198754; }
+.etape-label { font-size: .8rem; font-weight: 600; color: var(--texte-2); }
+.etape.act .etape-label { color: var(--or); }
+.etape-sep { width: 32px; height: 2px; background: var(--bordure); border-radius: 2px; }
+@media (max-width: 500px) { .etape-label { display: none; } .etape-sep { width: 20px; } }
+
+/* Lien retour */
+.retour { display: inline-flex; align-items: center; gap: 6px; color: var(--or); font-weight: 600; font-size: .9rem; margin-bottom: 20px; }
+.retour:hover { color: var(--or-lum); }
+.retour svg { width: 18px; height: 18px; }
+
+/* ═══════════ FOOTER ═══════════ */
+.pied { background: var(--nuit); color: var(--ivoire); padding: 32px 0; border-top: 2px solid var(--or-marque); margin-top: auto; text-align: center; }
+.pied p { font-size: .85rem; color: var(--texte-2); }
+.pied a { color: var(--or); }
+.pied a:hover { color: var(--or-lum); }
+
+/* ═══════════ RIPPLE ═══════════ */
+.ripple-host { position: relative; overflow: hidden; }
+.ripple { position: absolute; border-radius: 50%; background: var(--or-marque); opacity: .18; transform: scale(0); pointer-events: none; animation: ripple-out .55s ease-out forwards; }
+@keyframes ripple-out { to { transform: scale(2.5); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .ripple { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ EN-TÊTE ═══════════ -->
+<header class="entete">
+  <div class="enveloppe">
+    <a href="/vitrine/" class="marque" aria-label="Accueil Soldats de l'Éternel">
+      <span class="logo" role="img" aria-hidden="true"></span>
+      <span><b>SDE</b><small>Soldats de l'Éternel</small></span>
+    </a>
+    <div class="entete-actions">
+      <button class="btn-theme" id="btnTheme" aria-label="Changer de thème" title="Mode clair / sombre">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="contenu">
+  <div class="enveloppe" style="padding-top: 16px; padding-bottom: 48px;">
+
+    <a href="/vitrine/" class="retour">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Retour au site
+    </a>
+
+    <div class="hero-form">
+      <span class="badge-annee">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Bilan 2026 & Projets 2027
+      </span>
+      <h1>Formulaire de collecte</h1>
+      <p class="sous-titre">Complétez ce formulaire pour nous aider à dresser le bilan des activités SDE 2026 et à préparer les projets 2027. Tous les champs sont obligatoires.</p>
+    </div>
+
+    <!-- Progression -->
+    <div class="progression" id="progression">
+      <div class="etape act" data-etape="1"><span class="etape-num">1</span><span class="etape-label">Identité</span></div>
+      <span class="etape-sep"></span>
+      <div class="etape" data-etape="2"><span class="etape-num">2</span><span class="etape-label">Bilan</span></div>
+      <span class="etape-sep"></span>
+      <div class="etape" data-etape="3"><span class="etape-num">3</span><span class="etape-label">Envoi</span></div>
+    </div>
+
+    <form id="formulaire" enctype="multipart/form-data" novalidate>
+
+      <!-- ═══ ÉTAPE 1 : Identité ═══ -->
+      <div class="form-carte" id="etape1">
+        <div class="form-section">
+          <h2 class="form-section-titre">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Informations personnelles
+          </h2>
+          <div class="grille">
+            <div class="champ">
+              <label for="f-photo">Photo <span class="req">*</span></label>
+              <div class="photo-zone">
+                <div class="photo-apercu" id="photoApercu">
+                  <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </div>
+                <div class="photo-input-wrap">
+                  <input type="file" id="f-photo" name="photo" accept="image/*" required>
+                  <span class="aide">JPG, PNG — 5 Mo maximum</span>
+                </div>
+              </div>
+            </div>
+            <div class="champ">
+              <label for="f-nom">Nom <span class="req">*</span></label>
+              <input id="f-nom" name="nom" autocomplete="family-name" autocapitalize="words" maxlength="80" required>
+            </div>
+            <div class="champ">
+              <label for="f-prenom">Prenom <span class="req">*</span></label>
+              <input id="f-prenom" name="prenom" autocomplete="given-name" autocapitalize="words" maxlength="80" required>
+            </div>
+            <div class="champ">
+              <label for="f-statut">Statut matrimonial <span class="req">*</span></label>
+              <select id="f-statut" name="statut_matrimonial" required>
+                <option value="">— Choisir —</option>
+                <option>Celibataire</option>
+                <option>Marie(e)</option>
+                <option>Divorce(e)</option>
+                <option>Veuf / Veuve</option>
+              </select>
+            </div>
+            <div class="champ">
+              <label for="f-profession">Profession <span class="req">*</span></label>
+              <input id="f-profession" name="profession" maxlength="120" required>
+            </div>
+            <div class="champ">
+              <label for="f-naissance">Date de naissance <span class="req">*</span></label>
+              <input type="date" id="f-naissance" name="date_naissance" required>
+            </div>
+            <div class="champ">
+              <label for="f-lieu">Lieu de naissance <span class="req">*</span></label>
+              <input id="f-lieu" name="lieu_naissance" maxlength="120" required placeholder="Ville, Pays">
+            </div>
+            <div class="champ">
+              <label for="f-tel">Telephone <span class="req">*</span></label>
+              <input type="tel" id="f-tel" name="telephone" autocomplete="tel" inputmode="tel" maxlength="25" required placeholder="+225 07 00 00 00 00">
+            </div>
+            <div class="champ">
+              <label for="f-email">E-mail <span class="req">*</span></label>
+              <input type="email" id="f-email" name="email" autocomplete="email" maxlength="120" required>
+            </div>
+            <div class="champ">
+              <label for="f-ville">Ville de residence <span class="req">*</span></label>
+              <input id="f-ville" name="ville" maxlength="120" required placeholder="Abidjan, Cote d'Ivoire">
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:20px">
+          <button type="button" class="bouton-envoyer" style="width:auto;padding:12px 32px;font-size:1rem" onclick="allerEtape(2)">
+            Suivant
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══ ÉTAPE 2 : Bilan & Projets ═══ -->
+      <div class="form-carte" id="etape2" style="display:none">
+        <div class="form-section">
+          <h2 class="form-section-titre">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Bilan des activites SDE 2026
+          </h2>
+          <div class="grille">
+            <div class="champ plein">
+              <label>Satisfaction globale des activites 2026 <span class="req">*</span></label>
+              <div class="etoiles" id="etoiles">
+                <input type="radio" name="satisfaction_2026" value="1" id="e1" required><label for="e1" data-val="1">&#9733;</label>
+                <input type="radio" name="satisfaction_2026" value="2" id="e2"><label for="e2" data-val="2">&#9733;</label>
+                <input type="radio" name="satisfaction_2026" value="3" id="e3"><label for="e3" data-val="3">&#9733;</label>
+                <input type="radio" name="satisfaction_2026" value="4" id="e4"><label for="e4" data-val="4">&#9733;</label>
+                <input type="radio" name="satisfaction_2026" value="5" id="e5"><label for="e5" data-val="5">&#9733;</label>
+              </div>
+              <span class="aide" id="etoile-txt">Cliquez pour noter de 1 a 5</span>
+            </div>
+            <div class="champ plein">
+              <label for="f-marquantes">Activites les plus marquantes en 2026 <span class="req">*</span></label>
+              <textarea id="f-marquantes" name="activites_marquantes" maxlength="2000" required placeholder="Quels evenements, formations ou actions vous ont le plus marque(e) cette annee ?"></textarea>
+            </div>
+            <div class="champ plein">
+              <label for="f-ameliorer">Points a ameliorer <span class="req">*</span></label>
+              <textarea id="f-ameliorer" name="points_ameliorer" maxlength="2000" required placeholder="Qu'est-ce qui pourrait etre ameliore dans l'organisation ou les activites ?"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2 class="form-section-titre">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Propositions pour 2027
+          </h2>
+          <div class="grille">
+            <div class="champ plein">
+              <label>Domaines prioritaires pour 2027</label>
+              <div class="chips" id="chips">
+                <label class="chip"><input type="checkbox" name="domaine" value="evangelisation">Evangelisation</label>
+                <label class="chip"><input type="checkbox" name="domaine" value="formation">Formation</label>
+                <label class="chip"><input type="checkbox" name="domaine" value="priere">Priere & Intercession</label>
+                <label class="chip"><input type="checkbox" name="domaine" value="jeunesse">Jeunesse</label>
+                <label class="chip"><input type="checkbox" name="domaine" value="social">Action sociale</label>
+                <label class="chip"><input type="checkbox" name="domaine" value="communication">Communication</label>
+                <label class="chip"><input type="checkbox" name="domaine" value="implantation">Implantation</label>
+                <label class="chip"><input type="checkbox" name="domaine" value="media">Media & Digital</label>
+                <label class="chip"><input type="checkbox" name="domaine" value="conference">Conferences</label>
+                <label class="chip"><input type="checkbox" name="domaine" value="edition">Edition & Publications</label>
+              </div>
+            </div>
+            <div class="champ plein">
+              <label for="f-projets">Vos propositions de projets pour 2027 <span class="req">*</span></label>
+              <textarea id="f-projets" name="propositions_2027" maxlength="3000" required placeholder="Decrivez les projets, activites ou initiatives que vous proposez pour l'annee 2027."></textarea>
+            </div>
+            <div class="champ plein">
+              <label for="f-message">Message libre <span class="req">*</span></label>
+              <textarea id="f-message" name="message" maxlength="3000" required placeholder="Tout autre commentaire, suggestion ou remarque que vous souhaitez partager."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap">
+          <button type="button" class="bouton-envoyer" style="width:auto;padding:12px 32px;font-size:1rem;background:var(--surface-2);color:var(--texte);flex:0" onclick="allerEtape(1)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Precedent
+          </button>
+          <button type="submit" class="bouton-envoyer" id="btnEnvoyer" style="flex:1;min-width:200px">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Envoyer le formulaire
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+    <!-- Ecran de succes -->
+    <div id="ecranSucces" style="display:none">
+      <div class="form-carte" style="text-align:center;padding:48px 28px">
+        <div style="width:72px;height:72px;border-radius:50%;background:#198754;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2 style="color:var(--or);font-size:1.5rem;margin-bottom:8px">Merci pour votre participation !</h2>
+        <p style="color:var(--texte-2);max-width:480px;margin:0 auto 24px">Votre formulaire a ete enregistre avec succes. Vos reponses nous aideront a dresser le bilan 2026 et a preparer les projets 2027 du mouvement SDE.</p>
+        <a href="/vitrine/" class="bouton-envoyer" style="width:auto;display:inline-flex;padding:12px 32px;font-size:1rem;text-decoration:none">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Retour au site
+        </a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="pied">
+  <div class="enveloppe">
+    <p>&copy; 2024–2027 <a href="/vitrine/">Soldats de l'Eternel</a> — Mouvement Prophetico-Apostolique pour le reveil spirituel des nations.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════ THEME ═══════════ */
+(function(){
+  const r = document.documentElement;
+  const pref = localStorage.getItem("sde-theme");
+  if (pref) r.setAttribute("data-theme", pref);
+  document.getElementById("btnTheme").addEventListener("click", () => {
+    const t = r.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    r.setAttribute("data-theme", t);
+    localStorage.setItem("sde-theme", t);
+  });
+})();
+
+/* ═══════════ PHOTO PREVIEW ═══════════ */
+document.getElementById("f-photo").addEventListener("change", function() {
+  const apercu = document.getElementById("photoApercu");
+  if (this.files && this.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      apercu.innerHTML = '<img src="' + e.target.result + '" alt="Apercu">';
+      apercu.classList.add("has-img");
+    };
+    reader.readAsDataURL(this.files[0]);
+  }
+});
+
+/* ═══════════ ETOILES ═══════════ */
+const etoilesLabels = ["Tres insatisfait", "Insatisfait", "Neutre", "Satisfait", "Tres satisfait"];
+document.querySelectorAll(".etoiles label").forEach(lab => {
+  lab.addEventListener("click", () => {
+    const val = parseInt(lab.dataset.val);
+    document.querySelectorAll(".etoiles label").forEach(l => {
+      l.classList.toggle("lit", parseInt(l.dataset.val) <= val);
+    });
+    document.getElementById("etoile-txt").textContent = etoilesLabels[val - 1] + " (" + val + "/5)";
+  });
+  lab.addEventListener("mouseenter", () => {
+    const val = parseInt(lab.dataset.val);
+    document.querySelectorAll(".etoiles label").forEach(l => {
+      l.style.color = parseInt(l.dataset.val) <= val ? "var(--or)" : "";
+    });
+  });
+});
+document.querySelector(".etoiles").addEventListener("mouseleave", () => {
+  document.querySelectorAll(".etoiles label").forEach(l => { l.style.color = ""; });
+});
+
+/* ═══════════ CHIPS ═══════════ */
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    const cb = chip.querySelector("input");
+    /* le click natif toggle deja, on sync la classe */
+    setTimeout(() => chip.classList.toggle("sel", cb.checked), 0);
+  });
+});
+
+/* ═══════════ ETAPES ═══════════ */
+let etapeCourante = 1;
+function allerEtape(n) {
+  if (n === 2) {
+    /* Valider etape 1 */
+    const champs1 = document.querySelectorAll("#etape1 [required]");
+    let ok = true;
+    champs1.forEach(c => {
+      if (!c.value || (c.type === "file" && !c.files.length)) {
+        c.closest(".champ")?.classList.add("erreur");
+        ok = false;
+      } else {
+        c.closest(".champ")?.classList.remove("erreur");
+      }
+    });
+    if (!ok) { toast("Veuillez remplir tous les champs obligatoires.", "erreur"); return; }
+  }
+  etapeCourante = n;
+  document.getElementById("etape1").style.display = n === 1 ? "" : "none";
+  document.getElementById("etape2").style.display = n === 2 ? "" : "none";
+  document.querySelectorAll(".progression .etape").forEach(e => {
+    const en = parseInt(e.dataset.etape);
+    e.classList.toggle("act", en === n);
+    e.classList.toggle("fait", en < n);
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ═══════════ TOAST ═══════════ */
+function toast(msg, type) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.className = "toast " + type;
+  requestAnimationFrame(() => el.classList.add("visible"));
+  setTimeout(() => el.classList.remove("visible"), 4000);
+}
+
+/* ═══════════ ENVOI ═══════════ */
+document.getElementById("formulaire").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById("btnEnvoyer");
+
+  /* Valider etape 2 */
+  const sat = document.querySelector('input[name="satisfaction_2026"]:checked');
+  if (!sat) { toast("Veuillez indiquer votre satisfaction globale.", "erreur"); return; }
+  const champs2 = document.querySelectorAll("#etape2 textarea[required]");
+  let ok = true;
+  champs2.forEach(c => {
+    if (!c.value.trim()) { c.closest(".champ")?.classList.add("erreur"); ok = false; }
+    else { c.closest(".champ")?.classList.remove("erreur"); }
+  });
+  if (!ok) { toast("Veuillez remplir tous les champs obligatoires.", "erreur"); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Envoi en cours...';
+
+  const fd = new FormData(this);
+  /* Rassembler les domaines en une chaine */
+  const domaines = Array.from(document.querySelectorAll('input[name="domaine"]:checked')).map(c => c.value).join(", ");
+  fd.delete("domaine");
+  fd.set("domaines_prioritaires", domaines);
+
+  try {
+    const r = await fetch("/api/formulaire", { method: "POST", body: fd });
+    const j = await r.json();
+    if (j.ok) {
+      document.getElementById("formulaire").style.display = "none";
+      document.getElementById("progression").style.display = "none";
+      document.getElementById("ecranSucces").style.display = "";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      toast(j.message || "Erreur lors de l'envoi.", "erreur");
+      btn.disabled = false;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Envoyer le formulaire';
+    }
+  } catch (err) {
+    toast("Erreur reseau. Verifiez votre connexion.", "erreur");
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Envoyer le formulaire';
+  }
+});
+
+/* ═══════════ RIPPLE ═══════════ */
+const reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (!reduit) {
+  document.addEventListener("pointerdown", (e) => {
+    const cible = e.target.closest(".bouton-envoyer, .chip, .btn-theme, .retour");
+    if (!cible) return;
+    cible.classList.add("ripple-host");
+    const rect = cible.getBoundingClientRect();
+    const dim = Math.max(rect.width, rect.height) * 2;
+    const rip = document.createElement("span");
+    rip.className = "ripple";
+    rip.style.cssText = "width:" + dim + "px;height:" + dim + "px;left:" + (e.clientX - rect.left - dim/2) + "px;top:" + (e.clientY - rect.top - dim/2) + "px;";
+    cible.appendChild(rip);
+    rip.addEventListener("animationend", () => rip.remove());
+  });
+}
+</script>
+</body>
+</html>

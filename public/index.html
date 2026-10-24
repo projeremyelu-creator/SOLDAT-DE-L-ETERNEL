@@ -1560,7 +1560,7 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
     noms: {},
     vue: "accueil",
     sous: { membres: "tous", agenda: "avenir", secretariat: "encours", finances: "toutes", garnisons: "carte", cotis: "fixes", projets: "actifs", academie: "encours", portevoix: "annonces", chambre: "requetes", arsenal: "biblio" },
-    f: { membres: { q: "", pole: "", statut: "", garnison: "" }, finances: { q: "" }, agenda: { q: "", type: "", garnison: "" }, secretariat: { q: "" }, pointage: { q: "", seuls: false, tous: false }, academie: { q: "", programme: "" }, arsenal: { q: "", type: "", theme: "" }, sel: { q: "" }, assiduite: { periode: "3m", type: "" }, cotis: { q: "", filtre: "tous" }, discipline: { statut: "encours" }, voyants: { filtre: "tous" }, speciales: { filtre: "ouvertes" }, offrandes: { type: "", q: "" }, projets: { q: "", cat: "", taches: "toutes" } },
+    f: { membres: { q: "", pole: "", statut: "", garnison: "" }, finances: { q: "" }, agenda: { q: "", type: "", garnison: "" }, secretariat: { q: "" }, pointage: { q: "", seuls: false, tous: false }, academie: { q: "", programme: "", _ps: "" }, arsenal: { q: "", type: "", theme: "" }, sel: { q: "" }, assiduite: { periode: "3m", type: "" }, cotis: { q: "", filtre: "tous" }, discipline: { statut: "encours" }, voyants: { filtre: "tous" }, speciales: { filtre: "ouvertes" }, offrandes: { type: "", q: "" }, projets: { q: "", cat: "", taches: "toutes" } },
     mois: moisCourant(),
     limite: 80,
     pt: nouveauPointage(null),
@@ -3816,7 +3816,10 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
       <div class="stat"><span class="stat-l">Apprenants</span><span class="stat-v">${nb(apprenants.length)}</span><span class="stat-m">Membres inscrits au moins une fois</span></div>
       <div class="stat"><span class="stat-l">${I("i-award")}Certifiés en ${an}</span><span class="stat-v">${nb(certifies)}</span><span class="stat-m">Attestations délivrables</span></div>
       <div class="stat"><span class="stat-l">Programmes</span><span class="stat-v">${nb(c.programmes.length)}</span><span class="stat-m">${esc(c.programmes.slice(0, 2).join(", "))}${c.programmes.length > 2 ? "…" : ""}</span></div></div>`;
-    out += sousOnglets("academie", [["encours", "En cours", par.encours.length], ["avenir", "À venir", par.avenir.length], ["terminees", "Terminées", par.terminee.length], ["apprenants", "Apprenants", apprenants.length]]);
+    const tabsAcad = [["encours", "En cours", par.encours.length], ["avenir", "À venir", par.avenir.length], ["terminees", "Terminées", par.terminee.length], ["apprenants", "Apprenants", apprenants.length]];
+    if (peutAdmin()) tabsAcad.push(["preinscriptions", "Préinscriptions", S._preinsAcad ? S._preinsAcad.length : "…"]);
+    out += sousOnglets("academie", tabsAcad);
+    if (S.sous.academie === "preinscriptions" && peutAdmin()) return out + renderPreinsAcad();
     if (S.sous.academie === "apprenants") {
       if (!apprenants.length) return out + vide("i-cap", "Aucun membre n’est encore inscrit à une formation.");
       return out + `<div class="list">${apprenants.map((m) => {
@@ -3835,6 +3838,59 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
     if (!liste.length) return out + vide("i-search", par[cle].length ? "Aucune formation ne correspond." : `Aucune formation ${LIB_ETAT_F[cle].toLowerCase()}.`);
     return out + `<div class="list">${liste.map(rowFormation).join("")}</div>`;
   };
+  /* ── Préinscriptions Academy (admin) ── */
+  async function chargerPreinsAcad() {
+    try {
+      const r = await fetch("/api/preinscription-academy-admin?limite=200", { credentials: "same-origin" });
+      if (!r.ok) throw new Error();
+      const j = await r.json();
+      S._preinsAcad = j.preinscriptions || [];
+    } catch (e) { S._preinsAcad = []; toast("Impossible de charger les préinscriptions.", "err"); }
+    renderMain();
+  }
+  function renderPreinsAcad() {
+    if (!S._preinsAcad) { chargerPreinsAcad(); return chargement("Chargement des préinscriptions…"); }
+    const list = S._preinsAcad;
+    if (!list.length) return vide("i-inbox", "Aucune préinscription reçue pour le moment.");
+    const LIB_S = { nouvelle: "Nouvelle", contactee: "Contactée", acceptee: "Acceptée", refusee: "Refusée", inscrite: "Inscrite" };
+    const CLS_S = { nouvelle: "gold", contactee: "info", acceptee: "ok", refusee: "err", inscrite: "" };
+    const filtre = S.f.academie._ps || "";
+    const q = norm(S.f.academie.q);
+    const filtrée = list.filter((p) => (!filtre || p.statut === filtre) && (!q || norm([p.nom, p.prenom, p.email, p.telephone, p.ville || ""].join(" ")).includes(q)));
+    let h = `<div class="filters"><input class="search" type="search" placeholder="Nom, email, téléphone…" value="${esc(S.f.academie.q)}" data-filtre="academie.q" autocomplete="off"><select class="sel" data-filtre="academie._ps"><option value="">Tous les statuts</option>${Object.entries(LIB_S).map(([k, v]) => `<option value="${k}"${filtre === k ? " selected" : ""}>${v}</option>`).join("")}</select></div>`;
+    h += `<p class="muted" style="margin:0 0 8px;font-size:.85rem">${filtrée.length} préinscription${filtrée.length > 1 ? "s" : ""}</p>`;
+    h += `<div class="list">${filtrée.map((p) => `<button class="row" type="button" data-act="voir-preinscription" data-pid="${p.id}"><span class="avatar av-sm" style="background:var(--nuit-2);color:var(--or)">${esc((p.prenom || "?")[0])}${esc((p.nom || "?")[0])}</span><span class="row-main"><span class="row-t">${esc(p.prenom)} ${esc(p.nom)}</span><span class="row-m">${esc(p.email)} · ${esc(p.telephone)}${p.ville ? " · " + esc(p.ville) : ""}</span></span><span class="row-r"><span class="chip ${CLS_S[p.statut] || ""}">${esc(LIB_S[p.statut] || p.statut)}</span><span class="chip">${esc(p.niveau_souhaite || "—")}</span></span></button>`).join("")}</div>`;
+    return h;
+  }
+  function fichePreinscription(id) {
+    const p = (S._preinsAcad || []).find((x) => x.id == id);
+    if (!p) return;
+    const LIB_S = { nouvelle: "Nouvelle", contactee: "Contactée", acceptee: "Acceptée", refusee: "Refusée", inscrite: "Inscrite" };
+    const statuts = Object.entries(LIB_S);
+    let h = `<div class="fiche-lignes">
+      <div class="fl"><span class="fl-l">Nom complet</span><span class="fl-v">${esc(p.prenom)} ${esc(p.nom)}</span></div>
+      <div class="fl"><span class="fl-l">Email</span><span class="fl-v"><a href="mailto:${esc(p.email)}">${esc(p.email)}</a></span></div>
+      <div class="fl"><span class="fl-l">Téléphone</span><span class="fl-v"><a href="tel:${esc(p.telephone)}">${esc(p.telephone)}</a></span></div>
+      ${p.date_naissance ? `<div class="fl"><span class="fl-l">Date de naissance</span><span class="fl-v">${esc(p.date_naissance)}</span></div>` : ""}
+      ${p.ville ? `<div class="fl"><span class="fl-l">Ville</span><span class="fl-v">${esc(p.ville)}</span></div>` : ""}
+      <div class="fl"><span class="fl-l">Pays</span><span class="fl-v">${esc(p.pays || "—")}</span></div>
+      ${p.eglise_origine ? `<div class="fl"><span class="fl-l">Église d'origine</span><span class="fl-v">${esc(p.eglise_origine)}</span></div>` : ""}
+      <div class="fl"><span class="fl-l">Niveau souhaité</span><span class="fl-v">${esc(p.niveau_souhaite || "—")}</span></div>
+      ${p.experience ? `<div class="fl"><span class="fl-l">Expérience</span><span class="fl-v">${esc(p.experience)}</span></div>` : ""}
+      ${p.motivation ? `<div class="fl"><span class="fl-l">Motivation</span><span class="fl-v" style="white-space:pre-line">${esc(p.motivation)}</span></div>` : ""}
+      <div class="fl"><span class="fl-l">Date</span><span class="fl-v">${p.created_at ? F_STAMP.format(new Date(p.created_at + "Z")) : "—"}</span></div>
+    </div>
+    <h3 style="margin:16px 0 8px;font-size:.95rem">Statut</h3>
+    <div class="chips-row">${statuts.map(([k, v]) => `<button class="chip${p.statut === k ? " actif" : ""}" data-act="maj-preinscription-statut" data-pid="${p.id}" data-statut="${k}">${v}</button>`).join("")}</div>
+    <h3 style="margin:16px 0 8px;font-size:.95rem">Notes admin</h3>
+    <textarea class="champ-texte" id="notes-preins" rows="3" style="width:100%;min-height:70px">${esc(p.notes_admin || "")}</textarea>
+    <div class="actions" style="margin-top:12px">
+      ${btn("sauver-notes-preins", "Enregistrer les notes", { ico: "i-check", cls: "btn-primary", sm: true, data: `data-pid="${p.id}"` })}
+      ${btn("suppr-preinscription", "Supprimer", { ico: "i-trash", cls: "btn-danger", sm: true, data: `data-pid="${p.id}"` })}
+    </div>`;
+    ouvrir({ titre: "Préinscription · " + p.prenom + " " + p.nom, html: h });
+  }
+
   function ficheFormation(id) {
     const f = formation(id);
     if (!f) return null;
@@ -8366,6 +8422,40 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     },
     "zip-attestations": (t) => zipAttestations(t.dataset.id),
     "supprimer-formation": (t) => boutonArme(t, "Confirmer la suppression", async () => { if (await ecrire(() => S.db.doc("formations/" + t.dataset.id).delete(), "Formation supprimée")) fermer(); }),
+    /* Préinscriptions Academy */
+    "voir-preinscription": (t) => fichePreinscription(t.dataset.pid),
+    "maj-preinscription-statut": async (t) => {
+      const pid = t.dataset.pid, statut = t.dataset.statut;
+      try {
+        const r = await fetch("/api/preinscription-academy-admin", { method: "PATCH", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ id: +pid, statut }) });
+        if (!r.ok) throw new Error();
+        const p = (S._preinsAcad || []).find((x) => x.id == pid);
+        if (p) p.statut = statut;
+        toast("Statut mis à jour");
+        fichePreinscription(pid);
+        renderMain();
+      } catch (e) { toast("Erreur de mise à jour.", "err"); }
+    },
+    "sauver-notes-preins": async (t) => {
+      const pid = t.dataset.pid, notes = (document.getElementById("notes-preins") || {}).value || "";
+      try {
+        const r = await fetch("/api/preinscription-academy-admin", { method: "PATCH", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ id: +pid, notes_admin: notes }) });
+        if (!r.ok) throw new Error();
+        const p = (S._preinsAcad || []).find((x) => x.id == pid);
+        if (p) p.notes_admin = notes;
+        toast("Notes enregistrées");
+      } catch (e) { toast("Erreur.", "err"); }
+    },
+    "suppr-preinscription": (t) => boutonArme(t, "Supprimer définitivement", async () => {
+      try {
+        const r = await fetch("/api/preinscription-academy-admin", { method: "DELETE", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ id: +t.dataset.pid }) });
+        if (!r.ok) throw new Error();
+        S._preinsAcad = (S._preinsAcad || []).filter((x) => x.id != t.dataset.pid);
+        toast("Préinscription supprimée");
+        fermer(); renderMain();
+      } catch (e) { toast("Erreur.", "err"); }
+    }),
+    "recharger-preins-acad": () => { S._preinsAcad = null; renderMain(); },
     /* Porte-Voix */
     "aller-annonces": () => allerA("portevoix", "annonces"),
     "ajout-annonce": () => ouvrirFormAnnonce(null),

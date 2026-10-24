@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="fr" dir="ltr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Soldiers Academy · Préinscription · Soldats de l'Éternel</title>
+<meta name="description" content="Préinscrivez-vous à la Soldiers Academy du Mouvement Prophético-Apostolique Soldats de l'Éternel. Parcours de formation pour disciples et leaders.">
+<meta name="theme-color" content="#0f1e3d">
+<link rel="icon" href="/icone-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@400;500;600;700;800;900&family=Saira+Stencil+One&display=swap" rel="stylesheet">
+<style>
+/* ═══════════ DESIGN SYSTEM SDE ═══════════ */
+:root {
+  --nuit: #0f1e3d;
+  --nuit-2: #1b2f5b;
+  --nuit-3: #2c4377;
+  --or: #e2c26a;
+  --or-lum: #e2c26a;
+  --or-marque: #b8901f;
+  --or-sombre: #85650f;
+  --ivoire: #eef0f5;
+  --bordeaux: #641D2D;
+  --fond: #0a0f1d;
+  --surface: #121a2e;
+  --surface-2: #19233b;
+  --texte: #e8ebf4;
+  --texte-2: #a4adc4;
+  --bordure: rgba(43,67,119,.4);
+  --voile: rgba(10,15,29,.85);
+  --grad-or: linear-gradient(135deg, #b8901f, #e2c26a);
+  --ombre: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.5);
+  --ombre-carte: 0 2px 12px rgba(0,0,0,.3);
+  --f-titre: "Saira Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-texte: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --f-marque: "Saira Stencil One", "Saira Condensed", Impact, sans-serif;
+  --r: 10px;
+  --gutter: 16px;
+  --max: 860px;
+  --ease: cubic-bezier(.4,0,.2,1);
+  --duree: .35s;
+}
+:root[data-theme="light"] {
+  --or: #85650f; --or-lum: #b8901f;
+  --fond: #eef0f5; --surface: #ffffff; --surface-2: #f3f5f9;
+  --texte: #161e35; --texte-2: #535c75;
+  --bordure: rgba(221,225,234,.6); --voile: rgba(238,240,245,.85);
+  --ombre: 0 1px 2px rgba(15,30,61,.06), 0 12px 32px rgba(15,30,61,.14);
+  --ombre-carte: 0 2px 12px rgba(15,30,61,.08);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --or: #85650f; --or-lum: #b8901f;
+    --fond: #eef0f5; --surface: #ffffff; --surface-2: #f3f5f9;
+    --texte: #161e35; --texte-2: #535c75;
+    --bordure: rgba(221,225,234,.6); --voile: rgba(238,240,245,.85);
+    --ombre: 0 1px 2px rgba(15,30,61,.06), 0 12px 32px rgba(15,30,61,.14);
+    --ombre-carte: 0 2px 12px rgba(15,30,61,.08);
+  }
+}
+
+/* ═══════════ BASE ═══════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { font-family: var(--f-texte); font-size: 16px; line-height: 1.7; color: var(--texte); background: var(--fond); -webkit-font-smoothing: antialiased; overflow-x: hidden; transition: background var(--duree) var(--ease), color var(--duree) var(--ease); min-height: 100dvh; display: flex; flex-direction: column; }
+a { color: var(--or); text-decoration: none; }
+button { font: inherit; border: none; cursor: pointer; background: none; color: inherit; }
+h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.15; letter-spacing: .04em; text-transform: uppercase; }
+
+/* ═══════════ HEADER ═══════════ */
+.entete { position: sticky; top: 0; z-index: 1000; background: rgba(15,30,61,.95); backdrop-filter: blur(16px) saturate(1.6); border-bottom: 2px solid var(--or-marque); color: var(--ivoire); }
+.entete .enveloppe { display: flex; align-items: center; justify-content: space-between; min-height: 62px; max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
+.marque { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+.marque .logo { width: 36px; height: 36px; background: url(/vitrine/logo.png) center/contain no-repeat; flex-shrink: 0; }
+.marque b { font-family: var(--f-marque); color: var(--or); font-size: 1.1rem; letter-spacing: .06em; }
+.marque small { display: block; font-size: .65rem; color: rgba(255,255,255,.55); }
+.entete-actions { display: flex; align-items: center; gap: 8px; }
+.btn-theme { width: 42px; height: 42px; border-radius: var(--r); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.65); background: transparent; border: 1px solid rgba(255,255,255,.2); transition: all .2s var(--ease); }
+.btn-theme:hover { color: var(--or-lum); border-color: var(--or-lum); }
+
+/* ═══════════ LAYOUT ═══════════ */
+.contenu { flex: 1; }
+.enveloppe { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+
+/* ═══════════ HERO ═══════════ */
+.hero-acad { text-align: center; padding: 48px 0 32px; }
+.hero-acad h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); color: var(--or); margin-bottom: 8px; }
+.hero-acad .sous-titre { color: var(--texte-2); font-size: 1.05rem; max-width: 640px; margin: 0 auto; }
+.hero-acad .badge-acad { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px; padding: 8px 18px; border-radius: 999px; background: var(--surface); border: 1px solid var(--or-marque); font-family: var(--f-titre); font-weight: 700; font-size: .85rem; color: var(--or); letter-spacing: .06em; text-transform: uppercase; }
+
+/* ═══════════ NIVEAUX ═══════════ */
+.niveaux { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; margin-bottom: 40px; }
+.niveau-carte { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--r); padding: 24px 20px; text-align: center; position: relative; overflow: hidden; transition: border-color .3s var(--ease), transform .2s var(--ease); }
+.niveau-carte:hover { border-color: var(--or-marque); transform: translateY(-2px); }
+.niveau-carte.vedette { border-color: var(--or-marque); box-shadow: 0 0 24px rgba(184,144,31,.2); }
+.niveau-num { font-family: var(--f-titre); font-size: 3rem; font-weight: 900; color: var(--or-marque); opacity: .25; line-height: 1; margin-bottom: 4px; }
+.niveau-titre { font-family: var(--f-titre); font-size: 1.15rem; font-weight: 700; color: var(--or); margin-bottom: 8px; letter-spacing: .04em; text-transform: uppercase; }
+.niveau-desc { font-size: .9rem; color: var(--texte-2); line-height: 1.5; margin-bottom: 12px; }
+.niveau-modules { font-size: .82rem; color: var(--texte-2); }
+.niveau-modules b { color: var(--or-lum); }
+.niveau-badge { display: inline-block; margin-top: 10px; padding: 4px 12px; border-radius: 999px; font-size: .75rem; font-weight: 700; font-family: var(--f-titre); letter-spacing: .06em; text-transform: uppercase; }
+.niveau-badge.fondation { background: rgba(184,144,31,.15); color: var(--or); border: 1px solid rgba(184,144,31,.3); }
+.niveau-badge.combat { background: rgba(25,135,84,.15); color: #52c77e; border: 1px solid rgba(25,135,84,.3); }
+.niveau-badge.leadership { background: rgba(99,102,241,.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,.3); }
+.niveau-badge.apostolique { background: rgba(244,63,94,.15); color: #fda4af; border: 1px solid rgba(244,63,94,.3); }
+
+/* ═══════════ PARCOURS ═══════════ */
+.parcours { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--r); padding: 28px 24px; margin-bottom: 40px; }
+.parcours h2 { font-size: 1.2rem; color: var(--or); margin-bottom: 16px; }
+.parcours-liste { display: flex; flex-direction: column; gap: 16px; }
+.parcours-etape { display: flex; gap: 16px; align-items: flex-start; }
+.parcours-icone { width: 44px; height: 44px; border-radius: 50%; background: var(--nuit-2); border: 2px solid var(--or-marque); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: var(--f-titre); font-weight: 900; color: var(--or); font-size: 1.1rem; }
+.parcours-texte h3 { font-size: .95rem; color: var(--texte); margin-bottom: 2px; letter-spacing: .02em; }
+.parcours-texte p { font-size: .88rem; color: var(--texte-2); line-height: 1.5; }
+
+/* ═══════════ FORMULAIRE ═══════════ */
+.form-carte { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--r); padding: 32px 28px; margin-bottom: 32px; box-shadow: var(--ombre-carte); }
+.form-section { margin-bottom: 28px; }
+.form-section:last-child { margin-bottom: 0; }
+.form-section-titre { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; color: var(--or); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--bordure); }
+.form-section-titre svg { width: 22px; height: 22px; flex-shrink: 0; color: var(--or-marque); }
+.grille { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .grille { grid-template-columns: 1fr; } }
+.champ { display: flex; flex-direction: column; gap: 5px; }
+.champ.plein { grid-column: 1 / -1; }
+.champ label { font-size: .88rem; font-weight: 600; color: var(--texte); }
+.champ label .req { color: var(--or-marque); margin-left: 2px; }
+.champ input, .champ select, .champ textarea {
+  padding: 10px 14px; border-radius: var(--r); border: 1px solid var(--bordure);
+  background: var(--surface-2); color: var(--texte); font-size: 1rem;
+  font-family: var(--f-texte); min-height: 44px; transition: border-color .2s var(--ease);
+}
+.champ input:focus, .champ select:focus, .champ textarea:focus {
+  outline: 2px solid var(--or); outline-offset: 2px; border-color: var(--or);
+}
+.champ textarea { min-height: 100px; resize: vertical; }
+.champ .aide { font-size: .78rem; color: var(--texte-2); margin-top: 2px; }
+.champ.erreur input, .champ.erreur select, .champ.erreur textarea { border-color: var(--bordeaux); }
+.champ.erreur .msg-erreur { color: var(--bordeaux); font-size: .8rem; font-weight: 600; }
+.accord { display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; color: var(--texte-2); cursor: pointer; line-height: 1.5; }
+.accord input { margin-top: 3px; accent-color: var(--or-marque); flex-shrink: 0; }
+.oblig { color: var(--or-marque); font-weight: 600; font-size: .75rem; text-transform: uppercase; }
+
+/* Submit */
+.bouton-envoyer {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 14px 28px; border-radius: var(--r);
+  background: var(--grad-or); color: var(--nuit); font-family: var(--f-titre);
+  font-weight: 700; font-size: 1.1rem; letter-spacing: .06em; text-transform: uppercase;
+  border: none; cursor: pointer; transition: all .2s var(--ease); min-height: 52px;
+}
+.bouton-envoyer:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(184,144,31,.4); }
+.bouton-envoyer:disabled { opacity: .5; cursor: wait; transform: none; filter: none; box-shadow: none; }
+.bouton-envoyer svg { width: 20px; height: 20px; }
+.spinner { width: 20px; height: 20px; border: 3px solid rgba(15,30,61,.2); border-top-color: var(--nuit); border-radius: 50%; animation: spin .6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Toast */
+.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px); z-index: 9999; padding: 14px 24px; border-radius: var(--r); font-weight: 600; font-size: .95rem; box-shadow: var(--ombre); opacity: 0; transition: all .35s var(--ease); pointer-events: none; max-width: calc(100% - 32px); text-align: center; }
+.toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast.succes { background: #0f5132; color: #d1e7dd; border: 1px solid #198754; }
+.toast.erreur { background: #641D2D; color: #f8d7da; border: 1px solid #842029; }
+
+/* Succès */
+.succes-bloc { text-align: center; padding: 48px 20px; }
+.succes-bloc .icone-ok { width: 80px; height: 80px; border-radius: 50%; background: rgba(25,135,84,.15); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.succes-bloc .icone-ok svg { width: 40px; height: 40px; color: #52c77e; }
+.succes-bloc h2 { font-size: 1.4rem; color: var(--or); margin-bottom: 10px; }
+.succes-bloc p { color: var(--texte-2); max-width: 480px; margin: 0 auto; }
+
+/* ═══════════ RETOUR ═══════════ */
+.retour { display: inline-flex; align-items: center; gap: 6px; color: var(--or); font-weight: 600; font-size: .9rem; margin-bottom: 20px; }
+.retour:hover { color: var(--or-lum); }
+.retour svg { width: 18px; height: 18px; }
+
+/* ═══════════ FOOTER ═══════════ */
+.pied { background: var(--nuit); color: var(--ivoire); padding: 32px 0; border-top: 2px solid var(--or-marque); margin-top: auto; text-align: center; }
+.pied p { font-size: .85rem; color: var(--texte-2); }
+.pied a { color: var(--or); }
+
+/* ═══════════ RIPPLE ═══════════ */
+.ripple-host { position: relative; overflow: hidden; }
+.ripple { position: absolute; border-radius: 50%; background: var(--or-marque); opacity: .18; transform: scale(0); pointer-events: none; animation: ripple-out .55s ease-out forwards; }
+@keyframes ripple-out { to { transform: scale(2.5); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .ripple { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ EN-TÊTE ═══════════ -->
+<header class="entete">
+  <div class="enveloppe">
+    <a href="/vitrine/" class="marque" aria-label="Accueil Soldats de l'Éternel">
+      <span class="logo" role="img" aria-hidden="true"></span>
+      <span><b>SDE</b><small>Soldats de l'Éternel</small></span>
+    </a>
+    <div class="entete-actions">
+      <button class="btn-theme" id="btnTheme" aria-label="Changer de thème" title="Mode clair / sombre">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="contenu">
+  <div class="enveloppe" style="padding-top: 16px; padding-bottom: 48px;">
+
+    <a href="/vitrine/" class="retour">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Retour au site
+    </a>
+
+    <!-- ═══ HERO ═══ -->
+    <div class="hero-acad">
+      <span class="badge-acad">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        Parcours de formation
+      </span>
+      <h1>Soldiers Academy</h1>
+      <p class="sous-titre">Former des disciples solides et des leaders enracinés dans la Parole de Dieu. Quatre niveaux de formation pour grandir dans la foi, le combat spirituel et le ministère.</p>
+    </div>
+
+    <!-- ═══ NIVEAUX DE FORMATION ═══ -->
+    <div class="niveaux">
+      <div class="niveau-carte vedette">
+        <div class="niveau-num">1</div>
+        <div class="niveau-titre">Les fondations</div>
+        <div class="niveau-desc">Poser les bases de la vie chrétienne : identité en Christ, la Parole de Dieu, la prière et la vie de disciple.</div>
+        <div class="niveau-modules"><b>8 modules</b> · 2 mois</div>
+        <span class="niveau-badge fondation">Prérequis : aucun</span>
+      </div>
+      <div class="niveau-carte">
+        <div class="niveau-num">2</div>
+        <div class="niveau-titre">Le combat spirituel</div>
+        <div class="niveau-desc">Comprendre les réalités spirituelles, les armes du combat, l'intercession et la délivrance.</div>
+        <div class="niveau-modules"><b>10 modules</b> · 3 mois</div>
+        <span class="niveau-badge combat">Prérequis : Niveau 1</span>
+      </div>
+      <div class="niveau-carte">
+        <div class="niveau-num">3</div>
+        <div class="niveau-titre">Le leadership</div>
+        <div class="niveau-desc">Développer un leadership serviteur, la gestion d'équipe, la vision et la communication au service du Royaume.</div>
+        <div class="niveau-modules"><b>10 modules</b> · 3 mois</div>
+        <span class="niveau-badge leadership">Prérequis : Niveau 2</span>
+      </div>
+      <div class="niveau-carte">
+        <div class="niveau-num">4</div>
+        <div class="niveau-titre">Le ministère apostolique</div>
+        <div class="niveau-desc">S'enraciner dans la dimension prophético-apostolique : les cinq ministères, l'implantation et la mission.</div>
+        <div class="niveau-modules"><b>12 modules</b> · 4 mois</div>
+        <span class="niveau-badge apostolique">Prérequis : Niveau 3</span>
+      </div>
+    </div>
+
+    <!-- ═══ PARCOURS ═══ -->
+    <div class="parcours">
+      <h2>Comment ça marche ?</h2>
+      <div class="parcours-liste">
+        <div class="parcours-etape">
+          <div class="parcours-icone">1</div>
+          <div class="parcours-texte">
+            <h3>Préinscription</h3>
+            <p>Remplissez le formulaire ci-dessous. L'équipe de l'Academy vous contactera pour valider votre inscription.</p>
+          </div>
+        </div>
+        <div class="parcours-etape">
+          <div class="parcours-icone">2</div>
+          <div class="parcours-texte">
+            <h3>Formation</h3>
+            <p>Suivez les modules en présentiel ou en ligne. Chaque module inclut un enseignement, des exercices pratiques et un temps de prière.</p>
+          </div>
+        </div>
+        <div class="parcours-etape">
+          <div class="parcours-icone">3</div>
+          <div class="parcours-texte">
+            <h3>Suivi de progression</h3>
+            <p>Votre présence à chaque module est enregistrée. Suivez votre avancement depuis l'application SDE.</p>
+          </div>
+        </div>
+        <div class="parcours-etape">
+          <div class="parcours-icone">4</div>
+          <div class="parcours-texte">
+            <h3>Certification</h3>
+            <p>À la fin de chaque niveau, recevez votre attestation de formation signée par le Leader du mouvement.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ FORMULAIRE DE PRÉINSCRIPTION ═══ -->
+    <div id="zoneFormulaire">
+      <h2 style="font-size: 1.3rem; color: var(--or); text-align: center; margin-bottom: 24px;">Formulaire de préinscription</h2>
+
+      <form id="formulaire" novalidate>
+        <div class="form-carte">
+          <div class="form-section">
+            <h2 class="form-section-titre">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Informations personnelles
+            </h2>
+            <div class="grille">
+              <div class="champ">
+                <label for="f-nom">Nom <span class="req">*</span></label>
+                <input id="f-nom" name="nom" autocomplete="family-name" autocapitalize="words" maxlength="80" required>
+              </div>
+              <div class="champ">
+                <label for="f-prenom">Prénom <span class="req">*</span></label>
+                <input id="f-prenom" name="prenom" autocomplete="given-name" autocapitalize="words" maxlength="80" required>
+              </div>
+              <div class="champ">
+                <label for="f-email">Adresse e-mail <span class="req">*</span></label>
+                <input id="f-email" name="email" type="email" autocomplete="email" maxlength="120" required>
+              </div>
+              <div class="champ">
+                <label for="f-tel">Téléphone <span class="req">*</span></label>
+                <input id="f-tel" name="telephone" type="tel" autocomplete="tel" maxlength="30" required placeholder="+225 07 00 00 00 00">
+              </div>
+              <div class="champ">
+                <label for="f-naissance">Date de naissance</label>
+                <input id="f-naissance" name="date_naissance" type="date" autocomplete="bday">
+              </div>
+              <div class="champ">
+                <label for="f-ville">Ville</label>
+                <input id="f-ville" name="ville" autocomplete="address-level2" maxlength="80" placeholder="Abidjan">
+              </div>
+              <div class="champ">
+                <label for="f-pays">Pays</label>
+                <input id="f-pays" name="pays" autocomplete="country-name" maxlength="80" value="Côte d'Ivoire">
+              </div>
+              <div class="champ">
+                <label for="f-eglise">Église d'origine</label>
+                <input id="f-eglise" name="eglise_origine" maxlength="120" placeholder="Nom de votre assemblée">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2 class="form-section-titre">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              Votre parcours
+            </h2>
+            <div class="grille">
+              <div class="champ">
+                <label for="f-niveau">Niveau souhaité <span class="req">*</span></label>
+                <select id="f-niveau" name="niveau_souhaite" required>
+                  <option value="Niveau 1" selected>Niveau 1 — Les fondations</option>
+                  <option value="Niveau 2">Niveau 2 — Le combat spirituel</option>
+                  <option value="Niveau 3">Niveau 3 — Le leadership</option>
+                  <option value="Niveau 4">Niveau 4 — Le ministère apostolique</option>
+                </select>
+                <span class="aide">Les niveaux supérieurs nécessitent d'avoir validé les précédents.</span>
+              </div>
+              <div class="champ">
+                <label for="f-experience">Expérience chrétienne</label>
+                <select id="f-experience" name="experience">
+                  <option value="">— Choisir —</option>
+                  <option value="Moins de 1 an">Moins de 1 an</option>
+                  <option value="1 à 3 ans">1 à 3 ans</option>
+                  <option value="3 à 5 ans">3 à 5 ans</option>
+                  <option value="5 à 10 ans">5 à 10 ans</option>
+                  <option value="Plus de 10 ans">Plus de 10 ans</option>
+                </select>
+              </div>
+              <div class="champ plein">
+                <label for="f-motivation">Motivation <span class="req">*</span></label>
+                <textarea id="f-motivation" name="motivation" rows="4" required placeholder="Pourquoi souhaitez-vous rejoindre la Soldiers Academy ? Quels sont vos objectifs spirituels ?"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <label class="accord" for="f-accord">
+              <input id="f-accord" name="accord" type="checkbox" required>
+              <span>J'accepte que ces informations soient transmises à l'équipe de la Soldiers Academy pour traiter ma préinscription. Le mouvement SDE ne cède ces informations à aucun tiers. <span class="oblig">obligatoire</span></span>
+            </label>
+          </div>
+
+          <button class="bouton-envoyer ripple-host" type="submit" id="btnEnvoyer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            Envoyer ma préinscription
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ═══ SUCCÈS (masqué) ═══ -->
+    <div id="zoneSucces" style="display: none;">
+      <div class="form-carte succes-bloc">
+        <div class="icone-ok">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2>Préinscription envoyée !</h2>
+        <p>Merci pour votre intérêt pour la Soldiers Academy. L'équipe de formation vous contactera prochainement pour valider votre inscription et vous communiquer les détails pratiques.</p>
+        <p style="margin-top: 16px;"><a href="/vitrine/">← Retour au site</a></p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ═══════════ PIED ═══════════ -->
+<footer class="pied">
+  <div class="enveloppe">
+    <p>Mouvement Prophético-Apostolique Soldats de l'Éternel</p>
+    <p style="margin-top: 4px;"><a href="/vitrine/">mouvement-sde.org</a> · <a href="https://app.mouvement-sde.org">Accès application</a></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* Thème */
+(function () {
+  const b = document.getElementById("btnTheme");
+  const saved = localStorage.getItem("sde_theme");
+  if (saved) document.documentElement.dataset.theme = saved;
+  b.addEventListener("click", () => {
+    const t = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = t;
+    localStorage.setItem("sde_theme", t);
+  });
+})();
+
+/* Toast */
+let toastTimer = 0;
+function toast(msg, type) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.className = "toast " + (type === "err" ? "erreur" : "succes");
+  clearTimeout(toastTimer);
+  requestAnimationFrame(() => { el.classList.add("visible"); });
+  toastTimer = setTimeout(() => el.classList.remove("visible"), 5000);
+}
+
+/* Ripple */
+document.addEventListener("pointerdown", (e) => {
+  const h = e.target.closest(".ripple-host");
+  if (!h) return;
+  const r = h.getBoundingClientRect();
+  const s = Math.max(r.width, r.height) * 2;
+  const d = document.createElement("span");
+  d.className = "ripple";
+  d.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX - r.left - s / 2}px;top:${e.clientY - r.top - s / 2}px`;
+  h.appendChild(d);
+  d.addEventListener("animationend", () => d.remove());
+});
+
+/* Formulaire */
+const form = document.getElementById("formulaire");
+const btnEnvoyer = document.getElementById("btnEnvoyer");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  /* Validation simple */
+  const champs = ["nom", "prenom", "email", "telephone", "motivation"];
+  for (const n of champs) {
+    const el = form.elements[n];
+    if (el && !el.value.trim()) {
+      el.focus();
+      toast("Veuillez remplir le champ « " + (el.closest(".champ")?.querySelector("label")?.textContent?.replace(/\s*\*/, "") || n) + " ».", "err");
+      return;
+    }
+  }
+  if (!form.elements.accord.checked) {
+    toast("Veuillez accepter les conditions de traitement des données.", "err");
+    return;
+  }
+  const emailVal = form.elements.email.value.trim();
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailVal)) {
+    form.elements.email.focus();
+    toast("Adresse e-mail invalide.", "err");
+    return;
+  }
+
+  btnEnvoyer.disabled = true;
+  btnEnvoyer.innerHTML = '<span class="spinner"></span> Envoi en cours…';
+
+  try {
+    const fd = new FormData(form);
+    const r = await fetch("/api/preinscription-academy", { method: "POST", body: fd });
+    const j = await r.json();
+    if (!r.ok || j.erreur) {
+      toast(j.message || "Une erreur est survenue.", "err");
+      btnEnvoyer.disabled = false;
+      btnEnvoyer.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> Envoyer ma préinscription';
+      return;
+    }
+    document.getElementById("zoneFormulaire").style.display = "none";
+    document.getElementById("zoneSucces").style.display = "block";
+    toast(j.message || "Préinscription envoyée !", "ok");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (err) {
+    toast("Erreur de connexion. Vérifiez votre réseau et réessayez.", "err");
+    btnEnvoyer.disabled = false;
+    btnEnvoyer.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> Envoyer ma préinscription';
+  }
+});
+</script>
+</body>
+</html>

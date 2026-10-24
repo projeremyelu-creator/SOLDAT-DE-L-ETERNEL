@@ -557,6 +557,134 @@ async function apiPublic(env) {
   return json({ evenements: evts }, 200, { "cache-control": "public, max-age=300" });
 }
 
+/* ───────── Formulaire public : collecte d'infos + bilan 2026 ───────── */
+async function apiFormulaire(req, env) {
+  if (req.method !== "POST") return erreur("methode", "POST uniquement.", 405);
+  let fd;
+  try { fd = await req.formData(); } catch { return erreur("invalid", "Données du formulaire invalides."); }
+
+  const champ = (n) => String(fd.get(n) || "").trim();
+  const obligatoires = ["nom", "prenom", "statut_matrimonial", "profession", "date_naissance", "lieu_naissance", "telephone", "email", "ville", "message"];
+  for (const c of obligatoires) {
+    if (!champ(c)) return erreur("champ_manquant", `Le champ « ${c.replace(/_/g, " ")} » est obligatoire.`);
+  }
+  const emailVal = champ("email");
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailVal)) return erreur("email_invalide", "Adresse e-mail invalide.");
+
+  /* Photo (obligatoire) */
+  const photo = fd.get("photo");
+  if (!photo || typeof photo === "string" || !photo.size) return erreur("photo_manquante", "La photo est obligatoire.");
+  if (photo.size > 5 * 1024 * 1024) return erreur("photo_trop_lourde", "La photo ne doit pas dépasser 5 Mo.");
+  const photoType = photo.type || "image/jpeg";
+  if (!photoType.startsWith("image/")) return erreur("photo_invalide", "Le fichier doit être une image.");
+  const photoId = "form_" + jetonAleatoire(16);
+  const photoBuf = await photo.arrayBuffer();
+  await env.FICHIERS.put(photoId, photoBuf, { metadata: { type: photoType } });
+
+  /* Sondage bilan 2026 */
+  const satisfaction = parseInt(champ("satisfaction_2026") || "0", 10);
+
+  await env.DB.prepare(`INSERT INTO formulaire_reponses
+    (photo_id, nom, prenom, statut_matrimonial, profession, date_naissance, lieu_naissance,
+     telephone, email, ville, message, satisfaction_2026, activites_marquantes,
+     points_ameliorer, propositions_2027, domaines_prioritaires)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+    .bind(photoId, champ("nom"), champ("prenom"), champ("statut_matrimonial"),
+      champ("profession"), champ("date_naissance"), champ("lieu_naissance"),
+      champ("telephone"), emailVal, champ("ville"), champ("message"),
+      satisfaction, champ("activites_marquantes"), champ("points_ameliorer"),
+      champ("propositions_2027"), champ("domaines_prioritaires"))
+    .run();
+
+  return json({ ok: true, message: "Votre formulaire a été enregistré avec succès. Merci !" });
+}
+
+/* ───────── Préinscription Soldiers Academy (public) ───────── */
+async function apiPreinscriptionAcademy(req, env) {
+  if (req.method !== "POST") return erreur("methode", "POST uniquement.", 405);
+  let fd;
+  try { fd = await req.formData(); } catch { return erreur("invalid", "Données du formulaire invalides."); }
+  const champ = (n) => String(fd.get(n) || "").trim();
+  const obligatoires = ["nom", "prenom", "email", "telephone"];
+  for (const c of obligatoires) {
+    if (!champ(c)) return erreur("champ_manquant", `Le champ « ${c.replace(/_/g, " ")} » est obligatoire.`);
+  }
+  const emailVal = champ("email");
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailVal)) return erreur("email_invalide", "Adresse e-mail invalide.");
+  /* Doublon ? */
+  const doublon = await env.DB.prepare("SELECT id FROM preinscriptions_academy WHERE email = ? AND statut NOT IN ('refusee') LIMIT 1").bind(emailVal).first();
+  if (doublon) return erreur("doublon", "Une préinscription avec cette adresse e-mail existe déjà. Si vous souhaitez modifier vos informations, contactez le secrétariat.");
+
+  await env.DB.prepare(`INSERT INTO preinscriptions_academy
+    (nom, prenom, email, telephone, date_naissance, ville, pays, niveau_souhaite, motivation, experience, eglise_origine)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+    .bind(champ("nom"), champ("prenom"), emailVal, champ("telephone"),
+      champ("date_naissance"), champ("ville"), champ("pays") || "Côte d'Ivoire",
+      champ("niveau_souhaite") || "Niveau 1", champ("motivation"), champ("experience"), champ("eglise_origine"))
+    .run();
+
+  return json({ ok: true, message: "Votre préinscription à la Soldiers Academy a été enregistrée ! Nous vous contacterons prochainement." });
+}
+
+/* ───────── Gestion des préinscriptions Academy (admin) ───────── */
+async function apiPreinscriptionAcademyAdmin(req, env, u) {
+  if (u.niveau < 2) return erreur("refuse", "Réservé aux administrateurs.", 403);
+  const url = new URL(req.url);
+
+  if (req.method === "PATCH") {
+    const b = await req.json();
+    if (!b.id) return erreur("id_manquant", "ID requis.");
+    const sets = [];
+    const vals = [];
+    if (b.statut) { sets.push("statut = ?"); vals.push(b.statut); }
+    if (b.notes_admin !== undefined) { sets.push("notes_admin = ?"); vals.push(b.notes_admin); }
+    if (!sets.length) return erreur("vide", "Rien à modifier.");
+    sets.push("updated_at = datetime('now')");
+    vals.push(b.id);
+    await env.DB.prepare(`UPDATE preinscriptions_academy SET ${sets.join(", ")} WHERE id = ?`).bind(...vals).run();
+    return json({ ok: true });
+  }
+
+  if (req.method === "DELETE") {
+    const b = await req.json();
+    if (!b.id) return erreur("id_manquant", "ID requis.");
+    await env.DB.prepare("DELETE FROM preinscriptions_academy WHERE id = ?").bind(b.id).run();
+    return json({ ok: true });
+  }
+
+  const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
+  const statut = url.searchParams.get("statut") || "";
+  const limit = Math.min(200, Math.max(1, parseInt(url.searchParams.get("limite") || "30", 10)));
+  const offset = (page - 1) * limit;
+  const where = statut ? "WHERE statut = ?" : "";
+  const binds = statut ? [statut, limit, offset] : [limit, offset];
+  const total = (await env.DB.prepare(`SELECT COUNT(*) AS n FROM preinscriptions_academy ${where}`).bind(...(statut ? [statut] : [])).first()).n;
+  const r = await env.DB.prepare(`SELECT * FROM preinscriptions_academy ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`).bind(...binds).all();
+  return json({ total, page, pages: Math.ceil(total / limit), preinscriptions: r.results || [] });
+}
+
+/* Liste des réponses (admin) */
+async function apiFormulaireAdmin(req, env, u) {
+  if (u.niveau < 2) return erreur("refuse", "Réservé aux administrateurs.", 403);
+  const url = new URL(req.url);
+  const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
+  const limit = 20;
+  const offset = (page - 1) * limit;
+
+  if (req.method === "DELETE") {
+    const b = await req.json();
+    if (!b.id) return erreur("id_manquant", "ID requis.");
+    const row = await env.DB.prepare("SELECT photo_id FROM formulaire_reponses WHERE id = ?").bind(b.id).first();
+    if (row && row.photo_id) await env.FICHIERS.delete(row.photo_id);
+    await env.DB.prepare("DELETE FROM formulaire_reponses WHERE id = ?").bind(b.id).run();
+    return json({ ok: true });
+  }
+
+  const total = (await env.DB.prepare("SELECT COUNT(*) AS n FROM formulaire_reponses").first()).n;
+  const r = await env.DB.prepare("SELECT * FROM formulaire_reponses ORDER BY created_at DESC LIMIT ? OFFSET ?").bind(limit, offset).all();
+  return json({ total, page, pages: Math.ceil(total / limit), reponses: r.results || [] });
+}
+
 /* ───────── Éliézer : relais vers l'API Claude (clé gardée sur le serveur) ───────── */
 const IA_MAX_MESSAGES = 80, IA_MAX_OCTETS = 600000, IA_MAX_OUTILS = 16;
 function blocValide(b) {
@@ -911,6 +1039,8 @@ async function traiter(req, env) {
     if (url.hostname === "mouvement-sde.org") {
       if (p === "/" || p === "/index.html") return env.ASSETS.fetch(new Request(new URL("/vitrine/", url), req));
       if (p === "/api/public") return apiPublic(env);
+      if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env);
+      if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env);
       if (!/^\/(vitrine\/|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$)/.test(p))
         return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
       const r = await env.ASSETS.fetch(req);
@@ -934,6 +1064,8 @@ async function traiter(req, env) {
       const origine = req.headers.get("origin");
       if (origine && origine !== url.origin) return erreur("refuse", "Origine refusée.", 403);
     }
+    if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env);
+    if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env);
     try {
       const u = await utilisateur(req, env);
       if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
@@ -962,6 +1094,8 @@ async function traiter(req, env) {
       if (p === "/api/import" && req.method === "POST") return apiImport(req, env, u);
       if (p === "/api/medias" || p.startsWith("/api/medias/")) return apiMedias(req, env, u, url);
       if (p === "/api/sauvegardes" || p.startsWith("/api/sauvegardes/")) return apiSauvegardes(req, env, u, url);
+      if (p === "/api/formulaire-admin") return apiFormulaireAdmin(req, env, u);
+      if (p === "/api/preinscription-academy-admin") return apiPreinscriptionAcademyAdmin(req, env, u);
       return erreur("introuvable", "Route inconnue.", 404);
     } catch (e) {
       return erreur("unavailable", "Erreur du serveur : " + (e && e.message), 500);
