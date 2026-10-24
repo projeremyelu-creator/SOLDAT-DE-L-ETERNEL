@@ -6,7 +6,7 @@ import { readFileSync } from "node:fs";
 import vm from "node:vm";
 import { execFileSync } from "node:child_process";
 
-const pages = ["public/index.html", "public/vitrine/index.html", "public/offline.html"];
+const pages = ["public/index.html", "public/vitrine/index.html", "public/offline.html", "public/vitrine/point-sde.html"];
 let erreurs = 0;
 for (const page of pages) {
   const html = readFileSync(page, "utf8");

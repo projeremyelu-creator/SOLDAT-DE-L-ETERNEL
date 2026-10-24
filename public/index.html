@@ -361,6 +361,9 @@ svg { flex: none; }
 .hdr-btn { width: 42px; height: 42px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .2); background: transparent; color: var(--on-night); display: grid; place-items: center; }
 .hdr-btn:hover { border-color: var(--gold-on-night); color: var(--gold-on-night); }
 .hdr-site { text-decoration: none; }
+.point-fiche { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-top: 10px; background: var(--surface); }
+.point-fiche .row-main { display: flex; flex-direction: column; gap: 3px; }
+.point-fiche .inline-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 @media (max-width: 400px) { .sync-t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } }
 
 /* ── Bandeaux d’information ── */
@@ -8914,10 +8917,11 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   }
 
   /* — Comptes et accès (administrateurs) — */
-  const CPT = { liste: null, err: "", code: null, sauv: null };
+  const CPT = { liste: null, err: "", code: null, sauv: null, points: null };
   async function chargerComptes() {
     try { const r = await SDEH.comptes(); CPT.liste = r.comptes || []; CPT.err = ""; SYNC_C.comptes = null; } catch (e) { CPT.err = (e && e.message) || "Lecture impossible."; }
     try { const r = await fetch("/api/sauvegardes", { credentials: "same-origin", cache: "no-store" }); CPT.sauv = r.ok ? (await r.json()).sauvegardes || [] : null; } catch (e) { CPT.sauv = null; }
+    try { const r = await fetch("/api/points-sde", { credentials: "same-origin", cache: "no-store" }); CPT.points = r.ok ? (await r.json()).reponses || [] : null; } catch (e) { CPT.points = null; }
     dernier.sheet = null; render();
   }
   function messageActivation(c) {
@@ -8935,8 +8939,24 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     const code = CPT.code ? `<div class="note ok cpt-code" role="status"><p style="margin:0 0 6px"><b>Code d’activation pour ${esc(CPT.code.email)} : <span class="num esp-code">${esc(CPT.code.code)}</span></b></p><p class="hint" style="margin:0 0 8px">Transmettez-le à la personne : il n’est affiché qu’une fois, reste valable 14 jours et ne sert qu’une fois.</p><div class="btn-row"><a class="btn btn-sm btn-primary" href="${esc(lienWa("", messageActivation(CPT.code)))}" target="_blank" rel="noopener">${I("i-msg")}Envoyer par WhatsApp</a>${btn("cpt-copier", "Copier le message", { sm: true })}${btn("cpt-code-ok", "C’est transmis", { sm: true })}</div></div>` : "";
     const tailleKo = (n) => (n > 1048576 ? (n / 1048576).toFixed(1).replace(".", ",") + " Mo" : Math.max(1, Math.round((n || 0) / 1024)) + " Ko");
     const sauv = CPT.sauv ? `<details class="imp-h"><summary>Sauvegardes automatiques</summary><p class="hint">Toute la base (membres, agenda, caisse, comptes sans mots de passe) est sauvegardée chaque nuit à 2 h et gardée 35 jours. Pour restaurer, le propriétaire utilise « Transférer des données » avec le fichier téléchargé.</p><div class="btn-row">${btn("sauv-maintenant", "Sauvegarder maintenant", { ico: "i-down", sm: true })}</div>${CPT.sauv.length ? `<ul class="esp-l">${CPT.sauv.map((x) => `<li><span><b>${esc(fmtLong(x.jour))}</b><small>${esc(nb(x.documents || 0))} documents · ${esc(tailleKo(x.taille))}</small></span><a class="btn btn-sm" href="/api/sauvegardes/${esc(x.jour)}" download>${I("i-down")}Télécharger</a></li>`).join("")}</ul>` : `<p class="hint">Aucune sauvegarde pour l’instant : la première sera faite cette nuit.</p>`}</details>` : "";
+    const URL_FORM = "https://mouvement-sde.org/point-sde";
+    const msgForm = `Shalom ! Pour mettre à jour la page « Présence internationale » du site du mouvement, merci au responsable de chaque point SDE de remplir cette fiche (5 minutes) :\n${URL_FORM}\n\nQue Dieu vous bénisse.\n— Secrétariat SDE`;
+    const PUB = { ville: "ville", responsable: "nom", telephone: "téléphone", email: "e-mail", lieu: "lieu", horaires: "horaires" };
+    const ficheP = (x) => {
+      const l = (k, v) => v ? `<span class="row-m"><b>${k} :</b> ${esc(v)}</span>` : "";
+      return `<div class="point-fiche"><span class="row-main"><span class="row-t">${esc(x.pays)} · ${esc(x.ville)}${x.quartier ? " (" + esc(x.quartier) + ")" : ""}</span>
+        <span class="row-m">${esc(x.statut || "")} · reçue le ${esc(fmtStamp(x.cree))}</span>
+        ${l("Responsable", [x.responsable, x.role].filter(Boolean).join(", "))}${l("Téléphone", x.telephone)}${l("E-mail", x.email)}${l("Lieu", x.lieu)}${l("Rencontres", [x.jour, x.heure].filter(Boolean).join(" · "))}${l("Soldats", x.effectif)}${l("Langues", x.langues)}${l("Activités", x.activites)}${l("Réseaux", x.reseaux)}
+        ${l("À publier", (x.publier || []).map((k) => PUB[k] || k).join(", ") || "rien")}${l("Remplie par", [x.auteur, x.auteurRole, x.auteurTel].filter(Boolean).join(" · "))}${l("Remarques", x.remarques)}</span>
+        <span class="inline-actions"><a class="btn btn-ghost btn-sm" href="${esc(lienWa(x.telephone, `Shalom ${String(x.responsable || "").split(/\s+/)[0]} ! C’est le secrétariat SDE, au sujet de la fiche du point de ${x.ville}.`))}" target="_blank" rel="noopener">${I("i-msg")}WhatsApp</a><button class="btn btn-ghost btn-sm" type="button" data-act="point-suppr" data-id="${esc(x.id)}">${I("i-trash")}Retirer</button></span></div>`;
+    };
+    const points = `<details class="imp-h"${CPT.points && CPT.points.length ? " open" : ""}><summary>Fiches des points SDE${CPT.points ? ` (${CPT.points.length})` : ""}</summary>
+      <p class="hint">Formulaire à envoyer aux responsables des points dans les nations : <a class="link" href="${URL_FORM}" target="_blank" rel="noopener">${URL_FORM.replace("https://", "")}</a>. Les réponses arrivent ici.</p>
+      <div class="btn-row"><a class="btn btn-sm btn-primary" href="${esc(lienWa("", msgForm))}" target="_blank" rel="noopener">${I("i-msg")}Envoyer le formulaire par WhatsApp</a><button class="btn btn-sm btn-ghost" type="button" data-act="point-lien">${I("i-copy")}Copier le message</button></div>
+      ${CPT.points === null ? `<p class="hint">Les fiches n’ont pas pu être lues.</p>` : CPT.points.length ? `<div style="margin-top:4px">${CPT.points.map(ficheP).join("")}</div>` : `<p class="hint" style="margin-top:10px">Aucune fiche reçue pour le moment.</p>`}</details>`;
+    CPT.msgForm = msgForm;
     const etat = (c) => c.actif ? (c.derniere ? "dernière connexion " + fmtStamp(c.derniere) : "actif") : c.aActiver ? "en attente d’activation" : "sans mot de passe";
-    return imp + sauv + code + `<p class="hint" style="margin-top:0">Les soldats créent eux-mêmes leur compte et reçoivent un matricule à 6 chiffres. Pour un responsable, ajoutez son adresse avec son rôle : un code d’activation s’affiche, à lui transmettre pour qu’il choisisse son mot de passe.</p>
+    return points + imp + sauv + code + `<p class="hint" style="margin-top:0">Les soldats créent eux-mêmes leur compte et reçoivent un matricule à 6 chiffres. Pour un responsable, ajoutez son adresse avec son rôle : un code d’activation s’affiche, à lui transmettre pour qu’il choisisse son mot de passe.</p>
       <form class="form compte-aj" id="f-compte" novalidate><div class="f2">${champ("cp-email", "Adresse e-mail", inp("cp-email", "email", "", 'type="email" autocomplete="off" placeholder="prenom.nom@gmail.com" required'))}${champ("cp-nom", "Nom", inp("cp-nom", "nom", "", 'autocomplete="off"'))}</div>${champ("cp-role", "Rôle", `<select class="inp" id="cp-role" name="role">${opts("contributeur")}</select>`)}<button class="btn btn-primary btn-sm" type="submit">${I("i-plus")}Ajouter ou mettre à jour</button></form>
       <div class="list" style="margin-top:14px">${CPT.liste.map((c) => {
         const proprio = c.role === "proprietaire";
@@ -8989,6 +9009,8 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     "cpt-reinit": (t) => boutonArme(t, "Confirmer", () => majCompteH({ email: t.dataset.email, reinitialiser: true }, "Nouveau code créé : l’ancien mot de passe ne fonctionne plus")),
     "cpt-copier": () => { if (CPT.code) navigator.clipboard.writeText(messageActivation(CPT.code)).then(() => toast("Message copié"), () => toast("Copie impossible", "err")); },
     "sauv-maintenant": async (t) => { t.disabled = true; try { const r = await fetch("/api/sauvegardes", { method: "POST", credentials: "same-origin" }); if (!r.ok) throw new Error(); toast("Sauvegarde faite"); } catch (e) { toast("La sauvegarde a échoué.", "err"); } await chargerComptes(); },
+    "point-lien": () => { if (CPT.msgForm) navigator.clipboard.writeText(CPT.msgForm).then(() => toast("Message copié"), () => toast("Copie impossible", "err")); },
+    "point-suppr": (t) => boutonArme(t, "Confirmer", async () => { try { const r = await fetch("/api/points-sde/" + encodeURIComponent(t.dataset.id), { method: "DELETE", credentials: "same-origin" }); if (!r.ok) throw new Error(); toast("Fiche retirée"); } catch (e) { toast("Retrait impossible.", "err"); } await chargerComptes(); }),
     "cpt-code-ok": () => { CPT.code = null; dernier.sheet = null; render(); },
     "compte-suppr": (t) => boutonArme(t, "Confirmer le retrait", () => majCompteH({ email: t.dataset.email, supprimer: true }, "Accès retiré")),
   });
