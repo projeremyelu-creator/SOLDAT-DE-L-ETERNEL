@@ -1,0 +1,90 @@
+/* Présentation progressive : la palette et les contenus du site sont conservés. */
+:root { --gutter: clamp(16px, 3vw, 40px); }
+:focus-visible { outline: 3px solid var(--or); outline-offset: 5px; }
+.enveloppe > *, .mega-menu-cols > *, .vmi > *, .bios > * { min-width: 0; }
+.chapo, .hero-sous { text-wrap: pretty; }
+h1, h2 { text-wrap: balance; }
+.tete-section { max-width: 850px; margin-inline: auto; margin-bottom: clamp(28px, 4vw, 48px); }
+.tete-section .surtitre { display: inline-flex; align-items: center; gap: 12px; }
+.tete-section .surtitre::before, .tete-section .surtitre::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .55; }
+.hero { min-height: min(900px, calc(100svh - 64px)); padding-block: clamp(72px, 10vw, 120px) 80px; }
+.hero-contenu { max-width: 960px; }
+.hero h1 { font-size: clamp(2.35rem, 6.2vw, 5.3rem); line-height: 1.04; letter-spacing: .015em; }
+.hero-sous { max-width: 650px; line-height: 1.8; }
+.hero-badge { padding: 8px 18px; letter-spacing: .06em; }
+.hero-fond img { opacity: .32; }
+.hero-actions .bouton { min-height: 50px; }
+.bento-carte, .resume-carte, .vmi > *, .projet, .ressource-carte { border-color: color-mix(in srgb, var(--or) 18%, var(--bordure)); }
+.bento-carte { padding: clamp(22px, 3vw, 34px); }
+.bento-carte h3 { font-size: 1.35rem; }
+.bento-carte:focus-visible { border-color: var(--or); }
+.vmi, .bios, .points, .programmes { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+.pied-grille, .contact-grille { overflow-wrap: anywhere; }
+.entete { border-bottom-width: 1px; }
+.entete .enveloppe { min-height: 72px; }
+.entete.compact .enveloppe { min-height: 64px; }
+.entete .marque b { color: #e2c26a; }
+.nav-rubrique > button, .nav-principal .nav-lien-direct { position: relative; min-height: 44px; }
+.nav-rubrique > button::after, .nav-principal .nav-lien-direct::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: 4px; height: 2px; background: #e2c26a; transform: scaleX(0); transform-origin: left; transition: transform .22s ease; }
+.nav-rubrique > button:is(.act, [aria-expanded='true'])::after, .nav-principal .nav-lien-direct.act::after { transform: scaleX(1); }
+.btn-motion { width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.2); border-radius: var(--r); color: #e8ebf4; display: inline-grid; place-items: center; flex-shrink: 0; }
+.btn-motion:hover { border-color: #e2c26a; color: #e2c26a; }
+.btn-motion[aria-pressed='true'] { background: rgba(226,194,106,.12); border-color: #e2c26a; }
+.btn-motion:disabled { cursor: default; }
+.nav-membre-mobile { display: none; }
+@media (min-width: 1025px) {
+  .nav-rubrique[data-rubrique='mouvement'] .mega-menu, .nav-rubrique[data-rubrique='ressources'] .mega-menu { width: min(560px, calc(100vw - 64px)); }
+  .nav-rubrique[data-rubrique='mouvement'] .mega-menu-cols, .nav-rubrique[data-rubrique='ressources'] .mega-menu-cols { grid-template-columns: 1fr 1fr; }
+  .nav-rubrique[data-rubrique='engager'] .mega-menu { left: auto; right: 0; transform: translateY(8px); }
+  .nav-rubrique[data-rubrique='engager'].ouvert .mega-menu { transform: translateY(0); }
+  .mega-menu { max-height: calc(100dvh - 100px); overflow-y: auto; }
+  .mega-menu a { min-height: 64px; }
+  .mega-menu a:hover .mm-icone { transform: translateY(-2px); }
+  .mm-icone { transition: transform .2s ease; }
+  .vmi { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .bios { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 1100px) and (min-width: 1025px) {
+  .entete .enveloppe { gap: 6px; padding-inline: 16px; }
+  .nav-rubrique > button, .nav-principal .nav-lien-direct { padding-inline: 8px !important; }
+  .entete .marque small { display: none; }
+  .btn-membre { padding-inline: 12px; }
+}
+@media (max-width: 1024px) {
+  .entete { backdrop-filter: none; background: var(--nuit); }
+  .entete .enveloppe, .entete.compact .enveloppe { min-height: 64px; }
+  .nav-principal { inset: 64px 0 0; height: calc(100vh - 64px); height: calc(100dvh - 64px); padding: 16px var(--gutter) calc(32px + env(safe-area-inset-bottom)); background: var(--nuit); overscroll-behavior: contain; border-top: 1px solid rgba(226,194,106,.25); }
+  .nav-principal .nav-lien-direct { padding: 14px 4px !important; }
+  .nav-rubrique > button { padding: 18px 4px; font-size: 1.15rem; color: #e8ebf4; }
+  .mega-menu { color: #e8ebf4; --texte: #e8ebf4; --texte-2: #b8c1d8; --gris: #b8c1d8; --or: #e2c26a; }
+  :root[data-theme='light'] .entete .mega-menu { --texte: #e8ebf4; --gris: #b8c1d8; }
+  .mega-menu a { min-height: 60px; padding: 12px; }
+  .mega-menu a:hover, .mega-menu a:focus-visible { background: rgba(255,255,255,.08); }
+  .nav-rubrique.ouvert .mega-menu { animation: panneau-liens .22s ease both; }
+  @keyframes panneau-liens { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+  .nav-membre-mobile { display: inline-flex; margin-top: 24px; justify-content: center; min-height: 50px; flex-shrink: 0; }
+  .entete-droite { gap: 6px; }
+  .menu-ouvert .nav-mobile, .menu-ouvert .barre-if, .menu-ouvert .retour-haut { visibility: hidden; }
+}
+@media (max-width: 480px) {
+  .entete .marque small { font-size: .58rem; }
+  .entete .marque { gap: 6px; }
+  .entete .logo { width: 30px; height: 30px; }
+  .entete .marque b { font-size: 1.05rem; }
+  .entete .enveloppe { gap: 8px; }
+  .btn-theme, .btn-motion, .burger { width: 40px; height: 44px; }
+  .hero { padding-top: 64px; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .bouton { justify-content: center; white-space: normal; }
+  .hero-badge { font-size: .72rem; padding-inline: 12px; }
+  .scroll-ind { display: none; }
+  .if-compte .cd-nombre { font-size: 1.8rem; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  html[data-motion='full'] .galerie-ouvrir img { transition: transform .5s var(--ease); }
+  html[data-motion='full'] .galerie-ouvrir:hover img { transform: scale(1.035); }
+}
+html[data-motion='reduced'] *, html[data-motion='reduced'] *::before, html[data-motion='reduced'] *::after { animation: none !important; transition-duration: 0s !important; scroll-behavior: auto !important; }
+html[data-motion='reduced'] { scroll-behavior: auto !important; }
+html[data-motion='reduced'] .revele { opacity: 1 !important; transform: none !important; }
+html[data-motion='reduced'] .ripple { display: none !important; }
