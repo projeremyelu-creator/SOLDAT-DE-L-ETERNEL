@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="fr" dir="ltr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Demandes d'engagement · Soldats de l'Éternel</title>
+<meta name="description" content="Interface administrative : demandes d'engagement reçues depuis mouvement-sde.org.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0f1e3d">
+<link rel="icon" href="/icone-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/icone-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@400;500;600;700;800;900&family=Saira+Stencil+One&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --nuit: #0f1e3d; --nuit-2: #1b2f5b;
+  --or: #e2c26a; --or-lum: #f0d586; --or-sombre: #85650f;
+  --ivoire: #eef0f5;
+  --fond: #0a0f1d; --surface: #121a2e; --surface-2: #19233b;
+  --texte: #e8ebf4; --texte-2: #a4adc4; --gris: #b8c1d8;
+  --bordure: rgba(43,67,119,.4);
+  --vert: #7ED8A8; --bleu: #7EB4FF; --orange: #E8906F;
+  --r: 10px; --r-md: 14px; --r-lg: 20px;
+  --f-titre: "Saira Condensed", system-ui, sans-serif;
+  --f-texte: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --f-mono: "DM Mono", ui-monospace, Menlo, Consolas, monospace;
+  --f-marque: "Saira Stencil One", "Saira Condensed", Impact, sans-serif;
+}
+:root[data-theme="light"] {
+  --fond: #eef0f5; --surface: #ffffff; --surface-2: #f3f5f9;
+  --texte: #161e35; --texte-2: #535c75; --gris: #535c75;
+  --bordure: rgba(15,30,61,.1);
+}
+* { box-sizing: border-box; margin: 0; }
+body { font-family: var(--f-texte); background: var(--fond); color: var(--texte); line-height: 1.6; min-height: 100vh; }
+a { color: var(--or); text-decoration: none; }
+a:hover { color: var(--or-lum); }
+button { font: inherit; border: none; cursor: pointer; }
+h1, h2, h3 { font-family: var(--f-titre); font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+
+/* Header */
+.entete {
+  position: sticky; top: 0; z-index: 10;
+  background: linear-gradient(180deg, rgba(10,15,29,.9), rgba(10,15,29,.75));
+  backdrop-filter: blur(14px) saturate(1.5);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  border-bottom: 1px solid rgba(226,194,106,.25);
+  padding: 14px 24px;
+}
+.entete .enveloppe { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.marque { display: flex; align-items: center; gap: 10px; }
+.marque b { font-family: var(--f-marque); color: var(--or); font-size: 1.1rem; letter-spacing: .08em; }
+.marque small { font-size: .7rem; color: var(--texte-2); display: block; letter-spacing: .15em; text-transform: uppercase; }
+.entete-droite { display: flex; gap: 10px; align-items: center; font-size: .85rem; }
+.chip-ident { font-family: var(--f-mono); font-size: .78rem; padding: 6px 12px; background: rgba(226,194,106,.15); color: var(--or); border-radius: 999px; border: 1px solid rgba(226,194,106,.3); }
+
+/* Contenu */
+.enveloppe { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+main { padding: 32px 0 80px; position: relative; }
+
+.tete-section { margin-bottom: 28px; }
+.surtitre { font-family: var(--f-mono); font-size: .72rem; color: var(--or); letter-spacing: .18em; text-transform: uppercase; margin-bottom: 6px; padding-left: 14px; position: relative; }
+.surtitre::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 14px; background: linear-gradient(180deg, #e2c26a, #85650f); border-radius: 1px; }
+.titre { font-size: clamp(1.8rem, 4vw, 2.4rem); margin: 2px 0 10px; }
+.chapo { color: var(--texte-2); max-width: 680px; }
+
+/* Barre de statistiques */
+.stats-barre { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 24px 0 32px; }
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+  border-radius: var(--r-md);
+  padding: 18px 20px;
+  transition: border-color .25s, transform .25s, box-shadow .25s;
+}
+.stat:hover { border-color: rgba(226,194,106,.4); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.3); }
+.stat-label { font-family: var(--f-mono); font-size: .66rem; color: var(--texte-2); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 8px; }
+.stat-val { font-family: var(--f-titre); font-size: 2.2rem; font-weight: 700; color: var(--texte); line-height: 1; }
+.stat-val.v-or { color: var(--or); }
+.stat-val.v-vert { color: var(--vert); }
+
+/* Filtres */
+.filtres { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.filtres button {
+  padding: 8px 16px; border-radius: 999px;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
+  color: var(--texte-2); font-family: var(--f-titre); font-size: .78rem;
+  letter-spacing: .06em; text-transform: uppercase; font-weight: 600;
+  transition: all .2s;
+}
+.filtres button:hover { color: var(--or); border-color: rgba(226,194,106,.3); }
+.filtres button.actif { background: rgba(226,194,106,.15); border-color: var(--or); color: var(--or); }
+
+/* Liste des engagements */
+.liste { display: grid; gap: 14px; }
+
+.carte {
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+  border-left: 3px solid var(--or);
+  border-radius: var(--r-md);
+  padding: 20px 22px;
+  transition: border-color .25s, box-shadow .25s;
+}
+.carte:hover { box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+.carte.traite { opacity: .65; border-left-color: var(--vert); }
+
+.carte-tete { display: flex; justify-content: space-between; align-items: start; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; }
+.carte-id { font-family: var(--f-mono); font-size: .68rem; color: var(--texte-2); letter-spacing: .1em; }
+.carte-id b { color: var(--or); }
+.carte-date { font-family: var(--f-mono); font-size: .72rem; color: var(--texte-2); }
+
+.carte-nom { font-family: var(--f-titre); font-size: 1.2rem; font-weight: 700; color: var(--texte); letter-spacing: .02em; margin-bottom: 4px; }
+.carte-objet { font-size: .82rem; color: var(--or); font-weight: 600; margin-bottom: 10px; }
+
+.carte-contacts { display: flex; gap: 16px; flex-wrap: wrap; font-size: .85rem; margin: 10px 0; }
+.carte-contacts span { display: inline-flex; align-items: center; gap: 6px; color: var(--texte-2); }
+.carte-contacts a { color: var(--or); font-family: var(--f-mono); font-size: .82rem; }
+.carte-contacts svg { width: 14px; height: 14px; color: var(--or); opacity: .7; }
+
+.carte-msg { margin: 10px 0 14px; padding: 12px 14px; background: rgba(255,255,255,.03); border-radius: 8px; font-size: .9rem; color: var(--gris); white-space: pre-wrap; max-height: 160px; overflow: auto; }
+
+.carte-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding-top: 12px; border-top: 1px solid var(--bordure); }
+.carte-actions button, .carte-actions a {
+  padding: 8px 14px; border-radius: 8px;
+  font-family: var(--f-titre); font-size: .72rem; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  transition: all .2s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-marquer { background: linear-gradient(145deg, #e2c26a, #85650f); color: #0f1e3d; border: none; }
+.btn-marquer:hover { filter: brightness(1.1); }
+.btn-marquer.est-traite { background: rgba(126,216,168,.15); color: var(--vert); border: 1px solid rgba(126,216,168,.3); }
+.btn-mail { background: transparent; color: var(--texte-2); border: 1px solid var(--bordure); }
+.btn-mail:hover { color: var(--or); border-color: var(--or); }
+.btn-copier { background: transparent; color: var(--texte-2); border: 1px solid var(--bordure); }
+.btn-copier:hover { color: var(--or); border-color: var(--or); }
+
+.note {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  background: rgba(255,255,255,.03);
+  border: 1px dashed var(--bordure);
+  border-radius: 8px;
+  font-family: var(--f-texte); font-size: .85rem;
+  color: var(--texte);
+  resize: vertical;
+  min-height: 60px;
+}
+.note:focus { outline: 2px solid var(--or); outline-offset: 2px; }
+
+/* Message d'état */
+.message {
+  text-align: center; padding: 40px 20px;
+  color: var(--texte-2);
+}
+.message.erreur { color: var(--orange); background: rgba(232,144,111,.1); border-radius: var(--r-md); border: 1px solid rgba(232,144,111,.3); }
+.message.vide { background: rgba(226,194,106,.05); border: 1px dashed rgba(226,194,106,.2); border-radius: var(--r-md); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
+  padding: 12px 20px;
+  background: #0f1e3d; color: var(--or);
+  border: 1px solid var(--or);
+  border-radius: 999px;
+  font-family: var(--f-titre); font-size: .82rem; letter-spacing: .05em;
+  box-shadow: 0 10px 28px rgba(0,0,0,.5);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  z-index: 100;
+  pointer-events: none;
+}
+.toast.visible { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 600px) {
+  .stat-val { font-size: 1.6rem; }
+  main { padding: 24px 0 100px; }
+  .carte { padding: 16px 18px; }
+}
+</style>
+</head>
+<body>
+
+<header class="entete">
+  <div class="enveloppe">
+    <a href="/" class="marque" aria-label="Accueil SDE">
+      <img src="/vitrine/logo-96.png" alt="" width="36" height="36">
+      <span>
+        <b>SDE</b>
+        <small>Admin · Engagements</small>
+      </span>
+    </a>
+    <div class="entete-droite">
+      <span class="chip-ident" id="qui">—</span>
+      <a href="https://app.mouvement-sde.org/" style="font-size:.82rem">↗ App MPA SDE</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="enveloppe">
+    <div class="tete-section">
+      <div class="surtitre">Centre de commandement · Secrétariat</div>
+      <h1 class="titre">Demandes d'engagement reçues</h1>
+      <p class="chapo">Chaque personne qui remplit le formulaire sur <code>mouvement-sde.org</code> apparaît ici. Marquez-la « traitée » après contact.</p>
+    </div>
+
+    <div class="stats-barre" id="stats"></div>
+
+    <div class="filtres" role="tablist" aria-label="Filtre d'état">
+      <button data-filtre="tous" class="actif">Toutes</button>
+      <button data-filtre="nouvelles">Nouvelles</button>
+      <button data-filtre="traitees">Traitées</button>
+    </div>
+
+    <div id="liste"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast">Enregistré</div>
+
+<script>
+(() => {
+  'use strict';
+  const liste = document.getElementById('liste');
+  const stats = document.getElementById('stats');
+  const toast = document.getElementById('toast');
+  const qui = document.getElementById('qui');
+  let demandes = [];
+  let filtre = 'tous';
+  let moi = null;
+
+  const echap = (s) => String(s || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const toastT = (texte) => { toast.textContent = texte; toast.classList.add('visible'); clearTimeout(toastT._t); toastT._t = setTimeout(() => toast.classList.remove('visible'), 2000); };
+
+  const fmtDate = (ts) => {
+    const d = new Date(ts);
+    const jours = ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'];
+    const mois = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    return `${jours[d.getDay()]} ${d.getDate()} ${mois[d.getMonth()]} · ${hh}h${mm}`;
+  };
+
+  async function charger() {
+    liste.innerHTML = '<div class="message">Chargement des demandes…</div>';
+    try {
+      const r = await fetch('/api/engager-admin', { credentials: 'same-origin', cache: 'no-store' });
+      if (r.status === 401 || r.status === 403) {
+        liste.innerHTML = `<div class="message erreur">Accès réservé à l'équipe administrative.<br><br>
+          <a href="https://app.mouvement-sde.org/#connexion" style="color:var(--or);text-decoration:underline">Se connecter à l'application</a> avec un compte administrateur, puis revenir sur cette page.</div>`;
+        return;
+      }
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const j = await r.json();
+      demandes = j.engagements || [];
+      afficherStats();
+      afficher();
+    } catch (e) {
+      liste.innerHTML = `<div class="message erreur">Erreur de chargement : ${echap(e.message)}</div>`;
+    }
+  }
+
+  async function chargerMoi() {
+    try {
+      const r = await fetch('/api/moi', { credentials: 'same-origin', cache: 'no-store' });
+      moi = await r.json();
+      if (moi && moi.connecte) {
+        qui.textContent = `${moi.nom || moi.email} · ${moi.libRole}`;
+      } else {
+        qui.textContent = 'Non connecté';
+      }
+    } catch { qui.textContent = '—'; }
+  }
+
+  function afficherStats() {
+    const total = demandes.length;
+    const nouvelles = demandes.filter((d) => !d.traite).length;
+    const traitees = total - nouvelles;
+    const dernierJour = demandes.filter((d) => Date.now() - d.cree < 86400000).length;
+    stats.innerHTML = `
+      <div class="stat"><div class="stat-label">Total reçues</div><div class="stat-val">${total}</div></div>
+      <div class="stat"><div class="stat-label">À traiter</div><div class="stat-val v-or">${nouvelles}</div></div>
+      <div class="stat"><div class="stat-label">Traitées</div><div class="stat-val v-vert">${traitees}</div></div>
+      <div class="stat"><div class="stat-label">24 dernières h</div><div class="stat-val">${dernierJour}</div></div>
+    `;
+  }
+
+  function afficher() {
+    const filt = demandes.filter((d) => filtre === 'tous' ? true : filtre === 'traitees' ? d.traite : !d.traite);
+    if (!filt.length) {
+      liste.innerHTML = `<div class="message vide">${filtre === 'nouvelles' ? 'Aucune demande en attente — vous êtes à jour.' : filtre === 'traitees' ? 'Aucune demande traitée pour le moment.' : "Aucune demande reçue pour le moment. Elles apparaîtront ici dès qu'une personne remplit le formulaire sur mouvement-sde.org."}</div>`;
+      return;
+    }
+    liste.innerHTML = '<div class="liste">' + filt.map((d) => {
+      const idStr = String(d.id).padStart(4, '0');
+      const telHref = d.tel ? `tel:${d.tel.replace(/\s/g, '')}` : '';
+      const waHref = d.tel ? `https://wa.me/${d.tel.replace(/\D/g, '')}` : '';
+      const mailSubject = `Suite à votre demande SDE — ${d.objet || 'engagement'}`;
+      const mailHref = d.email ? `mailto:${d.email}?subject=${encodeURIComponent(mailSubject)}` : '';
+      return `
+      <article class="carte ${d.traite ? 'traite' : ''}" data-id="${d.id}">
+        <div class="carte-tete">
+          <div>
+            <div class="carte-id">ENG-<b>${idStr}</b> · ${echap(d.source || 'mouvement-sde.org')}</div>
+            <div class="carte-nom">${echap(d.nom)}</div>
+            <div class="carte-objet">${echap(d.objet || 'Demande')} ${d.pole ? '— ' + echap(d.pole) : ''}</div>
+          </div>
+          <div class="carte-date">${fmtDate(d.cree)}</div>
+        </div>
+        ${d.ville ? `<div style="font-size:.85rem;color:var(--texte-2);margin-bottom:8px">📍 ${echap(d.ville)}</div>` : ''}
+        <div class="carte-contacts">
+          ${d.tel ? `<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.63 2.63a2 2 0 0 1-.45 2.11L8 9.82a16 16 0 0 0 6 6l1.36-1.36a2 2 0 0 1 2.11-.45c.85.3 1.73.51 2.63.63A2 2 0 0 1 22 16.92z"/></svg> <a href="${telHref}">${echap(d.tel)}</a>${waHref ? ` · <a href="${waHref}" target="_blank" rel="noopener">WhatsApp</a>` : ''}</span>` : ''}
+          ${d.email ? `<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg> <a href="${mailHref}">${echap(d.email)}</a></span>` : ''}
+        </div>
+        ${d.message ? `<div class="carte-msg">${echap(d.message)}</div>` : ''}
+        <textarea class="note" data-id="${d.id}" placeholder="Note interne (vue par les administrateurs seulement)">${echap(d.note || '')}</textarea>
+        <div class="carte-actions">
+          <button type="button" class="btn-marquer ${d.traite ? 'est-traite' : ''}" data-id="${d.id}" data-traite="${d.traite ? 1 : 0}">
+            ${d.traite ? '✓ Traitée' : 'Marquer traitée'}
+          </button>
+          ${mailHref ? `<a class="btn-mail" href="${mailHref}">Répondre par e-mail</a>` : ''}
+          <button type="button" class="btn-copier" data-copier="${d.id}">Copier les coordonnées</button>
+        </div>
+      </article>`;
+    }).join('') + '</div>';
+
+    liste.querySelectorAll('.btn-marquer').forEach((b) => b.addEventListener('click', async () => {
+      const id = parseInt(b.dataset.id, 10);
+      const traite = b.dataset.traite === '1' ? 0 : 1;
+      const note = liste.querySelector(`textarea[data-id="${id}"]`).value;
+      try {
+        const r = await fetch('/api/engager-admin', {
+          method: 'PATCH',
+          headers: { 'content-type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ id, traite, note })
+        });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const d = demandes.find((x) => x.id === id);
+        if (d) { d.traite = traite; d.note = note; }
+        afficherStats();
+        afficher();
+        toastT(traite ? 'Marquée comme traitée' : 'Remise en attente');
+      } catch (e) {
+        toastT('Erreur : ' + e.message);
+      }
+    }));
+
+    liste.querySelectorAll('[data-copier]').forEach((b) => b.addEventListener('click', () => {
+      const id = parseInt(b.dataset.copier, 10);
+      const d = demandes.find((x) => x.id === id);
+      if (!d) return;
+      const texte = `${d.nom}\n${d.tel || ''}\n${d.email || ''}\n${d.ville || ''}\n\nObjet : ${d.objet || ''}\n${d.pole ? 'Pôle : ' + d.pole + '\n' : ''}\n${d.message || ''}`;
+      navigator.clipboard?.writeText(texte).then(() => toastT('Copié'), () => toastT('Copie refusée'));
+    }));
+
+    liste.querySelectorAll('textarea.note').forEach((t) => {
+      t.addEventListener('blur', async () => {
+        const id = parseInt(t.dataset.id, 10);
+        const d = demandes.find((x) => x.id === id);
+        if (!d) return;
+        if (t.value === (d.note || '')) return;
+        try {
+          const r = await fetch('/api/engager-admin', {
+            method: 'PATCH',
+            headers: { 'content-type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ id, traite: d.traite, note: t.value })
+          });
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          d.note = t.value;
+          toastT('Note enregistrée');
+        } catch (e) { toastT('Erreur : ' + e.message); }
+      });
+    });
+  }
+
+  document.querySelectorAll('.filtres button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('.filtres button').forEach((x) => x.classList.remove('actif'));
+    b.classList.add('actif');
+    filtre = b.dataset.filtre;
+    afficher();
+  }));
+
+  chargerMoi();
+  charger();
+})();
+</script>
+
+</body>
+</html>

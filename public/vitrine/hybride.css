@@ -721,3 +721,44 @@ a.ticket:hover, a.ticket:focus-visible { color: inherit; cursor: pointer; }
 }
 .dog-tag b { color: var(--or, #e2c26a); font-weight: 700; }
 :root[data-theme="light"] .dog-tag { background: rgba(255,255,255,.6); }
+
+/* ─── Fiche de pôle : accents dossier militaire ─── */
+.fp-boite {
+  background: linear-gradient(180deg, rgba(10,15,29,.98), rgba(5,7,14,.98)) !important;
+  border: 1px solid rgba(226,194,106,.35) !important;
+  position: relative;
+}
+.fp-boite::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--or, #e2c26a), transparent);
+  z-index: 2;
+}
+.fp-boite::after {
+  content: 'DOSSIER'; position: absolute; top: 10px; left: 14px; z-index: 3;
+  padding: 3px 10px;
+  background: linear-gradient(90deg, #85650f, #e2c26a);
+  color: #0f1e3d;
+  font-family: 'DMMono', 'GeistMono-Regular', ui-monospace, monospace;
+  font-size: .62rem; font-weight: 800; letter-spacing: .18em;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 50%, 100% 100%, 0 100%);
+}
+.fp-image::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(10,15,29,.3) 0%, transparent 50%, rgba(10,15,29,.95) 100%);
+  pointer-events: none;
+}
+.fp-corps .num {
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(226,194,106,.12);
+  border: 1px solid rgba(226,194,106,.3);
+  border-left: 3px solid var(--or, #e2c26a);
+  border-radius: 2px;
+  font-family: 'DMMono', 'GeistMono-Regular', ui-monospace, monospace;
+  letter-spacing: .14em;
+  margin-bottom: 10px;
+}
+:root[data-theme="light"] .fp-boite {
+  background: linear-gradient(180deg, #fff, #f3f5f9) !important;
+  border-color: rgba(184,144,31,.35) !important;
+}

@@ -1188,7 +1188,7 @@ html.anim .section { animation: section-in .5s ease-out both; }
           <p class="bio-devise">Un même appel, une même vision.</p>
         </article>
       </div>
-      <p class="bio-invit revele">Pour une invitation à prêcher, une conférence ou une rencontre avec le couple leader, écrivez au secrétariat : <a href="mailto:infosoldat@gmail.com">infosoldat@gmail.com</a> ou <a href="https://wa.me/2250778689573?text=Shalom%20!%20Je%20souhaite%20adresser%20une%20invitation%20au%20couple%20leader%20du%20MPA%20SDE." target="_blank" rel="noopener">WhatsApp</a>.</p>
+      <p class="bio-invit revele">Pour une invitation à prêcher, une conférence ou une rencontre avec le couple leader, écrivez au secrétariat : <a href="mailto:infosoldat@gmail.com?subject=Invitation%20au%20couple%20leader%20MPA%20SDE">infosoldat@gmail.com</a> ou <a href="#rejoindre" data-sujet="Autre">adressez votre invitation via le formulaire</a>.</p>
     </div>
   </section>
 
@@ -1489,7 +1489,10 @@ html.anim .section { animation: section-in .5s ease-out both; }
       </div>
       <div style="text-align:center;margin-top:32px">
         <p style="color:var(--gris);margin-bottom:14px">Pour soutenir un projet ou une initiative, contactez la trésorerie du mouvement.</p>
-        <a class="bouton b-or" href="https://wa.me/2250778689573?text=Shalom%20!%20Je%20souhaite%20soutenir%20un%20projet%20du%20mouvement%20SDE." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-msg"/></svg>Contacter la trésorerie</a>
+        <div style="display:inline-flex;gap:10px;flex-wrap:wrap;justify-content:center">
+          <a class="bouton b-or" href="#rejoindre" data-sujet="Autre"><svg aria-hidden="true"><use href="#i-msg"/></svg>Contacter la trésorerie</a>
+          <a class="bouton b-contour" href="mailto:infosoldat@gmail.com?subject=Soutien%20%C3%A0%20un%20projet%20SDE">Écrire un e-mail</a>
+        </div>
       </div>
     </div>
   </section>
@@ -1958,8 +1961,7 @@ html.anim .section { animation: section-in .5s ease-out both; }
       box.innerHTML = l.map((e) => {
         RDV[e.id] = e;
         const d = new Date(e.date + "T12:00:00Z");
-        const texte = "Shalom ! Je souhaite participer à « " + e.titre + " » le " + JOURS[d.getUTCDay()] + " " + d.getUTCDate() + " " + MOIS[d.getUTCMonth()] + ". Nom : ";
-        return `<article class="programme rdv" data-type="${echap(e.type || '')}"><div class="quand"><span class="jour"><b>${d.getUTCDate()}</b><small>${MOIS[d.getUTCMonth()]}</small></span><span><span class="rythme">${echap(e.type)}</span><br><span>${echap(JOURS[d.getUTCDay()].replace(/^./, (c) => c.toUpperCase()))}${e.heure ? " · " + echap(heureFr(e.heure)) : ""}</span></span></div><h3>${echap(e.titre)}</h3>${e.lieu ? `<p class="lieu">${echap(e.lieu)}</p>` : ""}<div class="rdv-actions"><a href="https://wa.me/2250778689573?text=${encodeURIComponent(texte)}" target="_blank" rel="noopener">Je viens <svg aria-hidden="true"><use href="#i-fleche"/></svg></a><button type="button" data-ics="${echap(e.id)}">Ajouter à mon agenda</button></div></article>`;
+        return `<article class="programme rdv" data-type="${echap(e.type || '')}"><div class="quand"><span class="jour"><b>${d.getUTCDate()}</b><small>${MOIS[d.getUTCMonth()]}</small></span><span><span class="rythme">${echap(e.type)}</span><br><span>${echap(JOURS[d.getUTCDay()].replace(/^./, (c) => c.toUpperCase()))}${e.heure ? " · " + echap(heureFr(e.heure)) : ""}</span></span></div><h3>${echap(e.titre)}</h3>${e.lieu ? `<p class="lieu">${echap(e.lieu)}</p>` : ""}<div class="rdv-actions"><a href="#rejoindre" data-sujet="${echap(e.titre)}">Je viens <svg aria-hidden="true"><use href="#i-fleche"/></svg></a><button type="button" data-ics="${echap(e.id)}">Ajouter à mon agenda</button></div></article>`;
       }).join("");
     }
   }).catch(() => {});
