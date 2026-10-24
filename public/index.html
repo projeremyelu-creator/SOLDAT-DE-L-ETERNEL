@@ -727,6 +727,36 @@ table.feuille td.p { color: var(--ok); }
 table.feuille td.r { color: var(--warn); }
 table.feuille td.e { color: var(--in); }
 table.feuille td.a, table.feuille td.na { color: var(--line-strong); }
+button.lien { background: none; border: none; color: var(--gold-on-night); cursor: pointer; font: inherit; padding: 0; text-decoration: underline; text-underline-offset: 2px; }
+button.lien:hover { color: var(--gold-mark); }
+/* ── Niveaux Academy ── */
+.niveaux-parcours { max-width: 720px; }
+.nv-card { border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 12px; border-left: 4px solid var(--nv-c, var(--gold-mark)); }
+.nv-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; }
+.nv-badge { display: flex; align-items: center; gap: 4px; background: var(--nv-c, var(--gold-mark)); color: #fff; border-radius: 8px; padding: 6px 10px; font-size: 14px; white-space: nowrap; }
+.nv-badge b { font-size: 16px; }
+.nv-badge .ico { width: 18px; height: 18px; }
+.nv-head h3 { margin: 0; font-size: 1rem; }
+.nv-desc { margin: 2px 0 0; font-size: .85rem; color: var(--muted); }
+.nv-stats { display: flex; gap: 16px; font-size: .82rem; color: var(--muted); margin-bottom: 8px; }
+.nv-list { margin: 0; }
+.nv-arrow { text-align: center; color: var(--line-strong); font-size: 18px; margin: 4px 0; }
+.nv-dots { display: inline-flex; gap: 4px; margin-top: 4px; }
+.nv-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--surface-2); border: 2px solid var(--line); }
+.nv-dot.ok { border-color: transparent; }
+.nv-dot.info { background: transparent; border-width: 2px; border-style: dashed; }
+/* Timeline parcours */
+.nv-timeline { position: relative; padding-left: 28px; margin: 12px 0; }
+.nv-tl-item { position: relative; padding-bottom: 20px; }
+.nv-tl-item:not(:last-child)::before { content: ""; position: absolute; left: -20px; top: 28px; bottom: 0; width: 2px; background: var(--line); }
+.nv-tl-item.done:not(:last-child)::before { background: var(--nv-c); }
+.nv-tl-marker { position: absolute; left: -28px; top: 2px; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; background: var(--surface-2); color: var(--muted); border: 2px solid var(--line); }
+.nv-tl-item.done .nv-tl-marker { background: var(--nv-c); color: #fff; border-color: var(--nv-c); }
+.nv-tl-item.active .nv-tl-marker { border-color: var(--nv-c); color: var(--nv-c); background: var(--surface); animation: pulse-nv 2s infinite; }
+@keyframes pulse-nv { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--nv-c) 30%, transparent); } 50% { box-shadow: 0 0 0 6px transparent; } }
+.nv-tl-body h4 { margin: 0 0 6px; font-size: .95rem; }
+.nv-tl-formations { margin-top: 4px; }
+.nv-tl-formations .row { padding: 6px 8px; }
 /* ── Cotisations ── */
 .fseg { margin: 0 0 16px; max-width: 520px; }
 .fseg button .ico { width: 18px; height: 18px; }
@@ -1359,6 +1389,9 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
   <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.5"/><path d="m8.5 13.5-1.5 7 5-2.5 5 2.5-1.5-7"/></symbol>
   <symbol id="i-image" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="9.5" r="1.8"/><path d="m4 18 5.5-5.5 4 4 2.5-2.5 4.5 4.5"/></symbol>
   <symbol id="i-horn" viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6l-7 4z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v15H6.5A2.5 2.5 0 0 0 4 19.5z"/><path d="M4 19.5V22h16"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2l8 4v5c0 5.5-3.8 10.1-8 11-4.2-.9-8-5.5-8-11V6z"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="M2 17l3-11 5 4 2-6 2 6 5-4 3 11z"/><path d="M2 17h20v3H2z"/></symbol>
 </svg>
 <button id="fab-ia" class="fab-ia" type="button" data-vue="assistant" hidden aria-label="Ouvrir l’assistant Éliézer"><svg class="ico" aria-hidden="true"><use href="#i-spark"/></svg><span>Éliézer</span></button>
 <script>
@@ -3767,6 +3800,34 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
   /* ════════════════════════ Académie ════════════════════════ */
   const MODES_F = ["Présentiel", "En ligne", "Mixte"];
   const MENTIONS = ["Sans mention", "Assez bien", "Bien", "Très bien", "Excellent"];
+  /* Niveaux structurés de la Soldiers Academy */
+  const NIVEAUX_ACAD = [
+    { id: "fondations", label: "Fondations de la Foi", court: "Fondations", ico: "i-book", desc: "Les bases doctrinales et spirituelles pour tout soldat de l'Éternel", couleur: "#4f8cff" },
+    { id: "combat", label: "Combat Spirituel", court: "Combat Spirituel", ico: "i-shield", desc: "Stratégies de guerre spirituelle, intercession et délivrance", couleur: "#e67e22" },
+    { id: "leadership", label: "Leadership & Service", court: "Leadership", ico: "i-users", desc: "Former des responsables capables d'encadrer et de servir", couleur: "#27ae60" },
+    { id: "apostolique", label: "Ministère Apostolique", court: "Min. Apostolique", ico: "i-crown", desc: "Approfondissement pour les ministères apostoliques et prophétiques", couleur: "#8e44ad" },
+  ];
+  const NIVEAUX_MAP = { fondations: 1, combat: 2, leadership: 3, apostolique: 4 };
+  function niveauFormation(f) {
+    const p = norm(f.parcours || "");
+    if (p.includes("fondation") || p.includes("niveau 1") || p === "1") return "fondations";
+    if (p.includes("combat") || p.includes("guerre") || p.includes("niveau 2") || p === "2") return "combat";
+    if (p.includes("leader") || p.includes("service") || p.includes("niveau 3") || p === "3") return "leadership";
+    if (p.includes("apostol") || p.includes("ministr") || p.includes("niveau 4") || p === "4") return "apostolique";
+    return null;
+  }
+  function progressionNiveau(mid, niveauId) {
+    const fs = S.formations.filter((f) => niveauFormation(f) === niveauId);
+    if (!fs.length) return { formations: 0, certifiees: 0, taux: null, enCours: false };
+    let certifiees = 0, enCours = false;
+    fs.forEach((f) => { const p = (f.participants || {})[mid]; if (actifF(p)) { if (p.statut === "Certifié") certifiees++; else enCours = true; } });
+    return { formations: fs.length, certifiees, taux: certifiees / fs.length, enCours };
+  }
+  function niveauAtteint(mid) {
+    let max = 0;
+    NIVEAUX_ACAD.forEach((nv) => { const pr = progressionNiveau(mid, nv.id); if (pr.certifiees > 0 && NIVEAUX_MAP[nv.id] > max) max = NIVEAUX_MAP[nv.id]; });
+    return max;
+  }
   const formation = (id) => S.formations.find((f) => f.id === id) || null;
   function etatFormation(f) {
     const t = aujourdhui();
@@ -3816,16 +3877,19 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
       <div class="stat"><span class="stat-l">Apprenants</span><span class="stat-v">${nb(apprenants.length)}</span><span class="stat-m">Membres inscrits au moins une fois</span></div>
       <div class="stat"><span class="stat-l">${I("i-award")}Certifiés en ${an}</span><span class="stat-v">${nb(certifies)}</span><span class="stat-m">Attestations délivrables</span></div>
       <div class="stat"><span class="stat-l">Programmes</span><span class="stat-v">${nb(c.programmes.length)}</span><span class="stat-m">${esc(c.programmes.slice(0, 2).join(", "))}${c.programmes.length > 2 ? "…" : ""}</span></div></div>`;
-    const tabsAcad = [["encours", "En cours", par.encours.length], ["avenir", "À venir", par.avenir.length], ["terminees", "Terminées", par.terminee.length], ["apprenants", "Apprenants", apprenants.length]];
+    const tabsAcad = [["encours", "En cours", par.encours.length], ["avenir", "À venir", par.avenir.length], ["terminees", "Terminées", par.terminee.length], ["niveaux", "Niveaux", NIVEAUX_ACAD.length], ["apprenants", "Apprenants", apprenants.length]];
     if (peutAdmin()) tabsAcad.push(["preinscriptions", "Préinscriptions", S._preinsAcad ? S._preinsAcad.length : "…"]);
     out += sousOnglets("academie", tabsAcad);
+    if (S.sous.academie === "niveaux") return out + renderNiveaux();
     if (S.sous.academie === "preinscriptions" && peutAdmin()) return out + renderPreinsAcad();
     if (S.sous.academie === "apprenants") {
       if (!apprenants.length) return out + vide("i-cap", "Aucun membre n’est encore inscrit à une formation.");
       return out + `<div class="list">${apprenants.map((m) => {
         const fs = formationsDe(m.id);
         const cert = fs.filter(({ p }) => p.statut === "Certifié").length;
-        return `<button class="row" type="button" data-act="voir-membre" data-id="${esc(m.id)}">${avatar(m)}<span class="row-main"><span class="row-t">${esc(nomComplet(m))}</span><span class="row-m">${esc(fs.map(({ f }) => f.titre).join(" · "))}</span></span><span class="row-r"><span class="chip">${pluriel(fs.length, "formation", "formations")}</span>${cert ? `<span class="chip ok">${pluriel(cert, "certificat", "certificats")}</span>` : ""}</span></button>`;
+        const nva = niveauAtteint(m.id);
+        const nvLib = nva > 0 ? (NIVEAUX_ACAD[nva - 1] || {}).court || "" : "";
+        return `<button class="row" type="button" data-act="parcours-academie" data-id="${esc(m.id)}">${avatar(m)}<span class="row-main"><span class="row-t">${esc(nomComplet(m))}</span><span class="row-m">${esc(fs.map(({ f }) => f.titre).join(" · "))}</span>${NIVEAUX_ACAD.length ? `<span class="nv-dots">${NIVEAUX_ACAD.map((nv, i) => { const pr = progressionNiveau(m.id, nv.id); const cls = pr.certifiees > 0 ? "ok" : pr.enCours ? "info" : ""; return `<span class="nv-dot ${cls}" title="${esc(nv.court)}${pr.certifiees > 0 ? " ✓" : pr.enCours ? " (en cours)" : ""}" style="${cls === "ok" ? `background:${nv.couleur}` : cls === "info" ? `border-color:${nv.couleur}` : ""}"></span>`; }).join("")}</span>` : ""}</span><span class="row-r">${nva > 0 ? `<span class="chip ok" style="background:${(NIVEAUX_ACAD[nva - 1] || {}).couleur || "var(--ok)"};color:#fff">${esc(nvLib)}</span>` : ""}<span class="chip">${pluriel(fs.length, "formation", "formations")}</span>${cert ? `<span class="chip ok">${pluriel(cert, "certificat", "certificats")}</span>` : ""}</span></button>`;
       }).join("")}</div>`;
     }
     const f = S.f.academie;
@@ -3891,6 +3955,60 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
     ouvrir({ titre: "Préinscription · " + p.prenom + " " + p.nom, html: h });
   }
 
+  /* ── Niveaux structurés de l'Académie ── */
+  function renderNiveaux() {
+    let h = `<div class="niveaux-parcours">`;
+    NIVEAUX_ACAD.forEach((nv, i) => {
+      const fs = S.formations.filter((f) => niveauFormation(f) === nv.id);
+      const certTotal = fs.reduce((t, f) => t + participantsF(f).filter(({ p }) => p.statut === "Certifié").length, 0);
+      const inscrits = fs.reduce((t, f) => t + participantsF(f).filter(({ p }) => p.statut !== "Abandon").length, 0);
+      h += `<div class="nv-card" style="--nv-c:${nv.couleur}">
+        <div class="nv-head">
+          <span class="nv-badge" aria-hidden="true">${I(nv.ico)}<b>${i + 1}</b></span>
+          <div><h3>${esc(nv.label)}</h3><p class="nv-desc">${esc(nv.desc)}</p></div>
+        </div>
+        <div class="nv-stats">
+          <span>${pluriel(fs.length, "formation", "formations")}</span>
+          <span>${pluriel(inscrits, "inscrit", "inscrits")}</span>
+          <span>${pluriel(certTotal, "certifié", "certifiés")}</span>
+        </div>
+        ${fs.length ? `<div class="list nv-list">${fs.map(rowFormation).join("")}</div>` : `<p class="hint">Aucune formation associée à ce niveau. Créez une formation et indiquez « ${esc(nv.court)} » dans le champ « Parcours ou niveau ».</p>`}
+      </div>`;
+      if (i < NIVEAUX_ACAD.length - 1) h += `<div class="nv-arrow" aria-hidden="true">▼</div>`;
+    });
+    h += `</div>`;
+    return h;
+  }
+
+  /* ── Parcours individuel d'un apprenant ── */
+  function ouvrirParcoursAcademie(mid) {
+    const m = membre(mid);
+    if (!m) return;
+    const nva = niveauAtteint(mid);
+    let h = `<div class="ident">${avatar(m, true)}<div><h3>${esc(nomComplet(m))}</h3><p>${nva > 0 ? `Niveau atteint : ${esc((NIVEAUX_ACAD[nva - 1] || {}).label || "")}` : "Parcours en cours"}</p></div></div>`;
+    h += `<div class="nv-timeline">`;
+    NIVEAUX_ACAD.forEach((nv, i) => {
+      const pr = progressionNiveau(mid, nv.id);
+      const fs = S.formations.filter((f) => niveauFormation(f) === nv.id);
+      const cls = pr.certifiees > 0 ? "done" : pr.enCours ? "active" : "todo";
+      h += `<div class="nv-tl-item ${cls}" style="--nv-c:${nv.couleur}">
+        <div class="nv-tl-marker">${pr.certifiees > 0 ? "✓" : i + 1}</div>
+        <div class="nv-tl-body">
+          <h4>${esc(nv.label)}</h4>
+          ${fs.length ? `<div class="nv-tl-formations">${fs.map((f) => {
+            const p = (f.participants || {})[mid];
+            const prF = actifF(p) ? progressionP(f, p) : null;
+            const isCert = actifF(p) && p.statut === "Certifié";
+            const isInsc = actifF(p) && p.statut !== "Certifié" && p.statut !== "Abandon";
+            return `<button class="row nolead" type="button" data-act="voir-participant" data-id="${esc(f.id)}" data-mid="${esc(mid)}"><span class="row-main"><span class="row-t">${esc(f.titre)}</span><span class="row-m">${prF && prF.total ? `${prF.faits}/${prF.total} modules` : esc(datesF(f))}</span>${prF && prF.taux != null ? `<span class="bar slim ${prF.taux >= 0.8 ? "ok" : prF.taux >= 0.5 ? "info" : "warn"}" aria-hidden="true"><i style="width:${(prF.taux * 100).toFixed(1)}%"></i></span>` : ""}</span><span class="row-r">${isCert ? `<span class="chip ok">Certifié</span>` : isInsc ? `<span class="chip info">En cours</span>` : `<span class="chip">—</span>`}</span></button>`;
+          }).join("")}</div>` : `<p class="hint muted">Aucune formation à ce niveau.</p>`}
+        </div>
+      </div>`;
+    });
+    h += `</div>`;
+    ouvrir({ titre: "Parcours Academy · " + nomUsuel(m), html: h, wide: true });
+  }
+
   function ficheFormation(id) {
     const f = formation(id);
     if (!f) return null;
@@ -3912,8 +4030,10 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
       const chip = p.statut === "Certifié" ? `<span class="chip ok">Certifié</span>` : p.statut === "Abandon" ? `<span class="chip">Abandon</span>` : `<span class="chip info">Inscrit</span>`;
       return `<button class="row" type="button" data-act="voir-participant" data-id="${esc(f.id)}" data-mid="${esc(m.id)}">${avatar(m)}<span class="row-main"><span class="row-t">${esc(nomComplet(m))}</span><span class="row-m">${pr.total ? `${pr.faits} module${pr.faits > 1 ? "s" : ""} sur ${pr.total}` : "Aucun module défini"}</span>${pr.taux != null ? `<span class="bar slim ${pr.taux >= 0.8 ? "ok" : pr.taux >= 0.5 ? "info" : "warn"}" aria-hidden="true"><i style="width:${(pr.taux * 100).toFixed(1)}%"></i></span>` : ""}</span><span class="row-r">${chip}</span></button>`;
     }).join("");
+    const nvF = niveauFormation(f);
+    const nvObj = nvF ? NIVEAUX_ACAD.find((n) => n.id === nvF) : null;
     return `<div class="ident"><span class="av lg g-av" aria-hidden="true">${I("i-cap")}</span><div><h3>${esc(f.titre)}</h3><p>${esc([f.programme, f.parcours].filter(Boolean).join(" · "))}</p></div></div>
-      <div class="figure"><span class="chip ${CLS_ETAT_F[et]}">${LIB_ETAT_F[et]}</span><span>${esc(datesF(f))}</span></div>
+      <div class="figure"><span class="chip ${CLS_ETAT_F[et]}">${LIB_ETAT_F[et]}</span>${nvObj ? `<span class="chip" style="background:${nvObj.couleur};color:#fff;border-color:${nvObj.couleur}">${I(nvObj.ico)} Niveau ${NIVEAUX_MAP[nvF]}</span>` : ""}<span>${esc(datesF(f))}</span></div>
       <div class="counters"><div class="counter"><span class="lab">Inscrits</span><div class="counter-c"><b>${nb(actifs.length)}${f.capacite ? `<small class="muted"> / ${nb(f.capacite)}</small>` : ""}</b></div></div><div class="counter"><span class="lab">Progression moyenne</span><div class="counter-c"><b>${pct(moy)}</b></div></div></div>
       ${kv([["Formateur", esc(f.formateur || "")], ["Lieu", esc(lieu)], ["Frais", Number(f.frais) ? esc(fcfa(f.frais)) : ""], ["Certifiés", certifies.length ? esc(pluriel(certifies.length, "participant", "participants")) : ""], ["Description", f.description ? `<span style="white-space:pre-wrap">${esc(f.description)}</span>` : ""]])}
       <h3 class="h3">Modules (${nb(mods.length)})</h3>${mods.length ? `<div class="list">${rowsMods}</div>` : `<p class="hint">Aucun module défini. Ajoutez-les en modifiant la formation, un par ligne.</p>`}
@@ -4746,6 +4866,18 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
     let out = "";
     if (S.pret.formations) {
       const fs = formationsDe(m.id);
+      /* Badges de niveaux */
+      const nva = niveauAtteint(m.id);
+      if (nva > 0 || fs.some(({ f }) => niveauFormation(f))) {
+        out += `<h3 class="h3">Progression Academy</h3><div class="nv-dots" style="margin-bottom:10px;gap:8px">`;
+        NIVEAUX_ACAD.forEach((nv) => {
+          const pr = progressionNiveau(m.id, nv.id);
+          const cls = pr.certifiees > 0 ? "ok" : pr.enCours ? "info" : "";
+          out += `<span class="chip ${cls}" style="${cls === "ok" ? `background:${nv.couleur};color:#fff;border-color:${nv.couleur}` : cls === "info" ? `border-color:${nv.couleur};color:${nv.couleur}` : ""}">${esc(nv.court)}${pr.certifiees > 0 ? " ✓" : ""}</span>`;
+        });
+        out += `</div>`;
+        if (fs.length) out += `<p style="margin:0 0 8px"><button class="lien" type="button" data-act="parcours-academie" data-id="${esc(m.id)}">Voir le parcours complet →</button></p>`;
+      }
       out += `<h3 class="h3">Formations</h3>` + (fs.length ? `<div class="list">${fs.map(({ f, p }) => {
         const pr = progressionP(f, p);
         const chip = p.statut === "Certifié" ? `<span class="chip ok">Certifié</span>` : p.statut === "Abandon" ? `<span class="chip">Abandon</span>` : `<span class="chip info">${LIB_ETAT_F[etatFormation(f)]}</span>`;
@@ -8422,6 +8554,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     },
     "zip-attestations": (t) => zipAttestations(t.dataset.id),
     "supprimer-formation": (t) => boutonArme(t, "Confirmer la suppression", async () => { if (await ecrire(() => S.db.doc("formations/" + t.dataset.id).delete(), "Formation supprimée")) fermer(); }),
+    "parcours-academie": (t) => ouvrirParcoursAcademie(t.dataset.id),
     /* Préinscriptions Academy */
     "voir-preinscription": (t) => fichePreinscription(t.dataset.pid),
     "maj-preinscription-statut": async (t) => {
