@@ -1,0 +1,349 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   HYBRIDE.CSS — Direction visuelle hybride appliquée à tout le site SDE
+
+   Charger APRÈS les styles de la page (dans <head>, après le dernier
+   <style> inline ou le lien vers experience.css) :
+     <link rel="stylesheet" href="/vitrine/hybride.css">
+
+   Quatre langages visuels harmonisés :
+     1. Glassmorphism       (nav, cartes RDV, bandeaux CTA)
+     2. Tableau de bord     (.kpi, .chart-barres, .ligne-progression)
+     3. Bento asymétrique   (variants gradients sur .bento-carte)
+     4. Workspace Kanban    (.kanban, .colonne, .ticket)
+
+   Non-destructif : s'empile sur experience.css et les styles inline
+   des pages ; respecte les tokens --nuit, --or, --ivoire, Saira,
+   Atkinson déjà définis. Honore prefers-reduced-motion et le thème
+   clair.
+   ═════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --vert: #7ED8A8;
+  --bleu-clair: #7EB4FF;
+  --violet: #B49FE8;
+  --voile: rgba(10,15,29,.55);
+  --r-md: 14px;
+  --grad-nuit:
+    radial-gradient(ellipse 60% 50% at 15% 8%, rgba(90,65,150,.28) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 18%, rgba(226,194,106,.14) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 50% at 50% 95%, rgba(30,60,130,.22) 0%, transparent 60%);
+}
+:root[data-theme="light"] {
+  --voile: rgba(255,255,255,.65);
+  --grad-nuit:
+    radial-gradient(ellipse 60% 50% at 15% 8%, rgba(90,65,150,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 18%, rgba(226,194,106,.08) 0%, transparent 65%);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --voile: rgba(255,255,255,.65);
+    --grad-nuit:
+      radial-gradient(ellipse 60% 50% at 15% 8%, rgba(90,65,150,.06) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 85% 18%, rgba(226,194,106,.08) 0%, transparent 65%);
+  }
+}
+
+/* ─── Fond cosmique sur body ─── */
+body { background-image: var(--grad-nuit), linear-gradient(180deg, var(--fond, #0a0f1d), var(--fond, #0a0f1d)); background-attachment: fixed; }
+:root[data-theme="light"] body { background-image: var(--grad-nuit), linear-gradient(180deg, var(--fond, #eef0f5), var(--fond, #eef0f5)); }
+
+/* ─── Starfield (champ d'étoiles) : décoration fixée sur le fond.
+   Ne s'affiche qu'en mode sombre et jamais si l'utilisateur a demandé
+   la réduction d'animation. ─── */
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .55;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 8%, rgba(255,255,255,.9), transparent),
+    radial-gradient(1px 1px at 28% 14%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.5px 1.5px at 48% 6%, rgba(255,255,255,.8), transparent),
+    radial-gradient(1px 1px at 64% 11%, rgba(255,255,255,.5), transparent),
+    radial-gradient(2px 2px at 78% 7%, rgba(226,194,106,.7), transparent),
+    radial-gradient(1px 1px at 92% 13%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1px 1px at 18% 22%, rgba(255,255,255,.4), transparent),
+    radial-gradient(1.5px 1.5px at 55% 24%, rgba(255,255,255,.5), transparent),
+    radial-gradient(1px 1px at 82% 28%, rgba(255,255,255,.4), transparent),
+    radial-gradient(1px 1px at 32% 42%, rgba(255,255,255,.35), transparent),
+    radial-gradient(1px 1px at 70% 48%, rgba(255,255,255,.3), transparent),
+    radial-gradient(1.5px 1.5px at 15% 60%, rgba(226,194,106,.4), transparent),
+    radial-gradient(1px 1px at 88% 70%, rgba(255,255,255,.3), transparent),
+    radial-gradient(1px 1px at 42% 80%, rgba(255,255,255,.35), transparent);
+}
+:root[data-theme="light"] body::before { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  body::before { opacity: .3; }
+}
+/* Pas d'étoiles au-dessus du contenu si une image de fond hero est présente */
+.hero-fond { z-index: 1; }
+main, header, footer, .entete, .pied, .nav-mobile, .retour-haut { position: relative; z-index: 1; }
+
+/* ═══════ 1. GLASSMORPHISM ═══════ */
+.verre, .entete.verre, .pied.verre {
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  background: var(--voile);
+  border: 1px solid rgba(255,255,255,.08);
+}
+:root[data-theme="light"] .verre,
+:root[data-theme="light"] .entete.verre,
+:root[data-theme="light"] .pied.verre { border-color: rgba(15,30,61,.08); }
+
+/* Entête : glass renforcé par-dessus l'existant */
+.entete {
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  background: linear-gradient(180deg, rgba(10,15,29,.75), rgba(10,15,29,.55));
+  border-bottom: 1px solid rgba(226,194,106,.22) !important;
+}
+:root[data-theme="light"] .entete {
+  background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.72));
+  border-bottom-color: rgba(226,194,106,.3) !important;
+}
+
+/* Carte rendez-vous (prochain événement) : vitrée + lueur dorée */
+.carte-rdv {
+  position: relative;
+  border-radius: var(--r-lg, 20px);
+  padding: 28px;
+  overflow: hidden;
+}
+.carte-rdv::before {
+  content: ''; position: absolute; top: -1px; left: 20%; right: 20%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(226,194,106,.6), transparent);
+}
+.carte-rdv::after {
+  content: ''; position: absolute; top: -40px; right: -40px; width: 130px; height: 130px;
+  border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(226,194,106,.2) 0%, transparent 70%);
+}
+
+/* Pied de page : glass léger */
+.pied { backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); }
+
+/* ═══════ 2. TABLEAU DE BORD ═══════ */
+.grille-kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.kpi {
+  background: rgba(18,26,46,.6);
+  border: 1px solid rgba(43,67,119,.4);
+  border-radius: var(--r-md);
+  padding: 22px;
+  transition: border-color .25s ease, transform .25s ease;
+  min-width: 0;
+}
+:root[data-theme="light"] .kpi { background: #fff; border-color: rgba(15,30,61,.1); }
+.kpi:hover { border-color: rgba(226,194,106,.35); transform: translateY(-2px); }
+.kpi-tete { display: flex; justify-content: space-between; align-items: start; margin-bottom: 14px; }
+.kpi-label { font-family: var(--f-titre); font-size: .68rem; color: var(--texte-2, #a4adc4); letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+.kpi-icone { color: var(--or); opacity: .9; width: 20px; height: 20px; flex-shrink: 0; }
+.kpi-chiffre { font-family: var(--f-titre); font-size: 2.5rem; font-weight: 700; line-height: 1; color: var(--texte, #e8ebf4); }
+.kpi-sous { margin-top: 10px; font-size: .78rem; color: var(--texte-2, #a4adc4); line-height: 1.4; }
+.kpi-sous strong { color: var(--or); font-weight: 700; }
+.kpi-delta { margin-top: 12px; display: inline-flex; align-items: center; gap: 5px; font-size: .72rem; color: var(--vert); font-weight: 600; }
+.kpi-delta.en-baisse { color: #E8906F; }
+
+.barre { height: 6px; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; }
+:root[data-theme="light"] .barre { background: rgba(15,30,61,.08); }
+.barre-remplissage { height: 100%; background: linear-gradient(90deg, #b8901f, #e2c26a); border-radius: 999px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+
+.grille-analyses { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.carte-chart {
+  background: rgba(18,26,46,.6);
+  border: 1px solid rgba(43,67,119,.4);
+  border-radius: var(--r-md);
+  padding: 22px;
+  min-width: 0;
+}
+:root[data-theme="light"] .carte-chart { background: #fff; border-color: rgba(15,30,61,.1); }
+.carte-chart.large { grid-column: span 2; }
+@media (max-width: 680px) { .carte-chart.large { grid-column: span 1; } }
+
+.chart-barres { display: flex; align-items: end; gap: 10px; height: 160px; padding: 0 4px; margin-top: 16px; }
+.chart-barre { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; }
+.chart-barre .valeur { font-size: .72rem; color: var(--texte, #e8ebf4); font-weight: 700; }
+.chart-barre .fuseau { width: 100%; background: linear-gradient(180deg, #e2c26a, #85650f); border-radius: 5px 5px 0 0; min-height: 12px; transition: transform .25s ease; }
+.chart-barre:hover .fuseau { transform: scaleY(1.03); transform-origin: bottom; }
+.chart-barre .legende { font-size: .72rem; color: var(--texte-2, #a4adc4); font-family: var(--f-titre); letter-spacing: .05em; }
+
+.ligne-progression { margin-bottom: 16px; }
+.ligne-progression:last-child { margin-bottom: 0; }
+.ligne-progression .tete-l { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: .82rem; }
+.ligne-progression .valeur-l { color: var(--or); font-weight: 700; font-size: .78rem; }
+
+/* Filtres de période (chips dashboard) */
+.filtres { display: flex; gap: 6px; flex-wrap: wrap; }
+.filtres .filtre {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  color: var(--texte-2, #a4adc4);
+  font-size: .72rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: var(--f-titre);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+.filtres .filtre:hover { color: var(--or); border-color: rgba(226,194,106,.3); }
+.filtres .filtre.actif, .filtres .filtre[aria-pressed="true"] { background: rgba(226,194,106,.15); border-color: var(--or); color: var(--or); }
+:root[data-theme="light"] .filtres .filtre { background: rgba(15,30,61,.03); border-color: rgba(15,30,61,.08); }
+
+/* ═══════ 3. BENTO — amplifié ═══════
+   Préserve l'existant .bento-carte et ajoute des variantes gradients */
+.bento-carte { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; min-width: 0; }
+.bento-carte:hover { border-color: rgba(226,194,106,.4); }
+
+/* Variantes de teintes pour les cartes bento (à appliquer en complément de .bento-carte) */
+.bento-carte.v-phare { background: linear-gradient(145deg, rgba(90,65,150,.4), rgba(14,18,32,.85)), radial-gradient(circle at 80% 20%, rgba(226,194,106,.25), transparent 50%); }
+.bento-carte.v-formation { background: linear-gradient(145deg, rgba(30,60,130,.4), rgba(14,18,32,.85)); }
+.bento-carte.v-traversee { background: linear-gradient(145deg, rgba(139,94,52,.3), rgba(14,18,32,.85)); }
+.bento-carte.v-action { background: linear-gradient(145deg, rgba(126,216,168,.18), rgba(14,18,32,.85)); }
+.bento-carte.v-bordeaux { background: linear-gradient(145deg, rgba(100,29,45,.35), rgba(14,18,32,.85)); }
+:root[data-theme="light"] .bento-carte.v-phare,
+:root[data-theme="light"] .bento-carte.v-formation,
+:root[data-theme="light"] .bento-carte.v-traversee,
+:root[data-theme="light"] .bento-carte.v-action,
+:root[data-theme="light"] .bento-carte.v-bordeaux { background: var(--surface, #fff); }
+
+/* Grille bento asymétrique (12 colonnes) — alternative à .bento-grille existante */
+.bento-asym { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: minmax(170px, auto); gap: 16px; }
+.c-7x2 { grid-column: span 7; grid-row: span 2; }
+.c-5x2 { grid-column: span 5; grid-row: span 2; }
+.c-8x2 { grid-column: span 8; grid-row: span 2; }
+.c-4x2 { grid-column: span 4; grid-row: span 2; }
+.c-6x1 { grid-column: span 6; }
+.c-4x1 { grid-column: span 4; }
+@media (max-width: 980px) {
+  .c-7x2, .c-5x2, .c-8x2, .c-4x2 { grid-row: span 1; }
+  .c-7x2, .c-8x2 { grid-column: span 7; }
+  .c-5x2, .c-4x2 { grid-column: span 5; }
+}
+@media (max-width: 680px) {
+  .bento-asym { grid-template-columns: 1fr; }
+  .c-7x2, .c-5x2, .c-8x2, .c-4x2, .c-6x1, .c-4x1 { grid-column: span 1; }
+}
+
+/* Étiquettes (pills) catégorielles */
+.etiquette { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: .64rem; font-family: var(--f-titre); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+.e-or { background: rgba(226,194,106,.15); color: var(--or); }
+.e-bleu { background: rgba(126,180,255,.12); color: var(--bleu-clair); }
+.e-vert { background: rgba(126,216,168,.15); color: var(--vert); }
+.e-violet { background: rgba(180,159,232,.15); color: var(--violet); }
+.e-bordeaux { background: rgba(100,29,45,.2); color: #E8906F; }
+.e-neutre { background: rgba(255,255,255,.08); color: var(--texte-2, #a4adc4); }
+
+/* Statistiques compactes à l'intérieur d'une carte bento */
+.stats-mini { display: flex; align-items: center; gap: 18px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.08); margin-top: auto; flex-wrap: wrap; }
+.stats-mini > div { min-width: 0; }
+.stats-mini b { font-family: var(--f-titre); font-size: 1.4rem; color: var(--or); display: block; line-height: 1; }
+.stats-mini.v-bleu b { color: var(--bleu-clair); }
+.stats-mini.v-vert b { color: var(--vert); }
+.stats-mini small { font-size: .62rem; color: var(--texte-2, #a4adc4); letter-spacing: .12em; text-transform: uppercase; display: block; margin-top: 3px; }
+
+/* Orbite décorative (compteur mensuel, calendrier) */
+.orbite { flex: 0 0 180px; position: relative; height: 180px; display: flex; align-items: center; justify-content: center; }
+.orbite .cercle-1 { position: absolute; width: 170px; height: 170px; border: 1px dashed rgba(226,194,106,.25); border-radius: 50%; }
+.orbite .cercle-2 { position: absolute; width: 115px; height: 115px; border: 1px dashed rgba(226,194,106,.35); border-radius: 50%; }
+.orbite .noyau { position: absolute; width: 68px; height: 68px; background: radial-gradient(circle, #e2c26a, #85650f); border-radius: 50%; box-shadow: 0 0 36px rgba(226,194,106,.5); display: flex; align-items: center; justify-content: center; font-family: var(--f-titre); font-size: 1.6rem; font-weight: 700; color: var(--nuit); }
+.orbite .satellite { position: absolute; background: var(--or); border-radius: 50%; }
+@media (prefers-reduced-motion: no-preference) {
+  .orbite .cercle-1 { animation: tourne 24s linear infinite; }
+  .orbite .cercle-2 { animation: tourne 16s linear infinite reverse; }
+  @keyframes tourne { to { transform: rotate(360deg); } }
+}
+
+/* ═══════ 4. KANBAN ═══════ */
+.kanban { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.colonne {
+  background: rgba(14,20,36,.5);
+  border: 1px solid rgba(43,67,119,.4);
+  border-radius: var(--r-md);
+  padding: 16px;
+  min-width: 0;
+}
+:root[data-theme="light"] .colonne { background: #fff; border-color: rgba(15,30,61,.1); }
+.colonne-tete { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.colonne-nom { display: flex; align-items: center; gap: 10px; font-family: var(--f-titre); font-size: .82rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.puce { width: 10px; height: 10px; border-radius: 50%; }
+.puce-bleu { background: var(--bleu-clair); }
+.puce-or { background: var(--or); }
+.puce-violet { background: var(--violet); }
+.puce-vert { background: var(--vert); }
+.puce-rouge { background: #E8906F; }
+.compteur { font-family: var(--f-titre); font-size: .72rem; color: var(--texte-2, #a4adc4); background: rgba(255,255,255,.06); padding: 2px 9px; border-radius: 999px; font-weight: 600; }
+:root[data-theme="light"] .compteur { background: rgba(15,30,61,.06); }
+
+.ticket {
+  background: rgba(28,36,60,.8);
+  border: 1px solid rgba(43,67,119,.4);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 10px;
+  cursor: grab;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+:root[data-theme="light"] .ticket { background: var(--surface-2, #f3f5f9); border-color: rgba(15,30,61,.08); }
+.ticket:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.25); border-color: rgba(226,194,106,.3); }
+.ticket:active { cursor: grabbing; }
+.ticket-tete { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ticket-date { font-family: var(--f-titre); font-size: .66rem; color: var(--texte-2, #a4adc4); letter-spacing: .05em; }
+.ticket-titre { font-size: .88rem; font-weight: 700; margin-bottom: 4px; line-height: 1.35; color: var(--texte, #e8ebf4); font-family: var(--f-texte); text-transform: none; letter-spacing: normal; }
+.ticket-sous { font-size: .74rem; color: var(--texte-2, #a4adc4); margin-bottom: 10px; line-height: 1.4; }
+.ticket-pied { display: flex; align-items: center; justify-content: space-between; }
+.ticket.urgent { border-color: rgba(226,194,106,.35); box-shadow: 0 0 0 1px rgba(226,194,106,.2); }
+.ticket.urgent-flag, .urgent-flag { font-family: var(--f-titre); font-size: .66rem; color: var(--or); font-weight: 700; letter-spacing: .12em; }
+.ticket.fait { opacity: .68; }
+.ticket.fait .ticket-titre { text-decoration: line-through; text-decoration-color: rgba(232,235,244,.3); }
+
+/* Avatars rondelles d'équipe */
+.avatars { display: flex; }
+.avatars .av { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--fond, #0a0f1d); font-size: .7rem; font-family: var(--f-titre); font-weight: 700; display: inline-flex; align-items: center; justify-content: center; color: var(--nuit); background: #ccc; }
+.avatars .av + .av { margin-left: -8px; }
+.av-or { background: linear-gradient(145deg, #e2c26a, #85650f); }
+.av-bleu { background: linear-gradient(145deg, #7EB4FF, #4A6FA5); color: var(--nuit); }
+.av-vert { background: linear-gradient(145deg, #7ED8A8, #4A8870); color: var(--nuit); }
+.av-violet { background: linear-gradient(145deg, #B49FE8, #7A5FB8); color: var(--nuit); }
+
+/* ═══════ Finitions utilitaires ═══════ */
+.pulse { animation: pulse-doux 2.4s ease-in-out infinite; }
+@keyframes pulse-doux { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(1.25); } }
+@media (prefers-reduced-motion: reduce) {
+  .pulse { animation: none; }
+  .orbite .cercle-1, .orbite .cercle-2 { animation: none; }
+}
+
+/* Badge « phare » (événement à la une) — à poser sur un article de section */
+.ruban-phare {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(226,194,106,.12); color: var(--or);
+  border: 1px solid rgba(226,194,106,.3);
+  padding: 6px 14px; border-radius: 999px;
+  font-size: .72rem; font-family: var(--f-titre);
+  letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+}
+.ruban-phare .pt { width: 6px; height: 6px; background: var(--or); border-radius: 50%; }
+
+/* Dégradé doré sur titres emphatiques (<em> dans h1/h2, et .accent déjà présent) */
+.h-degrade em, .titre-degrade em,
+.hero h1 .accent {
+  font-style: normal;
+  background: linear-gradient(135deg, #e2c26a 0%, #f0d586 50%, #b8901f 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+
+/* Boutons pilule — version harmonisée avec la direction hybride (en complément des .bouton existants) */
+.bouton.pilule, .bouton[data-pilule] { border-radius: 999px; }
+
+/* Bandeau CTA vitré en fin de section */
+.cta-band {
+  margin-top: 44px; border-radius: var(--r-lg, 20px); padding: 26px 30px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap;
+}
+.cta-band h3 { font-size: 1.3rem; margin-bottom: 4px; color: var(--texte, #e8ebf4); }
+.cta-band p { font-size: .85rem; color: var(--texte-2, #a4adc4); margin: 0; }
+@media (max-width: 720px) {
+  .cta-band { flex-direction: column; align-items: stretch; text-align: center; }
+  .cta-band .bouton { justify-content: center; }
+}
