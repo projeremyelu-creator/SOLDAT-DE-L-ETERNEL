@@ -534,7 +534,8 @@
     noms: {},
     vue: "accueil",
     sous: { membres: "tous", agenda: "avenir", secretariat: "encours", finances: "toutes", garnisons: "carte", cotis: "fixes", projets: "actifs", academie: "encours", portevoix: "annonces", chambre: "requetes", arsenal: "biblio" },
-    f: { membres: { q: "", pole: "", statut: "", garnison: "" }, finances: { q: "" }, agenda: { q: "", type: "", garnison: "" }, secretariat: { q: "" }, pointage: { q: "", seuls: false, tous: false }, academie: { q: "", programme: "", _ps: "" }, arsenal: { q: "", type: "", theme: "" }, sel: { q: "" }, assiduite: { periode: "3m", type: "" }, cotis: { q: "", filtre: "tous" }, discipline: { statut: "encours" }, voyants: { filtre: "tous" }, speciales: { filtre: "ouvertes" }, offrandes: { type: "", q: "" }, projets: { q: "", cat: "", taches: "toutes" } },
+    _formulaires: null, _formulairesPage: 1, _formulairesPages: 1, _formulairesTotal: 0,
+    f: { membres: { q: "", pole: "", statut: "", garnison: "" }, finances: { q: "" }, agenda: { q: "", type: "", garnison: "" }, secretariat: { q: "" }, formulaires: { q: "" }, pointage: { q: "", seuls: false, tous: false }, academie: { q: "", programme: "", _ps: "" }, arsenal: { q: "", type: "", theme: "" }, sel: { q: "" }, assiduite: { periode: "3m", type: "" }, cotis: { q: "", filtre: "tous" }, discipline: { statut: "encours" }, voyants: { filtre: "tous" }, speciales: { filtre: "ouvertes" }, offrandes: { type: "", q: "" }, projets: { q: "", cat: "", taches: "toutes" } },
     mois: moisCourant(),
     limite: 80,
     pt: nouveauPointage(null),
@@ -1254,7 +1255,10 @@
     if (S.etat === "absent") return out + nonConnecte("Les décisions et leur suivi");
     if (!S.pret.decisions) return out + chargement("Lecture du registre…");
     const enC = S.decisions.filter(enCours), ret = S.decisions.filter(enRetard), finies = S.decisions.filter((d) => !enCours(d));
-    out += sousOnglets("secretariat", [["encours", "En cours", enC.length], ["retard", "En retard", ret.length], ["terminees", "Terminées", finies.length]]);
+    const tabsSec = [["encours", "En cours", enC.length], ["retard", "En retard", ret.length], ["terminees", "Terminées", finies.length]];
+    if (peutAdmin()) tabsSec.push(["formulaires", "Formulaires", S._formulaires ? S._formulairesTotal : "…"]);
+    out += sousOnglets("secretariat", tabsSec);
+    if (S.sous.secretariat === "formulaires" && peutAdmin()) return out + renderFormulaires();
     out += `<div class="filters"><label class="sr" for="q-dec">Rechercher une décision</label><input class="search" id="q-dec" type="search" placeholder="Décision, responsable, instance…" value="${esc(S.f.secretariat.q)}" data-filtre="secretariat.q" autocomplete="off"></div>`;
     if (!S.decisions.length) return out + vide("i-scroll", "Aucune décision enregistrée. Notez ici chaque décision prise en réunion, la personne chargée de l’exécuter et l’échéance : le tableau de bord signalera les retards.", ecr ? btn("ajout-dec", "Nouvelle décision", { ico: "i-plus", cls: "btn-primary", sm: true }) : "");
     const base = S.sous.secretariat === "retard" ? ret : S.sous.secretariat === "terminees" ? finies : enC;
@@ -1264,6 +1268,57 @@
     if (!liste.length) return out + vide(S.sous.secretariat === "retard" ? "i-check" : "i-search", S.sous.secretariat === "retard" && !q ? "Aucune décision en retard." : "Aucune décision ne correspond.");
     return out + `<div class="list">${liste.slice(0, S.limite).map(rowDec).join("")}${liste.length > S.limite ? `<button class="more" type="button" data-act="plus">Afficher plus de décisions</button>` : ""}</div>`;
   };
+
+  /* ── Formulaires (réponses admin) ── */
+  async function chargerFormulaires(page) {
+    page = page || 1;
+    try {
+      const r = await fetch("/api/formulaire-admin?page=" + page, { credentials: "same-origin" });
+      if (!r.ok) throw new Error();
+      const j = await r.json();
+      S._formulaires = j.reponses || [];
+      S._formulairesPage = j.page || 1;
+      S._formulairesPages = j.pages || 1;
+      S._formulairesTotal = j.total || 0;
+    } catch (e) { S._formulaires = []; toast("Impossible de charger les réponses.", "err"); }
+    renderMain();
+  }
+  function renderFormulaires() {
+    if (!S._formulaires) { chargerFormulaires(); return chargement("Chargement des réponses au formulaire…"); }
+    const list = S._formulaires;
+    if (!list.length && S._formulairesTotal === 0) return vide("i-inbox", "Aucune réponse reçue pour le moment.");
+    const q = norm(S.f.formulaires.q);
+    const filtrée = list.filter((p) => !q || norm([p.nom, p.prenom, p.email, p.telephone, p.ville || "", p.message || ""].join(" ")).includes(q));
+    let h = `<div class="filters"><input class="search" type="search" placeholder="Nom, email, téléphone…" value="${esc(S.f.formulaires.q)}" data-filtre="formulaires.q" autocomplete="off"></div>`;
+    h += `<div style="display:flex;align-items:center;justify-content:space-between;margin:0 0 8px"><p class="muted" style="margin:0;font-size:.85rem">${S._formulairesTotal} réponse${S._formulairesTotal > 1 ? "s" : ""} — page ${S._formulairesPage}/${S._formulairesPages}</p><div class="btn-row">${btn("export-formulaires", "Exporter CSV", { ico: "i-down", sm: true })}${S._formulairesPages > 1 ? btn("form-page-prec", "◂", { sm: true, attrs: S._formulairesPage <= 1 ? "disabled" : "" }) + btn("form-page-suiv", "▸", { sm: true, attrs: S._formulairesPage >= S._formulairesPages ? "disabled" : "" }) : ""}</div></div>`;
+    h += `<div class="list">${filtrée.map((p) => `<button class="row" type="button" data-act="voir-formulaire" data-fid="${p.id}"><span class="avatar av-sm" style="background:var(--nuit-2);color:var(--or)">${esc((p.prenom || "?")[0])}${esc((p.nom || "?")[0])}</span><span class="row-main"><span class="row-t">${esc(p.prenom || "")} ${esc(p.nom || "")}</span><span class="row-m">${esc(p.email || "")}${p.telephone ? " · " + esc(p.telephone) : ""}${p.ville ? " · " + esc(p.ville) : ""}</span></span><span class="row-r"><span class="chip">${p.created_at ? esc(fmtCourt(p.created_at.slice(0, 10))) : "—"}</span></span></button>`).join("")}</div>`;
+    return h;
+  }
+  function ficheFormulaire(id) {
+    const p = (S._formulaires || []).find((x) => x.id == id);
+    if (!p) return;
+    const lignes = [
+      ["Nom", (p.prenom || "") + " " + (p.nom || "")],
+      ["Statut matrimonial", p.statut_matrimonial],
+      ["Profession", p.profession],
+      ["Date de naissance", p.date_naissance],
+      ["Lieu de naissance", p.lieu_naissance],
+      ["Téléphone", p.telephone ? `<a href="tel:${esc(p.telephone)}">${esc(p.telephone)}</a>` : null],
+      ["Email", p.email ? `<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>` : null],
+      ["Ville", p.ville],
+      ["Message", p.message],
+      ["Satisfaction 2026", p.satisfaction_2026],
+      ["Activités marquantes", p.activites_marquantes],
+      ["Points à améliorer", p.points_ameliorer],
+      ["Propositions 2027", p.propositions_2027],
+      ["Domaines prioritaires", p.domaines_prioritaires],
+      ["Reçu le", p.created_at ? F_STAMP.format(new Date(p.created_at + (p.created_at.includes("Z") ? "" : "Z"))) : null],
+    ];
+    let h = `<div class="fiche-lignes">${lignes.filter(([, v]) => v != null && v !== "").map(([k, v]) => `<div class="fl"><span class="fl-l">${esc(k)}</span><span class="fl-v" style="white-space:pre-line">${typeof v === "string" && v.startsWith("<a") ? v : esc(v)}</span></div>`).join("")}</div>`;
+    if (p.photo_id) h += `<div style="margin-top:12px"><img src="/_blob/${esc(p.photo_id)}" alt="Photo jointe" style="max-width:100%;border-radius:8px"></div>`;
+    h += `<div class="actions" style="margin-top:16px">${btn("suppr-formulaire", "Supprimer cette réponse", { ico: "i-trash", cls: "btn-danger", sm: true, data: `data-fid="${p.id}"` })}</div>`;
+    ouvrir({ titre: "Réponse · " + (p.prenom || "") + " " + (p.nom || ""), html: h });
+  }
 
   /* ════════════════════════ Feuilles (dialogues) ════════════════════════ */
   const SH = { refresh: null, onSubmit: null, retour: null, formulaire: false };
@@ -7898,6 +7953,38 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
         toast("Notifications désactivées.");
       } catch (e) { toast("Erreur : " + (e.message || e), "err"); }
       rendu();
+    },
+    "voir-formulaire": (t) => ficheFormulaire(t.dataset.fid),
+    "suppr-formulaire": (t) => boutonArme(t, "Confirmer la suppression", async () => {
+      try {
+        const r = await fetch("/api/formulaire-admin", { method: "DELETE", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ id: +t.dataset.fid }) });
+        if (!r.ok) throw new Error();
+        toast("Réponse supprimée");
+        fermer();
+        S._formulaires = null;
+        chargerFormulaires(S._formulairesPage);
+      } catch (e) { toast("Impossible de supprimer.", "err"); }
+    }),
+    "form-page-prec": () => { if (S._formulairesPage > 1) { S._formulaires = null; chargerFormulaires(S._formulairesPage - 1); } },
+    "form-page-suiv": () => { if (S._formulairesPage < S._formulairesPages) { S._formulaires = null; chargerFormulaires(S._formulairesPage + 1); } },
+    "export-formulaires": async () => {
+      try {
+        const toutes = [];
+        let page = 1, pages = 1;
+        while (page <= pages) {
+          const r = await fetch("/api/formulaire-admin?page=" + page, { credentials: "same-origin" });
+          const j = await r.json();
+          toutes.push(...(j.reponses || []));
+          pages = j.pages || 1;
+          page++;
+        }
+        if (!toutes.length) { toast("Aucune réponse à exporter."); return; }
+        const cols = ["id", "nom", "prenom", "statut_matrimonial", "profession", "date_naissance", "lieu_naissance", "telephone", "email", "ville", "message", "satisfaction_2026", "activites_marquantes", "points_ameliorer", "propositions_2027", "domaines_prioritaires", "created_at"];
+        const csvEsc = (v) => { const s = String(v ?? "").replace(/"/g, '""'); return s.includes(",") || s.includes('"') || s.includes("\n") ? '"' + s + '"' : s; };
+        const csv = "﻿" + cols.join(",") + "\n" + toutes.map((r) => cols.map((c) => csvEsc(r[c])).join(",")).join("\n");
+        telecharger("formulaires-sde.csv", csv);
+        toast("Export terminé !");
+      } catch (e) { toast("Impossible d'exporter.", "err"); }
     },
     "basculer-theme": () => {
       const cur = document.documentElement.getAttribute("data-theme");
