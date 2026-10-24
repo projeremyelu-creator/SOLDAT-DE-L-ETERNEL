@@ -9103,11 +9103,11 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     let corps;
     if (m === "connexion") corps = `${email}${champMdp("cx-mdp", "Mot de passe", "current-password")}${voirMdp}
       <p class="hint">Mot de passe oublié ? Un responsable vous donne un code pour en choisir un nouveau, à saisir dans « J’ai un code ».${telContact() ? ` <a class="link" href="${esc(lienWa(telContact(), "Shalom ! J’ai oublié mon mot de passe MPA SDE. Mon adresse e-mail : "))}" target="_blank" rel="noopener">Le demander par WhatsApp</a>` : ""}</p>${pied("Se connecter")}`;
-    else if (m === "inscription") corps = `<p class="hint" style="margin-top:0">Votre compte s’ouvre aussitôt et vous recevez votre <b>matricule à 6 chiffres</b>, votre carte de membre et votre espace soldat.</p>
+    else if (m === "inscription") corps = `<p class="hint" style="margin-top:0;padding:10px 12px;background:rgba(226,194,106,.1);border-left:3px solid #e2c26a;border-radius:4px"><b style="color:#e2c26a">Accès immédiat.</b> Dès que vous validez ce formulaire, votre compte est actif, votre <b>matricule à 6 chiffres</b> est attribué, et votre espace soldat s’ouvre dans la foulée. Aucune validation du secrétariat n’est nécessaire.</p>
       <div class="f2">${champ("ci-prenoms", "Prénoms", inp("ci-prenoms", "prenoms", "", 'autocomplete="given-name" required autofocus maxlength="80"'), { req: true })}${champ("ci-nom", "Nom", inp("ci-nom", "nom", "", 'autocomplete="family-name" required maxlength="80"'), { req: true })}</div>
       ${champ("ci-tel", "Téléphone (WhatsApp)", inp("ci-tel", "telephone", "", 'type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="07 00 00 00 00"'))}
       ${email}${champMdp("ci-mdp", "Choisissez un mot de passe", "new-password", "Au moins 4 caractères.")}${champMdp("ci-mdp2", "Confirmez le mot de passe", "new-password")}${voirMdp}
-      <p class="hint">Déjà membre avec un matricule (par exemple SDE-CI-013) ? Inscrivez-vous puis prévenez le secrétariat : il reliera votre compte à votre fiche et vous garderez votre matricule.</p>${pied("Créer mon compte")}`;
+      <p class="hint">Déjà membre avec un matricule SDE-CI-… ? Inscrivez-vous normalement — votre nouveau matricule fonctionne tout de suite, le secrétariat reliera votre ancienne fiche quand il le peut, sans retarder votre accès.</p>${pied("Créer mon compte")}`;
     else corps = `<p class="hint" style="margin-top:0">Le secrétariat vous a remis un code d’activation (par exemple K7PM-Q2XD) pour ouvrir votre compte ou choisir un nouveau mot de passe.</p>${email}
       ${champ("ca-code", "Code d’activation", inp("ca-code", "code", "", 'autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="12" required placeholder="K7PM-Q2XD"'), { req: true })}
       ${champMdp("ca-mdp", "Nouveau mot de passe", "new-password", "Au moins 4 caractères.")}${champMdp("ca-mdp2", "Confirmez le mot de passe", "new-password")}${voirMdp}${pied("Activer et me connecter")}`;
@@ -9131,7 +9131,12 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     if (b) { b.disabled = true; b.textContent = "Un instant…"; }
     try {
       if (mode === "connexion") await SDEH.connexion(email, mdp);
-      else if (mode === "inscription") { await SDEH.inscription({ email, motDePasse: mdp, prenoms: g("prenoms"), nom: g("nom"), telephone: g("telephone") }); location.hash = "#espace"; }
+      else if (mode === "inscription") {
+        const r = await SDEH.inscription({ email, motDePasse: mdp, prenoms: g("prenoms"), nom: g("nom"), telephone: g("telephone") });
+        /* Mémorise le matricule pour un accueil nominatif après rechargement */
+        try { sessionStorage.setItem("sde-bienvenue", JSON.stringify({ matricule: r && r.matricule, prenoms: g("prenoms") })); } catch (e) {}
+        location.hash = "#espace";
+      }
       else await SDEH.activation({ email, code: g("code"), motDePasse: mdp });
       location.reload();
     } catch (e) {
@@ -9567,5 +9572,49 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     render();
   }
   demarrer();
+})();
+</script>
+<script>
+/* Bienvenue nouveau soldat — bannière inscription réussie, lue depuis sessionStorage.
+   Déclenchée uniquement après une inscription réussie (voir soumettreConnexion). */
+(() => {
+  'use strict';
+  let b;
+  try { b = JSON.parse(sessionStorage.getItem('sde-bienvenue') || 'null'); } catch (e) { b = null; }
+  if (!b || !b.matricule) return;
+  try { sessionStorage.removeItem('sde-bienvenue'); } catch (e) {}
+
+  const esc = (s) => String(s || '').replace(/[<>&"']/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[c]);
+  const prenoms = (String(b.prenoms || '').trim().split(/\s+/)[0]) || 'Soldat';
+
+  const style = document.createElement('style');
+  style.textContent = '@keyframes bv-apparait{from{opacity:0;transform:translate(-50%,-50%) scale(.92)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}@keyframes bv-voile{from{opacity:0}to{opacity:1}}';
+  document.head.appendChild(style);
+
+  const voile = document.createElement('div');
+  voile.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(5,7,14,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:bv-voile .3s ease';
+
+  const panneau = document.createElement('div');
+  panneau.setAttribute('role', 'status');
+  panneau.setAttribute('aria-live', 'polite');
+  panneau.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:99999;max-width:90vw;width:420px;background:linear-gradient(180deg,#0f1e3d,#0a0f1d);color:#eef0f5;border:2px solid #e2c26a;border-radius:16px;padding:28px 26px 22px;box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px rgba(226,194,106,.3);font-family:system-ui,-apple-system,"Atkinson Hyperlegible",sans-serif;animation:bv-apparait .35s cubic-bezier(.2,.9,.3,1.2)';
+  panneau.innerHTML =
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;font-family:\'Saira Condensed\',sans-serif;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.74rem;color:#e2c26a">' +
+      '<span style="width:8px;height:8px;background:#e2c26a;border-radius:50%;box-shadow:0 0 10px #e2c26a"></span>' +
+      'Enrôlement confirmé' +
+    '</div>' +
+    '<h2 style="font-family:\'Saira Condensed\',sans-serif;font-size:1.6rem;font-weight:700;letter-spacing:.02em;margin:0 0 8px;line-height:1.1">Bienvenue, ' + esc(prenoms) + '.</h2>' +
+    '<p style="color:#a4adc4;font-size:.92rem;line-height:1.55;margin:0 0 18px">Votre compte est actif, votre espace soldat est ouvert. Aucune validation du secrétariat n\'est requise — vous êtes connecté directement.</p>' +
+    '<div style="padding:14px 16px;background:rgba(226,194,106,.1);border:1px solid rgba(226,194,106,.3);border-left:3px solid #e2c26a;border-radius:6px;margin-bottom:18px">' +
+      '<div style="font-family:\'DM Mono\',ui-monospace,monospace;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:#a4adc4;margin-bottom:4px">Matricule attribué</div>' +
+      '<div style="font-family:\'Saira Condensed\',sans-serif;font-size:2rem;font-weight:700;color:#e2c26a;letter-spacing:.1em;line-height:1">' + esc(b.matricule) + '</div>' +
+    '</div>' +
+    '<button type="button" style="width:100%;padding:12px 20px;background:linear-gradient(145deg,#e2c26a,#85650f);color:#0f1e3d;border:none;border-radius:999px;font-family:\'Saira Condensed\',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.88rem;cursor:pointer;min-height:44px">Entrer dans mon espace</button>';
+
+  document.body.appendChild(voile);
+  document.body.appendChild(panneau);
+  const fermer = () => { voile.remove(); panneau.remove(); };
+  panneau.querySelector('button').addEventListener('click', fermer);
+  voile.addEventListener('click', fermer);
 })();
 </script>

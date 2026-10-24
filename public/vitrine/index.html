@@ -1554,15 +1554,20 @@ html.anim .section { animation: section-in .5s ease-out both; }
       <div class="tete-section revele">
         <p class="surtitre">Espace membre</p>
         <h2 id="titre-membres">Votre espace soldat</h2>
-        <p class="chapo">Votre espace se trouve dans MPA SDE, l'application du mouvement. Créez votre compte avec votre adresse e-mail et un mot de passe : votre matricule à 6 chiffres vous est attribué aussitôt.</p>
+        <p class="chapo">Votre espace se trouve dans MPA SDE, l'application du mouvement. Créez votre compte avec votre adresse e-mail et un mot de passe : votre matricule à 6 chiffres est attribué <b style="color:var(--or)">tout de suite</b> et votre espace soldat s'ouvre <b style="color:var(--or)">sans attendre</b>, directement, sans passer par le secrétariat.</p>
       </div>
       <div class="acces">
         <div class="carte-acces revele">
           <p class="pour">Pour tous les soldats</p>
           <h3>Espace soldat</h3>
           <ul><li>Ma carte de membre, à télécharger</li><li>Mon matricule, mes présences et mes cotisations</li><li>Les prochains rassemblements et les annonces</li><li>Une requête de prière à déposer</li></ul>
-          <div class="actions"><a class="bouton b-or" href="https://app.mouvement-sde.org/#inscription"><svg aria-hidden="true"><use href="#i-cle"/></svg>Créer mon compte</a><a class="bouton b-contour" href="https://app.mouvement-sde.org/#connexion">Me connecter</a></div>
-          <small style="color:var(--gris)"><b>Nouveau :</b> adresse e-mail et mot de passe, matricule à 6 chiffres attribué aussitôt. <b>Ancien membre</b> (matricule SDE-CI-…) : créez votre compte puis prévenez le secrétariat, qui le relie à votre fiche.</small>
+          <ol class="chemin" style="margin:14px 0;list-style:none;padding:0;font-size:.88rem">
+            <li style="display:flex;gap:10px;align-items:center;padding:6px 0;color:var(--texte-2)"><span class="grade" style="flex:none">1</span>Je crée mon compte (e-mail + mot de passe)</li>
+            <li style="display:flex;gap:10px;align-items:center;padding:6px 0;color:var(--texte-2)"><span class="grade" style="flex:none">2</span>Matricule à 6 chiffres attribué <b style="color:var(--or)">immédiatement</b></li>
+            <li style="display:flex;gap:10px;align-items:center;padding:6px 0;color:var(--texte-2)"><span class="grade" style="flex:none">3</span>Mon espace soldat s'ouvre <b style="color:var(--or)">dans la foulée</b></li>
+          </ol>
+          <div class="actions"><a class="bouton b-or" href="https://app.mouvement-sde.org/#inscription"><svg aria-hidden="true"><use href="#i-cle"/></svg>Créer mon compte en 1 min</a><a class="bouton b-contour" href="https://app.mouvement-sde.org/#connexion">Me connecter</a></div>
+          <small style="color:var(--gris)"><b>Ancien membre</b> (matricule SDE-CI-…) ? Créez votre compte comme n'importe qui, votre matricule provisoire fonctionne tout de suite ; le secrétariat relie ensuite votre ancienne fiche à votre compte quand il le peut, sans bloquer votre accès.</small>
         </div>
         <div class="carte-acces revele" style="--d:.1s">
           <p class="pour">Réservé aux responsables</p>
