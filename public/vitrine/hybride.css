@@ -354,3 +354,238 @@ a.ticket:hover, a.ticket:focus-visible { color: inherit; cursor: pointer; }
   .cta-band { flex-direction: column; align-items: stretch; text-align: center; }
   .cta-band .bouton { justify-content: center; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DYNAMIQUE V2 — Inspirations collectées, adaptées au registre SDE
+
+   - Mobile nav flottante avec onglet actif surélevé (ref. nav mobile)
+   - Badges de croissance sur les KPI (ref. admin dashboard)
+   - Fiche-dossier dorée (ref. dossier confidentiel)
+   - Élévation douce des cartes (ref. soft UI)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ─── Mobile nav : onglet actif flottant en pilule dorée ─── */
+.nav-mobile {
+  background: linear-gradient(180deg, rgba(10,15,29,.75), rgba(10,15,29,.92)) !important;
+  border-top: 1px solid rgba(226,194,106,.25) !important;
+  backdrop-filter: blur(18px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.4) !important;
+}
+:root[data-theme="light"] .nav-mobile {
+  background: linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.95)) !important;
+  border-top-color: rgba(184,144,31,.3) !important;
+}
+.nav-mobile a {
+  position: relative;
+  transition: color .25s ease, transform .25s ease;
+}
+.nav-mobile a svg {
+  width: 22px; height: 22px;
+  padding: 7px; border-radius: 50%;
+  background: transparent;
+  transition: background .3s cubic-bezier(.4,0,.2,1), transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s cubic-bezier(.4,0,.2,1), color .3s;
+  box-sizing: content-box;
+}
+.nav-mobile a.act {
+  color: var(--or, #e2c26a);
+  font-weight: 800;
+}
+.nav-mobile a.act svg {
+  background: linear-gradient(145deg, #e2c26a, #85650f);
+  color: #0f1e3d;
+  transform: translateY(-12px) scale(1.15);
+  box-shadow: 0 6px 18px rgba(226,194,106,.45), 0 0 0 4px rgba(10,15,29,.6);
+}
+:root[data-theme="light"] .nav-mobile a.act svg {
+  box-shadow: 0 6px 18px rgba(184,144,31,.4), 0 0 0 4px rgba(255,255,255,.9);
+}
+.nav-mobile a.act::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 50%; transform: translateX(-50%);
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--or, #e2c26a);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-mobile a.act svg { transform: none; }
+}
+
+/* ─── KPI : badges de croissance stylisés + goal bars ─── */
+.kpi-growth {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 999px;
+  font-family: var(--f-titre, inherit);
+  font-size: .66rem; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+.kpi-growth.up { background: rgba(126,216,168,.15); color: var(--vert, #7ED8A8); }
+.kpi-growth.down { background: rgba(232,144,111,.15); color: #E8906F; }
+.kpi-growth.steady { background: rgba(255,255,255,.08); color: var(--texte-2, #a4adc4); }
+.kpi-growth svg { width: 10px; height: 10px; flex-shrink: 0; }
+
+.kpi-goal {
+  margin-top: 14px; padding-top: 12px;
+  border-top: 1px dashed rgba(226,194,106,.2);
+}
+.kpi-goal-l {
+  display: flex; justify-content: space-between;
+  font-size: .68rem; color: var(--texte-2, #a4adc4);
+  font-family: var(--f-titre, inherit);
+  letter-spacing: .08em; text-transform: uppercase; font-weight: 600;
+  margin-bottom: 6px;
+}
+.kpi-goal-l b { color: var(--or, #e2c26a); font-weight: 700; }
+
+/* ─── Fiche-dossier (inspiration dossier confidentiel) ─── */
+.dossier {
+  position: relative;
+  background: linear-gradient(180deg, rgba(10,15,29,.95), rgba(5,7,14,.95)),
+              repeating-linear-gradient(45deg, transparent 0, transparent 4px, rgba(226,194,106,.015) 4px, rgba(226,194,106,.015) 5px);
+  border: 1px solid rgba(226,194,106,.3);
+  border-radius: var(--r-md, 14px);
+  padding: 32px 28px 24px;
+  overflow: hidden;
+}
+:root[data-theme="light"] .dossier {
+  background: linear-gradient(180deg, #fff, #f3f5f9);
+  border-color: rgba(184,144,31,.35);
+}
+.dossier::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--or, #e2c26a), transparent);
+}
+.dossier::after {
+  content: '';
+  position: absolute; top: 10px; right: 10px;
+  width: 24px; height: 24px;
+  border-top: 2px solid var(--or, #e2c26a);
+  border-right: 2px solid var(--or, #e2c26a);
+  opacity: .5;
+}
+.dossier-ruban {
+  position: absolute; top: 14px; left: -2px;
+  padding: 4px 14px 4px 16px;
+  background: linear-gradient(90deg, #85650f, #e2c26a);
+  color: #0f1e3d;
+  font-family: var(--f-titre, inherit);
+  font-size: .62rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%);
+}
+.dossier-tete {
+  display: flex; justify-content: space-between; align-items: start;
+  gap: 20px; padding-bottom: 16px;
+  border-bottom: 1px solid rgba(226,194,106,.2);
+  margin-bottom: 20px;
+}
+.dossier-id {
+  font-family: 'DMMono', 'GeistMono-Regular', ui-monospace, monospace;
+  font-size: .7rem; color: var(--texte-2, #a4adc4);
+  letter-spacing: .1em; text-transform: uppercase;
+}
+.dossier-id b { color: var(--or, #e2c26a); }
+.dossier-grille {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px 20px;
+  font-family: 'DMMono', 'GeistMono-Regular', ui-monospace, monospace;
+  font-size: .78rem;
+}
+.dossier-grille dt {
+  color: var(--texte-2, #a4adc4);
+  text-transform: uppercase; letter-spacing: .06em; font-size: .68rem;
+}
+.dossier-grille dd {
+  color: var(--texte, #e8ebf4);
+  margin: 0 0 4px;
+}
+.dossier-attribut {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 6px;
+}
+.dossier-attribut .n {
+  flex: 0 0 100px;
+  font-family: 'DMMono', 'GeistMono-Regular', ui-monospace, monospace;
+  font-size: .68rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--texte-2, #a4adc4);
+}
+.dossier-attribut .b {
+  flex: 1; height: 4px;
+  background: rgba(255,255,255,.08);
+  border-radius: 2px; overflow: hidden;
+}
+.dossier-attribut .b i {
+  display: block; height: 100%;
+  background: linear-gradient(90deg, #85650f, #e2c26a);
+}
+.dossier-attribut .v {
+  flex: 0 0 42px; text-align: right;
+  font-family: 'DMMono', 'GeistMono-Regular', ui-monospace, monospace;
+  font-size: .7rem; color: var(--or, #e2c26a);
+  font-weight: 700;
+}
+@media (max-width: 540px) {
+  .dossier { padding: 32px 20px 20px; }
+  .dossier-grille { grid-template-columns: 1fr; }
+}
+
+/* ─── Élévation douce (soft UI) : cartes qui respirent ─── */
+.carte-flotte {
+  transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s cubic-bezier(.4,0,.2,1);
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.3),
+    0 8px 24px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
+.carte-flotte:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.35),
+    0 16px 42px rgba(0,0,0,.3),
+    0 0 0 1px rgba(226,194,106,.15),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+:root[data-theme="light"] .carte-flotte {
+  box-shadow:
+    0 1px 2px rgba(15,30,61,.06),
+    0 8px 24px rgba(15,30,61,.08);
+}
+:root[data-theme="light"] .carte-flotte:hover {
+  box-shadow:
+    0 2px 4px rgba(15,30,61,.08),
+    0 16px 42px rgba(15,30,61,.12),
+    0 0 0 1px rgba(184,144,31,.2);
+}
+
+/* Appliqué par défaut aux KPI, aux tickets kanban et aux cartes bento */
+.kpi, .ticket, .bento-carte {
+  transition: transform .3s cubic-bezier(.4,0,.2,1), border-color .25s ease, box-shadow .3s cubic-bezier(.4,0,.2,1);
+}
+.kpi:hover, .ticket:hover, .bento-carte:hover {
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.3),
+    0 16px 36px rgba(0,0,0,.28),
+    0 0 0 1px rgba(226,194,106,.2);
+}
+:root[data-theme="light"] .kpi:hover,
+:root[data-theme="light"] .ticket:hover,
+:root[data-theme="light"] .bento-carte:hover {
+  box-shadow:
+    0 2px 4px rgba(15,30,61,.06),
+    0 16px 36px rgba(15,30,61,.12),
+    0 0 0 1px rgba(184,144,31,.25);
+}
+
+/* ─── Divider doré « OR » (inspiré login neumorphism) ─── */
+.div-ou {
+  display: flex; align-items: center; gap: 14px;
+  margin: 24px 0;
+  color: var(--texte-2, #a4adc4);
+  font-family: var(--f-titre, inherit);
+  font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+  font-weight: 700;
+}
+.div-ou::before, .div-ou::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(226,194,106,.3), transparent);
+}
