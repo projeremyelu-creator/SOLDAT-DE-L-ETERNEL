@@ -227,6 +227,42 @@ async function apiSync(req, env, u) {
   }));
   return json({ res: out });
 }
+
+/* ───────── formulaire « Points SDE dans les nations » ─────────
+   Page publique : mouvement-sde.org/vitrine/point-sde.html
+   Les réponses sont gardées dans la base et lues par les administrateurs (Comptes et accès). */
+const TABLE_POINTS = "CREATE TABLE IF NOT EXISTS points_sde (id TEXT PRIMARY KEY, cree INTEGER NOT NULL, data TEXT NOT NULL)";
+const CHAMPS_POINT = { pays: 60, ville: 80, quartier: 120, statut: 40, responsable: 120, role: 80, telephone: 40, email: 120, lieu: 240, jour: 80, heure: 40, effectif: 20, activites: 600, langues: 120, reseaux: 400, auteur: 120, auteurTel: 40, auteurRole: 80, remarques: 800 };
+async function apiPointsSde(req, env, u, url) {
+  await env.DB.prepare(TABLE_POINTS).run();
+  if (req.method === "POST") {
+    const ip = ipDe(req);
+    if (await bloque(env, "point:" + ip, 8)) return erreur("rate_limited", "Trop d’envois depuis ce réseau : réessayez dans un quart d’heure.", 429);
+    let b; try { b = await req.json(); } catch (e) { return erreur("invalid_argument", "Formulaire illisible."); }
+    if (b.site) return json({ ok: true }); // piège à robots : champ caché rempli
+    const d = {};
+    for (const [k, n] of Object.entries(CHAMPS_POINT)) d[k] = String(b[k] == null ? "" : b[k]).replace(/\r\n?/g, "\n").replace(/[ \t]+/g, " ").trim().slice(0, n);
+    d.publier = Array.isArray(b.publier) ? b.publier.filter((x) => ["ville", "responsable", "telephone", "email", "lieu", "horaires"].includes(x)) : [];
+    d.accord = b.accord === true;
+    if (!d.pays || !d.ville || !d.responsable || !d.telephone || !d.auteur) return erreur("invalid_argument", "Merci de remplir les champs obligatoires.");
+    if (!d.accord) return erreur("invalid_argument", "Merci de cocher l’accord pour l’envoi des informations.");
+    if (d.email && !EMAIL_OK.test(d.email)) return erreur("invalid_argument", "Adresse e-mail invalide.");
+    if (d.telephone.replace(/\D/g, "").length < 8) return erreur("invalid_argument", "Numéro de téléphone du point invalide.");
+    await compter(env, "point:" + ip);
+    const id = idDoc();
+    await env.DB.prepare("INSERT INTO points_sde (id, cree, data) VALUES (?, ?, ?)").bind(id, Date.now(), JSON.stringify(d)).run();
+    return json({ ok: true, id });
+  }
+  if (!u || u.niveau < 2) return erreur("refuse", "Réservé aux administrateurs.", 403);
+  if (req.method === "DELETE") {
+    const id = url.pathname.split("/")[3] || "";
+    if (!/^[a-z0-9]{20}$/.test(id)) return erreur("invalid_argument", "Identifiant invalide.");
+    await env.DB.prepare("DELETE FROM points_sde WHERE id = ?").bind(id).run();
+    return json({ ok: true });
+  }
+  const r = await env.DB.prepare("SELECT id, cree, data FROM points_sde ORDER BY cree DESC LIMIT 500").all();
+  return json({ reponses: (r.results || []).map((x) => ({ id: x.id, cree: x.cree, ...JSON.parse(x.data) })) });
+}
 /* ───────── comptes ───────── */
 const ALPHA_ID = "abcdefghijklmnopqrstuvwxyz0123456789";
 const idDoc = () => [...crypto.getRandomValues(new Uint8Array(20))].map((x) => ALPHA_ID[x % 36]).join("");
@@ -910,7 +946,18 @@ async function traiter(req, env) {
     if (url.hostname === "www.mouvement-sde.org") return Response.redirect("https://mouvement-sde.org" + p + url.search, 301);
     if (url.hostname === "mouvement-sde.org") {
       if (p === "/" || p === "/index.html") return env.ASSETS.fetch(new Request(new URL("/vitrine/", url), req));
+      if (p === "/point-sde" || p === "/point-sde/") {
+        // Adresse courte du formulaire des points SDE (Cloudflare peut répondre par une redirection vers la page sans « .html »)
+        let r = await env.ASSETS.fetch(new Request(new URL("/vitrine/point-sde.html", url), req));
+        if (r.status >= 300 && r.status < 400 && r.headers.get("location")) r = await env.ASSETS.fetch(new Request(new URL(r.headers.get("location"), url), req));
+        return r;
+      }
       if (p === "/api/public") return apiPublic(env);
+      if (p === "/api/points-sde" && req.method === "POST") {
+        const o = req.headers.get("origin");
+        if (o && o !== "https://mouvement-sde.org") return erreur("refuse", "Origine refusée.", 403);
+        return apiPointsSde(req, env, null, url);
+      }
       if (!/^\/(vitrine\/|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$)/.test(p))
         return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
       const r = await env.ASSETS.fetch(req);
@@ -962,6 +1009,7 @@ async function traiter(req, env) {
       if (p === "/api/import" && req.method === "POST") return apiImport(req, env, u);
       if (p === "/api/medias" || p.startsWith("/api/medias/")) return apiMedias(req, env, u, url);
       if (p === "/api/sauvegardes" || p.startsWith("/api/sauvegardes/")) return apiSauvegardes(req, env, u, url);
+      if (p === "/api/points-sde" || p.startsWith("/api/points-sde/")) return apiPointsSde(req, env, u, url);
       return erreur("introuvable", "Route inconnue.", 404);
     } catch (e) {
       return erreur("unavailable", "Erreur du serveur : " + (e && e.message), 500);

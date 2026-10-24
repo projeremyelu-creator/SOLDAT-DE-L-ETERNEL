@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fiche du point SDE · Soldats de l'Éternel</title>
+<meta name="description" content="Formulaire pour les responsables des points SDE dans les nations : informations à publier sur mouvement-sde.org.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0f1e3d">
+<meta property="og:title" content="Fiche du point SDE · Soldats de l'Éternel">
+<meta property="og:description" content="Renseignez les informations de votre point SDE pour le site du mouvement.">
+<meta property="og:image" content="https://mouvement-sde.org/vitrine/fire-generation-1080.jpg">
+<link rel="icon" href="/icone-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --nuit: #0f1e3d; --nuit-2: #1b2f5b; --or: #e2c26a; --or-sombre: #85650f; --bordeaux: #8e2b3d;
+  --fond: #f3f1ec; --surface: #ffffff; --texte: #161e35; --texte-2: #4f5870; --ligne: #d9dce4; --erreur: #a3263a; --ok: #1f6b45;
+  --f-titre: "Saira Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-texte: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --fond: #0a0f1d; --surface: #121a2e; --texte: #e8ebf4; --texte-2: #b3bbd0; --ligne: #2c3a5c; --erreur: #f08a9a; --ok: #7fd3a6; --or-sombre: #e2c26a; }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--fond); color: var(--texte); font: 17px/1.55 var(--f-texte); }
+a { color: inherit; }
+.entete { background: var(--nuit); color: #eef0f5; border-bottom: 2px solid var(--or); }
+.entete-in { max-width: 760px; margin: 0 auto; padding: 14px 18px; display: flex; align-items: center; gap: 12px; }
+.logo { width: 40px; height: 40px; flex-shrink: 0; background: url(/vitrine/logo-96.png) center/contain no-repeat; }
+.marque b { display: block; font-family: var(--f-titre); font-size: 1.25rem; letter-spacing: .08em; color: var(--or); line-height: 1.1; }
+.marque small { color: #c3cadb; font-size: .85rem; }
+.hero { background: linear-gradient(160deg, var(--nuit) 0%, var(--nuit-2) 100%); color: #eef0f5; }
+.hero-in { max-width: 760px; margin: 0 auto; padding: 34px 18px 38px; }
+.surtitre { font-family: var(--f-titre); letter-spacing: .14em; text-transform: uppercase; color: var(--or); font-weight: 700; font-size: .9rem; margin: 0 0 6px; }
+h1 { font-family: var(--f-titre); text-transform: uppercase; font-size: clamp(1.9rem, 6vw, 2.6rem); line-height: 1.05; margin: 0 0 12px; letter-spacing: .02em; }
+.hero p { margin: 0; color: #d4d9e6; max-width: 60ch; }
+.corps { max-width: 760px; margin: 0 auto; padding: 22px 18px 60px; }
+.bloc { background: var(--surface); border: 1px solid var(--ligne); border-radius: 16px; padding: 22px 20px; margin: 0 0 18px; }
+.bloc h2 { font-family: var(--f-titre); text-transform: uppercase; letter-spacing: .04em; font-size: 1.3rem; margin: 0 0 4px; display: flex; gap: 10px; align-items: center; }
+.bloc h2 .n { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--or); color: var(--nuit); font-size: 1rem; flex-shrink: 0; }
+.bloc > .aide { margin: 0 0 16px; color: var(--texte-2); font-size: .95rem; }
+.grille { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; }
+.plein { grid-column: 1 / -1; }
+@media (max-width: 620px) { .grille { grid-template-columns: 1fr; } }
+label, .lab { display: block; font-weight: 700; font-size: .95rem; margin-bottom: 6px; }
+.oblig { color: var(--erreur); font-weight: 400; font-size: .85rem; }
+.fac { color: var(--texte-2); font-weight: 400; font-size: .85rem; }
+input[type=text], input[type=tel], input[type=email], select, textarea {
+  width: 100%; font: inherit; color: var(--texte); background: var(--fond); border: 1.5px solid var(--ligne); border-radius: 10px; padding: 11px 12px; min-height: 48px;
+}
+textarea { min-height: 96px; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: 3px solid color-mix(in srgb, var(--or) 55%, transparent); outline-offset: 1px; border-color: var(--or-sombre); }
+.indice { display: block; color: var(--texte-2); font-size: .85rem; margin-top: 5px; }
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px; margin: 0; padding: 0; border: 0; }
+.case { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; padding: 10px 12px; border: 1.5px solid var(--ligne); border-radius: 10px; background: var(--fond); cursor: pointer; margin: 0; }
+.case input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--or-sombre); flex-shrink: 0; }
+.accord { border-color: var(--or-sombre); }
+.piege { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.bouton { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 700 1.05rem var(--f-texte); min-height: 52px; padding: 12px 26px; border-radius: 12px; border: 0; cursor: pointer; background: linear-gradient(135deg, #b8901f, #e2c26a); color: var(--nuit); width: 100%; }
+.bouton[disabled] { opacity: .6; cursor: wait; }
+.bouton:focus-visible { outline: 3px solid var(--nuit); outline-offset: 3px; }
+.message { border-radius: 12px; padding: 14px 16px; margin: 0 0 16px; font-weight: 700; }
+.message.err { background: color-mix(in srgb, var(--erreur) 12%, transparent); color: var(--erreur); border: 1px solid var(--erreur); }
+.merci { text-align: center; padding: 38px 22px; }
+.merci .rond { width: 64px; height: 64px; border-radius: 50%; background: var(--or); color: var(--nuit); display: grid; place-items: center; margin: 0 auto 14px; font-size: 2rem; font-weight: 700; }
+.merci h2 { justify-content: center; }
+.merci p { color: var(--texte-2); margin: 8px auto 0; max-width: 46ch; }
+.lien { display: inline-block; margin-top: 18px; color: var(--or-sombre); font-weight: 700; }
+.pied { text-align: center; color: var(--texte-2); font-size: .85rem; padding: 0 18px 30px; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header class="entete">
+  <div class="entete-in">
+    <span class="logo" aria-hidden="true"></span>
+    <span class="marque"><b>S.D.E.</b><small>Soldats de l'Éternel</small></span>
+  </div>
+</header>
+
+<main id="contenu">
+<section class="hero">
+  <div class="hero-in">
+    <p class="surtitre">Présence internationale</p>
+    <h1>Fiche du point SDE</h1>
+    <p>Responsables des points SDE dans les nations : renseignez les informations de votre point. Elles serviront à mettre à jour la page « Présence internationale » du site mouvement-sde.org. Comptez 5 minutes.</p>
+  </div>
+</section>
+
+<div class="corps">
+  <form id="formulaire" novalidate>
+    <div class="message err" id="erreur" role="alert" hidden></div>
+
+    <section class="bloc" aria-labelledby="t1">
+      <h2 id="t1"><span class="n" aria-hidden="true">1</span>Le point SDE</h2>
+      <p class="aide">Où se trouve le point et où en est-il ?</p>
+      <div class="grille">
+        <div>
+          <label for="pays">Pays <span class="oblig">obligatoire</span></label>
+          <select id="pays" name="pays" required>
+            <option value="">Choisir…</option>
+            <option>Côte d'Ivoire</option>
+            <option>Burkina Faso</option>
+            <option>Tunisie</option>
+            <option>Italie</option>
+            <option>Canada</option>
+            <option>États-Unis</option>
+            <option value="autre">Autre pays</option>
+          </select>
+        </div>
+        <div id="bloc-autre" hidden>
+          <label for="pays-autre">Nom du pays <span class="oblig">obligatoire</span></label>
+          <input type="text" id="pays-autre" autocomplete="country-name" maxlength="60">
+        </div>
+        <div>
+          <label for="ville">Ville <span class="oblig">obligatoire</span></label>
+          <input type="text" id="ville" name="ville" autocomplete="address-level2" maxlength="80" required>
+        </div>
+        <div>
+          <label for="quartier">Quartier ou zone <span class="fac">facultatif</span></label>
+          <input type="text" id="quartier" name="quartier" maxlength="120">
+        </div>
+        <div>
+          <label for="statut">Situation du point</label>
+          <select id="statut" name="statut">
+            <option>Point SDE en activité</option>
+            <option>Groupe en formation</option>
+            <option>Projet d'ouverture</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloc" aria-labelledby="t2">
+      <h2 id="t2"><span class="n" aria-hidden="true">2</span>Le ou la responsable</h2>
+      <p class="aide">La personne à contacter pour ce point.</p>
+      <div class="grille">
+        <div>
+          <label for="responsable">Nom et prénoms <span class="oblig">obligatoire</span></label>
+          <input type="text" id="responsable" name="responsable" autocomplete="name" maxlength="120" required>
+        </div>
+        <div>
+          <label for="role">Fonction <span class="fac">facultatif</span></label>
+          <input type="text" id="role" name="role" maxlength="80" placeholder="Responsable du point, coordinateur…">
+        </div>
+        <div>
+          <label for="telephone">Téléphone ou WhatsApp <span class="oblig">obligatoire</span></label>
+          <input type="tel" id="telephone" name="telephone" autocomplete="tel" maxlength="40" required aria-describedby="i-tel">
+          <span class="indice" id="i-tel">Avec l'indicatif du pays, par exemple +216 58 06 05 36.</span>
+        </div>
+        <div>
+          <label for="email">E-mail <span class="fac">facultatif</span></label>
+          <input type="email" id="email" name="email" autocomplete="email" maxlength="120">
+        </div>
+      </div>
+    </section>
+
+    <section class="bloc" aria-labelledby="t3">
+      <h2 id="t3"><span class="n" aria-hidden="true">3</span>Les rencontres</h2>
+      <p class="aide">Pour que les visiteurs sachent où et quand vous rejoindre.</p>
+      <div class="grille">
+        <div class="plein">
+          <label for="lieu">Lieu de réunion <span class="fac">facultatif</span></label>
+          <input type="text" id="lieu" name="lieu" maxlength="240" placeholder="Adresse, nom de la salle ou repère connu">
+        </div>
+        <div>
+          <label for="jour">Jour(s) <span class="fac">facultatif</span></label>
+          <input type="text" id="jour" name="jour" maxlength="80" placeholder="Chaque samedi, 1er dimanche du mois…">
+        </div>
+        <div>
+          <label for="heure">Heure <span class="fac">facultatif</span></label>
+          <input type="text" id="heure" name="heure" maxlength="40" placeholder="18 h 00">
+        </div>
+        <div>
+          <label for="effectif">Nombre de soldats (environ)</label>
+          <select id="effectif" name="effectif">
+            <option value="">Je ne sais pas</option>
+            <option>1 à 5</option>
+            <option>6 à 15</option>
+            <option>16 à 30</option>
+            <option>31 à 60</option>
+            <option>Plus de 60</option>
+          </select>
+        </div>
+        <div>
+          <label for="langues">Langue(s) utilisée(s) <span class="fac">facultatif</span></label>
+          <input type="text" id="langues" name="langues" maxlength="120" placeholder="Français, arabe, italien, anglais…">
+        </div>
+        <div class="plein">
+          <label for="activites">Activités du point <span class="fac">facultatif</span></label>
+          <textarea id="activites" name="activites" maxlength="600" placeholder="Prière, Traversée Prophétique, enseignements, évangélisation, actions solidaires…"></textarea>
+        </div>
+        <div class="plein">
+          <label for="reseaux">Réseaux sociaux du point <span class="fac">facultatif</span></label>
+          <textarea id="reseaux" name="reseaux" maxlength="400" placeholder="Liens Facebook, WhatsApp, YouTube, TikTok…"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloc" aria-labelledby="t4">
+      <h2 id="t4"><span class="n" aria-hidden="true">4</span>Ce qui peut être publié</h2>
+      <p class="aide">Cochez ce qui peut apparaître sur le site public. Le reste sera connu seulement de la direction.</p>
+      <fieldset class="cases">
+        <legend class="lab" style="grid-column:1/-1">Afficher sur mouvement-sde.org</legend>
+        <label class="case"><input type="checkbox" name="publier" value="ville" checked>La ville et le quartier</label>
+        <label class="case"><input type="checkbox" name="publier" value="responsable">Le nom du responsable</label>
+        <label class="case"><input type="checkbox" name="publier" value="telephone">Le numéro de téléphone</label>
+        <label class="case"><input type="checkbox" name="publier" value="email">L'adresse e-mail</label>
+        <label class="case"><input type="checkbox" name="publier" value="lieu">Le lieu de réunion</label>
+        <label class="case"><input type="checkbox" name="publier" value="horaires">Les jours et heures</label>
+      </fieldset>
+    </section>
+
+    <section class="bloc" aria-labelledby="t5">
+      <h2 id="t5"><span class="n" aria-hidden="true">5</span>Qui remplit cette fiche ?</h2>
+      <p class="aide">Pour que le secrétariat puisse vous recontacter en cas de question.</p>
+      <div class="grille">
+        <div>
+          <label for="auteur">Vos nom et prénoms <span class="oblig">obligatoire</span></label>
+          <input type="text" id="auteur" name="auteur" autocomplete="name" maxlength="120" required>
+        </div>
+        <div>
+          <label for="auteurTel">Votre téléphone <span class="fac">facultatif</span></label>
+          <input type="tel" id="auteurTel" name="auteurTel" autocomplete="tel" maxlength="40">
+        </div>
+        <div class="plein">
+          <label for="auteurRole">Votre lien avec le point <span class="fac">facultatif</span></label>
+          <input type="text" id="auteurRole" name="auteurRole" maxlength="80" placeholder="Je suis le responsable, un membre, un proche…">
+        </div>
+        <div class="plein">
+          <label for="remarques">Autre chose à nous dire ? <span class="fac">facultatif</span></label>
+          <textarea id="remarques" name="remarques" maxlength="800"></textarea>
+        </div>
+      </div>
+      <div class="piege" aria-hidden="true"><label for="site">Ne pas remplir</label><input type="text" id="site" name="site" tabindex="-1" autocomplete="off"></div>
+      <label class="case accord" style="margin-top:16px"><input type="checkbox" id="accord" name="accord" required>
+        <span>J'accepte que ces informations soient envoyées à la direction du mouvement Soldats de l'Éternel, pour mettre à jour le site. Seules les informations cochées à l'étape 4 seront publiées. <span class="oblig">obligatoire</span></span></label>
+    </section>
+
+    <button class="bouton" type="submit" id="envoyer">Envoyer la fiche</button>
+  </form>
+
+  <section class="bloc merci" id="merci" hidden tabindex="-1" aria-labelledby="t-merci">
+    <div class="rond" aria-hidden="true">✓</div>
+    <h2 id="t-merci">Merci, la fiche est bien arrivée !</h2>
+    <p>La direction du mouvement va la relire et mettre à jour la page « Présence internationale ». Le secrétariat vous contactera si une précision est nécessaire.</p>
+    <a class="lien" href="/#presence">Voir le site du mouvement</a>
+  </section>
+</div>
+</main>
+<footer><p class="pied">Mouvement Prophético-Apostolique Soldats de l'Éternel · Abidjan, Côte d'Ivoire · infosoldat@gmail.com</p></footer>
+
+<script>
+(() => {
+  const f = document.getElementById("formulaire"), err = document.getElementById("erreur"), btn = document.getElementById("envoyer");
+  const pays = document.getElementById("pays"), blocAutre = document.getElementById("bloc-autre"), autre = document.getElementById("pays-autre");
+  pays.addEventListener("change", () => { const a = pays.value === "autre"; blocAutre.hidden = !a; autre.required = a; if (a) autre.focus(); });
+  const champs = ["ville", "quartier", "statut", "responsable", "role", "telephone", "email", "lieu", "jour", "heure", "effectif", "activites", "langues", "reseaux", "auteur", "auteurTel", "auteurRole", "remarques", "site"];
+  function montrer(msg, el) {
+    err.textContent = msg; err.hidden = false;
+    document.querySelectorAll("[aria-invalid]").forEach((x) => x.removeAttribute("aria-invalid"));
+    if (el) { el.setAttribute("aria-invalid", "true"); el.focus(); } else err.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+  f.addEventListener("submit", async (e) => {
+    e.preventDefault(); err.hidden = true;
+    const v = (id) => document.getElementById(id).value.trim();
+    const valPays = pays.value === "autre" ? v("pays-autre") : pays.value;
+    const manque = [["pays", valPays ? "" : "le pays"], ["pays-autre", pays.value === "autre" && !v("pays-autre") ? "le nom du pays" : ""], ["ville", v("ville") ? "" : "la ville"], ["responsable", v("responsable") ? "" : "le nom du responsable"], ["telephone", v("telephone").replace(/\D/g, "").length >= 8 ? "" : "un numéro de téléphone complet"], ["auteur", v("auteur") ? "" : "vos nom et prénoms"]].find(([, m]) => m);
+    if (manque) return montrer("Il manque " + manque[1] + ".", document.getElementById(manque[0] === "pays" ? "pays" : manque[0]));
+    if (v("email") && !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v("email"))) return montrer("L'adresse e-mail n'est pas valide.", document.getElementById("email"));
+    if (!document.getElementById("accord").checked) return montrer("Merci de cocher l'accord pour l'envoi des informations.", document.getElementById("accord"));
+    const d = { pays: valPays, publier: [...f.querySelectorAll('input[name=publier]:checked')].map((x) => x.value), accord: true };
+    champs.forEach((k) => { d[k] = v(k); });
+    btn.disabled = true; btn.textContent = "Envoi en cours…";
+    try {
+      const r = await fetch("/api/points-sde", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(d) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.message || "L'envoi a échoué.");
+      f.hidden = true; const m = document.getElementById("merci"); m.hidden = false; m.focus(); window.scrollTo(0, 0);
+    } catch (x) {
+      montrer((x && x.message && x.message !== "Failed to fetch" ? x.message : "Pas de connexion au serveur.") + " Réessayez dans un instant ; si le problème continue, écrivez au +225 07 78 68 95 73 (WhatsApp).");
+    } finally { btn.disabled = false; btn.textContent = "Envoyer la fiche"; }
+  });
+})();
+</script>
+</body>
+</html>
