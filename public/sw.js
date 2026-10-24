@@ -1,6 +1,6 @@
 /* Service Worker — Soldats de l'Éternel
    Cache les pages publiques. Ne met jamais en cache les données pastorales ou personnelles. */
-const CACHE = "sde-v8";
+const CACHE = "sde-v9";
 const PRECACHE = ["/", "/vitrine/", "/manifest.webmanifest", "/offline.html", "/icone-192.png", "/icone-512.png", "/app.css"];
 
 self.addEventListener("install", (e) => {
