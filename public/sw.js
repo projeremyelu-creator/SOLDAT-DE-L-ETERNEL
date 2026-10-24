@@ -29,3 +29,28 @@ self.addEventListener("fetch", (e) => {
     caches.match(e.request).then((r) => r || fetch(e.request).then((nr) => { if (nr.ok) { const c = nr.clone(); caches.open(CACHE).then((k) => k.put(e.request, c)); } return nr; }))
   );
 });
+
+/* ───────── Notifications push ───────── */
+self.addEventListener("push", (e) => {
+  let data = { title: "MPA SDE", body: "Nouvelle notification", url: "/" };
+  try { if (e.data) data = Object.assign(data, e.data.json()); } catch (_) {}
+  e.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: "/icone-192.png",
+      badge: "/icone-192.png",
+      data: { url: data.url || "/" },
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (e) => {
+  e.notification.close();
+  const dest = (e.notification.data && e.notification.data.url) || "/";
+  e.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((cs) => {
+      for (const c of cs) { if (new URL(c.url).pathname === dest && "focus" in c) return c.focus(); }
+      return clients.openWindow(dest);
+    })
+  );
+});
