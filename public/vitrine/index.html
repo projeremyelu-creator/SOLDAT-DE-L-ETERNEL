@@ -673,6 +673,7 @@ html.anim .section { animation: section-in .5s ease-out both; }
   :root:not([data-theme="dark"]) .entete .mega-menu { --or: #85650f; --or-lum: #b8901f; --texte: #161e35; --texte-2: #535c75; --gris: #535c75; }
 }
 </style>
+<link rel="stylesheet" href="/vitrine/experience.css">
 </head>
 <body>
 
@@ -705,74 +706,57 @@ html.anim .section { animation: section-in .5s ease-out both; }
 
       <!-- 2. Le mouvement -->
       <div class="nav-rubrique" data-rubrique="mouvement">
-        <button type="button" aria-expanded="false" aria-haspopup="true">Le mouvement <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
-        <div class="mega-menu" role="menu">
+        <button type="button" aria-expanded="false">Le mouvement <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+        <div class="mega-menu">
           <div class="mega-menu-cols">
-            <a href="#mouvement" role="menuitem"><span class="mm-icone">✦</span><span><span class="mm-label">Qui sommes-nous</span><span class="mm-desc">Vision, mission et valeurs</span></span></a>
-            <a href="#histoire" role="menuitem"><span class="mm-icone">📜</span><span><span class="mm-label">Notre histoire</span><span class="mm-desc">Des origines à aujourd'hui</span></span></a>
-            <a href="#responsables" role="menuitem"><span class="mm-icone">👑</span><span><span class="mm-label">Couple leader</span><span class="mm-desc">Jérémy et Amy GLAZAÏ</span></span></a>
-            <a href="#poles" role="menuitem"><span class="mm-icone">⚙</span><span><span class="mm-label">Pôles et départements</span><span class="mm-desc">Cinq pôles au service</span></span></a>
-            <a href="#presence" role="menuitem"><span class="mm-icone">🌍</span><span><span class="mm-label">Présence internationale</span><span class="mm-desc">Six pays, un mouvement</span></span></a>
-            <a href="#projets" role="menuitem"><span class="mm-icone">🔨</span><span><span class="mm-label">Nos projets</span><span class="mm-desc">Ce que nous bâtissons</span></span></a>
+            <a href="#mouvement"><span class="mm-icone">✦</span><span><span class="mm-label">Qui sommes-nous</span><span class="mm-desc">Vision, mission et valeurs</span></span></a>
+            <a href="#histoire"><span class="mm-icone">📜</span><span><span class="mm-label">Notre histoire</span><span class="mm-desc">Des origines à aujourd'hui</span></span></a>
+            <a href="#responsables"><span class="mm-icone">👑</span><span><span class="mm-label">Couple leader</span><span class="mm-desc">Jérémy et Amy GLAZAÏ</span></span></a>
+            <a href="#poles"><span class="mm-icone">⚙</span><span><span class="mm-label">Pôles et départements</span><span class="mm-desc">Cinq pôles au service</span></span></a>
+            <a href="#presence"><span class="mm-icone">🌍</span><span><span class="mm-label">Présence internationale</span><span class="mm-desc">Six pays, un mouvement</span></span></a>
+            <a href="#projets"><span class="mm-icone">🔨</span><span><span class="mm-label">Nos projets</span><span class="mm-desc">Ce que nous bâtissons</span></span></a>
           </div>
         </div>
       </div>
 
       <!-- 3. Programmes -->
       <div class="nav-rubrique" data-rubrique="programmes">
-        <button type="button" aria-expanded="false" aria-haspopup="true">Programmes <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
-        <div class="mega-menu" role="menu">
+        <button type="button" aria-expanded="false">Programmes <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+        <div class="mega-menu">
           <div class="mega-menu-cols">
-            <a href="#agenda" role="menuitem"><span class="mm-icone">📅</span><span><span class="mm-label">Agenda</span><span class="mm-desc">Calendrier des rassemblements</span></span></a>
-            <a href="#infire" role="menuitem"><span class="mm-icone">🔥</span><span><span class="mm-label">IN FIRE 2026</span><span class="mm-desc">Conférence internationale</span></span></a>
-            <a href="#programmes" role="menuitem"><span class="mm-icone">📋</span><span><span class="mm-label">Tous les programmes</span><span class="mm-desc">Traversée, Academy, Holy Talk…</span></span></a>
+            <a href="#agenda"><span class="mm-icone">📅</span><span><span class="mm-label">Agenda</span><span class="mm-desc">Calendrier des rassemblements</span></span></a>
+            <a href="#infire"><span class="mm-icone">🔥</span><span><span class="mm-label">IN FIRE 2026</span><span class="mm-desc">Conférence internationale</span></span></a>
+            <a href="#programmes"><span class="mm-icone">📋</span><span><span class="mm-label">Tous les programmes</span><span class="mm-desc">Traversée, Academy, Holy Talk…</span></span></a>
           </div>
         </div>
       </div>
 
-      <!-- 4. Enseignements -->
-      <div class="nav-rubrique" data-rubrique="enseignements">
-        <button type="button" aria-expanded="false" aria-haspopup="true">Enseignements <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
-        <div class="mega-menu" role="menu">
-          <div class="mega-menu-cols">
-            <a href="#ressources" role="menuitem"><span class="mm-icone">📖</span><span><span class="mm-label">Bibliothèque</span><span class="mm-desc">Enseignements et documents</span></span></a>
-            <a href="/vitrine/academy.html" role="menuitem"><span class="mm-icone">🎓</span><span><span class="mm-label">Soldiers Academy</span><span class="mm-desc">Parcours de formation</span></span></a>
-            <a href="#ressources" role="menuitem"><span class="mm-icone">📚</span><span><span class="mm-label">Livres et publications</span><span class="mm-desc">Ouvrages des leaders</span></span></a>
-          </div>
-        </div>
+      <!-- 4. Ressources : tous les contenus au même endroit -->
+      <div class="nav-rubrique" data-rubrique="ressources">
+        <button type="button" aria-expanded="false">Ressources <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+        <div class="mega-menu"><div class="mega-menu-cols">
+          <a href="#ressources"><span class="mm-icone" aria-hidden="true">📖</span><span><span class="mm-label">Enseignements et livres</span><span class="mm-desc">Bibliothèque et publications</span></span></a>
+          <a href="/vitrine/academy.html"><span class="mm-icone" aria-hidden="true">🎓</span><span><span class="mm-label">Soldiers Academy</span><span class="mm-desc">Découvrir les formations</span></span></a>
+          <a href="#galerie"><span class="mm-icone" aria-hidden="true">📸</span><span><span class="mm-label">Photos du mouvement</span><span class="mm-desc">Rencontres, missions et communion</span></span></a>
+          <a href="#galerie"><span class="mm-icone" aria-hidden="true">🎬</span><span><span class="mm-label">Vidéos, audios et témoignages</span><span class="mm-desc">À venir dans la médiathèque</span></span></a>
+        </div></div>
       </div>
-
-      <!-- 5. Médiathèque -->
-      <div class="nav-rubrique" data-rubrique="mediatheque">
-        <button type="button" aria-expanded="false" aria-haspopup="true">Médiathèque <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
-        <div class="mega-menu" role="menu">
-          <div class="mega-menu-cols">
-            <a href="#galerie" role="menuitem"><span class="mm-icone">📸</span><span><span class="mm-label">Photos</span><span class="mm-desc">Galerie du mouvement</span></span></a>
-            <a href="#galerie" role="menuitem"><span class="mm-icone">🎬</span><span><span class="mm-label">Vidéos et audios</span><span class="mm-desc">Bientôt disponible</span></span></a>
-            <a href="#galerie" role="menuitem"><span class="mm-icone">💬</span><span><span class="mm-label">Témoignages</span><span class="mm-desc">Vies transformées</span></span></a>
-          </div>
-        </div>
+      <!-- 5. S’engager : participer, prier, servir et soutenir -->
+      <div class="nav-rubrique" data-rubrique="engager">
+        <button type="button" aria-expanded="false">S’engager <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+        <div class="mega-menu"><div class="mega-menu-cols">
+          <a href="#rejoindre"><span class="mm-icone" aria-hidden="true">✦</span><span><span class="mm-label">Rejoindre SDE</span><span class="mm-desc">Découvrir, participer et servir</span></span></a>
+          <a href="#rejoindre" data-objet="Demande de prière"><span class="mm-icone" aria-hidden="true">🙏</span><span><span class="mm-label">Demander la prière</span><span class="mm-desc">Être accompagné dans la prière</span></span></a>
+          <a href="#programmes"><span class="mm-icone" aria-hidden="true">⛪</span><span><span class="mm-label">Programmes de prière</span><span class="mm-desc">Traversée et ALEPH 12</span></span></a>
+          <a href="#soutenir"><span class="mm-icone" aria-hidden="true">💛</span><span><span class="mm-label">Dons et partenariats</span><span class="mm-desc">Soutenir les projets du mouvement</span></span></a>
+          <a href="#contact"><span class="mm-icone" aria-hidden="true">✉</span><span><span class="mm-label">Nous contacter</span><span class="mm-desc">Échanger avec le secrétariat</span></span></a>
+        </div></div>
       </div>
-
-      <!-- 6. Prière -->
-      <div class="nav-rubrique" data-rubrique="priere">
-        <button type="button" aria-expanded="false" aria-haspopup="true">Prière <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
-        <div class="mega-menu" role="menu">
-          <div class="mega-menu-cols">
-            <a href="#rejoindre" role="menuitem"><span class="mm-icone">🙏</span><span><span class="mm-label">Déposer une requête</span><span class="mm-desc">Demande de prière</span></span></a>
-            <a href="#programmes" role="menuitem"><span class="mm-icone">⛪</span><span><span class="mm-label">Programmes de prière</span><span class="mm-desc">Traversée, ALEPH 12</span></span></a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 7. Dons et Soutien -->
-      <a href="#soutenir" class="nav-lien-direct" style="padding:8px 14px;font-size:.88rem;font-weight:500;color:var(--texte-2);border-radius:var(--r);transition:color .2s">Dons</a>
-
-      <!-- 8. Contact -->
-      <a href="#contact" class="nav-lien-direct" style="padding:8px 14px;font-size:.88rem;font-weight:500;color:var(--texte-2);border-radius:var(--r);transition:color .2s">Contact</a>
+      <a class="bouton b-or nav-membre-mobile" href="https://app.mouvement-sde.org/#connexion">Espace membre <svg aria-hidden="true"><use href="#i-cle"/></svg></a>
     </nav>
 
     <div class="entete-droite">
+      <button class="btn-motion" id="btn-motion" type="button" aria-label="Mettre les animations en pause" aria-pressed="false" title="Mettre les animations en pause"><span data-motion-icon aria-hidden="true">Ⅱ</span></button>
       <button class="btn-theme" id="btn-theme" type="button" aria-label="Changer de thème">
         <svg class="icone-theme-sombre" aria-hidden="true"><use href="#i-soleil"/></svg>
         <svg class="icone-theme-clair" aria-hidden="true" style="display:none"><use href="#i-lune"/></svg>
@@ -1465,9 +1449,11 @@ html.anim .section { animation: section-in .5s ease-out both; }
 </nav>
 
 <!-- ═══════════ JAVASCRIPT ═══════════ -->
+<script src="/vitrine/navigation.js"></script>
+<script src="/vitrine/motion.js"></script>
 <script>
 (() => {
-  const reduit = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let reduit = document.documentElement.dataset.motion === "reduced";
 
   /* ═══════ Thème sombre / clair ═══════ */
   const btnTheme = document.getElementById("btn-theme");
@@ -1492,35 +1478,6 @@ html.anim .section { animation: section-in .5s ease-out both; }
     setTheme(cur === "dark" ? "light" : "dark");
   });
 
-  /* ═══════ Menu burger + sous-menus ═══════ */
-  const burger = document.getElementById("burger"), nav = document.getElementById("nav-principal");
-  burger.addEventListener("click", () => { const o = nav.classList.toggle("ouvert"); burger.setAttribute("aria-expanded", String(o)); burger.setAttribute("aria-label", o ? "Fermer le menu" : "Ouvrir le menu"); });
-  nav.addEventListener("click", (e) => { if (e.target.closest("a:not([data-rubrique]),.mega-menu a,.nav-lien-direct")) { nav.classList.remove("ouvert"); burger.setAttribute("aria-expanded", "false"); fermerTousMenus(); } });
-
-  function fermerTousMenus() { document.querySelectorAll(".nav-rubrique.ouvert").forEach(r => { r.classList.remove("ouvert"); r.querySelector("button").setAttribute("aria-expanded", "false"); }); }
-  document.querySelectorAll("[data-rubrique]").forEach(rub => {
-    const btn = rub.querySelector("button");
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const estOuvert = rub.classList.contains("ouvert");
-      fermerTousMenus();
-      if (!estOuvert) { rub.classList.add("ouvert"); btn.setAttribute("aria-expanded", "true"); }
-    });
-  });
-  document.addEventListener("click", (e) => { if (!e.target.closest(".nav-rubrique")) fermerTousMenus(); });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") { fermerTousMenus(); nav.classList.remove("ouvert"); burger.setAttribute("aria-expanded", "false"); }
-    const rubOuvert = document.querySelector(".nav-rubrique.ouvert");
-    if (rubOuvert && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
-      const liens = [...rubOuvert.querySelectorAll(".mega-menu a")];
-      if (!liens.length) return;
-      e.preventDefault();
-      const idx = liens.indexOf(document.activeElement);
-      const next = e.key === "ArrowDown" ? (idx + 1) % liens.length : (idx <= 0 ? liens.length - 1 : idx - 1);
-      liens[next].focus();
-    }
-  });
-
   /* En-tête compact au scroll */
   const entete = document.getElementById("entete");
   window.addEventListener("scroll", () => { entete.classList.toggle("compact", window.scrollY > 80); }, { passive: true });
@@ -1533,7 +1490,7 @@ html.anim .section { animation: section-in .5s ease-out both; }
       es.forEach(e => {
         if (!e.isIntersecting) return;
         const id = e.target.id;
-        menuLiens.forEach(a => { a.classList.toggle("act", a.getAttribute("href") === "#" + id); });
+        menuLiens.forEach(a => { const courant = a.getAttribute("href") === "#" + id; a.classList.toggle("act", courant); if (courant) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current"); });
         document.querySelectorAll("[data-rubrique]").forEach(r => {
           const sousLiens = r.querySelectorAll(".mega-menu a");
           const actifDans = [...sousLiens].some(a => a.classList.contains("act"));
@@ -1568,7 +1525,7 @@ html.anim .section { animation: section-in .5s ease-out both; }
     [...pv.children].forEach((b, k) => b.setAttribute("aria-pressed", String(k === i)));
   }
   let tv = 0;
-  function relancer() { clearInterval(tv); if (!reduit) tv = setInterval(() => { if (!document.hidden) montrer((iv + 1) % V.length); }, 9000); }
+  function relancer() { clearInterval(tv); if (!reduit && !document.hidden) tv = setInterval(() => { if (!document.hidden) montrer((iv + 1) % V.length); }, 9000); }
   relancer();
 
   /* ═══════ Braises (canvas) ═══════ */
@@ -1585,7 +1542,8 @@ html.anim .section { animation: section-in .5s ease-out both; }
   }
   let dernier = 0;
   function boucle(t) {
-    if (!document.hidden && t - dernier >= 33) {
+    if (reduit || document.hidden || !cvVisible) { raf = 0; return; }
+    if (t - dernier >= 33) {
       dernier = t;
       for (const p of parts) { p.o += 0.04; p.y -= p.v * 2; p.x += Math.sin(p.o) * 0.7 * dpr; if (p.y < -10) Object.assign(p, naitre(false)); }
       dessiner();
@@ -1595,16 +1553,30 @@ html.anim .section { animation: section-in .5s ease-out both; }
   taille();
   const nbBraises = window.innerWidth < 700 ? 36 : 70;
   for (let i = 0; i < nbBraises; i += 1) parts.push(naitre(true));
-  if (reduit) dessiner(); else raf = requestAnimationFrame(boucle);
+  let cvVisible = true;
+  if (reduit || document.hidden) dessiner(); else raf = requestAnimationFrame(boucle);
   window.addEventListener("resize", () => { taille(); parts = parts.map(() => naitre(true)); dessiner(); });
   if ("IntersectionObserver" in window) {
-    let cvVisible = true;
     new IntersectionObserver(([e]) => {
       cvVisible = e.isIntersecting;
-      if (cvVisible && !raf && !reduit) raf = requestAnimationFrame(boucle);
+      if (cvVisible && !raf && !reduit && !document.hidden) raf = requestAnimationFrame(boucle);
       if (!cvVisible && raf) { cancelAnimationFrame(raf); raf = 0; }
     }, { threshold: 0 }).observe(document.querySelector(".hero"));
   }
+
+  function synchroniserMouvement() {
+    relancer();
+    if (reduit || document.hidden || !cvVisible) {
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+    } else if (!raf) raf = requestAnimationFrame(boucle);
+  }
+  document.addEventListener("sde-motion-change", (e) => {
+    reduit = e.detail.reduced;
+    if (reduit) document.querySelectorAll(".revele").forEach(el => el.classList.add("vu"));
+    synchroniserMouvement();
+  });
+  document.addEventListener("visibilitychange", synchroniserMouvement);
 
   /* ═══════ Compte à rebours IN FIRE 2026 ═══════ */
   const cible = Date.UTC(2026, 9, 31, 8, 0, 0), fin = Date.UTC(2026, 9, 31, 20, 0, 0);
@@ -1742,7 +1714,7 @@ html.anim .section { animation: section-in .5s ease-out both; }
     const ic = new IntersectionObserver((es) => es.forEach((e) => {
       if (!e.isIntersecting) return; ic.unobserve(e.target);
       const b = e.target, fn = +b.dataset.compte, t0 = performance.now();
-      const pas = (t) => { const k = Math.min(1, (t - t0) / 1200); b.textContent = Math.round(fn * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(pas); };
+      const pas = (t) => { const k = reduit ? 1 : Math.min(1, (t - t0) / 1200); b.textContent = Math.round(fn * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(pas); };
       b.textContent = "0"; requestAnimationFrame(pas);
     }), { threshold: .6 });
     document.querySelectorAll("[data-compte]").forEach((b) => ic.observe(b));
@@ -1886,8 +1858,9 @@ html.anim .section { animation: section-in .5s ease-out both; }
   });
 
   /* ═══════ v11 : Effet ripple tactile ═══════ */
-  if (!reduit) {
+  {
     document.addEventListener("pointerdown", (e) => {
+      if (reduit) return;
       const cible = e.target.closest(".bouton, .bento-carte, .resume-carte, .nav-mobile a, .btn-theme, .burger, .retour-haut");
       if (!cible) return;
       cible.classList.add("ripple-host");
