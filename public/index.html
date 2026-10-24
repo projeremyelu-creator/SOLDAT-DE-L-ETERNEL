@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MPA SDE</title>
@@ -22,6 +22,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="/app.css">
+<script>/* Thème : applique le choix utilisateur avant le premier paint */
+(function(){try{var t=localStorage.getItem("sde-theme");if(t){document.documentElement.setAttribute("data-theme",t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==="light"?"#eef0f5":"#0f1e3d";}}catch(e){}}());
+</script>
 <script>/* Pont MPA SDE : fournit à l'application la même interface que dans Claude
    (window.claude.use("db" | "user" | "downloads" | "assets")), branchée sur le serveur Cloudflare. */
 (function () {
@@ -326,6 +329,9 @@
   <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v15H6.5A2.5 2.5 0 0 0 4 19.5z"/><path d="M4 19.5V22h16"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2l8 4v5c0 5.5-3.8 10.1-8 11-4.2-.9-8-5.5-8-11V6z"/></symbol>
   <symbol id="i-crown" viewBox="0 0 24 24"><path d="M2 17l3-11 5 4 2-6 2 6 5-4 3 11z"/><path d="M2 17h20v3H2z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1.08z"/></symbol>
 </svg>
 <button id="fab-ia" class="fab-ia" type="button" data-vue="assistant" hidden aria-label="Ouvrir l’assistant Éliézer"><svg class="ico" aria-hidden="true"><use href="#i-spark"/></svg><span>Éliézer</span></button>
 <script>
@@ -3794,7 +3800,9 @@
   VUES.plus = function () {
     let out = secHead("Modules", { eyebrow: "Toutes les sections du Quartier Général" });
     const vis = ongletsVisibles().filter((o) => o.id !== "accueil");
-    return out + `<div class="tiles">${vis.map((o) => `<button class="tile" type="button" data-vue="${o.id}"><span class="tile-ico" aria-hidden="true">${I(o.ico)}</span><span class="tile-t">${esc(o.long)}</span><span class="tile-d">${esc(o.desc || "")}</span><span class="tile-m">${esc(resumeModule(o.id))}</span></button>`).join("")}</div>`;
+    const estClair = document.documentElement.getAttribute("data-theme") === "light";
+    return out + `<div class="tiles">${vis.map((o) => `<button class="tile" type="button" data-vue="${o.id}"><span class="tile-ico" aria-hidden="true">${I(o.ico)}</span><span class="tile-t">${esc(o.long)}</span><span class="tile-d">${esc(o.desc || "")}</span><span class="tile-m">${esc(resumeModule(o.id))}</span></button>`).join("")}</div>`
+      + `<section class="card" style="margin-top:16px"><p class="eyebrow">${I("i-settings")} Apparence</p><button class="row" type="button" data-act="basculer-theme"><span class="row-main"><span class="row-t">${estClair ? "Passer en mode sombre" : "Passer en mode clair"}</span><span class="row-m">${estClair ? "Fond sombre, texte clair — confort nocturne" : "Fond clair, texte sombre — confort diurne"}</span></span><span class="row-r">${estClair ? I("i-moon") : I("i-sun")}</span></button></section>`;
   };
   /* Parcours du membre dans les modules : formations, chaîne de prière, livres empruntés */
   function blocParcours(m) {
@@ -7890,6 +7898,15 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
         toast("Notifications désactivées.");
       } catch (e) { toast("Erreur : " + (e.message || e), "err"); }
       rendu();
+    },
+    "basculer-theme": () => {
+      const cur = document.documentElement.getAttribute("data-theme");
+      const nv = cur === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", nv);
+      try { localStorage.setItem("sde-theme", nv); } catch (e) {}
+      const mc = document.querySelector('meta[name="theme-color"]');
+      if (mc) mc.content = nv === "light" ? "#eef0f5" : "#0f1e3d";
+      render();
     },
   });
 
