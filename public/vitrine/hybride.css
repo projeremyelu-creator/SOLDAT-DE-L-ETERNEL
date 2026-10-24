@@ -43,14 +43,13 @@
   }
 }
 
-/* ─── Fond cosmique sur body ─── */
-body { background-image: var(--grad-nuit), linear-gradient(180deg, var(--fond, #0a0f1d), var(--fond, #0a0f1d)); background-attachment: fixed; }
-:root[data-theme="light"] body { background-image: var(--grad-nuit), linear-gradient(180deg, var(--fond, #eef0f5), var(--fond, #eef0f5)); }
+/* ─── Fond cosmique + starfield : OPT-IN via <body data-cosmique>.
+   Ainsi les pages vitrine en profitent, l'app membre (utilitaire)
+   charge le même CSS pour ses utilitaires sans voir son fond modifié. ─── */
+body[data-cosmique] { background-image: var(--grad-nuit), linear-gradient(180deg, var(--fond, #0a0f1d), var(--fond, #0a0f1d)); background-attachment: fixed; }
+:root[data-theme="light"] body[data-cosmique] { background-image: var(--grad-nuit), linear-gradient(180deg, var(--fond, #eef0f5), var(--fond, #eef0f5)); }
 
-/* ─── Starfield (champ d'étoiles) : décoration fixée sur le fond.
-   Ne s'affiche qu'en mode sombre et jamais si l'utilisateur a demandé
-   la réduction d'animation. ─── */
-body::before {
+body[data-cosmique]::before {
   content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .55;
   background-image:
     radial-gradient(1.5px 1.5px at 12% 8%, rgba(255,255,255,.9), transparent),
@@ -68,13 +67,13 @@ body::before {
     radial-gradient(1px 1px at 88% 70%, rgba(255,255,255,.3), transparent),
     radial-gradient(1px 1px at 42% 80%, rgba(255,255,255,.35), transparent);
 }
-:root[data-theme="light"] body::before { display: none; }
+:root[data-theme="light"] body[data-cosmique]::before { display: none; }
 @media (prefers-reduced-motion: reduce) {
-  body::before { opacity: .3; }
+  body[data-cosmique]::before { opacity: .3; }
 }
 /* Pas d'étoiles au-dessus du contenu si une image de fond hero est présente */
-.hero-fond { z-index: 1; }
-main, header, footer, .entete, .pied, .nav-mobile, .retour-haut { position: relative; z-index: 1; }
+body[data-cosmique] .hero-fond { z-index: 1; }
+body[data-cosmique] :is(main, header, footer, .entete, .pied, .nav-mobile, .retour-haut) { position: relative; z-index: 1; }
 
 /* ═══════ 1. GLASSMORPHISM ═══════ */
 .verre, .entete.verre, .pied.verre {
