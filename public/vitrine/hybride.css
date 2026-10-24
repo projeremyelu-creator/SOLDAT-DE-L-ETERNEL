@@ -93,8 +93,9 @@ body[data-cosmique] :is(main, header, footer, .entete, .pied, .nav-mobile, .reto
   background: linear-gradient(180deg, rgba(10,15,29,.75), rgba(10,15,29,.55));
   border-bottom: 1px solid rgba(226,194,106,.22) !important;
 }
+/* Garder un contraste lisible : les liens et commandes de l’en-tête sont clairs. */
 :root[data-theme="light"] .entete {
-  background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.72));
+  background: linear-gradient(180deg, rgba(15,30,61,.98), rgba(15,30,61,.94));
   border-bottom-color: rgba(226,194,106,.3) !important;
 }
 
@@ -761,4 +762,14 @@ a.ticket:hover, a.ticket:focus-visible { color: inherit; cursor: pointer; }
 :root[data-theme="light"] .fp-boite {
   background: linear-gradient(180deg, #fff, #f3f5f9) !important;
   border-color: rgba(184,144,31,.35) !important;
+}
+
+/* Mobile : fond opaque et pas de flou coûteux au défilement. */
+@media (max-width: 1024px) {
+  .entete,
+  :root[data-theme="light"] .entete {
+    background: #0f1e3d;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
