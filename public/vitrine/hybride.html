@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="fr" dir="ltr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aperçu · Interface hybride · Soldats de l'Éternel</title>
+<meta name="description" content="Aperçu de travail — nouvelle direction visuelle hybride (glassmorphism, tableau de bord, bento, kanban) pour mouvement-sde.org.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0f1e3d">
+<link rel="icon" href="/icone-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/icone-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@400;500;600;700;800;900&family=Saira+Stencil+One&display=swap" rel="stylesheet">
+<style>
+/* ═══════════ APERÇU — INTERFACE HYBRIDE SDE ═══════════
+   Démontre quatre approches qui cohabitent sur une seule page :
+     1. Glassmorphism (nav + carte héro)
+     2. Tableau de bord analytique (impact)
+     3. Grille modulaire asymétrique « bento » (plateformes)
+     4. Workspace collaboratif façon kanban (poste de commandement)
+   Palette, typographies et tokens hérités de experience.css / index.html.
+   ═════════════════════════════════════════════════════════════ */
+
+:root {
+  --nuit: #0f1e3d;
+  --nuit-2: #1b2f5b;
+  --nuit-3: #2c4377;
+  --or: #e2c26a;
+  --or-lum: #f0d586;
+  --or-marque: #b8901f;
+  --or-sombre: #85650f;
+  --ivoire: #eef0f5;
+  --bordeaux: #641D2D;
+  --vert: #7ED8A8;
+  --bleu-clair: #7EB4FF;
+  --violet: #B49FE8;
+
+  --fond: #0a0f1d;
+  --surface: #121a2e;
+  --surface-2: #19233b;
+  --texte: #e8ebf4;
+  --texte-2: #a4adc4;
+  --gris: #b8c1d8;
+  --bordure: rgba(43,67,119,.4);
+  --voile: rgba(10,15,29,.55);
+
+  --grad-or: linear-gradient(135deg, #b8901f, #e2c26a);
+  --grad-nuit: radial-gradient(ellipse 60% 50% at 15% 8%, rgba(90,65,150,.28) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 85% 18%, rgba(226,194,106,.14) 0%, transparent 65%), radial-gradient(ellipse 70% 50% at 50% 95%, rgba(30,60,130,.22) 0%, transparent 60%), linear-gradient(180deg, #05070e 0%, #0a0f1d 40%, #060a16 100%);
+  --ombre: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.5);
+  --ombre-carte: 0 2px 12px rgba(0,0,0,.3);
+
+  --f-titre: "Saira Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+  --f-texte: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --f-marque: "Saira Stencil One", "Saira Condensed", Impact, "Arial Narrow", sans-serif;
+
+  --r: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --gutter: clamp(16px, 3vw, 40px);
+  --max: 1200px;
+  --ease: cubic-bezier(.4,0,.2,1);
+  --duree: .35s;
+}
+
+:root[data-theme="light"] {
+  --fond: #eef0f5;
+  --surface: #ffffff;
+  --surface-2: #f3f5f9;
+  --texte: #161e35;
+  --texte-2: #535c75;
+  --gris: #535c75;
+  --bordure: rgba(15,30,61,.15);
+  --voile: rgba(255,255,255,.65);
+  --or: #85650f;
+  --or-lum: #b8901f;
+  --grad-nuit: radial-gradient(ellipse 60% 50% at 15% 8%, rgba(90,65,150,.08) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 85% 18%, rgba(226,194,106,.1) 0%, transparent 65%), linear-gradient(180deg, #eef0f5 0%, #ffffff 50%, #eef0f5 100%);
+  --ombre: 0 1px 2px rgba(15,30,61,.06), 0 12px 32px rgba(15,30,61,.14);
+  --ombre-carte: 0 2px 12px rgba(15,30,61,.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { font-family: var(--f-texte); font-size: 16px; line-height: 1.65; color: var(--texte); background: var(--fond); background-image: var(--grad-nuit); background-attachment: fixed; -webkit-font-smoothing: antialiased; overflow-x: hidden; min-height: 100vh; }
+a { color: var(--or); text-decoration: none; transition: color var(--duree) var(--ease); }
+a:hover, a:focus-visible { color: var(--or-lum); }
+button { font: inherit; border: none; cursor: pointer; background: none; color: inherit; }
+img, svg { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.1; letter-spacing: .03em; text-transform: uppercase; }
+:focus-visible { outline: 3px solid var(--or); outline-offset: 4px; border-radius: 4px; }
+
+.enveloppe { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+
+/* ═══════ BANDEAU APERÇU ═══════ */
+.bandeau-apercu { background: linear-gradient(90deg, #641D2D, #8B2E3D); color: #fff; text-align: center; padding: 10px var(--gutter); font-size: .78rem; font-family: var(--f-titre); letter-spacing: .15em; text-transform: uppercase; font-weight: 600; }
+.bandeau-apercu a { color: var(--or-lum); text-decoration: underline; }
+
+/* ═══════ 1. GLASSMORPHISM — NAV + HERO ═══════ */
+.verre { backdrop-filter: blur(18px) saturate(1.5); -webkit-backdrop-filter: blur(18px) saturate(1.5); background: var(--voile); border: 1px solid rgba(255,255,255,.08); }
+:root[data-theme="light"] .verre { border-color: rgba(15,30,61,.08); background: rgba(255,255,255,.65); }
+
+.entete { position: sticky; top: 0; z-index: 100; padding: 14px var(--gutter); border-top: none; border-left: none; border-right: none; border-bottom: 1px solid rgba(226,194,106,.2); }
+.entete .enveloppe { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0; flex-wrap: wrap; }
+.marque { display: flex; align-items: center; gap: 12px; }
+.marque .logo { width: 40px; height: 40px; background: url(/vitrine/logo-96.png) center/contain no-repeat; background-image: image-set(url(/vitrine/logo-96.webp) type("image/webp"), url(/vitrine/logo-96.png) type("image/png")); flex-shrink: 0; filter: drop-shadow(0 2px 6px rgba(226,194,106,.3)); }
+.marque b { font-family: var(--f-marque); font-size: 1.15rem; color: var(--or); letter-spacing: .08em; }
+.marque small { font-size: .64rem; letter-spacing: .25em; color: var(--texte-2); text-transform: uppercase; display: block; margin-top: 2px; }
+.nav-liens { display: flex; gap: 22px; font-size: .88rem; font-weight: 600; font-family: var(--f-titre); text-transform: uppercase; letter-spacing: .08em; flex-wrap: wrap; justify-content: center; }
+.nav-liens a { color: var(--texte-2); }
+.nav-liens a:hover, .nav-liens a.actif { color: var(--or); }
+.nav-cta { display: flex; gap: 10px; align-items: center; }
+
+.bouton { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; font-weight: 600; font-size: .9rem; font-family: var(--f-titre); letter-spacing: .06em; text-transform: uppercase; transition: all var(--duree) var(--ease); white-space: nowrap; min-height: 44px; }
+.bouton svg { width: 14px; height: 14px; flex-shrink: 0; }
+.b-or { background: var(--grad-or); color: var(--nuit); }
+.b-or:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(226,194,106,.4); color: var(--nuit); }
+.b-contour { border: 1.5px solid rgba(255,255,255,.2); color: var(--texte); background: transparent; }
+.b-contour:hover { border-color: var(--or); color: var(--or); }
+.b-petit { padding: 8px 14px; font-size: .78rem; min-height: 36px; }
+
+.hero { padding: clamp(60px, 10vw, 110px) var(--gutter) clamp(70px, 11vw, 130px); position: relative; }
+.hero .enveloppe { display: flex; flex-wrap: wrap; gap: clamp(32px, 5vw, 60px); align-items: center; }
+.hero-texte { flex: 999 1 420px; min-width: 0; }
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(226,194,106,.1); color: var(--or); border: 1px solid rgba(226,194,106,.3); padding: 6px 14px; border-radius: 999px; font-size: .72rem; font-family: var(--f-titre); letter-spacing: .12em; text-transform: uppercase; font-weight: 700; margin-bottom: 22px; }
+.hero-badge .point { width: 6px; height: 6px; background: var(--or); border-radius: 50%; animation: pulse 2.4s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.3); } }
+.hero h1 { font-size: clamp(2.4rem, 6.2vw, 4.6rem); line-height: 1; margin-bottom: 24px; }
+.hero h1 em { font-style: normal; background: linear-gradient(135deg, #e2c26a 0%, #f0d586 50%, #b8901f 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero p { font-size: clamp(1rem, 1.5vw, 1.1rem); color: var(--texte-2); line-height: 1.75; max-width: 540px; margin-bottom: 32px; }
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.carte-rdv { flex: 1 1 300px; min-width: 280px; max-width: 420px; border-radius: var(--r-lg); padding: 28px; position: relative; overflow: hidden; }
+.carte-rdv::before { content: ''; position: absolute; top: -1px; left: 20%; right: 20%; height: 1px; background: linear-gradient(90deg, transparent, rgba(226,194,106,.6), transparent); }
+.carte-rdv::after { content: ''; position: absolute; top: -40px; right: -40px; width: 130px; height: 130px; border-radius: 50%; background: radial-gradient(circle, rgba(226,194,106,.2) 0%, transparent 70%); pointer-events: none; }
+.surtitre { font-family: var(--f-titre); font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--or); font-weight: 700; margin-bottom: 8px; }
+.carte-rdv h3 { font-size: 1.5rem; margin-bottom: 6px; }
+.carte-rdv .sous { font-size: .82rem; color: var(--texte-2); margin-bottom: 22px; }
+.rdv-detail { display: flex; gap: 14px; margin-bottom: 22px; }
+.rdv-date { flex: 0 0 68px; text-align: center; padding: 14px 6px; background: rgba(255,255,255,.04); border-radius: var(--r); border: 1px solid rgba(255,255,255,.06); }
+.rdv-date b { display: block; font-family: var(--f-titre); font-size: 2rem; font-weight: 700; color: var(--or); line-height: 1; }
+.rdv-date small { font-size: .62rem; letter-spacing: .15em; color: var(--texte-2); text-transform: uppercase; margin-top: 4px; display: block; }
+.rdv-infos { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 7px; }
+.rdv-infos li { display: flex; align-items: center; gap: 8px; font-size: .82rem; color: var(--texte); list-style: none; }
+.rdv-infos svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--or); }
+
+/* ═══════ 2. TABLEAU DE BORD ANALYTIQUE ═══════ */
+.section { padding: clamp(60px, 8vw, 100px) var(--gutter); position: relative; }
+.tete { display: flex; align-items: end; justify-content: space-between; margin-bottom: 36px; flex-wrap: wrap; gap: 20px; }
+.tete-texte { max-width: 720px; }
+.tete h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); margin: 6px 0 10px; }
+.tete h2 em { font-style: italic; color: var(--or); font-family: var(--f-titre); }
+.tete .chapo { font-size: .98rem; color: var(--texte-2); line-height: 1.6; }
+.filtres { display: flex; gap: 6px; }
+.filtres .bouton { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); color: var(--texte-2); font-size: .72rem; }
+.filtres .bouton.actif { background: rgba(226,194,106,.15); border-color: var(--or); color: var(--or); }
+
+.grille-kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.kpi { background: rgba(18,26,46,.6); border: 1px solid var(--bordure); border-radius: var(--r-md); padding: 22px; transition: border-color .25s ease, transform .25s ease; }
+.kpi:hover { border-color: rgba(226,194,106,.35); transform: translateY(-2px); }
+:root[data-theme="light"] .kpi { background: var(--surface); }
+.kpi-tete { display: flex; justify-content: space-between; align-items: start; margin-bottom: 14px; }
+.kpi-label { font-family: var(--f-titre); font-size: .68rem; color: var(--texte-2); letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+.kpi-icone { color: var(--or); opacity: .9; }
+.kpi-chiffre { font-family: var(--f-titre); font-size: 2.5rem; font-weight: 700; line-height: 1; color: var(--texte); }
+.kpi-sous { margin-top: 10px; font-size: .78rem; color: var(--texte-2); line-height: 1.4; }
+.kpi-sous strong { color: var(--or); font-weight: 700; }
+.kpi-delta { margin-top: 12px; display: inline-flex; align-items: center; gap: 5px; font-size: .72rem; color: var(--vert); font-weight: 600; }
+
+.barre { height: 6px; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; }
+.barre-remplissage { height: 100%; background: var(--grad-or); border-radius: 999px; transition: width .6s var(--ease); }
+
+.grille-analyses { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.carte-chart { background: rgba(18,26,46,.6); border: 1px solid var(--bordure); border-radius: var(--r-md); padding: 22px; min-width: 0; }
+:root[data-theme="light"] .carte-chart { background: var(--surface); }
+.carte-chart.large { grid-column: span 2; }
+@media (max-width: 680px) { .carte-chart.large { grid-column: span 1; } }
+.chart-barres { display: flex; align-items: end; gap: 10px; height: 160px; padding: 0 4px; margin-top: 16px; }
+.chart-barre { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.chart-barre .valeur { font-size: .72rem; color: var(--texte); font-weight: 700; }
+.chart-barre .fuseau { width: 100%; background: var(--grad-or); border-radius: 5px 5px 0 0; min-height: 12px; transition: transform .25s ease; }
+.chart-barre:hover .fuseau { transform: scaleY(1.03); transform-origin: bottom; }
+.chart-barre .legende { font-size: .72rem; color: var(--texte-2); font-family: var(--f-titre); letter-spacing: .05em; }
+.ligne-progression { margin-bottom: 16px; }
+.ligne-progression:last-child { margin-bottom: 0; }
+.ligne-progression .tete-l { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: .82rem; }
+.ligne-progression .valeur-l { color: var(--or); font-weight: 700; font-size: .78rem; }
+
+/* ═══════ 3. BENTO GRID ═══════ */
+.bento { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: minmax(170px, auto); gap: 16px; }
+.bento-carte { background: linear-gradient(145deg, rgba(28,36,60,.75), rgba(14,18,32,.75)); border: 1px solid var(--bordure); border-radius: var(--r-md); padding: 24px; position: relative; overflow: hidden; display: flex; flex-direction: column; transition: transform .25s ease, border-color .25s ease; min-width: 0; }
+:root[data-theme="light"] .bento-carte { background: var(--surface); }
+.bento-carte:hover { transform: translateY(-3px); border-color: rgba(226,194,106,.35); }
+.bento-tete { display: flex; justify-content: space-between; align-items: start; }
+.etiquette { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: .64rem; font-family: var(--f-titre); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.e-or { background: rgba(226,194,106,.15); color: var(--or); }
+.e-bleu { background: rgba(126,180,255,.12); color: var(--bleu-clair); }
+.e-vert { background: rgba(126,216,168,.15); color: var(--vert); }
+.e-violet { background: rgba(180,159,232,.15); color: var(--violet); }
+.e-neutre { background: rgba(255,255,255,.08); color: var(--texte-2); }
+
+.bento-corps { margin-top: auto; }
+.bento-corps h3 { font-size: 1.5rem; margin-bottom: 6px; }
+.bento-corps p { font-size: .85rem; color: var(--texte-2); line-height: 1.55; margin-bottom: 14px; }
+
+/* Tailles des cases bento */
+.c-7x2 { grid-column: span 7; grid-row: span 2; }
+.c-5x2 { grid-column: span 5; grid-row: span 2; }
+.c-8x2 { grid-column: span 8; grid-row: span 2; }
+.c-4x2 { grid-column: span 4; grid-row: span 2; }
+.c-6x1 { grid-column: span 6; }
+.c-4x1 { grid-column: span 4; }
+@media (max-width: 980px) {
+  .c-7x2, .c-5x2, .c-8x2, .c-4x2 { grid-row: span 1; }
+  .c-7x2, .c-8x2 { grid-column: span 7; }
+  .c-5x2, .c-4x2 { grid-column: span 5; }
+}
+@media (max-width: 680px) {
+  .bento { grid-template-columns: 1fr; }
+  .c-7x2, .c-5x2, .c-8x2, .c-4x2, .c-6x1, .c-4x1 { grid-column: span 1; }
+}
+
+.carte-phare { background: linear-gradient(145deg, rgba(90,65,150,.4), rgba(14,18,32,.85)), radial-gradient(circle at 80% 20%, rgba(226,194,106,.25), transparent 50%); }
+.carte-formation { background: linear-gradient(145deg, rgba(30,60,130,.4), rgba(14,18,32,.85)); }
+.carte-traversee { background: linear-gradient(145deg, rgba(139,94,52,.3), rgba(14,18,32,.85)); }
+.carte-action { background: linear-gradient(145deg, rgba(126,216,168,.15), rgba(14,18,32,.85)); }
+
+.stats-mini { display: flex; align-items: center; gap: 18px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.08); margin-top: 6px; }
+.stats-mini div { min-width: 0; }
+.stats-mini b { font-family: var(--f-titre); font-size: 1.4rem; color: var(--bleu-clair); display: block; line-height: 1; }
+.stats-mini small { font-size: .62rem; color: var(--texte-2); letter-spacing: .12em; text-transform: uppercase; display: block; margin-top: 3px; }
+
+.orbite { flex: 0 0 180px; position: relative; height: 180px; display: flex; align-items: center; justify-content: center; }
+.orbite .cercle-1 { position: absolute; width: 170px; height: 170px; border: 1px dashed rgba(226,194,106,.25); border-radius: 50%; }
+.orbite .cercle-2 { position: absolute; width: 115px; height: 115px; border: 1px dashed rgba(226,194,106,.35); border-radius: 50%; }
+.orbite .noyau { position: absolute; width: 68px; height: 68px; background: radial-gradient(circle, #e2c26a, #85650f); border-radius: 50%; box-shadow: 0 0 36px rgba(226,194,106,.5); display: flex; align-items: center; justify-content: center; font-family: var(--f-titre); font-size: 1.6rem; font-weight: 700; color: var(--nuit); }
+.orbite .satellite { position: absolute; background: var(--or); border-radius: 50%; }
+
+.citation { font-family: var(--f-titre); font-size: 1rem; font-weight: 500; font-style: italic; line-height: 1.4; color: var(--texte); letter-spacing: normal; text-transform: none; margin-bottom: 8px; }
+.auteur { font-size: .7rem; color: var(--texte-2); letter-spacing: .08em; }
+
+/* ═══════ 4. KANBAN ═══════ */
+.equipe { display: flex; align-items: center; gap: 10px; }
+.avatars { display: flex; }
+.avatars .av { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--fond); font-size: .7rem; font-family: var(--f-titre); font-weight: 700; display: flex; align-items: center; justify-content: center; color: var(--nuit); }
+.avatars .av + .av { margin-left: -8px; }
+.av-or { background: var(--grad-or); }
+.av-bleu { background: linear-gradient(145deg, #7EB4FF, #4A6FA5); }
+.av-vert { background: linear-gradient(145deg, #7ED8A8, #4A8870); }
+
+.kanban { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.colonne { background: rgba(14,20,36,.5); border: 1px solid var(--bordure); border-radius: var(--r-md); padding: 16px; min-width: 0; }
+:root[data-theme="light"] .colonne { background: var(--surface); }
+.colonne-tete { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.colonne-nom { display: flex; align-items: center; gap: 10px; font-family: var(--f-titre); font-size: .82rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.puce { width: 10px; height: 10px; border-radius: 50%; }
+.puce-bleu { background: var(--bleu-clair); }
+.puce-or { background: var(--or); }
+.puce-violet { background: var(--violet); }
+.puce-vert { background: var(--vert); }
+.compteur { font-family: var(--f-titre); font-size: .72rem; color: var(--texte-2); background: rgba(255,255,255,.06); padding: 2px 9px; border-radius: 999px; font-weight: 600; }
+
+.ticket { background: rgba(28,36,60,.8); border: 1px solid var(--bordure); border-radius: var(--r); padding: 14px; margin-bottom: 10px; cursor: grab; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+:root[data-theme="light"] .ticket { background: var(--surface-2); }
+.ticket:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.25); border-color: rgba(226,194,106,.3); }
+.ticket:active { cursor: grabbing; }
+.ticket-tete { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
+.ticket-date { font-family: var(--f-titre); font-size: .66rem; color: var(--texte-2); letter-spacing: .05em; }
+.ticket-titre { font-size: .88rem; font-weight: 700; margin-bottom: 4px; line-height: 1.35; }
+.ticket-sous { font-size: .74rem; color: var(--texte-2); margin-bottom: 10px; line-height: 1.4; }
+.ticket-pied { display: flex; align-items: center; justify-content: space-between; }
+.ticket.urgent { border-color: rgba(226,194,106,.35); box-shadow: 0 0 0 1px rgba(226,194,106,.2); }
+.urgent-flag { font-family: var(--f-titre); font-size: .66rem; color: var(--or); font-weight: 700; letter-spacing: .12em; }
+.ticket.fait { opacity: .68; }
+.ticket.fait .ticket-titre { text-decoration: line-through; text-decoration-color: rgba(232,235,244,.3); }
+
+.cta-band { margin-top: 44px; border-radius: var(--r-lg); padding: 26px 30px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.cta-band div h3 { font-size: 1.3rem; margin-bottom: 4px; color: var(--texte); }
+.cta-band div p { font-size: .85rem; color: var(--texte-2); }
+
+/* ═══════ PIED ═══════ */
+.pied { padding: 36px var(--gutter); border-top: 1px solid var(--bordure); margin-top: 40px; }
+.pied .enveloppe { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 0; }
+.pied-marque { display: flex; align-items: center; gap: 12px; font-size: .82rem; }
+.pied-marque .logo { width: 28px; height: 28px; background: url(/vitrine/logo-96.png) center/contain no-repeat; }
+.pied small { font-size: .68rem; color: var(--texte-2); letter-spacing: .05em; }
+
+/* Décoration étoilée */
+.etoiles { position: fixed; inset: 0; pointer-events: none; opacity: .5; z-index: 0; background-image:
+  radial-gradient(1.5px 1.5px at 12% 8%, rgba(255,255,255,.9), transparent),
+  radial-gradient(1px 1px at 28% 14%, rgba(255,255,255,.6), transparent),
+  radial-gradient(1.5px 1.5px at 48% 6%, rgba(255,255,255,.8), transparent),
+  radial-gradient(1px 1px at 64% 11%, rgba(255,255,255,.5), transparent),
+  radial-gradient(2px 2px at 78% 7%, rgba(226,194,106,.7), transparent),
+  radial-gradient(1px 1px at 92% 13%, rgba(255,255,255,.6), transparent),
+  radial-gradient(1px 1px at 18% 22%, rgba(255,255,255,.4), transparent),
+  radial-gradient(1.5px 1.5px at 55% 24%, rgba(255,255,255,.5), transparent),
+  radial-gradient(1px 1px at 82% 28%, rgba(255,255,255,.4), transparent);
+}
+:root[data-theme="light"] .etoiles { display: none; }
+main, .entete, .pied, .bandeau-apercu { position: relative; z-index: 1; }
+
+/* Préférence réduction d'animation */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* Mobile: adaptations */
+@media (max-width: 720px) {
+  .nav-liens { display: none; }
+  .cta-band { flex-direction: column; align-items: stretch; text-align: center; }
+  .cta-band .bouton { justify-content: center; }
+  .hero .enveloppe { flex-direction: column; }
+  .carte-rdv { max-width: 100%; }
+  .orbite { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="etoiles" aria-hidden="true"></div>
+
+<div class="bandeau-apercu">
+  Aperçu de travail — Interface hybride · <a href="/">Retour au site actuel</a>
+</div>
+
+<header class="entete verre" id="entete">
+  <div class="enveloppe">
+    <a href="/" class="marque" aria-label="Soldats de l'Éternel — accueil">
+      <span class="logo" aria-hidden="true"></span>
+      <span>
+        <b>Soldats de l'Éternel</b>
+        <small>Mouvement International</small>
+      </span>
+    </a>
+    <nav class="nav-liens" aria-label="Navigation principale">
+      <a href="#vision" class="actif">Vision</a>
+      <a href="#impact">Impact</a>
+      <a href="#plateformes">Plateformes</a>
+      <a href="#traversee">Traversée</a>
+      <a href="#commandement">Commandement</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="https://app.mouvement-sde.org" class="bouton b-contour b-petit">Se connecter</a>
+      <a href="#rejoindre" class="bouton b-or b-petit">Rejoindre</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════ 1. HERO — GLASSMORPHISM ═══════ -->
+<section class="hero" id="vision">
+  <div class="enveloppe">
+    <div class="hero-texte">
+      <span class="hero-badge">
+        <span class="point" aria-hidden="true"></span>
+        Prophético-apostolique · Depuis Abidjan
+      </span>
+      <h1>L'Éternel lève<br><em>une armée</em><br>dans ce temps.</h1>
+      <p>Un mouvement international, prophétique et apostolique, Christocentrique — enraciné dans la Parole, formé pour le combat spirituel, envoyé pour l'édification du Corps du Christ sur cinq continents.</p>
+      <div class="hero-actions">
+        <a href="#traversee" class="bouton b-or">
+          Entrer dans la Traversée
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#plateformes" class="bouton b-contour">Découvrir la vision</a>
+      </div>
+    </div>
+
+    <aside class="carte-rdv verre" aria-labelledby="rdv-titre">
+      <div class="surtitre">Prochain rendez-vous</div>
+      <h3 id="rdv-titre">Traversée Prophétique Mensuelle</h3>
+      <div class="sous">Édition d'Octobre 2026 · Abidjan + diffusion internationale</div>
+
+      <div class="rdv-detail">
+        <div class="rdv-date"><b>28</b><small>Oct.</small></div>
+        <ul class="rdv-infos">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            19h00 GMT (20h00 Abidjan)
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+            Hybride · Live + présentiel
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H2v-2a4 4 0 0 1 3-3.87m4-5a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm8-4a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+            5 pays connectés
+          </li>
+        </ul>
+      </div>
+
+      <a href="#rejoindre" class="bouton b-or" style="width: 100%; justify-content: center;">Je m'inscris</a>
+    </aside>
+  </div>
+</section>
+
+<!-- ═══════ 2. TABLEAU DE BORD — IMPACT ═══════ -->
+<section class="section" id="impact">
+  <div class="enveloppe">
+    <div class="tete">
+      <div class="tete-texte">
+        <div class="surtitre">Tableau de bord — Impact</div>
+        <h2>La main de l'Éternel<br>sur <em>5 nations</em>.</h2>
+        <p class="chapo">Données consolidées — Octobre 2026. Mis à jour en continu depuis le poste de commandement SDE.</p>
+      </div>
+      <div class="filtres" role="group" aria-label="Période">
+        <button class="bouton b-petit">30 jours</button>
+        <button class="bouton b-petit actif" aria-pressed="true">90 jours</button>
+        <button class="bouton b-petit">Année</button>
+      </div>
+    </div>
+
+    <div class="grille-kpi">
+      <div class="kpi">
+        <div class="kpi-tete">
+          <div class="kpi-label">Nations touchées</div>
+          <svg class="kpi-icone" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+        </div>
+        <div class="kpi-chiffre">5</div>
+        <div class="kpi-sous">Côte d'Ivoire · Canada · USA · Italie · Tunisie · Burkina</div>
+        <div class="kpi-delta">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
+          +2 depuis janvier
+        </div>
+      </div>
+
+      <div class="kpi">
+        <div class="kpi-tete">
+          <div class="kpi-label">Traversées 2026</div>
+          <svg class="kpi-icone" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </div>
+        <div class="kpi-chiffre">10</div>
+        <div class="kpi-sous">Traversées Prophétiques Mensuelles tenues</div>
+        <svg viewBox="0 0 200 36" style="width: 100%; height: 32px; margin-top: 10px;" aria-hidden="true">
+          <defs><linearGradient id="g1" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#e2c26a" stop-opacity=".4"/><stop offset="100%" stop-color="#e2c26a" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0 30 L20 26 L40 28 L60 20 L80 22 L100 16 L120 18 L140 12 L160 14 L180 8 L200 6 L200 36 L0 36 Z" fill="url(#g1)"/>
+          <path d="M0 30 L20 26 L40 28 L60 20 L80 22 L100 16 L120 18 L140 12 L160 14 L180 8 L200 6" stroke="#e2c26a" stroke-width="2" fill="none"/>
+        </svg>
+      </div>
+
+      <div class="kpi">
+        <div class="kpi-tete">
+          <div class="kpi-label">Enseignements</div>
+          <svg class="kpi-icone" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>
+        </div>
+        <div class="kpi-chiffre">37</div>
+        <div class="kpi-sous">Dont <strong>23 Lois Spirituelles</strong> &amp; <strong>14 Lois de Job 38</strong></div>
+        <div class="kpi-delta">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
+          +8 ce trimestre
+        </div>
+      </div>
+
+      <div class="kpi">
+        <div class="kpi-tete">
+          <div class="kpi-label">Actions sociales</div>
+          <svg class="kpi-icone" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="kpi-chiffre">214</div>
+        <div class="kpi-sous">Vies touchées — Tomorrow Hope (Daloa) &amp; Veuves de Cocody</div>
+        <div style="margin-top: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: .66rem; color: var(--texte-2); margin-bottom: 4px; font-family: var(--f-titre); letter-spacing: .08em;"><span>Objectif annuel</span><span>71%</span></div>
+          <div class="barre"><div class="barre-remplissage" style="width: 71%;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grille-analyses">
+      <div class="carte-chart large">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 4px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <div class="kpi-label">Portée · Audience par Traversée</div>
+            <h4 style="font-size: 1.2rem; margin-top: 4px; letter-spacing: .02em;">Dernière édition — Septembre 2026</h4>
+          </div>
+          <span class="etiquette e-vert">● En ligne</span>
+        </div>
+        <div class="chart-barres" role="img" aria-label="Audience par pays : Côte d'Ivoire 1240, Canada 420, USA 380, Italie 260, Tunisie 190, Burkina 145">
+          <div class="chart-barre"><span class="valeur" style="color: var(--or);">1 240</span><span class="fuseau" style="height: 92%;"></span><span class="legende">CIV</span></div>
+          <div class="chart-barre"><span class="valeur">420</span><span class="fuseau" style="height: 32%; background: linear-gradient(180deg, rgba(226,194,106,.6), rgba(139,94,52,.4));"></span><span class="legende">Canada</span></div>
+          <div class="chart-barre"><span class="valeur">380</span><span class="fuseau" style="height: 28%; background: linear-gradient(180deg, rgba(226,194,106,.55), rgba(139,94,52,.4));"></span><span class="legende">USA</span></div>
+          <div class="chart-barre"><span class="valeur">260</span><span class="fuseau" style="height: 20%; background: linear-gradient(180deg, rgba(226,194,106,.5), rgba(139,94,52,.35));"></span><span class="legende">Italie</span></div>
+          <div class="chart-barre"><span class="valeur">190</span><span class="fuseau" style="height: 15%; background: linear-gradient(180deg, rgba(226,194,106,.45), rgba(139,94,52,.3));"></span><span class="legende">Tunisie</span></div>
+          <div class="chart-barre"><span class="valeur">145</span><span class="fuseau" style="height: 11%; background: linear-gradient(180deg, rgba(226,194,106,.4), rgba(139,94,52,.3));"></span><span class="legende">Burkina</span></div>
+        </div>
+      </div>
+
+      <div class="carte-chart">
+        <div class="kpi-label" style="margin-bottom: 20px;">Avancement — Projets</div>
+
+        <div class="ligne-progression">
+          <div class="tete-l"><span>Livre « 23 Lois Spirituelles »</span><span class="valeur-l">88%</span></div>
+          <div class="barre"><div class="barre-remplissage" style="width: 88%;"></div></div>
+        </div>
+        <div class="ligne-progression">
+          <div class="tete-l"><span>Enseignement 14 Lois Job 38</span><span class="valeur-l">100%</span></div>
+          <div class="barre"><div class="barre-remplissage" style="width: 100%;"></div></div>
+        </div>
+        <div class="ligne-progression">
+          <div class="tete-l"><span>App membre MPA SDE</span><span class="valeur-l">62%</span></div>
+          <div class="barre"><div class="barre-remplissage" style="width: 62%;"></div></div>
+        </div>
+        <div class="ligne-progression">
+          <div class="tete-l"><span>Soldiers Academy — S2</span><span class="valeur-l">45%</span></div>
+          <div class="barre"><div class="barre-remplissage" style="width: 45%;"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 3. BENTO GRID — PLATEFORMES ═══════ -->
+<section class="section" id="plateformes">
+  <div class="enveloppe">
+    <div class="tete">
+      <div class="tete-texte">
+        <div class="surtitre">Plateformes &amp; Ministères</div>
+        <h2>Un seul mouvement,<br><em>plusieurs portes</em>.</h2>
+        <p class="chapo">Chaque plateforme SDE répond à un appel spécifique du Saint-Esprit — formation, édification, intercession, action.</p>
+      </div>
+    </div>
+
+    <div class="bento">
+
+      <article class="bento-carte carte-phare c-7x2">
+        <div class="bento-tete">
+          <span class="etiquette e-or">Phare</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="1.8" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+        </div>
+        <div class="bento-corps">
+          <h3>Holy Talk</h3>
+          <p>La parole prophétique en direct. Diffusion hebdomadaire — enseignements, exhortations, mots de connaissance pour l'armée de l'Éternel.</p>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <a href="#" class="bouton b-or b-petit">Écouter maintenant</a>
+            <span style="font-size: .74rem; color: var(--texte-2);">Prochain live · Mardi 20h GMT</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="bento-carte carte-formation c-5x2">
+        <div class="bento-tete">
+          <span class="etiquette e-bleu">Formation</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--bleu-clair)" stroke-width="1.8" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="bento-corps">
+          <h3>Soldiers Academy</h3>
+          <p>École de formation apostolique — Hébreu, Grec, typologie biblique, combat spirituel.</p>
+          <div class="stats-mini">
+            <div><b>S2</b><small>Session</small></div>
+            <div><b>12</b><small>Modules</small></div>
+            <div><b>86</b><small>Soldats</small></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="bento-carte c-4x1">
+        <div class="bento-tete">
+          <span class="etiquette e-or">Livre</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="1.8" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>
+        </div>
+        <div class="bento-corps">
+          <h3 style="font-size: 1.2rem;">23 Lois Spirituelles</h3>
+          <p style="margin-bottom: 0;">4 axes thématiques · Parution imminente</p>
+        </div>
+      </article>
+
+      <article class="bento-carte c-4x1">
+        <div class="bento-tete">
+          <span class="etiquette e-or">Enseignement</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--or)" stroke-width="1.8" aria-hidden="true"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07"/></svg>
+        </div>
+        <div class="bento-corps">
+          <h3 style="font-size: 1.2rem;">14 Lois · Job 38</h3>
+          <p style="margin-bottom: 0;">« Connais-tu les lois des cieux ? »</p>
+        </div>
+      </article>
+
+      <article class="bento-carte carte-action c-4x1">
+        <div class="bento-tete">
+          <span class="etiquette e-vert">Action</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--vert)" stroke-width="1.8" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="bento-corps">
+          <h3 style="font-size: 1.15rem;">Tomorrow Hope · Veuves</h3>
+          <p style="margin-bottom: 0;">Daloa · Cocody — 214 vies</p>
+        </div>
+      </article>
+
+      <article class="bento-carte carte-traversee c-8x2">
+        <div style="display: flex; gap: 24px; height: 100%; align-items: center; flex-wrap: wrap;">
+          <div style="flex: 1 1 280px; min-width: 0;">
+            <div class="bento-tete" style="margin-bottom: 10px;">
+              <span class="etiquette e-or">Mensuel · Flagship</span>
+            </div>
+            <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Traversée Prophétique Mensuelle</h3>
+            <p style="margin-bottom: 16px;">Le rendez-vous apostolique mondial — intercession, décrets prophétiques, basculements. Hybride, cinq pays en simultané.</p>
+            <a href="#" class="bouton b-contour b-petit">
+              Voir le calendrier
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+          <div class="orbite" aria-hidden="true">
+            <div class="cercle-1"></div>
+            <div class="cercle-2"></div>
+            <div class="noyau">28</div>
+            <span class="satellite" style="top: 10px; right: 20px; width: 10px; height: 10px;"></span>
+            <span class="satellite" style="bottom: 30px; left: 10px; width: 6px; height: 6px; opacity: .6;"></span>
+            <span class="satellite" style="bottom: 10px; right: 40px; width: 8px; height: 8px; opacity: .8;"></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="bento-carte c-4x1">
+        <div class="bento-tete">
+          <span class="etiquette e-bleu">Membres</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--bleu-clair)" stroke-width="1.8" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20M6 15h2M10 15h4"/></svg>
+        </div>
+        <div class="bento-corps">
+          <h3 style="font-size: 1.15rem;">Poste de Commandement</h3>
+          <p style="margin-bottom: 0;">app.mouvement-sde.org</p>
+        </div>
+      </article>
+
+      <article class="bento-carte c-4x1">
+        <div class="bento-tete">
+          <span class="etiquette e-neutre">Témoignages</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--texte-2)" stroke-width="1.8" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="bento-corps">
+          <p class="citation">« Depuis la Traversée de juin, le feu de Dieu n'a plus quitté notre cellule. »</p>
+          <div class="auteur">— Cellule Montréal</div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 4. KANBAN — POSTE DE COMMANDEMENT ═══════ -->
+<section class="section" id="commandement">
+  <div class="enveloppe">
+    <div class="tete">
+      <div class="tete-texte">
+        <div class="surtitre">Poste de Commandement — Vie interne</div>
+        <h2>Le mouvement<br><em>en marche</em>.</h2>
+        <p class="chapo">Aperçu de app.mouvement-sde.org — les responsables de cellule coordonnent missions, intercessions et formations en glisser-déposer.</p>
+      </div>
+      <div class="equipe">
+        <div class="avatars" aria-label="12 collaborateurs">
+          <span class="av av-or">AG</span>
+          <span class="av av-bleu">JG</span>
+          <span class="av av-vert">+9</span>
+        </div>
+        <button class="bouton b-contour b-petit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Nouvelle mission
+        </button>
+      </div>
+    </div>
+
+    <div class="kanban" role="list" aria-label="Tableau Kanban des missions">
+
+      <div class="colonne" role="listitem">
+        <div class="colonne-tete">
+          <div class="colonne-nom"><span class="puce puce-bleu"></span>À planifier<span class="compteur">4</span></div>
+        </div>
+        <article class="ticket">
+          <div class="ticket-tete"><span class="etiquette e-or">Traversée</span><span class="ticket-date">28 Oct</span></div>
+          <div class="ticket-titre">Préparer la salle · Édition Octobre</div>
+          <div class="ticket-sous">Équipe logistique Abidjan</div>
+          <div class="ticket-pied">
+            <span class="av av-or" style="width: 24px; height: 24px; font-size: .64rem; border-width: 1px;">AG</span>
+            <span style="display: inline-flex; align-items: center; gap: 5px; font-size: .68rem; color: var(--texte-2); font-family: var(--f-titre);">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+              3/8
+            </span>
+          </div>
+        </article>
+        <article class="ticket">
+          <div class="ticket-tete"><span class="etiquette e-bleu">Enseignement</span><span class="ticket-date">Nov</span></div>
+          <div class="ticket-titre">Rédiger module 7 — Soldiers Academy S2</div>
+          <div class="ticket-sous">Combat spirituel · Éphésiens 6</div>
+        </article>
+        <article class="ticket">
+          <div class="ticket-tete"><span class="etiquette e-vert">Action</span><span class="ticket-date">Nov</span></div>
+          <div class="ticket-titre">Collecte · Veuves de Cocody</div>
+          <div class="ticket-sous">Lot novembre — 40 bénéficiaires</div>
+        </article>
+      </div>
+
+      <div class="colonne" role="listitem">
+        <div class="colonne-tete">
+          <div class="colonne-nom"><span class="puce puce-or"></span>En cours<span class="compteur">3</span></div>
+        </div>
+        <article class="ticket urgent">
+          <div class="ticket-tete"><span class="etiquette e-or">Livre</span><span class="urgent-flag">URGENT</span></div>
+          <div class="ticket-titre">Relecture finale — 23 Lois Spirituelles</div>
+          <div class="ticket-sous">Axe 4 · dernière passe théologique</div>
+          <div class="barre" style="margin-bottom: 10px;"><div class="barre-remplissage" style="width: 88%;"></div></div>
+          <div class="ticket-pied">
+            <span class="av av-or" style="width: 24px; height: 24px; font-size: .64rem; border-width: 1px;">JG</span>
+            <span style="font-size: .68rem; color: var(--texte-2); font-family: var(--f-titre);">88%</span>
+          </div>
+        </article>
+        <article class="ticket">
+          <div class="ticket-tete"><span class="etiquette e-bleu">App MPA</span><span class="ticket-date">Sprint 4</span></div>
+          <div class="ticket-titre">Onboarding nouveau membre</div>
+          <div class="ticket-sous">Flow d'inscription · 3 écrans</div>
+        </article>
+        <article class="ticket">
+          <div class="ticket-tete"><span class="etiquette e-violet">Holy Talk</span><span class="ticket-date">Mar.</span></div>
+          <div class="ticket-titre">Préparer prédication — Hébreu « châqar »</div>
+          <div class="ticket-sous">Sonder, scruter · Psaume 139</div>
+        </article>
+      </div>
+
+      <div class="colonne" role="listitem">
+        <div class="colonne-tete">
+          <div class="colonne-nom"><span class="puce puce-violet"></span>En revue<span class="compteur">2</span></div>
+        </div>
+        <article class="ticket">
+          <div class="ticket-tete"><span class="etiquette e-or">Visuel</span><span class="ticket-date">Oct</span></div>
+          <div class="ticket-titre">Flyer Traversée — version internationale</div>
+          <div class="ticket-sous">Validation Amy · multilingue FR/EN</div>
+        </article>
+        <article class="ticket">
+          <div class="ticket-tete"><span class="etiquette e-bleu">Site</span><span class="ticket-date">Oct</span></div>
+          <div class="ticket-titre">mouvement-sde.org — refonte accueil</div>
+          <div class="ticket-sous">Interface hybride · prête à publier</div>
+        </article>
+      </div>
+
+      <div class="colonne" role="listitem">
+        <div class="colonne-tete">
+          <div class="colonne-nom"><span class="puce puce-vert"></span>Accompli<span class="compteur">12</span></div>
+        </div>
+        <article class="ticket fait">
+          <div class="ticket-tete"><span class="etiquette e-vert"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M9 12l2 2 4-4"/></svg>Terminé</span><span class="ticket-date">22 Oct</span></div>
+          <div class="ticket-titre">Publication — 14 Lois de Job 38</div>
+          <div class="ticket-sous">1 240 téléchargements · 4,8★</div>
+        </article>
+        <article class="ticket fait">
+          <div class="ticket-tete"><span class="etiquette e-vert"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M9 12l2 2 4-4"/></svg>Terminé</span><span class="ticket-date">18 Oct</span></div>
+          <div class="ticket-titre">Don orphelinat Tomorrow Hope</div>
+          <div class="ticket-sous">Daloa · 68 enfants servis</div>
+        </article>
+        <article class="ticket fait">
+          <div class="ticket-tete"><span class="etiquette e-vert"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M9 12l2 2 4-4"/></svg>Terminé</span><span class="ticket-date">12 Oct</span></div>
+          <div class="ticket-titre">Diffusion Holy Talk #42</div>
+          <div class="ticket-sous">« L'autel du matin » · 2,1k vues</div>
+        </article>
+      </div>
+    </div>
+
+    <aside class="cta-band verre" id="rejoindre">
+      <div>
+        <h3>Vous êtes responsable de cellule ou missionnaire SDE ?</h3>
+        <p>Accédez à votre poste de commandement et coordonnez votre équipe.</p>
+      </div>
+      <a href="https://app.mouvement-sde.org" class="bouton b-or">
+        Ouvrir app.mouvement-sde.org
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+      </a>
+    </aside>
+  </div>
+</section>
+
+</main>
+
+<footer class="pied verre">
+  <div class="enveloppe">
+    <div class="pied-marque">
+      <span class="logo" aria-hidden="true"></span>
+      <span><b>Soldats de l'Éternel</b> · Abidjan, Côte d'Ivoire · mouvement-sde.org</span>
+    </div>
+    <small>© 2026 SDE · Un mouvement prophético-apostolique international · Aperçu de travail</small>
+  </div>
+</footer>
+
+<script>
+/* Interactions légères — défilement en douceur et surlignage de la nav active au scroll. */
+(() => {
+  'use strict';
+  const liens = document.querySelectorAll('.nav-liens a[href^="#"]');
+  const cibles = [...liens].map(a => document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);
+  if (!cibles.length || !('IntersectionObserver' in window)) return;
+
+  const observateur = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        liens.forEach(l => l.classList.toggle('actif', l.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+
+  cibles.forEach(c => observateur.observe(c));
+})();
+</script>
+
+</body>
+</html>
