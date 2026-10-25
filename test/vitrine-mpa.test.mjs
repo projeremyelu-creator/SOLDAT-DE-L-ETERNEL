@@ -160,3 +160,28 @@ test("MPA: les pages historiques continuent à charger la nouvelle navigation",(
     assert.ok(h.includes("mpa.css"),p);
   }
 });
+
+test("MPA: la barre basse est réservée au mobile et le méga-menu au PC",()=>{
+  const css=read("public/vitrine/mpa.css");
+  assert.ok(css.includes("body.sde-portal .nav-mobile.sde-global-nav { display:none !important; }"),"barre mobile masquée sur grand écran");
+  assert.ok(css.includes("body.sde-portal .sde-mega-nav { display:flex !important; }"),"méga-menu affiché sur PC");
+  assert.ok(css.includes("body.sde-portal .sde-mega-nav { display:none !important; }"),"méga-menu masqué sur mobile");
+  assert.ok(css.includes("body.sde-portal .sde-global-nav { display:block !important; }"),"barre présente sur mobile");
+  assert.ok(css.includes('.sde-mega:not([open]) > .sde-mega-panel { display:none !important; }'),"panneau fermé masqué sur PC");
+});
+test("MPA: les méga-menus répondent au clic et à la touche Échap",()=>{
+  const d=dom("mouvement"),w=d.window,document=w.document;
+  const panels=[...document.querySelectorAll(".sde-mega-nav details")];
+  assert.equal(panels.length,4);
+  const first=panels[0],second=panels[1];
+  first.open=true;
+  first.dispatchEvent(new w.Event("toggle"));
+  second.open=true;
+  second.dispatchEvent(new w.Event("toggle"));
+  assert.equal(first.open,false,"un seul méga-menu ouvert à la fois");
+  const summary=second.querySelector("summary");
+  summary.focus();
+  second.dispatchEvent(new w.KeyboardEvent("keydown",{key:"Escape",bubbles:true}));
+  assert.equal(second.open,false,"Échap referme le menu");
+  d.window.close();
+});
