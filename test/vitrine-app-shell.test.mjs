@@ -42,7 +42,8 @@ test("interface publique : commandes, onglets mobiles, menu PC et annuaire de ru
   assert.ok(doc.querySelector(".sde-shell-search-btn"));
   assert.ok(doc.querySelector(".sde-shell-public-tag"));
   const toolbar=doc.querySelector(".sde-shell-toolbar");
-  assert.equal(toolbar.querySelectorAll("a").length,5);
+  assert.equal(toolbar.querySelectorAll("a").length,6);
+  assert.ok(toolbar.querySelector('a[href="/os-v31/"]'),"accès SDE OS privé depuis le site public");
   assert.ok(toolbar.querySelector('a[href="https://app.mouvement-sde.org/#connexion"]'));
   assert.ok(doc.querySelector("form#form-rejoindre"),"formulaire d'adhésion conservé");
   assert.ok(doc.querySelector("form#f-venue"),"formulaire IN FIRE conservé");

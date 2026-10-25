@@ -7,6 +7,7 @@ import vm from "node:vm";
 import { execFileSync } from "node:child_process";
 
 const pages = ["public/index.html", "public/vitrine/index.html", "public/vitrine/engagements.html", "public/vitrine/formulaire.html", "public/vitrine/academy.html", "public/vitrine/mouvement.html", "public/vitrine/programmes.html", "public/vitrine/ressources.html", "public/vitrine/rejoindre.html", "public/vitrine/projets.html", "public/vitrine/plus.html", "public/vitrine/prieres.html", "public/vitrine/temoignages.html", "public/vitrine/soldiers-voice.html", "public/vitrine/missions-humanitaires.html", "public/vitrine/offline-public.html", "public/offline.html"];
+pages.push("public/os-v31/index.html");
 let erreurs = 0;
 for (const page of pages) {
   const html = readFileSync(page, "utf8");
@@ -29,4 +30,7 @@ for (const f of ["src/worker.js", "public/sw.js", "public/vitrine/navigation.js"
   catch (e) { erreurs += 1; console.error(`✗ ${f} :\n${String(e.stderr)}`); }
 }
 if (erreurs) { console.error(`\n${erreurs} erreur(s) : ne pas publier.`); process.exit(1); }
+for (const f of ["src/os-v31.js", "public/os-v31/sde-os.js"]) {
+  execFileSync(process.execPath, ["--check", f], {stdio:"pipe"});
+}
 console.log("\nTout est valide.");

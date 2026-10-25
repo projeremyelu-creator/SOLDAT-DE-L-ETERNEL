@@ -1156,6 +1156,18 @@ async function traiter(req, env, ctx) {
       return new Response(r.value, { headers: { "content-type": (r.metadata && r.metadata.type) || "application/octet-stream", "cache-control": "private, max-age=86400", "x-content-type-options": "nosniff", "content-security-policy": "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; sandbox" } });
     }
     if (p.startsWith("/m/") && (req.method === "GET" || req.method === "HEAD")) return servirMedia(req, env, await utilisateur(req, env), p.split("/")[2]);
+    if (p === "/os-v31") return Response.redirect(url.origin + "/os-v31/" + url.search, 302);
+    if (p.startsWith("/os-v31/")) {
+      if (!["/os-v31/", "/os-v31/index.html", "/os-v31/sde-os.js", "/os-v31/sde-os.css"].includes(p))
+        return new Response("Introuvable", {status:404,headers:{"cache-control":"no-store"}});
+      const asset = await env.ASSETS.fetch(req);
+      const r = new Response(asset.body, asset);
+      r.headers.set("cache-control", "no-store");
+      r.headers.set("x-robots-tag", "noindex, nofollow");
+      r.headers.set("content-type", p.endsWith(".js") ? "text/javascript; charset=utf-8" : p.endsWith(".css") ? "text/css; charset=utf-8" : "text/html; charset=utf-8");
+      r.headers.set("content-security-policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
+      return r;
+    }
     if (!p.startsWith("/api/")) return env.ASSETS.fetch(req);
     if (req.method !== "GET") {
       const origine = req.headers.get("origin");
@@ -1170,7 +1182,7 @@ async function traiter(req, env, ctx) {
         if (u.niveau < 3) return erreur("refuse", "Réservé au propriétaire.", 403);
         return json(await mailStatus(env));
       }
-      if (p === "/api/os-v31" && req.method === "POST") return apiSdeOs31(req, env, u);
+      if (p === "/api/os-v31") return await apiSdeOs31(req, env, u);
       if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
       if (p === "/api/inscription" && req.method === "POST") return apiInscription(req, env, ctx);
       if (p === "/api/connexion" && req.method === "POST") return apiConnexionMdp(req, env);
@@ -1202,7 +1214,7 @@ async function traiter(req, env, ctx) {
       if (p === "/api/preinscription-academy-admin") return apiPreinscriptionAcademyAdmin(req, env, u);
       return erreur("introuvable", "Route inconnue.", 404);
     } catch (e) {
-      return erreur("unavailable", "Erreur du serveur : " + (e && e.message), 500);
+      return erreur("unavailable", "Service temporairement indisponible. Réessayez plus tard.", 500);
     }
   }
 }

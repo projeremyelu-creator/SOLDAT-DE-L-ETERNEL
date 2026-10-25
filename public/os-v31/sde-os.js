@@ -11,14 +11,29 @@ gouvernance:["Directoire Général","Gouvernance, traçabilité et responsabilit
 academy:["Soldiers Academy","Former, équiper, accompagner et envoyer."],
 poles:["Les cinq pôles","L'organisation opérationnelle du mouvement."]};
 const colors=["#bd8b3b","#641d2d","#556346","#4e7ca4","#8d6db1"];
-const state={data:null,admin:false,history:[],enrolled:[],route:"tableau",trend:null,decisions:[]};
+const state={data:null,admin:false,history:[],enrolled:[],route:"tableau",trend:null,decisions:[],locked:false};
 const api=async(action,payload={})=>{
+ if(state.locked)throw Error("Reconnectez-vous à SDE.");
  const response=await fetch("/api/os-v31",{method:"POST",credentials:"same-origin",cache:"no-store",
   headers:{"content-type":"application/json"},body:JSON.stringify({action,...payload})});
  let result;try{result=await response.json();}catch{throw Error("Le serveur SDE ne répond pas correctement.");}
+ if(response.status===401){lockSession(result.message||"Votre session a expiré.");throw Error("Reconnectez-vous à SDE.");}
+ if(state.locked)throw Error("Reconnectez-vous à SDE.");
  if(!response.ok||!result.ok)throw Error(result.message||"Action refusée");
  return result;
 };
+function lockSession(message){
+ const requested=location.hash.slice(1).trim();
+ if(views.includes(requested))state.route=requested;
+ state.locked=true;state.data=null;state.admin=false;state.history=[];state.enrolled=[];state.trend=null;state.decisions=[];
+ $("#workspace-content").hidden=true;$("#session-state").hidden=false;
+ for(const id of ["my-history","decision-list","trend-chart","trend-table","identity-name","identity-role"])$("#"+id).replaceChildren();
+ $("#balance-form").reset();$("#decision-form").reset();closeDialog();
+ $("#session-state").replaceChildren(node("h2","","Accès privé SDE"),node("p","",message));
+ const link=node("a","primary-button","Se connecter à SDE ↗");
+ link.href="https://app.mouvement-sde.org/?retour="+encodeURIComponent("/os-v31/#"+state.route)+"#connexion";
+ $("#session-state").append(link);
+}
 const node=(tag,klass,text)=>{
  const element=document.createElement(tag);if(klass)element.className=klass;
  if(text!==undefined)element.textContent=text;return element;
@@ -36,7 +51,7 @@ const setRoute=(page,push=true)=>{
   if(current)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");
  });
  $("#view-title").textContent=names[page][0];$("#view-subtitle").textContent=names[page][1];
- if(push&&location.hash!=="#"+page)history.replaceState(null,"","#"+page);
+ if(push&&location.hash!=="#"+page)history.pushState(null,"","#"+page);
  $("#contenu").focus({preventScroll:true});
  scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"instant":"smooth"});
  if(page==="fractures"&&state.admin&&state.trend===null)loadTrend();
@@ -214,7 +229,7 @@ async function loadMyHistory(){
    for(const [key,list] of [["integral",latest.dimensions],["bienetre",latest.bienEtre],["fracture",latest.fractures],["prejuges",[latest.prejuges]]])
     list.forEach((v,i)=>{const select=$("#rating-"+key+"-"+i);if(select)select.value=String(v);});
   }
- }catch(error){el.textContent="Historique indisponible : "+error.message;}
+ }catch(error){if(!state.locked)el.textContent="Historique indisponible : "+error.message;}
 }
 function drawChart(data){
  const root=$("#trend-chart"),table=$("#trend-table"),legend=$("#trend-legend");
@@ -290,7 +305,7 @@ async function loadDecisions(){
  root.replaceChildren(node("p","hint","Chargement du registre…"));
  try{const r=await api("decisions");state.decisions=r.decisions||[];
   root.replaceChildren(...(state.decisions.length?state.decisions.map(decisionUI):[node("p","hint","Aucune proposition à examiner.")]));
- }catch(error){root.replaceChildren(node("p","hint","Registre indisponible : "+error.message));}
+ }catch(error){if(!state.locked)root.replaceChildren(node("p","hint","Registre indisponible : "+error.message));}
 }
 function registerGovernance(){
  $("#decision-form").addEventListener("submit",async e=>{
@@ -314,10 +329,7 @@ async function start(){
   $("#session-state").hidden=true;$("#workspace-content").hidden=false;
   decorate();setRoute(getRoute(),false);await loadMyHistory();
  }catch(error){
-  $("#session-state").replaceChildren(node("h2","","Accès privé SDE"));
-  $("#session-state").append(node("p","",error.message));
-  const link=node("a","primary-button","Se connecter à SDE ↗");
-  link.href="https://app.mouvement-sde.org/#connexion";$("#session-state").append(link);
+  lockSession(error.message);
  }
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();

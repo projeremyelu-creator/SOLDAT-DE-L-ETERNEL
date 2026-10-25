@@ -12,7 +12,8 @@
     ["Missions humanitaires","/vitrine/missions-humanitaires","Solidarité"],
     ["Projets et dons","/vitrine/projets","Engagement"],
     ["Rejoindre SDE","/vitrine/rejoindre","Adhésion"],
-    ["Toutes les rubriques","/vitrine/plus","Explorer"]
+    ["Toutes les rubriques","/vitrine/plus","Explorer"],
+    ["SDE OS v3.1 — connexion requise","/os-v31/","Espace privé"]
   ];
   const normalize = value => String(value || "").normalize("NFD")
     .replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("fr").trim();
@@ -77,7 +78,8 @@
         ["Témoignages","/vitrine/temoignages"],
         ["Soldiers Voice","/vitrine/soldiers-voice"],
         ["Missions solidaires","/vitrine/missions-humanitaires"],
-        ["Espace sécurisé","https://app.mouvement-sde.org/#connexion"]
+        ["Espace sécurisé","https://app.mouvement-sde.org/#connexion"],
+        ["SDE OS v3.1 · privé","/os-v31/"]
       ]) {
         const link = make("a","",label);
         link.href = url;
