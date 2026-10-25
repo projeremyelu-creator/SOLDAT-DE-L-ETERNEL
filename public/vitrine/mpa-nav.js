@@ -57,6 +57,18 @@
       detail.querySelector("summary")?.setAttribute("aria-current","page");
     }else if(page==="plus")nav.querySelector(".sde-mega-all").setAttribute("aria-current","page");
     else if(!page || page==="accueil")nav.querySelector(".sde-mega-home").setAttribute("aria-current","page");
+    // En ouvrant un pôle depuis sa page dédiée, retrouver la fiche détaillée
+    // déjà disponible dans la vitrine historique (aucun contenu ni fiche perdu).
+    if (document.getElementById("accueil")) {
+      try {
+        const pending=sessionStorage.getItem("sde-pole-ouvrir");
+        if (/^[1-5]$/.test(pending || "")) {
+          sessionStorage.removeItem("sde-pole-ouvrir");
+          const target=document.querySelector('.pole[data-pole="'+pending+'"]');
+          if (target) setTimeout(()=>target.click(),80);
+        }
+      } catch (_) {}
+    }
     // Les pages existantes ont déjà leur propre gestion du thème.
     if(document.body.classList.contains("sde-subpage")){
       const theme=document.getElementById("btn-theme");
