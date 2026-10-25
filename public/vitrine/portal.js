@@ -7,6 +7,20 @@
     body.classList.add("sde-portal");
     const home = Boolean(document.getElementById("nav-principal"));
     if (home) body.classList.add("sde-home-page");
+    // Lien d'évitement : disponible au clavier sur les pages secondaires.
+    if (!home) {
+      const main = document.querySelector("main");
+      if (main) {
+        if (!main.id) main.id = "sde-contenu-principal";
+        if (!document.querySelector(".sde-skip")) {
+          const skip = document.createElement("a");
+          skip.className = "sde-skip";
+          skip.href = "#" + main.id;
+          skip.textContent = "Accéder au contenu";
+          body.insertBefore(skip, body.firstChild);
+        }
+      }
+    }
     const site = "https://mouvement-sde.org/";
     const app = "https://app.mouvement-sde.org/#connexion";
     const finances = "https://app.mouvement-sde.org/#finances";
