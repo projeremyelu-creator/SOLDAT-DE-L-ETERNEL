@@ -1,0 +1,36 @@
+/* Modernisation visuelle de la vitrine publique SDE (conserve les contenus). */
+body.sde-portal .entete{box-shadow:0 8px 25px rgba(1,9,29,.18)}
+body.sde-portal .sde-mega-nav .sde-mega[open] > summary{background:rgba(226,194,106,.13);color:#f0d586}
+body.sde-portal .sde-mega-panel{border-radius:17px;box-shadow:0 24px 52px rgba(2,8,24,.42)}
+body.sde-portal .sde-mega-panel a{transition:background .18s var(--sde-ease),transform .18s var(--sde-ease)}
+body.sde-portal .sde-mega-panel a:hover{transform:translateX(2px)}
+body.sde-portal .sde-global-nav{border-top:1px solid rgba(226,194,106,.29)}
+body.sde-portal .sde-global-nav .sde-current{color:#f0d586}
+body.sde-portal .sde-parcours-card,
+body.sde-portal .sde-simple-grid a,
+body.sde-portal .sde-initiative-card{border-radius:var(--sde-radius)}
+body.sde-portal .sde-parcours-card:hover,
+body.sde-portal .sde-simple-grid a:hover{border-color:rgba(226,194,106,.65)}
+body.sde-portal .sde-search-empty[hidden]{display:none!important}
+.sde-directory-search{display:grid;gap:8px;max-width:600px;margin:24px auto 10px}
+.sde-directory-search label{font-size:.94rem;font-weight:700}
+.sde-directory-search input{min-height:48px;width:100%;padding:11px 14px;border:1px solid rgba(226,194,106,.42);border-radius:12px;background:var(--surface-2,#19233b);color:var(--texte,#e8ebf4);font:inherit;font-size:16px}
+.sde-directory-search .sde-count{color:var(--texte-2,#bac6d5);font-size:.83rem}
+.sde-directory-search + .sde-simple-grid a[hidden]{display:none!important}
+.sde-directory-search .sde-search-empty{padding:12px;background:rgba(226,194,106,.09);border-radius:10px}
+.sde-portal-bridge{display:inline-flex;align-items:center;gap:7px;color:#e2c26a;background:rgba(226,194,106,.10);border:1px solid rgba(226,194,106,.38);padding:10px 13px;border-radius:11px;font-weight:700;font-size:.87rem;min-height:44px;text-decoration:none}
+.sde-portal-bridge:hover{color:#fff;background:rgba(226,194,106,.2)}
+.sde-public-notice{font-size:.82rem;color:var(--texte-2,#bac6d5);margin:12px auto;max-width:750px}
+.sde-install-button{display:block;margin:20px auto 0;font:700 .9rem system-ui,sans-serif;border:1px solid #e2c26a;background:#e2c26a;color:#0f1e3d;padding:12px 20px;border-radius:12px;min-height:46px;cursor:pointer}
+@media(max-width:1024px){
+ body.sde-portal .sde-global-nav{padding-bottom:calc(6px + env(safe-area-inset-bottom,0px))}
+ body.sde-portal{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+}
+@media(max-width:620px){
+ body.sde-portal .sde-parcours-card{min-height:155px}
+ body.sde-portal .sde-simple-grid a{min-height:115px}
+ body.sde-portal .entete{min-height:58px}
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-portal .sde-mega-panel a,body.sde-portal .sde-parcours-card{transition:none!important;transform:none!important}
+}
