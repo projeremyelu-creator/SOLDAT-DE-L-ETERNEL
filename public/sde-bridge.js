@@ -36,6 +36,7 @@
         nav.setAttribute("aria-label","Accès aux rubriques publiques SDE");
         nav.innerHTML=
           '<a href="https://app.mouvement-sde.org/os-v31/">SDE OS v3.1</a>'+
+          '<a href="'+app+'os/">Parcours SDE OS existant</a>'+
           '<a href="'+site+'">Portail SDE</a>'+
           '<a href="'+site+'vitrine/programmes">Programmes publics</a>'+
           '<a href="'+site+'vitrine/prieres">Prières</a>'+

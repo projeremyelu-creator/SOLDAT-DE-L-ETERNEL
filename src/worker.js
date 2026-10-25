@@ -1,5 +1,6 @@
 import {apiSdeOs31} from "./os-v31.js";
 import {notifySde,flushNotices,mailStatus} from "./notifications.js";
+import {sdeOsApi} from "./sde-os.js";
 /* MPA SDE — serveur Cloudflare (Worker)
    Sert l'application, garde les données dans D1, les fichiers dans KV,
    et reconnaît chacun par son adresse e-mail et son mot de passe.
@@ -1178,6 +1179,7 @@ async function traiter(req, env, ctx) {
     if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
     try {
       const u = await utilisateur(req, env);
+      if (p.startsWith("/api/os/")) return sdeOsApi(req,env,u,url);
       if (p === "/api/notifications-status" && req.method === "GET") {
         if (u.niveau < 3) return erreur("refuse", "Réservé au propriétaire.", 403);
         return json(await mailStatus(env));
