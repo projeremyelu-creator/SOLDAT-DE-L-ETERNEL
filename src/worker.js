@@ -1,3 +1,4 @@
+import {notifySde,flushNotices,mailStatus} from "./notifications.js";
 /* MPA SDE — serveur Cloudflare (Worker)
    Sert l'application, garde les données dans D1, les fichiers dans KV,
    et reconnaît chacun par son adresse e-mail et son mot de passe.
@@ -176,7 +177,7 @@ function filtrer(u, path, data) {
 }
 
 /* ───────── API ───────── */
-async function apiDb(req, env, u) {
+async function apiDb(req, env, u, ctx) {
   const b = await req.json();
   const path = String(b.path || "");
   if (b.op === "get") {
@@ -195,7 +196,7 @@ async function apiDb(req, env, u) {
     if (!peutEcrire(u, path)) return erreur("invalid_argument", "Votre niveau d’accès ne permet pas cette modification.", 403);
     if (b.op !== "delete" && (typeof b.data !== "object" || b.data === null || Array.isArray(b.data))) return erreur("invalid_argument", "données");
     if (b.op !== "delete" && JSON.stringify(b.data).length > 256 * 1024) return erreur("invalid_argument", "trop volumineux");
-    try { await ecrireDoc(env, b.op, path, b.data); } catch (e) { return erreur(e.code || "unavailable", e.message, e.code === "invalid_argument" ? 400 : 409); }
+    try { await ecrireDoc(env, b.op, path, b.data); notifySde(env,ctx,"espace",{path,action:b.op}); } catch (e) { return erreur(e.code || "unavailable", e.message, e.code === "invalid_argument" ? 400 : 409); }
     return json({ ok: true });
   }
   return erreur("invalid_argument", "opération");
@@ -239,7 +240,7 @@ async function nouveauMatricule(env) {
   throw new Error("Aucun matricule libre.");
 }
 const propre = (t, n) => String(t || "").replace(/\s+/g, " ").trim().slice(0, n);
-async function apiInscription(req, env) {
+async function apiInscription(req, env, ctx) {
   const ip = ipDe(req);
   if (await bloque(env, "insc:" + ip, 12)) return erreur("rate_limited", "Trop d’inscriptions depuis ce réseau : réessayez dans un quart d’heure.", 429);
   const b = await req.json();
@@ -260,6 +261,7 @@ async function apiInscription(req, env) {
       bumpRev(env, "membres"),
     ]);
   } catch (e) { return erreur("existe", "Un compte existe déjà avec cette adresse.", 409); }
+  notifySde(env,ctx,"inscription",{nom:prenoms+" "+nom,email,tel:telephone});
   return json({ ok: true, matricule }, 200, { "set-cookie": await ouvrirSession(env, email) });
 }
 async function apiConnexionMdp(req, env) {
@@ -382,7 +384,7 @@ async function apiMonEspace(env, u) {
   const r = await lireDoc(env, "espace_membre/" + u.membreId);
   return json({ membre: m, garnisons: gs, resume: r ? r.data.resume || null : null, majLe: r ? r.data.majLe || null : null });
 }
-async function apiPriere(req, env, u) {
+async function apiPriere(req, env, u, ctx) {
   if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 403);
   const b = await req.json();
   const sujet = String(b.sujet || "").trim().slice(0, 2000);
@@ -391,6 +393,7 @@ async function apiPriere(req, env, u) {
   await compter(env, "priere:" + u.email);
   const t = Date.now();
   await ecrireDoc(env, "set", "prieres/" + idDoc(), { sujet: sujet.slice(0, 140), details: sujet.length > 140 ? sujet : "", categorie: "Personnelle", date: new Date(t).toISOString().slice(0, 10), pourId: u.membreId, pour: "", urgent: false, statut: "En prière", priants: {}, source: "espace", creePar: u.id, creeLe: t, modifiePar: u.id, modifieLe: t });
+  notifySde(env,ctx,"priere");
   return json({ ok: true });
 }
 
@@ -436,7 +439,7 @@ async function apiMonProfil(req, env, u) {
 }
 
 /* ───────── demande d'absence ───────── */
-async function apiAbsence(req, env, u) {
+async function apiAbsence(req, env, u, ctx) {
   if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 403);
   if (req.method !== "POST") return erreur("invalid_argument", "Utilisez POST.");
   const b = await req.json();
@@ -448,6 +451,7 @@ async function apiAbsence(req, env, u) {
   await compter(env, "absence:" + u.email);
   const t = Date.now();
   await ecrireDoc(env, "set", "absences/" + idDoc(), { membreId: u.membreId, nom: u.nom || u.email, dateDebut, dateFin: dateFin || dateDebut, motif, statut: "en_attente", creePar: u.id, creeLe: t, modifiePar: u.id, modifieLe: t });
+  notifySde(env,ctx,"absence");
   return json({ ok: true });
 }
 
@@ -528,7 +532,7 @@ async function apiFichiers(req, env, u, url) {
   return json({ id: nid, url: "/_blob/" + nid, sizeBytes: corps.byteLength, contentType: type });
 }
 
-async function apiImport(req, env, u) {
+async function apiImport(req, env, u, ctx) {
   if (u.niveau < 3) return erreur("refuse", "Réservé au propriétaire.", 403);
   const b = await req.json();
   const docs = b && typeof b.docs === "object" && b.docs ? Object.entries(b.docs) : [];
@@ -540,6 +544,7 @@ async function apiImport(req, env, u) {
   }
   const parents = [...new Set(valides.map(([p]) => parentDe(p)))];
   await env.DB.batch(parents.map((p) => bumpRev(env, p)));
+  notifySde(env,ctx,"import",{nombre:valides.length});
   return json({ ok: true, importes: valides.length, ignores: docs.length - valides.length });
 }
 
@@ -563,7 +568,7 @@ async function apiPublic(env) {
    Remplace les redirections WhatsApp par un enregistrement centralisé
    que le secrétariat peut consulter depuis l'app, et un e-mail de secours
    vers infosoldat@gmail.com. */
-async function apiEngager(req, env) {
+async function apiEngager(req, env, ctx) {
   if (req.method !== "POST") return erreur("methode", "POST uniquement.", 405);
   let b;
   try {
@@ -586,6 +591,9 @@ async function apiEngager(req, env) {
   if (!tel && !email) return erreur("champ_manquant", "Indiquez au moins un téléphone ou un e-mail pour que l'équipe vous recontacte.");
   if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return erreur("email_invalide", "Adresse e-mail invalide.");
   if (tel && tel.replace(/\D/g, "").length < 7) return erreur("tel_invalide", "Numéro de téléphone trop court.");
+  const ipPublic = "engagement:" + ipDe(req);
+  if (await bloque(env, ipPublic, 30)) return erreur("rate_limited", "Trop de demandes récentes. Réessayez plus tard.", 429);
+  await compter(env, ipPublic);
 
   /* Table auto-provisionnée pour ne pas dépendre d'une migration */
   await env.DB.prepare(`CREATE TABLE IF NOT EXISTS engagements (
@@ -603,6 +611,7 @@ async function apiEngager(req, env) {
     .bind(Date.now(), objet, pole, source, nom, tel, email, ville, message)
     .run();
 
+  notifySde(env,ctx,"engagement",{nom,email,tel});
   return json({ ok: true, message: "Votre demande a bien été transmise au secrétariat du mouvement. Nous vous recontacterons sous peu." });
 }
 
@@ -631,7 +640,7 @@ async function apiEngagerAdmin(req, env, u) {
   return json({ ok: true, engagements: r.results || [] });
 }
 
-async function apiFormulaire(req, env) {
+async function apiFormulaire(req, env, ctx) {
   if (req.method !== "POST") return erreur("methode", "POST uniquement.", 405);
   let fd;
   try { fd = await req.formData(); } catch { return erreur("invalid", "Données du formulaire invalides."); }
@@ -643,6 +652,10 @@ async function apiFormulaire(req, env) {
   }
   const emailVal = champ("email");
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailVal)) return erreur("email_invalide", "Adresse e-mail invalide.");
+
+  const ipSondage = "sondage:" + ipDe(req);
+  if (await bloque(env, ipSondage, 15)) return erreur("rate_limited", "Trop de réponses récentes. Réessayez plus tard.", 429);
+  await compter(env, ipSondage);
 
   /* Photo (obligatoire) */
   const photo = fd.get("photo");
@@ -669,11 +682,12 @@ async function apiFormulaire(req, env) {
       champ("propositions_2027"), champ("domaines_prioritaires"))
     .run();
 
+  notifySde(env,ctx,"sondage",{nom:champ("nom")+" "+champ("prenom"),email:emailVal});
   return json({ ok: true, message: "Votre formulaire a été enregistré avec succès. Merci !" });
 }
 
 /* ───────── Préinscription Soldiers Academy (public) ───────── */
-async function apiPreinscriptionAcademy(req, env) {
+async function apiPreinscriptionAcademy(req, env, ctx) {
   if (req.method !== "POST") return erreur("methode", "POST uniquement.", 405);
   let fd;
   try { fd = await req.formData(); } catch { return erreur("invalid", "Données du formulaire invalides."); }
@@ -687,6 +701,9 @@ async function apiPreinscriptionAcademy(req, env) {
   /* Doublon ? */
   const doublon = await env.DB.prepare("SELECT id FROM preinscriptions_academy WHERE email = ? AND statut NOT IN ('refusee') LIMIT 1").bind(emailVal).first();
   if (doublon) return erreur("doublon", "Une préinscription avec cette adresse e-mail existe déjà. Si vous souhaitez modifier vos informations, contactez le secrétariat.");
+  const ipAcademy = "academy:" + ipDe(req);
+  if (await bloque(env, ipAcademy, 20)) return erreur("rate_limited", "Trop de préinscriptions récentes. Réessayez plus tard.", 429);
+  await compter(env, ipAcademy);
 
   await env.DB.prepare(`INSERT INTO preinscriptions_academy
     (nom, prenom, email, telephone, date_naissance, ville, pays, niveau_souhaite, motivation, experience, eglise_origine)
@@ -696,6 +713,7 @@ async function apiPreinscriptionAcademy(req, env) {
       champ("niveau_souhaite") || "Niveau 1", champ("motivation"), champ("experience"), champ("eglise_origine"))
     .run();
 
+  notifySde(env,ctx,"academy",{nom:champ("nom")+" "+champ("prenom"),email:emailVal,tel:champ("telephone")});
   return json({ ok: true, message: "Votre préinscription à la Soldiers Academy a été enregistrée ! Nous vous contacterons prochainement." });
 }
 
@@ -850,7 +868,7 @@ const propreMedia = (b, m = {}) => ({
   titre: propre(b.titre ?? m.titre, 160), description: String(b.description ?? m.description ?? "").trim().slice(0, 2000),
   categorie: propre(b.categorie ?? m.categorie, 60), visibilite: VISIBILITES.includes(b.visibilite) ? b.visibilite : (m.visibilite || "membres"),
 });
-async function apiMedias(req, env, u, url) {
+async function apiMedias(req, env, u, url, ctx) {
   const [, , , id, n] = url.pathname.split("/");
   if (id && !ID_MEDIA.test(id)) return erreur("introuvable", "Média inconnu.", 404);
   if (!id && req.method === "GET") {
@@ -900,6 +918,7 @@ async function apiMedias(req, env, u, url) {
     const c = await env.DB.prepare("SELECT COUNT(*) AS n FROM media_morceaux WHERE id = ?").bind(m.id).first();
     if (c.n !== m.morceaux) return erreur("invalid_argument", `Envoi incomplet : ${c.n} morceaux reçus sur ${m.morceaux}.`);
     await env.DB.batch([env.DB.prepare("UPDATE medias SET fini = 1 WHERE id = ?").bind(m.id), env.DB.prepare("DELETE FROM media_morceaux WHERE id = ?").bind(m.id)]);
+    notifySde(env,ctx,"media",{genre:m.genre});
     return json({ ok: true, url: `/m/${m.id}/${encodeURIComponent(m.nom)}` });
   }
   if (req.method === "POST" && !n) {
@@ -1099,12 +1118,15 @@ function securiser(r) {
 }
 
 export default {
-  async scheduled(ev, env, ctx) { ctx.waitUntil(Promise.all([sauvegarder(env), nettoyerMedias(env), syncEspacesMembres(env)])); },
-  async fetch(req, env) {
-    return securiser(await traiter(req, env));
+  async scheduled(ev, env, ctx) {
+    if (ev.cron === "0 2 * * *") ctx.waitUntil(Promise.all([sauvegarder(env), nettoyerMedias(env), syncEspacesMembres(env)]));
+    ctx.waitUntil(flushNotices(env));
+  },
+  async fetch(req, env, ctx) {
+    return securiser(await traiter(req, env, ctx));
   },
 };
-async function traiter(req, env) {
+async function traiter(req, env, ctx) {
   {
     const url = new URL(req.url);
     const p = url.pathname;
@@ -1112,9 +1134,9 @@ async function traiter(req, env) {
     if (url.hostname === "mouvement-sde.org") {
       if (p === "/" || p === "/index.html") return env.ASSETS.fetch(new Request(new URL("/vitrine/", url), req));
       if (p === "/api/public") return apiPublic(env);
-      if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env);
-      if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env);
-      if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env);
+      if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
+      if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
+      if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
       if (!/^\/(vitrine\/|sde-(unified\.css|bridge\.js)$|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$|sw-public\.js$)/.test(p))
         return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
       const r = await env.ASSETS.fetch(req);
@@ -1138,26 +1160,30 @@ async function traiter(req, env) {
       const origine = req.headers.get("origin");
       if (origine && origine !== url.origin) return erreur("refuse", "Origine refusée.", 403);
     }
-    if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env);
-    if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env);
-    if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env);
+    if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
+    if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
+    if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
     try {
       const u = await utilisateur(req, env);
+      if (p === "/api/notifications-status" && req.method === "GET") {
+        if (u.niveau < 3) return erreur("refuse", "Réservé au propriétaire.", 403);
+        return json(await mailStatus(env));
+      }
       if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
-      if (p === "/api/inscription" && req.method === "POST") return apiInscription(req, env);
+      if (p === "/api/inscription" && req.method === "POST") return apiInscription(req, env, ctx);
       if (p === "/api/connexion" && req.method === "POST") return apiConnexionMdp(req, env);
       if (p === "/api/activation" && req.method === "POST") return apiActivation(req, env);
       if (p === "/api/mot-de-passe" && req.method === "POST") return apiMotDePasse(req, env, u);
       if (p === "/api/mon-espace") return apiMonEspace(env, u);
       if (p === "/api/mon-historique") return apiMonHistorique(req, env, u);
       if (p === "/api/mon-profil" && req.method === "PATCH") return apiMonProfil(req, env, u);
-      if (p === "/api/priere" && req.method === "POST") return apiPriere(req, env, u);
-      if (p === "/api/absence" && req.method === "POST") return apiAbsence(req, env, u);
+      if (p === "/api/priere" && req.method === "POST") return apiPriere(req, env, u, ctx);
+      if (p === "/api/absence" && req.method === "POST") return apiAbsence(req, env, u, ctx);
       if (p === "/api/push" && (req.method === "POST" || req.method === "DELETE")) return apiPushSubscription(req, env, u);
       if (p === "/api/calendrier.ics") return apiCalendrier(env);
       if (p === "/api/public") return apiPublic(env);
       if (p === "/api/ia" && req.method === "POST") return apiIA(req, env, u);
-      if (p === "/api/db" && req.method === "POST") return apiDb(req, env, u);
+      if (p === "/api/db" && req.method === "POST") return apiDb(req, env, u, ctx);
       if (p === "/api/sync" && req.method === "POST") return apiSync(req, env, u);
       if (p === "/api/profils" && req.method === "POST") return apiProfils(req, env, u);
       if (p === "/api/deconnexion" && req.method === "POST") {
@@ -1166,8 +1192,8 @@ async function traiter(req, env) {
       }
       if (p === "/api/comptes") return apiComptes(req, env, u);
       if (p.startsWith("/api/fichiers")) return apiFichiers(req, env, u, url);
-      if (p === "/api/import" && req.method === "POST") return apiImport(req, env, u);
-      if (p === "/api/medias" || p.startsWith("/api/medias/")) return apiMedias(req, env, u, url);
+      if (p === "/api/import" && req.method === "POST") return apiImport(req, env, u, ctx);
+      if (p === "/api/medias" || p.startsWith("/api/medias/")) return apiMedias(req, env, u, url, ctx);
       if (p === "/api/sauvegardes" || p.startsWith("/api/sauvegardes/")) return apiSauvegardes(req, env, u, url);
       if (p === "/api/formulaire-admin") return apiFormulaireAdmin(req, env, u);
       if (p === "/api/engager-admin") return apiEngagerAdmin(req, env, u);
