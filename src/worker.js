@@ -261,7 +261,7 @@ async function apiInscription(req, env, ctx) {
       bumpRev(env, "membres"),
     ]);
   } catch (e) { return erreur("existe", "Un compte existe déjà avec cette adresse.", 409); }
-  notifySde(env,ctx,"inscription");
+  notifySde(env,ctx,"inscription",{nom:prenoms+" "+nom,email,tel:telephone});
   return json({ ok: true, matricule }, 200, { "set-cookie": await ouvrirSession(env, email) });
 }
 async function apiConnexionMdp(req, env) {
@@ -608,7 +608,7 @@ async function apiEngager(req, env, ctx) {
     .bind(Date.now(), objet, pole, source, nom, tel, email, ville, message)
     .run();
 
-  notifySde(env,ctx,"engagement");
+  notifySde(env,ctx,"engagement",{nom,email,tel});
   return json({ ok: true, message: "Votre demande a bien été transmise au secrétariat du mouvement. Nous vous recontacterons sous peu." });
 }
 
@@ -675,7 +675,7 @@ async function apiFormulaire(req, env, ctx) {
       champ("propositions_2027"), champ("domaines_prioritaires"))
     .run();
 
-  notifySde(env,ctx,"sondage");
+  notifySde(env,ctx,"sondage",{nom:champ("nom")+" "+champ("prenom"),email:emailVal});
   return json({ ok: true, message: "Votre formulaire a été enregistré avec succès. Merci !" });
 }
 
@@ -703,7 +703,7 @@ async function apiPreinscriptionAcademy(req, env, ctx) {
       champ("niveau_souhaite") || "Niveau 1", champ("motivation"), champ("experience"), champ("eglise_origine"))
     .run();
 
-  notifySde(env,ctx,"academy");
+  notifySde(env,ctx,"academy",{nom:champ("nom")+" "+champ("prenom"),email:emailVal,tel:champ("telephone")});
   return json({ ok: true, message: "Votre préinscription à la Soldiers Academy a été enregistrée ! Nous vous contacterons prochainement." });
 }
 
