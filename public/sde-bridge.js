@@ -22,6 +22,7 @@
           '<a href="'+site+'">Portail SDE</a>'+
           '<a href="'+site+'vitrine/programmes">Programmes publics</a>'+
           '<a href="'+site+'vitrine/prieres">Prières</a>'+
+          '<a href="'+site+'vitrine/temoignages">Témoignages</a>'+
           '<a href="'+site+'vitrine/soldiers-voice">Soldiers Voice</a>'+
           '<a href="'+site+'vitrine/missions-humanitaires">Missions</a>';
         banner.insertAdjacentElement("afterend",nav);
