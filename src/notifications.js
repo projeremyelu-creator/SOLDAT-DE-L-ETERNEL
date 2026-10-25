@@ -1,15 +1,19 @@
 import {SDE_MAIL_RECIPIENT,PRIVATE_DASHBOARD,SDE_ALERT_TYPES} from "./notification-events.js";
 const sections={membres:"Membres",prieres:"Prières",accompagnement:"Accompagnement pastoral",pastoral:"Accompagnement pastoral",cotisations:"Finances",offrandes:"Finances",projets_fin:"Finances",projets:"Projets",evenements:"Agenda",formations:"Formations",absences:"Absences",directoire:"Directoire"};
-const safe=(value,size=100)=>String(value??"").replace(/[\\r\\n\\t]/g," ").trim().slice(0,size);
+const safe=(value,size=100)=>String(value??"").replace(/[\r\n\t]/g," ").trim().slice(0,size);
 export function notificationConfigured(env){return !!(env?.NOTIFICATION_FROM && typeof env?.EMAIL?.send==="function");}
 export function renderNotice(type,details={}){
  if(!SDE_ALERT_TYPES.includes(type))return null;
  const section=type==="espace"?(sections[String(details.path||"").split("/")[0]]||"Autre espace privé"):type;
  const topic=safe(section,80);
+ const contact=["engagement","academy","sondage","inscription"].includes(type)
+  ? [details.nom&&"Nom : "+safe(details.nom),details.email&&"E-mail : "+safe(details.email,160),
+     details.tel&&"Téléphone : "+safe(details.tel,40)].filter(Boolean) : [];
  return {subject:"[SDE] Nouvelle information : "+topic,text:[
  "Une information a été enregistrée dans le système SDE.","",
  "Rubrique : "+topic,
  "Opération : "+safe(details.action||"Nouvelle saisie",40),
+ ...contact,
  "Traitement sécurisé : "+PRIVATE_DASHBOARD,
  "","Aucune donnée pastorale, financière ou personnelle détaillée n'est jointe."
  ].join("\n")};
