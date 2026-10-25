@@ -81,13 +81,8 @@
     window.addEventListener("popstate", active);
     // L'onglet actif suit aussi le défilement des sections, sans modifier l'historique.
     if (home) {
-      const mapping = [
-        ["accueil", "accueil"], ["infire", "agenda"], ["agenda", "agenda"],
-        ["programmes", "agenda"], ["membres", "membres"], ["rejoindre", "membres"],
-        ["parcours-sde", "plus"], ["mouvement", "plus"], ["poles", "plus"],
-        ["ressources", "plus"], ["galerie", "plus"], ["projets", "plus"],
-        ["soutenir", "plus"], ["faq", "plus"]
-      ];
+      const categories = { "accueil": "accueil", "infire": "agenda", "agenda": "agenda", "programmes": "agenda", "rejoindre": "membres", "membres": "membres" };
+      const sections = [...document.querySelectorAll("main section[id]")];
       let scheduled = false;
       const onScroll = () => {
         if (scheduled) return;
@@ -95,10 +90,9 @@
         requestAnimationFrame(() => {
           scheduled = false;
           let id = "accueil";
-          for (const [section, destination] of mapping) {
-            const element = document.getElementById(section);
-            if (element && element.getBoundingClientRect().top <= Math.max(160, window.innerHeight * .4)) {
-              id = destination;
+          for (const element of sections) {
+            if (element.getBoundingClientRect().top <= Math.max(160, window.innerHeight * .4)) {
+              id = categories[element.id] || "plus";
             }
           }
           nav.querySelectorAll("a[data-sde-tab]").forEach((a) => {
