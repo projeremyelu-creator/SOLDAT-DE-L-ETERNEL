@@ -13,3 +13,5 @@ jobs:
           node-version: 22
       - run: npm ci --ignore-scripts
       - run: npm test
+      - name: Vérifier les quatre lots en production (lecture seule)
+        run: node test/live-final-check.mjs
