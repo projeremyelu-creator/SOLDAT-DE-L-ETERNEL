@@ -1149,9 +1149,9 @@ async function traiter(req, env, ctx) {
       const origine = req.headers.get("origin");
       if (origine && origine !== url.origin) return erreur("refuse", "Origine refusée.", 403);
     }
-    if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env);
-    if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env);
-    if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env);
+    if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
+    if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
+    if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
     try {
       const u = await utilisateur(req, env);
       if (p === "/api/notifications-status" && req.method === "GET") {
