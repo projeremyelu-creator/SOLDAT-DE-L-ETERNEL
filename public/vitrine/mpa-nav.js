@@ -12,18 +12,22 @@
       ["Agenda", "/vitrine/programmes#agenda", "Prochains rendez-vous"],
       ["Tous les programmes", "/vitrine/programmes#programmes", "Formations et réunions"],
       ["IN FIRE 2026", "/vitrine/programmes#infire", "Conférence internationale"],
-      ["Soldiers Academy", "/vitrine/academy", "Préinscription"]
+      ["Soldiers Academy", "/vitrine/academy", "Préinscription"],
+      ["Prières et intercession", "/vitrine/prieres", "Temps de prière et contact"]
     ]},
     {title:"Ressources", links:[
       ["Enseignements et livres", "/vitrine/ressources#ressources", "Bibliothèque SDE"],
       ["Galerie et médias", "/vitrine/ressources#galerie", "La vie du mouvement"],
-      ["Soldiers Academy", "/vitrine/academy", "Se former"]
+      ["Soldiers Academy", "/vitrine/academy", "Se former"],
+      ["Témoignages", "/vitrine/temoignages", "Parcours de foi"]
     ]},
     {title:"S'engager", links:[
       ["Rejoindre SDE", "/vitrine/rejoindre#rejoindre", "Formulaire de contact"],
       ["Espace membre", "/vitrine/rejoindre#membres", "Compte et inscription"],
       ["Missions et solidarité", "/vitrine/projets#engagement", "Agir pour les autres"],
-      ["Dons et soutien", "/vitrine/projets#soutenir", "Soutenir le mouvement"]
+      ["Dons et soutien", "/vitrine/projets#soutenir", "Soutenir le mouvement"],
+      ["Soldiers Voice", "/vitrine/soldiers-voice", "Groupe musical et louange"],
+      ["Missions humanitaires", "/vitrine/missions-humanitaires", "Bénévolat et solidarité"]
     ]}
   ];
   const escape = (s) => String(s).replace(/[&<>"']/g, x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[x]));
