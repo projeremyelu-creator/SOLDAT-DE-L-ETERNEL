@@ -195,7 +195,7 @@
       }catch(err){
         $("#envoi-titre").textContent="⚠ Envoi indisponible.";
         $("#envoi-msg").textContent="Vous pouvez adresser votre demande par e-mail au secrétariat.";
-      }finally{submit.disabled=false;box.hidden=false;box.scrollIntoView({block:"nearest"});}
+      }finally{submit.disabled=false;box.hidden=false;box.scrollIntoView?.({block:"nearest"});}
     });
     $("#envoi-copier")?.addEventListener("click",()=>{
       const text=$("#envoi-texte")?.textContent||"";
