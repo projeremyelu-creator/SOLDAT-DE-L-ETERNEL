@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+ <meta name="theme-color" content="#111329"><meta name="robots" content="noindex,nofollow,noarchive">
+ <meta name="description" content="SDE OS v3.1 : espace personnel et gouvernance sécurisé Soldat De l'Éternel.">
+ <title>SDE OS v3.1 — Le Soldat intégral</title>
+ <link rel="icon" href="/icone-192.png"><link rel="stylesheet" href="/os/os.css?v=31a">
+ <script type="module" src="/os/os.js?v=31a"></script>
+</head>
+<body>
+ <a class="skip" href="#workspace">Accéder au contenu principal</a>
+ <div id="app" class="app" data-paradigme="commandement">
+  <header class="top">
+   <a class="brand" href="/os/" aria-label="SDE OS, accueil"><img src="/icone-192.png" width="42" height="42" alt=""><span><strong>SDE <b>OS</b></strong><small>LE RÉVEIL SPIRITUEL DES NATIONS</small></span></a>
+   <span class="version">v3.1 · SOLDIER HOUSE</span>
+   <nav class="mega" aria-label="Navigation principale">
+    <details><summary>Vie du Soldat</summary><div class="mega-panel"><button data-go="integral">Soldat intégral</button><button data-go="barometre">Fractures & préjugés</button><button data-go="academy">Soldiers Academy</button></div></details>
+    <details><summary>Gouvernance</summary><div class="mega-panel"><button data-go="directoire">Directoire Général</button><button data-go="poles">Pôles 1 à 5</button><button data-go="finances">Règle des 4 Yeux</button></div></details>
+   </nav>
+   <div class="top-actions">
+    <button id="search-open" class="icon-button" title="Rechercher" aria-label="Rechercher une rubrique">⌕</button>
+    <button id="theme-button" class="icon-button" title="Thème" aria-label="Basculer le thème">◐</button>
+    <a class="public-link" href="https://mouvement-sde.org/">↗ Portail public</a>
+    <span id="avatar" class="avatar" aria-label="Profil membre">SDE</span>
+   </div>
+  </header>
+  <div class="layout">
+   <aside class="side" aria-label="Navigation latérale">
+    <div class="side-inner">
+     <p class="side-caption">ENVIRONNEMENT UNIFIÉ</p>
+     <button class="nav-item active" data-go="accueil"><span class="nav-icon">◈</span><span>Vue d'ensemble</span></button>
+     <p class="side-caption">ÉPANOUISSEMENT</p>
+     <button class="nav-item" data-go="integral"><span class="nav-icon">✧</span><span>Soldat intégral</span></button>
+     <button class="nav-item" data-go="barometre"><span class="nav-icon">⌁</span><span>Courbe des fractures</span></button>
+     <button class="nav-item" data-go="academy"><span class="nav-icon">▤</span><span>Soldiers Academy</span></button>
+     <p class="side-caption">GOUVERNANCE</p>
+     <button class="nav-item" data-go="directoire"><span class="nav-icon">♜</span><span>Directoire Général</span></button>
+     <button class="nav-item" data-go="poles"><span class="nav-icon">⬡</span><span>Les cinq pôles</span></button>
+     <button class="nav-item" data-go="finances"><span class="nav-icon">⚖</span><span>Quatre Yeux</span></button>
+     <div class="side-foot"><span class="pulse"></span> Connexion protégée<br><small>Source : Soldier House · Oct. 2026</small></div>
+    </div>
+   </aside>
+   <main id="workspace" class="workspace" tabindex="-1">
+    <div class="bar"><div><p id="breadcrumb">SDE OS / Vue d'ensemble</p><h1 id="view-title">Votre espace de commandement</h1></div><div class="bar-right"><span class="private-chip">♢ Espace privé</span><button id="menu-collapse" class="muted-button" aria-label="Replier le menu latéral">☰</button></div></div>
+    <div class="switchers">
+     <label for="paradigm-select">Paradigme visuel</label>
+     <select id="paradigm-select"><option value="commandement">Commandement institutionnel</option><option value="bento">Bento interactif</option><option value="focus">Clarté & concentration</option><option value="immersif">Immersion & mission</option></select>
+     <span class="helper">Quatre présentations · cinq navigations complémentaires</span>
+    </div>
+    <div id="busy" class="busy" role="status">Chargement de votre espace sécurisé…</div>
+    <div id="alert" class="alert" role="status" aria-live="polite" hidden></div>
+    <section id="view-accueil" class="view" aria-labelledby="view-title">
+     <section class="hero"><div class="hero-copy"><div class="eyebrow"><span class="pulse"></span> INSTITUTION · SOLDIER HOUSE / 2026</div><h2>Un soldat.<br><em>Sept dimensions.</em><br>Une seule mission.</h2><p>Réveiller · Restaurer · Former · Équiper · Envoyer. Une expérience intégrée de croissance personnelle et de redevabilité institutionnelle.</p><div class="hero-actions"><button class="primary-button" data-go="integral">Mon bilan intégral <span>↗</span></button><button class="light-button" data-go="poles">Explorer les cinq pôles</button></div></div><div class="hero-ornament" aria-hidden="true"><span>✦</span><small>SOLDAT<br>INTÉGRAL</small></div></section>
+     <div class="stats" id="stats"><div class="stat"><span>Dimensions</span><strong>07</strong><small>Socle institutionnel</small></div><div class="stat"><span>Écoles</span><strong>04</strong><small>Parcours de formation</small></div><div class="stat"><span>Pôles</span><strong>05</strong><small>Mandats complémentaires</small></div><div class="stat"><span>Évaluation personnelle</span><strong id="nb-eval">—</strong><small>Saisie volontaire</small></div></div>
+     <div class="section-heading"><div><span class="eyebrow dark-eyebrow">VOS ESPACES</span><h2>Une plateforme, plusieurs dimensions</h2></div><span>Explorer les modules ↘</span></div>
+     <div class="bento">
+      <button class="tile tile-big" data-go="integral"><span class="tile-icon">✧</span><span class="tile-tag">CROISSANCE</span><strong>Le Soldat intégral</strong><small>Sept dimensions · quatre indicateurs de ressenti · historique personnel</small><i>Découvrir ↗</i></button>
+      <button class="tile tile-gold" data-go="barometre"><span class="tile-icon">⌁</span><span class="tile-tag">OBSERVATOIRE</span><strong>Courbe des fractures</strong><small>Évolution collective, anonymisée et sans classement individuel</small><i>Consulter ↗</i></button>
+      <button class="tile" data-go="academy"><span class="tile-icon">▤</span><span class="tile-tag">FORMATION</span><strong>Soldiers Academy</strong><small>Fondations · Maturité · Service & Leadership · Mission & Influence</small><i>Explorer ↗</i></button>
+      <button class="tile" data-go="directoire"><span class="tile-icon">♜</span><span class="tile-tag">INSTITUTION</span><strong>Directoire Général</strong><small>Rôles, responsabilités, redevabilité et décisions</small><i>Accéder ↗</i></button>
+      <button class="tile tile-wide" data-go="poles"><span class="tile-icon">⬡</span><span class="tile-tag">ACTION</span><strong>Les cinq pôles stratégiques</strong><small>Réveil & missions · Impact social · Logistique · Médias & digital · Formation intégrale</small><i>Voir les pôles ↗</i></button>
+      <button class="tile tile-night" data-go="finances"><span class="tile-icon">⚖</span><span class="tile-tag">REDEVABILITÉ</span><strong>La règle des quatre yeux</strong><small>Demande, autorisation, trace d'exécution et contrôle distinct</small><i>Vérifier ↗</i></button>
+     </div>
+    </section>
+    <section id="view-integral" class="view" hidden>
+     <div class="intro"><span class="eyebrow dark-eyebrow">CHAPITRE 14 · ADN DU SOLDAT</span><h2>Le Soldat intégral</h2><p>Auto-évaluation personnelle des sept dimensions définies par SDE. Elle soutient votre croissance et ne constitue ni diagnostic ni outil de surveillance institutionnelle.</p></div>
+     <div class="panel-grid"><article class="panel"><div class="panel-head"><div><h3>Mon équilibre en sept dimensions</h3><p>Historique réel, calculé à partir de vos réponses</p></div><span class="hint">1–5</span></div><div id="radar" class="chart-holder"></div><p id="eval-empty" class="subtle"></p></article><article class="panel"><div class="panel-head"><div><h3>Auto-évaluation confidentielle</h3><p>Visible uniquement depuis votre compte</p></div></div><form id="form-eval"><div id="eval-fields" class="range-list"></div><h4>Ressenti holistique complémentaire (facultatif)</h4><p class="subtle">Santé spirituelle, physique, émotionnelle et financière : ressenti personnel, sans valeur médicale ou administrative.</p><div id="wellness-fields" class="range-list"></div><label class="agree"><input type="checkbox" name="consentement" required> Je consens à enregistrer ce bilan personnel privé.</label><button type="submit" class="primary-button">Enregistrer mon bilan</button></form></article></div>
+     <article class="panel"><div class="panel-head"><h3>Mes bilans précédents</h3><span class="hint">Suppression possible</span></div><div id="eval-history" class="table-scroll"></div></article>
+    </section>
+    <section id="view-barometre" class="view" hidden>
+     <div class="intro"><span class="eyebrow dark-eyebrow">CHAPITRE 04 · TRANSFORMATION</span><h2>Fractures et préjugés</h2><p>Quatre fractures décrites dans le document institutionnel et un indicateur supplémentaire de perceptions/préjugés demandé pour SDE OS. Des réponses volontaires produisent un baromètre collectif, non une mesure objective des personnes.</p></div>
+     <div class="panel-grid"><article class="panel"><div class="panel-head"><div><h3>Courbe d'évolution collective</h3><p>Moyennes mensuelles · publication à partir de 5 participants</p></div></div><div class="legend-row"><span class="dot a"></span> Caractère <span class="dot b"></span> Mise en service <span class="dot c"></span> Vie intégrale <span class="dot d"></span> Redevabilité <span class="dot e"></span> Préjugés perçus</div><div id="fracture-chart" class="chart-holder"></div><div id="fracture-note" class="subtle"></div></article><article class="panel"><div class="panel-head"><h3>Contribuer au baromètre</h3></div><p class="subtle">Évaluez de 1 (fracture peu ressentie) à 5 (fracture très ressentie). Une contribution par mois, modifiable. Aucun classement individuel.</p><form id="form-fractures"><div id="fracture-fields" class="range-list"></div><label class="agree"><input type="checkbox" name="consentement" required> Je contribue volontairement à des résultats collectifs à partir de cinq membres.</label><button type="submit" class="primary-button">Soumettre mon observation</button></form></article></div>
+    </section>
+    <section id="view-academy" class="view" hidden><div class="intro"><span class="eyebrow dark-eyebrow">CHAPITRE 19 · FORMATION</span><h2>Soldiers Academy</h2><p>De la découverte à la maturité, du potentiel à la compétence, de la formation à la mission. Votre suivi individuel n'est pas une certification officielle.</p></div><div id="schools" class="schools"></div></section>
+    <section id="view-directoire" class="view" hidden><div class="intro"><span class="eyebrow dark-eyebrow">CHAPITRES 21–31 · GOUVERNANCE</span><h2>Directoire Général</h2><p>Gouvernance collégiale, distinction des fonctions, archivage des décisions et protection des personnes.</p></div><div class="governance"><div class="lead-card"><span>ORIENTATION SPIRITUELLE & STRATÉGIQUE</span><h3>Leader du Mouvement</h3><strong>Jérémy l’Élu GLAZAÏ</strong></div><div class="org-arrow">↓</div><div class="lead-card emphasis"><span>GOUVERNANCE COLLÉGIALE</span><h3>Directoire Général</h3><p>Supervision institutionnelle et responsabilités documentées</p></div><div id="governance-list" class="org-cards"></div></div><article class="panel"><h3>Principes de gouvernance</h3><div class="principles"><div><strong>Transparence</strong><p>Registre et traçabilité des décisions autorisées.</p></div><div><strong>Protection</strong><p>Signalements graves : accès direct à un cadre indépendant.</p></div><div><strong>Redevabilité</strong><p>Un responsable rend compte de ses missions et ressources.</p></div><div><strong>Quatre yeux</strong><p>L'approbateur et le contrôleur ne doivent pas confondre leurs fonctions.</p></div></div></article></section>
+    <section id="view-poles" class="view" hidden><div class="intro"><span class="eyebrow dark-eyebrow">CHAPITRES 32–39 · ORGANISATION</span><h2>Pôles 1 à 5</h2><p>Cinq mandats complémentaires, pilotés par la Coordination Générale des Pôles et supervisés par le Directoire Général.</p></div><div id="poles-list" class="poles-grid"></div><article class="panel" id="pole-workspace"><div class="panel-head"><h3>Plans d'action et suivi</h3><span class="hint">Responsables autorisés uniquement</span></div><form id="form-action" class="horizontal-form"><label>Action<input name="titre" required maxlength="180" placeholder="Ex. Préparer une mission"></label><label>Pôle<select id="action-pole" name="pole" required></select></label><label>Échéance<input type="date" name="echeance"></label><button class="primary-button" type="submit">Créer une action</button></form><div id="actions-list" class="table-scroll"></div></article></section>
+    <section id="view-finances" class="view" hidden><div class="intro"><span class="eyebrow dark-eyebrow">CHAPITRE 30 · REDEVABILITÉ</span><h2>Règle des 4 Yeux</h2><p>Aucune opération financière significative ne repose sur une seule personne. Ce module trace des validations et justificatifs ; il ne réalise aucun transfert bancaire.</p></div><div class="steps"><div><span>01</span><strong>Demande</strong></div><div><span>02</span><strong>Autorisation</strong></div><div><span>03</span><strong>Exécution déclarée</strong></div><div><span>04</span><strong>Contrôle distinct</strong></div></div><article class="panel" id="finance-workspace"><div class="panel-head"><h3>Registre des validations</h3><span class="hint">Accès réservé · journalisation</span></div><form id="form-finance" class="horizontal-form"><label>Objet<input name="objet" maxlength="180" required placeholder="Objet de la dépense"></label><label>Montant FCFA<input type="number" name="montant" min="1" max="1000000000" required></label><label>Pôle<select id="finance-pole" name="pole" required></select></label><button type="submit" class="primary-button">Soumettre au contrôle</button></form><div id="finance-list" class="table-scroll"></div></article></section>
+    <footer class="footer"><span>ÉDITION SOLDIER HOUSE · OCTOBRE 2026 · SDE OS v3.1</span><span>Réveiller · Restaurer · Former · Équiper · Envoyer</span></footer>
+   </main>
+  </div>
+  <nav class="mobile-tabs" aria-label="Navigation rapide mobile"><button data-go="accueil"><span>◈</span>Accueil</button><button data-go="integral"><span>✧</span>Intégral</button><button data-go="barometre"><span>⌁</span>Courbes</button><button data-go="academy"><span>▤</span>Academy</button><button id="mobile-more"><span>☷</span>Plus</button></nav>
+  <div id="more-overlay" class="overlay" hidden><div class="sheet"><div class="sheet-head"><strong>Tous les espaces SDE OS</strong><button id="more-close" class="icon-button" aria-label="Fermer les rubriques">×</button></div><div class="sheet-list"><button data-go="directoire">Directoire Général</button><button data-go="poles">Pôles 1 à 5</button><button data-go="finances">Règle des 4 Yeux</button><a href="https://mouvement-sde.org/">Portail public ↗</a><a href="/">Application SDE classique ↗</a></div></div></div>
+  <dialog id="command-dialog" class="command" aria-label="Navigation rapide SDE"><div class="command-top"><label for="command-input">RECHERCHE RAPIDE <small>Ctrl/⌘ K</small></label><button id="command-close" aria-label="Fermer" class="icon-button">×</button></div><input id="command-input" type="search" autocomplete="off" placeholder="Rechercher une rubrique…"><div id="command-results"></div></dialog>
+ </div>
+</body>
+</html>
