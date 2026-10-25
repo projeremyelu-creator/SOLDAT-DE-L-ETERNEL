@@ -24,7 +24,7 @@ for (const page of pages) {
   }
   console.log(`✓ ${page} : ${n} script(s) lu(s)`);
 }
-for (const f of ["src/worker.js", "public/sw.js", "public/vitrine/navigation.js", "public/vitrine/motion.js", "public/vitrine/portal.js"]) {
+for (const f of ["src/worker.js", "public/sw.js", "public/vitrine/navigation.js", "public/vitrine/motion.js", "public/vitrine/portal.js, "public/vitrine/discovery.js"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); console.log(`✓ ${f}`); }
   catch (e) { erreurs += 1; console.error(`✗ ${f} :\n${String(e.stderr)}`); }
 }
