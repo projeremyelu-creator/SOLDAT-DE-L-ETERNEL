@@ -5,14 +5,15 @@
     const body = document.body;
     if (!body) return;
     body.classList.add("sde-portal");
-    const home = Boolean(document.getElementById("nav-principal"));
+    const home = Boolean(document.getElementById("accueil"));
+    const page = body.dataset.sdePage || "";
     if (home) body.classList.add("sde-home-page");
     // Lien d'évitement : disponible au clavier sur les pages secondaires.
     if (!home) {
       const main = document.querySelector("main");
       if (main) {
         if (!main.id) main.id = "sde-contenu-principal";
-        if (!document.querySelector(".sde-skip")) {
+        if (!document.querySelector(".sde-skip, .skip")) {
           const skip = document.createElement("a");
           skip.className = "sde-skip";
           skip.href = "#" + main.id;
@@ -36,11 +37,11 @@
     };
     const svg = (name) => '<svg viewBox="0 0 24 24" aria-hidden="true">' + pictos[name] + '</svg>';
     const tabs = [
-      ["Accueil",hashUrl("accueil"),"maison","accueil"],
-      ["Membres",hashUrl("membres"),"membres","membres"],
-      ["Agenda",hashUrl("agenda"),"agenda","agenda"],
+      ["Accueil",site,"maison","accueil"],
+      ["Membres",site+"vitrine/rejoindre#membres","membres","membres"],
+      ["Agenda",site+"vitrine/programmes#agenda","agenda","agenda"],
       ["Finances",finances,"finances","finances"],
-      ["Plus",hashUrl("parcours-sde"),"plus","plus"]
+      ["Plus",site+"vitrine/plus","plus","plus"]
     ];
     let nav = document.querySelector(".nav-mobile");
     if (!nav) {
@@ -73,7 +74,8 @@
       const inAgenda = ["agenda","programmes","infire"].includes(h);
       const inMembres = ["membres","rejoindre"].includes(h);
       const inPlus = ["parcours-sde","mouvement","histoire","poles","ressources","galerie","projets","faq","responsables","soutenir","presence","chiffres","axes","engagement"].includes(h);
-      const key = inAgenda ? "agenda" : inMembres ? "membres" : inPlus || !home ? "plus" : "accueil";
+      const key = !home ? (page === "programmes" ? "agenda" : page === "rejoindre" ? "membres" : "plus") :
+        (inAgenda ? "agenda" : inMembres ? "membres" : inPlus ? "plus" : "accueil");
       nav.querySelectorAll("a[data-sde-tab]").forEach((a) => {
         const selected = a.dataset.sdeTab === key;
         a.classList.toggle("sde-current", selected);
