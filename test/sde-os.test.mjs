@@ -32,6 +32,8 @@ function db(){
       const prev=baro.findIndex(x=>x.compte===args[0]&&x.periode===args[1]);
       if(prev>=0)baro.splice(prev,1);
       baro.push({compte:args[0],periode:args[1],donnees:args[3]});
+    }else if(query.startsWith("DELETE FROM os_barometre")){
+      for(let i=baro.length-1;i>=0;i--)if(baro[i].compte===args[0]&&baro[i].periode===args[1])baro.splice(i,1);
     }else if(query.startsWith("INSERT INTO os_parcours")){
       const prev=progress.findIndex(x=>x.compte===args[0]&&x.ecole===args[1]);if(prev>=0)progress.splice(prev,1);
       progress.push({compte:args[0],ecole:args[1],statut:args[2],maj:args[3]});
