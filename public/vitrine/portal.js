@@ -9,6 +9,7 @@
     if (home) body.classList.add("sde-home-page");
     const site = "https://mouvement-sde.org/";
     const app = "https://app.mouvement-sde.org/#connexion";
+    const finances = "https://app.mouvement-sde.org/#finances";
     const hashUrl = (id) => (home ? "#" : site + "#") + id;
     const pictos = {
       maison: '<path d="M3 10 12 3l9 7v11h-6v-7H9v7H3z"/>',
@@ -24,7 +25,7 @@
       ["Accueil",hashUrl("accueil"),"maison","accueil"],
       ["Membres",hashUrl("membres"),"membres","membres"],
       ["Agenda",hashUrl("agenda"),"agenda","agenda"],
-      ["Finances",app,"finances","finances"],
+      ["Finances",finances,"finances","finances"],
       ["Plus",hashUrl("parcours-sde"),"plus","plus"]
     ];
     let nav = document.querySelector(".nav-mobile");
@@ -78,6 +79,38 @@
     });
     window.addEventListener("hashchange", active);
     window.addEventListener("popstate", active);
+    // L'onglet actif suit aussi le défilement des sections, sans modifier l'historique.
+    if (home) {
+      const mapping = [
+        ["accueil", "accueil"], ["infire", "agenda"], ["agenda", "agenda"],
+        ["programmes", "agenda"], ["membres", "membres"], ["rejoindre", "membres"],
+        ["parcours-sde", "plus"], ["mouvement", "plus"], ["poles", "plus"],
+        ["ressources", "plus"], ["galerie", "plus"], ["projets", "plus"],
+        ["soutenir", "plus"], ["faq", "plus"]
+      ];
+      let scheduled = false;
+      const onScroll = () => {
+        if (scheduled) return;
+        scheduled = true;
+        requestAnimationFrame(() => {
+          scheduled = false;
+          let id = "accueil";
+          for (const [section, destination] of mapping) {
+            const element = document.getElementById(section);
+            if (element && element.getBoundingClientRect().top <= Math.max(160, window.innerHeight * .4)) {
+              id = destination;
+            }
+          }
+          nav.querySelectorAll("a[data-sde-tab]").forEach((a) => {
+            const selected = a.dataset.sdeTab === id;
+            a.classList.toggle("sde-current", selected);
+            if (selected) a.setAttribute("aria-current", "page");
+            else a.removeAttribute("aria-current");
+          });
+        });
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+    }
     active();
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
