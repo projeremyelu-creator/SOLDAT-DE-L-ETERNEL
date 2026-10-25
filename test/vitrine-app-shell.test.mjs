@@ -32,8 +32,7 @@ test("interface publique : 13 pages reçoivent les tokens de l'app privée depui
     assert.ok(html.includes("/vitrine/sde-unified.css?v=20261025f"),name+" design tokens");
     assert.ok(!html.includes('src="/sde-bridge.js'),name+" ne charge pas la passerelle privée");
     assert.ok(!html.includes('href="/sde-unified.css'),name+" CSS local obligatoire");
-    assert.ok(html.includes('href="https://app.mouvement-sde.org/#connexion"')||
-      html.includes('app.mouvement-sde.org/'),"lien sécurisé conservé "+name);
+    assert.ok(html.includes("sde-app-shell.js"),"point d'accès sécurisé injecté depuis le shell public : "+name);
   }
 });
 test("interface publique : commandes, onglets mobiles, menu PC et annuaire de rubriques",()=>{
