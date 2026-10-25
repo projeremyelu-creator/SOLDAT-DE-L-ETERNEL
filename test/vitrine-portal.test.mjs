@@ -4,12 +4,14 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 const { JSDOM } = createRequire(import.meta.url)("jsdom");
 const script = readFileSync("public/vitrine/portal.js", "utf8");
+const discovery = readFileSync("public/vitrine/discovery.js", "utf8");
 const pages = ["index.html", "academy.html", "formulaire.html", "engagements.html"];
 const load = (page) => {
   const html = readFileSync("public/vitrine/" + page, "utf8");
   const url = "https://mouvement-sde.org/" + (page === "index.html" ? "" : "vitrine/" + page);
   const dom = new JSDOM(html, { url, runScripts: "outside-only", pretendToBeVisual: true });
   dom.window.eval(script);
+  if (page === "index.html") dom.window.eval(discovery);
   dom.window.document.dispatchEvent(new dom.window.Event("DOMContentLoaded"));
   return { dom, d: dom.window.document, w: dom.window };
 };
@@ -35,11 +37,14 @@ for (const page of pages) {
     const items = [...p.d.querySelectorAll(".sde-global-nav a[data-sde-tab]")];
     assert.deepEqual(items.map((a) => a.textContent.trim()), ["Accueil", "Membres", "Agenda", "Finances", "Plus"]);
     assert.equal(p.d.querySelectorAll(".sde-global-nav").length, 1);
-    assert.equal(items[3].href, "https://app.mouvement-sde.org/#connexion");
+    assert.equal(items[3].href, "https://app.mouvement-sde.org/#finances");
     assert.equal(items[4].href, page === "index.html" ? "https://mouvement-sde.org/#parcours-sde" : "https://mouvement-sde.org/#parcours-sde");
     assert.ok(p.d.body.classList.contains("sde-portal"));
     assert.equal(p.d.querySelectorAll(".sde-global-nav a[aria-current='page']").length, 1);
-    if (page !== "index.html") assert.equal(p.d.querySelector("header.entete").nextElementSibling, p.d.querySelector(".sde-global-nav"));
+    if (page !== "index.html") {
+      assert.equal(p.d.querySelector("header.entete").nextElementSibling, p.d.querySelector(".sde-global-nav"));
+      assert.ok(p.d.querySelector(".sde-skip[href^='#']"), "lien de navigation clavier");
+    }
     if (page === "formulaire.html" || page === "academy.html") {
       const form = p.d.getElementById("formulaire");
       assert.ok(form, "formulaire d'origine conservé");
@@ -59,3 +64,52 @@ for (const page of pages) {
     p.dom.window.close();
   });
 }
+
+test("recherche sur les programmes : filtrage sans altérer les textes ni les liens", () => {
+  const p = load("index.html");
+  const input = p.d.getElementById("sde-search-programmes");
+  const articles = [...p.d.querySelectorAll("#programmes .programmes .programme")];
+  const namesBefore = articles.map(a => a.textContent);
+  assert.ok(input, "recherche des programmes disponible");
+  const q = "Soldiers Academy";
+  input.value = q;
+  input.dispatchEvent(new p.w.Event("input", { bubbles:true }));
+  const visible = articles.filter(a => !a.hidden);
+  assert.equal(visible.length, 1);
+  assert.ok(visible[0].textContent.includes(q));
+  assert.deepEqual(articles.map(a => a.textContent), namesBefore);
+  input.value = "";
+  input.dispatchEvent(new p.w.Event("input", { bubbles:true }));
+  assert.equal(articles.filter(a=>!a.hidden).length, articles.length);
+  p.dom.window.close();
+});
+test("recherche ressources : filtres d'origine, accents français et état vide", async () => {
+  const p = load("index.html");
+  const input = p.d.getElementById("sde-search-ressources");
+  const cards = [...p.d.querySelectorAll("#ressources-grille .ressource-carte")];
+  assert.ok(input);
+  const sourceCount = cards.length;
+  input.value = "révélation";
+  input.dispatchEvent(new p.w.Event("input", { bubbles:true }));
+  assert.ok(cards.some(c=>!c.hidden));
+  input.value = "zzzz-recherche-introuvable";
+  input.dispatchEvent(new p.w.Event("input", { bubbles:true }));
+  assert.equal(cards.filter(c=>!c.hidden).length, 0);
+  assert.equal(p.d.querySelector("#ressources .sde-search-empty").hidden, false);
+  input.value = "";
+  input.dispatchEvent(new p.w.Event("input", { bubbles:true }));
+  assert.equal(cards.filter(c=>!c.hidden).length, sourceCount);
+  p.dom.window.close();
+});
+test("navigation desktop : barre fixe également présente sur l'accueil", () => {
+  const style = readFileSync("public/vitrine/portal.css","utf8");
+  assert.ok(style.includes("position: fixed; top: auto; bottom: 0;"));
+  assert.ok(!style.includes(".sde-home-page .sde-global-nav { display: none"));
+});
+test("référencement : Academy indexable, interface admin exclue", () => {
+  const xml = readFileSync("public/sitemap.xml","utf8");
+  const admin = readFileSync("public/vitrine/engagements.html","utf8");
+  assert.ok(xml.includes("https://mouvement-sde.org/vitrine/academy"));
+  assert.ok(!xml.includes("engagements"));
+  assert.ok(admin.includes('name="robots" content="noindex, nofollow"'));
+});
