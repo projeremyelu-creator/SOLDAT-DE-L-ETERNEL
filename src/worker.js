@@ -858,7 +858,7 @@ const propreMedia = (b, m = {}) => ({
   titre: propre(b.titre ?? m.titre, 160), description: String(b.description ?? m.description ?? "").trim().slice(0, 2000),
   categorie: propre(b.categorie ?? m.categorie, 60), visibilite: VISIBILITES.includes(b.visibilite) ? b.visibilite : (m.visibilite || "membres"),
 });
-async function apiMedias(req, env, u, url) {
+async function apiMedias(req, env, u, url, ctx) {
   const [, , , id, n] = url.pathname.split("/");
   if (id && !ID_MEDIA.test(id)) return erreur("introuvable", "Média inconnu.", 404);
   if (!id && req.method === "GET") {
@@ -908,6 +908,7 @@ async function apiMedias(req, env, u, url) {
     const c = await env.DB.prepare("SELECT COUNT(*) AS n FROM media_morceaux WHERE id = ?").bind(m.id).first();
     if (c.n !== m.morceaux) return erreur("invalid_argument", `Envoi incomplet : ${c.n} morceaux reçus sur ${m.morceaux}.`);
     await env.DB.batch([env.DB.prepare("UPDATE medias SET fini = 1 WHERE id = ?").bind(m.id), env.DB.prepare("DELETE FROM media_morceaux WHERE id = ?").bind(m.id)]);
+    notifySde(env,ctx,"media",{genre:m.genre});
     return json({ ok: true, url: `/m/${m.id}/${encodeURIComponent(m.nom)}` });
   }
   if (req.method === "POST" && !n) {
@@ -1182,7 +1183,7 @@ async function traiter(req, env, ctx) {
       if (p === "/api/comptes") return apiComptes(req, env, u);
       if (p.startsWith("/api/fichiers")) return apiFichiers(req, env, u, url);
       if (p === "/api/import" && req.method === "POST") return apiImport(req, env, u, ctx);
-      if (p === "/api/medias" || p.startsWith("/api/medias/")) return apiMedias(req, env, u, url);
+      if (p === "/api/medias" || p.startsWith("/api/medias/")) return apiMedias(req, env, u, url, ctx);
       if (p === "/api/sauvegardes" || p.startsWith("/api/sauvegardes/")) return apiSauvegardes(req, env, u, url);
       if (p === "/api/formulaire-admin") return apiFormulaireAdmin(req, env, u);
       if (p === "/api/engager-admin") return apiEngagerAdmin(req, env, u);
