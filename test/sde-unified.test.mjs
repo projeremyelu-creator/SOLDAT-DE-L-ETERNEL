@@ -39,7 +39,7 @@ test("passerelle de navigation privée vers les pages publiques",()=>{
  d.window.document.dispatchEvent(new d.window.Event("DOMContentLoaded"));
  const nav=d.window.document.querySelector(".sde-private-links");
  assert.ok(nav);
- for(const slug of ["programmes","prieres","soldiers-voice","missions-humanitaires"]) assert.ok(nav.querySelector('a[href*="/vitrine/'+slug+'"]'));
+ for(const slug of ["programmes","prieres","temoignages","soldiers-voice","missions-humanitaires"]) assert.ok(nav.querySelector('a[href*="/vitrine/'+slug+'"]'));
  assert.equal(d.window.document.querySelector(".sde-public-label").textContent,"Site public");
  d.window.close();
 });
@@ -80,4 +80,13 @@ test("reduced motion et navigation PC/mobile des deux espaces",()=>{
  assert.ok(publicCss.includes("@media (max-width:1024px)"));
  assert.ok(file("vitrine/modern-2026.css").includes("prefers-reduced-motion"));
  assert.ok(file("sde-private-ui.css").includes("max-width:720px"));
+});
+
+test("PWA publique : CSS et JS toujours actualisés, ressources privées hors cache",()=>{
+ const sw=file("sw-public.js");
+ assert.ok(sw.includes('await fetch(req)'),"le SW doit interroger le réseau");
+ assert.ok(sw.includes('caches.match(req)'),"le cache de secours respecte la version de la requête");
+ assert.ok(!sw.includes('caches.match(req,{ignoreSearch:true})'),"ne pas servir une ancienne version par erreur");
+ for(const forbidden of ['/api/','/_blob/','/m/','/engagements','/formulaire']) assert.ok(sw.includes(forbidden));
+ assert.ok(sw.includes('req.method !== "GET"'));
 });
