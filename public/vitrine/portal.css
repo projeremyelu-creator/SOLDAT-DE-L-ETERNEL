@@ -146,15 +146,45 @@ body.sde-portal .sde-global-nav :is(a,button) { -webkit-tap-highlight-color: tra
   body.sde-portal .sde-header-quick a { width: 35px; }
 }
 @media (min-width: 1025px) {
-  body.sde-portal .sde-global-nav {
-    position: sticky; top: 62px; bottom: auto; padding: 8px 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,.1);
-  }
-  body.sde-portal.sde-home-page .sde-global-nav { display: none !important; }
-  body.sde-portal { padding-bottom: 0; }
+  /* Même barre d'onglets sur ordinateur et sur téléphone, sans masquer l'accueil. */
+  body.sde-portal .sde-global-nav { position: fixed; top: auto; bottom: 0; padding: 8px 16px 9px; }
+  body.sde-portal { padding-bottom: 86px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .sde-parcours-card { transition: none !important; }
   .sde-parcours-card:hover { transform: none; }
 }
 html[data-motion="reduced"] .sde-parcours-card { transition: none !important; transform: none !important; }
+
+/* Lot 2 : cartes du parcours plus compactes sur téléphone. */
+@media (min-width: 360px) and (max-width: 640px) {
+  .sde-parcours-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+  .sde-parcours-card { padding: 16px 12px; min-height: 174px; border-radius: 14px; gap: 7px; }
+  .sde-parcours-card strong { font-size: clamp(1.05rem,4.5vw,1.3rem); }
+  .sde-parcours-card .sde-parcours-picto { font-size: 1.35rem; }
+  .sde-parcours-card .sde-parcours-detail { font-size: .78rem !important; line-height: 1.4; }
+  .sde-parcours-card .sde-parcours-go { font-size: .76rem; }
+}
+@media (max-width: 359px) { .sde-parcours-grid { grid-template-columns: 1fr; } }
+/* Recherche locale dans les programmes et les ressources publiques : aucun accès privé. */
+.sde-find { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 20px; }
+.sde-find label { font-size: .89rem; font-weight: 700; color: var(--texte, #e8ebf4); }
+.sde-find input {
+  width: min(100%, 440px); max-width: 100%; min-height: 48px;
+  border: 1px solid var(--sde-portal-bord); border-radius: 12px;
+  color: var(--texte, #e8ebf4); background: var(--surface-2, #19233b);
+  padding: 11px 15px; font: inherit; font-size: 16px;
+}
+.sde-find input:focus-visible { outline: 3px solid var(--sde-portal-or); outline-offset: 2px; }
+.sde-find output { font-size: .83rem; color: var(--texte-2, #b8c1d8); }
+.sde-search-empty { color: var(--texte-2, #b8c1d8); padding: 16px; border: 1px dashed var(--sde-portal-bord); border-radius: 12px; }
+body.sde-portal :is(.programme, .ressource-carte)[hidden] { display: none !important; }
+body.sde-portal .sde-global-nav a:focus-visible,
+body.sde-portal .sde-parcours-card:focus-visible,
+body.sde-portal :is(button,a,input,select,textarea):focus-visible { outline-offset: 3px; }
+body.sde-portal main :is(section[id],article[id]) { scroll-margin-top: 85px; }
+body.sde-portal .sde-global-nav { overscroll-behavior: contain; }
+body.sde-portal .sde-global-nav li a { touch-action: manipulation; }
+@media (prefers-reduced-motion: reduce) {
+  body.sde-portal *, body.sde-portal *::before, body.sde-portal *::after { scroll-behavior: auto !important; }
+}
