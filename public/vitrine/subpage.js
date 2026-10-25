@@ -38,10 +38,18 @@
     overlay.setAttribute("role","dialog");
     overlay.setAttribute("aria-modal","true");
     overlay.setAttribute("aria-label","Photo agrandie");
-    overlay.innerHTML='<button type="button" class="sde-modal-close" aria-label="Fermer la photo">×</button><figure><img alt=""><figcaption></figcaption></figure>';
+    overlay.innerHTML='<button type="button" class="sde-modal-close" aria-label="Fermer la photo">×</button><button type="button" class="sde-modal-prev" aria-label="Photo précédente">‹</button><figure><img alt=""><figcaption></figcaption></figure><button type="button" class="sde-modal-next" aria-label="Photo suivante">›</button>';
     document.body.append(overlay);
     const img=$("img",overlay),cap=$("figcaption",overlay);
-    let previous=null;
+    let previous=null,selected=0;
+    const display=()=>{
+      const source=cards[selected];
+      const original=source.querySelector("img");
+      img.src=original?.dataset.grand || original?.src || "";
+      img.alt=original?.alt || "Photo SDE";
+      cap.textContent=source.querySelector(".galerie-legende")?.textContent||"";
+    };
+    const go=(delta)=>{selected=(selected+delta+cards.length)%cards.length;display();};
     const close=()=>{
       overlay.setAttribute("aria-hidden","true");
       img.removeAttribute("src");
@@ -50,13 +58,18 @@
     };
     $(".sde-modal-close",overlay).addEventListener("click",close);
     overlay.addEventListener("click",e=>{if(e.target===overlay)close();});
-    document.addEventListener("keydown",e=>{if(e.key==="Escape"&&overlay.getAttribute("aria-hidden")==="false")close();});
-    cards.forEach(button=>button.addEventListener("click",()=>{
+    $(".sde-modal-prev",overlay).addEventListener("click",()=>go(-1));
+    $(".sde-modal-next",overlay).addEventListener("click",()=>go(1));
+    document.addEventListener("keydown",e=>{
+      if(overlay.getAttribute("aria-hidden")!=="false")return;
+      if(e.key==="Escape")close();
+      if(e.key==="ArrowRight")go(1);
+      if(e.key==="ArrowLeft")go(-1);
+    });
+    cards.forEach((button,index)=>button.addEventListener("click",()=>{
       previous=button;
-      const original=button.querySelector("img");
-      img.src=original?.dataset.grand || original?.src || "";
-      img.alt=original?.alt || "Photo SDE";
-      cap.textContent=button.querySelector(".galerie-legende")?.textContent||"";
+      selected=index;
+      display();
       overlay.setAttribute("aria-hidden","false");
       document.body.style.overflow="hidden";
       $(".sde-modal-close",overlay).focus();
