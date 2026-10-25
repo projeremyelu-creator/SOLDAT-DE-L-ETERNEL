@@ -38,7 +38,7 @@ for (const page of pages) {
     assert.deepEqual(items.map((a) => a.textContent.trim()), ["Accueil", "Membres", "Agenda", "Finances", "Plus"]);
     assert.equal(p.d.querySelectorAll(".sde-global-nav").length, 1);
     assert.equal(items[3].href, "https://app.mouvement-sde.org/#finances");
-    assert.equal(items[4].href, page === "index.html" ? "https://mouvement-sde.org/#parcours-sde" : "https://mouvement-sde.org/#parcours-sde");
+    assert.equal(items[4].href, "https://mouvement-sde.org/vitrine/plus");
     assert.ok(p.d.body.classList.contains("sde-portal"));
     assert.equal(p.d.querySelectorAll(".sde-global-nav a[aria-current='page']").length, 1);
     if (page !== "index.html") {
