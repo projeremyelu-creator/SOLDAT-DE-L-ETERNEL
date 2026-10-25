@@ -39,6 +39,7 @@ for (const page of pages) {
     assert.equal(items[4].href, page === "index.html" ? "https://mouvement-sde.org/#parcours-sde" : "https://mouvement-sde.org/#parcours-sde");
     assert.ok(p.d.body.classList.contains("sde-portal"));
     assert.equal(p.d.querySelectorAll(".sde-global-nav a[aria-current='page']").length, 1);
+    if (page !== "index.html") assert.equal(p.d.querySelector("header.entete").nextElementSibling, p.d.querySelector(".sde-global-nav"));
     if (page === "formulaire.html" || page === "academy.html") {
       const form = p.d.getElementById("formulaire");
       assert.ok(form, "formulaire d'origine conservé");
