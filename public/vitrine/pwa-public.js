@@ -1,9 +1,21 @@
 /* Invite d'installation du portail lorsqu'elle est proposée par le navigateur.
    La PWA privée sur app.mouvement-sde.org conserve son fonctionnement propre. */
 (() => {
-  // Uniquement sur le domaine public ; portée /vitrine/ sans API ni données privées.
+  // Uniquement sur le domaine public ; portée publique /, cache strictement limité aux pages publiques autorisées.
   if (location.hostname === "mouvement-sde.org" && "serviceWorker" in navigator) {
-    const register = () => navigator.serviceWorker.register("/vitrine/sw-public.js", {scope:"/vitrine/"}).catch(() => {});
+    const register = async () => {
+      try {
+        // Nettoyer uniquement l'ancien SW public /vitrine/. Aucun effet sur app.mouvement-sde.org.
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const old of registrations) {
+          if (new URL(old.scope).pathname === "/vitrine/" &&
+              old.active?.scriptURL.includes("/vitrine/sw-public.js")) {
+            await old.unregister();
+          }
+        }
+        await navigator.serviceWorker.register("/sw-public.js", {scope:"/"});
+      } catch (_) { /* PWA indisponible : le site reste utilisable */ }
+    };
     if (document.readyState === "complete") register();
     else window.addEventListener("load", register, {once:true});
   }

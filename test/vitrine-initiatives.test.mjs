@@ -93,8 +93,8 @@ test("liens dans Plus, accueil, mega menu et sitemap",()=>{
 });
 test("manifeste public PWA séparé de l'application privée",()=>{
   const config=JSON.parse(read("manifest.webmanifest"));
-  assert.equal(config.scope,"/vitrine/");
-  assert.equal(config.start_url,"/vitrine/");
+  assert.equal(config.scope,"/");
+  assert.equal(config.start_url,"/");
   assert.equal(config.display,"standalone");
   assert.ok(config.icons.length>=2);
   assert.ok(!read("pwa-public.js").includes('serviceWorker.register("/sw.js"'));

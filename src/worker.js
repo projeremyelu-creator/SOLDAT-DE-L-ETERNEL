@@ -1115,7 +1115,7 @@ async function traiter(req, env) {
       if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env);
       if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env);
       if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env);
-      if (!/^\/(vitrine\/|sde-(unified\.css|bridge\.js)$|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$)/.test(p))
+      if (!/^\/(vitrine\/|sde-(unified\.css|bridge\.js)$|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$|sw-public\.js$)/.test(p))
         return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
       const r = await env.ASSETS.fetch(req);
       // Images de la vitrine : gardées 7 jours par le navigateur (visites suivantes plus rapides)

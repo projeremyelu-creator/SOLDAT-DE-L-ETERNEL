@@ -11,9 +11,9 @@ test("design commun SDE servi sur vitrine ET application privée",()=>{
  for(const ref of ["/app.css","/sde-unified.css","/sde-private-ui.css","/sde-bridge.js"]) assert.ok(privateHtml.includes(ref),ref);
  for(const name of pages) {
   const html=file("vitrine/"+name+".html");
-  assert.ok(html.includes("/sde-unified.css"),name);
+  assert.ok(html.includes("/vitrine/sde-unified.css"),name);
   assert.ok(html.includes("/vitrine/modern-2026.css"),name);
-  assert.ok(html.includes("/sde-bridge.js"),name);
+  assert.ok(html.includes("/vitrine/sde-public-directory.js"),name);
  }
  assert.ok(file("sde-unified.css").includes("--sde-gold"));
  assert.ok(file("sde-private-ui.css").includes(".hdr-site"));
@@ -57,20 +57,20 @@ test("recherche instantanée du répertoire public Plus et état vide",()=>{
 });
 test("PWA publique installable et strictement limitée aux ressources accessibles",()=>{
  const m=JSON.parse(file("vitrine/manifest.webmanifest"));
- assert.equal(m.scope,"/vitrine/");assert.equal(m.display,"standalone");
+ assert.equal(m.scope,"/");assert.equal(m.start_url,"/");assert.equal(m.display,"standalone");
  for(const name of pages.filter(p=>!["formulaire","engagements"].includes(p))){
   const h=file("vitrine/"+name+".html");
   assert.ok(h.includes('rel="manifest"'),name);
   assert.ok(h.includes("/vitrine/pwa-public.js"),name);
  }
  const js=file("vitrine/pwa-public.js");
- assert.ok(js.includes('scope:"/vitrine/"'));
+ assert.ok(js.includes('scope:"/"'));
  assert.ok(js.includes('location.hostname === "mouvement-sde.org"'));
- const sw=file("vitrine/sw-public.js");
- assert.ok(sw.includes('if(req.method!=="GET")return;'));
- assert.ok(sw.includes('if(!DOCS.has(path))return;'));
- assert.ok(!sw.includes('"/vitrine/engagements"'));
- assert.ok(!sw.includes('"/vitrine/formulaire"'));
+ const sw=file("sw-public.js");
+ assert.ok(sw.includes('req.method !== "GET"'));
+ assert.ok(sw.includes('PAGES.has(path)'));
+ assert.ok(sw.includes('pathname.includes("/engagements")'));
+ assert.ok(sw.includes('pathname.includes("/formulaire")'));
  assert.ok(sw.includes('"/vitrine/offline-public.html"'));
 });
 test("reduced motion et navigation PC/mobile des deux espaces",()=>{
