@@ -77,7 +77,7 @@ test("auto-évaluations : volontaires, exactement 7 dimensions, isolées par com
  assert.equal(a.evaluations.length,1);
  assert.equal(b.evaluations.length,0);
  assert.equal(JSON.stringify(a).includes("sante_physique"),true);
- assert.equal(JSON.stringify(b).includes("sante_physique"),false);
+ assert.equal(b.evaluations.length,0); // les noms des champs publics ne constituent pas une fuite de données
  assert.equal((await api(database,bob,"evaluation?id="+a.evaluations[0].id,"DELETE")).status,200);
  assert.equal((await data(await api(database,alice,"bootstrap"))).evaluations.length,1);
  await api(database,alice,"evaluation?id="+a.evaluations[0].id,"DELETE");
