@@ -104,6 +104,48 @@ test("MPA: programmation — calendrier et confirmation existants présents",()=
   assert.ok(document.querySelector("#if-prog"));
   d.window.close();
 });
+test("MPA: base CSS mutualisée plutôt que dupliquée sur six HTML",()=>{
+  const source=new JSDOM(home).window.document;
+  const fromHome=source.querySelector("style")?.textContent;
+  assert.equal(read("public/vitrine/mpa-base.css"),fromHome);
+  for(const name of Object.keys(pages)){
+    const html=read("public/vitrine/"+name+".html");
+    assert.ok(html.includes("/vitrine/mpa-base.css"),name);
+    assert.ok(!html.includes("<style>"),"CSS dupliqué sur "+name);
+  }
+});
+test("MPA: galerie média conserve photo précédente et suivante",()=>{
+  const d=dom("ressources"),document=d.window.document;
+  document.querySelector(".galerie-ouvrir").click();
+  const before=document.querySelector(".sde-modal img").src;
+  document.querySelector(".sde-modal-next").click();
+  const after=document.querySelector(".sde-modal img").src;
+  assert.notEqual(before,after);
+  document.querySelector(".sde-modal-prev").click();
+  assert.equal(document.querySelector(".sde-modal img").src,before);
+  document.querySelector(".sde-modal-close").click();
+  d.window.close();
+});
+test("MPA: formulaire d'adhésion utilise /api/engager (simulation hors production)",async()=>{
+  const d=dom("rejoindre"),document=d.window.document,w=d.window;
+  let sent=null;
+  w.fetch=async(path,options)=>{
+    sent={path,data:JSON.parse(options.body)};
+    return {ok:true,json:async()=>({ok:true})};
+  };
+  const form=document.querySelector("#form-rejoindre");
+  form.querySelector('[name="nom"]').value="Test Usage";
+  form.querySelector('[name="tel"]').value="+2250700000000";
+  form.querySelector('[name="ville"]').value="Abidjan";
+  form.querySelector('[name="accord"]').checked=true;
+  form.dispatchEvent(new w.Event("submit",{bubbles:true,cancelable:true}));
+  await new Promise(resolve=>setTimeout(resolve,10));
+  assert.equal(sent?.path,"/api/engager");
+  assert.equal(sent?.data?.nom,"Test Usage");
+  assert.equal(sent?.data?.ville,"Abidjan");
+  assert.equal(document.querySelector("#envoi").hidden,false);
+  d.window.close();
+});
 test("MPA: pages sensibles absentes du sitemap et pages publiques ajoutées",()=>{
   const map=read("public/sitemap.xml");
   for(const page of Object.keys(pages))assert.ok(map.includes("/vitrine/"+page+"</loc>"),page);
