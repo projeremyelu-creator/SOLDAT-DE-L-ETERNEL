@@ -69,3 +69,27 @@ body.sde-portal .burger { display: none !important; }
  body.sde-portal .burger { display:none !important; }
 }
 @media (prefers-reduced-motion:reduce) { .sde-subpage * { scroll-behavior:auto !important; } }
+
+/* Navigation finale : onglets uniquement sur écrans tactiles/étroits,
+   méga-menus uniquement sur desktop. Les sous-menus clos ne peuvent jamais
+   être affichés par une règle display:grid concurrente. */
+@media (min-width:1025px) {
+  body.sde-portal .sde-global-nav,
+  body.sde-portal .nav-mobile.sde-global-nav { display:none !important; }
+  body.sde-portal .sde-mega-nav { display:flex !important; }
+  body.sde-portal .sde-mega:not([open]) > .sde-mega-panel { display:none !important; }
+  body.sde-portal .sde-mega[open] > .sde-mega-panel { display:grid; }
+  body.sde-portal .sde-mega-nav a:focus-visible,
+  body.sde-portal .sde-mega-nav summary:focus-visible {
+    outline:3px solid #e2c26a; outline-offset:2px;
+  }
+}
+@media (max-width:1024px) {
+  body.sde-portal .sde-mega-nav { display:none !important; }
+  body.sde-portal .sde-global-nav { display:block !important; }
+  body.sde-portal .nav-mobile.sde-global-nav {
+    padding-bottom:calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+  body.sde-portal { padding-bottom:calc(86px + env(safe-area-inset-bottom, 0px)); }
+  .sde-subpage .sde-page-footer { padding-bottom:calc(110px + env(safe-area-inset-bottom, 0px)); }
+}
