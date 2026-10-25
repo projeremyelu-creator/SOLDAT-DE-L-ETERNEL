@@ -16,15 +16,15 @@ const load = (page) => {
   return { dom, d: dom.window.document, w: dom.window };
 };
 
-test("vitrine : parcours d'accueil avec huit liens valides vers des sections et pages existantes", () => {
+test("vitrine : parcours d'accueil avec douze liens valides vers des sections et pages existantes", () => {
   const p = load("index.html");
   const cartes = [...p.d.querySelectorAll("#parcours-sde .sde-parcours-card")];
-  assert.equal(cartes.length, 8);
+  assert.equal(cartes.length, 12);
   for (const a of cartes) {
     assert.ok(a.querySelector("strong"), "titre de parcours manquant");
     const href = a.getAttribute("href");
     if (href.startsWith("#")) assert.ok(p.d.getElementById(href.slice(1)), href + " doit pointer sur une section existante");
-    else assert.equal(href, "/vitrine/academy.html");
+    else assert.ok(["/vitrine/academy.html","/vitrine/prieres","/vitrine/temoignages","/vitrine/soldiers-voice","/vitrine/missions-humanitaires"].includes(href), href);
   }
   assert.ok(p.d.getElementById("f-venue"));
   assert.ok(p.d.getElementById("form-rejoindre"));
