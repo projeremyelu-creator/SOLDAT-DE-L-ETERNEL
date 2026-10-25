@@ -1,0 +1,65 @@
+/* SDE : navigation multiplateforme. Menu déroulant desktop, barre basse mobile. */
+body.sde-portal .sde-mega-nav { display: none; }
+body.sde-portal .sde-global-nav { display: block; }
+body.sde-portal .nav-principal { display: none !important; }
+body.sde-portal .burger { display: none !important; }
+.sde-subpage .sde-intro { padding: clamp(60px,9vw,104px) 20px 44px; text-align:center; background:linear-gradient(145deg,#111e38,#222b49 65%,#111a2d); border-bottom:1px solid rgba(226,194,106,.18); }
+.sde-subpage .sde-intro .sde-kicker { color:#e2c26a; text-transform:uppercase; letter-spacing:.15em; font-size:.75rem; font-weight:800; }
+.sde-subpage .sde-intro h1 { color:#f7f4ed; font-family:var(--f-titre,"Saira Condensed",sans-serif); font-size:clamp(2.35rem,5vw,4.8rem); line-height:1.13; margin:10px 0; }
+.sde-subpage .sde-intro p { max-width:720px; margin:10px auto; color:#bec8db; font-size:clamp(.95rem,1.8vw,1.14rem); }
+.sde-subpage .sde-crumbs { margin-top:20px; font-size:.87rem; color:#ced4e4; }
+.sde-subpage .sde-crumbs a { color:#e2c26a; }
+.sde-subpage .sde-page-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:18px; }
+.sde-subpage .sde-page-actions a { display:inline-flex; align-items:center; justify-content:center; background:#e2c26a; color:#131a2d; border-radius:12px; padding:9px 18px; font-weight:800; min-height:44px; text-decoration:none; }
+.sde-subpage .sde-page-actions a.sde-secondary { background:transparent; color:#f7f4ed; border:1px solid #e2c26a; }
+.sde-subpage .sde-further { padding:40px 16px 70px; background:#101827; color:#e8ebf4; text-align:center; }
+.sde-subpage .sde-further a { display:inline-flex; padding:10px 20px; border:1px solid #e2c26a; border-radius:12px; margin:8px; min-height:44px; align-items:center; color:#e2c26a; }
+.sde-subpage .sde-further h2 { color:#f7f4ed; font-size:clamp(1.6rem,3vw,2.5rem); margin-bottom:18px; }
+.sde-subpage .sde-page-footer { background:#0c1322; color:#c7cad5; padding:34px 16px 120px; text-align:center; border-top:1px solid rgba(226,194,106,.18); }
+.sde-subpage .sde-page-footer a { margin:0 8px; }
+.sde-subpage main { display:block; }
+.sde-subpage section[id] { scroll-margin-top: 88px; }
+.sde-subpage .revele { opacity:1 !important; transform:none !important; }
+.sde-subpage .section { overflow:clip; }
+.sde-subpage .sde-search-empty[hidden],.sde-subpage [hidden] { display:none !important; }
+.sde-subpage .sde-simple-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; max-width:1150px; margin:28px auto; }
+.sde-subpage .sde-simple-grid a { display:flex; flex-direction:column; gap:8px; background:#19233b; padding:24px; border:1px solid rgba(226,194,106,.28); border-radius:18px; color:#e8ebf4; min-height:150px; }
+.sde-subpage .sde-simple-grid strong { color:#e2c26a; font-size:1.2rem; }
+.sde-subpage .sde-simple-grid span { color:#bac6d5; }
+.sde-subpage #rejoindre .formulaire { max-width:100%; }
+.sde-subpage .sde-modal { position:fixed; inset:0; z-index:2200; background:rgba(3,7,16,.93); display:none; align-items:center; justify-content:center; padding:20px; }
+.sde-subpage .sde-modal[aria-hidden="false"] { display:flex; }
+.sde-subpage .sde-modal img { max-width:min(92vw,1250px); max-height:78vh; object-fit:contain; }
+.sde-subpage .sde-modal .sde-modal-close { position:absolute; right:22px; top:18px; background:#e2c26a; border-radius:30px; padding:5px 13px; color:#0f1e3d; font-size:25px; }
+.sde-subpage .sde-modal figcaption { color:white; text-align:center; padding:8px; }
+@media (min-width:1025px) {
+ body.sde-portal .sde-global-nav { display:none !important; }
+ body.sde-portal { padding-bottom:0; }
+ body.sde-portal .sde-mega-nav { display:flex; align-items:center; flex:1 1 auto; min-width:0; justify-content:center; gap:clamp(3px,.5vw,10px); font-family:var(--f-texte,"Atkinson Hyperlegible",sans-serif); }
+ body.sde-portal .entete .enveloppe { max-width:1450px; }
+ body.sde-portal .sde-mega-nav>a, body.sde-portal .sde-mega summary {
+   display:flex; align-items:center; gap:4px; color:#eef0f5; text-decoration:none; cursor:pointer; padding:10px clamp(6px,.8vw,13px);
+   border-radius:10px; font-size:clamp(.76rem,.95vw,.96rem); font-weight:700; white-space:nowrap; min-height:44px;
+ }
+ body.sde-portal .sde-mega summary { list-style:none; }
+ body.sde-portal .sde-mega summary::-webkit-details-marker { display:none; }
+ body.sde-portal .sde-mega summary svg { width:12px; height:12px; fill:none; stroke:currentColor; stroke-width:1.6; }
+ body.sde-portal .sde-mega-nav :is(a,summary):hover,body.sde-portal .sde-mega-nav :is(a,summary):focus-visible,body.sde-portal .sde-mega-nav [aria-current="page"] { background:rgba(226,194,106,.13); color:#f0d586; }
+ body.sde-portal .sde-mega { position:relative; }
+ body.sde-portal .sde-mega-panel { position:absolute; z-index:1200; top:calc(100% + 12px); left:50%; transform:translateX(-50%); width:min(340px,90vw); background:#14223e; border:1px solid rgba(226,194,106,.45); border-radius:15px; box-shadow:0 20px 42px rgba(0,0,0,.4); padding:10px; display:grid; grid-template-columns:1fr; gap:4px; max-height:70vh; overflow-y:auto; }
+ body.sde-portal .sde-mega:last-of-type .sde-mega-panel {left:auto;right:0;transform:none;}
+ body.sde-portal .sde-mega-panel a { display:flex; flex-direction:column; color:#f0f2f7; padding:10px 13px; border-radius:9px; text-decoration:none; gap:3px; }
+ body.sde-portal .sde-mega-panel a small {color:#abb9d0;font-size:.76rem;}
+ body.sde-portal .sde-mega-panel a:hover,body.sde-portal .sde-mega-panel a:focus-visible {background:rgba(226,194,106,.13);}
+ body.sde-portal .sde-mega-nav .sde-mega-all { color:#e2c26a; }
+}
+@media (min-width:1025px) and (max-width:1150px) {
+ body.sde-portal .entete .marque small,body.sde-portal .btn-membre { display:none !important; }
+}
+@media (max-width:1024px) {
+ body.sde-portal .sde-global-nav { display:block !important; }
+ body.sde-portal .sde-mega-nav { display:none !important; }
+ body.sde-portal .nav-principal { display:none !important; }
+ body.sde-portal .burger { display:none !important; }
+}
+@media (prefers-reduced-motion:reduce) { .sde-subpage * { scroll-behavior:auto !important; } }
