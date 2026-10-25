@@ -13,3 +13,5 @@ jobs:
           node-version: 22
       - run: npm ci --ignore-scripts
       - run: npm test
+      - name: Auditer site public et application privée sans authentification
+        run: node test/live-unified-audit.mjs
