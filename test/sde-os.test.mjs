@@ -133,3 +133,38 @@ test("interface OS : 4 paradigmes, 5 navigations, aucune donnée de santé en ca
  const privateIndex=load("public/sde-bridge.js");
  assert.ok(privateIndex.includes("SDE OS v3.1"));
 });
+
+
+test("SDE OS : démarrage authentifié, cinq pôles, quatre écoles, navigation et recherche utilisables", async()=>{
+ const html=load("public/os/index.html"),code=load("public/os/os.js");
+ const dom=new JSDOM(html,{url:"https://app.mouvement-sde.org/os/",runScripts:"outside-only",pretendToBeVisual:true});
+ const w=dom.window,d=w.document;
+ w.scrollTo=()=>{};
+ w.fetch=async(url)=>({ok:true,json:async()=>({
+  ok:true,profil:{id:"alice",nom:"Membre Test",role:"soldat",niveau:0},peutGerer:false,
+  dimensions:DIMENSIONS,bienEtre:BIEN_ETRE,fractures:FRACTURES,poles:POLES,ecoles:ECOLES,
+  evaluations:[],parcours:[],barometre:[],actions:[],validations:[]
+ })});
+ w.eval(code);
+ d.dispatchEvent(new w.Event("DOMContentLoaded"));
+ await new Promise(resolve=>setTimeout(resolve,45));
+ assert.equal(d.getElementById("busy").hidden,true);
+ assert.equal(d.querySelectorAll("#schools .school").length,4);
+ assert.equal(d.querySelectorAll("#poles-list .pole-card").length,5);
+ assert.equal(d.querySelectorAll("#eval-fields input[type=range]").length,7);
+ assert.equal(d.querySelectorAll("#wellness-fields input[type=range]").length,4);
+ assert.equal(d.querySelectorAll("#fracture-fields input[type=range]").length,5);
+ assert.equal(d.querySelector("#pole-workspace").hidden,true,"les non-gestionnaires ne gèrent pas les pôles");
+ assert.equal(d.querySelector("#finance-workspace").hidden,true);
+ d.querySelector('.nav-item[data-go="academy"]').click();
+ assert.equal(d.getElementById("view-academy").hidden,false);
+ assert.equal(d.getElementById("view-accueil").hidden,true);
+ d.getElementById("mobile-more").click();
+ assert.equal(d.getElementById("more-overlay").hidden,false);
+ d.getElementById("more-close").click();
+ assert.equal(d.getElementById("more-overlay").hidden,true);
+ d.getElementById("paradigm-select").value="immersif";
+ d.getElementById("paradigm-select").dispatchEvent(new w.Event("change"));
+ assert.equal(d.getElementById("app").dataset.paradigme,"immersif");
+ dom.window.close();
+});
