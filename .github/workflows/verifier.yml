@@ -13,3 +13,5 @@ jobs:
           node-version: 22
       - run: npm ci --ignore-scripts
       - run: npm test
+      - name: Auditer le portail public modernisé en production
+        run: node test/live-app-shell-audit.mjs
