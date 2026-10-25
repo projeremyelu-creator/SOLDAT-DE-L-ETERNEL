@@ -1,7 +1,7 @@
 /* SDE — service worker PUBLIC uniquement. Scope "/" sur mouvement-sde.org.
    Ne prend jamais en charge le sous-domaine privé app.mouvement-sde.org.
    Seuls les GET de pages publiques explicitement listées sont mis en cache. */
-const CACHE = "sde-public-shell-20261025f";
+const CACHE = "sde-public-shell-20261025g";
 const PAGES = new Set([
   "/", "/index.html", "/vitrine/", "/vitrine/index.html",
   "/vitrine/mouvement", "/vitrine/programmes", "/vitrine/ressources",
@@ -58,7 +58,22 @@ self.addEventListener("fetch", event => {
   }
   if (!PUBLIC_ASSETS.test(pathname)) return;
   event.respondWith((async () => {
-    const cached = await caches.match(req,{ignoreSearch:true});
+    // Les fichiers CSS et JS doivent refléter immédiatement les déploiements.
+    // Respecter la version ?v= et servir le dernier contenu en priorité.
+    if (/\.(?:css|js)$/i.test(pathname)) {
+      try {
+        const response = await fetch(req);
+        if (response.ok && response.type !== "opaqueredirect") {
+          const cache = await caches.open(CACHE);
+          await cache.put(req, response.clone());
+        }
+        return response;
+      } catch (_) {
+        return (await caches.match(req)) ||
+          new Response("Ressource indisponible hors connexion.",{status:503});
+      }
+    }
+    const cached = await caches.match(req);
     if (cached) return cached;
     const response = await fetch(req);
     if (response.ok && response.type !== "opaqueredirect") {
