@@ -15,7 +15,7 @@ const endpoints=[
   ["/vitrine/mpa.css?v=20261025c","@media (max-width:1024px)","CSS responsive"],
   ["/vitrine/mpa-base.css?v=20261025c",".entete","CSS partagé"],
   ["/vitrine/subpage.js?v=20261025c","setupProgrammes","Script pages"],
-  ["/vitrine/portal.js?v=20261025c","/vitrine/plus","Navigation mobile"],
+  ["/vitrine/portal.js?v=20261025c","vitrine/plus","Navigation mobile"],
   ["/sitemap.xml","/vitrine/projets","Sitemap"]
 ];
 let failed=false,movement=null,navjs=null,portaljs=null,mpacss=null;
