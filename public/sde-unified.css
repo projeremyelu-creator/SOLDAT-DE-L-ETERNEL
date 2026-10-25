@@ -1,0 +1,20 @@
+/* Identité partagée entre site public MPA et application privée SPA.
+ * Tokens seulement : aucune donnée, permission ou logique métier modifiée. */
+:root{
+ --sde-night:#0f1e3d;
+ --sde-night-deep:#0a0f1d;
+ --sde-gold:#e2c26a;
+ --sde-gold-soft:#f0d586;
+ --sde-burgundy:#641d2d;
+ --sde-olive:#556346;
+ --sde-white:#f7f4ed;
+ --sde-radius:18px;
+ --sde-focus:3px solid #dba83e;
+ --sde-ease:cubic-bezier(.2,.7,.2,1);
+}
+:where(a,button,input,select,textarea,summary):focus-visible{outline:var(--sde-focus);outline-offset:3px}
+:where(button,a){-webkit-tap-highlight-color:transparent}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto!important}
+ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
