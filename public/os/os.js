@@ -375,4 +375,5 @@ function renderSearch(){
  }
  if(!dest.children.length)dest.append(el("p","subtle","Aucun espace correspondant."));
 }
+if("serviceWorker" in navigator && location.hostname==="app.mouvement-sde.org") window.addEventListener("load",()=>{navigator.serviceWorker.register("/os/sw.js",{scope:"/os/"}).catch(()=>{});},{once:true});
 document.addEventListener("DOMContentLoaded",start,{once:true});
