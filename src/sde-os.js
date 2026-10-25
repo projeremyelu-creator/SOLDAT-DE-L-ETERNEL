@@ -45,7 +45,7 @@ const parse=(t)=>{try{return JSON.parse(t);}catch{return null;}};
 async function load(env,u){
  const scores=(await get(env,"SELECT id,cree,donnees FROM os_evaluations WHERE compte=? ORDER BY cree DESC LIMIT 24",u.id)).results||[];
  const parcours=(await get(env,"SELECT ecole,statut,maj FROM os_parcours WHERE compte=? ORDER BY ecole",u.id)).results||[];
- const response={ok:true,version:"3.1",profil:{nom:u.nom||"Membre SDE",role:u.role,niveau:u.niveau},
+ const response={ok:true,version:"3.1",profil:{id:u.id,nom:u.nom||"Membre SDE",role:u.role,niveau:u.niveau},
    dimensions:DIMENSIONS,bienEtre:BIEN_ETRE,fractures:FRACTURES,poles:POLES,ecoles:ECOLES,
    evaluations:scores.map(e=>({id:e.id,date:e.cree,...parse(e.donnees)})),
    parcours,barometre:[],actions:[],validations:[],peutGerer:admin(u)};
