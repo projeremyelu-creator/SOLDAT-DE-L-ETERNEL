@@ -1,0 +1,39 @@
+/* Pages publiques SDE dédiées. */
+.sde-initiative-lead,.sde-initiative-section{padding:clamp(46px,6vw,82px) 0}
+.sde-initiative-lead{text-align:center;background:var(--fond,#0a0f1d)}
+.sde-initiative-lead .enveloppe{max-width:900px}
+.sde-initiative-lead h2{font-size:clamp(1.8rem,3.8vw,3.1rem)}
+.sde-initiative-lead p:last-child{color:var(--texte-2,#bac6d5);font-size:1.05rem;line-height:1.7;max-width:780px;margin:12px auto}
+.sde-initiative-section h2{font-size:clamp(1.7rem,3.5vw,2.75rem);margin:0 0 15px}
+.sde-initiative-section .sde-kicker,.sde-initiative-lead .sde-kicker{color:var(--or,#e2c26a);font-size:.81rem;text-transform:uppercase;letter-spacing:.16em;font-weight:800}
+.sde-initiative-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:28px 0 0}
+.sde-initiative-card{display:flex;flex-direction:column;gap:10px;padding:25px 23px;min-width:0;min-height:195px;border-radius:18px;border:1px solid rgba(226,194,106,.3);background:linear-gradient(150deg,#1a2948,#121b2e);color:#e8ebf4}
+.sde-initiative-card>span:first-child{font-size:1.55rem}
+.sde-initiative-card h3,.sde-initiative-card strong{font-size:1.4rem;line-height:1.2;color:#f7f4ed}
+.sde-initiative-card p,.sde-initiative-card span:not(:first-child){color:#bec8db;font-size:.94rem;line-height:1.6}
+.sde-initiative-card a{color:#e2c26a;font-weight:800;margin-top:auto}
+.sde-initiative-card a:focus-visible,.sde-initiative-linkcard:focus-visible{outline:3px solid #e2c26a;outline-offset:4px}
+a.sde-initiative-linkcard{text-decoration:none;min-height:150px;justify-content:center;transition:border-color .2s,transform .2s}
+a.sde-initiative-linkcard:hover{border-color:#e2c26a;transform:translateY(-2px)}
+.sde-initiative-soft{background:var(--surface,#121a2e)}
+.sde-initiative-next{background:var(--fond,#0a0f1d)}
+.sde-initiative-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,70px);align-items:start}
+.sde-initiative-split>div>p{color:var(--texte-2,#bac6d5);line-height:1.75;margin:12px 0}
+.sde-initiative-note{max-width:980px;padding:16px 18px;border-left:3px solid var(--or,#e2c26a);margin:26px 0 0;background:rgba(226,194,106,.07);border-radius:0 12px 12px 0;color:var(--texte,#e8ebf4);font-size:.92rem}
+.sde-initiative-note a,.sde-initiative-split a{color:var(--or,#e2c26a);font-weight:700}
+.sde-initiative-form{display:grid;gap:10px;padding:clamp(19px,3vw,30px);border-radius:18px;background:var(--fond,#0a0f1d);border:1px solid rgba(226,194,106,.28);box-shadow:0 10px 24px rgba(0,0,0,.13)}
+.sde-initiative-form h3{margin-bottom:7px;font-size:1.5rem}
+.sde-initiative-form label{font-size:.93rem;font-weight:700;color:var(--texte,#e8ebf4)}
+.sde-initiative-form :is(input:not([type=checkbox]),select){width:100%;min-height:48px;border:1px solid rgba(226,194,106,.35);background:var(--surface-2,#19233b);color:var(--texte,#e8ebf4);border-radius:10px;padding:12px 14px;font:inherit;font-size:16px}
+.sde-initiative-form .sde-consent{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:.88rem;line-height:1.5;margin:5px 0}
+.sde-initiative-form .sde-consent input{width:20px;height:20px;flex:none;accent-color:#d9b35c;margin-top:2px}
+.sde-initiative-form .sde-form-submit{min-height:49px;border-radius:10px;font-size:1rem;font-weight:800;color:#101a2e;background:#e2c26a;border:0;padding:11px 18px;cursor:pointer}
+.sde-initiative-form .sde-form-submit:disabled{opacity:.65}
+.sde-form-feedback{min-height:1.5em;color:var(--texte-2,#bac6d5);font-size:.92rem;margin-top:4px}
+.sde-form-feedback[data-state=ok]{color:#76dab0;font-weight:700}
+.sde-form-feedback[data-state=error]{color:#ffb5a7;font-weight:700}
+.sde-hidden-trap{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important}
+.sde-initiative-form :is(input,select,button):focus-visible{outline:3px solid #e2c26a;outline-offset:3px}
+@media(max-width:860px){.sde-initiative-split{grid-template-columns:1fr}.sde-initiative-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:590px){.sde-initiative-grid{grid-template-columns:1fr}.sde-initiative-card{min-height:0;padding:20px}.sde-initiative .sde-intro{padding:45px 16px 38px}}
+@media(prefers-reduced-motion:reduce){a.sde-initiative-linkcard{transition:none}a.sde-initiative-linkcard:hover{transform:none}}
