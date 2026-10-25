@@ -1,3 +1,4 @@
+import {apiSdeOs31} from "./os-v31.js";
 import {notifySde,flushNotices,mailStatus} from "./notifications.js";
 /* MPA SDE — serveur Cloudflare (Worker)
    Sert l'application, garde les données dans D1, les fichiers dans KV,
@@ -1169,6 +1170,7 @@ async function traiter(req, env, ctx) {
         if (u.niveau < 3) return erreur("refuse", "Réservé au propriétaire.", 403);
         return json(await mailStatus(env));
       }
+      if (p === "/api/os-v31" && req.method === "POST") return apiSdeOs31(req, env, u);
       if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
       if (p === "/api/inscription" && req.method === "POST") return apiInscription(req, env, ctx);
       if (p === "/api/connexion" && req.method === "POST") return apiConnexionMdp(req, env);
