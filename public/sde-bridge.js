@@ -19,6 +19,7 @@
         nav.className="sde-private-links";
         nav.setAttribute("aria-label","Accès aux rubriques publiques SDE");
         nav.innerHTML=
+          '<a href="'+app+'os/">SDE OS v3.1</a>'+
           '<a href="'+site+'">Portail SDE</a>'+
           '<a href="'+site+'vitrine/programmes">Programmes publics</a>'+
           '<a href="'+site+'vitrine/prieres">Prières</a>'+
