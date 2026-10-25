@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "test": "node test/verifier.mjs && node --test test/vitrine-navigation.test.mjs test/vitrine-portal.test.mjs"
+    "test": "node test/verifier.mjs && node --test test/vitrine-navigation.test.mjs test/vitrine-portal.test.mjs test/vitrine-mpa.test.mjs"
   },
   "devDependencies": {
     "jsdom": "30.1.2"

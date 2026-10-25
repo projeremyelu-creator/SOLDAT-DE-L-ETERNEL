@@ -51,6 +51,26 @@ Les règles d’accès aux données sont vérifiées par le serveur (`REGLES` da
 
 **Illustrations** : `public/vitrine/illus/*.svg`, générées par `python3 app/illustrations.py` (légères, animées). Pour mettre une vraie photo à la place, déposer l’image dans `public/vitrine/` et changer le `src` correspondant.
 
+### Navigation multipage de la vitrine (25 octobre 2026)
+
+La vitrine publique est désormais une **Multi-Page Application (MPA)** : chaque rubrique possède un document HTML autonome accessible sans JavaScript pour son contenu rédactionnel. L'ancienne page d'accueil complète reste à `/` et conserve tous ses formulaires et modules d'origine.
+
+| Page | URL publique | Sections reprises |
+| --- | --- | --- |
+| Mouvement | `/vitrine/mouvement` | Vision, histoire, implantation, responsables, pôles |
+| Programmes | `/vitrine/programmes` | Agenda, programmes, IN FIRE |
+| Ressources | `/vitrine/ressources` | Bibliothèque et galerie |
+| Nous rejoindre | `/vitrine/rejoindre` | Adhésion, compte membre, FAQ et confidentialité |
+| Projets | `/vitrine/projets` | Missions, projets et dons |
+| Plus | `/vitrine/plus` | Répertoire des pages et services |
+| Academy | `/vitrine/academy` | Préinscription conservée |
+
+**Responsive :** `public/vitrine/mpa-nav.js` construit le méga-menu déroulant sur ordinateur (largeur supérieure à 1024 px) ; `portal.js` fournit la barre à cinq onglets Accueil, Membres, Agenda, Finances, Plus sur mobile et tablette (1024 px et moins). Les règles sont dans `mpa.css`. Aucun accès direct aux informations financières ou pastorales n'est exposé : Finances rejoint la vue privée protégée.
+
+**Styles :** `mpa-base.css` reprend les styles du site d'origine et est mis en cache pour les pages secondaires. `subpage.js` gère uniquement les interactions publiques autonomes (agenda, téléchargement ICS, demandes, filtres et galerie). Les pages secondaires utilisent `/api/public` pour l'agenda et `/api/engager` pour les demandes, comme la vitrine existante.
+
+**Tester :** `npm test` valide aussi `test/vitrine-mpa.test.mjs`, qui compare le texte des sections des nouvelles pages avec la vitrine d'origine et contrôle les liens et formulaires. Toute nouvelle page publique indexable doit être ajoutée à `public/sitemap.xml` ; les pages administratives restent exclues.
+
 ## Mettre à jour l’application
 
 1. Modifier les sources dans `source/src/` (voir `source/patch_v5.py`, qui assemble les modules).
