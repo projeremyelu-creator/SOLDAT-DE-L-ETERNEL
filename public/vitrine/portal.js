@@ -30,7 +30,9 @@
     let nav = document.querySelector(".nav-mobile");
     if (!nav) {
       nav = document.createElement("nav");
-      body.append(nav);
+      const header = document.querySelector("header.entete");
+      if (header) header.insertAdjacentElement("afterend", nav);
+      else body.append(nav);
     }
     nav.className = "nav-mobile sde-global-nav";
     nav.setAttribute("aria-label", "Navigation SDE — accès principaux");
