@@ -76,7 +76,8 @@
         ["Prière","/vitrine/prieres"],
         ["Témoignages","/vitrine/temoignages"],
         ["Soldiers Voice","/vitrine/soldiers-voice"],
-        ["Missions solidaires","/vitrine/missions-humanitaires"]
+        ["Missions solidaires","/vitrine/missions-humanitaires"],
+        ["Espace sécurisé","https://app.mouvement-sde.org/#connexion"]
       ]) {
         const link = make("a","",label);
         link.href = url;
