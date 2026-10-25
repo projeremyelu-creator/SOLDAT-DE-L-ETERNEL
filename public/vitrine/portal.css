@@ -134,6 +134,11 @@ body.sde-portal .sde-global-nav :is(a,button) { -webkit-tap-highlight-color: tra
   body.sde-portal .entete .enveloppe { gap: 5px; }
   body.sde-portal .sde-header-quick a { width: 39px; height: 42px; }
 }
+@media (max-width: 420px) {
+  body.sde-portal .entete .marque small { display: none; }
+  body.sde-portal .entete .marque b { font-size: 1.05rem; }
+  body.sde-portal .entete .logo { width: 30px; height: 30px; }
+}
 @media (max-width: 360px) {
   body.sde-portal .sde-global-nav a { font-size: .62rem; }
   body.sde-portal .sde-global-nav svg { width: 20px; height: 20px; }
