@@ -93,6 +93,11 @@ async function evaluation(req,env,u){
  return json({ok:true,message:"Votre auto-évaluation privée est enregistrée."});
 }
 async function barometre(req,env,u){
+ if(req.method==="DELETE"){
+  const periode=new Date().toISOString().slice(0,7);
+  await run(env,"DELETE FROM os_barometre WHERE compte=? AND periode=?",u.id,periode);
+  return json({ok:true,message:"Votre participation pour ce mois a été retirée."});
+ }
  if(req.method!=="POST")return err("methode","Méthode refusée",405);
  const b=await req.json();
  if(b.consentement!==true)return err("consentement","Votre accord est nécessaire pour contribuer.");
