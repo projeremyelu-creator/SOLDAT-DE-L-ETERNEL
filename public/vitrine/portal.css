@@ -188,3 +188,14 @@ body.sde-portal .sde-global-nav li a { touch-action: manipulation; }
 @media (prefers-reduced-motion: reduce) {
   body.sde-portal *, body.sde-portal *::before, body.sde-portal *::after { scroll-behavior: auto !important; }
 }
+
+/* Lien d'évitement visible uniquement lors de la navigation au clavier. */
+.sde-skip {
+  position: fixed; z-index: 3001; top: 8px; left: 8px;
+  padding: 10px 16px; border-radius: 10px;
+  background: #e2c26a; color: #0f1e3d !important; font-weight: 800;
+  transform: translateY(-160%);
+}
+.sde-skip:focus { transform: translateY(0); outline: 3px solid #0f1e3d; outline-offset: 2px; }
+body.sde-portal { scroll-padding-bottom: 95px; }
+body.sde-portal :is(input,textarea,select,button):focus-visible { scroll-margin-bottom: 95px; }
