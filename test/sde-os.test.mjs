@@ -96,6 +96,10 @@ test("baromètre : aucun graphique institutionnel avec moins de 5 participants d
  assert.equal(aggregate[0].prejuges,3);
  await api(database,user("m4"),"barometre","POST",{...values,prejuges:5,consentement:true});
  assert.equal(database.baro.length,5,"un membre ne peut produire deux votes dans un mois");
+ const withdrawal=await api(database,user("m4"),"barometre","DELETE");
+ assert.equal(withdrawal.status,200);
+ assert.equal((await data(await api(database,user("m0"),"bootstrap"))).barometre.length,0);
+ assert.equal(database.baro.filter(x=>x.compte!=="m4").length,4);
 });
 test("quatre yeux : approbation et contrôle par des personnes différentes",async()=>{
  const base={etat:"soumis",demandeur:"a"};
@@ -154,6 +158,7 @@ test("SDE OS : démarrage authentifié, cinq pôles, quatre écoles, navigation 
  assert.equal(d.querySelectorAll("#eval-fields input[type=range]").length,7);
  assert.equal(d.querySelectorAll("#wellness-fields input[type=range]").length,4);
  assert.equal(d.querySelectorAll("#fracture-fields input[type=range]").length,5);
+ assert.ok(d.querySelector("#withdraw-barometer"));
  assert.equal(d.querySelector("#pole-workspace").hidden,true,"les non-gestionnaires ne gèrent pas les pôles");
  assert.equal(d.querySelector("#finance-workspace").hidden,true);
  d.querySelector('.nav-item[data-go="academy"]').click();
