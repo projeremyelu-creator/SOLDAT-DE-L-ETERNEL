@@ -1,9 +1,9 @@
 /* Invite d'installation du portail lorsqu'elle est proposée par le navigateur.
    La PWA privée sur app.mouvement-sde.org conserve son fonctionnement propre. */
 (() => {
-  // Uniquement sur le domaine public ; portée /vitrine/ sans API ni données privées.
+  // Uniquement sur le domaine public ; portée publique /, cache strictement limité aux pages publiques autorisées.
   if (location.hostname === "mouvement-sde.org" && "serviceWorker" in navigator) {
-    const register = () => navigator.serviceWorker.register("/vitrine/sw-public.js", {scope:"/vitrine/"}).catch(() => {});
+    const register = () => navigator.serviceWorker.register("/sw-public.js", {scope:"/"}).catch(() => {});
     if (document.readyState === "complete") register();
     else window.addEventListener("load", register, {once:true});
   }
