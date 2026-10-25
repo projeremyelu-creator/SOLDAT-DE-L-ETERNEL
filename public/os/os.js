@@ -313,6 +313,10 @@ async function start(){
   await handle(()=>request("barometre","POST",p),"Votre contribution a été enregistrée. La courbe nécessite cinq réponses distinctes.");
   f.elements.consentement.checked=false;
  });
+ $("#withdraw-barometer").addEventListener("click",async()=>{
+  if(!confirm("Retirer votre contribution à la courbe collective pour le mois en cours ?"))return;
+  await handle(()=>request("barometre","DELETE"),"Votre participation du mois a été retirée.");
+ });
  $("#schools").addEventListener("change",async e=>{
   const select=e.target.closest("select[data-school]");if(!select)return;
   await handle(()=>request("parcours","POST",{ecole:Number(select.dataset.school),statut:select.value}),"Votre progression personnelle a été actualisée.");
