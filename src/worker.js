@@ -591,6 +591,9 @@ async function apiEngager(req, env, ctx) {
   if (!tel && !email) return erreur("champ_manquant", "Indiquez au moins un téléphone ou un e-mail pour que l'équipe vous recontacte.");
   if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return erreur("email_invalide", "Adresse e-mail invalide.");
   if (tel && tel.replace(/\D/g, "").length < 7) return erreur("tel_invalide", "Numéro de téléphone trop court.");
+  const ipPublic = "engagement:" + ipDe(req);
+  if (await bloque(env, ipPublic, 30)) return erreur("rate_limited", "Trop de demandes récentes. Réessayez plus tard.", 429);
+  await compter(env, ipPublic);
 
   /* Table auto-provisionnée pour ne pas dépendre d'une migration */
   await env.DB.prepare(`CREATE TABLE IF NOT EXISTS engagements (
@@ -650,6 +653,10 @@ async function apiFormulaire(req, env, ctx) {
   const emailVal = champ("email");
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailVal)) return erreur("email_invalide", "Adresse e-mail invalide.");
 
+  const ipSondage = "sondage:" + ipDe(req);
+  if (await bloque(env, ipSondage, 15)) return erreur("rate_limited", "Trop de réponses récentes. Réessayez plus tard.", 429);
+  await compter(env, ipSondage);
+
   /* Photo (obligatoire) */
   const photo = fd.get("photo");
   if (!photo || typeof photo === "string" || !photo.size) return erreur("photo_manquante", "La photo est obligatoire.");
@@ -694,6 +701,9 @@ async function apiPreinscriptionAcademy(req, env, ctx) {
   /* Doublon ? */
   const doublon = await env.DB.prepare("SELECT id FROM preinscriptions_academy WHERE email = ? AND statut NOT IN ('refusee') LIMIT 1").bind(emailVal).first();
   if (doublon) return erreur("doublon", "Une préinscription avec cette adresse e-mail existe déjà. Si vous souhaitez modifier vos informations, contactez le secrétariat.");
+  const ipAcademy = "academy:" + ipDe(req);
+  if (await bloque(env, ipAcademy, 20)) return erreur("rate_limited", "Trop de préinscriptions récentes. Réessayez plus tard.", 429);
+  await compter(env, ipAcademy);
 
   await env.DB.prepare(`INSERT INTO preinscriptions_academy
     (nom, prenom, email, telephone, date_naissance, ville, pays, niveau_souhaite, motivation, experience, eglise_origine)
