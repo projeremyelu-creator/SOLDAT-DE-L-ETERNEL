@@ -6,7 +6,7 @@ import { readFileSync } from "node:fs";
 import vm from "node:vm";
 import { execFileSync } from "node:child_process";
 
-const pages = ["public/index.html", "public/vitrine/index.html", "public/vitrine/engagements.html", "public/vitrine/formulaire.html", "public/vitrine/academy.html", "public/vitrine/mouvement.html", "public/vitrine/programmes.html", "public/vitrine/ressources.html", "public/vitrine/rejoindre.html", "public/vitrine/projets.html", "public/vitrine/plus.html", "public/vitrine/prieres.html", "public/vitrine/temoignages.html", "public/vitrine/soldiers-voice.html", "public/vitrine/missions-humanitaires.html", "public/vitrine/offline-public.html", "public/offline.html"];
+const pages = ["public/index.html", "public/vitrine/index.html", "public/vitrine/engagements.html", "public/vitrine/formulaire.html", "public/vitrine/academy.html", "public/vitrine/mouvement.html", "public/vitrine/programmes.html", "public/vitrine/ressources.html", "public/vitrine/rejoindre.html", "public/vitrine/projets.html", "public/vitrine/plus.html", "public/vitrine/prieres.html", "public/vitrine/temoignages.html", "public/vitrine/soldiers-voice.html", "public/vitrine/missions-humanitaires.html", "public/vitrine/offline-public.html", "public/offline.html", "public/os/index.html"];
 let erreurs = 0;
 for (const page of pages) {
   const html = readFileSync(page, "utf8");
@@ -24,7 +24,7 @@ for (const page of pages) {
   }
   console.log(`✓ ${page} : ${n} script(s) lu(s)`);
 }
-for (const f of ["src/worker.js", "public/sw.js", "public/vitrine/navigation.js", "public/vitrine/motion.js", "public/vitrine/portal.js", "public/vitrine/discovery.js", "public/vitrine/mpa-nav.js", "public/vitrine/subpage.js", "public/vitrine/initiatives.js", "public/vitrine/pwa-public.js", "public/vitrine/sde-app-shell.js", "public/vitrine/sde-public-directory.js", "public/sw-public.js", "public/sde-bridge.js", "public/vitrine/sw-public.js"]) {
+for (const f of ["src/worker.js", "public/sw.js", "public/vitrine/navigation.js", "public/vitrine/motion.js", "public/vitrine/portal.js", "public/vitrine/discovery.js", "public/vitrine/mpa-nav.js", "public/vitrine/subpage.js", "public/vitrine/initiatives.js", "public/vitrine/pwa-public.js", "public/vitrine/sde-app-shell.js", "public/vitrine/sde-public-directory.js", "public/sw-public.js", "public/sde-bridge.js", "public/vitrine/sw-public.js", "src/sde-os.js", "public/os/os.js", "public/os/sw.js"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); console.log(`✓ ${f}`); }
   catch (e) { erreurs += 1; console.error(`✗ ${f} :\n${String(e.stderr)}`); }
 }
