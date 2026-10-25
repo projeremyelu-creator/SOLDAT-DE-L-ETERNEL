@@ -1,0 +1,26 @@
+{
+  "name": "Mouvement SDE — Le Réveil Spirituel des Nations",
+  "short_name": "SDE",
+  "description": "Portail public du Mouvement Prophético-Apostolique Soldats de l'Éternel",
+  "id": "/vitrine/",
+  "start_url": "/vitrine/",
+  "scope": "/vitrine/",
+  "display": "standalone",
+  "background_color": "#0a0f1d",
+  "theme_color": "#0f1e3d",
+  "lang": "fr-CI",
+  "icons": [
+    {
+      "src": "/icone-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icone-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
