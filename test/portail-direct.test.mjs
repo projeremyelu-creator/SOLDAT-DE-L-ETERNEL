@@ -33,10 +33,11 @@ test("L'entrée membre et l'entrée direction servent directement un seul moteur
 });
 const tick=()=>new Promise(resolve=>setTimeout(resolve,20));
 async function create(path,level){
- const dom=new JSDOM("<!doctype html><html><head></head><body><nav id='nav'></nav><main id='main'>Prêt</main></body></html>",{
+ const dom=new JSDOM("<!doctype html><html><head></head><body><button id='btn-reglages' type='button'>Ouvrir réglages natifs</button><nav id='nav'></nav><main id='main'>Prêt</main></body></html>",{
   url:"https://mouvement-sde.org"+path,runScripts:"outside-only",pretendToBeVisual:true
  });
  const w=dom.window,nav=w.document.getElementById("nav"),main=w.document.getElementById("main"),opened=[];
+ w.document.getElementById("btn-reglages").addEventListener("click",()=>opened.push("reglages"));
  w.fetch=async()=>({ok:true,json:async()=>({connecte:true,role:level>1?"admin":level===1?"contributeur":"soldat",niveau:level,libRole:"Test"})});
  for(const name of ["accueil","espace","agenda","academie","membres","portevoix","finances","projets"]){
   const btn=w.document.createElement("button");btn.dataset.vue=name;btn.textContent=name;
@@ -81,6 +82,12 @@ test("La direction voit le poste de commandement et les rubriques qui lui sont a
  assert.equal(admin.main.textContent,"Module : membres");
  assert.equal(admin.w.location.pathname,"/administration");
  admin.dom.window.close();
+});
+test("Le bouton Réglages du bandeau commun conserve le menu natif",async()=>{
+ const ctx=await create("/mon-espace",0);
+ ctx.w.document.querySelector(".sde-direct-settings").click();
+ assert.equal(ctx.opened.at(-1),"reglages");
+ ctx.dom.window.close();
 });
 test("Aucune page privée n'est redirigée vers une nouvelle application externe",()=>{
  const workerSource=readFileSync("src/worker.js","utf8");
