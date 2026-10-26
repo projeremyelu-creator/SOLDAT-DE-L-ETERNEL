@@ -1,0 +1,45 @@
+<!doctype html><html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#11182a">
+<title>Mon espace personnel | Soldats de l'Éternel</title><link rel="icon" href="/vitrine/logo-96.png">
+<link rel="stylesheet" href="/vitrine/portail-unifie.css?v=20261026">
+<link rel="stylesheet" href="/vitrine/tableaux-de-bord.css?v=20261026b">
+<script defer src="/vitrine/tableaux-de-bord.js?v=20261026b"></script></head>
+<body class="sde-unifie sde-tableau" data-dashboard="membre">
+<a class="skip" href="#espace-principal">Aller au contenu personnel</a>
+<header class="sde-dash-header"><div class="sde-dash-header-inner">
+<a href="/" class="sde-dash-logo"><img src="/vitrine/logo-96.png" alt="" width="38" height="38"><span><strong>S.D.E.</strong><small>Le Réveil Spirituel des Nations</small></span></a>
+<nav aria-label="Navigation commune du site"><a href="/">Site public</a><a href="/mon-espace" aria-current="page">Mon espace</a><a href="/administration" class="sde-admin-switch" hidden>Administration</a></nav>
+<button type="button" data-action="deconnexion" class="sde-dash-signout">Déconnexion</button>
+</div></header>
+<div class="sde-dash-shell">
+<aside class="sde-dash-side"><p class="sde-dash-side-caption">Espace personnel</p>
+<nav aria-label="Rubriques personnelles">
+<a href="#accueil" data-view="accueil" aria-current="page">Vue d'ensemble</a>
+<a href="#profil" data-view="profil">Mon profil</a>
+<a href="#presences" data-view="presences">Mes présences</a>
+<a href="#prieres" data-view="prieres">Mes prières</a>
+<a href="#formations" data-view="formations">Mes formations</a>
+<a href="#outils" data-view="outils">Tous mes services</a>
+</nav><div class="sde-dash-side-footer"><span>Un compte, un parcours.</span><a href="/programmes">Programmes publics ↗</a></div></aside>
+<main id="espace-principal" tabindex="-1" class="sde-dash-main">
+<p class="sde-dash-overline">Mon espace • SDE</p>
+<div class="sde-dash-heading"><div><h1 id="sde-heading">Bienvenue dans votre espace.</h1><p id="sde-subtitle">Votre parcours, vos activités et vos informations, au même endroit.</p></div><span class="sde-dash-role" id="sde-role">Membre</span></div>
+<p class="sde-dash-alert" id="sde-status" role="status" aria-live="polite">Chargement de vos informations…</p>
+<section data-section="accueil" aria-label="Vue générale personnelle">
+<div class="sde-dash-metrics">
+<article><span>Mon matricule</span><strong id="m-matricule">—</strong><small>Identifiant de membre</small></article>
+<article><span>Mes présences enregistrées</span><strong id="m-presences">—</strong><small>Dans mon historique</small></article>
+<article><span>Mes requêtes de prière</span><strong id="m-prieres">—</strong><small>Dans mon historique</small></article>
+</div>
+<div class="sde-dash-two">
+<section class="sde-panel"><p class="sde-panel-eyebrow">Votre communauté</p><h2>Avancer ensemble</h2><p>Retrouvez les rendez-vous et la vie du mouvement sans quitter ce site.</p><div class="sde-panel-actions"><a href="/programmes">Consulter les programmes ↗</a><a href="#formations" data-view="formations">Se former avec SDE</a></div></section>
+<section class="sde-panel"><p class="sde-panel-eyebrow">Raccourcis</p><h2>Ce dont j'ai besoin</h2><div class="sde-dash-quick"><a href="#profil" data-view="profil">Mettre à jour mon profil →</a><a href="#prieres" data-view="prieres">Déposer une prière →</a><a href="#presences" data-view="presences">Consulter mes présences →</a></div></section>
+</div></section>
+<section data-section="profil" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Identité et informations</p><h2>Mon profil</h2><dl class="sde-profile"><div><dt>Nom et prénoms</dt><dd id="profil-nom">—</dd></div><div><dt>Matricule</dt><dd id="profil-matricule">—</dd></div><div><dt>E-mail</dt><dd id="profil-email">—</dd></div><div><dt>Statut</dt><dd id="profil-statut">—</dd></div></dl>
+<form id="profil-form" class="sde-dash-form"><label>Téléphone<input name="telephone" type="tel" autocomplete="tel" maxlength="30"></label><label>Quartier<input name="quartier" autocomplete="street-address" maxlength="200"></label><label>Situation familiale<input name="situation" maxlength="200"></label><button type="submit">Enregistrer mes informations</button></form><p class="sde-form-feedback" id="profil-feedback" role="status" aria-live="polite"></p></div></section>
+<section data-section="presences" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Mon parcours</p><h2>Mes présences</h2><p>Seules les présences associées à votre compte sont affichées.</p><ul class="sde-dash-items" id="liste-presences"><li>Chargement…</li></ul></div></section>
+<section data-section="prieres" hidden><div class="sde-dash-two"><div class="sde-panel"><p class="sde-panel-eyebrow">Prière et intercession</p><h2>Déposer une prière</h2><form id="priere-form" class="sde-dash-form"><label>Ma requête<textarea name="sujet" rows="6" maxlength="2000" required placeholder="Écrivez votre sujet de prière…"></textarea></label><button type="submit">Envoyer ma requête</button></form><p class="sde-form-feedback" id="priere-feedback" role="status" aria-live="polite"></p></div><div class="sde-panel"><p class="sde-panel-eyebrow">Historique personnel</p><h2>Mes dernières prières</h2><ul class="sde-dash-items" id="liste-prieres"><li>Chargement…</li></ul></div></div></section>
+<section data-section="formations" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Apprendre • Grandir • Servir</p><h2>Soldiers Academy</h2><p>Accédez aux formations, aux ressources spirituelles et à votre suivi de formation.</p><div class="sde-panel-actions"><a href="/academy">Découvrir l'Academy ↗</a><a href="/mon-espace/outils">Ouvrir mon suivi de formation →</a></div></div></section>
+<section data-section="outils" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Services complémentaires</p><h2>Tous mes services SDE</h2><p>Carte de membre, cotisations, notifications, suivi personnel et autres fonctionnalités existantes dans l'interface complète du mouvement.</p><div class="sde-panel-actions"><a href="/mon-espace/outils">Accéder aux services complets →</a></div><p class="sde-dash-note">Vos données et votre compte restent les mêmes. Vous demeurez sur mouvement-sde.org.</p></div></section>
+</main></div></body></html>
