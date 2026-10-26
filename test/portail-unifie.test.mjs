@@ -84,7 +84,7 @@ test("portail : deux espaces servis uniquement aux rôles autorisés",async()=>{
  for(const role of ["contributeur","admin","proprietaire"]){
   const r=await get("/administration",role);
   assert.equal(r.status,200,role);
-  assert.equal(await r.text(),"/index.html");
+  assert.equal(await r.text(),"/vitrine/tableau-administration.html");
  }
 });
 test("portail : même API sécurisée disponible depuis le domaine public",async()=>{
