@@ -10,7 +10,7 @@
    nav.id="sde-espace-entete";
    nav.setAttribute("aria-label","Navigation du portail SDE");
    nav.innerHTML='<a href="/" class="sde-espace-marque">S.D.E. <small>Site officiel</small></a><a href="/mon-espace">Mon espace</a>';
-   if(location.pathname==="/mon-espace")nav.querySelector('a[href="/mon-espace"]').setAttribute("aria-current","page");
+   if(location.pathname.startsWith("/mon-espace"))nav.querySelector('a[href="/mon-espace"]').setAttribute("aria-current","page");
    document.body.insertBefore(nav,document.body.firstChild);
    const update=async()=>{
      try {
