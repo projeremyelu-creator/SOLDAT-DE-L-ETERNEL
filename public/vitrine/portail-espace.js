@@ -19,7 +19,7 @@
        const user=await r.json();
        if(user.niveau>=1){
          const a=document.createElement("a");a.href="/administration";a.textContent="Administration";
-         if(location.pathname==="/administration")a.setAttribute("aria-current","page");
+         if(location.pathname.startsWith("/administration"))a.setAttribute("aria-current","page");
          nav.append(a);
        }
      }catch(_){}
