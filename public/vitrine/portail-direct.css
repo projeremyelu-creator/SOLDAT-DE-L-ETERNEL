@@ -51,3 +51,10 @@ body.sde-direct{--sde-direct-night:#11182a;--sde-direct-gold:#c8a451}
 @media(max-width:760px){
  .sde-direct .main{padding:16px!important;padding-bottom:60px!important}
 }
+
+/* La barre SDE remplace réellement l'ancien bandeau, mais conserve son action Réglages. */
+.sde-direct .hdr{display:none!important}
+#sde-direct-top .sde-direct-settings{background:transparent;color:#f7f4ed;border:1px solid #6b7691;border-radius:9px;min-height:43px;padding:9px 13px;cursor:pointer;font:800 .86rem "Atkinson Hyperlegible",system-ui,sans-serif}
+#sde-direct-top .sde-direct-settings:hover{background:#293955;color:#edd089}
+#sde-direct-top .sde-direct-settings:focus-visible{outline:3px solid #edd089;outline-offset:3px}
+@media(max-width:760px){#sde-direct-top .sde-direct-settings{min-height:38px;padding:7px;font-size:.77rem}}
