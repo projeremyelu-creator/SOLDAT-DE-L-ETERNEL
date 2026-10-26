@@ -1,0 +1,45 @@
+<!doctype html><html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#11182a">
+<title>Administration | Soldats de l'Éternel</title><link rel="icon" href="/vitrine/logo-96.png">
+<link rel="stylesheet" href="/vitrine/portail-unifie.css?v=20261026">
+<link rel="stylesheet" href="/vitrine/tableaux-de-bord.css?v=20261026b">
+<script defer src="/vitrine/tableaux-de-bord.js?v=20261026b"></script></head>
+<body class="sde-unifie sde-tableau" data-dashboard="administration">
+<a class="skip" href="#espace-principal">Aller au poste de commandement</a>
+<header class="sde-dash-header"><div class="sde-dash-header-inner">
+<a href="/" class="sde-dash-logo"><img src="/vitrine/logo-96.png" alt="" width="38" height="38"><span><strong>S.D.E.</strong><small>Le Réveil Spirituel des Nations</small></span></a>
+<nav aria-label="Navigation commune du site"><a href="/">Site public</a><a href="/mon-espace">Mon espace</a><a href="/administration" aria-current="page">Administration</a></nav>
+<button type="button" data-action="deconnexion" class="sde-dash-signout">Déconnexion</button>
+</div></header>
+<div class="sde-dash-shell">
+<aside class="sde-dash-side"><p class="sde-dash-side-caption">Gouvernance du mouvement</p><nav aria-label="Rubriques d'administration">
+<a href="#accueil" data-view="accueil" aria-current="page">Tableau de bord</a>
+<a href="#membres" data-view="membres">Registre des membres</a>
+<a href="#programmes" data-view="programmes">Agenda et pointages</a>
+<a href="#projets" data-view="projets">Pôles et projets</a>
+<a href="#communication" data-view="communication">Communication</a>
+<a href="#finances" data-view="finances" data-access="admin" hidden>Finances</a>
+<a href="#pastoral" data-view="pastoral" data-access="proprietaire" hidden>Suivi pastoral confidentiel</a>
+<a href="#outils" data-view="outils">Gestion complète</a>
+</nav><div class="sde-dash-side-footer"><span>Rôles et permissions actifs.</span><a href="/">Retour au site public ↗</a></div></aside>
+<main id="espace-principal" tabindex="-1" class="sde-dash-main">
+<p class="sde-dash-overline">Administration • SDE</p><div class="sde-dash-heading"><div><h1 id="sde-heading">Poste de commandement</h1><p id="sde-subtitle">Une vue d'ensemble des activités et de la gouvernance du mouvement.</p></div><span class="sde-dash-role" id="sde-role">Direction</span></div>
+<p class="sde-dash-alert" id="sde-status" role="status" aria-live="polite">Chargement des données autorisées…</p>
+<section data-section="accueil" aria-label="Vue générale d'administration">
+<div class="sde-dash-metrics">
+<article><span>Membres enregistrés</span><strong id="a-membres">—</strong><small>Registre SDE</small></article>
+<article><span>Événements enregistrés</span><strong id="a-evenements">—</strong><small>Dans l'agenda</small></article>
+<article><span>Projets enregistrés</span><strong id="a-projets">—</strong><small>Dans le suivi</small></article>
+<article><span>Annonces enregistrées</span><strong id="a-annonces">—</strong><small>Communication interne</small></article>
+</div>
+<div class="sde-dash-two"><section class="sde-panel"><p class="sde-panel-eyebrow">À organiser</p><h2>Prochains programmes publics</h2><ul class="sde-dash-items" id="liste-agenda"><li>Chargement…</li></ul><div class="sde-panel-actions"><a href="/administration/outils">Gérer l'agenda →</a></div></section><section class="sde-panel"><p class="sde-panel-eyebrow">Accès rapides</p><h2>Gérer le mouvement</h2><div class="sde-dash-quick"><a href="#membres" data-view="membres">Membres et fiches →</a><a href="#programmes" data-view="programmes">Rassemblements →</a><a href="#projets" data-view="projets">Projets et départements →</a><a href="#outils" data-view="outils">Tous les outils →</a></div></section></div>
+</section>
+<section data-section="membres" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Registre central</p><h2>Membres et organisations</h2><p>Gérez les profils, les garnisons, les fonctions, le directoire et les autorisations depuis les outils administratifs du même site.</p><div class="sde-panel-actions"><a href="/administration/outils">Ouvrir le registre →</a></div></div></section>
+<section data-section="programmes" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Rassemblements</p><h2>Agenda et pointages</h2><p>Planifiez les rencontres, gérez les présences et retrouvez les historiques.</p><div class="sde-panel-actions"><a href="/administration/outils">Gérer les rassemblements →</a><a href="/programmes">Voir le programme public ↗</a></div></div></section>
+<section data-section="projets" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Missions et départements</p><h2>Projets du mouvement</h2><p>Retrouvez les pôles, départements, initiatives, projets et rapports.</p><div class="sde-panel-actions"><a href="/administration/outils">Ouvrir la gestion des projets →</a></div></div></section>
+<section data-section="communication" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Mobiliser et informer</p><h2>Communication interne</h2><p>Préparez les annonces, les messages, les diffusions et les notifications du mouvement.</p><div class="sde-panel-actions"><a href="/administration/outils">Accéder à la communication →</a></div></div></section>
+<section data-section="finances" data-access="admin" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Accès autorisé</p><h2>Finances et rapports</h2><p>Gestion des recettes, dépenses, cotisations et validations selon les permissions du compte. Aucune donnée financière n'est transmise aux autres rôles.</p><div class="sde-panel-actions"><a href="/administration/outils">Accéder à la gestion financière →</a></div></div></section>
+<section data-section="pastoral" data-access="proprietaire" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Accès propriétaire uniquement</p><h2>Accompagnement confidentiel</h2><p>Accès réservé au responsable propriétaire. Le suivi pastoral demeure protégé par les contrôles du serveur.</p><div class="sde-panel-actions"><a href="/administration/outils">Ouvrir les dossiers autorisés →</a></div></div></section>
+<section data-section="outils" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Administration complète</p><h2>Outils de direction</h2><p>Registre, finances selon les droits, gouvernance, projets, rapports, école de formation et messagerie : retrouvez les modules complets existants dans le même domaine.</p><div class="sde-panel-actions"><a href="/administration/outils">Ouvrir l'interface de gestion complète →</a></div><p class="sde-dash-note">Même serveur Cloudflare, mêmes données D1, mêmes permissions et mêmes comptes.</p></div></section>
+</main></div></body></html>
