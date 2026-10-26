@@ -426,7 +426,7 @@ async function apiMonHistorique(req, env, u) {
   presences.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
   /* Prières déposées par le membre */
   const prieres = (await lireRequete(env, "prieres")).filter((p) => p.data && p.data.pourId === u.membreId).map((p) => ({ date: p.data.date || "", sujet: (p.data.sujet || "").slice(0, 60), statut: p.data.statut || "" })).sort((a, b) => (b.date || "").localeCompare(a.date || ""));
-  return json({ presences, prieres: prieres.slice(0, 50), resume });
+  return json({ presences, prieres: prieres.slice(0, 50), totalPrieres: prieres.length, resume });
 }
 
 /* ───────── profil modifiable par le membre ───────── */
