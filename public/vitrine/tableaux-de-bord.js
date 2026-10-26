@@ -178,7 +178,7 @@
       configureRoles();
       wireForms();
       window.addEventListener("hashchange",()=>navigate(location.hash.slice(1)));
-      navigate(decodeURIComponent(location.hash.slice(1))||"accueil");
+      navigate(location.hash.slice(1)||"accueil");
       if(mode==="membre")await chargerMembre();
       else await chargerAdmin();
     }catch(e){setStatus(e.message||"Impossible de charger votre espace.","error")}
