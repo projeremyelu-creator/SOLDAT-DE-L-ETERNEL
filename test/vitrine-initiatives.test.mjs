@@ -88,7 +88,7 @@ test("liens dans Plus, accueil, mega menu et sitemap",()=>{
     assert.ok(plus.includes("/vitrine/"+page));
     assert.ok(home.includes("/vitrine/"+page));
     assert.ok(nav.includes("/vitrine/"+page));
-    assert.ok(map.includes("/vitrine/"+page+"</loc>"));
+    assert.ok(map.includes("/"+({prieres:"priere",temoignages:"temoignages","soldiers-voice":"soldiers-voice","missions-humanitaires":"missions-humanitaires"})[page]+"</loc>"));
   }
 });
 test("manifeste public PWA séparé de l'application privée",()=>{
