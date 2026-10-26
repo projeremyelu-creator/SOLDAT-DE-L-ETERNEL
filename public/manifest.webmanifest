@@ -1,13 +1,16 @@
 {
- "name": "MPA SDE",
+ "name": "MPA SDE — Soldats de l'Éternel",
  "short_name": "MPA SDE",
  "lang": "fr",
  "start_url": "/",
  "scope": "/",
  "display": "standalone",
+ "orientation": "any",
  "background_color": "#0f1e3d",
  "theme_color": "#0f1e3d",
- "description": "Gestion du Mouvement Prophético-Apostolique Soldats de l’Éternel",
+ "description": "Gestion du Mouvement Prophético-Apostolique Soldats de l'Éternel — registre, finances, garnisons, académie, prière et communication",
+ "categories": ["productivity", "social"],
+ "dir": "ltr",
  "icons": [
   {
    "src": "/icone-192.png",
@@ -24,6 +27,26 @@
    "sizes": "512x512",
    "type": "image/png",
    "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "Mon espace soldat",
+   "short_name": "Espace",
+   "url": "/#espace",
+   "icons": [{"src": "/icone-192.png", "sizes": "192x192"}]
+  },
+  {
+   "name": "Agenda",
+   "short_name": "Agenda",
+   "url": "/#agenda",
+   "icons": [{"src": "/icone-192.png", "sizes": "192x192"}]
+  },
+  {
+   "name": "Chambre Haute",
+   "short_name": "Prière",
+   "url": "/#chambre",
+   "icons": [{"src": "/icone-192.png", "sizes": "192x192"}]
   }
  ]
 }

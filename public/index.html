@@ -249,7 +249,7 @@
   };
 })();
 </script>
-<script>if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));</script>
+<script>if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("/sw.js").then((r) => { r.addEventListener("updatefound", () => { const nw = r.installing; if (nw) nw.addEventListener("statechange", () => { if (nw.state === "installed" && navigator.serviceWorker.controller) nw.postMessage("skipWaiting"); }); }); }).catch(() => {}));</script>
 
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -335,6 +335,7 @@
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
   <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1.08z"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 4.5-2 6.5-2 6.5h16S18 12.5 18 8z"/><path d="M13.7 18.3a2 2 0 0 1-3.4 0"/></symbol>
 </svg>
 <button id="fab-ia" class="fab-ia" type="button" data-vue="assistant" hidden aria-label="Ouvrir l’assistant Éliézer"><svg class="ico" aria-hidden="true"><use href="#i-spark"/></svg><span>Éliézer</span></button>
 <script>
@@ -544,6 +545,25 @@
     pt: nouveauPointage(null),
   };
   function nouveauPointage(id) { return { id, attente: {}, vol: {}, compteurs: {}, volC: {}, timer: 0, envoi: false, final: false }; }
+
+  /* ───────── Système de notifications (badges non lus) ───────── */
+  const NOTIF_CLE = "sde_notif_vu";
+  function notifVu() { try { return JSON.parse(localStorage.getItem(NOTIF_CLE) || "{}"); } catch (e) { return {}; } }
+  function marquerVu(section) { try { const v = notifVu(); v[section] = Date.now(); localStorage.setItem(NOTIF_CLE, JSON.stringify(v)); } catch (e) { /* quota */ } }
+  function countNonLu(section, items, champDate) {
+    const v = notifVu(); const seuil = v[section] || 0;
+    return items.filter((d) => (d[champDate] || 0) > seuil).length;
+  }
+  function badgesNav() {
+    const b = {}, p = prefsNotif();
+    if (p.annonces && S.pret.annonces) { const n = countNonLu("annonces", S.annonces, "creeLe"); if (n) b.portevoix = n; }
+    if (p.diffusions && S.pret.diffusions && peutEcrire()) { const n = countNonLu("diffusions", S.diffusions, "creeLe"); if (n) b.portevoix = (b.portevoix || 0) + n; }
+    if (p.prieres && S.pret.prieres) { const n = countNonLu("prieres", S.prieres.filter((q) => (q.statut || "En prière") === "En prière"), "creeLe"); if (n) b.chambre = n; }
+    return b;
+  }
+  const PREFS_NOTIF_CLE = "sde_prefs_notif";
+  function prefsNotif() { try { return JSON.parse(localStorage.getItem(PREFS_NOTIF_CLE) || '{"annonces":true,"diffusions":true,"prieres":true,"rappels":true}'); } catch (e) { return { annonces: true, diffusions: true, prieres: true, rappels: true }; } }
+  function sauverPrefsNotif(p) { try { localStorage.setItem(PREFS_NOTIF_CLE, JSON.stringify(p)); } catch (e) { /* quota */ } }
 
   function cfg() {
     const d = S.cfgDoc || {};
@@ -903,7 +923,8 @@
     const prim = vis.filter(estPrim);
     const autres = vis.filter((o) => !estPrim(o));
     const compact = prim.length + autres.length > 5;
-    const b = (o, x) => `<button class="nav-btn${x ? " nav-x" : ""}${o.id === S.vue ? " on" : ""}" type="button" data-vue="${o.id}"${o.id === S.vue ? ' aria-current="page"' : ""}>${I(o.ico)}<span class="l-short">${o.court}</span><span class="l-long">${o.long}</span></button>`;
+    const badges = badgesNav();
+    const b = (o, x) => { const dot = badges[o.id] ? `<span class="notif-dot" aria-label="${badges[o.id]} nouveau(x)"></span>` : ""; return `<button class="nav-btn${x ? " nav-x" : ""}${o.id === S.vue ? " on" : ""}" type="button" data-vue="${o.id}"${o.id === S.vue ? ' aria-current="page"' : ""}><span class="badge">${I(o.ico)}${dot}</span><span class="l-short">${o.court}</span><span class="l-long">${o.long}</span></button>`; };
     const plusOn = S.vue === "plus" || autres.some((o) => o.id === S.vue);
     const html = prim.map((o) => b(o, false)).join("") + (autres.length ? `<span class="nav-sep${compact ? " nav-x" : ""}" aria-hidden="true">Modules</span>` : "") + autres.map((o) => b(o, compact)).join("")
       + (compact ? `<button class="nav-btn nav-plus${plusOn ? " on" : ""}" type="button" data-vue="plus"${S.vue === "plus" ? ' aria-current="page"' : ""}>${I("i-grid")}<span class="l-short">Plus</span><span class="l-long">Tous les modules</span></button>` : "");
@@ -937,6 +958,8 @@
     S.limite = 80;
     try { localStorage.setItem("sde-vue", v); } catch (e) { /* stockage indisponible */ }
     if (v === "finances") abonnerMois(S.mois);
+    if (v === "portevoix") { marquerVu("annonces"); marquerVu("diffusions"); }
+    if (v === "chambre") marquerVu("prieres");
     render();
     if (change) { window.scrollTo({ top: 0, behavior: "instant" }); $("#main").focus({ preventScroll: true }); }
   }
@@ -8135,11 +8158,28 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
       } });
   }
 
+  /* — Préférences de notification — */
+  function ouvrirPrefsNotif() {
+    const p = prefsNotif();
+    const html = `<form class="form" id="f-prefs-notif" novalidate>
+      <p class="hint">Choisissez les catégories pour lesquelles un indicateur apparaît dans la navigation lorsqu'il y a du nouveau.</p>
+      <label class="check"><input type="checkbox" name="annonces" value="1"${p.annonces ? " checked" : ""}> Nouvelles annonces (Porte-Voix)</label>
+      <label class="check"><input type="checkbox" name="diffusions" value="1"${p.diffusions ? " checked" : ""}> Nouveaux messages ciblés</label>
+      <label class="check"><input type="checkbox" name="prieres" value="1"${p.prieres ? " checked" : ""}> Nouvelles requêtes de prière</label>
+      <label class="check"><input type="checkbox" name="rappels" value="1"${p.rappels ? " checked" : ""}> Rappels du jour</label>
+      <div class="sheet-f"><button class="btn btn-primary" type="submit">${I("i-check")}Enregistrer</button> <button class="btn btn-ghost" type="button" data-act="tout-lu">Tout marquer comme lu</button></div>
+    </form>`;
+    ouvrir({ titre: "Préférences de notification", html, onSubmit: (fd) => {
+      sauverPrefsNotif({ annonces: fd.get("annonces") === "1", diffusions: fd.get("diffusions") === "1", prieres: fd.get("prieres") === "1", rappels: fd.get("rappels") === "1" });
+      fermer(); toast("Préférences enregistrées"); render();
+    } });
+  }
+
   /* — Mon compte — */
   function blocCompteH() {
     const m = moiH();
     if (!m.connecte) return `<section class="card compte-h"><h2 class="h3">Mon compte</h2><p class="hint">Créez votre compte avec votre adresse e-mail : vous recevez aussitôt votre matricule, votre carte de membre et votre espace soldat.</p><div class="btn-row">${btn("inscription", "Créer mon compte", { ico: "i-plus", cls: "btn-primary" })}${btn("connexion", "Se connecter", { ico: "i-lock" })}</div></section>`;
-    return `<section class="card compte-h"><h2 class="h3">Mon compte</h2><p style="margin:0"><b>${esc(m.nom || m.email)}</b></p><p class="hint" style="margin:2px 0 10px">${esc(m.email)} · ${esc(LIB_ROLE_H[m.role] || m.libRole || "")}${m.matricule ? ` · matricule <b class="num">${esc(m.matricule)}</b>` : ""}</p>${m.role === "attente" ? `<p class="note warn">Votre compte attend qu’un administrateur vous attribue un rôle.</p>` : ""}<div class="btn-row">${m.membreId ? btn("aller-espace", "Mon espace soldat", { ico: "i-card", sm: true, cls: "btn-primary" }) : ""}${m.niveau >= 2 ? btn("comptes", "Comptes et accès", { ico: "i-users", sm: true }) : ""}${btn("mot-de-passe", "Changer mon mot de passe", { ico: "i-lock", sm: true })}${btn("deconnexion", "Se déconnecter", { sm: true })}</div></section>`;
+    return `<section class="card compte-h"><h2 class="h3">Mon compte</h2><p style="margin:0"><b>${esc(m.nom || m.email)}</b></p><p class="hint" style="margin:2px 0 10px">${esc(m.email)} · ${esc(LIB_ROLE_H[m.role] || m.libRole || "")}${m.matricule ? ` · matricule <b class="num">${esc(m.matricule)}</b>` : ""}</p>${m.role === "attente" ? `<p class="note warn">Votre compte attend qu’un administrateur vous attribue un rôle.</p>` : ""}<div class="btn-row">${m.membreId ? btn("aller-espace", "Mon espace soldat", { ico: "i-card", sm: true, cls: "btn-primary" }) : ""}${m.niveau >= 2 ? btn("comptes", "Comptes et accès", { ico: "i-users", sm: true }) : ""}${btn("prefs-notif", "Notifications", { ico: "i-bell", sm: true })}${btn("mot-de-passe", "Changer mon mot de passe", { ico: "i-lock", sm: true })}${btn("deconnexion", "Se déconnecter", { sm: true })}</div></section>`;
   }
   (function boutonCompteH() {
     const ref = document.getElementById("btn-reglages");
@@ -8308,6 +8348,8 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     "sauv-maintenant": async (t) => { t.disabled = true; try { const r = await fetch("/api/sauvegardes", { method: "POST", credentials: "same-origin" }); if (!r.ok) throw new Error(); toast("Sauvegarde faite"); } catch (e) { toast("La sauvegarde a échoué.", "err"); } await chargerComptes(); },
     "cpt-code-ok": () => { CPT.code = null; dernier.sheet = null; render(); },
     "compte-suppr": (t) => boutonArme(t, "Confirmer le retrait", () => majCompteH({ email: t.dataset.email, supprimer: true }, "Accès retiré")),
+    "prefs-notif": () => ouvrirPrefsNotif(),
+    "tout-lu": () => { marquerVu("annonces"); marquerVu("diffusions"); marquerVu("prieres"); fermer(); toast("Tout marqué comme lu"); render(); },
   });
   /* Liens directs depuis le site vitrine : #connexion et #inscription ouvrent la feuille de connexion */
   if (/^#(connexion|inscription)$/.test(location.hash)) {

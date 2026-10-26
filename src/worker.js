@@ -107,6 +107,15 @@ function compter(env, cle) {
 const effacer = (env, cle) => env.DB.prepare("DELETE FROM tentatives WHERE cle = ?").bind(cle).run();
 const ipDe = (req) => req.headers.get("cf-connecting-ip") || "local";
 
+/* Rate-limit global : 120 requêtes API par IP / 15 min */
+const RATE_API_MAX = 120;
+async function rateLimitGlobal(env, ip) {
+  const cle = "api:" + ip;
+  if (await bloque(env, cle, RATE_API_MAX)) return true;
+  await compter(env, cle);
+  return false;
+}
+
 async function ouvrirSession(env, email) {
   const jeton = jetonAleatoire(), t = Date.now();
   await env.DB.batch([
@@ -1114,17 +1123,54 @@ function securiser(r) {
   n.headers.set("x-content-type-options", "nosniff");
   n.headers.set("referrer-policy", "strict-origin-when-cross-origin");
   n.headers.set("x-frame-options", "DENY");
-  n.headers.set("strict-transport-security", "max-age=31536000");
-  n.headers.set("permissions-policy", "geolocation=(self), camera=(self), microphone=()");
+  n.headers.set("strict-transport-security", "max-age=63072000; includeSubDomains; preload");
+  n.headers.set("permissions-policy", "geolocation=(self), camera=(self), microphone=(), payment=(), usb=()");
+  n.headers.set("x-xss-protection", "1; mode=block");
   return n;
+}
+
+/* ───────── Migration automatique de la base de données ───────── */
+const SCHEMA_VERSION = 2;
+const MIGRATIONS = {
+  2: [
+    "CREATE TABLE IF NOT EXISTS meta (cle TEXT PRIMARY KEY, val TEXT)",
+    "CREATE INDEX IF NOT EXISTS docs_id ON docs(id)",
+    "CREATE INDEX IF NOT EXISTS sessions_expire ON sessions(expire)",
+    "CREATE INDEX IF NOT EXISTS ia_conso_cle ON ia_conso(cle)",
+  ],
+};
+async function migrer(env) {
+  try {
+    await env.DB.prepare("CREATE TABLE IF NOT EXISTS meta (cle TEXT PRIMARY KEY, val TEXT)").run();
+    const row = await env.DB.prepare("SELECT val FROM meta WHERE cle = 'schema_version'").first();
+    let cur = row ? Number(row.val) : 1;
+    while (cur < SCHEMA_VERSION) {
+      cur += 1;
+      const stmts = MIGRATIONS[cur];
+      if (stmts) for (const sql of stmts) await env.DB.prepare(sql).run();
+      await env.DB.prepare("INSERT OR REPLACE INTO meta (cle, val) VALUES ('schema_version', ?)").bind(String(cur)).run();
+    }
+  } catch (e) { /* migration non bloquante */ }
+}
+let migrationFaite = false;
+
+/* Nettoyage des sessions expirées */
+async function nettoyerSessions(env) {
+  try { await env.DB.prepare("DELETE FROM sessions WHERE expire < ?").bind(Date.now()).run(); } catch (e) { /* non bloquant */ }
+}
+
+/* Nettoyage des anciennes tentatives de rate-limit (> 1 heure) */
+async function nettoyerTentatives(env) {
+  try { await env.DB.prepare("DELETE FROM tentatives WHERE depuis < ?").bind(Date.now() - 3600000).run(); } catch (e) { /* non bloquant */ }
 }
 
 export default {
   async scheduled(ev, env, ctx) {
-    if (ev.cron === "0 2 * * *") ctx.waitUntil(Promise.all([sauvegarder(env), nettoyerMedias(env), syncEspacesMembres(env)]));
+    if (ev.cron === "0 2 * * *") ctx.waitUntil(Promise.all([sauvegarder(env), nettoyerMedias(env), syncEspacesMembres(env), nettoyerSessions(env), nettoyerTentatives(env)]));
     ctx.waitUntil(flushNotices(env));
   },
   async fetch(req, env, ctx) {
+    if (!migrationFaite) { migrationFaite = true; try { await migrer(env); } catch (e) { /* non bloquant */ } }
     return securiser(await traiter(req, env, ctx));
   },
 };
@@ -1170,10 +1216,14 @@ async function traiter(req, env, ctx) {
       return r;
     }
     if (!p.startsWith("/api/")) return env.ASSETS.fetch(req);
+    if (p === "/api/sante") return json({ ok: true, version: "2.0.0", ts: Date.now() });
     if (req.method !== "GET") {
       const origine = req.headers.get("origin");
       if (origine && origine !== url.origin) return erreur("refuse", "Origine refusée.", 403);
     }
+    /* Rate-limit global par IP */
+    const ipGlobal = ipDe(req);
+    if (await rateLimitGlobal(env, ipGlobal)) return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
     if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
     if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
     if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);

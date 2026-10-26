@@ -13,3 +13,7 @@ CREATE TABLE IF NOT EXISTS media_morceaux (id TEXT NOT NULL, n INTEGER NOT NULL,
 CREATE TABLE IF NOT EXISTS push_subs (userId TEXT NOT NULL, endpoint TEXT NOT NULL, p256dh TEXT, auth TEXT, cree INTEGER, PRIMARY KEY (userId, endpoint));
 CREATE TABLE IF NOT EXISTS engagements (id INTEGER PRIMARY KEY AUTOINCREMENT, cree INTEGER NOT NULL, objet TEXT, pole TEXT, source TEXT, nom TEXT NOT NULL, tel TEXT, email TEXT, ville TEXT, message TEXT, traite INTEGER NOT NULL DEFAULT 0, note TEXT);
 CREATE INDEX IF NOT EXISTS engagements_cree ON engagements(traite, cree);
+CREATE TABLE IF NOT EXISTS meta (cle TEXT PRIMARY KEY, val TEXT);
+CREATE INDEX IF NOT EXISTS docs_id ON docs(id);
+CREATE INDEX IF NOT EXISTS sessions_expire ON sessions(expire);
+CREATE INDEX IF NOT EXISTS ia_conso_cle ON ia_conso(cle);

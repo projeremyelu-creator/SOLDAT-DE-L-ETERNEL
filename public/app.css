@@ -137,6 +137,8 @@ svg { flex: none; }
 .nav-btn.on { color: var(--ink); background: var(--surface-2); }
 .nav-btn.on .ico { color: var(--gold-mark); }
 .nav-btn .badge { position: relative; }
+.nav-btn .notif-dot { position: absolute; top: 0; right: -4px; width: 8px; height: 8px; border-radius: 50%; background: var(--danger, #d33); border: 2px solid var(--surface); pointer-events: none; }
+@media (min-width: 1000px) { .nav-btn .notif-dot { top: 12px; right: auto; left: 28px; } }
 .l-long { display: none; }
 @media (min-width: 1000px) {
   .shell { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 8px; }
