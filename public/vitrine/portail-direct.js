@@ -17,6 +17,13 @@
     arsenal:"Enseignements",mediatheque:"Médiathèque",assistant:"Assistant Éliézer"
   };
   const personnel=new Set(["espace","agenda","academie","portevoix","arsenal","mediatheque"]);
+  const groupes=[
+    {titre:"Mon tableau de bord",ids:["accueil","espace"]},
+    {titre:"Membres et activités",ids:["membres","agenda","garnisons","projets","secretariat"]},
+    {titre:"Formation et vie spirituelle",ids:["academie","chambre","arsenal","mediatheque"]},
+    {titre:"Communication",ids:["portevoix","assistant"]},
+    {titre:"Gestion financière",ids:["finances"]}
+  ];
   const url=new URL(location.href);
   const demandé=url.searchParams.get("module")||"";
   const souhait=Object.prototype.hasOwnProperty.call(catalogue,demandé)?demandé:
@@ -24,6 +31,8 @@
   const body=document.body;
   body.classList.add("sde-direct",mode==="membre"?"sde-direct-member":"sde-direct-admin");
   let compte=null,initial=false,signature="",navCourant="";
+  const titrePage=mode==="membre"?"Mon espace personnel":"Poste de commandement";
+  document.title=titrePage+" | Soldats de l'Éternel";
   const element=(tag,classe,contenu)=>{
     const node=document.createElement(tag);
     if(classe)node.className=classe;
@@ -63,50 +72,86 @@
     const role=element("span","sde-direct-access",mode==="membre"?"Tableau personnel":"Poste de commandement");
     head.append(role);
     const tabs=element("nav");tabs.id="sde-direct-tabs";tabs.setAttribute("aria-label","Rubriques de l'espace privé");
-    header.append(head,tabs);
+    header.append(head);
     body.insertBefore(header,body.firstChild);
     const original=document.getElementById("nav");
-    if(!original)return;
+    const shell=document.querySelector(".shell");
+    if(!original||!shell)return;
+
+    // Le tableau de bord ET le contenu natif restent sur la même page.
+    const workspace=element("div","sde-direct-workspace");
+    const sidebar=element("aside","sde-direct-aside");
+    sidebar.id="sde-direct-aside";
+    sidebar.setAttribute("aria-label","Menu des rubriques privées");
+    sidebar.dataset.collapsed="false";
+    const sidenavHead=element("div","sde-direct-aside-head");
+    const heading=element("h2","sde-direct-aside-heading",titrePage);
+    const note=element("p","sde-direct-aside-intro","Choisissez une rubrique : son contenu s'affiche ici.");
+    const menuToggle=element("button","sde-direct-menu-toggle","Masquer les rubriques");
+    menuToggle.type="button";menuToggle.setAttribute("aria-controls","sde-direct-tabs");menuToggle.setAttribute("aria-expanded","true");
+    menuToggle.addEventListener("click",()=>{
+      const collapsed=sidebar.dataset.collapsed!=="true";
+      sidebar.dataset.collapsed=String(collapsed);
+      menuToggle.setAttribute("aria-expanded",String(!collapsed));
+      menuToggle.textContent=collapsed?"Afficher toutes les rubriques":"Masquer les rubriques";
+    });
+    sidenavHead.append(heading,note,menuToggle);
+    sidebar.append(sidenavHead,tabs);
+    shell.before(workspace);workspace.append(sidebar,shell);
 
     const sync=()=>{
       if(!compte)return;
       const buttons=[...original.querySelectorAll('button[data-vue]')];
       const disponibles=buttons.filter(b=>allowed(b.dataset.vue)&&!b.disabled);
       const next=disponibles.map(b=>b.dataset.vue).join("|");
-      if(next!==signature){
+      const rebuilt=next!==signature;
+      if(rebuilt){
         signature=next;tabs.replaceChildren();
-        for(const b of disponibles){
-          const nom=b.dataset.vue;
-          const item=element("button","sde-direct-tab",catalogue[nom]);
-          item.type="button";item.dataset.module=nom;
-          item.addEventListener("click",()=>{
-            const target=original.querySelector('button[data-vue="'+nom+'"]');
-            if(!target||target.disabled)return;
-            // Le contenu se met à jour dans #main par le routeur natif, sans navigation HTTP.
-            target.click();
-            const nextUrl=new URL(location.href);
-            nextUrl.searchParams.set("module",nom);
-            if(nextUrl.hash)nextUrl.hash="";
-            history.replaceState(null,"",nextUrl.pathname+nextUrl.search);
-          });
-          tabs.append(item);
+        for(const groupe of groupes){
+          const compatibles=disponibles.filter(b=>groupe.ids.includes(b.dataset.vue));
+          if(!compatibles.length)continue;
+          const section=element("div","sde-direct-group");
+          section.append(element("h3","sde-direct-group-title",groupe.titre));
+          for(const b of compatibles){
+            const nom=b.dataset.vue;
+            const item=element("button","sde-direct-tab",catalogue[nom]);
+            item.type="button";item.dataset.module=nom;
+            item.addEventListener("click",()=>{
+              const target=original.querySelector('button[data-vue="'+nom+'"]');
+              if(!target||target.disabled)return;
+              // Une seule action : le routeur natif remplace #main sur place.
+              target.click();
+              const nextUrl=new URL(location.href);
+              nextUrl.searchParams.set("module",nom);
+              if(nextUrl.hash)nextUrl.hash="";
+              history.replaceState(null,"",nextUrl.pathname+nextUrl.search);
+              if(window.matchMedia?.("(max-width:760px)").matches){
+                sidebar.dataset.collapsed="true";
+                menuToggle.setAttribute("aria-expanded","false");
+                menuToggle.textContent="Afficher toutes les rubriques";
+                document.getElementById("main")?.focus({preventScroll:true});
+              }
+            });
+            section.append(item);
+          }
+          tabs.append(section);
         }
       }
       const courant=buttons.find(b=>b.getAttribute("aria-current")==="page"||b.classList.contains("on"))?.dataset.vue||"";
-      if(courant!==navCourant||next!==signature){
+      if(courant!==navCourant||rebuilt){
         navCourant=courant;
         for(const b of tabs.querySelectorAll("button")){
           if(b.dataset.module===courant)b.setAttribute("aria-current","page");
           else b.removeAttribute("aria-current");
         }
       }
-      if(!initial){
-        const cible=disponibles.find(b=>b.dataset.vue===souhait);
-        if(cible){
-          initial=true;
-          // Évite une étape "tous les outils" : le module demandé devient la vue courante.
-          if(!cible.classList.contains("on")&&cible.getAttribute("aria-current")!=="page")cible.click();
-        }
+      if(!initial&&disponibles.length){
+        const cible=disponibles.find(b=>b.dataset.vue===souhait)||
+          disponibles.find(b=>b.dataset.vue===(mode==="membre"?"espace":"accueil"))||
+          disponibles[0];
+        initial=true;
+        // Si le lien demandé n'est pas autorisé, rester dans le tableau natif adapté.
+        if(!cible.classList.contains("on")&&cible.getAttribute("aria-current")!=="page")cible.click();
       }
     };
     const monitor=new MutationObserver(sync);
