@@ -24,13 +24,13 @@
     }
     const site = "https://mouvement-sde.org/";
     const app = "https://app.mouvement-sde.org/#connexion";
-    const finances = "https://app.mouvement-sde.org/#finances";
+    const prieres = site + "vitrine/prieres";
     const hashUrl = (id) => (home ? "#" : site + "#") + id;
     const pictos = {
       maison: '<path d="M3 10 12 3l9 7v11h-6v-7H9v7H3z"/>',
       membres: '<circle cx="9" cy="8" r="3"/><path d="M2.5 20c.6-3.6 3-5 6.5-5s5.9 1.4 6.5 5M16 5a3 3 0 0 1 0 6M18 14c2 1 3 3 3.5 6"/>',
       agenda: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/>',
-      finances: '<rect x="3" y="6" width="18" height="15" rx="2"/><path d="M3 10h18M16 16h2"/>',
+      priere: '<path d="M12 21s-8-4.8-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.2-8 11-8 11z"/>',
       plus: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
       globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
       user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'
@@ -40,7 +40,7 @@
       ["Accueil",site,"maison","accueil"],
       ["Membres",site+"vitrine/rejoindre#membres","membres","membres"],
       ["Agenda",site+"vitrine/programmes#agenda","agenda","agenda"],
-      ["Finances",finances,"finances","finances"],
+      ["Prière",prieres,"priere","priere"],
       ["Plus",site+"vitrine/plus","plus","plus"]
     ];
     let nav = document.querySelector(".nav-mobile");
@@ -73,9 +73,10 @@
       const h = window.location.hash.substring(1);
       const inAgenda = ["agenda","programmes","infire"].includes(h);
       const inMembres = ["membres","rejoindre"].includes(h);
+      const inPriere = ["priere","prieres","intercession"].includes(h);
       const inPlus = ["parcours-sde","mouvement","histoire","poles","ressources","galerie","projets","faq","responsables","soutenir","presence","chiffres","axes","engagement"].includes(h);
-      const key = !home ? (page === "programmes" ? "agenda" : page === "rejoindre" ? "membres" : "plus") :
-        (inAgenda ? "agenda" : inMembres ? "membres" : inPlus ? "plus" : "accueil");
+      const key = !home ? (page === "programmes" ? "agenda" : page === "rejoindre" ? "membres" : page === "prieres" ? "priere" : "plus") :
+        (inAgenda ? "agenda" : inMembres ? "membres" : inPriere ? "priere" : inPlus ? "plus" : "accueil");
       nav.querySelectorAll("a[data-sde-tab]").forEach((a) => {
         const selected = a.dataset.sdeTab === key;
         a.classList.toggle("sde-current", selected);
@@ -97,7 +98,7 @@
     window.addEventListener("popstate", active);
     // L'onglet actif suit aussi le défilement des sections, sans modifier l'historique.
     if (home) {
-      const categories = { "accueil": "accueil", "infire": "agenda", "agenda": "agenda", "programmes": "agenda", "rejoindre": "membres", "membres": "membres" };
+      const categories = { "accueil": "accueil", "infire": "agenda", "agenda": "agenda", "programmes": "agenda", "rejoindre": "membres", "membres": "membres", "prieres": "priere" };
       const sections = [...document.querySelectorAll("main section[id]")];
       let scheduled = false;
       const onScroll = () => {
