@@ -109,7 +109,7 @@ test("navigation desktop : barre fixe également présente sur l'accueil", () =>
 test("référencement : Academy indexable, interface admin exclue", () => {
   const xml = readFileSync("public/sitemap.xml","utf8");
   const admin = readFileSync("public/vitrine/engagements.html","utf8");
-  assert.ok(xml.includes("https://mouvement-sde.org/vitrine/academy"));
+  assert.ok(xml.includes("https://mouvement-sde.org/academy"));
   assert.ok(!xml.includes("engagements"));
   assert.ok(admin.includes('name="robots" content="noindex, nofollow"'));
 });
