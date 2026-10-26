@@ -1,6 +1,6 @@
 /* Service Worker — Soldats de l'Éternel
    Cache les pages publiques. Ne met jamais en cache les données pastorales ou personnelles. */
-const CACHE = "sde-v9";
+const CACHE = "sde-v10";
 const PRECACHE = ["/", "/vitrine/", "/manifest.webmanifest", "/offline.html", "/icone-192.png", "/icone-512.png", "/app.css"];
 
 self.addEventListener("install", (e) => {
@@ -15,7 +15,7 @@ self.addEventListener("fetch", (e) => {
   const u = new URL(e.request.url);
   if (e.request.method !== "GET" || u.origin !== location.origin) return;
   // Ne jamais mettre en cache les API, les sessions, les fichiers privés, les médias
-  if (u.pathname.startsWith("/api/") || u.pathname.startsWith("/_blob/") || u.pathname.startsWith("/m/")) return;
+  if (u.pathname === "/os-v31" || u.pathname.startsWith("/os-v31/") || u.pathname.startsWith("/api/") || u.pathname.startsWith("/_blob/") || u.pathname.startsWith("/m/")) return;
 
   if (e.request.mode === "navigate") {
     e.respondWith(

@@ -5,6 +5,22 @@
   const app="https://app.mouvement-sde.org/";
   const start=()=>{
     const isPrivate=location.hostname==="app.mouvement-sde.org";
+    // Destination interne fixe : aucune redirection vers une URL fournie librement.
+    const retour=new URLSearchParams(location.search).get("retour");
+    if(isPrivate && /^\/os-v31\/#(tableau|integral|fractures|gouvernance|academy|poles)$/.test(retour||"")){
+      let checking=false;
+      const resume=async()=>{
+        if(checking||document.hidden)return;
+        checking=true;
+        try{
+          const r=await fetch("/api/moi",{credentials:"same-origin",cache:"no-store"});
+          if(r.ok&&(await r.json()).connecte){clearInterval(timer);location.replace(retour);}
+        }catch(_){ /* réessayer après connexion */ }
+        finally{checking=false;}
+      };
+      const timer=setInterval(resume,2000);resume();
+      window.addEventListener("pagehide",()=>clearInterval(timer),{once:true});
+    }
     if(isPrivate){
       const link=document.querySelector(".hdr-site");
       if(link&&!link.querySelector(".sde-public-label")){
@@ -19,7 +35,8 @@
         nav.className="sde-private-links";
         nav.setAttribute("aria-label","Accès aux rubriques publiques SDE");
         nav.innerHTML=
-          '<a href="'+app+'os/">SDE OS v3.1</a>'+
+          '<a href="https://app.mouvement-sde.org/os-v31/">SDE OS v3.1</a>'+
+          '<a href="'+app+'os/">Parcours SDE OS existant</a>'+
           '<a href="'+site+'">Portail SDE</a>'+
           '<a href="'+site+'vitrine/programmes">Programmes publics</a>'+
           '<a href="'+site+'vitrine/prieres">Prières</a>'+

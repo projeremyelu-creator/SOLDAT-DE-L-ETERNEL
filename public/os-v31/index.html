@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr" data-theme="light"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101a33"><meta name="robots" content="noindex,nofollow">
+<meta name="description" content="SDE OS v3.1 — Poste de pilotage privé Soldat De l'Éternel.">
+<title>SDE OS v3.1 | Soldat De l'Éternel</title>
+<link rel="icon" href="/icone-192.png"><link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;500;600;700;800&family=Saira+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/os-v31/sde-os.css?v=31a">
+<script defer src="/os-v31/sde-os.js?v=31a"></script>
+</head>
+<body data-presentation="institutionnel">
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="app-header">
+  <div class="header-brand"><a href="https://mouvement-sde.org/" aria-label="SDE — site institutionnel"><span class="brand-mark">S<span>✦</span></span><span class="brand-word">SDE <small>OS v3.1</small><i>Le Réveil Spirituel des Nations</i></span></a></div>
+  <nav class="header-links" aria-label="Méga-menu de l'application">
+    <a href="#tableau" data-route="tableau">Poste de commandement</a>
+    <div class="nav-group"><button type="button" class="nav-pop" aria-expanded="false">Soldat Intégral <span>⌄</span></button>
+      <div class="nav-flyout"><a href="#integral" data-route="integral">Mon équilibre</a><a href="#fractures" data-route="fractures">Fractures et préjugés</a></div></div>
+    <div class="nav-group"><button type="button" class="nav-pop" aria-expanded="false">Gouvernance <span>⌄</span></button>
+      <div class="nav-flyout"><a href="#gouvernance" data-route="gouvernance">Directoire et 4 Yeux</a><a href="#poles" data-route="poles">Pôles 1 à 5</a></div></div>
+    <a href="#academy" data-route="academy">Soldiers Academy</a>
+  </nav>
+  <div class="header-actions">
+    <a class="cross-link" href="https://app.mouvement-sde.org/" aria-label="Retour à la gestion SDE"><span aria-hidden="true">↗</span> Gestion SDE</a>
+    <button id="command-open" class="icon-button" type="button" aria-label="Ouvrir le menu plein écran" title="Navigation immersive">☷</button>
+    <button id="theme-toggle" class="icon-button" type="button" aria-label="Changer le thème" title="Thème clair ou sombre">◐</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" aria-label="Menu latéral rétractable"><div class="sidebar-top"><span class="sidetag">APPLICATION PRIVÉE</span><button type="button" id="side-collapse" aria-label="Réduire le menu latéral">⇤</button></div>
+    <nav class="side-links" aria-label="Navigation latérale">
+      <a href="#tableau" data-route="tableau"><span>⌂</span><b>Vue d'ensemble</b></a>
+      <a href="#integral" data-route="integral"><span>◉</span><b>Soldat Intégral</b></a>
+      <a href="#fractures" data-route="fractures"><span>⌁</span><b>Fractures & préjugés</b></a>
+      <a href="#gouvernance" data-route="gouvernance"><span>⚖</span><b>Directoire Général</b></a>
+      <a href="#academy" data-route="academy"><span>◈</span><b>Soldiers Academy</b></a>
+      <a href="#poles" data-route="poles"><span>▦</span><b>Pôles et départements</b></a>
+    </nav>
+    <div class="sidebar-verse"><span>VISION SDE</span><p>Réveiller · Restaurer · Former · Équiper · Envoyer</p><small>Soldier House · Octobre 2026</small></div>
+    <a class="sidebar-home" href="https://mouvement-sde.org/">← Retour au site public</a>
+  </aside>
+  <main id="contenu" class="workspace" tabindex="-1">
+    <div id="session-state" role="status" aria-live="polite" class="session-state">Connexion à votre espace SDE…</div>
+    <div id="workspace-content" hidden>
+      <div class="workspace-heading"><div><span class="eyebrow">SDE OS <strong>3.1</strong> / ARCHITECTURE ULTRA-HYBRIDE</span><h1 id="view-title">Poste de commandement</h1><p id="view-subtitle">Une vision, cinq pôles, un Soldat Intégral.</p></div>
+      <div class="identity"><span class="identity-dot" aria-hidden="true"></span><div><b id="identity-name">Espace membre</b><small id="identity-role">Session sécurisée</small></div></div></div>
+      <section class="presentation-switcher" aria-label="Choisir un paradigme visuel"><span>PRÉSENTATION</span><div class="view-pills" role="group" aria-label="Quatre paradigmes visuels">
+        <button data-presentation-value="institutionnel" class="selected" type="button" aria-pressed="true">Institutionnel</button>
+        <button data-presentation-value="bento" type="button" aria-pressed="false">Bento Grid</button>
+        <button data-presentation-value="analytique" type="button" aria-pressed="false">Analytique</button>
+        <button data-presentation-value="immersif" type="button" aria-pressed="false">Immersif</button></div></section>
+
+      <section class="workspace-view active" id="view-tableau" aria-labelledby="dashboard-label">
+        <div class="hero"><div class="hero-copy"><span class="eyebrow light">POSTE DE COMMANDEMENT · SDE OS 3.1</span><h2 id="dashboard-label">Équiper chaque vie.<br><em>Servir les nations.</em></h2><p>Une expérience numérique enracinée dans la vision, le développement intégral et la redevabilité du Mouvement Soldat De l'Éternel.</p><div class="hero-actions"><button type="button" data-route="integral" class="primary-button">Mon bilan intégral ↗</button><button type="button" data-route="academy" class="outline-button">Soldiers Academy</button></div></div><div class="hero-seal" aria-hidden="true"><span>SDE</span><strong>LE RÉVEIL<br>SPIRITUEL<br>DES NATIONS</strong><small>ÉDITION SOLDIER HOUSE</small></div></div>
+        <div class="overview-grid" id="kpi-grid"><article class="stat-card"><span>Auto-évaluations personnelles</span><strong id="stat-checkins">—</strong><small>Enregistrées dans votre espace</small></article><article class="stat-card"><span>Mon parcours Academy</span><strong id="stat-school">—</strong><small>Écoles pour lesquelles vous avez manifesté un intérêt</small></article><article class="stat-card admin-stat" hidden><span>Décisions en attente</span><strong id="stat-pending">—</strong><small>Validation collégiale à examiner</small></article><article class="stat-card"><span>Architecture SDE</span><strong>5 <small>pôles</small></strong><small>Structure institutionnelle du mouvement</small></article></div>
+        <div class="section-head"><div><span class="eyebrow">ACCÈS IMMÉDIAT</span><h2>Votre écosystème SDE</h2></div><button id="bento-menu-open" class="quiet-button" type="button">Explorer les modules ↗</button></div>
+        <div class="bento-nav" aria-label="Navigation par cartes Bento">
+          <button data-route="integral" class="bento-card bento-large" type="button"><span class="big-icon">◎</span><span class="bento-text"><b>Soldat Intégral</b><small>Sept dimensions institutionnelles et suivi volontaire</small></span><span>↗</span></button>
+          <button data-route="fractures" class="bento-card" type="button"><span class="big-icon">⌁</span><span class="bento-text"><b>Fractures & préjugés</b><small>Tendances collectives anonymisées</small></span><span>↗</span></button>
+          <button data-route="gouvernance" class="bento-card" type="button"><span class="big-icon">⚖</span><span class="bento-text"><b>Directoire Général</b><small>Règle des 4 Yeux</small></span><span>↗</span></button>
+          <button data-route="academy" class="bento-card" type="button"><span class="big-icon">✧</span><span class="bento-text"><b>Soldiers Academy</b><small>Les quatre écoles du mouvement</small></span><span>↗</span></button>
+          <button data-route="poles" class="bento-card" type="button"><span class="big-icon">▦</span><span class="bento-text"><b>Les cinq pôles</b><small>Organisation et action</small></span><span>↗</span></button>
+        </div>
+        <div class="quote-line">« Spirituellement fort. Humainement équilibré. Professionnellement compétent. Socialement utile. Missionnellement engagé. »</div>
+      </section>
+
+      <section class="workspace-view" id="view-integral"><div class="section-head"><div><span class="eyebrow">CROISSANCE PERSONNELLE</span><h2>Le Soldat Intégral</h2><p>Auto-évaluation volontaire : un outil de croissance personnelle, jamais de surveillance ni de diagnostic.</p></div></div>
+        <div class="card-layout">
+          <div class="panel"><div class="panel-head"><h3>Les sept dimensions du Soldat</h3><small>Édition Soldier House · Chapitre 14</small></div><div id="seven-dimensions" class="dimension-grid"></div></div>
+          <div class="panel"><div class="panel-head"><h3>Votre bien-être, selon votre ressenti</h3><small>Complément SDE OS · Non clinique</small></div><p>Un repère libre sur vos dimensions spirituelle, physique, émotionnelle et financière. Il ne constitue pas une évaluation médicale.</p><div id="wellbeing-dimensions" class="dimension-grid"></div></div>
+        </div>
+        <form id="balance-form" class="panel long-form"><div class="panel-head"><h3>Mon point d'étape personnel</h3><small>Une seule saisie par mois, modifiable</small></div>
+          <p class="hint">Sur cette échelle : 0 = très difficile aujourd'hui ; 4 = ressenti très favorable. Vos réponses restent dans votre espace personnel.</p>
+          <h4>Dimensions institutionnelles</h4><div id="seven-fields" class="rating-fields"></div>
+          <h4>Bien-être perçu (complément)</h4><div id="wellbeing-fields" class="rating-fields"></div>
+          <h4>Évolution des fractures et obstacles perçus</h4><p class="hint">0 = aucun obstacle ressenti ; 4 = obstacle fortement ressenti. Ces réponses servent uniquement aux tendances agrégées avec seuil de confidentialité.</p><div id="fracture-fields" class="rating-fields"></div><div id="prejuges-field" class="rating-fields"></div>
+          <label class="consent"><input id="consent-checkin" type="checkbox" required> Je consens librement à enregistrer mon auto-évaluation. Je peux supprimer mes bilans à tout moment. Aucun classement ou diagnostic n'en sera déduit.</label>
+          <div class="form-actions"><button class="primary-button" type="submit" id="submit-checkin">Enregistrer mon bilan</button><button class="danger-quiet" type="button" id="delete-checkins">Supprimer mes bilans</button></div><p class="form-feedback" id="balance-feedback" role="status" aria-live="polite"></p>
+        </form>
+        <div class="panel"><div class="panel-head"><h3>Mon historique personnel</h3><small>Visible seulement depuis votre compte</small></div><div id="my-history" class="history-grid"></div></div>
+      </section>
+
+      <section class="workspace-view" id="view-fractures"><div class="section-head"><div><span class="eyebrow">RECHERCHE & DISCERNEMENT</span><h2>Courbe d'évolution des fractures</h2><p>Les quatre fractures sont celles définies au chapitre 4.1 du document. Les préjugés perçus constituent un indicateur exploratoire distinct.</p></div></div>
+        <div class="panel"><div class="panel-head"><h3>Indicateurs collectifs</h3><span class="private-chip">Aucune donnée nominative</span></div><p id="trend-intro" class="hint">Graphique accessible aux responsables habilités ; publication limitée aux périodes ayant au moins cinq réponses volontaires.</p>
+          <div id="trend-legend" class="trend-legend"></div><div class="chart-holder" id="trend-chart" role="img" aria-label="Tendances mensuelles des quatre fractures et des préjugés perçus"></div><div class="chart-table-holder" id="trend-table"></div><p class="hint">Échelle 0 à 4. Les données représentent des perceptions déclarées, non des faits imputés à des personnes. Des volumes trop faibles sont masqués.</p></div>
+        <div class="panel"><h3>Comprendre le modèle</h3><div id="fracture-explainer" class="fracture-cards"></div></div>
+      </section>
+
+      <section class="workspace-view" id="view-gouvernance"><div class="section-head"><div><span class="eyebrow">GOUVERNANCE & TRANSPARENCE</span><h2>Directoire Général</h2><p>Contrôle collégial des propositions : une personne propose, une autre décide. Aucun décaissement automatique.</p></div></div>
+        <div class="organel"><span>Leader du mouvement</span><span>Directoire Général</span><span>Secrétariat · Trésorerie · Communication</span><span>Coordination générale des pôles</span><span>Départements · Équipes · Membres</span></div>
+        <div id="governance-private" hidden><form class="panel" id="decision-form"><div class="panel-head"><h3>Soumettre à la Règle des 4 Yeux</h3><span class="private-chip">Validation distincte</span></div><div class="form-grid"><label>Type de décision<select name="type" required><option value="finances">Finances</option><option value="projet">Projet</option><option value="partenariat">Partenariat</option><option value="gouvernance">Gouvernance</option></select></label><label>Intitulé<input type="text" name="titre" minlength="5" maxlength="160" required placeholder="Objet de la décision"></label></div><label>Motivation ou objet administratif (sans donnée sensible)<textarea name="details" maxlength="1000" rows="3" placeholder="Résumé nécessaire à la décision"></textarea></label><button type="submit" class="primary-button">Soumettre à un autre responsable</button><p id="decision-feedback" class="form-feedback" role="status" aria-live="polite"></p></form>
+          <div class="panel"><div class="panel-head"><h3>Registre des propositions</h3><button class="quiet-button" id="refresh-decisions" type="button">Actualiser ↻</button></div><div id="decision-list" class="decision-list"></div></div></div>
+        <div id="governance-locked" class="panel"><h3>Accès réservé aux responsables habilités</h3><p>Seuls le Directoire et les administrateurs autorisés peuvent consulter et approuver les propositions. Les autres modules de votre compte restent disponibles.</p></div>
+        <p class="hint">Le règlement du Directoire, les seuils financiers et les règles de quorum doivent être adoptés par les autorités compétentes. Ce registre ne remplace pas les procédures légales et financières en vigueur.</p>
+      </section>
+
+      <section class="workspace-view" id="view-academy"><div class="section-head"><div><span class="eyebrow">FORMATION & DÉVELOPPEMENT</span><h2>Soldiers Academy</h2><p>Le parcours institutionnel en quatre écoles : de la fondation à la mission.</p></div><a href="https://mouvement-sde.org/vitrine/academy" class="quiet-button">Découvrir l'Academy ↗</a></div>
+        <div id="academy-schools" class="academy-grid"></div><div class="panel"><h3>Parcours de formation</h3><p>L'intérêt enregistré ici n'est ni une admission automatique, ni une validation de compétences, ni un certificat. Les modalités de certification relèvent du référentiel officiel adopté par le Directoire.</p></div>
+      </section>
+
+      <section class="workspace-view" id="view-poles"><div class="section-head"><div><span class="eyebrow">ARCHITECTURE OPÉRATIONNELLE</span><h2>Les cinq pôles stratégiques</h2><p>Chaque pôle agit sous la supervision du Directoire Général et de la Coordination Générale des Pôles.</p></div></div>
+        <div class="poles-grid" id="poles-list"></div><div class="panel"><h3>Notre engagement commun</h3><p>Chaque pôle définit un responsable, un adjoint, un plan d'action, un budget, un calendrier et des rapports. Les actions transversales font l'objet d'une coordination et des validations appropriées.</p><a href="https://mouvement-sde.org/vitrine/mouvement#poles" class="quiet-button">Voir la présentation du mouvement ↗</a></div>
+      </section>
+      <footer class="os-footer"><span>© 2026 SDE · Édition Soldier House · SDE OS v3.1</span><a href="https://mouvement-sde.org/">Site public</a><a href="https://app.mouvement-sde.org/">Gestion SDE</a><span>Accès privé · Données non mises en cache</span></footer>
+    </div>
+  </main>
+</div>
+<nav class="bottom-navigation" aria-label="Navigation inférieure mobile">
+  <a href="#tableau" data-route="tableau"><span>⌂</span><small>Accueil</small></a>
+  <a href="#integral" data-route="integral"><span>◎</span><small>Intégral</small></a>
+  <a href="#fractures" data-route="fractures"><span>⌁</span><small>Évolution</small></a>
+  <a href="#academy" data-route="academy"><span>✧</span><small>Academy</small></a>
+  <button type="button" id="bottom-more"><span>▦</span><small>Plus</small></button>
+</nav>
+<dialog class="command-dialog" id="command-dialog" aria-label="Navigation immersive">
+ <div class="command-inner"><div class="command-top"><span>SDE OS <b>3.1</b> · Navigation immersive</span><button type="button" id="command-close" aria-label="Fermer la navigation">×</button></div><h2>Où souhaitez-vous aller ?</h2><input type="search" id="command-search" aria-label="Rechercher un module" placeholder="Rechercher : Pôles, Academy, finances…"><div class="command-links" id="command-links"></div><p>Appuyez sur Échap pour fermer · Les données privées ne sont pas indexées dans cette recherche.</p></div>
+</dialog>
+</body></html>
