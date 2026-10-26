@@ -53,6 +53,13 @@
     direction.hidden=true;
     if(mode==="direction")direction.setAttribute("aria-current","page");
     head.append(direction);
+    const reglages=element("button","sde-direct-settings","Réglages");
+    reglages.type="button";
+    reglages.addEventListener("click",()=>{
+      const natif=document.getElementById("btn-reglages");
+      if(natif) natif.click();
+    });
+    head.append(reglages);
     const role=element("span","sde-direct-access",mode==="membre"?"Tableau personnel":"Poste de commandement");
     head.append(role);
     const tabs=element("nav");tabs.id="sde-direct-tabs";tabs.setAttribute("aria-label","Rubriques de l'espace privé");
