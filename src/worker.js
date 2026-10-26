@@ -1186,21 +1186,64 @@ async function traiter(req, env, ctx) {
     const p = url.pathname;
     if (url.hostname === "www.mouvement-sde.org") return Response.redirect("https://mouvement-sde.org" + p + url.search, 301);
     if (url.hostname === "mouvement-sde.org") {
-      if (p === "/" || p === "/index.html") return env.ASSETS.fetch(new Request(new URL("/vitrine/", url), req));
+      // Routage unifié : pages réelles, un guichet de connexion, deux espaces protégés.
+      const pagesPubliques = {
+        "/mouvement": "/vitrine/mouvement.html",
+        "/programmes": "/vitrine/programmes.html",
+        "/academy": "/vitrine/academy.html",
+        "/enseignements": "/vitrine/ressources.html",
+        "/missions": "/vitrine/projets.html",
+        "/priere": "/vitrine/prieres.html",
+        "/contact": "/vitrine/rejoindre.html",
+        "/temoignages": "/vitrine/temoignages.html",
+        "/soldiers-voice": "/vitrine/soldiers-voice.html",
+        "/missions-humanitaires": "/vitrine/missions-humanitaires.html",
+        "/rubriques": "/vitrine/plus.html"
+      };
+      const assetPortail = (nom) => env.ASSETS.fetch(new Request(new URL(nom, url), req));
+      if (req.method === "GET" || req.method === "HEAD") {
+        if (p === "/" || p === "/index.html") return assetPortail("/vitrine/portail.html");
+        if (pagesPubliques[p]) return assetPortail(pagesPubliques[p]);
+        if (p === "/connexion") {
+          const r = await assetPortail("/vitrine/connexion-unifiee.html");
+          const n = new Response(r.body, r);
+          n.headers.set("cache-control", "no-store");
+          n.headers.set("x-robots-tag", "noindex, nofollow");
+          return n;
+        }
+        if (p === "/mon-espace" || p === "/administration") {
+          const u = await utilisateur(req, env);
+          if (!u.connecte)
+            return Response.redirect(url.origin + "/connexion?retour=" + encodeURIComponent(p), 302);
+          if (p === "/administration" && u.niveau < 2)
+            return erreur("refuse", "Accès réservé aux responsables autorisés.", 403);
+          const r = await assetPortail("/index.html");
+          const n = new Response(r.body, r);
+          n.headers.set("cache-control", "private, no-store");
+          n.headers.set("x-robots-tag", "noindex, nofollow");
+          return n;
+        }
+      }
       if (p === "/api/public") return apiPublic(env);
       if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
       if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
       if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
-      if (!/^\/(vitrine\/|sde-(unified\.css|bridge\.js)$|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$|sw-public\.js$)/.test(p))
-        return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
-      const r = await env.ASSETS.fetch(req);
-      // Images de la vitrine : gardées 7 jours par le navigateur (visites suivantes plus rapides)
-      if (r.ok && /^\/vitrine\/.+\.(jpe?g|png|webp|svg)$/.test(p)) {
-        const n = new Response(r.body, r);
-        n.headers.set("cache-control", "public, max-age=604800");
-        return n;
+      // Les routes sensibles conservent les contrôles serveur existants :
+      // aucun contenu, document ou fichier privé n'est rendu statique.
+      const routeInterne = p.startsWith("/api/") || p.startsWith("/_blob/") || p.startsWith("/m/");
+      if (!routeInterne) {
+        if (!/^\/(vitrine\/|app\.css$|sde-(unified\.css|bridge\.js|private-ui\.css)$|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$|sw-public\.js$|manifest\.webmanifest$|sw\.js$)/.test(p))
+          return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
+        const r = await env.ASSETS.fetch(req);
+        if (r.ok && /^\/vitrine\/.+\.(jpe?g|png|webp|svg)$/.test(p)) {
+          const n = new Response(r.body, r);
+          n.headers.set("cache-control", "public, max-age=604800");
+          return n;
+        }
+        return r;
       }
-      return r;
+      // Les routes API et médias continuent plus bas, avec le même utilisateur
+      // et les mêmes permissions que sur le sous-domaine historique.
     }
     if (p.startsWith("/_blob/")) {
       if (!ID_FICHIER.test(p.slice(7))) return new Response("Introuvable", { status: 404 });
