@@ -124,3 +124,17 @@ Onglet « Médiathèque » : vidéos (MP4, WebM, MOV), audios (MP3, M4A, WAV), p
 - Règles d’accès vérifiées par le serveur à chaque lecture et écriture (`REGLES`), synchronisation comprise.
 - Visiteurs et soldats ne reçoivent jamais la liste des présents d’un rassemblement, ni les noms des comptes.
 - En-têtes de sécurité sur toutes les réponses : HSTS, nosniff, interdiction d’intégration dans un autre site, Referrer-Policy.
+
+## Refonte dynamique du portail public (26 octobre 2026)
+
+Branche de préparation : `ameliorations/site-sde-phases-1-4-20261026`.
+
+- Page d'accueil : les 12 cartes existantes sont conservées, mais organisées par filtres interactifs (Découvrir, Grandir, Servir, Tout voir), avec recherche indépendante des accents et messages accessibles. Sans JavaScript, les 12 cartes restent visibles.
+- L'agenda affiche, dans le parcours, le prochain événement annoncé par `/api/public`, sans accéder aux données de l'application privée. Sans événement ou sans connexion, les liens vers l'agenda restent visibles.
+- Navigation de confort sur les principales pages : indicateur discret de progression et bouton de retour en haut, avec respect de la réduction des mouvements.
+- Sur mobile public, « Prière » remplace « Finances » ; les finances restent dans l'application privée des membres, et ne sont pas exposées publiquement.
+- La section confidentialité précise que les demandes d'engagement sont stockées côté serveur, et mentionne les droits d'accès, rectification et effacement. **À confirmer avant déploiement :** politique officielle de durée de conservation et responsabilités de gestion des données.
+- Scripts/feuilles indépendants `public/vitrine/sde-dynamique.js` et `sde-dynamique.css`, pour limiter les changements dans le HTML historique.
+- Test dédié : `test/sde-dynamique.test.mjs`. Exécuter `npm ci --ignore-scripts && npm test` avant la fusion, puis valider manuellement l'accueil et les pages sur smartphone.
+
+**Attention :** ne pas reconstruire `public/index.html` depuis les anciennes sources avant d'avoir réaligné `source/src/` (voir note de maintenance ci-dessus).
