@@ -377,7 +377,7 @@ async function apiComptes(req, env, u) {
 }
 
 /* ───────── espace personnel d'un compte relié à une fiche ───────── */
-const CHAMPS_FICHE = ["nom", "prenoms", "matricule", "statut", "fonction", "pole", "eglise", "garnisonId", "photoId", "anniv", "adhesion", "telephone", "email", "sexe"];
+const CHAMPS_FICHE = ["nom", "prenoms", "matricule", "statut", "fonction", "pole", "eglise", "garnisonId", "photoId", "anniv", "adhesion", "telephone", "email", "sexe", "quartier", "situation"];
 async function apiMonEspace(env, u) {
   if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 404);
   const f = await lireDoc(env, "membres/" + u.membreId);
@@ -559,6 +559,20 @@ async function apiImport(req, env, u, ctx) {
   return json({ ok: true, importes: valides.length, ignores: docs.length - valides.length });
 }
 
+
+/* Indicateurs administratifs : agrégats seulement, sans identité ni finances.
+ * Le serveur vérifie le rôle à chaque appel; aucune liste privée n'est publiée.
+ */
+async function apiTableauDeBord(req,env,u) {
+  if(req.method!=="GET")return erreur("methode","GET uniquement.",405);
+  if(!u.connecte || u.niveau<1)return erreur("refuse","Accès réservé aux responsables.",403);
+  const r=await env.DB.prepare("SELECT parent, COUNT(*) AS n FROM docs WHERE parent IN ('membres','evenements','projets','annonces') GROUP BY parent").all();
+  const total={membres:0,evenements:0,projets:0,annonces:0};
+  for(const x of r.results||[]){
+    if(Object.prototype.hasOwnProperty.call(total,x.parent))total[x.parent]=Number(x.n)||0;
+  }
+  return json({total});
+}
 
 /* ───────── site vitrine : rendez-vous publics ───────── */
 const TYPES_PUBLICS = ["Culte", "Prière et intercession", "Formation", "Conférence", "Évangélisation"];
@@ -1212,16 +1226,22 @@ async function traiter(req, env, ctx) {
           n.headers.set("x-robots-tag", "noindex, nofollow");
           return n;
         }
-        if (p === "/mon-espace" || p === "/administration") {
+        if (["/mon-espace","/administration","/mon-espace/outils","/administration/outils"].includes(p)) {
           const u = await utilisateur(req, env);
-          if (!u.connecte)
-            return Response.redirect(url.origin + "/connexion?retour=" + encodeURIComponent(p), 302);
-          if (p === "/administration" && u.niveau < 1)
+          if (!u.connecte) {
+            const cible=p.startsWith("/administration")?"/administration":"/mon-espace";
+            return Response.redirect(url.origin + "/connexion?retour=" + encodeURIComponent(cible), 302);
+          }
+          if (p.startsWith("/administration") && u.niveau < 1)
             return erreur("refuse", "Accès réservé aux responsables autorisés.", 403);
-          const r = await assetPortail("/index.html");
-          const n = new Response(r.body, r);
-          n.headers.set("cache-control", "private, no-store");
-          n.headers.set("x-robots-tag", "noindex, nofollow");
+          // Les outils réutilisent l'application existante, les nouveaux tableaux
+          // affichent la synthèse correspondant au rôle sans nouvelle base.
+          const fichier = p.endsWith("/outils")?"/index.html":
+            p==="/administration"?"/vitrine/tableau-administration.html":"/vitrine/tableau-membre.html";
+          const r = await assetPortail(fichier);
+          const n = new Response(r.body,r);
+          n.headers.set("cache-control","private, no-store");
+          n.headers.set("x-robots-tag","noindex, nofollow");
           return n;
         }
       }
@@ -1285,6 +1305,7 @@ async function traiter(req, env, ctx) {
         return json(await mailStatus(env));
       }
       if (p === "/api/os-v31") return await apiSdeOs31(req, env, u);
+      if (p === "/api/tableau-de-bord") return apiTableauDeBord(req, env, u);
       if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
       if (p === "/api/inscription" && req.method === "POST") return apiInscription(req, env, ctx);
       if (p === "/api/connexion" && req.method === "POST") return apiConnexionMdp(req, env);
