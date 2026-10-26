@@ -86,3 +86,57 @@ self.addEventListener("fetch", event => {
     return response;
   })());
 });
+
+
+/* Notifications PWA unifiées.
+   Ce service worker ne conserve ni sessions, ni requêtes API, ni pages privées.
+   Les liens de notification sont limités au site SDE (pas de redirection externe). */
+function destinationNotification(valeur) {
+  try {
+    const u = new URL(String(valeur || "/"), self.location.origin);
+    if (u.origin !== self.location.origin) {
+      if(u.protocol === "https:" && u.hostname === "app.mouvement-sde.org")
+        return "/mon-espace";
+      return "/";
+    }
+    if (/^\/(?:api\/|_blob\/|m\/)/.test(u.pathname))return "/";
+    if (u.pathname === "/os-v31" || u.pathname === "/os-v31/")
+      return "/mon-espace/os-v31" + u.hash;
+    return u.pathname + u.search + u.hash;
+  } catch (_) {
+    return "/";
+  }
+}
+
+self.addEventListener("push",event=>{
+  let payload={};
+  try { payload=event.data?.json()||{}; } catch (_) {}
+  const titre=String(payload.title||"SDE · Soldats de l'Éternel").slice(0,140);
+  const texte=String(payload.body||"Vous avez une nouvelle notification.").slice(0,260);
+  const destination=destinationNotification(payload.url||"/mon-espace");
+  event.waitUntil(self.registration.showNotification(titre,{
+    body:texte,
+    icon:"/icone-192.png",badge:"/icone-192.png",
+    data:{url:destination}
+  }));
+});
+
+self.addEventListener("notificationclick",event=>{
+  event.notification.close();
+  const cible=destinationNotification(event.notification?.data?.url||"/mon-espace");
+  event.waitUntil((async()=>{
+    const ouvert=await self.clients.matchAll({type:"window",includeUncontrolled:true});
+    for(const fenetre of ouvert){
+      try{
+        const u=new URL(fenetre.url);
+        if(u.origin!==self.location.origin || u.pathname!==new URL(cible,self.location.origin).pathname)continue;
+        if(typeof fenetre.focus==="function")return fenetre.focus();
+      }catch(_){}
+    }
+    return self.clients.openWindow(cible);
+  })());
+});
+
+self.addEventListener("message",event=>{
+  if(event.data==="skipWaiting")self.skipWaiting();
+});
