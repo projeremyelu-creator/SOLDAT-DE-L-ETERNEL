@@ -177,7 +177,7 @@
       if(mode==="administration"&&compte.niveau<1){location.replace("/mon-espace");return}
       configureRoles();
       wireForms();
-      window.addEventListener("hashchange",()=>navigate(decodeURIComponent(location.hash.slice(1))));
+      window.addEventListener("hashchange",()=>navigate(location.hash.slice(1)));
       navigate(decodeURIComponent(location.hash.slice(1))||"accueil");
       if(mode==="membre")await chargerMembre();
       else await chargerAdmin();
