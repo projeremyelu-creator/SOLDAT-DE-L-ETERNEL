@@ -1171,7 +1171,13 @@ export default {
   },
   async fetch(req, env, ctx) {
     if (!migrationFaite) { migrationFaite = true; try { await migrer(env); } catch (e) { /* non bloquant */ } }
-    return securiser(await traiter(req, env, ctx));
+    // Toute erreur non anticipée (y compris rate-limit/DB avant le routeur API)
+    // est convertie en réponse neutre : aucun détail SQL n'atteint le visiteur.
+    try {
+      return securiser(await traiter(req, env, ctx));
+    } catch (_) {
+      return securiser(erreur("erreur_interne", "Le service est temporairement indisponible. Réessayez plus tard.", 500));
+    }
   },
 };
 async function traiter(req, env, ctx) {
