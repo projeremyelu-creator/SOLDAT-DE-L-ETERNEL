@@ -6672,7 +6672,8 @@ input{width:100%;padding:10px 12px;border:1px solid var(--l);border-radius:8px;f
 <h2>Prochains rassemblements</h2>${evs.length ? `<ul>${evs.map((x) => `<li><b>${e(x.titre)}</b><small>${e([fmtLong(x.date), fmtHeure(x.heure), x.lieu].filter(Boolean).join(" · "))}</small></li>`).join("")}</ul>` : "<p>Aucun rassemblement programmé.</p>"}
 ${(S.annonces || []).length ? `<h2>Annonces</h2><ul>${S.annonces.filter((a) => !a.expireLe || a.expireLe >= aujourdhui()).slice(0, 10).map((a) => `<li><b>${e(a.titre)}</b><small>${e(a.texte)}</small></li>`).join("")}</ul>` : ""}
 ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search" placeholder="Rechercher un nom, un matricule, un point…" oninput="var q=this.value.toLowerCase();document.querySelectorAll('#ann li').forEach(function(l){l.style.display=l.textContent.toLowerCase().indexOf(q)>-1?'':'none'})"><ul id="ann">${mbs.map((m) => `<li><b>${e(nomComplet(m))}</b><small>${e([m.matricule, m.fonction || m.statut, nomG(m.garnisonId)].filter(Boolean).join(" · "))}</small>${m.telephone ? `<small><a href="tel:${e(String(m.telephone).replace(/[^\d+]/g, ""))}">${e(telAffiche(m.telephone))}</a> · <a href="${e(lienWa(m.telephone, ""))}">WhatsApp</a></small>` : ""}</li>`).join("")}</ul>` : ""}
-<footer>${e(c.nomCourt)} · ${e(c.devise || "")}. Document confidentiel réservé au mouvement : ne le partagez pas en dehors.</footer></main></body></html>`;
+<footer>${e(c.nomCourt)} · ${e(c.devise || "")}. Document confidentiel réservé au mouvement : ne le partagez pas en dehors.</footer></main><script defer src="/vitrine/portail-espace.js?v=20261026"></script>
+</body></html>`;
     telecharger(`SDE-copie-de-poche-${aujourdhui()}.html`, html);
   }
 
