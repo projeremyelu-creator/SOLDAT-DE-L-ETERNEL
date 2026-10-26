@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "test": "node test/verifier.mjs && node --test test/tableaux-de-bord.test.mjs test/portail-unifie.test.mjs test/vitrine-navigation.test.mjs test/vitrine-portal.test.mjs test/vitrine-mpa.test.mjs test/vitrine-initiatives.test.mjs test/sde-unified.test.mjs test/vitrine-app-shell.test.mjs test/sde-dynamique.test.mjs test/sde-notifications-email.test.mjs test/sde-os-v31.test.mjs test/os-v31-integration.mjs test/sde-os.test.mjs"
+    "test": "node test/verifier.mjs && node --test test/navigation-contextuelle.test.mjs test/tableaux-de-bord.test.mjs test/portail-unifie.test.mjs test/vitrine-navigation.test.mjs test/vitrine-portal.test.mjs test/vitrine-mpa.test.mjs test/vitrine-initiatives.test.mjs test/sde-unified.test.mjs test/vitrine-app-shell.test.mjs test/sde-dynamique.test.mjs test/sde-notifications-email.test.mjs test/sde-os-v31.test.mjs test/os-v31-integration.mjs test/sde-os.test.mjs"
   },
   "devDependencies": {
     "jsdom": "30.1.2"
