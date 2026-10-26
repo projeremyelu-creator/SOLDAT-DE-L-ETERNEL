@@ -1,0 +1,54 @@
+<!doctype html><html lang="fr" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Connexion sécurisée | Soldats de l'Éternel</title>
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#11182a">
+<link rel="icon" href="/vitrine/logo-96.png">
+<link rel="stylesheet" href="/vitrine/portail-unifie.css?v=20261026">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;600;700&family=Saira+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<script defer src="/vitrine/portail-unifie.js?v=20261026"></script><script defer src="/vitrine/portail-connexion.js?v=20261026"></script>
+<style>
+.access-main{background:linear-gradient(115deg,#11182a,#261c34);min-height:calc(100vh - 76px);padding:65px 20px 90px;color:#fff}
+.access-shell{width:min(530px,100%);margin:auto}
+.access-shell>p{color:#d4d8e4}.access-shell h1{font-size:clamp(2.5rem,6vw,4rem);margin:8px 0 12px}
+.access-card{padding:24px;background:#fff;color:#171d30;border-radius:18px;box-shadow:0 20px 45px rgba(0,0,0,.25)}
+.access-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:24px}
+.access-tabs button{padding:10px 5px;border:1px solid #d5d2ca;border-radius:9px;background:#f4f1eb;font-size:.84rem;font-weight:700}
+.access-tabs button[aria-selected=true]{background:#c8a451;border-color:#c8a451;color:#11182a}
+.access-panel[hidden]{display:none!important}
+.access-panel h2{font-size:1.65rem;margin:0 0 8px}
+.access-panel p{font-size:.9rem;color:#555a6a}
+.access-panel form{display:grid;gap:14px}
+.access-panel label{display:grid;gap:5px;font-weight:700;font-size:.89rem}
+.access-panel input{width:100%;min-height:46px;border-radius:10px;padding:10px 13px;border:1px solid #bfc5d2;font-size:16px}
+.access-panel input:focus-visible{outline:3px solid #c8a451}
+.access-submit{min-height:48px;padding:12px 18px;background:#641d2d;color:#fff;border:0;border-radius:10px;font-weight:800;margin-top:8px}
+.access-submit:disabled{opacity:.65;cursor:progress}
+.access-message{font-size:.91rem;min-height:24px;margin-top:14px;color:#6f1428}
+.access-message[data-state=success]{color:#186943}
+.access-back{display:inline-block;margin-top:20px;color:#edd089}
+</style></head>
+<body class="sde-unifie">
+<a class="skip" href="#connexion-principale">Aller aux formulaires</a>
+<header class="site-header"><div class="site-header-inner">
+<a class="site-brand" href="/" aria-label="Accueil SDE"><img src="/vitrine/logo-96.png" alt="" width="44" height="44"><span><b>S.D.E.</b><small>Le Réveil Spirituel des Nations</small></span></a>
+<button class="site-burger" aria-label="Ouvrir la navigation" aria-controls="site-menu" aria-expanded="false" type="button"><span></span><span></span><span></span></button>
+<nav class="site-menu" id="site-menu" aria-label="Navigation principale"><a href="/">Accueil</a><a href="/mouvement">Le Mouvement</a><a href="/programmes">Programmes</a><a href="/academy">Academy</a><a href="/enseignements">Enseignements</a><a href="/missions">Missions</a><a href="/priere">Prière</a><a class="menu-login" href="/mon-espace">Mon espace</a></nav>
+</div></header>
+<main class="access-main" id="connexion-principale">
+<div class="access-shell"><p class="eyebrow">Les accès privés du mouvement</p><h1>Un compte. Deux espaces.</h1>
+<p>Connectez-vous à votre espace personnel. Les responsables habilités peuvent également accéder à l'administration avec leur compte existant.</p>
+<div class="access-card"><div class="access-tabs" role="tablist" aria-label="Accès au compte">
+<button id="tab-connexion" role="tab" type="button" data-mode="connexion" aria-controls="panel-connexion" aria-selected="true">Connexion</button>
+<button id="tab-inscription" role="tab" type="button" data-mode="inscription" aria-controls="panel-inscription" aria-selected="false">Créer un compte</button>
+<button id="tab-activation" role="tab" type="button" data-mode="activation" aria-controls="panel-activation" aria-selected="false">J'ai un code</button></div>
+<section class="access-panel" id="panel-connexion" role="tabpanel" aria-labelledby="tab-connexion"><h2>Bienvenue</h2><p>Retrouvez votre espace SDE sécurisé.</p>
+<form id="form-connexion"><label>Adresse e-mail<input required name="email" type="email" autocomplete="email"></label><label>Mot de passe<input required name="motDePasse" type="password" autocomplete="current-password"></label><button class="access-submit" type="submit">Se connecter</button></form></section>
+<section class="access-panel" id="panel-inscription" role="tabpanel" aria-labelledby="tab-inscription" hidden><h2>Devenir membre</h2><p>Une fiche et un matricule provisoire sont créés pour les nouveaux membres.</p>
+<form id="form-inscription"><label>Nom<input required name="nom" autocomplete="family-name"></label><label>Prénoms<input required name="prenoms" autocomplete="given-name"></label><label>E-mail<input required name="email" type="email" autocomplete="email"></label><label>Téléphone (facultatif)<input name="telephone" type="tel" autocomplete="tel"></label><label>Mot de passe<input required name="motDePasse" type="password" autocomplete="new-password" minlength="4"></label><button class="access-submit" type="submit">Créer mon espace</button></form></section>
+<section class="access-panel" id="panel-activation" role="tabpanel" aria-labelledby="tab-activation" hidden><h2>Activer mon accès</h2><p>Réservé aux responsables ayant reçu un code d'activation du secrétariat.</p>
+<form id="form-activation"><label>E-mail<input required name="email" type="email" autocomplete="email"></label><label>Code d'activation<input required name="code" autocomplete="one-time-code"></label><label>Créer un mot de passe<input required name="motDePasse" type="password" autocomplete="new-password" minlength="4"></label><button class="access-submit" type="submit">Activer mon accès</button></form></section>
+<p class="access-message" id="access-message" role="status" aria-live="polite"></p>
+</div><a class="access-back" href="/">← Revenir au site public</a><p>Besoin d'aide pour récupérer votre compte ? <a href="mailto:infosoldat@gmail.com" style="color:#edd089">Contacter le secrétariat</a>.</p>
+</div></main>
+</body></html>
