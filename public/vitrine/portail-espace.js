@@ -1,39 +1,105 @@
-/* Dans le portail unique, l'application historique est affichée comme espace intégré.
-   Toutes ses autorisations restent vérifiées par src/worker.js. */
+/* Pont visuel SDE : modules historiques, même domaine et même session. */
 (() => {
- "use strict";
- if (location.hostname !== "mouvement-sde.org") return;
- if (!["/mon-espace/outils","/administration/outils"].includes(location.pathname)) return;
- function ajouter(){
-   if(document.getElementById("sde-espace-entete"))return;
-   const nav=document.createElement("nav");
-   nav.id="sde-espace-entete";
-   nav.setAttribute("aria-label","Navigation du portail SDE");
-   nav.innerHTML='<a href="/" class="sde-espace-marque">S.D.E. <small>Site officiel</small></a><a href="/mon-espace">Mon espace</a>';
-   if(location.pathname.startsWith("/mon-espace"))nav.querySelector('a[href="/mon-espace"]').setAttribute("aria-current","page");
-   document.body.insertBefore(nav,document.body.firstChild);
-   const update=async()=>{
-     try {
-       const r=await fetch("/api/moi",{credentials:"same-origin",cache:"no-store"});
-       if(!r.ok)return;
-       const user=await r.json();
-       if(user.niveau>=1){
-         const a=document.createElement("a");a.href="/administration";a.textContent="Administration";
-         if(location.pathname.startsWith("/administration"))a.setAttribute("aria-current","page");
-         nav.append(a);
-       }
-     }catch(_){}
-   };
-   update();
- }
- document.addEventListener("click",e=>{
-   const a=e.target.closest?.('a[href^="https://app.mouvement-sde.org"]');
-   if(!a)return;
-   const url=new URL(a.href),route=url.hash==="#finances"?"/administration":"/mon-espace";
-   e.preventDefault();location.assign(route);
- },true);
- const css=document.createElement("style");
- css.textContent='#sde-espace-entete{position:sticky;top:0;z-index:9999;display:flex;align-items:center;gap:18px;padding:9px clamp(14px,4vw,46px);min-height:57px;background:#11182a;border-bottom:2px solid #c8a451;color:#f7f4ed;font:700 14px system-ui,sans-serif;box-sizing:border-box}#sde-espace-entete a{text-decoration:none;color:inherit;padding:6px 4px}#sde-espace-entete a[aria-current="page"]{color:#edd089}#sde-espace-entete .sde-espace-marque{margin-right:auto;color:#edd089;letter-spacing:.1em}#sde-espace-entete small{display:block;font-size:9px;letter-spacing:0;color:#d5d9e3}@media(max-width:450px){#sde-espace-entete{gap:8px;font-size:12px}#sde-espace-entete .sde-espace-marque{letter-spacing:0}}';
- document.head.append(css);
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",ajouter,{once:true});else ajouter();
+  "use strict";
+  if (location.hostname !== "mouvement-sde.org") return;
+  const path=location.pathname;
+  const personnel=path.startsWith("/mon-espace/");
+  const direction=path.startsWith("/administration/");
+  if(!personnel&&!direction)return;
+  const retour=direction?"/administration":"/mon-espace";
+  const os31=path.endsWith("/os-v31");
+  const historique=path.endsWith("/outils");
+  if(!historique&&!os31)return;
+
+  const modules={
+    espace:{nom:"Espace soldat",niveau:0},
+    academie:{nom:"Soldiers Academy",niveau:0},
+    agenda:{nom:"Agenda",niveau:0},
+    arsenal:{nom:"Enseignements",niveau:0},
+    mediatheque:{nom:"Médiathèque",niveau:0},
+    membres:{nom:"Registre des membres",niveau:1},
+    garnisons:{nom:"Garnisons et départements",niveau:1},
+    projets:{nom:"Projets",niveau:1},
+    portevoix:{nom:"Annonces et messages",niveau:1},
+    chambre:{nom:"Chambre Haute",niveau:1},
+    secretariat:{nom:"Secrétariat",niveau:1},
+    finances:{nom:"Finances",niveau:2}
+  };
+  const requested=new URLSearchParams(location.search).get("module")||"";
+  const souhait=Object.prototype.hasOwnProperty.call(modules,requested)?requested:"";
+  function lien(href,label,cls=""){
+    const a=document.createElement("a");
+    a.href=href;a.textContent=label;
+    if(cls)a.className=cls;
+    return a;
+  }
+  function creer(){
+    if(document.getElementById("sde-espace-entete"))return;
+    const nav=document.createElement("nav");
+    nav.id="sde-espace-entete";
+    nav.setAttribute("aria-label","Navigation commune des espaces SDE");
+    nav.append(
+      lien("/","S.D.E.","sde-espace-marque"),
+      lien(retour,"← Tableau de bord","sde-espace-retour"),
+      lien("/","Site public")
+    );
+    const info=document.createElement("span");
+    info.id="sde-module-etat";info.setAttribute("role","status");info.setAttribute("aria-live","polite");
+    info.textContent=os31?"Soldat Intégral · SDE OS 3.1":"Gestion SDE";
+    nav.append(info);
+    document.body.insertBefore(nav,document.body.firstChild);
+    const css=document.createElement("style");
+    css.textContent=[
+      '#sde-espace-entete{position:sticky;top:0;z-index:99999;display:flex;align-items:center;gap:14px;min-height:58px;padding:8px clamp(12px,3vw,38px);box-sizing:border-box;color:#f7f4ed;background:#11182a;border-bottom:2px solid #c8a451;font:700 14px/1.4 system-ui,sans-serif}',
+      '#sde-espace-entete a{color:inherit!important;text-decoration:none!important;padding:10px 9px;border-radius:9px;white-space:nowrap}',
+      '#sde-espace-entete a:hover,#sde-espace-entete a:focus-visible{background:#293955;color:#edd089!important}',
+      '#sde-espace-entete .sde-espace-marque{color:#edd089!important;font-weight:900;letter-spacing:.08em}',
+      '#sde-espace-entete .sde-espace-retour{background:#32405b}',
+      '#sde-module-etat{margin-left:auto;max-width:40%;color:#dbe1eb;text-align:right;font-size:12px;overflow:hidden;text-overflow:ellipsis}',
+      '@media(max-width:650px){#sde-espace-entete{gap:4px;padding:8px;font-size:12px;flex-wrap:wrap}#sde-espace-entete a{padding:7px}#sde-module-etat{max-width:100%;flex-basis:100%;text-align:left;margin:0 5px}}'
+    ].join("");
+    document.head.append(css);
+    fetch("/api/moi",{credentials:"same-origin",cache:"no-store"})
+      .then(r=>r.ok?r.json():null)
+      .then(user=>{
+        if(!user||!user.connecte)return;
+        if(user.niveau>=1)nav.insertBefore(lien("/administration","Administration"),info);
+        if(historique&&requested){
+          if(!souhait||(personnel&&modules[souhait].niveau>=1)||user.niveau<modules[souhait].niveau){
+            info.textContent="Module non autorisé ou inconnu";return;
+          }
+          ouvrirModule(souhait,info);
+        }
+      })
+      .catch(()=>{info.textContent="Connexion indisponible";});
+  }
+  function ouvrirModule(nom,info){
+    const nav=document.querySelector("#nav");
+    if(!nav)return;
+    let fait=false;
+    let observation;
+    const essayer=()=>{
+      if(fait)return;
+      const bouton=nav.querySelector('button[data-vue="'+nom+'"]');
+      if(!bouton||bouton.disabled)return;
+      fait=true;
+      observation.disconnect();
+      info.textContent=modules[nom].nom;
+      bouton.click(); // Le routeur natif revalide la disponibilité du module.
+    };
+    observation=new MutationObserver(essayer);
+    observation.observe(nav,{childList:true,subtree:true});
+    essayer();
+    setTimeout(()=>{
+      if(!fait){observation.disconnect();info.textContent="Module indisponible pour ce compte";}
+    },12000);
+  }
+  document.addEventListener("click",e=>{
+    const a=e.target.closest?.('a[href^="https://app.mouvement-sde.org"]');
+    if(!a)return;
+    e.preventDefault();
+    location.assign(a.href.includes("#finances")?"/administration":"/mon-espace");
+  },true);
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",creer,{once:true});
+  else creer();
 })();
