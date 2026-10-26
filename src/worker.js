@@ -1215,7 +1215,7 @@ async function traiter(req, env, ctx) {
           const u = await utilisateur(req, env);
           if (!u.connecte)
             return Response.redirect(url.origin + "/connexion?retour=" + encodeURIComponent(p), 302);
-          if (p === "/administration" && u.niveau < 2)
+          if (p === "/administration" && u.niveau < 1)
             return erreur("refuse", "Accès réservé aux responsables autorisés.", 403);
           const r = await assetPortail("/index.html");
           const n = new Response(r.body, r);
