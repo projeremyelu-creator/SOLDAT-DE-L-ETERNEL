@@ -37,7 +37,7 @@ test("bottom bar mobile et mega menu PC présents sur les quatre nouvelles pages
   for(const page of pages) {
     const dom=init(page),d=dom.window.document;
     const tabs=[...d.querySelectorAll(".sde-global-nav a")].map(a=>a.textContent.trim());
-    assert.deepEqual(tabs, ["Accueil","Membres","Agenda","Finances","Plus"]);
+    assert.deepEqual(tabs, ["Accueil","Membres","Agenda","Prière","Plus"]);
     assert.equal(d.querySelectorAll(".sde-mega-nav details").length,4);
     for(const p of pages) assert.ok(d.querySelector('.sde-mega-nav a[href="/vitrine/'+p+'"]'),p);
     dom.window.close();

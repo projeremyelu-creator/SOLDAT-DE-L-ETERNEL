@@ -35,9 +35,9 @@ for (const page of pages) {
   test("navigation à cinq onglets et contenus intacts : " + page, () => {
     const p = load(page);
     const items = [...p.d.querySelectorAll(".sde-global-nav a[data-sde-tab]")];
-    assert.deepEqual(items.map((a) => a.textContent.trim()), ["Accueil", "Membres", "Agenda", "Finances", "Plus"]);
+    assert.deepEqual(items.map((a) => a.textContent.trim()), ["Accueil", "Membres", "Agenda", "Prière", "Plus"]);
     assert.equal(p.d.querySelectorAll(".sde-global-nav").length, 1);
-    assert.equal(items[3].href, "https://app.mouvement-sde.org/#finances");
+    assert.equal(items[3].href, "https://mouvement-sde.org/vitrine/prieres");
     assert.equal(items[4].href, "https://mouvement-sde.org/vitrine/plus");
     assert.ok(p.d.body.classList.contains("sde-portal"));
     assert.equal(p.d.querySelectorAll(".sde-global-nav a[aria-current='page']").length, 1);

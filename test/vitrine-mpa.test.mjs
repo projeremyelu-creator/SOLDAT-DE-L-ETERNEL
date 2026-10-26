@@ -45,10 +45,10 @@ test("MPA: menus — 5 onglets mobiles, méga-menu desktop avec liens vers 4 pag
   const d=dom("rejoindre");
   const document=d.window.document;
   const bottom=[...document.querySelectorAll(".sde-global-nav a")];
-  assert.deepEqual(bottom.map(x=>x.textContent.trim()),["Accueil","Membres","Agenda","Finances","Plus"]);
+  assert.deepEqual(bottom.map(x=>x.textContent.trim()),["Accueil","Membres","Agenda","Prière","Plus"]);
   assert.equal(bottom[1].href,"https://mouvement-sde.org/vitrine/rejoindre#membres");
   assert.equal(bottom[2].href,"https://mouvement-sde.org/vitrine/programmes#agenda");
-  assert.equal(bottom[3].href,"https://app.mouvement-sde.org/#finances");
+  assert.equal(bottom[3].href,"https://mouvement-sde.org/vitrine/prieres");
   assert.equal(bottom[4].href,"https://mouvement-sde.org/vitrine/plus");
   assert.equal(document.querySelectorAll(".sde-mega-nav details").length,4);
   const links=[...document.querySelectorAll(".sde-mega-nav .sde-mega-panel a")].map(x=>x.href);
