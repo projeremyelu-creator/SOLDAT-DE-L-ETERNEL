@@ -33,7 +33,7 @@ test("L'entrée membre et l'entrée direction servent directement un seul moteur
 });
 const tick=()=>new Promise(resolve=>setTimeout(resolve,20));
 async function create(path,level){
- const dom=new JSDOM("<!doctype html><html><head></head><body><button id='btn-reglages' type='button'>Ouvrir réglages natifs</button><nav id='nav'></nav><main id='main'>Prêt</main></body></html>",{
+ const dom=new JSDOM("<!doctype html><html><head></head><body><button id='btn-reglages' type='button'>Ouvrir réglages natifs</button><div class='shell'><nav id='nav'></nav><main id='main' tabindex='-1'>Prêt</main></div></body></html>",{
   url:"https://mouvement-sde.org"+path,runScripts:"outside-only",pretendToBeVisual:true
  });
  const w=dom.window,nav=w.document.getElementById("nav"),main=w.document.getElementById("main"),opened=[];
