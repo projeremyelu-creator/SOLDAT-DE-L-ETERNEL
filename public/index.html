@@ -249,7 +249,7 @@
   };
 })();
 </script>
-<script>if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("/sw.js").then((r) => { r.addEventListener("updatefound", () => { const nw = r.installing; if (nw) nw.addEventListener("statechange", () => { if (nw.state === "installed" && navigator.serviceWorker.controller) nw.postMessage("skipWaiting"); }); }); }).catch(() => {}));</script>
+<script>if ("serviceWorker" in navigator && location.hostname !== "mouvement-sde.org") addEventListener("load", () => navigator.serviceWorker.register("/sw.js").then((r) => { r.addEventListener("updatefound", () => { const nw = r.installing; if (nw) nw.addEventListener("statechange", () => { if (nw.state === "installed" && navigator.serviceWorker.controller) nw.postMessage("skipWaiting"); }); }); }).catch(() => {}));</script>
 
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
