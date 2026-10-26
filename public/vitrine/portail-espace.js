@@ -3,7 +3,7 @@
 (() => {
  "use strict";
  if (location.hostname !== "mouvement-sde.org") return;
- if (!["/mon-espace","/administration"].includes(location.pathname)) return;
+ if (!["/mon-espace/outils","/administration/outils"].includes(location.pathname)) return;
  function ajouter(){
    if(document.getElementById("sde-espace-entete"))return;
    const nav=document.createElement("nav");
