@@ -148,7 +148,7 @@ test("MPA: formulaire d'adhésion utilise /api/engager (simulation hors producti
 });
 test("MPA: pages sensibles absentes du sitemap et pages publiques ajoutées",()=>{
   const map=read("public/sitemap.xml");
-  for(const page of Object.keys(pages))assert.ok(map.includes("/vitrine/"+page+"</loc>"),page);
+  for(const page of Object.keys(pages))assert.ok(map.includes("/"+({mouvement:"mouvement",programmes:"programmes",ressources:"enseignements",rejoindre:"contact",projets:"missions",plus:"rubriques"})[page]+"</loc>"),page);
   assert.ok(!map.includes("/vitrine/engagements"));
   assert.ok(!map.includes("app.mouvement-sde.org"));
   assert.ok(!map.includes("/vitrine/formulaire"));
