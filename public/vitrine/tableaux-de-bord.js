@@ -99,7 +99,7 @@
     const presences=historique?.presences||[];
     const prieres=historique?.prieres||[];
     setText("m-presences",presences.filter(x=>["P","R"].includes(x.etat)).length);
-    setText("m-prieres",prieres.length);
+    setText("m-prieres",historique?.totalPrieres ?? prieres.length);
     const etiquettes={P:"Présent",R:"En retard",A:"Absent",E:"Excusé"};
     renderList("liste-presences",presences,x=>[x.titre||"Rassemblement",[formatDate(x.date),etiquettes[x.etat]||""].filter(Boolean).join(" · ")],"Aucune présence enregistrée");
     renderList("liste-prieres",prieres,x=>[x.sujet||"Prière",[formatDate(x.date),x.statut||""].filter(Boolean).join(" · ")],"Aucune requête de prière enregistrée");
