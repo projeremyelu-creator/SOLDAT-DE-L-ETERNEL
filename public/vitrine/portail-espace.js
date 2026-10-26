@@ -59,6 +59,10 @@
       '@media(max-width:650px){#sde-espace-entete{gap:4px;padding:8px;font-size:12px;flex-wrap:wrap}#sde-espace-entete a{padding:7px}#sde-module-etat{max-width:100%;flex-basis:100%;text-align:left;margin:0 5px}}'
     ].join("");
     document.head.append(css);
+    // Les modules privés partagent le service worker public, limité aux ressources publiques.
+    // Le worker privé /sw.js n'est jamais enregistré sur le domaine principal.
+    if ("serviceWorker" in navigator)
+      navigator.serviceWorker.register("/sw-public.js",{scope:"/"}).catch(()=>{});
     fetch("/api/moi",{credentials:"same-origin",cache:"no-store"})
       .then(r=>r.ok?r.json():null)
       .then(user=>{
