@@ -33,7 +33,7 @@ test("L'entrée membre et l'entrée direction servent directement un seul moteur
 });
 const tick=()=>new Promise(resolve=>setTimeout(resolve,20));
 async function create(path,level){
- const dom=new JSDOM("<!doctype html><html><head></head><body><button id='btn-reglages' type='button'>Ouvrir réglages natifs</button><nav id='nav'></nav><main id='main'>Prêt</main></body></html>",{
+ const dom=new JSDOM("<!doctype html><html><head></head><body><button id='btn-reglages' type='button'>Ouvrir réglages natifs</button><div class='shell'><nav id='nav'></nav><main id='main' tabindex='-1'>Prêt</main></div></body></html>",{
   url:"https://mouvement-sde.org"+path,runScripts:"outside-only",pretendToBeVisual:true
  });
  const w=dom.window,nav=w.document.getElementById("nav"),main=w.document.getElementById("main"),opened=[];
@@ -94,4 +94,47 @@ test("Aucune page privée n'est redirigée vers une nouvelle application externe
  assert.match(workerSource,/const fichier = p\.endsWith\("\/os-v31"\)\?"\/os-v31\/index\.html":"\/index\.html"/);
  assert.ok(!direct.includes("app.mouvement-sde.org"));
  assert.ok(!direct.includes("iframe"));
+});
+
+test("Les rubriques sont regroupées et visibles dans une seule zone de navigation",async()=>{
+ const ctx=await create("/administration",2);
+ const d=ctx.w.document;
+ const aside=d.getElementById("sde-direct-aside");
+ assert.ok(aside,"navigation latérale commune");
+ assert.equal(d.querySelectorAll(".sde-direct-workspace").length,1);
+ assert.ok(d.querySelector(".sde-direct-workspace .shell"),"moteur natif conservé sur place");
+ const groups=[...aside.querySelectorAll(".sde-direct-group-title")].map(x=>x.textContent);
+ assert.ok(groups.includes("Membres et activités"));
+ assert.ok(groups.includes("Formation et vie spirituelle"));
+ assert.ok(groups.includes("Gestion financière"));
+ const boutons=[...ctx.tabs.querySelectorAll("button[data-module]")];
+ assert.ok(boutons.length>=6,"un clic direct par rubrique disponible");
+ assert.ok(boutons.every(x=>x.type==="button"));
+ assert.equal(aside.dataset.collapsed,"false");
+ const toggle=aside.querySelector(".sde-direct-menu-toggle");
+ toggle.click();
+ assert.equal(toggle.getAttribute("aria-expanded"),"false");
+ assert.equal(aside.dataset.collapsed,"true");
+ toggle.click();
+ assert.equal(toggle.getAttribute("aria-expanded"),"true");
+ ctx.dom.window.close();
+});
+test("Un clic change le contenu, jamais d'adresse ni de moteur de données",async()=>{
+ const ctx=await create("/administration?module=membres",2);
+ const {dom,w,main,tabs}=ctx;
+ assert.equal(main.textContent,"Module : membres");
+ const projects=tabs.querySelector('[data-module="projets"]');
+ projects.click();await tick();
+ assert.equal(main.textContent,"Module : projets");
+ assert.equal(w.location.pathname,"/administration");
+ assert.equal(tabs.querySelector('[data-module="projets"]').getAttribute("aria-current"),"page");
+ assert.equal(w.document.querySelector(".sde-direct-workspace .shell #main"),main);
+ dom.window.close();
+});
+test("Un lien vers un module privé non autorisé ne l'ouvre pas",async()=>{
+ const ctx=await create("/mon-espace?module=finances",0);
+ assert.ok(!ctx.opened.includes("finances"));
+ assert.ok(!ctx.tabs.querySelector('[data-module="finances"]'));
+ assert.equal(ctx.main.textContent,"Module : espace");
+ ctx.dom.window.close();
 });
