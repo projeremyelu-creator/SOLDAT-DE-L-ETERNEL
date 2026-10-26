@@ -16,7 +16,7 @@ test('Worker : routes OS, origine, session expirée et cache privé',async t=>{
  const page=await run('/os-v31/');assert.match(page.headers.get('cache-control')||'',/no-store/);
  assert.equal(page.headers.get('x-frame-options'),'DENY');
  const pub=await worker.fetch(new Request('https://mouvement-sde.org/os-v31/'),env,{});
- assert.equal(pub.status,301);assert.equal(pub.headers.get('location'),'https://app.mouvement-sde.org/os-v31/');
+ assert.equal(pub.status,302);assert.equal(pub.headers.get('location'),'https://mouvement-sde.org/mon-espace/os-v31');
 });
 test('Worker : erreur asynchrone OS interceptée sans fuite SQL',async()=>{
  const env={DB:{prepare:()=>({bind(){return this},first:async()=>({email:'test@example.com',id:'test',role:'soldat',expire:Date.now()+60000}),run:async()=>{throw Error('SQL_PRIVATE')}})}};
