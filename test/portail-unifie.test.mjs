@@ -78,13 +78,13 @@ test("portail : administration interdite aux non-connectés et membres simples",
 test("portail : deux espaces servis uniquement aux rôles autorisés",async()=>{
  const espace=await get("/mon-espace","soldat");
  assert.equal(espace.status,200);
- assert.equal(await espace.text(),"/vitrine/tableau-membre.html");
+ assert.equal(await espace.text(),"/index.html");
  assert.match(espace.headers.get("cache-control"),/no-store/);
  assert.match(espace.headers.get("x-robots-tag"),/noindex/);
  for(const role of ["contributeur","admin","proprietaire"]){
   const r=await get("/administration",role);
   assert.equal(r.status,200,role);
-  assert.equal(await r.text(),"/vitrine/tableau-administration.html");
+  assert.equal(await r.text(),"/index.html");
  }
 });
 test("portail : même API sécurisée disponible depuis le domaine public",async()=>{
