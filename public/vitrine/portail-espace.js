@@ -98,7 +98,7 @@
     const a=e.target.closest?.('a[href^="https://app.mouvement-sde.org"]');
     if(!a)return;
     e.preventDefault();
-    location.assign(a.href.includes("#finances")?"/administration":"/mon-espace");
+    location.assign(a.href.includes("#finances")?"/administration":retour);
   },true);
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",creer,{once:true});
   else creer();
