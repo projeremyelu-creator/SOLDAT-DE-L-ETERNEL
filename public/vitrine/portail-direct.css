@@ -37,3 +37,17 @@ body.sde-direct{--sde-direct-night:#11182a;--sde-direct-gold:#c8a451}
  .sde-direct .main{padding-bottom:90px}
 }
 @media(prefers-reduced-motion:reduce){#sde-direct-tabs *{transition:none!important}}
+
+/* Un seul menu visible : l'ancien menu reste uniquement dans le DOM pour son routeur. */
+.sde-direct #nav{display:none!important}
+.sde-direct .shell{display:block!important;max-width:1350px;margin:0 auto}
+.sde-direct .main{min-width:0;width:100%;padding:clamp(16px,2.5vw,34px)!important;padding-bottom:80px!important}
+.sde-direct .view{max-width:1200px;margin:0 auto}
+.sde-direct .sde-private-links{display:none!important}
+@media(min-width:761px){
+ #sde-direct-top{position:sticky;top:0}
+ #sde-direct-tabs{flex-wrap:wrap;overflow-x:visible}
+}
+@media(max-width:760px){
+ .sde-direct .main{padding:16px!important;padding-bottom:60px!important}
+}
