@@ -35,7 +35,7 @@ test("MPA: 6 URLs HTML distinctes avec titre et URL canonique",()=>{
     assert.ok(document.querySelector(".sde-mega-nav"));
     assert.equal(document.querySelectorAll(".sde-global-nav").length,1);
     const url=document.querySelector('link[rel="canonical"]')?.href;
-    assert.equal(url,"https://mouvement-sde.org/vitrine/"+page);
+    assert.equal(url,"https://mouvement-sde.org/"+({mouvement:"mouvement",programmes:"programmes",ressources:"enseignements",rejoindre:"contact",projets:"missions",plus:"rubriques"})[page]);
     canonical.add(url);
     d.window.close();
   }
