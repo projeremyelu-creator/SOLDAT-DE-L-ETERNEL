@@ -16,10 +16,10 @@ const REGLES = [
   { path: "finances", read: "admin", write: "admin" },
   { path: "cotisations", read: "admin", write: "admin" },
   { path: "discipline", read: "admin", write: "admin" },
-  { path: "prieres_conf", read: "admin", write: "admin" },
+  { path: "prieres_conf", read: "owner", write: "owner" },
   { path: "annonces", read: "view", write: "interact" },
   { path: "ressources", read: "view", write: "interact" },
-  { path: "suivi", read: "admin", write: "admin" },
+  { path: "suivi", read: "owner", write: "owner" },
   { path: "cotis_speciales", read: "admin", write: "admin" },
   { path: "offrandes", read: "admin", write: "admin" },
   { path: "projets_fin", read: "admin", write: "admin" },
@@ -1226,7 +1226,19 @@ async function traiter(req, env, ctx) {
           n.headers.set("x-robots-tag", "noindex, nofollow");
           return n;
         }
-        if (["/mon-espace","/administration","/mon-espace/outils","/administration/outils"].includes(p)) {
+        if (p === "/os-v31" || p === "/os-v31/")
+          return Response.redirect(url.origin + "/mon-espace/os-v31" + url.search + url.hash, 302);
+        // Ressources JS/CSS privées, sous le même domaine ; aucune donnée métier statique.
+        if (p === "/os-v31/sde-os.js" || p === "/os-v31/sde-os.css") {
+          const r = await assetPortail(p);
+          const n = new Response(r.body,r);
+          n.headers.set("cache-control","private, no-store");
+          n.headers.set("x-robots-tag","noindex, nofollow");
+          n.headers.set("content-type",p.endsWith(".js")?"text/javascript; charset=utf-8":"text/css; charset=utf-8");
+          return n;
+        }
+        if (["/mon-espace","/administration","/mon-espace/outils","/administration/outils",
+             "/mon-espace/os-v31","/administration/os-v31"].includes(p)) {
           const u = await utilisateur(req, env);
           if (!u.connecte) {
             const cible=p.startsWith("/administration")?"/administration":"/mon-espace";
@@ -1237,11 +1249,14 @@ async function traiter(req, env, ctx) {
           // Les outils réutilisent l'application existante, les nouveaux tableaux
           // affichent la synthèse correspondant au rôle sans nouvelle base.
           const fichier = p.endsWith("/outils")?"/index.html":
+            p.endsWith("/os-v31")?"/os-v31/index.html":
             p==="/administration"?"/vitrine/tableau-administration.html":"/vitrine/tableau-membre.html";
           const r = await assetPortail(fichier);
           const n = new Response(r.body,r);
           n.headers.set("cache-control","private, no-store");
           n.headers.set("x-robots-tag","noindex, nofollow");
+          if (p.endsWith("/os-v31")) n.headers.set("content-security-policy",
+            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
           return n;
         }
       }
