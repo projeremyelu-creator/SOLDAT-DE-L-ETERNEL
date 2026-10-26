@@ -30,7 +30,7 @@
     status.dataset.state="success";status.textContent="Connexion établie. Ouverture de votre espace…";
     const me=await fetch("/api/moi",{credentials:"same-origin",cache:"no-store"}).then(r=>r.json());
     const destination=retour();
-    location.assign(destination==="/administration"&&me.niveau<2?"/mon-espace":destination);
+    location.assign(destination==="/administration"&&me.niveau<1?"/mon-espace":destination);
    } catch(_){status.textContent="Connexion impossible. Vérifiez votre réseau et réessayez."}
    finally{button.disabled=false}
   }
