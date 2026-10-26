@@ -78,7 +78,7 @@ test("portail : administration interdite aux non-connectés et membres simples",
 test("portail : deux espaces servis uniquement aux rôles autorisés",async()=>{
  const espace=await get("/mon-espace","soldat");
  assert.equal(espace.status,200);
- assert.equal(await espace.text(),"/index.html");
+ assert.equal(await espace.text(),"/vitrine/tableau-membre.html");
  assert.match(espace.headers.get("cache-control"),/no-store/);
  assert.match(espace.headers.get("x-robots-tag"),/noindex/);
  for(const role of ["contributeur","admin","proprietaire"]){
