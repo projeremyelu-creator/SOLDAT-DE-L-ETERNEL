@@ -25,7 +25,7 @@ test("quatre pages autonomes avec URLs uniques, SEO et formulaire", () => {
     assert.equal(d.body.dataset.sdePage, page);
     assert.ok(d.querySelector("h1"));
     assert.ok(d.querySelector('link[rel="manifest"]'));
-    assert.equal(d.querySelector('link[rel="canonical"]')?.href, "https://mouvement-sde.org/vitrine/" + page);
+    assert.equal(d.querySelector('link[rel="canonical"]')?.href, "https://mouvement-sde.org/" + ({prieres:"priere",temoignages:"temoignages","soldiers-voice":"soldiers-voice","missions-humanitaires":"missions-humanitaires"})[page]);
     assert.equal(d.querySelectorAll("form[data-sde-contact]").length, 1);
     assert.ok(html.includes("/vitrine/initiatives.css"));
     assert.ok(html.includes("/vitrine/pwa-public.js"));
