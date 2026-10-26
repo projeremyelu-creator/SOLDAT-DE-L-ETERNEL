@@ -1246,11 +1246,10 @@ async function traiter(req, env, ctx) {
           }
           if (p.startsWith("/administration") && u.niveau < 1)
             return erreur("refuse", "Accès réservé aux responsables autorisés.", 403);
-          // Les outils réutilisent l'application existante, les nouveaux tableaux
-          // affichent la synthèse correspondant au rôle sans nouvelle base.
-          const fichier = p.endsWith("/outils")?"/index.html":
-            p.endsWith("/os-v31")?"/os-v31/index.html":
-            p==="/administration"?"/vitrine/tableau-administration.html":"/vitrine/tableau-membre.html";
+          // Un seul espace interactif : les deux entrées principales ouvrent
+          // directement l'application native, jamais une page de liens intermédiaire.
+          // Les routes /outils restent disponibles pour les anciens favoris.
+          const fichier = p.endsWith("/os-v31")?"/os-v31/index.html":"/index.html";
           const r = await assetPortail(fichier);
           const n = new Response(r.body,r);
           n.headers.set("cache-control","private, no-store");

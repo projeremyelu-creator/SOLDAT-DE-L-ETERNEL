@@ -1,0 +1,60 @@
+/* Portail privé direct SDE : un seul moteur et une seule surface de travail. */
+body.sde-direct{--sde-direct-night:#11182a;--sde-direct-gold:#c8a451}
+.sde-direct [hidden]{display:none!important}
+#sde-direct-top{z-index:99996;background:var(--sde-direct-night);color:#f7f4ed;border-bottom:2px solid var(--sde-direct-gold);font-family:"Atkinson Hyperlegible",system-ui,sans-serif}
+#sde-direct-top .sde-direct-header{display:flex;align-items:center;gap:12px;padding:10px clamp(14px,3vw,40px);max-width:1550px;margin:auto;min-height:65px}
+#sde-direct-top a{color:inherit;text-decoration:none!important;border-radius:9px;padding:9px 13px;min-height:44px;display:inline-flex;align-items:center;font-size:.88rem;font-weight:800;white-space:nowrap}
+#sde-direct-top a:hover,#sde-direct-top a:focus-visible{background:#293955;color:#eed085}
+#sde-direct-top .sde-direct-logo{font-weight:900;letter-spacing:.07em;color:#edd089;font-size:1.2rem;margin-right:auto;gap:8px}
+#sde-direct-top .sde-direct-logo img{width:36px;height:36px;border-radius:50%;object-fit:contain}
+#sde-direct-top a[aria-current=page]{background:#293955;color:#edd089}
+#sde-direct-top .sde-direct-access{color:#a9b9d5;font-size:.75rem;padding-right:6px;white-space:nowrap}
+#sde-direct-tabs{display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:thin;padding:8px clamp(12px,3vw,40px);background:#192640;border-top:1px solid #36435c;min-height:56px;max-width:1550px;margin:auto}
+#sde-direct-tabs button{flex:0 0 auto;border:1px solid rgba(230,226,211,.18);background:#273650;color:#e5e9ef;border-radius:10px;min-height:42px;padding:10px 13px;font:700 .85rem/1.1 "Atkinson Hyperlegible",system-ui,sans-serif;white-space:nowrap;cursor:pointer}
+#sde-direct-tabs button[aria-current=page]{background:#c8a451;color:#11182a;border-color:#c8a451}
+#sde-direct-tabs button:hover:not([aria-current=page]){background:#35486a}
+#sde-direct-tabs button:focus-visible{outline:3px solid #edd089;outline-offset:2px}
+.sde-direct .hdr{position:relative!important;top:auto!important}
+.sde-direct .hdr .hdr-site{display:none}
+.sde-direct .main{scroll-margin-top:20px}
+.sde-direct-member #nav button[data-vue="accueil"],
+.sde-direct-member #nav button[data-vue="membres"],
+.sde-direct-member #nav button[data-vue="garnisons"],
+.sde-direct-member #nav button[data-vue="secretariat"],
+.sde-direct-member #nav button[data-vue="finances"],
+.sde-direct-member #nav button[data-vue="projets"],
+.sde-direct-member #nav button[data-vue="chambre"],
+.sde-direct-member #nav button[data-vue="plus"]{display:none!important}
+@media(max-width:760px){
+ #sde-direct-top .sde-direct-header{min-height:58px;gap:4px;padding:6px 8px;flex-wrap:wrap}
+ #sde-direct-top a{font-size:.77rem;padding:7px 8px;min-height:38px}
+ #sde-direct-top .sde-direct-logo{font-size:1rem}
+ #sde-direct-top .sde-direct-logo img{width:29px;height:29px}
+ #sde-direct-top .sde-direct-access{display:none}
+ #sde-direct-tabs{padding:7px 10px;min-height:51px}
+ #sde-direct-tabs button{min-height:40px;font-size:.8rem;padding:9px 12px}
+ .sde-direct .hdr{display:none}
+ .sde-direct .main{padding-bottom:90px}
+}
+@media(prefers-reduced-motion:reduce){#sde-direct-tabs *{transition:none!important}}
+
+/* Un seul menu visible : l'ancien menu reste uniquement dans le DOM pour son routeur. */
+.sde-direct #nav{display:none!important}
+.sde-direct .shell{display:block!important;max-width:1350px;margin:0 auto}
+.sde-direct .main{min-width:0;width:100%;padding:clamp(16px,2.5vw,34px)!important;padding-bottom:80px!important}
+.sde-direct .view{max-width:1200px;margin:0 auto}
+.sde-direct .sde-private-links{display:none!important}
+@media(min-width:761px){
+ #sde-direct-top{position:sticky;top:0}
+ #sde-direct-tabs{flex-wrap:wrap;overflow-x:visible}
+}
+@media(max-width:760px){
+ .sde-direct .main{padding:16px!important;padding-bottom:60px!important}
+}
+
+/* La barre SDE remplace réellement l'ancien bandeau, mais conserve son action Réglages. */
+.sde-direct .hdr{display:none!important}
+#sde-direct-top .sde-direct-settings{background:transparent;color:#f7f4ed;border:1px solid #6b7691;border-radius:9px;min-height:43px;padding:9px 13px;cursor:pointer;font:800 .86rem "Atkinson Hyperlegible",system-ui,sans-serif}
+#sde-direct-top .sde-direct-settings:hover{background:#293955;color:#edd089}
+#sde-direct-top .sde-direct-settings:focus-visible{outline:3px solid #edd089;outline-offset:3px}
+@media(max-width:760px){#sde-direct-top .sde-direct-settings{min-height:38px;padding:7px;font-size:.77rem}}

@@ -24,9 +24,9 @@ const request=(path,role,opts={})=>worker.fetch(new Request("https://mouvement-s
 }),fakeRole(role),{waitUntil(){}});
 test("Tableaux privés : rôles, réponses no-store et sources réelles",async()=>{
   for(const [path,role,expected] of [
-    ["/mon-espace","soldat","/vitrine/tableau-membre.html"],
+    ["/mon-espace","soldat","/index.html"],
     ["/mon-espace/outils","soldat","/index.html"],
-    ["/administration","contributeur","/vitrine/tableau-administration.html"],
+    ["/administration","contributeur","/index.html"],
     ["/administration/outils","admin","/index.html"]
   ]){
     const response=await request(path,role);

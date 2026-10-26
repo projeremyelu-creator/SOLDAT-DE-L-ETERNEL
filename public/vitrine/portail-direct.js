@@ -1,0 +1,127 @@
+/* Portail privé à navigation directe.
+   Les rubriques déclenchent le routeur de l'application historique dans la même page.
+   Aucune nouvelle API ni données clonées : même compte, même moteur, mêmes contrôles Worker.
+ */
+(() => {
+  "use strict";
+  if (location.hostname !== "mouvement-sde.org") return;
+  const mode=location.pathname==="/mon-espace"?"membre":
+    location.pathname==="/administration"?"direction":null;
+  if(!mode)return;
+
+  const catalogue={
+    accueil:"Vue d'ensemble",espace:"Mon espace",membres:"Membres",
+    agenda:"Agenda et présences",garnisons:"Garnisons",academie:"Soldiers Academy",
+    portevoix:"Annonces et messages",chambre:"Prière et intercession",
+    projets:"Projets",secretariat:"Décisions",finances:"Finances",
+    arsenal:"Enseignements",mediatheque:"Médiathèque",assistant:"Assistant Éliézer"
+  };
+  const personnel=new Set(["espace","agenda","academie","portevoix","arsenal","mediatheque"]);
+  const url=new URL(location.href);
+  const demandé=url.searchParams.get("module")||"";
+  const souhait=Object.prototype.hasOwnProperty.call(catalogue,demandé)?demandé:
+    mode==="membre"?"espace":"accueil";
+  const body=document.body;
+  body.classList.add("sde-direct",mode==="membre"?"sde-direct-member":"sde-direct-admin");
+  let compte=null,initial=false,signature="",navCourant="";
+  const element=(tag,classe,contenu)=>{
+    const node=document.createElement(tag);
+    if(classe)node.className=classe;
+    if(contenu!==undefined)node.textContent=contenu;
+    return node;
+  };
+  const link=(href,txt,cls)=>{
+    const el=element("a",cls,txt);el.href=href;return el;
+  };
+  function allowed(nom){
+    if(!Object.prototype.hasOwnProperty.call(catalogue,nom))return false;
+    if(mode==="membre"&&!personnel.has(nom))return false;
+    if(nom==="finances"&&compte?.niveau<2)return false;
+    return true;
+  }
+  function start(){
+    const header=element("header");header.id="sde-direct-top";
+    const head=element("div","sde-direct-header");
+    const brand=link("/","S.D.E.","sde-direct-logo");
+    const logo=document.createElement("img");
+    logo.src="/vitrine/logo-96.png";logo.alt="";logo.width=36;logo.height=36;
+    brand.prepend(logo);head.append(brand);
+    const publique=link("/","Site public");head.append(publique);
+    const membre=link("/mon-espace","Mon espace");head.append(membre);
+    if(mode==="membre")membre.setAttribute("aria-current","page");
+    const direction=link("/administration","Administration");
+    direction.hidden=true;
+    if(mode==="direction")direction.setAttribute("aria-current","page");
+    head.append(direction);
+    const reglages=element("button","sde-direct-settings","Réglages");
+    reglages.type="button";
+    reglages.addEventListener("click",()=>{
+      const natif=document.getElementById("btn-reglages");
+      if(natif) natif.click();
+    });
+    head.append(reglages);
+    const role=element("span","sde-direct-access",mode==="membre"?"Tableau personnel":"Poste de commandement");
+    head.append(role);
+    const tabs=element("nav");tabs.id="sde-direct-tabs";tabs.setAttribute("aria-label","Rubriques de l'espace privé");
+    header.append(head,tabs);
+    body.insertBefore(header,body.firstChild);
+    const original=document.getElementById("nav");
+    if(!original)return;
+
+    const sync=()=>{
+      if(!compte)return;
+      const buttons=[...original.querySelectorAll('button[data-vue]')];
+      const disponibles=buttons.filter(b=>allowed(b.dataset.vue)&&!b.disabled);
+      const next=disponibles.map(b=>b.dataset.vue).join("|");
+      if(next!==signature){
+        signature=next;tabs.replaceChildren();
+        for(const b of disponibles){
+          const nom=b.dataset.vue;
+          const item=element("button","sde-direct-tab",catalogue[nom]);
+          item.type="button";item.dataset.module=nom;
+          item.addEventListener("click",()=>{
+            const target=original.querySelector('button[data-vue="'+nom+'"]');
+            if(!target||target.disabled)return;
+            // Le contenu se met à jour dans #main par le routeur natif, sans navigation HTTP.
+            target.click();
+            const nextUrl=new URL(location.href);
+            nextUrl.searchParams.set("module",nom);
+            if(nextUrl.hash)nextUrl.hash="";
+            history.replaceState(null,"",nextUrl.pathname+nextUrl.search);
+          });
+          tabs.append(item);
+        }
+      }
+      const courant=buttons.find(b=>b.getAttribute("aria-current")==="page"||b.classList.contains("on"))?.dataset.vue||"";
+      if(courant!==navCourant||next!==signature){
+        navCourant=courant;
+        for(const b of tabs.querySelectorAll("button")){
+          if(b.dataset.module===courant)b.setAttribute("aria-current","page");
+          else b.removeAttribute("aria-current");
+        }
+      }
+      if(!initial){
+        const cible=disponibles.find(b=>b.dataset.vue===souhait);
+        if(cible){
+          initial=true;
+          // Évite une étape "tous les outils" : le module demandé devient la vue courante.
+          if(!cible.classList.contains("on")&&cible.getAttribute("aria-current")!=="page")cible.click();
+        }
+      }
+    };
+    const monitor=new MutationObserver(sync);
+    monitor.observe(original,{childList:true,subtree:true,attributes:true,attributeFilter:["aria-current","class"]});
+    fetch("/api/moi",{credentials:"same-origin",cache:"no-store"})
+      .then(r=>r.ok?r.json():null)
+      .then(user=>{
+        if(!user||!user.connecte){role.textContent="Session non disponible";return}
+        compte=user;
+        role.textContent=user.libRole||user.role||(mode==="membre"?"Membre":"Direction");
+        direction.hidden=user.niveau<1;
+        sync();
+      })
+      .catch(()=>{role.textContent="Connexion indisponible";});
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});
+  else start();
+})();
