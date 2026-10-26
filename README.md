@@ -178,3 +178,12 @@ Le Worker sert l'application privée existante à partir de `public/index.html` 
 - Test automatisé additionnel : `test/tableaux-de-bord.test.mjs` (contrôle des deux espaces, accès par rôle, données dynamiques et formulaires).
 
 **Avant mise en ligne :** tester en préproduction la connexion réelle, les droits de tous les rôles, les fonctions financières, les notifications et le fonctionnement du service worker public. La fusion reste en brouillon jusqu'à validation de ces étapes.
+
+### Navigation contextuelle et SDE OS unifié (26 octobre 2026)
+
+- Depuis les deux tableaux, les liens des rubriques ouvrent directement les modules de l'application existante par une URL de même domaine : `/mon-espace/outils?module=academie`, `/administration/outils?module=membres`, `/administration/outils?module=agenda`, `/administration/outils?module=finances` (administrateur uniquement), etc. Le pont `public/vitrine/portail-espace.js` utilise le bouton natif du module une fois qu'il apparaît, ne force pas les permissions et ajoute un retour direct au tableau.
+- `/mon-espace/os-v31` et `/administration/os-v31` intègrent les fonctions SDE OS v3.1 (Soldat Intégral, Academy, gouvernance) au portail principal, avec les mêmes API et la même session ; le chemin historique `/os-v31/` redirige vers `/mon-espace/os-v31` sur le domaine principal. Les scripts et CSS restent servis sous `/os-v31/` sur le même domaine, `no-store` et `noindex`.
+- Confidentialité : `prieres_conf` et `suivi` ont maintenant des règles de lecture et d'écriture `owner` dans le Worker, et non `admin`. Vérifier avant publication que cette décision correspond bien au fonctionnement pastoral souhaité et que les anciennes tâches d'administration ne nécessitent pas l'accès délégué.
+- Le nombre de requêtes de prière du membre est calculé sur l'ensemble de son historique et non uniquement sur les 50 éléments récents affichés.
+- `test/navigation-contextuelle.test.mjs` vérifie les chemins privés, les accès des rôles, les liens directs, les protections des documents pastoraux et les ressources SDE OS.
+- **Préproduction indispensable :** tester un membre, un contributeur, un administrateur et le propriétaire sur téléphones Android et ordinateur ; ouvrir et quitter un module ; utiliser le Soldat Intégral ; tester la PWA et les notifications. Ne pas fusionner directement sans ces contrôles.
