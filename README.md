@@ -138,3 +138,33 @@ Branche de préparation : `ameliorations/site-sde-phases-1-4-20261026`.
 - Test dédié : `test/sde-dynamique.test.mjs`. Exécuter `npm ci --ignore-scripts && npm test` avant la fusion, puis valider manuellement l'accueil et les pages sur smartphone.
 
 **Attention :** ne pas reconstruire `public/index.html` depuis les anciennes sources avant d'avoir réaligné `source/src/` (voir note de maintenance ci-dessus).
+
+## Portail unifié — nouvelle architecture en revue (26 octobre 2026)
+
+L'objectif est de conserver **une seule plateforme** : `https://mouvement-sde.org/`.
+
+### Pages publiques autonomes
+
+Accueil `/`, Le Mouvement `/mouvement`, Programmes `/programmes`, Academy `/academy`, Enseignements et médiathèque `/enseignements`, Missions et projets `/missions`, Prières `/priere`, Nous rejoindre et contact `/contact`. Les anciennes pages `/vitrine/*.html` sont maintenues comme sources de contenu pendant la migration, mais leurs canoniques SEO renvoient aux nouvelles URLs publiques. Le vieil accueil `/vitrine/` est redirigé vers `/`.
+
+Le nouvel accueil est `public/vitrine/portail.html`, sans les longues sections de l'ancien accueil. Le même en-tête visuel est utilisé pour les pages éditoriales via `portail-unifie.js`/`.css`.
+
+### Deux espaces privés, une authentification
+
+- **`/mon-espace`** : le compte individuel et les informations personnelles. Toute personne non connectée est redirigée vers `/connexion?retour=%2Fmon-espace`.
+- **`/administration`** : interface des responsables autorisés (contributeurs, administrateurs et propriétaire). Une session de simple membre reçoit 403. Les fonctions internes conservent les droits du Worker, y compris les restrictions financières et pastorales.
+- **`/connexion`** : formulaire de connexion, création de compte et activation avec les endpoints existants ; aucun nouvel identifiant, aucune base supplémentaire.
+- **`app.mouvement-sde.org`** : compatibilité conservée pour les liens historiques et les sessions précédentes. Les sessions étant liées à leur domaine, une reconnexion au portail principal peut être nécessaire. Ce sous-domaine n'est plus un accès principal du nouveau menu.
+
+Le Worker sert l'application privée existante à partir de `public/index.html` sur les deux chemins, sans changement du stockage D1. Les API et fichiers privés sont servis sur le même domaine en réutilisant les contrôles existants, jamais directement par la couche statique. Les pages privées ne doivent jamais être indexées ni mises en cache par la PWA publique.
+
+### Validation et points restant à résoudre avant la fusion
+
+- Exécuter `npm ci --ignore-scripts && npm test`, dont `test/portail-unifie.test.mjs`.
+- Tester les connexions, la création de compte, les droits du contributeur et de l'administrateur, et le retour aux pages publiques sur un serveur Cloudflare de préproduction.
+- Valider que le déploiement du nouveau shell de l'application est compatible avec tous les anciens chemins de média, de notification et de partage.
+- **Notifications push** : l'ancienne application ne doit pas écraser le service worker public lorsque servie sous le domaine principal. Le comportement de souscription des notifications doit être testé sur smartphone et pourra nécessiter une évolution du worker public avant activation générale.
+- Sur des sessions existantes de l'ancien sous-domaine, une connexion sur le domaine principal est nécessaire ; ne pas migrer automatiquement les cookies entre hôtes.
+- Ne pas reconstruire `public/index.html` depuis les sources anciennes sans les réaligner : voir l'avertissement précédent.
+
+**Important :** cette refonte change le point d'entrée public et la destination des API de l'espace privé. Ne fusionner et ne publier qu'après les tests et la validation manuelle des accès privés. Prévoir une sauvegarde D1 et un retour arrière rapide.
