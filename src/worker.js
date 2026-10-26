@@ -1203,6 +1203,7 @@ async function traiter(req, env, ctx) {
       const assetPortail = (nom) => env.ASSETS.fetch(new Request(new URL(nom, url), req));
       if (req.method === "GET" || req.method === "HEAD") {
         if (p === "/" || p === "/index.html") return assetPortail("/vitrine/portail.html");
+        if (p === "/vitrine/" || p === "/vitrine/index.html") return Response.redirect(url.origin + "/", 301);
         if (pagesPubliques[p]) return assetPortail(pagesPubliques[p]);
         if (p === "/connexion") {
           const r = await assetPortail("/vitrine/connexion-unifiee.html");
