@@ -168,3 +168,13 @@ Le Worker sert l'application privée existante à partir de `public/index.html` 
 - Ne pas reconstruire `public/index.html` depuis les sources anciennes sans les réaligner : voir l'avertissement précédent.
 
 **Important :** cette refonte change le point d'entrée public et la destination des API de l'espace privé. Ne fusionner et ne publier qu'après les tests et la validation manuelle des accès privés. Prévoir une sauvegarde D1 et un retour arrière rapide.
+
+### Deux tableaux de bord dédiés (nouveau)
+
+- `/mon-espace` sert `public/vitrine/tableau-membre.html` et `tableaux-de-bord.js` : informations du membre issues de `/api/mon-espace`, historiques individuels depuis `/api/mon-historique`, édition du téléphone/quartier/situation via `PATCH /api/mon-profil`, requêtes depuis `POST /api/priere`. Aucune donnée artificielle n'est affichée si l'API est indisponible.
+- `/administration` sert `public/vitrine/tableau-administration.html` : indicateurs agrégés du serveur via `GET /api/tableau-de-bord` (uniquement après authentification et rôle >= contributeur) et événements publics via `/api/public`. Les chiffres n'incluent aucune identité privée ni montant financier. L'accès visuel aux finances exige un rôle admin et l'accès aux dossiers pastoraux est proposé aux propriétaires uniquement. Les permissions réelles restent appliquées par le serveur.
+- `/mon-espace/outils` et `/administration/outils` conservent provisoirement les écrans fonctionnels de l'application historique sous **le même domaine et les mêmes cookies**. Il ne s'agit pas de nouvelles applications séparées. Les accès sont protégés avant le chargement du HTML et ne sont jamais indexés. Ces modules pourront être intégrés progressivement aux nouveaux tableaux de bord.
+- Tous les tableaux ont le même logo, le même en-tête et la même navigation ; aucune donnée de suivi pastoral ou financier ne se trouve dans les pages HTML statiques.
+- Test automatisé additionnel : `test/tableaux-de-bord.test.mjs` (contrôle des deux espaces, accès par rôle, données dynamiques et formulaires).
+
+**Avant mise en ligne :** tester en préproduction la connexion réelle, les droits de tous les rôles, les fonctions financières, les notifications et le fonctionnement du service worker public. La fusion reste en brouillon jusqu'à validation de ces étapes.
