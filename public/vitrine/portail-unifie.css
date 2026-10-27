@@ -37,3 +37,12 @@ body.sde-multipage-unifie .site-footer{margin-top:0}
 @media(max-width:1180px){.site-access-top{gap:5px}.site-access-top a{font-size:.76rem;padding:7px 9px}}
 @media(max-width:760px){.site-header-inner{flex-wrap:wrap;gap:7px;min-height:75px;padding:8px 0}.site-brand{flex:1 1 auto}.site-access-top{order:2;width:100%;justify-content:center}.site-access-top a{font-size:.79rem;min-height:39px;flex:1;justify-content:center}.site-burger{order:1}.private-access{padding:50px 0}.private-access-grid{grid-template-columns:1fr}.private-access-card{padding:23px}.hero-private-links{flex-direction:column;align-items:stretch}.hero-private-links a{text-align:center}}
 @media(prefers-reduced-motion:reduce){.private-access-card{transition:none}}
+
+/* En-tête compact sur tablette : toujours montrer les deux accès directs. */
+@media(max-width:1300px){
+ .site-header .site-burger{display:flex}
+ .site-header .site-menu{position:absolute;top:100%;left:0;right:0;display:none;flex-direction:column;align-items:stretch;gap:0;padding:12px 22px 24px;background:#11182a;border-bottom:1px solid #c8a451;max-height:80svh;overflow-y:auto}
+ .site-header .site-menu[data-open=true]{display:flex}
+ .site-header .site-menu>a{padding:12px 8px;font-size:1rem}
+ .site-header .site-menu .menu-login{display:flex}
+}
