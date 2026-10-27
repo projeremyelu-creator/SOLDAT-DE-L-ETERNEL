@@ -27,7 +27,7 @@ test('mobile: lock background, expose member link, Escape closes and restores bu
   const p = page();
   const burger = click(p, '#burger');
   assert.equal(p.d.body.style.overflow, 'hidden');
-  assert.ok(p.d.querySelector('#nav-principal a[href="https://app.mouvement-sde.org/#connexion"]'));
+  assert.ok(p.d.querySelector('#nav-principal a[href="/connexion"]'));
   assert.equal(p.d.querySelector('main').inert, true);
   p.d.activeElement.dispatchEvent(new p.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   assert.equal(burger.getAttribute('aria-expanded'), 'false');

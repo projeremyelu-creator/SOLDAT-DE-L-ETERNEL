@@ -1,3 +1,4 @@
+import {checkPublicRegistration} from './helpers/pwa.mjs';
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { test } from "node:test";
@@ -75,7 +76,7 @@ test("thème public : basculement sans toucher l'application privée",()=>{
   assert.equal(w.localStorage.getItem("sde-theme"),"light");
   dom.window.close();
 });
-test("PWA publique : page d'accueil installable et service worker d'origine isolée",()=>{
+test("PWA publique : page d'accueil installable et service worker d'origine isolée",async()=>{
   const publicManifest=JSON.parse(read(path("manifest.webmanifest")));
   assert.equal(publicManifest.scope,"/");
   assert.equal(publicManifest.start_url,"/");
@@ -85,8 +86,7 @@ test("PWA publique : page d'accueil installable et service worker d'origine isol
   const pwa=read(path("pwa-public.js"));
   const publicSW=read("public/sw-public.js");
   const worker=read("src/worker.js");
-  assert.ok(pwa.includes('location.hostname === "mouvement-sde.org"'));
-  assert.ok(pwa.includes('register("/sw-public.js", {scope:"/"})'));
+  await checkPublicRegistration();
   assert.ok(pwa.includes('"/vitrine/sw-public.js"'),"migration de l'ancien service worker public");
   assert.ok(worker.includes("sw-public\\.js$"),"route Cloudflare réservée au worker public");
   for(const marker of ["/api/","/_blob/","/m/","/engagements","/formulaire"])

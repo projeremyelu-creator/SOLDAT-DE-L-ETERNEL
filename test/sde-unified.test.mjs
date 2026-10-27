@@ -1,3 +1,4 @@
+import {checkPublicRegistration} from './helpers/pwa.mjs';
 import {readFileSync} from "node:fs";
 import {test} from "node:test";
 import assert from "node:assert/strict";
@@ -23,7 +24,8 @@ test("les domaines restent séparés par leurs privilèges, non par leur identit
  const h=file("index.html");
  assert.ok(h.includes('href="https://mouvement-sde.org/"'));
  assert.ok(h.includes('name="robots" content="noindex"'));
- assert.ok(file("vitrine/index.html").includes("https://app.mouvement-sde.org"));
+ const publicPage=new JSDOM(file("vitrine/index.html"));
+ assert.ok(publicPage.window.document.querySelector('a[href="/connexion"]'));publicPage.window.close();
  const wrangler=readFileSync("wrangler.toml","utf8");
  assert.ok(wrangler.includes('pattern = "mouvement-sde.org"'));
  assert.ok(wrangler.includes('pattern = "app.mouvement-sde.org"'));
@@ -55,7 +57,7 @@ test("recherche instantanée du répertoire public Plus et état vide",()=>{
  assert.equal(d.window.document.querySelector(".sde-search-empty").hidden,false);
  d.window.close();
 });
-test("PWA publique installable et strictement limitée aux ressources accessibles",()=>{
+test("PWA publique installable et strictement limitée aux ressources accessibles",async()=>{
  const m=JSON.parse(file("vitrine/manifest.webmanifest"));
  assert.equal(m.scope,"/");assert.equal(m.start_url,"/");assert.equal(m.display,"standalone");
  for(const name of pages.filter(p=>!["formulaire","engagements"].includes(p))){
@@ -64,8 +66,7 @@ test("PWA publique installable et strictement limitée aux ressources accessible
   assert.ok(h.includes("/vitrine/pwa-public.js"),name);
  }
  const js=file("vitrine/pwa-public.js");
- assert.ok(js.includes('scope:"/"'));
- assert.ok(js.includes('location.hostname === "mouvement-sde.org"'));
+ await checkPublicRegistration();
  const sw=file("sw-public.js");
  assert.ok(sw.includes('req.method !== "GET"'));
  assert.ok(sw.includes('PAGES.has(path)'));

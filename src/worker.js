@@ -2,6 +2,7 @@ import {apiSdeOs31} from "./os-v31.js";
 import {notifySde,flushNotices,mailStatus,pushConfigured} from "./notifications.js";
 import {generateVapidKeys} from "./web-push.js";
 import {sdeOsApi} from "./sde-os.js";
+import {portalApi,portalAudit,portalBackup} from "./portal-services.js";
 /* MPA SDE — serveur Cloudflare (Worker)
    Sert l'application, garde les données dans D1, les fichiers dans KV,
    et reconnaît chacun par son adresse e-mail et son mot de passe.
@@ -208,7 +209,7 @@ async function apiDb(req, env, u, ctx) {
     if (!peutEcrire(u, path)) return erreur("invalid_argument", "Votre niveau d’accès ne permet pas cette modification.", 403);
     if (b.op !== "delete" && (typeof b.data !== "object" || b.data === null || Array.isArray(b.data))) return erreur("invalid_argument", "données");
     if (b.op !== "delete" && JSON.stringify(b.data).length > 256 * 1024) return erreur("invalid_argument", "trop volumineux");
-    try { await ecrireDoc(env, b.op, path, b.data); notifySde(env,ctx,"espace",{path,action:b.op}); } catch (e) { return erreur(e.code || "unavailable", e.message, e.code === "invalid_argument" ? 400 : 409); }
+    try { await ecrireDoc(env, b.op, path, b.data); await portalAudit(env,u,segs(path)[0],b.op); notifySde(env,ctx,"espace",{path,action:b.op}); } catch (e) { return erreur(e.code || "unavailable", e.message, e.code === "invalid_argument" ? 400 : 409); }
     return json({ ok: true });
   }
   return erreur("invalid_argument", "opération");
@@ -259,7 +260,7 @@ async function apiInscription(req, env, ctx) {
   const email = normEmail(b.email), prenoms = propre(b.prenoms, 80), nom = propre(b.nom, 80).toUpperCase(), telephone = propre(b.telephone, 30);
   if (!EMAIL_OK.test(email)) return erreur("invalid_argument", "Adresse e-mail invalide.");
   if (!prenoms || !nom) return erreur("invalid_argument", "Indiquez votre nom et vos prénoms.");
-  if (!mdpValide(b.motDePasse)) return erreur("invalid_argument", "Le mot de passe doit compter au moins 4 caractères.");
+  if (!mdpValide(b.motDePasse)) return erreur("invalid_argument", "Le mot de passe doit compter au moins 8 caractères.");
   if (telephone && telephone.replace(/\D/g, "").length < 8) return erreur("invalid_argument", "Numéro de téléphone invalide.");
   const existe = await env.DB.prepare("SELECT email FROM comptes WHERE email = ?").bind(email).first();
   if (existe || proprietaires(env).includes(email)) return erreur("existe", "Un compte existe déjà avec cette adresse. Connectez-vous, ou utilisez le code d’activation reçu du secrétariat.", 409);
@@ -293,7 +294,7 @@ async function apiActivation(req, env) {
   const b = await req.json();
   const email = normEmail(b.email), ip = ipDe(req);
   if (await bloque(env, "e:" + email, 8) || await bloque(env, "ip:" + ip, 40)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure avant de réessayer.", 429);
-  if (!mdpValide(b.motDePasse)) return erreur("invalid_argument", "Le mot de passe doit compter au moins 4 caractères.");
+  if (!mdpValide(b.motDePasse)) return erreur("invalid_argument", "Le mot de passe doit compter au moins 8 caractères.");
   const c = EMAIL_OK.test(email) ? await env.DB.prepare("SELECT email, activation FROM comptes WHERE email = ?").bind(email).first() : null;
   const [h, exp] = String((c && c.activation) || "").split("|");
   if (!c || !h || Number(exp) < Date.now() || h !== (await empreinteCode(email, b.code))) {
@@ -307,7 +308,7 @@ async function apiActivation(req, env) {
 async function apiMotDePasse(req, env, u) {
   if (!u.connecte) return erreur("refuse", "Connectez-vous d’abord.", 401);
   const b = await req.json();
-  if (!mdpValide(b.nouveau)) return erreur("invalid_argument", "Le nouveau mot de passe doit compter au moins 4 caractères.");
+  if (!mdpValide(b.nouveau)) return erreur("invalid_argument", "Le nouveau mot de passe doit compter au moins 8 caractères.");
   if (await bloque(env, "e:" + u.email, 8)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure.", 429);
   const c = await env.DB.prepare("SELECT mdp FROM comptes WHERE email = ?").bind(u.email).first();
   if (c && c.mdp && !(await verifierMdp(b.ancien, c.mdp))) { await compter(env, "e:" + u.email); return erreur("refuse", "Mot de passe actuel incorrect.", 401); }
@@ -404,7 +405,8 @@ async function apiPriere(req, env, u, ctx) {
   if (await bloque(env, "priere:" + u.email, 10)) return erreur("rate_limited", "Vous avez déposé beaucoup de requêtes : réessayez un peu plus tard.", 429);
   await compter(env, "priere:" + u.email);
   const t = Date.now();
-  await ecrireDoc(env, "set", "prieres/" + idDoc(), { sujet: sujet.slice(0, 140), details: sujet.length > 140 ? sujet : "", categorie: "Personnelle", date: new Date(t).toISOString().slice(0, 10), pourId: u.membreId, pour: "", urgent: false, statut: "En prière", priants: {}, source: "espace", creePar: u.id, creeLe: t, modifiePar: u.id, modifieLe: t });
+  if(b.confidentiel!==undefined&&typeof b.confidentiel!=="boolean")return erreur("invalid_argument","Choix de confidentialité invalide.");
+  await ecrireDoc(env, "set", (b.confidentiel===true?"prieres_conf/":"prieres/") + idDoc(), { sujet: sujet.slice(0, 140), details: sujet.length > 140 ? sujet : "", categorie: "Personnelle", date: new Date(t).toISOString().slice(0, 10), pourId: u.membreId, pour: "", urgent: false, statut: "En prière", priants: {}, source: "espace", creePar: u.id, creeLe: t, modifiePar: u.id, modifieLe: t });
   notifySde(env,ctx,"priere");
   return json({ ok: true });
 }
@@ -415,7 +417,7 @@ async function apiMonHistorique(req, env, u) {
   const r = await lireDoc(env, "espace_membre/" + u.membreId);
   const resume = r ? r.data.resume || null : null;
   /* Presences complètes : chercher tous les événements contenant le membre */
-  const evts = await lireRequete(env, "evenements");
+  const evts = await lireRequete(env, {path:"evenements"});
   const presences = [];
   for (const e of evts) {
     if (!e.data || !e.data.presents) continue;
@@ -426,7 +428,9 @@ async function apiMonHistorique(req, env, u) {
   }
   presences.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
   /* Prières déposées par le membre */
-  const prieres = (await lireRequete(env, "prieres")).filter((p) => p.data && p.data.pourId === u.membreId).map((p) => ({ date: p.data.date || "", sujet: (p.data.sujet || "").slice(0, 60), statut: p.data.statut || "" })).sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  const publiques=await lireRequete(env,{path:"prieres"});
+  const confidentielles=await lireRequete(env,{path:"prieres_conf"});
+  const prieres = [...publiques.map(p=>({...p,confidentiel:false})),...confidentielles.map(p=>({...p,confidentiel:true}))].filter((p) => p.data && p.data.pourId === u.membreId && (!p.confidentiel || p.data.creePar===u.id)).map((p) => ({ date: p.data.date || "", sujet: (p.data.sujet || "").slice(0, 60), statut: p.data.statut || "",confidentiel:p.confidentiel })).sort((a, b) => (b.date || "").localeCompare(a.date || ""));
   return json({ presences, prieres: prieres.slice(0, 50), totalPrieres: prieres.length, resume });
 }
 
@@ -1005,12 +1009,14 @@ async function sauvegarder(env) {
   const comptes = (await env.DB.prepare("SELECT email, id, nom, role, cree, derniere, membreId, matricule FROM comptes").all()).results || [];
   const medias = (await env.DB.prepare("SELECT id, titre, description, categorie, genre, nom, mime, taille, stockage, visibilite, auteur, auteurNom, cree FROM medias WHERE fini = 1").all()).results || [];
   const jour = new Date().toISOString().slice(0, 10);
-  const corps = JSON.stringify({ version: 1, date: jour, application: "MPA SDE", docs: Object.fromEntries(docs.map((d) => [d.path, JSON.parse(d.data)])), comptes, medias });
+  const portail=await portalBackup(env);
+  const corps = JSON.stringify({ version: 1, date: jour, application: "MPA SDE", docs: Object.fromEntries(docs.map((d) => [d.path, JSON.parse(d.data)])), comptes, medias,portail });
   await env.FICHIERS.put("sauvegarde:" + jour, corps, { expirationTtl: 35 * 86400, metadata: { type: "application/json", taille: corps.length, documents: docs.length, comptes: comptes.length, faite: Date.now() } });
   return { jour, documents: docs.length, taille: corps.length };
 }
 async function apiSauvegardes(req, env, u, url) {
-  if (u.niveau < 2) return erreur("refuse", "Réservé aux administrateurs.", 403);
+  // Une sauvegarde contient aussi les dossiers pastoraux : mêmes droits owner.
+  if (u.niveau < 3) return erreur("refuse", "Sauvegardes complètes réservées au propriétaire.", 403);
   const jour = url.pathname.split("/")[3];
   if (req.method === "POST") return json({ ok: true, ...(await sauvegarder(env)) });
   if (jour) {
@@ -1353,6 +1359,12 @@ async function traiter(req, env, ctx) {
       // Un cookie invalide ou expiré ne permet pas d'échapper au plafond anonyme.
       if (avecSession && !u.connecte && await rateLimitGlobal(env, ipGlobal))
         return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
+      const portail=await portalApi(req,env,u,{
+        list:path=>lireRequete(env,{path}),write:(op,path,data)=>ecrireDoc(env,op,path,data),
+        notify:(type,details)=>notifySde(env,ctx,type,details),
+        blocked:(key,max)=>bloque(env,key,max),count:key=>compter(env,key),hash:sha,owners:proprietaires(env)
+      });
+      if(portail)return portail;
       if (p.startsWith("/api/os/")) return sdeOsApi(req,env,u,url);
       if (p === "/api/notifications-status" && req.method === "GET") {
         if (u.niveau < 3) return erreur("refuse", "Réservé au propriétaire.", 403);
@@ -1387,7 +1399,11 @@ async function traiter(req, env, ctx) {
         if (u.jeton) await env.DB.prepare("DELETE FROM sessions WHERE jeton = ?").bind(u.jeton).run();
         return json({ ok: true }, 200, { "set-cookie": "sde_s=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0" });
       }
-      if (p === "/api/comptes") return apiComptes(req, env, u);
+      if (p === "/api/comptes") {
+        const reponse=await apiComptes(req,env,u);
+        if(req.method!=="GET"&&reponse.ok)await portalAudit(env,u,"comptes","modification");
+        return reponse;
+      }
       if (p.startsWith("/api/fichiers")) return apiFichiers(req, env, u, url);
       if (p === "/api/import" && req.method === "POST") return apiImport(req, env, u, ctx);
       if (p === "/api/medias" || p.startsWith("/api/medias/")) return apiMedias(req, env, u, url, ctx);

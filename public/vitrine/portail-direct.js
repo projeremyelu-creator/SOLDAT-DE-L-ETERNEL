@@ -14,16 +14,17 @@
     agenda:"Agenda et présences",garnisons:"Garnisons et pôles",academie:"Soldiers Academy",
     portevoix:"Communication et annonces",chambre:"Prière et intercession",
     projets:"Projets et missions",secretariat:"Secrétariat et décisions",finances:"Finances et cotisations",
-    arsenal:"Bibliothèque et enseignements",mediatheque:"Médiathèque",assistant:"Assistant Éliézer"
+    arsenal:"Bibliothèque et enseignements",mediatheque:"Médiathèque",assistant:"Assistant Éliézer",
+    synthese:"Mon accueil",parcours:"Lecture et prière",preferences:"Mes rappels",gestion:"Centre de contrôle"
   };
-  const personnel=new Set(["priere","espace","agenda","academie","portevoix","arsenal","mediatheque"]);
+  const personnel=new Set(["priere","espace","agenda","academie","portevoix","arsenal","mediatheque","synthese","parcours","preferences"]);
   const url=new URL(location.href);
   const demandé=url.searchParams.get("module")||"";
   const souhait=Object.prototype.hasOwnProperty.call(catalogue,demandé)?demandé:
     mode==="membre"?"espace":"accueil";
   const body=document.body;
   body.classList.add("sde-direct",mode==="membre"?"sde-direct-member":"sde-direct-admin");
-  let compte=null,initial=false,signature="",navCourant="",priereOuverte=false,historiqueCharge=false;
+  let compte=null,initial=false,signature="",navCourant="",priereOuverte=false,historiqueCharge=false,vueExterne="";
   const element=(tag,classe,contenu)=>{
     const node=document.createElement(tag);
     if(classe)node.className=classe;
@@ -37,6 +38,7 @@
     if(!Object.prototype.hasOwnProperty.call(catalogue,nom))return false;
     if(mode==="membre"&&!personnel.has(nom))return false;
     if(nom==="priere")return mode==="membre";
+    if(nom==="gestion")return mode==="direction"&&compte?.niveau>=1;
     if(nom==="finances"&&compte?.niveau<2)return false;
     return true;
   }
@@ -61,6 +63,9 @@
       if(natif) natif.click();
     });
     head.append(reglages);
+    const account=element("button","sde-direct-settings","Mon compte");account.type="button";
+    account.addEventListener("click",()=>{(document.getElementById("btn-compte")||document.getElementById("btn-reglages"))?.click()});
+    head.append(account);
     const role=element("span","sde-direct-access",mode==="membre"?"Espace membre":"Espace administrateur");
     head.append(role);
     const tabs=element("nav");tabs.id="sde-direct-tabs";tabs.setAttribute("aria-label","Rubriques de l'espace privé");
@@ -96,8 +101,12 @@
       panneau=element("section","sde-spiritual-panel");panneau.id="sde-priere-panel";
       panneau.hidden=true;panneau.setAttribute("aria-labelledby","sde-priere-titre");
       const h=element("h2","", "Mes prières et mon intercession");h.id="sde-priere-titre";
-      const aide=element("p","", "Transmettez un sujet de prière à l'équipe d'intercession. Votre demande est liée à votre compte SDE.");
+      const aide=element("p","", "Choisissez vos destinataires avant l'envoi. Une requête d'intercession est visible par les responsables habilités ; une demande confidentielle reste réservée au leader et à votre historique personnel.");
       const form=element("form","sde-priere-form");
+      const confidentialite=element("label","", "Destinataires de ma demande");
+      const audience=document.createElement("select");audience.name="confidentialite";
+      for(const [value,label] of [["equipe","Responsables habilités — intercession"],["leader","Leader uniquement — confidentiel"]]){const option=element("option","",label);option.value=value;audience.append(option)}
+      confidentialite.append(audience);
       const label=element("label","", "Mon sujet de prière");
       champPriere=document.createElement("textarea");
       champPriere.name="sujet";champPriere.required=true;champPriere.maxLength=2000;
@@ -105,7 +114,7 @@
       label.append(champPriere);
       envoiPriere=element("button","sde-priere-submit","Déposer ma requête");
       envoiPriere.type="submit";
-      form.append(label,envoiPriere);
+      form.append(confidentialite,label,envoiPriere);
       messagePriere=element("p","sde-priere-feedback","");
       messagePriere.setAttribute("role","status");messagePriere.setAttribute("aria-live","polite");
       const recap=element("h3","", "Mes dernières requêtes");
@@ -119,7 +128,7 @@
         if(!sujet)return;
         envoiPriere.disabled=true;messagePriere.textContent="Transmission de votre prière…";
         try{
-          const r=await fetch("/api/priere",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"content-type":"application/json","accept":"application/json"},body:JSON.stringify({sujet})});
+          const r=await fetch("/api/priere",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"content-type":"application/json","accept":"application/json"},body:JSON.stringify({sujet,...(audience.value==="leader"?{confidentiel:true}:{})})});
           const data=await r.json().catch(()=>({}));
           if(!r.ok||data.ok!==true)throw Error(data.message||"La prière n'a pas pu être transmise.");
           champPriere.value="";messagePriere.textContent="Votre requête de prière a été enregistrée.";
@@ -146,7 +155,7 @@
         for(const p of prieres.slice(0,8)){
           const li=element("li","");
           const titre=element("strong","",String(p.sujet||"Prière personnelle"));
-          const detail=element("span","", [p.date,p.statut].filter(Boolean).join(" · "));
+          const detail=element("span","", [p.date,p.statut,p.confidentiel?"Leader uniquement":"Intercession"].filter(Boolean).join(" · "));
           li.append(titre,detail);histoire.append(li);
         }
         historiqueCharge=true;
@@ -154,7 +163,12 @@
     }
     function selectionner(nom){
       if(!compte||!allowed(nom))return;
-      if(nom==="priere"&&mode==="membre"&&panneau){
+      const ouverture=new CustomEvent("sde:open",{cancelable:true,detail:{module:nom}});
+      document.dispatchEvent(ouverture);
+      if(ouverture.defaultPrevented){
+        vueExterne=nom;priereOuverte=false;if(panneau)panneau.hidden=true;main.hidden=true;
+      }else if(nom==="priere"&&mode==="membre"&&panneau){
+        vueExterne="";
         panneau.hidden=false;main.hidden=true;priereOuverte=true;
         if(!compte.membreId){
           messagePriere.textContent="Votre compte doit être relié à une fiche membre pour déposer une prière.";
@@ -164,6 +178,7 @@
       }else{
         const native=original.querySelector('button[data-vue="'+nom+'"]');
         if(!native||native.disabled)return;
+        vueExterne="";
         if(panneau)panneau.hidden=true;
         main.hidden=false;priereOuverte=false;
         native.click();
@@ -176,6 +191,7 @@
         else b.removeAttribute("aria-current");
       }
       navCourant=nom;
+      document.dispatchEvent(new CustomEvent("sde:navigate",{detail:{module:nom,titre:catalogue[nom]}}));
       if(nom==="priere")panneau?.querySelector("h2")?.focus?.();
     }
 
@@ -183,11 +199,17 @@
       if(!compte)return;
       const buttons=[...original.querySelectorAll('button[data-vue]')];
       const ordre=mode==="membre"?
-        ["priere","academie","arsenal","espace","agenda","portevoix","mediatheque"]:
-        ["accueil","chambre","academie","arsenal","agenda","portevoix",
+        ["priere","academie","arsenal","synthese","parcours","espace","agenda","preferences","portevoix","mediatheque"]:
+        ["synthese","accueil","chambre","academie","arsenal","parcours","agenda","portevoix",
          "membres","garnisons","projets","secretariat","mediatheque",
-         "finances","assistant","espace"];
+         "finances","gestion","preferences","assistant","espace"];
       const disponibles=buttons.filter(b=>allowed(b.dataset.vue)&&!b.disabled);
+      if(mode==="membre"&&!disponibles.some(b=>b.dataset.vue==="academie")){
+        const b=element("button","");b.dataset.vue="academie";disponibles.push(b);
+      }
+      for(const nom of ["synthese","parcours","preferences","gestion"].filter(allowed)){
+        const b=element("button","");b.dataset.vue=nom;disponibles.push(b);
+      }
       if(mode==="membre"){
         const prayerButton=element("button","");
         prayerButton.dataset.vue="priere";disponibles.push(prayerButton);
@@ -195,15 +217,16 @@
       disponibles.sort((a,b)=>ordre.indexOf(a.dataset.vue)-ordre.indexOf(b.dataset.vue));
       const next=disponibles.map(b=>b.dataset.vue).join("|");
       if(next!==signature){
-        signature=next;tabs.replaceChildren();
+        const search=tabs.querySelector(".sde-plus-search");
+        signature=next;tabs.replaceChildren();if(search)tabs.append(search);
         const groupes=mode==="membre"?[
           ["Vie spirituelle",new Set(["priere","academie","arsenal"])],
-          ["Mon parcours",new Set(["espace","agenda"])],
+          ["Mon parcours",new Set(["synthese","parcours","espace","agenda","preferences"])],
           ["Communauté et ressources",new Set(["portevoix","mediatheque"])]
         ]:[
-          ["Vie spirituelle et communication",new Set(["accueil","chambre","academie","arsenal","agenda","portevoix"])],
+          ["Vie spirituelle et communication",new Set(["synthese","accueil","chambre","academie","arsenal","parcours","agenda","portevoix"])],
           ["Pilotage et organisation",new Set(["membres","garnisons","projets","secretariat","mediatheque"])],
-          ["Finances et administration",new Set(["finances","assistant","espace"])]
+          ["Finances et administration",new Set(["finances","gestion","preferences","assistant","espace"])]
         ];
         let precedent="";
         for(const b of disponibles){
@@ -219,8 +242,9 @@
           tabs.append(item);
         }
         etat.textContent="Cliquez sur une rubrique pour afficher directement son contenu, sans changer de page.";
+        document.dispatchEvent(new Event("sde:modules"));
       }
-      const courant=priereOuverte?"priere":buttons.find(b=>b.getAttribute("aria-current")==="page"||b.classList.contains("on"))?.dataset.vue||"";
+      const courant=vueExterne|| (priereOuverte?"priere":buttons.find(b=>b.getAttribute("aria-current")==="page"||b.classList.contains("on"))?.dataset.vue||"");
       if(courant!==navCourant||next!==signature){
         navCourant=courant;
         for(const b of tabs.querySelectorAll("button")){
@@ -232,7 +256,7 @@
         const cible=disponibles.find(b=>b.dataset.vue===souhait);
         if(cible){
           initial=true;
-          if(souhait==="priere")selectionner("priere");
+          if(["priere","synthese","parcours","preferences","gestion"].includes(souhait))selectionner(souhait);
           else if(!cible.classList.contains("on")&&cible.getAttribute("aria-current")!=="page")cible.click();
         }
       }
@@ -247,6 +271,8 @@
         role.textContent=user.libRole||user.role||(mode==="membre"?"Membre":"Direction");
         direction.hidden=user.niveau<1;
         sync();
+        window.SDEPortal={compte:user,selectionner};
+        document.dispatchEvent(new CustomEvent("sde:ready",{detail:window.SDEPortal}));
       })
       .catch(()=>{role.textContent="Connexion indisponible";etat.textContent="Impossible de vérifier la session. Réessayez ou contactez le secrétariat.";});
   }

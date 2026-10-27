@@ -25,7 +25,7 @@ for (const page of pages) {
   }
   console.log(`✓ ${page} : ${n} script(s) lu(s)`);
 }
-for (const f of ["src/worker.js", "public/sw.js", "public/vitrine/navigation.js", "public/vitrine/motion.js", "public/vitrine/portal.js", "public/vitrine/discovery.js", "public/vitrine/mpa-nav.js", "public/vitrine/subpage.js", "public/vitrine/initiatives.js", "public/vitrine/pwa-public.js", "public/vitrine/sde-app-shell.js", "public/vitrine/sde-public-directory.js", "public/sw-public.js", "public/sde-bridge.js", "public/vitrine/sw-public.js"]) {
+for (const f of ["src/portal-services.js", "public/vitrine/portail-plus.js", "public/vitrine/portail-direct.js", "public/vitrine/portail-connexion.js", "src/worker.js", "public/sw.js", "public/vitrine/navigation.js", "public/vitrine/motion.js", "public/vitrine/portal.js", "public/vitrine/discovery.js", "public/vitrine/mpa-nav.js", "public/vitrine/subpage.js", "public/vitrine/initiatives.js", "public/vitrine/pwa-public.js", "public/vitrine/sde-app-shell.js", "public/vitrine/sde-public-directory.js", "public/sw-public.js", "public/sde-bridge.js", "public/vitrine/sw-public.js"]) {
   try { execFileSync(process.execPath, ["--check", f], { stdio: "pipe" }); console.log(`✓ ${f}`); }
   catch (e) { erreurs += 1; console.error(`✗ ${f} :\n${String(e.stderr)}`); }
 }

@@ -28,7 +28,8 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace")}ca
 <link rel="stylesheet" href="/app.css">
 <link rel="stylesheet" href="/sde-unified.css?v=20261025e">
 <link rel="stylesheet" href="/sde-private-ui.css?v=20261025e">
-<link rel="stylesheet" href="/vitrine/portail-direct.css?v=20261027b">
+<link rel="stylesheet" href="/vitrine/portail-direct.css?v=20261027c">
+<link rel="stylesheet" href="/vitrine/portail-plus.css?v=20261027c">
 <script defer src="/sde-bridge.js?v=20261025e"></script>
 <script>/* Thème : applique le choix utilisateur avant le premier paint */
 (function(){try{var t=localStorage.getItem("sde-theme");if(t){document.documentElement.setAttribute("data-theme",t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==="light"?"#eef0f5":"#0f1e3d";}}catch(e){}}());
@@ -8092,7 +8093,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   const LIB_ROLE_H = { attente: "En attente", soldat: "Soldat", lecture: "Lecture seule", contributeur: "Contributeur", admin: "Administrateur", proprietaire: "Propriétaire", visiteur: "Visiteur" };
   const ROLES_H = [["soldat", "Soldat : son espace, l’agenda et les annonces"], ["contributeur", "Contributeur : registre, agenda, pointage, sans les finances"], ["admin", "Administrateur : tout, finances comprises"], ["lecture", "Lecture seule"], ["attente", "En attente (aucun accès interne)"]];
   const URL_APP_H = "https://app.mouvement-sde.org";
-  const champMdp = (id, label, auto, hint) => champ(id, label, `<input class="inp" id="${id}" name="${id.replace(/^c[a-z]+-/, "")}" type="password" autocomplete="${auto}" minlength="4" maxlength="200" required>`, { req: true, hint });
+  const champMdp = (id, label, auto, hint) => champ(id, label, `<input class="inp" id="${id}" name="${id.replace(/^c[a-z]+-/, "")}" type="password" autocomplete="${auto}" minlength="${auto === "new-password" ? 8 : 4}" maxlength="200" required>`, { req: true, hint });
   const voirMdp = `<label class="check cnx-voir"><input type="checkbox" data-voir-mdp> Afficher le mot de passe</label>`;
 
   /* — Feuille de connexion : se connecter, créer son compte, activer un compte — */
@@ -8107,11 +8108,11 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     else if (m === "inscription") corps = `<p class="hint" style="margin-top:0;padding:10px 12px;background:rgba(226,194,106,.1);border-left:3px solid #e2c26a;border-radius:4px"><b style="color:#e2c26a">Accès immédiat.</b> Dès que vous validez ce formulaire, votre compte est actif, votre <b>matricule à 6 chiffres</b> est attribué, et votre espace soldat s’ouvre dans la foulée. Aucune validation du secrétariat n’est nécessaire.</p>
       <div class="f2">${champ("ci-prenoms", "Prénoms", inp("ci-prenoms", "prenoms", "", 'autocomplete="given-name" required autofocus maxlength="80"'), { req: true })}${champ("ci-nom", "Nom", inp("ci-nom", "nom", "", 'autocomplete="family-name" required maxlength="80"'), { req: true })}</div>
       ${champ("ci-tel", "Téléphone (WhatsApp)", inp("ci-tel", "telephone", "", 'type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="07 00 00 00 00"'))}
-      ${email}${champMdp("ci-mdp", "Choisissez un mot de passe", "new-password", "Au moins 4 caractères.")}${champMdp("ci-mdp2", "Confirmez le mot de passe", "new-password")}${voirMdp}
+      ${email}${champMdp("ci-mdp", "Choisissez un mot de passe", "new-password", "Au moins 8 caractères.")}${champMdp("ci-mdp2", "Confirmez le mot de passe", "new-password")}${voirMdp}
       <p class="hint">Déjà membre avec un matricule SDE-CI-… ? Inscrivez-vous normalement — votre nouveau matricule fonctionne tout de suite, le secrétariat reliera votre ancienne fiche quand il le peut, sans retarder votre accès.</p>${pied("Créer mon compte")}`;
     else corps = `<p class="hint" style="margin-top:0">Le secrétariat vous a remis un code d’activation (par exemple K7PM-Q2XD) pour ouvrir votre compte ou choisir un nouveau mot de passe.</p>${email}
       ${champ("ca-code", "Code d’activation", inp("ca-code", "code", "", 'autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="12" required placeholder="K7PM-Q2XD"'), { req: true })}
-      ${champMdp("ca-mdp", "Nouveau mot de passe", "new-password", "Au moins 4 caractères.")}${champMdp("ca-mdp2", "Confirmez le mot de passe", "new-password")}${voirMdp}${pied("Activer et me connecter")}`;
+      ${champMdp("ca-mdp", "Nouveau mot de passe", "new-password", "Au moins 8 caractères.")}${champMdp("ca-mdp2", "Confirmez le mot de passe", "new-password")}${voirMdp}${pied("Activer et me connecter")}`;
     return `<div class="cnx-onglets" role="group" aria-label="Choix">${onglets}</div><form class="form cnx-form" id="f-cnx" data-mode="${m}" novalidate>${corps}</form>`;
   }
   function ouvrirConnexion(mode) {
@@ -8124,7 +8125,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     CNX.email = email;
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { erreurForm("Indiquez une adresse e-mail valide."); return; }
     const mdp = String(fd.get("mdp") || "");
-    if (mdp.length < 4) { erreurForm("Le mot de passe doit compter au moins 4 caractères."); return; }
+    if (mode !== "connexion" && mdp.length < 8) { erreurForm("Le mot de passe doit compter au moins 8 caractères."); return; }
     if (mode !== "connexion" && mdp !== String(fd.get("mdp2") || "")) { erreurForm("Les deux mots de passe ne sont pas identiques."); return; }
     if (mode === "inscription" && (!g("prenoms") || !g("nom"))) { erreurForm("Indiquez votre nom et vos prénoms."); return; }
     if (mode === "activation" && g("code").replace(/[^0-9a-z]/gi, "").length !== 8) { erreurForm("Le code d’activation compte 8 caractères, par exemple K7PM-Q2XD."); return; }
@@ -8153,10 +8154,10 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
 
   /* — Changer son mot de passe — */
   function ouvrirMotDePasse() {
-    ouvrir({ titre: "Changer mon mot de passe", html: `<form class="form" id="f-mdp" novalidate>${champ("cm-ancien", "Mot de passe actuel", '<input class="inp" id="cm-ancien" name="ancien" type="password" autocomplete="current-password" required autofocus>', { req: true })}${champ("cm-nouveau", "Nouveau mot de passe", '<input class="inp" id="cm-nouveau" name="nouveau" type="password" autocomplete="new-password" minlength="4" required>', { req: true, hint: "Au moins 4 caractères." })}${champ("cm-nouveau2", "Confirmez le nouveau mot de passe", '<input class="inp" id="cm-nouveau2" name="nouveau2" type="password" autocomplete="new-password" required>', { req: true })}${voirMdp}${pied("Enregistrer")}</form>`,
+    ouvrir({ titre: "Changer mon mot de passe", html: `<form class="form" id="f-mdp" novalidate>${champ("cm-ancien", "Mot de passe actuel", '<input class="inp" id="cm-ancien" name="ancien" type="password" autocomplete="current-password" required autofocus>', { req: true })}${champ("cm-nouveau", "Nouveau mot de passe", '<input class="inp" id="cm-nouveau" name="nouveau" type="password" autocomplete="new-password" minlength="8" required>', { req: true, hint: "Au moins 8 caractères." })}${champ("cm-nouveau2", "Confirmez le nouveau mot de passe", '<input class="inp" id="cm-nouveau2" name="nouveau2" type="password" autocomplete="new-password" required>', { req: true })}${voirMdp}${pied("Enregistrer")}</form>`,
       onSubmit: async (fd, form) => {
         const n = String(fd.get("nouveau") || "");
-        if (n.length < 4) { erreurForm("Le nouveau mot de passe doit compter au moins 4 caractères."); return; }
+        if (n.length < 8) { erreurForm("Le nouveau mot de passe doit compter au moins 8 caractères."); return; }
         if (n !== String(fd.get("nouveau2") || "")) { erreurForm("Les deux mots de passe ne sont pas identiques."); return; }
         try { await SDEH.motDePasse({ ancien: String(fd.get("ancien") || ""), nouveau: n }); fermer(); toast("Mot de passe modifié. Vos autres appareils sont déconnectés."); }
         catch (e) { erreurForm((e && e.message) || "Modification impossible."); }
@@ -8640,6 +8641,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
 </script>
 
 <script defer src="/vitrine/portail-espace.js?v=20261026"></script>
-<script defer src="/vitrine/portail-direct.js?v=20261027b"></script>
+<script defer src="/vitrine/portail-plus.js?v=20261027c"></script>
+<script defer src="/vitrine/portail-direct.js?v=20261027c"></script>
 </body>
 </html>
