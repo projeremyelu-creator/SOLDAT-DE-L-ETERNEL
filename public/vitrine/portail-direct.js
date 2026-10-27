@@ -156,7 +156,11 @@
       if(!compte||!allowed(nom))return;
       if(nom==="priere"&&mode==="membre"&&panneau){
         panneau.hidden=false;main.hidden=true;priereOuverte=true;
-        void lireHistorique();
+        if(!compte.membreId){
+          messagePriere.textContent="Votre compte doit être relié à une fiche membre pour déposer une prière.";
+          envoiPriere.disabled=true;
+          histoire.replaceChildren();histoire.append(element("li","","Historique disponible après liaison de votre fiche."));
+        }else void lireHistorique();
       }else{
         const native=original.querySelector('button[data-vue="'+nom+'"]');
         if(!native||native.disabled)return;
