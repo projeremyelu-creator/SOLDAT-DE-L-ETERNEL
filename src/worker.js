@@ -92,7 +92,7 @@ function nouveauCode() { const a = crypto.getRandomValues(new Uint8Array(8)); co
 const normCode = (c) => String(c || "").toUpperCase().replace(/[^0-9A-Z]/g, "");
 const CODE_JOURS = 14;
 const empreinteCode = async (email, code) => sha("activation:" + email + ":" + normCode(code));
-function mdpValide(m) { return typeof m === "string" && m.length >= 4 && m.length <= 200; }
+function mdpValide(m) { return typeof m === "string" && m.length >= 8 && m.length <= 200; }
 
 /* Freins contre les essais répétés (par adresse et par réseau) */
 const FENETRE = 15 * 60e3;
@@ -1222,7 +1222,13 @@ async function traiter(req, env, ctx) {
         let cible = new URL(nom, url);
         for (let saut = 0; saut < 4; saut++) {
           const r = await env.ASSETS.fetch(new Request(cible, req));
-          if (![301, 302, 303, 307, 308].includes(r.status)) return r;
+          if (![301, 302, 303, 307, 308].includes(r.status)) {
+            const n = new Response(r.body, r);
+            n.headers.set("x-content-type-options", "nosniff");
+            n.headers.set("x-frame-options", "DENY");
+            n.headers.set("referrer-policy", "strict-origin-when-cross-origin");
+            return n;
+          }
           const location = r.headers.get("location");
           if (!location) throw new Error("Redirection asset sans destination");
           const suivante = new URL(location, cible);
@@ -1237,6 +1243,12 @@ async function traiter(req, env, ctx) {
         if (p === "/vitrine/" || p === "/vitrine/index.html") return Response.redirect(url.origin + "/", 301);
         if (pagesPubliques[p]) return assetPortail(pagesPubliques[p]);
         if (p === "/connexion") {
+          const u = await utilisateur(req, env);
+          if (u.connecte) {
+            const retour = url.searchParams.get("retour");
+            const dest = retour === "/administration" && u.niveau >= 1 ? "/administration" : "/mon-espace";
+            return Response.redirect(url.origin + dest, 302);
+          }
           const r = await assetPortail("/vitrine/connexion-unifiee.html");
           const n = new Response(r.body, r);
           n.headers.set("cache-control", "no-store");
@@ -1284,8 +1296,10 @@ async function traiter(req, env, ctx) {
       // aucun contenu, document ou fichier privé n'est rendu statique.
       const routeInterne = p.startsWith("/api/") || p.startsWith("/_blob/") || p.startsWith("/m/");
       if (!routeInterne) {
-        if (!/^\/(vitrine\/|app\.css$|sde-(unified\.css|bridge\.js|private-ui\.css)$|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$|sw-public\.js$|manifest\.webmanifest$|sw\.js$)/.test(p))
-          return Response.redirect("https://app.mouvement-sde.org" + p + url.search, 301);
+        if (!/^\/(vitrine\/|app\.css$|sde-(unified\.css|bridge\.js|private-ui\.css)$|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$|sw-public\.js$|manifest\.webmanifest$|sw\.js$)/.test(p)) {
+          const r404 = await assetPortail("/vitrine/404.html");
+          return new Response(r404.body, { status: 404, headers: r404.headers });
+        }
         const r = await env.ASSETS.fetch(req);
         if (r.ok && /^\/vitrine\/.+\.(jpe?g|png|webp|svg)$/.test(p)) {
           const n = new Response(r.body, r);

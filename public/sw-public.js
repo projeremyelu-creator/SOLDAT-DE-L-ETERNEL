@@ -1,7 +1,7 @@
 /* SDE — service worker PUBLIC uniquement. Scope "/" sur mouvement-sde.org.
    Ne prend jamais en charge le sous-domaine privé app.mouvement-sde.org.
    Seuls les GET de pages publiques explicitement listées sont mis en cache. */
-const CACHE = "sde-public-shell-20261026-unifie";
+const CACHE = "sde-public-shell-20261027-ameliorations";
 const PAGES = new Set([
   "/", "/index.html", "/vitrine/", "/vitrine/index.html",
   "/vitrine/mouvement", "/vitrine/programmes", "/vitrine/ressources",

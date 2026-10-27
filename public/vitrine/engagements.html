@@ -198,7 +198,7 @@ main { padding: 32px 0 80px; position: relative; }
     </a>
     <div class="entete-droite">
       <span class="chip-ident" id="qui">—</span>
-      <a href="https://app.mouvement-sde.org/" style="font-size:.82rem">↗ App MPA SDE</a>
+      <a href="/mon-espace" style="font-size:.82rem">↗ App MPA SDE</a>
     </div>
   </div>
 </header>
@@ -254,7 +254,7 @@ main { padding: 32px 0 80px; position: relative; }
       const r = await fetch('/api/engager-admin', { credentials: 'same-origin', cache: 'no-store' });
       if (r.status === 401 || r.status === 403) {
         liste.innerHTML = `<div class="message erreur">Accès réservé à l'équipe administrative.<br><br>
-          <a href="https://app.mouvement-sde.org/#connexion" style="color:var(--or);text-decoration:underline">Se connecter à l'application</a> avec un compte administrateur, puis revenir sur cette page.</div>`;
+          <a href="/connexion" style="color:var(--or);text-decoration:underline">Se connecter à l'application</a> avec un compte administrateur, puis revenir sur cette page.</div>`;
         return;
       }
       if (!r.ok) throw new Error('HTTP ' + r.status);
