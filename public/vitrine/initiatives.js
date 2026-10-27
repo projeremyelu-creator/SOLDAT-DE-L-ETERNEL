@@ -53,6 +53,23 @@
         }
       });
     });
+    document.querySelectorAll("form[data-sde-anonymous-prayer]").forEach((form) => {
+      form.addEventListener("submit",async(event)=>{
+        event.preventDefault();
+        const status=form.querySelector(".sde-form-feedback"),submit=form.querySelector('button[type="submit"]');
+        if(!status||!submit||!form.reportValidity())return;
+        if(form.elements.website?.value)return;
+        const sujet=String(form.elements.sujet?.value||"").trim();
+        if(!sujet){status.textContent="Écrivez votre sujet de prière.";status.dataset.state="error";return}
+        status.textContent="Transmission anonyme en cours…";status.dataset.state="";submit.disabled=true;
+        try{
+          const response=await fetch("/api/priere-anonyme",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({sujet,categorie:String(form.elements.categorie?.value||"Prière générale"),accord:form.elements.accord?.checked===true,website:""})});
+          const result=await response.json().catch(()=>null);if(!response.ok||!result?.ok)throw new Error(result?.message||"Envoi non confirmé");
+          status.textContent=result.message||"Votre sujet anonyme a été transmis aux intercesseurs SDE.";status.dataset.state="ok";form.reset();
+        }catch(error){status.textContent=error.message||"Envoi indisponible. Réessayez plus tard.";status.dataset.state="error"}
+        finally{submit.disabled=false}
+      });
+    });
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, {once:true});
   else init();

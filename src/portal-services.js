@@ -1,7 +1,7 @@
 /* Compléments du portail : aucune identité de compte ne vient du corps client. */
 const reply=(data,status=200)=>Response.json(data,{status,headers:{'cache-control':'private, no-store'}});
 const fail=(message,status=400)=>reply({ok:false,message},status);
-const defaults={rencontres:true,formations:true,taches:true,lecture:true,delai:1};
+const defaults={rencontres:true,formations:true,taches:true,lecture:true,cotisations:true,delai:1};
 const text=(v,n=180)=>String(v??'').trim().slice(0,n);
 const day=()=>new Date().toISOString().slice(0,10);
 const week=()=>{const d=new Date();d.setUTCHours(0,0,0,0);d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);return d.toISOString().slice(0,10)};
@@ -56,7 +56,7 @@ export async function portalApi(req,env,u,services){
    const b=await req.json();
    if(path==='/api/mes-preferences'){
     if(Object.keys(b).some(k=>!Object.hasOwn(defaults,k)))return fail('Préférence inconnue.');
-    for(const k of ['rencontres','formations','taches','lecture'])if(b[k]!==undefined){if(typeof b[k]!=='boolean')return fail('Choix invalide.');s.preferences[k]=b[k]}
+    for(const k of ['rencontres','formations','taches','lecture','cotisations'])if(b[k]!==undefined){if(typeof b[k]!=='boolean')return fail('Choix invalide.');s.preferences[k]=b[k]}
     if(b.delai!==undefined){if(![1,3,7].includes(b.delai))return fail('Délai invalide.');s.preferences.delai=b.delai}
    }else{
     if(b.semaine!==week())return fail('La semaine a changé. Actualisez votre parcours.');

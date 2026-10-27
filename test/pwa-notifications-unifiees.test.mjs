@@ -43,6 +43,9 @@ test("PWA unifiée : notifications internes avec destination protégée",async()
  const info=await o.push({title:"Programme SDE",body:"Rendez-vous",url:"/programmes"});
  assert.equal(info.title,"Programme SDE");
  assert.equal(info.options.data.url,"/programmes");
+ assert.equal(info.options.silent,false);
+ assert.equal(info.options.renotify,true);
+ assert.deepEqual(Array.from(info.options.vibrate),[180,90,180,90,260]);
  assert.equal(await o.click(info.options.data.url),true);
  assert.equal(o.opened.at(-1),"/programmes");
 });

@@ -90,6 +90,13 @@ test("MPA: recherche et galerie restent utilisables sur la page ressources",()=>
   assert.equal(document.querySelector(".sde-modal").getAttribute("aria-hidden"),"true");
   d.window.close();
 });
+test("Enseignements : les ressources publiées sont téléchargeables directement",async()=>{
+  const d=new JSDOM(read("public/vitrine/ressources.html"),{url:"https://mouvement-sde.org/enseignements",runScripts:"outside-only",pretendToBeVisual:true});
+  d.window.fetch=async()=>({ok:true,json:async()=>({ressources:[{id:"livre",titre:"Livre SDE",type:"livre",auteur:"Jérémy l’Élu",description:"Enseignement",telechargement:"/api/ressources-publiques/livre/telecharger",lien:""}]})});
+  d.window.eval(read("public/vitrine/ressources-public.js"));d.window.document.dispatchEvent(new d.window.Event("DOMContentLoaded"));await new Promise(done=>setTimeout(done,5));
+  const card=d.window.document.querySelector("#ressources-grille .ressource-carte");assert.equal(card.querySelector("h3").textContent,"Livre SDE");
+  assert.equal(card.querySelector(".res-download").getAttribute("href"),"/api/ressources-publiques/livre/telecharger");assert.match(d.window.document.getElementById("res-compteur").textContent,/1 ressource/);d.window.close();
+});
 test("MPA: programmation — calendrier et confirmation existants présents",()=>{
   const d=dom("programmes"),document=d.window.document;
   assert.ok(document.querySelector("#f-venue"));

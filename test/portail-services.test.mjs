@@ -1,6 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {fixture} from './helpers/d1.mjs';
+import {sendPortalReminders} from '../src/reminders.js';
 const use=()=>{const f=fixture();f.account('alice');f.account('bob');f.account('admin','admin');f.account('owner','proprietaire');return f};
 test('Portail : toutes les API privées refusent un visiteur',async()=>{const f=use();try{for(const path of ['/api/portail-resume','/api/mes-preferences','/api/mon-parcours-spirituel','/api/temoignages-personnels','/api/recuperations','/api/journal-administratif'])assert.equal((await f.call(path)).status,401,path)}finally{f.close()}});
 test('Préférences : persistance par compte, validation et rappels réellement filtrés',async()=>{const f=use();try{f.doc('evenements/e1',{titre:'Rencontre',date:new Date().toISOString().slice(0,10),type:'Culte'});assert.equal((await f.call('/api/mes-preferences','alice','PATCH',{rencontres:false})).status,200);assert.equal((await f.call('/api/mes-preferences','alice')).body.preferences.rencontres,false);assert.equal((await f.call('/api/mes-preferences','bob')).body.preferences.rencontres,true);assert.equal((await f.call('/api/mes-preferences','alice','PATCH',{delai:999})).status,400);assert.equal((await f.call('/api/portail-resume','alice')).body.rappels.some(r=>r.type==='rencontres'),false);assert.equal((await f.call('/api/portail-resume','bob')).body.rappels.some(r=>r.type==='rencontres'),true)}finally{f.close()}});
@@ -19,3 +20,41 @@ test('Comptes existants : la nouvelle politique ne bloque pas la connexion avec 
 test('Notifications : un appareil change de compte sans doubler les envois',async()=>{const f=use();try{const b={endpoint:'https://push.example.test/device',keys:{p256dh:'public-test',auth:'auth-test'}};assert.equal((await f.call('/api/push','alice','POST',b)).status,200);assert.equal((await f.call('/api/push','bob','POST',b)).status,200);const rows=f.sql.prepare('SELECT userId FROM push_subs WHERE endpoint=?').all(b.endpoint);assert.deepEqual(rows.map(x=>x.userId),['bob']);await f.call('/api/push','alice','DELETE',{endpoint:b.endpoint});assert.equal(f.sql.prepare('SELECT COUNT(*) AS n FROM push_subs WHERE userId=?').get('bob').n,1)}finally{f.close()}});
 
 test('Récupération publique : la demande ne détruit ni le mot de passe ni les sessions',async()=>{const f=use();try{f.sql.prepare('UPDATE comptes SET mdp=? WHERE id=?').run('hash-existant','alice');const r=await f.call('/api/demande-reinitialisation',null,'POST',{email:'alice@example.org'});assert.equal(r.status,200);assert.equal(f.sql.prepare('SELECT mdp FROM comptes WHERE id=?').get('alice').mdp,'hash-existant');assert.equal((await f.call('/api/moi','alice')).body.connecte,true);assert.equal((await f.call('/api/recuperations','admin')).body.demandes.length,1)}finally{f.close()}});
+test('Rappels téléphone : rencontres, formations et cotisation sont personnalisés et non répétés',async()=>{const f=use();try{
+ const now=Date.parse('2026-10-27T08:00:00Z');
+ f.doc('membres/alice',{nom:'Alice',adhesion:'2026-01-01'});f.doc('membres/bob',{nom:'Bob',adhesion:'2026-01-01'});
+ f.doc('config/general',{cotisationMensuelle:5000,cotisationDebut:'2026-01'});
+ f.doc('evenements/e1',{titre:'IN FIRE',date:'2026-10-28',heure:'08:00',lieu:'Abidjan'});
+ f.doc('evenements/secret',{titre:'Réunion réservée',date:'2026-10-28',heure:'18:00',lieu:'Direction',prive:true});
+ f.doc('formations/f1',{titre:'Soldiers Academy',dateDebut:'2026-10-28',participants:{alice:{statut:'Inscrit'}}});
+ f.doc('cotisations/bob-2026',{membreId:'bob',annee:2026,mois:{'10':{montant:5000,date:'2026-10-05'}}});
+ f.env.VAPID_PUBLIC_KEY='public';f.env.VAPID_PRIVATE_KEY='private';
+ f.sql.prepare("INSERT INTO push_subs(userId,endpoint,p256dh,auth,cree) VALUES('alice','https://push.test/a','p','a',?),('bob','https://push.test/b','p','a',?)").run(now,now);
+ const sent=[];const send=async(sub,payload)=>{sent.push({userId:sub.userId,payload});return{ok:true}};
+ const first=await sendPortalReminders(f.env,{now,send});assert.equal(first.sent,4);
+ assert.deepEqual(sent.filter(x=>x.userId==='alice').map(x=>x.payload.kind).sort(),['cotisation','formation','rencontre']);
+ assert.deepEqual(sent.filter(x=>x.userId==='bob').map(x=>x.payload.kind),['rencontre']);
+ assert.ok(!sent.some(x=>x.payload.title.includes('Réunion réservée')));
+ assert.ok(sent.every(x=>x.payload.sound===true));
+ const second=await sendPortalReminders(f.env,{now,send});assert.equal(second.sent,0);assert.equal(sent.length,4);
+ const night=await sendPortalReminders(f.env,{now:Date.parse('2026-10-28T02:00:00Z'),send});assert.equal(night.reason,'quiet_hours');assert.equal(sent.length,4);
+}finally{f.close()}});
+test('Prière anonyme : aucun nom, compte ou contact n’est exigé ni enregistré',async()=>{const f=use();try{
+ const r=await f.call('/api/priere-anonyme',null,'POST',{sujet:'Paix dans ma famille',categorie:'Famille',accord:true,website:''});assert.equal(r.status,200);
+ const rows=f.sql.prepare("SELECT data FROM docs WHERE parent='prieres'").all();assert.equal(rows.length,1);const data=JSON.parse(rows[0].data);
+ assert.equal(data.anonyme,true);assert.equal(data.sujet,'Paix dans ma famille');for(const key of ['nom','email','telephone','creePar','pourId'])assert.ok(!data[key],key);
+ assert.equal((await f.call('/api/priere-anonyme',null,'POST',{sujet:'Sans accord'})).status,400);
+}finally{f.close()}});
+test('Ressources publiques : seuls les livres et enseignements publiés sont exposés',async()=>{const f=use();try{
+ f.account('editor','contributeur');
+ f.doc('ressources/livre',{titre:'Livre public',type:'livre',auteur:'SDE',description:'Lecture',public:true,fichierId:'abcdefghijklmnop',fichierNom:'livre.pdf',fichierType:'application/pdf'});
+ f.doc('ressources/prive',{titre:'Document interne',type:'document',public:false,fichierId:'secret'});
+ f.env.FICHIERS={getWithMetadata:async id=>id==='abcdefghijklmnop'?{value:new TextEncoder().encode('PDF').buffer,metadata:{type:'application/pdf'}}:null};
+ const r=await f.call('/api/ressources-publiques');assert.equal(r.status,200);assert.deepEqual(r.body.ressources.map(x=>x.titre),['Livre public']);
+ assert.equal(r.body.ressources[0].telechargement,'/api/ressources-publiques/livre/telecharger');assert.ok(!JSON.stringify(r.body).includes('secret'));
+ const download=await f.request('/api/ressources-publiques/livre/telecharger');assert.equal(download.status,200);assert.equal(download.headers.get('content-type'),'application/pdf');assert.match(download.headers.get('content-disposition'),/livre\.pdf/);assert.equal(await download.text(),'PDF');
+ assert.equal((await f.request('/api/ressources-publiques/prive/telecharger')).status,404);
+ assert.equal((await f.call('/api/db','editor','POST',{op:'update',path:'ressources/prive',data:{public:true}})).status,403);
+ assert.equal((await f.call('/api/db','editor','POST',{op:'update',path:'ressources/livre',data:{titre:'Altération'}})).status,403);
+ assert.equal((await f.call('/api/db','admin','POST',{op:'update',path:'ressources/prive',data:{public:true}})).status,200);
+}finally{f.close()}});

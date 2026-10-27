@@ -1,6 +1,7 @@
 import {apiSdeOs31} from "./os-v31.js";
 import {notifySde,flushNotices,mailStatus,pushConfigured} from "./notifications.js";
 import {generateVapidKeys} from "./web-push.js";
+import {sendPortalReminders} from "./reminders.js";
 import {sdeOsApi} from "./sde-os.js";
 import {portalApi,portalAudit,portalBackup} from "./portal-services.js";
 /* MPA SDE — serveur Cloudflare (Worker)
@@ -209,6 +210,11 @@ async function apiDb(req, env, u, ctx) {
     if (!peutEcrire(u, path)) return erreur("invalid_argument", "Votre niveau d’accès ne permet pas cette modification.", 403);
     if (b.op !== "delete" && (typeof b.data !== "object" || b.data === null || Array.isArray(b.data))) return erreur("invalid_argument", "données");
     if (b.op !== "delete" && JSON.stringify(b.data).length > 256 * 1024) return erreur("invalid_argument", "trop volumineux");
+    if (segs(path)[0] === "ressources" && u.niveau < 2) {
+      const actuelle=await lireDoc(env,path);
+      if(actuelle?.data?.public===true || (b.op!=="delete"&&Object.hasOwn(b.data,"public")))
+        return erreur("refuse","Seuls les administrateurs peuvent publier, modifier ou retirer une ressource publique.",403);
+    }
     try { await ecrireDoc(env, b.op, path, b.data); await portalAudit(env,u,segs(path)[0],b.op); notifySde(env,ctx,"espace",{path,action:b.op}); } catch (e) { return erreur(e.code || "unavailable", e.message, e.code === "invalid_argument" ? 400 : 409); }
     return json({ ok: true });
   }
@@ -409,6 +415,27 @@ async function apiPriere(req, env, u, ctx) {
   await ecrireDoc(env, "set", (b.confidentiel===true?"prieres_conf/":"prieres/") + idDoc(), { sujet: sujet.slice(0, 140), details: sujet.length > 140 ? sujet : "", categorie: "Personnelle", date: new Date(t).toISOString().slice(0, 10), pourId: u.membreId, pour: "", urgent: false, statut: "En prière", priants: {}, source: "espace", creePar: u.id, creeLe: t, modifiePar: u.id, modifieLe: t });
   notifySde(env,ctx,"priere");
   return json({ ok: true });
+}
+
+async function apiPriereAnonyme(req,env,ctx){
+  if(req.method!=="POST")return erreur("methode","POST uniquement.",405);
+  let b;try{b=await req.json()}catch{return erreur("invalid_argument","Données invalides.")}
+  if(String(b.website||"").trim())return json({ok:true});
+  const sujet=String(b.sujet||"").trim().replace(/\s+/g," ").slice(0,600);
+  const categorie=String(b.categorie||"Prière générale").trim().slice(0,80);
+  if(!sujet)return erreur("invalid_argument","Écrivez votre sujet de prière.");
+  if(b.accord!==true)return erreur("invalid_argument","Confirmez l’envoi anonyme de votre sujet.");
+  const cle="priere-anonyme:"+await sha(ipDe(req));
+  if(await bloque(env,cle,5))return erreur("rate_limited","Trop de sujets ont été envoyés. Réessayez plus tard.",429);
+  await compter(env,cle);
+  const t=Date.now();
+  await ecrireDoc(env,"set","prieres/"+idDoc(),{
+    sujet:sujet.slice(0,140),details:sujet.length>140?sujet:"",categorie,
+    date:new Date(t).toISOString().slice(0,10),pour:"Anonyme",urgent:false,
+    statut:"En prière",priants:{},source:"public-anonyme",anonyme:true,creeLe:t,modifieLe:t
+  });
+  notifySde(env,ctx,"priere",{action:"Sujet anonyme reçu"});
+  return json({ok:true,message:"Votre sujet anonyme a été transmis aux intercesseurs SDE."});
 }
 
 /* ───────── historique complet (presences, cotisations, prières) ───────── */
@@ -647,6 +674,39 @@ async function apiPublic(env) {
     .slice(0, 8)
     .map((e) => ({ id: e.id, titre: String(e.titre || ""), type: e.type, date: e.date, heure: e.heure || "", fin: e.fin || "", lieu: String(e.lieu || ""), description: String(e.description || "").slice(0, 600) }));
   return json({ evenements: evts }, 200, { "cache-control": "public, max-age=300" });
+}
+
+async function apiRessourcesPubliques(env){
+  const rows=(await env.DB.prepare("SELECT id,data FROM docs WHERE parent='ressources'").all()).results||[];
+  const ressources=[];
+  for(const row of rows){
+    let d;try{d=JSON.parse(row.data)}catch{continue}
+    if(d.public!==true)continue;
+    const lien=/^https?:\/\//i.test(String(d.lien||""))?String(d.lien).slice(0,1000):"";
+    ressources.push({
+      id:row.id,titre:String(d.titre||"Ressource").slice(0,180),type:String(d.type||"document").slice(0,40),
+      auteur:String(d.auteur||"").slice(0,160),annee:String(d.annee||"").slice(0,4),theme:String(d.theme||"").slice(0,120),
+      description:String(d.description||"").slice(0,700),lien,
+      telechargement:d.fichierId?`/api/ressources-publiques/${encodeURIComponent(row.id)}/telecharger`:""
+    });
+  }
+  ressources.sort((a,b)=>a.titre.localeCompare(b.titre,"fr"));
+  return json({ressources},200,{"cache-control":"public, max-age=300"});
+}
+async function telechargerRessourcePublique(env,id){
+  if(!/^[A-Za-z0-9_-]{1,120}$/.test(id))return new Response("Introuvable",{status:404});
+  const row=await env.DB.prepare("SELECT data FROM docs WHERE path=?").bind("ressources/"+id).first();
+  if(!row)return new Response("Introuvable",{status:404});
+  let d;try{d=JSON.parse(row.data)}catch{return new Response("Introuvable",{status:404})}
+  if(d.public!==true||!d.fichierId||!ID_FICHIER.test(String(d.fichierId)))return new Response("Introuvable",{status:404});
+  const fichier=await env.FICHIERS.getWithMetadata(String(d.fichierId),{type:"arrayBuffer"});
+  if(!fichier?.value)return new Response("Introuvable",{status:404});
+  const nom=String(d.fichierNom||d.titre||"ressource-sde").replace(/[\r\n"\\/]/g,"-").slice(0,160);
+  return new Response(fichier.value,{headers:{
+    "content-type":fichier.metadata?.type||d.fichierType||"application/octet-stream",
+    "content-disposition":`attachment; filename*=UTF-8''${encodeURIComponent(nom)}`,
+    "cache-control":"public, max-age=3600","x-content-type-options":"nosniff"
+  }});
 }
 
 /* ───────── Formulaire public : collecte d'infos + bilan 2026 ───────── */
@@ -1245,7 +1305,7 @@ async function nettoyerTentatives(env) {
 export default {
   async scheduled(ev, env, ctx) {
     if (ev.cron === "0 2 * * *") ctx.waitUntil(Promise.all([sauvegarder(env), nettoyerMedias(env), syncEspacesMembres(env), nettoyerSessions(env), nettoyerTentatives(env)]));
-    ctx.waitUntil(flushNotices(env));
+    ctx.waitUntil(Promise.all([flushNotices(env),sendPortalReminders(env)]));
   },
   async fetch(req, env, ctx) {
     if (!migrationFaite) { migrationFaite = true; try { await migrer(env); } catch (e) { /* non bloquant */ } }
@@ -1411,6 +1471,10 @@ async function traiter(req, env, ctx) {
     if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
     if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
     if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
+    if (p === "/api/priere-anonyme" && req.method === "POST") return apiPriereAnonyme(req,env,ctx);
+    if (p === "/api/ressources-publiques" && req.method === "GET") return apiRessourcesPubliques(env);
+    const telechargementPublic=p.match(/^\/api\/ressources-publiques\/([^/]+)\/telecharger$/);
+    if(telechargementPublic&&req.method==="GET")return telechargerRessourcePublique(env,telechargementPublic[1]);
     try {
       const u = await utilisateur(req, env);
       // Un cookie invalide ou expiré ne permet pas d'échapper au plafond anonyme.

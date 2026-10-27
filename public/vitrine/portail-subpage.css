@@ -380,6 +380,10 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.35rem); }
 .res-auteur { font-size: .85rem; color: var(--texte-2); margin-bottom: 8px; }
 .res-meta { display: flex; gap: 8px; font-size: .78rem; color: var(--gris); flex-wrap: wrap; }
 .res-dispo { background: rgba(184,144,31,.1); color: var(--or); padding: 2px 8px; border-radius: 4px; }
+.res-description { color: var(--gris); font-size: .9rem; margin: 8px 0 12px; }
+.res-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+.res-actions a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 9px 13px; border-radius: 8px; border: 1px solid var(--or); color: var(--or); font-weight: 800; text-decoration: none; }
+.res-actions .res-download { background: var(--or); color: #11182a; }
 
 /* ═══════ GALERIE & LIGHTBOX ═══════ */
 /* ═══════════ GALERIE ═══════════ */

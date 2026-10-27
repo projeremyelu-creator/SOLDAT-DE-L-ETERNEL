@@ -67,7 +67,7 @@ test("formulaires : refuser contact invalide et consentement absent",async()=>{
   const dom=init("prieres"),w=dom.window,d=w.document;
   let sent=0;
   w.fetch=async()=>{sent++;return {ok:true,json:async()=>({ok:true})};};
-  const form=d.querySelector("form");
+  const form=d.querySelector("form[data-sde-contact]");
   form.elements.nom.value="Exemple";
   form.elements.contact.value="incorrect";
   form.dispatchEvent(new w.Event("submit",{bubbles:true,cancelable:true}));
@@ -75,6 +75,14 @@ test("formulaires : refuser contact invalide et consentement absent",async()=>{
   assert.equal(sent,0);
   assert.equal(form.querySelector(".sde-form-feedback").dataset.state,"error");
   dom.window.close();
+});
+test("prière anonyme : aucun nom ni contact et confirmation du serveur",async()=>{
+  const dom=init("prieres"),w=dom.window,d=w.document;let sent;
+  w.fetch=async(url,options)=>{sent={url,body:JSON.parse(options.body)};return{ok:true,json:async()=>({ok:true,message:"Sujet reçu anonymement."})}};
+  const form=d.querySelector("form[data-sde-anonymous-prayer]");assert.ok(form);assert.equal(form.querySelector('[name="nom"], [name="email"], [name="contact"]'),null);
+  form.elements.sujet.value="Paix dans ma famille";form.elements.accord.checked=true;
+  form.dispatchEvent(new w.Event("submit",{bubbles:true,cancelable:true}));await new Promise(done=>setTimeout(done,10));
+  assert.equal(sent.url,"/api/priere-anonyme");assert.equal(sent.body.sujet,"Paix dans ma famille");assert.equal(sent.body.accord,true);assert.match(form.querySelector(".sde-form-feedback").textContent,/anonyme/i);dom.window.close();
 });
 test("liens dans Plus, accueil, mega menu et sitemap",()=>{
   const plus=read("plus.html"),home=read("index.html"),nav=read("mpa-nav.js");

@@ -9,6 +9,7 @@ export function fixture(){
  const ctx={waitUntil:p=>pending.push(p)};
  function account(id,role='soldat',member=id){sql.prepare('INSERT INTO comptes(email,id,nom,role,membreId) VALUES(?,?,?,?,?)').run(id+'@example.org',id,'Compte '+id,role,member);sql.prepare('INSERT INTO sessions(jeton,email,expire) VALUES(?,?,?)').run(id,id+'@example.org',Date.now()+3600000)}
  function doc(path,data){const parts=path.split('/');sql.prepare('INSERT INTO docs(path,parent,id,data,maj) VALUES(?,?,?,?,?)').run(path,parts.slice(0,-1).join('/'),parts.at(-1),JSON.stringify(data),Date.now())}
- async function call(path,id=null,method='GET',data){const r=await worker.fetch(new Request('https://mouvement-sde.org'+path,{method,headers:{...(id?{cookie:'sde_s='+id}:{}),'content-type':'application/json',origin:'https://mouvement-sde.org'},...(data!==undefined?{body:JSON.stringify(data)}:{})}),env,ctx);const body=await r.json();await Promise.allSettled(pending.splice(0));return {status:r.status,body,headers:r.headers}}
- return {sql,env,call,account,doc,close:()=>sql.close()};
+ async function request(path,id=null,method='GET',data){const r=await worker.fetch(new Request('https://mouvement-sde.org'+path,{method,headers:{...(id?{cookie:'sde_s='+id}:{}),'content-type':'application/json',origin:'https://mouvement-sde.org'},...(data!==undefined?{body:JSON.stringify(data)}:{})}),env,ctx);await Promise.allSettled(pending.splice(0));return r}
+ async function call(path,id=null,method='GET',data){const r=await request(path,id,method,data);const body=await r.json();return {status:r.status,body,headers:r.headers}}
+ return {sql,env,call,request,account,doc,close:()=>sql.close()};
 }

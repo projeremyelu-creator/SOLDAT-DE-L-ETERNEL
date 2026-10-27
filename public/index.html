@@ -3738,7 +3738,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace")}ca
     const t = typeR(r);
     const dispo = disponibles(r);
     const meta = [t[1], r.auteur, r.annee, r.theme].filter(Boolean).join(" · ");
-    return `<button class="row" type="button" data-act="voir-ressource" data-id="${esc(r.id)}"><span class="r-ico t-${esc(t[0])}" aria-hidden="true">${I(t[2])}</span><span class="row-main"><span class="row-t">${esc(r.titre || "Ressource")}</span><span class="row-m">${esc(meta)}</span></span><span class="row-r">${dispo != null ? `<span class="chip ${dispo > 0 ? "ok" : "warn"}">${dispo > 0 ? `${nb(dispo)} dispo.` : "Tous prêtés"}</span>` : ""}${r.fichierId ? `<span class="chip">${I("i-file")}Fichier</span>` : urlSure(r.lien) ? `<span class="chip">${I("i-link")}Lien</span>` : ""}</span></button>`;
+    return `<button class="row" type="button" data-act="voir-ressource" data-id="${esc(r.id)}"><span class="r-ico t-${esc(t[0])}" aria-hidden="true">${I(t[2])}</span><span class="row-main"><span class="row-t">${esc(r.titre || "Ressource")}</span><span class="row-m">${esc(meta)}</span></span><span class="row-r">${r.public ? `<span class="chip ok">Publié</span>` : ""}${dispo != null ? `<span class="chip ${dispo > 0 ? "ok" : "warn"}">${dispo > 0 ? `${nb(dispo)} dispo.` : "Tous prêtés"}</span>` : ""}${r.fichierId ? `<span class="chip">${I("i-file")}Fichier</span>` : urlSure(r.lien) ? `<span class="chip">${I("i-link")}Lien</span>` : ""}</span></button>`;
   }
   VUES.arsenal = function () {
     const ecr = peutEcrire();
@@ -3801,7 +3801,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace")}ca
       <div class="f2">${champ("r-annee", "Année", inp("r-annee", "annee", r.annee, 'inputmode="numeric" maxlength="4" autocomplete="off"'))}${champ("r-theme", "Thème", inp("r-theme", "theme", r.theme, 'autocomplete="off" placeholder="Combat spirituel, Prière, Famille…" list="themes-l"'))}<datalist id="themes-l">${[...new Set(S.ressources.map((x) => x.theme).filter(Boolean))].map((x) => `<option value="${esc(x)}">`).join("")}</datalist></div>
       ${champ("r-desc", "Description", zone("r-desc", "description", r.description, 'rows="3"'))}
       ${champ("r-lien", "Lien (YouTube, Drive, site…)", inp("r-lien", "lien", r.lien, 'type="url" inputmode="url" autocomplete="off" placeholder="https://"'), { hint: "Pour un enseignement audio ou une vidéo lourde, mettez le lien de la plateforme où il est hébergé." })}
-      <div class="f2">${champ("r-ex", "Exemplaires physiques", inp("r-ex", "exemplaires", r.exemplaires || "", 'inputmode="numeric" autocomplete="off" placeholder="0"'), { hint: "Pour les livres que le mouvement peut prêter." })}<div class="field"><span class="lab">Mise en avant</span><label class="check"><input type="checkbox" name="enAvant" value="1"${r.enAvant ? " checked" : ""}> Afficher en tête</label></div></div>
+      <div class="f2">${champ("r-ex", "Exemplaires physiques", inp("r-ex", "exemplaires", r.exemplaires || "", 'inputmode="numeric" autocomplete="off" placeholder="0"'), { hint: "Pour les livres que le mouvement peut prêter." })}<div class="field"><span class="lab">Diffusion</span><label class="check"><input type="checkbox" name="enAvant" value="1"${r.enAvant ? " checked" : ""}> Afficher en tête</label>${peutAdmin()?`<label class="check"><input type="checkbox" name="public" value="1"${r.public ? " checked" : ""}> Publier sur la page Enseignements et autoriser le téléchargement</label>`:`<p class="hint">La publication sur le site est réservée aux administrateurs.</p>`}</div></div>
       ${peutFichier ? `<div class="field"><label for="r-fichier">Fichier</label><input class="inp" type="file" id="r-fichier" name="fichier" accept="${TYPES_FICHIER.join(",")}"><p class="hint">PDF, image ou vidéo MP4/WebM, 20 Mo au plus. ${r.fichierId ? `Fichier actuel : ${esc(r.fichierNom || "fichier")} ; un nouveau fichier le remplacera.` : ""}</p>${r.fichierId ? `<label class="check"><input type="checkbox" name="retirerFichier" value="1"> Retirer le fichier actuel</label>` : ""}</div>` : `<p class="hint">Le dépôt de fichiers est réservé aux éditeurs ; vous pouvez indiquer un lien.</p>`}
       ${pied(id ? "Enregistrer" : "Ajouter à l’Arsenal")}
     </form>`;
@@ -3814,6 +3814,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace")}ca
     if (g("annee") && !/^\d{4}$/.test(g("annee"))) { erreurForm("L’année doit comporter quatre chiffres."); return; }
     const ancien = id ? ressource(id) : null;
     const data = { titre: g("titre"), type: g("type"), auteur: g("auteur"), annee: g("annee"), theme: g("theme"), description: g("description"), lien: g("lien"), exemplaires: Number(g("exemplaires").replace(/\D/g, "")) || 0, enAvant: fd.get("enAvant") === "1" };
+    if(peutAdmin())data.public=fd.get("public") === "1";
     const fichier = fd.get("fichier");
     const btnS = form.querySelector("[type=submit]");
     btnS.disabled = true;

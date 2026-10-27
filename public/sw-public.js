@@ -114,10 +114,12 @@ self.addEventListener("push",event=>{
   const titre=String(payload.title||"SDE · Soldats de l'Éternel").slice(0,140);
   const texte=String(payload.body||"Vous avez une nouvelle notification.").slice(0,260);
   const destination=destinationNotification(payload.url||"/mon-espace");
+  const tag=String(payload.tag||"sde-information").replace(/[^a-z0-9_-]/gi,"-").slice(0,120);
   event.waitUntil(self.registration.showNotification(titre,{
     body:texte,
     icon:"/icone-192.png",badge:"/icone-192.png",
-    data:{url:destination}
+    data:{url:destination},tag,renotify:true,silent:false,
+    vibrate:[180,90,180,90,260],timestamp:Date.now()
   }));
 });
 

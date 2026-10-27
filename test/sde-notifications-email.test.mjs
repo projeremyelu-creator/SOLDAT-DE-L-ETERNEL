@@ -72,7 +72,8 @@ test("notification : opérations publiques et privées déclenchent la file apr�
   assert.ok(source.includes('notifySde(env,ctx,"'+type+'"'),"événement non connecté : "+type);
  assert.ok(source.includes('u.niveau < 3'),"statut réservé au propriétaire");
  assert.ok(source.includes("/api/notifications-status"));
- assert.ok(source.includes("ctx.waitUntil(flushNotices(env))"));
+ assert.ok(source.includes("flushNotices(env)"));
+ assert.ok(source.includes("sendPortalReminders(env)"));
  const wrangler=readFileSync("wrangler.toml","utf8");
  assert.ok(wrangler.includes("*/15 * * * *"));
  assert.ok(wrangler.includes('destination_address = "infosoldat@gmail.com"'));
