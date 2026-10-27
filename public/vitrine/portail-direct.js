@@ -10,11 +10,11 @@
   if(!mode)return;
 
   const catalogue={
-    accueil:"Vue d'ensemble",espace:"Mon espace",membres:"Membres",
-    agenda:"Agenda et présences",garnisons:"Garnisons",academie:"Soldiers Academy",
-    portevoix:"Annonces et messages",chambre:"Prière et intercession",
-    projets:"Projets",secretariat:"Décisions",finances:"Finances",
-    arsenal:"Enseignements",mediatheque:"Médiathèque",assistant:"Assistant Éliézer"
+    accueil:"Tableau de bord",espace:"Mon profil et ma carte",membres:"Membres et fiches",
+    agenda:"Agenda et présences",garnisons:"Garnisons et pôles",academie:"Soldiers Academy",
+    portevoix:"Communication et annonces",chambre:"Prière et intercession",
+    projets:"Projets et missions",secretariat:"Secrétariat et décisions",finances:"Finances et cotisations",
+    arsenal:"Bibliothèque et enseignements",mediatheque:"Médiathèque",assistant:"Assistant Éliézer"
   };
   const personnel=new Set(["espace","agenda","academie","portevoix","arsenal","mediatheque"]);
   const url=new URL(location.href);
@@ -60,13 +60,26 @@
       if(natif) natif.click();
     });
     head.append(reglages);
-    const role=element("span","sde-direct-access",mode==="membre"?"Tableau personnel":"Poste de commandement");
+    const role=element("span","sde-direct-access",mode==="membre"?"Espace membre":"Espace administrateur");
     head.append(role);
     const tabs=element("nav");tabs.id="sde-direct-tabs";tabs.setAttribute("aria-label","Rubriques de l'espace privé");
-    header.append(head,tabs);
+    header.append(head);
+    const intro=element("div","sde-direct-intro");
+    const eyebrow=element("p","sde-direct-eyebrow","MOUVEMENT SDE · PORTAIL PRIVÉ");
+    const titre=element("h1","sde-direct-title",mode==="membre"?"Mon espace membre":"Poste de commandement administratif");
+    const description=element("p","sde-direct-description",mode==="membre"?
+      "Mon profil, mes présences, mes prières, mes formations et mes ressources. Chaque onglet ouvre son contenu directement ici.":
+      "Pilotez le mouvement : membres, agenda, présences, directoire, pôles, projets, communication, finances et décisions. Choisissez une rubrique ci-dessous.");
+    const etat=element("p","sde-direct-loading","Chargement des rubriques autorisées…");
+    etat.setAttribute("role","status");etat.setAttribute("aria-live","polite");
+    intro.append(eyebrow,titre,description,etat);
+    header.append(intro);
     body.insertBefore(header,body.firstChild);
+    const main=document.getElementById("main");
+    if(main?.parentElement)main.parentElement.insertBefore(tabs,main);
+    else header.append(tabs);
     const original=document.getElementById("nav");
-    if(!original)return;
+    if(!original){etat.textContent="Les modules de gestion n’ont pas été chargés. Rechargez la page.";return;}
 
     const sync=()=>{
       if(!compte)return;
@@ -75,7 +88,21 @@
       const next=disponibles.map(b=>b.dataset.vue).join("|");
       if(next!==signature){
         signature=next;tabs.replaceChildren();
+        const groupes=mode==="membre"?[
+          ["Mon parcours",new Set(["espace","agenda","academie"])],
+          ["Ressources et communauté",new Set(["portevoix","arsenal","mediatheque"])]
+        ]:[
+          ["Pilotage et organisation",new Set(["accueil","membres","agenda","garnisons","projets","secretariat"])],
+          ["Vie spirituelle et communication",new Set(["academie","portevoix","chambre","arsenal","mediatheque"])],
+          ["Finances et administration",new Set(["finances","assistant","espace"])]
+        ];
+        let precedent="";
         for(const b of disponibles){
+          const groupe=groupes.find(g=>g[1].has(b.dataset.vue))?.[0]||"Autres services";
+          if(groupe!==precedent){
+            const titreGroupe=element("span","sde-direct-group",groupe);
+            tabs.append(titreGroupe);precedent=groupe;
+          }
           const nom=b.dataset.vue;
           const item=element("button","sde-direct-tab",catalogue[nom]);
           item.type="button";item.dataset.module=nom;
@@ -91,6 +118,7 @@
           });
           tabs.append(item);
         }
+        etat.textContent="Cliquez sur une rubrique pour afficher directement son contenu, sans changer de page.";
       }
       const courant=buttons.find(b=>b.getAttribute("aria-current")==="page"||b.classList.contains("on"))?.dataset.vue||"";
       if(courant!==navCourant||next!==signature){
@@ -114,13 +142,13 @@
     fetch("/api/moi",{credentials:"same-origin",cache:"no-store"})
       .then(r=>r.ok?r.json():null)
       .then(user=>{
-        if(!user||!user.connecte){role.textContent="Session non disponible";return}
+        if(!user||!user.connecte){role.textContent="Session non disponible";etat.textContent="Votre session est expirée. Reconnectez-vous sur /connexion.";return}
         compte=user;
         role.textContent=user.libRole||user.role||(mode==="membre"?"Membre":"Direction");
         direction.hidden=user.niveau<1;
         sync();
       })
-      .catch(()=>{role.textContent="Connexion indisponible";});
+      .catch(()=>{role.textContent="Connexion indisponible";etat.textContent="Impossible de vérifier la session. Réessayez ou contactez le secrétariat.";});
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});
   else start();
