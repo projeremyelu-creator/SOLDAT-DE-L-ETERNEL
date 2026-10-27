@@ -46,3 +46,51 @@ body.sde-multipage-unifie .site-footer{margin-top:0}
  .site-header .site-menu>a{padding:12px 8px;font-size:1rem}
  .site-header .site-menu .menu-login{display:flex}
 }
+
+/* ═══════ BOUTON BASCULE THÈME ═══════ */
+.site-theme-toggle{display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:10px;color:#f7f4ed;flex:none;transition:background .2s,color .2s}
+.site-theme-toggle:hover{background:rgba(255,255,255,.2);color:var(--light-gold)}
+.site-theme-toggle:focus-visible{outline:3px solid var(--light-gold);outline-offset:3px}
+
+/* ═══════ MODE CLAIR ═══════ */
+:root[data-theme="light"]{--navy:#11182a;--navy2:#19243a;--ivory:#f7f4ed;--gold:#9a7c2e;--light-gold:#85650f;--burgundy:#641d2d;--muted:#535c75}
+:root[data-theme="light"] body{background:#eef0f5;color:#161e35}
+
+/* En-tête : garde le fond sombre même en mode clair pour la cohérence */
+
+/* Pied de page en mode clair */
+:root[data-theme="light"] .site-footer{background:#1c2436;color:#d1d6e3}
+
+/* Sections homepage en mode clair */
+:root[data-theme="light"] .home-hero{background:#11182a}
+:root[data-theme="light"] .announcement{background:#f4f1eb;border-color:#d5d2ca}
+:root[data-theme="light"] .story{background:#1a2340}
+:root[data-theme="light"] .explore{background:#f7f4ed}
+:root[data-theme="light"] .explore .chapter-list{border-color:#d5d2ca}
+:root[data-theme="light"] .explore .chapter-list>a{border-color:#d5d2ca}
+:root[data-theme="light"] .explore .chapter-list>a:hover{background:#ede8de}
+:root[data-theme="light"] .community{background:linear-gradient(115deg,#2d1a38,#5e1628)}
+:root[data-theme="light"] .private-access{background:#f7f4ed}
+:root[data-theme="light"] .private-access-card.private-admin{border-color:#c8a451;background:#fff}
+
+/* Bouton thème en mode clair */
+:root[data-theme="light"] .site-theme-toggle{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.25);color:#eef0f5}
+
+/* Carte d'accès (page connexion) en mode clair */
+:root[data-theme="light"] .access-main{background:linear-gradient(115deg,#eef0f5,#f7f0e7)}
+:root[data-theme="light"] .access-main,.access-shell>p{color:#161e35}
+:root[data-theme="light"] .access-shell h1{color:#11182a}
+:root[data-theme="light"] .access-back{color:#85650f}
+
+/* Respect de la préférence système quand aucun choix explicite */
+@media(prefers-color-scheme:light){
+  :root:not([data-theme="dark"]) body{background:#eef0f5;color:#161e35}
+  :root:not([data-theme="dark"]) .site-footer{background:#1c2436}
+  :root:not([data-theme="dark"]) .announcement{background:#f4f1eb;border-color:#d5d2ca}
+  :root:not([data-theme="dark"]) .explore .chapter-list{border-color:#d5d2ca}
+  :root:not([data-theme="dark"]) .explore .chapter-list>a{border-color:#d5d2ca}
+  :root:not([data-theme="dark"]) .explore .chapter-list>a:hover{background:#ede8de}
+  :root:not([data-theme="dark"]) .access-main{background:linear-gradient(115deg,#eef0f5,#f7f0e7)}
+  :root:not([data-theme="dark"]) .access-main{color:#161e35}
+  :root:not([data-theme="dark"]) .access-back{color:#85650f}
+}

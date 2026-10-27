@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /mon-espace
+Disallow: /administration
+Disallow: /connexion-unifiee
 Sitemap: https://mouvement-sde.org/sitemap.xml

@@ -13,6 +13,7 @@
 .access-shell>p{color:#d4d8e4}.access-shell h1{font-size:clamp(2.5rem,6vw,4rem);margin:8px 0 12px}
 .access-card{padding:24px;background:#fff;color:#171d30;border-radius:18px;box-shadow:0 20px 45px rgba(0,0,0,.25)}
 .access-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:24px}
+@media(min-width:460px){.access-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .access-tabs button{padding:10px 5px;border:1px solid #d5d2ca;border-radius:9px;background:#f4f1eb;font-size:.84rem;font-weight:700}
 .access-tabs button[aria-selected=true]{background:#c8a451;border-color:#c8a451;color:#11182a}
 .access-panel[hidden]{display:none!important}
@@ -26,6 +27,8 @@
 .access-submit:disabled{opacity:.65;cursor:progress}
 .access-message{font-size:.91rem;min-height:24px;margin-top:14px;color:#6f1428}
 .access-message[data-state=success]{color:#186943}
+.access-forgot{display:block;margin-top:10px;font-size:.84rem;color:#6f73a0;text-decoration:underline;cursor:pointer;background:none;border:none;padding:0;text-align:left}
+.access-forgot:hover{color:#c8a451}
 .access-back{display:inline-block;margin-top:20px;color:#edd089}
 
 .access-password-toggle,.access-forgot{min-height:44px;padding:8px 0;border:0;background:transparent;color:#641d2d;font:700 .85rem system-ui;text-align:left;cursor:pointer}
@@ -46,15 +49,16 @@
 <div class="access-card"><div class="access-tabs" role="tablist" aria-label="Accès au compte">
 <button id="tab-connexion" role="tab" type="button" data-mode="connexion" aria-controls="panel-connexion" aria-selected="true">Connexion</button>
 <button id="tab-inscription" role="tab" type="button" data-mode="inscription" aria-controls="panel-inscription" aria-selected="false">Créer un compte</button>
-<button id="tab-activation" role="tab" type="button" data-mode="activation" aria-controls="panel-activation" aria-selected="false">J'ai un code</button><button id="tab-recuperation" role="tab" type="button" data-mode="recuperation" aria-controls="panel-recuperation" aria-selected="false">Récupérer mon accès</button></div>
+<button id="tab-activation" role="tab" type="button" data-mode="activation" aria-controls="panel-activation" aria-selected="false">J'ai un code</button>
+<button id="tab-recuperation" role="tab" type="button" data-mode="recuperation" aria-controls="panel-recuperation" aria-selected="false">Récupérer mon accès</button></div>
 <section class="access-panel" id="panel-connexion" role="tabpanel" aria-labelledby="tab-connexion"><h2>Bienvenue</h2><p>Retrouvez votre espace SDE sécurisé.</p>
-<form id="form-connexion"><label>Adresse e-mail<input required name="email" type="email" autocomplete="email"></label><label>Mot de passe<input required name="motDePasse" type="password" autocomplete="current-password"></label><button class="access-submit" type="submit">Se connecter</button></form><button type="button" id="access-forgot" class="access-forgot">Mot de passe oublié ?</button></section>
+<form id="form-connexion"><label>Adresse e-mail<input required name="email" type="email" autocomplete="email"></label><label>Mot de passe<input required name="motDePasse" type="password" autocomplete="current-password" minlength="8"></label><button class="access-submit" type="submit">Se connecter</button></form><button type="button" class="access-forgot" data-goto="recuperation">Mot de passe oublié ?</button></section>
 <section class="access-panel" id="panel-inscription" role="tabpanel" aria-labelledby="tab-inscription" hidden><h2>Devenir membre</h2><p>Une fiche et un matricule provisoire sont créés pour les nouveaux membres.</p>
 <form id="form-inscription"><label>Nom<input required name="nom" autocomplete="family-name"></label><label>Prénoms<input required name="prenoms" autocomplete="given-name"></label><label>E-mail<input required name="email" type="email" autocomplete="email"></label><label>Téléphone (facultatif)<input name="telephone" type="tel" autocomplete="tel"></label><label>Mot de passe (8 caractères minimum)<input required name="motDePasse" type="password" autocomplete="new-password" minlength="8"></label><button class="access-submit" type="submit">Créer mon espace</button></form></section>
 <section class="access-panel" id="panel-activation" role="tabpanel" aria-labelledby="tab-activation" hidden><h2>Activer mon accès</h2><p>Réservé aux responsables ayant reçu un code d'activation du secrétariat.</p>
 <form id="form-activation"><label>E-mail<input required name="email" type="email" autocomplete="email"></label><label>Code d'activation<input required name="code" autocomplete="one-time-code"></label><label>Créer un mot de passe (8 caractères minimum)<input required name="motDePasse" type="password" autocomplete="new-password" minlength="8"></label><button class="access-submit" type="submit">Activer mon accès</button></form></section>
 <section class="access-panel" id="panel-recuperation" role="tabpanel" aria-labelledby="tab-recuperation" hidden><h2>Retrouver mon accès</h2><p>Le secrétariat vérifiera votre identité avant de vous remettre un code. Votre mot de passe actuel reste valable tant que votre demande n'est pas traitée.</p><form id="form-recuperation"><label>Adresse e-mail de mon compte<input required name="email" type="email" autocomplete="email" maxlength="254"></label><button class="access-submit" type="submit">Demander l'aide du secrétariat</button></form><p>Vous avez reçu votre code ? Choisissez « J'ai un code » pour définir votre nouveau mot de passe. Aucun envoi automatique par e-mail n'est annoncé.</p></section>
 <p class="access-message" id="access-message" role="status" aria-live="polite"></p>
-</div><a class="access-back" href="/">← Revenir au site public</a><p>Besoin d'aide pour récupérer votre compte ? <a href="mailto:infosoldat@gmail.com" style="color:#edd089">Contacter le secrétariat</a>.</p>
+</div><a class="access-back" href="/">← Revenir au site public</a><p>Besoin d'aide ? <a href="mailto:infosoldat@gmail.com" style="color:#edd089">Contacter le secrétariat</a>.</p>
 </div></main>
 </body></html>

@@ -27,9 +27,10 @@
      event.preventDefault();const index=tabs.indexOf(tab),next=tabs[(index+(event.key==="ArrowRight"?1:tabs.length-1))%tabs.length];afficher(next.dataset.mode);next.focus();
    }
   })}
-  document.getElementById("access-forgot")?.addEventListener("click",()=>{
-   afficher("recuperation");document.querySelector('#form-recuperation input')?.focus();
-  });
+  /* Lien "Mot de passe oublié ?" sous le formulaire de connexion */
+  for(const btn of document.querySelectorAll("[data-goto]")){
+   btn.addEventListener("click",()=>{afficher(btn.dataset.goto)});
+  }
   async function envoyer(form,endpoint){
    if(!form.reportValidity())return;
    const b=Object.fromEntries(new FormData(form).entries());

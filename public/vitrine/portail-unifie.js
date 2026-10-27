@@ -93,6 +93,38 @@
       status.textContent=String(e.titre).slice(0,140)+" · "+new Intl.DateTimeFormat("fr-CI",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}).format(date)+(e.heure?" à "+String(e.heure):"")+(e.lieu?" · "+String(e.lieu):"");
     }catch(_) { /* Ne bloque jamais la vitrine si l'agenda est indisponible. */ }
   }
-  const start=()=>{navigation();agenda()};
+  function theme() {
+    /* Restaurer le choix enregistré ou respecter la préférence système */
+    try {
+      const saved = localStorage.getItem("sde-theme");
+      if (saved === "light" || saved === "dark") document.documentElement.setAttribute("data-theme", saved);
+    } catch (_) {}
+    /* Bouton bascule dans l'en-tête */
+    const header = document.querySelector(".site-header-inner");
+    if (!header || header.querySelector(".site-theme-toggle")) return;
+    const btn = document.createElement("button");
+    btn.className = "site-theme-toggle";
+    btn.type = "button";
+    const isDark = () => document.documentElement.getAttribute("data-theme") !== "light";
+    const label = () => isDark() ? "Passer en mode clair" : "Passer en mode sombre";
+    const icon = () => isDark()
+      ? '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="4"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.42 1.42M14.36 14.36l1.42 1.42M4.22 15.78l1.42-1.42M14.36 5.64l1.42-1.42"/></svg>'
+      : '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 11.36A7.5 7.5 0 1 1 8.64 3 5.5 5.5 0 0 0 17 11.36z"/></svg>';
+    btn.innerHTML = icon();
+    btn.setAttribute("aria-label", label());
+    btn.addEventListener("click", () => {
+      const next = isDark() ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      document.querySelector('meta[name="theme-color"]')?.setAttribute("content", next === "dark" ? "#11182a" : "#eef0f5");
+      btn.innerHTML = icon();
+      btn.setAttribute("aria-label", label());
+      try { localStorage.setItem("sde-theme", next); } catch (_) {}
+    });
+    /* Insérer avant le burger */
+    const burger = header.querySelector(".site-burger");
+    if (burger) burger.insertAdjacentElement("beforebegin", btn);
+    else header.append(btn);
+  }
+  const start=()=>{theme();navigation();agenda()};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
