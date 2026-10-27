@@ -33,7 +33,8 @@ export async function portalBackup(env){
 }
 const paths=new Set(['/api/portail-resume','/api/mes-preferences','/api/mon-parcours-spirituel','/api/recuperation','/api/recuperations','/api/journal-administratif','/api/temoignages-personnels','/api/temoignages-validation']);
 export async function portalApi(req,env,u,services){
- const path=new URL(req.url).pathname;if(!paths.has(path))return null;
+ const requestedPath=new URL(req.url).pathname;
+ const path=requestedPath==='/api/demande-reinitialisation'?'/api/recuperation':requestedPath;if(!paths.has(path))return null;
  if(path!=='/api/recuperation'&&!u.connecte)return fail('Connectez-vous pour ouvrir votre espace.',401);
  await ensure(env);
  const {list,write,notify,blocked,count,hash,owners}=services;

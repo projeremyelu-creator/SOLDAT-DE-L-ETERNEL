@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 const {JSDOM}=createRequire(import.meta.url)("jsdom");
 const read=p=>readFileSync(p,"utf8");
 const home=read("public/vitrine/index.html");
-const scripts=["portal.js","mpa-nav.js","subpage.js","discovery.js"].map(s=>[s,read("public/vitrine/"+s)]);
+const scripts=["portail-unifie.js","subpage.js","discovery.js"].map(s=>[s,read("public/vitrine/"+s)]);
 const pages={
   mouvement:["mouvement","axes","histoire","presence","responsables","poles"],
   programmes:["agenda","programmes","infire"],
@@ -32,8 +32,8 @@ test("MPA: 6 URLs HTML distinctes avec titre et URL canonique",()=>{
     const d=dom(page),document=d.window.document;
     assert.equal(document.body.dataset.sdePage,page);
     assert.ok(document.querySelector("main#contenu h1"));
-    assert.ok(document.querySelector(".sde-mega-nav"));
-    assert.equal(document.querySelectorAll(".sde-global-nav").length,1);
+    assert.ok(document.querySelector(".site-menu"));
+    assert.equal(document.querySelectorAll(".site-menu").length,1);
     const url=document.querySelector('link[rel="canonical"]')?.href;
     assert.equal(url,"https://mouvement-sde.org/"+({mouvement:"mouvement",programmes:"programmes",ressources:"enseignements",rejoindre:"contact",projets:"missions",plus:"rubriques"})[page]);
     canonical.add(url);
@@ -41,23 +41,13 @@ test("MPA: 6 URLs HTML distinctes avec titre et URL canonique",()=>{
   }
   assert.equal(canonical.size,6);
 });
-test("MPA: menus — 5 onglets mobiles, méga-menu desktop avec liens vers 4 pages",()=>{
-  const d=dom("rejoindre");
-  const document=d.window.document;
-  const bottom=[...document.querySelectorAll(".sde-global-nav a")];
-  assert.deepEqual(bottom.map(x=>x.textContent.trim()),["Accueil","Membres","Agenda","Prière","Plus"]);
-  assert.equal(bottom[1].href,"https://mouvement-sde.org/vitrine/rejoindre#membres");
-  assert.equal(bottom[2].href,"https://mouvement-sde.org/vitrine/programmes#agenda");
-  assert.equal(bottom[3].href,"https://mouvement-sde.org/vitrine/prieres");
-  assert.equal(bottom[4].href,"https://mouvement-sde.org/vitrine/plus");
-  assert.equal(document.querySelectorAll(".sde-mega-nav details").length,4);
-  const links=[...document.querySelectorAll(".sde-mega-nav .sde-mega-panel a")].map(x=>x.href);
-  for(const page of ["mouvement","programmes","ressources","rejoindre","projets"])assert.ok(links.some(x=>x.includes("/vitrine/"+page)),page);
-  const styles=read("public/vitrine/mpa.css");
-  assert.match(styles,/@media \(min-width:1025px\)/);
-  assert.match(styles,/\.sde-global-nav \{ display:none !important/);
-  assert.match(styles,/@media \(max-width:1024px\)/);
-  d.window.close();
+test("MPA: navigation commune et accès directs aux espaces privés",()=>{
+ const d=dom("rejoindre"),doc=d.window.document;
+ for(const route of ["/","/mouvement","/programmes","/academy","/enseignements","/missions","/priere","/mon-espace","/administration"])
+   assert.ok(doc.querySelector('.site-menu a[href="'+route+'"]'),route);
+ const btn=doc.querySelector('.site-burger');assert.equal(btn.getAttribute('aria-controls'),'site-menu');
+ btn.click();assert.equal(btn.getAttribute('aria-expanded'),'true');
+ doc.querySelector('.site-menu a').click();assert.equal(btn.getAttribute('aria-expanded'),'false');d.window.close();
 });
 test("MPA: les sections éditoriales existantes sont reprises sans altérer leurs textes",()=>{
   const source=new JSDOM(home).window.document;
@@ -66,7 +56,11 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
     for(const id of ids){
       const a=source.getElementById(id),b=target.getElementById(id);
       assert.ok(a&&b,name+"/"+id);
-      assert.equal(normalize(b.textContent),normalize(a.textContent),name+"/"+id);
+      if(id==='membres'){
+        // Les coordonnées sont désormais regroupées dans le pied de page Contact.
+        assert.ok(normalize(a.textContent).startsWith(normalize(b.textContent)));
+        assert.ok(target.querySelector('a[href="mailto:infosoldat@gmail.com"]'));
+      }else assert.equal(normalize(b.textContent),normalize(a.textContent),name+"/"+id);
       assert.equal(b.querySelectorAll("img").length,a.querySelectorAll("img").length,name+"/"+id+" images");
       assert.equal(b.querySelectorAll("form").length,a.querySelectorAll("form").length,name+"/"+id+" forms");
     }
@@ -110,7 +104,7 @@ test("MPA: base CSS mutualisée plutôt que dupliquée sur six HTML",()=>{
   assert.equal(read("public/vitrine/mpa-base.css"),fromHome);
   for(const name of Object.keys(pages)){
     const html=read("public/vitrine/"+name+".html");
-    assert.ok(html.includes("/vitrine/mpa-base.css"),name);
+    assert.ok(html.includes("/vitrine/portail-subpage.css"),name);
     assert.ok(!html.includes("<style>"),"CSS dupliqué sur "+name);
   }
 });
@@ -156,8 +150,8 @@ test("MPA: pages sensibles absentes du sitemap et pages publiques ajoutées",()=
 test("MPA: les pages historiques continuent à charger la nouvelle navigation",()=>{
   for(const p of ["index","academy","formulaire","engagements"]){
     const h=read("public/vitrine/"+p+".html");
-    assert.ok(h.includes("mpa-nav.js"),p);
-    assert.ok(h.includes("mpa.css"),p);
+    assert.ok(h.includes(p==="index"?"mpa-nav.js":"portail-unifie.js"),p);
+    assert.ok(h.includes(p==="index"?"mpa.css":"portail-unifie.css"),p);
   }
 });
 
@@ -169,19 +163,10 @@ test("MPA: la barre basse est réservée au mobile et le méga-menu au PC",()=>{
   assert.ok(css.includes("body.sde-portal .sde-global-nav { display:block !important; }"),"barre présente sur mobile");
   assert.ok(css.includes('.sde-mega:not([open]) > .sde-mega-panel { display:none !important; }'),"panneau fermé masqué sur PC");
 });
-test("MPA: les méga-menus répondent au clic et à la touche Échap",()=>{
-  const d=dom("mouvement"),w=d.window,document=w.document;
-  const panels=[...document.querySelectorAll(".sde-mega-nav details")];
-  assert.equal(panels.length,4);
-  const first=panels[0],second=panels[1];
-  first.open=true;
-  first.dispatchEvent(new w.Event("toggle"));
-  second.open=true;
-  second.dispatchEvent(new w.Event("toggle"));
-  assert.equal(first.open,false,"un seul méga-menu ouvert à la fois");
-  const summary=second.querySelector("summary");
-  summary.focus();
-  second.dispatchEvent(new w.KeyboardEvent("keydown",{key:"Escape",bubbles:true}));
-  assert.equal(second.open,false,"Échap referme le menu");
-  d.window.close();
+test("MPA: le menu commun répond à Échap et rend le focus au bouton",()=>{
+ const d=dom("mouvement"),w=d.window,doc=w.document,btn=doc.querySelector('.site-burger');
+ btn.click();assert.equal(doc.getElementById('site-menu').dataset.open,'true');
+ doc.querySelector('.site-menu a').focus();
+ doc.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+ assert.equal(doc.getElementById('site-menu').dataset.open,'false');assert.equal(doc.activeElement,btn);d.window.close();
 });

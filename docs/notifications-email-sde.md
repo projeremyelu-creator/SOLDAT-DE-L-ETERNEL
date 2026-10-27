@@ -18,3 +18,8 @@ Les e-mails publics comportent les coordonnées nécessaires au traitement (nom,
 - Le Worker ne doit pas être déployé avec une liaison e-mail dont le destinataire ou le domaine expéditeur n'est pas vérifié.
 - La validation du code et les tests simulés ne prouvent pas la livraison effective dans Gmail : confirmer avec un vrai e-mail de test après configuration.
 - La sauvegarde de la base demeure programmée une fois par nuit.
+
+## Notifications sur téléphone
+La connexion est vérifiée par `/api/moi` : le cookie de session HttpOnly ne doit pas être lu par JavaScript. L'activation utilise la clé publique du serveur et enregistre les clés de l'abonnement au format Web Push. Un abonnement existant est rattaché au compte actuellement connecté, sans doublon entre comptes. Le remplacement d'une ancienne clé exige un clic de l'utilisateur.
+
+Pour activer la livraison, configurer une paire correspondante `VAPID_PUBLIC_KEY` et `VAPID_PRIVATE_KEY` dans les secrets du Worker Cloudflare, avec `VAPID_SUBJECT`. Ne jamais publier la clé privée. Si `/api/vapid-public-key` renvoie `null`, le service n'est pas configuré et l'interface le signale sans demander la permission du navigateur. Les tests automatisés valident le parcours et l'enregistrement ; une livraison réelle sur téléphone reste à vérifier après configuration.

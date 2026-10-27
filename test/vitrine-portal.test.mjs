@@ -10,7 +10,7 @@ const load = (page) => {
   const html = readFileSync("public/vitrine/" + page, "utf8");
   const url = "https://mouvement-sde.org/" + (page === "index.html" ? "" : "vitrine/" + page);
   const dom = new JSDOM(html, { url, runScripts: "outside-only", pretendToBeVisual: true });
-  dom.window.eval(script);
+  dom.window.eval(page === "index.html" ? script : readFileSync("public/vitrine/portail-unifie.js", "utf8"));
   if (page === "index.html") dom.window.eval(discovery);
   dom.window.document.dispatchEvent(new dom.window.Event("DOMContentLoaded"));
   return { dom, d: dom.window.document, w: dom.window };
@@ -32,18 +32,18 @@ test("vitrine : parcours d'accueil avec douze liens valides vers des sections et
 });
 
 for (const page of pages) {
-  test("navigation à cinq onglets et contenus intacts : " + page, () => {
+  test("navigation accessible et contenus intacts : " + page, () => {
     const p = load(page);
     const items = [...p.d.querySelectorAll(".sde-global-nav a[data-sde-tab]")];
-    assert.deepEqual(items.map((a) => a.textContent.trim()), ["Accueil", "Membres", "Agenda", "Prière", "Plus"]);
-    assert.equal(p.d.querySelectorAll(".sde-global-nav").length, 1);
-    assert.equal(items[3].href, "https://mouvement-sde.org/vitrine/prieres");
-    assert.equal(items[4].href, "https://mouvement-sde.org/vitrine/plus");
-    assert.ok(p.d.body.classList.contains("sde-portal"));
-    assert.equal(p.d.querySelectorAll(".sde-global-nav a[aria-current='page']").length, 1);
-    if (page !== "index.html") {
-      assert.equal(p.d.querySelector("header.entete").nextElementSibling, p.d.querySelector(".sde-global-nav"));
-      assert.ok(p.d.querySelector(".sde-skip[href^='#']"), "lien de navigation clavier");
+    if(page==='index.html'){
+      assert.deepEqual(items.map(a=>a.textContent.trim()),['Accueil','Membres','Agenda','Prière','Plus']);
+      assert.equal(p.d.querySelectorAll('.sde-global-nav').length,1);
+      assert.equal(p.d.querySelectorAll(".sde-global-nav a[aria-current='page']").length,1);
+    }else{
+      assert.equal(p.d.querySelectorAll('.site-menu').length,1);
+      for(const route of ['/','/mon-espace','/administration'])assert.ok(p.d.querySelector('.site-menu a[href="'+route+'"]'));
+      const skip=p.d.querySelector('.skip[href^="#"]');assert.ok(skip,'lien de navigation clavier');assert.ok(p.d.querySelector(skip.getAttribute('href')),'cible du lien clavier');
+      const btn=p.d.querySelector('.site-burger');btn.click();assert.equal(btn.getAttribute('aria-expanded'),'true');
     }
     if (page === "formulaire.html" || page === "academy.html") {
       const form = p.d.getElementById("formulaire");

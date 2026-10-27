@@ -75,11 +75,11 @@ test("progression : bouton retour masqué avant défilement et accessible",()=>{
   dom.window.close();
 });
 
-test("chargement : toutes les rubriques publiques disposent de la feuille et du script",()=>{
+test("chargement : toutes les rubriques publiques disposent du design et de la navigation communs",()=>{
   for(const page of pages){
     const code=readFileSync("public/vitrine/"+page+".html","utf8");
-    assert.match(code,/\/vitrine\/sde-dynamique\.css/);
-    assert.match(code,/\/vitrine\/sde-dynamique\.js/);
+    assert.ok(code.includes('/vitrine/'+(page==='index'?'sde-dynamique':'portail-unifie')+'.css'));
+    assert.ok(code.includes('/vitrine/'+(page==='index'?'sde-dynamique':'portail-unifie')+'.js'));
   }
 });
 

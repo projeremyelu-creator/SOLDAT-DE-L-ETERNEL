@@ -7099,7 +7099,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     if (!("Notification" in window) || !("serviceWorker" in navigator)) return "";
     const perm = Notification.permission;
     if (perm === "denied") return `<section class="card"><p class="eyebrow">${I("i-bell")} Notifications</p><p class="note warn">Les notifications sont bloquées sur cet appareil. Pour les recevoir, autorisez-les dans les paramètres de votre navigateur.</p></section>`;
-    if (perm === "granted") return `<section class="card"><p class="eyebrow">${I("i-bell")} Notifications</p><p class="note ok">Les notifications sont activées sur cet appareil.</p><button class="btn btn-sm btn-ghost" type="button" data-act="push-desactiver">${I("i-x")}Désactiver</button></section>`;
+    if (perm === "granted") return `<section class="card"><p class="eyebrow">${I("i-bell")} Notifications</p><p class="note ok">Les notifications sont autorisées par votre navigateur. Vérifiez leur enregistrement pour ce compte.</p><button class="btn btn-sm btn-ghost" type="button" data-act="push-desactiver">${I("i-x")}Désactiver</button><button class="btn btn-sm btn-primary" type="button" data-act="push-activer">Vérifier mon abonnement</button></section>`;
     return `<section class="card"><p class="eyebrow">${I("i-bell")} Notifications</p><p>Recevez les annonces et rappels directement sur cet appareil.</p><button class="btn btn-sm btn-primary" type="button" data-act="push-activer">${I("i-bell")}Activer les notifications</button></section>`;
   }
 
@@ -7961,16 +7961,30 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     "esp-quitter": () => quitterEspace(),
     "push-activer": async () => {
       try {
-        const perm = await Notification.requestPermission();
-        if (perm !== "granted") { toast("Autorisation refusée par le navigateur.", "err"); rendu(); return; }
-        const reg = await navigator.serviceWorker.ready;
-        const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlB64ToUint8Array("BLkc_LFiRnur2qfQ7hfRYuTcY60m0XP1g3HZrEVMV5jCXlzMM7ZvvVFmBLPiGwQe5euDhux7oQwHWGIKLbOz0J4") });
-        const j = sub.toJSON();
         const h = moiH();
-        if (h.connecte) await SDEH.pushSub({ endpoint: j.endpoint, p256dh: (j.keys && j.keys.p256dh) || "", auth: (j.keys && j.keys.auth) || "" });
-        toast("Notifications activées !");
+        if (!h.connecte) throw new Error("Connectez-vous d’abord.");
+        const configResponse = await fetch("/api/vapid-public-key", {credentials:"same-origin",cache:"no-store"});
+        const config = await configResponse.json();
+        if (!configResponse.ok || !config.key) throw new Error("Le service de notifications doit être configuré par le responsable du site. Vos rappels restent disponibles dans le portail.");
+        const perm = await Notification.requestPermission();
+        if (perm !== "granted") { toast("Autorisation refusée par le navigateur.", "err"); render(); return; }
+        if (location.hostname === "mouvement-sde.org") await navigator.serviceWorker.register("/sw-public.js", {scope:"/"});
+        const reg = await navigator.serviceWorker.ready;
+        const expectedKey = urlB64ToUint8Array(config.key);
+        let sub = await reg.pushManager.getSubscription();
+        if (sub?.options?.applicationServerKey) {
+          const storedKey = new Uint8Array(sub.options.applicationServerKey);
+          if (storedKey.length !== expectedKey.length || !storedKey.every((v,i) => v === expectedKey[i])) {
+            if (!await sub.unsubscribe()) throw new Error("Impossible de renouveler l'ancien abonnement. Désactivez les notifications puis réessayez.");
+            sub = null;
+          }
+        }
+        sub = sub || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: expectedKey });
+        const j = sub.toJSON();
+        await SDEH.pushSub({ endpoint: j.endpoint, keys: j.keys });
+        toast("Votre abonnement aux notifications est enregistré.");
       } catch (e) { toast("Impossible d'activer les notifications : " + (e.message || e), "err"); }
-      rendu();
+      render();
     },
     "push-desactiver": async () => {
       try {
@@ -7984,7 +7998,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
         }
         toast("Notifications désactivées.");
       } catch (e) { toast("Erreur : " + (e.message || e), "err"); }
-      rendu();
+      render();
     },
     "voir-formulaire": (t) => ficheFormulaire(t.dataset.fid),
     "suppr-formulaire": (t) => boutonArme(t, "Confirmer la suppression", async () => {

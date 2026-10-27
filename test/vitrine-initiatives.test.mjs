@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 const { JSDOM } = createRequire(import.meta.url)("jsdom");
 const read = (name) => readFileSync("public/vitrine/" + name, "utf8");
 const pages = ["prieres", "temoignages", "soldiers-voice", "missions-humanitaires"];
-const scripts = ["portal.js", "mpa-nav.js", "initiatives.js"].map(read);
+const scripts = ["portail-unifie.js", "initiatives.js"].map(read);
 
 const init = (page) => {
   const dom = new JSDOM(read(page + ".html"), {
@@ -33,15 +33,10 @@ test("quatre pages autonomes avec URLs uniques, SEO et formulaire", () => {
     dom.window.close();
   }
 });
-test("bottom bar mobile et mega menu PC présents sur les quatre nouvelles pages", () => {
-  for(const page of pages) {
-    const dom=init(page),d=dom.window.document;
-    const tabs=[...d.querySelectorAll(".sde-global-nav a")].map(a=>a.textContent.trim());
-    assert.deepEqual(tabs, ["Accueil","Membres","Agenda","Prière","Plus"]);
-    assert.equal(d.querySelectorAll(".sde-mega-nav details").length,4);
-    for(const p of pages) assert.ok(d.querySelector('.sde-mega-nav a[href="/vitrine/'+p+'"]'),p);
-    dom.window.close();
-  }
+test("navigation commune disponible sur les quatre pages",()=>{
+ for(const page of pages){const dom=init(page),d=dom.window.document;
+ for(const route of ['/','/mon-espace','/administration','/priere'])assert.ok(d.querySelector('.site-menu a[href="'+route+'"]'));
+ const btn=d.querySelector('.site-burger');btn.click();assert.equal(btn.getAttribute('aria-expanded'),'true');dom.window.close();}
 });
 test("formulaires : confirmation du serveur indispensable ; aucune publication de témoignage", async () => {
   for(const page of pages) {
@@ -85,7 +80,7 @@ test("liens dans Plus, accueil, mega menu et sitemap",()=>{
   const plus=read("plus.html"),home=read("index.html"),nav=read("mpa-nav.js");
   const map=readFileSync("public/sitemap.xml","utf8");
   for(const page of pages){
-    assert.ok(plus.includes("/vitrine/"+page));
+    assert.ok(plus.includes('href="/'+(page==='prieres'?'priere':page)+'"'));
     assert.ok(home.includes("/vitrine/"+page));
     assert.ok(nav.includes("/vitrine/"+page));
     assert.ok(map.includes("/"+({prieres:"priere",temoignages:"temoignages","soldiers-voice":"soldiers-voice","missions-humanitaires":"missions-humanitaires"})[page]+"</loc>"));

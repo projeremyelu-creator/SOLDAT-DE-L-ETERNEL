@@ -18,22 +18,23 @@ function open(name) {
   const html = read(path(name+".html"));
   const url="https://mouvement-sde.org/"+(name==="index"?"":"vitrine/"+name);
   const dom=new JSDOM(html,{url,runScripts:"outside-only",pretendToBeVisual:true});
-  dom.window.eval(portal);
-  dom.window.eval(mega);
-  dom.window.eval(directory);
-  dom.window.eval(shell);
+  for(const script of dom.window.document.querySelectorAll('script[src]')){
+    const src=new URL(script.src).pathname;
+    const name=src.split('/').at(-1);
+    if(['portal.js','mpa-nav.js','sde-public-directory.js','sde-app-shell.js','portail-unifie.js'].includes(name))dom.window.eval(read(path(name)));
+  }
   dom.window.document.dispatchEvent(new dom.window.Event("DOMContentLoaded"));
   return dom;
 }
-test("interface publique : 13 pages reçoivent les tokens de l'app privée depuis /vitrine",()=>{
+test("interface publique : 13 pages chargent la navigation commune sans passerelle privée",()=>{
   for(const name of pages) {
     const html=read(path(name+".html"));
-    assert.ok(html.includes("/vitrine/sde-app-shell.css?v=20261025f"),name+" CSS");
-    assert.ok(html.includes("/vitrine/sde-app-shell.js?v=20261025f"),name+" JS");
-    assert.ok(html.includes("/vitrine/sde-unified.css?v=20261025f"),name+" design tokens");
+    assert.ok(html.includes("/vitrine/"+(name==="index"?"sde-app-shell":"portail-unifie")+".css"),name+" CSS");
+    assert.ok(html.includes("/vitrine/"+(name==="index"?"sde-app-shell":"portail-unifie")+".js"),name+" JS");
+    if(name!=="index")assert.ok(html.includes('href="/mon-espace"'),name+" accès membre");
     assert.ok(!html.includes('src="/sde-bridge.js'),name+" ne charge pas la passerelle privée");
     assert.ok(!html.includes('href="/sde-unified.css'),name+" CSS local obligatoire");
-    assert.ok(html.includes("sde-app-shell.js"),"point d'accès sécurisé injecté depuis le shell public : "+name);
+    if(name!=="index")assert.ok(html.includes('href="/administration"'),name+" accès administrateur");
   }
 });
 test("interface publique : commandes, onglets mobiles, menu PC et annuaire de rubriques",()=>{
@@ -51,7 +52,7 @@ test("interface publique : commandes, onglets mobiles, menu PC et annuaire de ru
   dom.window.close();
 });
 test("recherche globale : filtrage accessible sans requête aux données privées",()=>{
-  const dom=open("plus"),d=dom.window.document,w=dom.window;
+  const dom=open("index"),d=dom.window.document,w=dom.window;
   const openBtn=d.querySelector(".sde-shell-search-btn");
   openBtn.click();
   const dialog=d.querySelector(".sde-shell-search-dialog");
@@ -64,12 +65,12 @@ test("recherche globale : filtrage accessible sans requête aux données privée
   assert.equal(dialog.querySelector('[role="status"]').textContent,"1 rubrique disponible");
   dialog.querySelector(".sde-search-close").click();
   assert.equal(dialog.hasAttribute("open"),false);
-  assert.ok(d.querySelector(".sde-directory-search input"),"annuaire filtrable conservé");
+  const directoryDom=open("plus");assert.ok(directoryDom.window.document.querySelector(".sde-directory-search input"),"annuaire filtrable conservé");directoryDom.window.close();
   dom.window.close();
 });
 test("thème public : basculement sans toucher l'application privée",()=>{
   const dom=open("plus"),d=dom.window.document,w=dom.window;
-  const theme=d.querySelector(".sde-shell-theme");
+  const theme=d.querySelector(".site-theme-toggle");
   assert.ok(theme);
   theme.click();
   assert.equal(d.documentElement.dataset.theme,"light");

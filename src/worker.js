@@ -305,23 +305,6 @@ async function apiActivation(req, env) {
   await effacer(env, "e:" + email);
   return json({ ok: true }, 200, { "set-cookie": await ouvrirSession(env, email) });
 }
-async function apiDemandeReinit(req, env, ctx) {
-  const b = await req.json();
-  const email = normEmail(b.email), ip = ipDe(req);
-  if (!EMAIL_OK.test(email)) return erreur("invalid_argument", "Adresse e-mail invalide.");
-  if (await bloque(env, "reinit:" + ip, 5) || await bloque(env, "reinit:" + email, 3)) return erreur("rate_limited", "Trop de demandes : patientez un quart d'heure avant de réessayer.", 429);
-  await compter(env, "reinit:" + ip); await compter(env, "reinit:" + email);
-  const c = await env.DB.prepare("SELECT email, mdp FROM comptes WHERE email = ?").bind(email).first();
-  if (!c) return json({ ok: true }); /* ne pas révéler l'existence du compte */
-  /* Réinitialiser : supprimer le mot de passe, invalider les sessions, poser un code d'activation */
-  await env.DB.batch([
-    env.DB.prepare("UPDATE comptes SET mdp = NULL WHERE email = ?").bind(email),
-    env.DB.prepare("DELETE FROM sessions WHERE email = ?").bind(email),
-  ]);
-  const code = await poserCode(env, email);
-  notifySde(env, ctx, "reinitialisation", { email, code });
-  return json({ ok: true });
-}
 async function apiMotDePasse(req, env, u) {
   if (!u.connecte) return erreur("refuse", "Connectez-vous d’abord.", 401);
   const b = await req.json();
@@ -548,7 +531,12 @@ async function apiPushSubscription(req, env, u) {
   if (req.method === "POST") {
     const b = await req.json();
     if (!b.endpoint || !b.keys) return erreur("invalid_argument", "Abonnement invalide.");
-    await env.DB.prepare("INSERT OR REPLACE INTO push_subs (userId, endpoint, p256dh, auth, cree) VALUES (?, ?, ?, ?, ?)").bind(u.id, b.endpoint, b.keys.p256dh || "", b.keys.auth || "", Date.now()).run();
+    // Un endpoint représente un appareil : lors d'un changement de compte,
+    // transférer son abonnement plutôt que multiplier les envois à cet appareil.
+    await env.DB.batch([
+      env.DB.prepare("DELETE FROM push_subs WHERE endpoint = ? AND userId <> ?").bind(b.endpoint,u.id),
+      env.DB.prepare("INSERT OR REPLACE INTO push_subs (userId, endpoint, p256dh, auth, cree) VALUES (?, ?, ?, ?, ?)").bind(u.id, b.endpoint, b.keys.p256dh || "", b.keys.auth || "", Date.now()),
+    ]);
     return json({ ok: true });
   }
   if (req.method === "DELETE") {
@@ -1354,7 +1342,7 @@ async function traiter(req, env, ctx) {
           // Un seul espace interactif : les deux entrées principales ouvrent
           // directement l'application native, jamais une page de liens intermédiaire.
           // Les routes /outils restent disponibles pour les anciens favoris.
-          const fichier = p.endsWith("/os-v31")?"/os-v31/index.html":(p==="/mon-espace"||p==="/administration")?"/vitrine/espace-membre.html":"/index.html";
+          const fichier = p.endsWith("/os-v31")?"/os-v31/index.html":"/index.html";
           const r = await assetPortail(fichier);
           const n = new Response(r.body,r);
           n.headers.set("cache-control","private, no-store");
@@ -1446,7 +1434,6 @@ async function traiter(req, env, ctx) {
       if (p === "/api/connexion" && req.method === "POST") return apiConnexionMdp(req, env);
       if (p === "/api/activation" && req.method === "POST") return apiActivation(req, env);
       if (p === "/api/mot-de-passe" && req.method === "POST") return apiMotDePasse(req, env, u);
-      if (p === "/api/demande-reinitialisation" && req.method === "POST") return apiDemandeReinit(req, env, ctx);
       if (p === "/api/mon-espace") return apiMonEspace(env, u);
       if (p === "/api/mon-historique") return apiMonHistorique(req, env, u);
       if (p === "/api/mon-profil" && req.method === "PATCH") return apiMonProfil(req, env, u);

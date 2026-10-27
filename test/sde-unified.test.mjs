@@ -12,9 +12,9 @@ test("design commun SDE servi sur vitrine ET application privée",()=>{
  for(const ref of ["/app.css","/sde-unified.css","/sde-private-ui.css","/sde-bridge.js"]) assert.ok(privateHtml.includes(ref),ref);
  for(const name of pages) {
   const html=file("vitrine/"+name+".html");
-  assert.ok(html.includes("/vitrine/sde-unified.css"),name);
-  assert.ok(html.includes("/vitrine/modern-2026.css"),name);
-  assert.ok(html.includes("/vitrine/sde-public-directory.js"),name);
+  assert.ok(html.includes("/vitrine/"+(name==="index"?"sde-unified":"portail-unifie")+".css"),name);
+  assert.ok(html.includes("/vitrine/"+(name==="index"?"sde-app-shell":"portail-unifie")+".js"),name);
+  if(name!=="index")assert.ok(html.includes('href="/mon-espace"') && html.includes('href="/administration"'),name);
  }
  assert.ok(file("sde-unified.css").includes("--sde-gold"));
  assert.ok(file("sde-private-ui.css").includes(".hdr-site"));

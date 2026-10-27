@@ -52,30 +52,34 @@
   async function initPushNotifications() {
     if (!("Notification" in window) || !("PushManager" in window) || !("serviceWorker" in navigator)) return;
 
-    // Attendre que la page soit chargée
-    const sw = await navigator.serviceWorker.ready;
-
-    // Vérifier si l'utilisateur est connecté (cookie sde_s présent)
-    if (!document.cookie.includes("sde_s=")) return;
+    // Le cookie de session est HttpOnly : seule l'API peut confirmer la session.
+    try {
+      const response = await fetch("/api/moi", {credentials:"same-origin",cache:"no-store"});
+      if (!response.ok || !(await response.json()).connecte) return;
+    } catch (_) { return; }
 
     // Récupérer la clé publique VAPID
     let vapidKey = null;
     try {
-      const res = await fetch("/api/vapid-public-key");
+      const res = await fetch("/api/vapid-public-key", {credentials:"same-origin",cache:"no-store"});
+      if (!res.ok) return;
       const data = await res.json();
       vapidKey = data.key;
     } catch (_) { return; }
     if (!vapidKey) return;
 
-    // Vérifier l'abonnement existant
-    const existing = await sw.pushManager.getSubscription();
-    if (existing) return; // Déjà abonné
-
     // Vérifier la permission actuelle
     if (Notification.permission === "denied") return;
-
-    // Afficher le bandeau de demande de permission
-    showNotificationBanner(sw, vapidKey);
+    try {
+      const sw = await navigator.serviceWorker.ready;
+      const existing = await sw.pushManager.getSubscription();
+      // Un même navigateur peut changer de compte : confirmer l'association
+      // côté serveur sans demander à nouveau l'autorisation du navigateur.
+      if (existing && matchesKey(existing,vapidKey)) {
+        if (await saveSubscription(existing)) return;
+      }
+      showNotificationBanner(sw, vapidKey);
+    } catch (_) { /* Les autres fonctions du portail restent utilisables. */ }
   }
 
   function urlBase64ToUint8Array(base64String) {
@@ -86,20 +90,39 @@
     for (let i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
     return arr;
   }
+  function matchesKey(subscription,key) {
+    const stored=subscription.options?.applicationServerKey;
+    if(!stored)return true;
+    const actual=new Uint8Array(stored),expected=urlBase64ToUint8Array(key);
+    return actual.length===expected.length&&actual.every((v,i)=>v===expected[i]);
+  }
 
   async function subscribePush(sw, vapidKey) {
     try {
       const permission = await Notification.requestPermission();
       if (permission !== "granted") return false;
 
-      const sub = await sw.pushManager.subscribe({
+      let sub=await sw.pushManager.getSubscription();
+      if(sub&&!matchesKey(sub,vapidKey)){
+        if(!await sub.unsubscribe())return false;
+        sub=null;
+      }
+      sub = sub || await sw.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(vapidKey),
       });
 
-      // Envoyer l'abonnement au serveur
+      return await saveSubscription(sub);
+    } catch (e) {
+      console.warn("SDE push subscription failed:", e);
+      return false;
+    }
+  }
+
+  async function saveSubscription(sub) {
       const res = await fetch("/api/push", {
         method: "POST",
+        credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           endpoint: sub.endpoint,
@@ -109,10 +132,6 @@
       });
 
       return res.ok;
-    } catch (e) {
-      console.warn("SDE push subscription failed:", e);
-      return false;
-    }
   }
 
   function showNotificationBanner(sw, vapidKey) {
@@ -157,13 +176,16 @@
     document.body.appendChild(banner);
 
     banner.querySelector(".sde-notif-accept").addEventListener("click", async () => {
+      const button = banner.querySelector(".sde-notif-accept");
+      button.disabled = true;
       const ok = await subscribePush(sw, vapidKey);
       if (ok) {
         banner.querySelector(".sde-notif-text").innerHTML = "<strong>Notifications activées ✓</strong><span>Vous recevrez les alertes SDE sur cet appareil.</span>";
         banner.querySelector(".sde-notif-actions").innerHTML = "";
         setTimeout(() => banner.remove(), 3000);
       } else {
-        banner.querySelector(".sde-notif-text span").textContent = "La permission a été refusée. Vous pouvez l'activer dans les paramètres de votre navigateur.";
+        banner.querySelector(".sde-notif-text span").textContent = "L'activation n'a pas pu être confirmée. Vérifiez l'autorisation et votre connexion, puis réessayez.";
+        button.disabled = false;
       }
     });
 
