@@ -33,6 +33,52 @@ const get=(path,role,extra={})=>worker.fetch(new Request("https://mouvement-sde.
   headers:{...(role?{cookie:"sde_s=une_session"}:{}),...(extra.headers||{})},
   redirect:"manual"
 }),env(role),{waitUntil(){}});
+
+// Cloudflare canonicalise aussi les requêtes internes à ASSETS.fetch :
+// /index.html -> / et /vitrine/page.html -> /vitrine/page (307 observés en production).
+// Le routeur doit absorber ces redirections sans changer l'URL du navigateur.
+async function avecAssetsCanoniques(path,role){
+ const bindings=env(role);
+ const fichiers={
+  "/":"public/index.html",
+  "/vitrine/portail":"public/vitrine/portail.html",
+  "/vitrine/connexion-unifiee":"public/vitrine/connexion-unifiee.html"
+ };
+ bindings.ASSETS.fetch=async request=>{
+  const url=new URL(request.url);
+  if(url.pathname.endsWith(".html")){
+   const canonique=url.pathname==="/index.html"?"/":url.pathname.slice(0,-5);
+   return Response.redirect(url.origin+canonique,307);
+  }
+  const fichier=fichiers[url.pathname];
+  return fichier?new Response(repoFile(fichier),{headers:{"content-type":"text/html"}}):new Response("Introuvable",{status:404});
+ };
+ return worker.fetch(new Request("https://mouvement-sde.org"+path,{
+  headers:role?{cookie:"sde_s=une_session"}:{},redirect:"manual"
+ }),bindings,{waitUntil(){}});
+}
+test("accès privés : les redirections HTML de Cloudflare ne renvoient pas les membres à l'accueil",async()=>{
+ for(const [path,role]of [["/mon-espace","soldat"],["/administration","admin"]]){
+  const res=await avecAssetsCanoniques(path,role);
+  assert.equal(res.status,200,path);
+  assert.equal(res.headers.get("location"),null,path);
+  assert.equal(await res.text(),repoFile("public/index.html"),path);
+  assert.match(res.headers.get("cache-control"),/no-store/);
+ }
+});
+test("connexion : conserver la destination administration sans redirection vers le fichier HTML",async()=>{
+ const res=await avecAssetsCanoniques("/connexion?retour=%2Fadministration");
+ assert.equal(res.status,200);
+ assert.equal(res.headers.get("location"),null);
+ assert.equal(await res.text(),repoFile("public/vitrine/connexion-unifiee.html"));
+ assert.match(res.headers.get("cache-control"),/no-store/);
+});
+test("accueil : servir le document public sans exposer son chemin de stockage",async()=>{
+ const res=await avecAssetsCanoniques("/");
+ assert.equal(res.status,200);
+ assert.equal(res.headers.get("location"),null);
+ assert.equal(await res.text(),repoFile("public/vitrine/portail.html"));
+});
 test("portail : page d'accueil légère distincte du tableau de bord privé",async()=>{
  const res=await get("/");
  assert.equal(res.status,200);

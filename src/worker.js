@@ -1214,7 +1214,24 @@ async function traiter(req, env, ctx) {
         "/missions-humanitaires": "/vitrine/missions-humanitaires.html",
         "/rubriques": "/vitrine/plus.html"
       };
-      const assetPortail = (nom) => env.ASSETS.fetch(new Request(new URL(nom, url), req));
+      const assetPortail = async (nom) => {
+        // ASSETS applique ses redirections HTML même derrière le Worker :
+        // /index.html -> / renvoyait les comptes connectés à l'accueil public.
+        // Résoudre les chemins de stockage ici pour garder l'URL privée et
+        // les paramètres de connexion dans le navigateur, après contrôle du rôle.
+        let cible = new URL(nom, url);
+        for (let saut = 0; saut < 4; saut++) {
+          const r = await env.ASSETS.fetch(new Request(cible, req));
+          if (![301, 302, 303, 307, 308].includes(r.status)) return r;
+          const location = r.headers.get("location");
+          if (!location) throw new Error("Redirection asset sans destination");
+          const suivante = new URL(location, cible);
+          await r.body?.cancel();
+          if (suivante.origin !== url.origin) throw new Error("Redirection asset externe");
+          cible = suivante;
+        }
+        throw new Error("Boucle de redirections asset");
+      };
       if (req.method === "GET" || req.method === "HEAD") {
         if (p === "/" || p === "/index.html") return assetPortail("/vitrine/portail.html");
         if (p === "/vitrine/" || p === "/vitrine/index.html") return Response.redirect(url.origin + "/", 301);
