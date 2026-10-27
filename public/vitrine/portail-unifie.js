@@ -4,7 +4,7 @@
   const routes = [
     ["/","Accueil"],["/mouvement","Le Mouvement"],["/programmes","Programmes"],
     ["/academy","Academy"],["/enseignements","Enseignements"],["/missions","Missions"],
-    ["/priere","Prière"],["/mon-espace","Mon espace"]
+    ["/priere","Prière"],["/mon-espace","Espace membre"],["/administration","Espace administrateur"]
   ];
   function navigation() {
     if (!document.querySelector(".site-header")) {
@@ -19,7 +19,7 @@
         '<button class="site-burger" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Ouvrir la navigation"><span></span><span></span><span></span></button>' +
         '<nav class="site-menu" id="site-menu" aria-label="Navigation principale">' +
         routes.map(([href,label])=>'<a href="'+href+'">'+label+'</a>').join("") +
-        '</nav></div>';
+        '</nav><div class="site-access-top" aria-label="Accès privés"><a href="/mon-espace">Espace membre</a><a href="/administration">Espace administrateur</a></div></div>';
       old.insertAdjacentElement("beforebegin",header);
       const footer=document.querySelector("footer");
       if(footer && !footer.classList.contains("site-footer")) {
