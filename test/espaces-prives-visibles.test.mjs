@@ -63,7 +63,7 @@ test("Administration : tous les titres de pilotage et les accès liés au rôle"
  const d=ctx.w.document,menu=d.querySelector("#sde-direct-tabs");
  assert.equal(d.querySelector("h1.sde-direct-title").textContent,"Poste de commandement administratif");
  const groupes=[...menu.querySelectorAll(".sde-direct-group")].map(x=>x.textContent);
- assert.deepEqual(groupes,["Pilotage et organisation","Vie spirituelle et communication","Finances et administration"]);
+ assert.deepEqual(groupes,["Vie spirituelle et communication","Pilotage et organisation","Finances et administration"]);
  const modules=[...menu.querySelectorAll("button")].map(x=>x.dataset.module);
  for(const nom of ["accueil","membres","agenda","garnisons","projets","secretariat","academie","portevoix","chambre","finances"])
    assert.ok(modules.includes(nom),nom);

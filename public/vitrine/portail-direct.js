@@ -10,20 +10,20 @@
   if(!mode)return;
 
   const catalogue={
-    accueil:"Tableau de bord",espace:"Mon profil et ma carte",membres:"Membres et fiches",
+    accueil:"Tableau de bord",espace:"Mon profil et ma carte",priere:"Mes prières",membres:"Membres et fiches",
     agenda:"Agenda et présences",garnisons:"Garnisons et pôles",academie:"Soldiers Academy",
     portevoix:"Communication et annonces",chambre:"Prière et intercession",
     projets:"Projets et missions",secretariat:"Secrétariat et décisions",finances:"Finances et cotisations",
     arsenal:"Bibliothèque et enseignements",mediatheque:"Médiathèque",assistant:"Assistant Éliézer"
   };
-  const personnel=new Set(["espace","agenda","academie","portevoix","arsenal","mediatheque"]);
+  const personnel=new Set(["priere","espace","agenda","academie","portevoix","arsenal","mediatheque"]);
   const url=new URL(location.href);
   const demandé=url.searchParams.get("module")||"";
   const souhait=Object.prototype.hasOwnProperty.call(catalogue,demandé)?demandé:
     mode==="membre"?"espace":"accueil";
   const body=document.body;
   body.classList.add("sde-direct",mode==="membre"?"sde-direct-member":"sde-direct-admin");
-  let compte=null,initial=false,signature="",navCourant="";
+  let compte=null,initial=false,signature="",navCourant="",priereOuverte=false,historiqueCharge=false;
   const element=(tag,classe,contenu)=>{
     const node=document.createElement(tag);
     if(classe)node.className=classe;
@@ -36,6 +36,7 @@
   function allowed(nom){
     if(!Object.prototype.hasOwnProperty.call(catalogue,nom))return false;
     if(mode==="membre"&&!personnel.has(nom))return false;
+    if(nom==="priere")return mode==="membre";
     if(nom==="finances"&&compte?.niveau<2)return false;
     return true;
   }
@@ -65,41 +66,143 @@
     const tabs=element("nav");tabs.id="sde-direct-tabs";tabs.setAttribute("aria-label","Rubriques de l'espace privé");
     header.append(head);
     const intro=element("div","sde-direct-intro");
-    const eyebrow=element("p","sde-direct-eyebrow","MOUVEMENT SDE · PORTAIL PRIVÉ");
+    const eyebrow=element("p","sde-direct-eyebrow","MOUVEMENT SDE · LE RÉVEIL SPIRITUEL DES NATIONS");
     const titre=element("h1","sde-direct-title",mode==="membre"?"Mon espace membre":"Poste de commandement administratif");
     const description=element("p","sde-direct-description",mode==="membre"?
-      "Mon profil, mes présences, mes prières, mes formations et mes ressources. Chaque onglet ouvre son contenu directement ici.":
-      "Pilotez le mouvement : membres, agenda, présences, directoire, pôles, projets, communication, finances et décisions. Choisissez une rubrique ci-dessous.");
+      "Votre vie spirituelle au premier plan : prière, formation biblique, enseignements et rencontres. Vos informations personnelles restent accessibles au même endroit.":
+      "Accompagnez le réveil spirituel : intercession, enseignements, Soldiers Academy et rassemblements, avec les outils de gouvernance et d'administration SDE.");
     const etat=element("p","sde-direct-loading","Chargement des rubriques autorisées…");
     etat.setAttribute("role","status");etat.setAttribute("aria-live","polite");
-    intro.append(eyebrow,titre,description,etat);
+    intro.append(eyebrow,titre,description);
+    const actions=element("div","sde-spirit-actions");
+    actions.setAttribute("aria-label","Accès rapides à la vie spirituelle");
+    const rapides=mode==="membre"?[
+      ["priere","Déposer une prière"],["academie","Me former"],["arsenal","Lire un enseignement"],["agenda","Rencontres"]
+    ]:[
+      ["chambre","Intercession"],["academie","Formations"],["arsenal","Enseignements"],["agenda","Rassemblements"]
+    ];
+    for(const [nom,label] of rapides){
+      const b=element("button","sde-spirit-quick",label);
+      b.type="button";b.dataset.quick=nom;
+      b.addEventListener("click",()=>selectionner(nom));
+      actions.append(b);
+    }
+    intro.append(actions,etat);
     header.append(intro);
     body.insertBefore(header,body.firstChild);
     const main=document.getElementById("main");
-    if(main?.parentElement)main.parentElement.insertBefore(tabs,main);
+    let panneau=null,histoire=null,messagePriere=null,champPriere=null,envoiPriere=null;
+    if(mode==="membre"&&main?.parentElement){
+      panneau=element("section","sde-spiritual-panel");panneau.id="sde-priere-panel";
+      panneau.hidden=true;panneau.setAttribute("aria-labelledby","sde-priere-titre");
+      const h=element("h2","", "Mes prières et mon intercession");h.id="sde-priere-titre";
+      const aide=element("p","", "Transmettez un sujet de prière à l'équipe d'intercession. Votre demande est liée à votre compte SDE.");
+      const form=element("form","sde-priere-form");
+      const label=element("label","", "Mon sujet de prière");
+      champPriere=document.createElement("textarea");
+      champPriere.name="sujet";champPriere.required=true;champPriere.maxLength=2000;
+      champPriere.rows=5;champPriere.placeholder="Écrivez votre sujet de prière…";
+      label.append(champPriere);
+      envoiPriere=element("button","sde-priere-submit","Déposer ma requête");
+      envoiPriere.type="submit";
+      form.append(label,envoiPriere);
+      messagePriere=element("p","sde-priere-feedback","");
+      messagePriere.setAttribute("role","status");messagePriere.setAttribute("aria-live","polite");
+      const recap=element("h3","", "Mes dernières requêtes");
+      histoire=element("ul","sde-priere-historique");
+      panneau.append(h,aide,form,messagePriere,recap,histoire);
+      main.parentElement.insertBefore(panneau,main);
+      form.addEventListener("submit",async event=>{
+        event.preventDefault();
+        if(!compte?.connecte||!compte.membreId)return;
+        const sujet=champPriere.value.trim();
+        if(!sujet)return;
+        envoiPriere.disabled=true;messagePriere.textContent="Transmission de votre prière…";
+        try{
+          const r=await fetch("/api/priere",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"content-type":"application/json","accept":"application/json"},body:JSON.stringify({sujet})});
+          const data=await r.json().catch(()=>({}));
+          if(!r.ok||data.ok!==true)throw Error(data.message||"La prière n'a pas pu être transmise.");
+          champPriere.value="";messagePriere.textContent="Votre requête de prière a été enregistrée.";
+          historiqueCharge=false;await lireHistorique();
+        }catch(err){messagePriere.textContent=err.message||"Service temporairement indisponible.";}
+        finally{envoiPriere.disabled=false;}
+      });
+    }
+    if(main?.parentElement)main.parentElement.insertBefore(tabs,panneau||main);
     else header.append(tabs);
     const original=document.getElementById("nav");
     if(!original){etat.textContent="Les modules de gestion n’ont pas été chargés. Rechargez la page.";return;}
+    async function lireHistorique(){
+      if(!histoire||historiqueCharge)return;
+      histoire.replaceChildren();
+      histoire.append(element("li","","Chargement de votre historique…"));
+      try{
+        const r=await fetch("/api/mon-historique",{credentials:"same-origin",cache:"no-store",headers:{accept:"application/json"}});
+        if(!r.ok)throw Error("Historique indisponible pour ce compte.");
+        const data=await r.json();
+        const prieres=Array.isArray(data.prieres)?data.prieres:[];
+        histoire.replaceChildren();
+        if(!prieres.length)histoire.append(element("li","","Aucune requête enregistrée."));
+        for(const p of prieres.slice(0,8)){
+          const li=element("li","");
+          const titre=element("strong","",String(p.sujet||"Prière personnelle"));
+          const detail=element("span","", [p.date,p.statut].filter(Boolean).join(" · "));
+          li.append(titre,detail);histoire.append(li);
+        }
+        historiqueCharge=true;
+      }catch(err){histoire.replaceChildren();histoire.append(element("li","",err.message));}
+    }
+    function selectionner(nom){
+      if(!compte||!allowed(nom))return;
+      if(nom==="priere"&&mode==="membre"&&panneau){
+        panneau.hidden=false;main.hidden=true;priereOuverte=true;
+        if(!compte.membreId){
+          messagePriere.textContent="Votre compte doit être relié à une fiche membre pour déposer une prière.";
+          envoiPriere.disabled=true;
+          histoire.replaceChildren();histoire.append(element("li","","Historique disponible après liaison de votre fiche."));
+        }else void lireHistorique();
+      }else{
+        const native=original.querySelector('button[data-vue="'+nom+'"]');
+        if(!native||native.disabled)return;
+        if(panneau)panneau.hidden=true;
+        main.hidden=false;priereOuverte=false;
+        native.click();
+      }
+      const nextUrl=new URL(location.href);
+      nextUrl.searchParams.set("module",nom);nextUrl.hash="";
+      history.replaceState(null,"",nextUrl.pathname+nextUrl.search);
+      for(const b of tabs.querySelectorAll("[data-module]")){
+        if(b.dataset.module===nom)b.setAttribute("aria-current","page");
+        else b.removeAttribute("aria-current");
+      }
+      navCourant=nom;
+      if(nom==="priere")panneau?.querySelector("h2")?.focus?.();
+    }
 
     const sync=()=>{
       if(!compte)return;
       const buttons=[...original.querySelectorAll('button[data-vue]')];
       const ordre=mode==="membre"?
-        ["espace","agenda","academie","portevoix","arsenal","mediatheque"]:
-        ["accueil","membres","agenda","garnisons","projets","secretariat",
-         "academie","portevoix","chambre","arsenal","mediatheque",
+        ["priere","academie","arsenal","espace","agenda","portevoix","mediatheque"]:
+        ["accueil","chambre","academie","arsenal","agenda","portevoix",
+         "membres","garnisons","projets","secretariat","mediatheque",
          "finances","assistant","espace"];
-      const disponibles=buttons.filter(b=>allowed(b.dataset.vue)&&!b.disabled)
-        .sort((a,b)=>ordre.indexOf(a.dataset.vue)-ordre.indexOf(b.dataset.vue));
+      const disponibles=buttons.filter(b=>allowed(b.dataset.vue)&&!b.disabled);
+      if(mode==="membre"){
+        const prayerButton=element("button","");
+        prayerButton.dataset.vue="priere";disponibles.push(prayerButton);
+      }
+      disponibles.sort((a,b)=>ordre.indexOf(a.dataset.vue)-ordre.indexOf(b.dataset.vue));
       const next=disponibles.map(b=>b.dataset.vue).join("|");
       if(next!==signature){
         signature=next;tabs.replaceChildren();
         const groupes=mode==="membre"?[
-          ["Mon parcours",new Set(["espace","agenda","academie"])],
-          ["Ressources et communauté",new Set(["portevoix","arsenal","mediatheque"])]
+          ["Vie spirituelle",new Set(["priere","academie","arsenal"])],
+          ["Mon parcours",new Set(["espace","agenda"])],
+          ["Communauté et ressources",new Set(["portevoix","mediatheque"])]
         ]:[
-          ["Pilotage et organisation",new Set(["accueil","membres","agenda","garnisons","projets","secretariat"])],
-          ["Vie spirituelle et communication",new Set(["academie","portevoix","chambre","arsenal","mediatheque"])],
+          ["Vie spirituelle et communication",new Set(["accueil","chambre","academie","arsenal","agenda","portevoix"])],
+          ["Pilotage et organisation",new Set(["membres","garnisons","projets","secretariat","mediatheque"])],
           ["Finances et administration",new Set(["finances","assistant","espace"])]
         ];
         let precedent="";
@@ -112,21 +215,12 @@
           const nom=b.dataset.vue;
           const item=element("button","sde-direct-tab",catalogue[nom]);
           item.type="button";item.dataset.module=nom;
-          item.addEventListener("click",()=>{
-            const target=original.querySelector('button[data-vue="'+nom+'"]');
-            if(!target||target.disabled)return;
-            // Le contenu se met à jour dans #main par le routeur natif, sans navigation HTTP.
-            target.click();
-            const nextUrl=new URL(location.href);
-            nextUrl.searchParams.set("module",nom);
-            if(nextUrl.hash)nextUrl.hash="";
-            history.replaceState(null,"",nextUrl.pathname+nextUrl.search);
-          });
+          item.addEventListener("click",()=>selectionner(nom));
           tabs.append(item);
         }
         etat.textContent="Cliquez sur une rubrique pour afficher directement son contenu, sans changer de page.";
       }
-      const courant=buttons.find(b=>b.getAttribute("aria-current")==="page"||b.classList.contains("on"))?.dataset.vue||"";
+      const courant=priereOuverte?"priere":buttons.find(b=>b.getAttribute("aria-current")==="page"||b.classList.contains("on"))?.dataset.vue||"";
       if(courant!==navCourant||next!==signature){
         navCourant=courant;
         for(const b of tabs.querySelectorAll("button")){
@@ -138,8 +232,8 @@
         const cible=disponibles.find(b=>b.dataset.vue===souhait);
         if(cible){
           initial=true;
-          // Évite une étape "tous les outils" : le module demandé devient la vue courante.
-          if(!cible.classList.contains("on")&&cible.getAttribute("aria-current")!=="page")cible.click();
+          if(souhait==="priere")selectionner("priere");
+          else if(!cible.classList.contains("on")&&cible.getAttribute("aria-current")!=="page")cible.click();
         }
       }
     };
