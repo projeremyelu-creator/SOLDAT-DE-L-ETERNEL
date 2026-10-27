@@ -153,16 +153,36 @@
     });
     const title=$("#decompte-titre"),days=$("#c-j"),hours=$("#c-h"),mins=$("#c-m"),seconds=$("#c-s");
     if(title&&days&&hours&&mins&&seconds){
+      // Abidjan = UTC+0 : début 8 h 30, fin 18 h le samedi 31 octobre 2026.
       const deadline=new Date("2026-10-31T08:30:00Z").getTime();
+      const end=new Date("2026-10-31T18:00:00Z").getTime();
+      const counter=$(".decompte");
+      let timer=null;
+      const hide=(el)=>{if(el)el.hidden=true;};
       const tick=()=>{
-        const delta=Math.max(0,deadline-Date.now());
+        const now=Date.now();
+        if(now>=end){
+          title.textContent="IN FIRE 2026 s'est tenue le samedi 31 octobre. Merci à tous ! Rendez-vous à la prochaine édition.";
+          hide(counter);
+          // L'édition est terminée : on retire les actions d'inscription et de trajet.
+          hide($('[data-ics="infire"]'));hide($("#b-yango"));hide($("#yango-aide"));
+          const venue=$("#f-venue");
+          if(venue){hide(venue);const h=venue.previousElementSibling;if(h&&h.tagName==="H3")hide(h);}
+          if(timer)clearInterval(timer);
+          return;
+        }
+        if(now>=deadline){
+          title.textContent="IN FIRE 2026 a commencé : rejoignez-nous à l'Église MADEG jusqu'à 18 h !";
+          hide(counter);
+          return;
+        }
+        const delta=deadline-now;
         days.textContent=Math.floor(delta/864e5);
         hours.textContent=Math.floor(delta%864e5/36e5);
         mins.textContent=Math.floor(delta%36e5/6e4);
         seconds.textContent=Math.floor(delta%6e4/1000);
-        if(delta===0){title.textContent="L'édition 2026 est passée.";clearInterval(timer);}
       };
-      const timer=setInterval(tick,1000);tick();
+      timer=setInterval(tick,1000);tick();
     }
   }
   function setupRejoindre(){
