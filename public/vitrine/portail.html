@@ -17,8 +17,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;500;600;700&family=Saira+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/vitrine/portail-unifie.css?v=20261026">
-<script defer src="/vitrine/portail-unifie.js?v=20261026"></script>
+<link rel="stylesheet" href="/vitrine/portail-unifie.css?v=20261027a">
+<script defer src="/vitrine/portail-unifie.js?v=20261027a"></script>
 <script defer src="/vitrine/pwa-public.js?v=20261026"></script>
 </head>
 <body class="sde-unifie">
@@ -26,10 +26,11 @@
 <header class="site-header" id="haut">
   <div class="site-header-inner">
     <a class="site-brand" href="/" aria-label="Soldats de l'Éternel — Accueil"><img src="/vitrine/logo-96.png" alt="" width="44" height="44"><span><b>S.D.E.</b><small>Le Réveil Spirituel des Nations</small></span></a>
+    <div class="site-access-top" aria-label="Accès privés"><a href="/mon-espace">Espace membre</a><a href="/administration">Espace administrateur</a></div>
     <button class="site-burger" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Ouvrir la navigation"><span></span><span></span><span></span></button>
     <nav class="site-menu" id="site-menu" aria-label="Navigation principale">
       <a href="/" aria-current="page">Accueil</a><a href="/mouvement">Le Mouvement</a><a href="/programmes">Programmes</a><a href="/academy">Academy</a><a href="/enseignements">Enseignements</a><a href="/missions">Missions</a><a href="/priere">Prière</a>
-      <a class="menu-login" href="/mon-espace"><span aria-hidden="true">◈</span> Mon espace</a>
+      <a class="menu-login" href="/mon-espace">Espace membre</a><a class="menu-login menu-admin" href="/administration">Espace administrateur</a>
     </nav>
   </div>
 </header>
@@ -42,9 +43,27 @@
     <h1>Une génération de <em>soldats</em> pour les nations.</h1>
     <p class="lead">Réveiller. Restaurer. Former. Équiper. Envoyer. Découvrez une communauté engagée pour l'accomplissement du dessein éternel de Dieu.</p>
     <div class="hero-actions"><a class="action gold" href="/mouvement">Découvrir notre vision <span aria-hidden="true">↗</span></a><a class="action ghost" href="/programmes">Voir nos programmes</a></div>
-    <a class="subtle-link" href="/mon-espace">Déjà membre ? Accéder à mon espace <span aria-hidden="true">→</span></a>
+    <div class="hero-private-links" aria-label="Vos espaces sécurisés"><a href="/mon-espace"><span aria-hidden="true">◈</span> Accéder à l'espace membre</a><a href="/administration"><span aria-hidden="true">▦</span> Accéder à l'administration</a></div>
   </div>
   <span class="hero-mark" aria-hidden="true">ÉZÉCHIEL 37</span>
+</section>
+<section class="private-access" id="espaces-prives" aria-labelledby="titre-espaces">
+  <div class="wrap">
+    <p class="eyebrow dark-eyebrow">Portail S.D.E. · Accès sécurisé</p>
+    <h2 id="titre-espaces">Vos deux espaces, directement accessibles.</h2>
+    <p class="private-access-intro">Un seul site et un seul compte. Après connexion, chaque rubrique s'ouvre dans son tableau de bord, sans passage par une autre application.</p>
+    <div class="private-access-grid">
+      <a href="/mon-espace" class="private-access-card private-member">
+        <span class="private-icon" aria-hidden="true">♙</span>
+        <span class="private-card-body"><strong>Espace membre</strong><span>Mon profil, ma carte, mes présences, prières, formations, bibliothèque et parcours personnel.</span><small>Ouvrir mon tableau de bord personnel <span aria-hidden="true">→</span></small></span>
+      </a>
+      <a href="/administration" class="private-access-card private-admin">
+        <span class="private-icon" aria-hidden="true">▦</span>
+        <span class="private-card-body"><strong>Espace administrateur</strong><span>Poste de commandement : membres, pointages, pôles, projets, finances, communications, décisions et suivi autorisé.</span><small>Ouvrir le poste de commandement <span aria-hidden="true">→</span></small></span>
+      </a>
+    </div>
+    <p class="private-access-note">L'accès à l'administration dépend de votre rôle SDE. Les données confidentielles restent protégées.</p>
+  </div>
 </section>
 <section class="announcement" aria-labelledby="titre-agenda">
   <div class="wrap announcement-inner">
