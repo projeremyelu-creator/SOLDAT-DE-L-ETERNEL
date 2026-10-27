@@ -1199,7 +1199,34 @@ async function traiter(req, env, ctx) {
     const url = new URL(req.url);
     const p = url.pathname;
     if (url.hostname === "www.mouvement-sde.org") return Response.redirect("https://mouvement-sde.org" + p + url.search, 301);
+    // Le domaine www n'a pas de session distincte ni de portail séparé :
+    // conserver la requête et rejoindre immédiatement le domaine canonique.
+    if (url.hostname === "www.mouvement-sde.org") {
+      const destination = new URL(url);
+      destination.hostname = "mouvement-sde.org";
+      return Response.redirect(destination.toString(), 308);
+    }
     if (url.hostname === "mouvement-sde.org") {
+      // Normaliser les variantes fréquemment utilisées avant les contrôles d'accès.
+      // La destination privée valide toujours la session et le rôle sur le serveur.
+      const aliasPrives = {
+        "/mon-espace/": "/mon-espace",
+        "/administration/": "/administration",
+        "/connexion/": "/connexion",
+        "/mon-espace/outils/": "/mon-espace/outils",
+        "/administration/outils/": "/administration/outils",
+        "/mon-espace/os-v31/": "/mon-espace/os-v31",
+        "/administration/os-v31/": "/administration/os-v31",
+        "/espace-membre": "/mon-espace",
+        "/espace-membre/": "/mon-espace",
+        "/espace-administrateur": "/administration",
+        "/espace-administrateur/": "/administration"
+      };
+      if ((req.method === "GET" || req.method === "HEAD") && aliasPrives[p]) {
+        const destination = new URL(url);
+        destination.pathname = aliasPrives[p];
+        return Response.redirect(destination.toString(), 308);
+      }
       // Routage unifié : pages réelles, un guichet de connexion, deux espaces protégés.
       const pagesPubliques = {
         "/mouvement": "/vitrine/mouvement.html",
