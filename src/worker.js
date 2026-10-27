@@ -1306,13 +1306,21 @@ async function traiter(req, env, ctx) {
       if (origine && origine !== url.origin) return erreur("refuse", "Origine refusée.", 403);
     }
     /* Rate-limit global par IP */
+    // Le plafond global ne vise que les requêtes anonymes. Les espaces membre et
+    // administrateur se synchronisent toutes les 4 s (≈ 225 appels / 15 min) : les
+    // soumettre au plafond bloquait la connexion de tous les appareils d'une même
+    // adresse IP. La connexion garde ses propres freins (8 essais par e-mail, 40 par IP).
     const ipGlobal = ipDe(req);
-    if (await rateLimitGlobal(env, ipGlobal)) return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
+    const avecSession = !!cookies(req).sde_s;
+    if (!avecSession && await rateLimitGlobal(env, ipGlobal)) return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
     if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
     if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
     if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
     try {
       const u = await utilisateur(req, env);
+      // Un cookie invalide ou expiré ne permet pas d'échapper au plafond anonyme.
+      if (avecSession && !u.connecte && await rateLimitGlobal(env, ipGlobal))
+        return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
       if (p.startsWith("/api/os/")) return sdeOsApi(req,env,u,url);
       if (p === "/api/notifications-status" && req.method === "GET") {
         if (u.niveau < 3) return erreur("refuse", "Réservé au propriétaire.", 403);
