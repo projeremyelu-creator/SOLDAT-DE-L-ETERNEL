@@ -6,12 +6,11 @@
 <title>Demandes d'engagement · Soldats de l'Éternel</title>
 <meta name="description" content="Interface administrative : demandes d'engagement reçues depuis mouvement-sde.org.">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#0f1e3d">
-<link rel="icon" href="/icone-192.png" type="image/png">
+<meta name="theme-color" content="#11182a">
+<link rel="icon" href="/vitrine/logo-96.png" type="image/png">
 <link rel="apple-touch-icon" href="/icone-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@400;500;600;700;800;900&family=Saira+Stencil+One&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --nuit: #0f1e3d; --nuit-2: #1b2f5b;
@@ -180,26 +179,21 @@ main { padding: 32px 0 80px; position: relative; }
   .carte { padding: 16px 18px; }
 }
 </style>
-<link rel="stylesheet" href="/vitrine/portal.css?v=20261025b">
-<link rel="stylesheet" href="/vitrine/mpa.css?v=20261025d">
-<link rel="stylesheet" href="/vitrine/sde-unified.css?v=20261025f">
-<link rel="stylesheet" href="/vitrine/modern-2026.css?v=20261025e">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;500;600;700&family=Saira+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/vitrine/portail-unifie.css?v=20261027b">
+<link rel="stylesheet" href="/vitrine/portail-subpage.css?v=20261027a">
 </head>
-<body>
+<body class="sde-unifie sde-subpage" data-sde-page="engagements">
 
-<header class="entete">
-  <div class="enveloppe">
-    <a href="/" class="marque" aria-label="Accueil SDE">
-      <img src="/vitrine/logo-96.png" alt="" width="36" height="36">
-      <span>
-        <b>SDE</b>
-        <small>Admin · Engagements</small>
-      </span>
-    </a>
-    <div class="entete-droite">
-      <span class="chip-ident" id="qui">—</span>
-      <a href="/mon-espace" style="font-size:.82rem">↗ App MPA SDE</a>
-    </div>
+<header class="site-header" id="haut">
+  <div class="site-header-inner">
+    <a class="site-brand" href="/" aria-label="Soldats de l’Éternel — Accueil"><img src="/vitrine/logo-96.png" alt="" width="44" height="44"><span><b>S.D.E.</b><small>Le Réveil Spirituel des Nations</small></span></a>
+    <div class="site-access-top" aria-label="Accès privés"><a href="/mon-espace">Espace membre</a><a href="/administration">Espace administrateur</a></div>
+    <button class="site-burger" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Ouvrir la navigation"><span></span><span></span><span></span></button>
+    <nav class="site-menu" id="site-menu" aria-label="Navigation principale">
+      <a href="/">Accueil</a><a href="/mouvement">Le Mouvement</a><a href="/programmes">Programmes</a><a href="/academy">Academy</a><a href="/enseignements">Enseignements</a><a href="/missions">Missions</a><a href="/priere">Prière</a>
+      <a class="menu-login" href="/mon-espace">Espace membre</a><a class="menu-login menu-admin" href="/administration">Espace administrateur</a>
+    </nav>
   </div>
 </header>
 
@@ -254,7 +248,7 @@ main { padding: 32px 0 80px; position: relative; }
       const r = await fetch('/api/engager-admin', { credentials: 'same-origin', cache: 'no-store' });
       if (r.status === 401 || r.status === 403) {
         liste.innerHTML = `<div class="message erreur">Accès réservé à l'équipe administrative.<br><br>
-          <a href="/connexion" style="color:var(--or);text-decoration:underline">Se connecter à l'application</a> avec un compte administrateur, puis revenir sur cette page.</div>`;
+          <a href="/mon-espace" style="color:var(--or);text-decoration:underline">Se connecter à l'application</a> avec un compte administrateur, puis revenir sur cette page.</div>`;
         return;
       }
       if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -394,8 +388,8 @@ main { padding: 32px 0 80px; position: relative; }
 })();
 </script>
 
-<script src="/vitrine/portal.js?v=20261025c"></script>
-<script src="/vitrine/mpa-nav.js?v=20261025e"></script>
-<script src="/vitrine/sde-public-directory.js?v=20261025f"></script>
+<footer class="site-footer"><div class="wrap footer-grid"><div><strong class="footer-brand">S.D.E.</strong><p>Le Réveil Spirituel des Nations.</p><small>© 2026 Mouvement Prophético-Apostolique Soldats de l’Éternel.</small></div><nav aria-label="Navigation de pied de page"><a href="/mouvement">Le Mouvement</a><a href="/programmes">Programmes</a><a href="/academy">Academy</a><a href="/enseignements">Enseignements</a><a href="/missions">Missions</a><a href="/priere">Prière</a><a href="/contact">Contact</a></nav><div><p>Cocody Deux-Plateaux, Abidjan, Côte d’Ivoire</p><a href="mailto:infosoldat@gmail.com">infosoldat@gmail.com</a><a href="/administration" rel="nofollow">Administration <span aria-hidden="true">→</span></a><a href="/contact#confidentialite">Confidentialité et protection des données</a></div></div></footer>
+<script defer src="/vitrine/portail-unifie.js?v=20261027a"></script>
+<script defer src="/vitrine/pwa-public.js?v=20261027b"></script>
 </body>
 </html>
