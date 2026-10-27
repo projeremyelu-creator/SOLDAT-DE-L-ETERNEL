@@ -1,0 +1,516 @@
+<!doctype html><html lang="fr" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mon espace | Soldats de l'Éternel</title>
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#11182a">
+<link rel="icon" href="/vitrine/logo-96.png"><link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/vitrine/portail-unifie.css?v=20261027c">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;600;700&family=Saira+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<script defer src="/vitrine/portail-unifie.js?v=20261027c"></script>
+<style>
+.espace{max-width:960px;margin:0 auto;padding:90px 20px 60px}
+.espace h1{font-family:'Saira Condensed',sans-serif;font-size:clamp(2rem,5vw,3rem);color:var(--gold);margin:0 0 8px}
+.espace .sous-titre{color:var(--muted);font-size:.95rem;margin:0 0 32px}
+
+/* Chargement */
+.espace-loading{text-align:center;padding:80px 20px;color:var(--muted)}
+.espace-loading .spinner{display:inline-block;width:36px;height:36px;border:3px solid var(--navy2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Carte profil */
+.profil-card{display:flex;gap:24px;padding:28px;background:var(--navy2);border-radius:18px;border:1px solid rgba(200,164,81,.15);margin-bottom:28px;align-items:flex-start;flex-wrap:wrap}
+.profil-photo{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);background:var(--navy);flex:none}
+.profil-photo-placeholder{width:100px;height:100px;border-radius:50%;border:3px solid var(--gold);background:var(--navy);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:2.2rem;font-weight:800;flex:none}
+.profil-infos{flex:1;min-width:200px}
+.profil-infos h2{margin:0 0 4px;font-size:1.4rem;color:#fff}
+.profil-infos .matricule{color:var(--gold);font-weight:700;font-size:.88rem;letter-spacing:.06em}
+.profil-infos .meta{color:var(--muted);font-size:.88rem;margin-top:8px;line-height:1.6}
+.profil-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:10px;font-weight:700;font-size:.88rem;border:none;cursor:pointer;transition:background .2s,transform .1s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--gold);color:#11182a}.btn-primary:hover{background:var(--light-gold)}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold)}.btn-outline:hover{background:rgba(200,164,81,.12)}
+.btn-danger{background:#641d2d;color:#fff}.btn-danger:hover{background:#7a2236}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Grille KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+.kpi{padding:20px;background:var(--navy2);border-radius:14px;border:1px solid rgba(255,255,255,.06)}
+.kpi-label{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.kpi-value{font-size:1.8rem;font-weight:800;color:#fff;margin:6px 0 2px}
+.kpi-sub{font-size:.82rem;color:var(--muted)}
+
+/* Sections */
+.section{margin-bottom:32px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.section-head h3{margin:0;font-size:1.15rem;color:var(--light-gold)}
+.section-head small{color:var(--muted);font-size:.82rem}
+
+/* Tableau cotisations */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{text-align:left;padding:10px 12px;background:var(--navy2);color:var(--muted);font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid rgba(200,164,81,.2)}
+td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06);color:#d5d9e3}
+tr:hover td{background:rgba(255,255,255,.03)}
+.badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:.78rem;font-weight:700}
+.badge-ok{background:rgba(24,105,67,.25);color:#5cd69a}
+.badge-wait{background:rgba(200,164,81,.2);color:var(--light-gold)}
+
+/* Actualités */
+.news-list{display:grid;gap:12px}
+.news-item{padding:16px 18px;background:var(--navy2);border-radius:12px;border-left:4px solid var(--gold)}
+.news-item .news-date{font-size:.78rem;color:var(--muted);margin-bottom:4px}
+.news-item .news-titre{font-weight:700;color:#fff;margin-bottom:4px}
+.news-item .news-extrait{font-size:.88rem;color:#c5c9d6;line-height:1.5}
+.news-item.evenement{border-left-color:#4e7ca4}
+
+/* Événements prochain */
+.evt-lieu{color:var(--muted);font-size:.84rem}
+
+/* Formulaire profil (modal) */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal{background:#1e283e;border-radius:18px;padding:28px;width:min(500px,100%);max-height:85vh;overflow-y:auto;border:1px solid rgba(200,164,81,.2)}
+.modal h2{margin:0 0 20px;color:var(--gold);font-size:1.3rem}
+.modal label{display:block;margin-bottom:14px;font-size:.88rem;font-weight:700;color:#d5d9e3}
+.modal input,.modal select{width:100%;padding:10px 13px;border:1px solid rgba(255,255,255,.15);border-radius:10px;background:var(--navy);color:#fff;font-size:15px;margin-top:5px;box-sizing:border-box}
+.modal input:focus,.modal select:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+.modal-footer{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+.modal .feedback{font-size:.88rem;min-height:22px;margin-top:10px}
+.modal .feedback[data-ok="1"]{color:#5cd69a}.modal .feedback[data-ok="0"]{color:#e25c5c}
+
+/* Photo upload */
+.photo-upload{position:relative;cursor:pointer}
+.photo-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.photo-upload .overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.78rem;font-weight:700;opacity:0;transition:opacity .2s}
+.photo-upload:hover .overlay{opacity:1}
+
+/* Assiduité */
+.assiduite-bar{height:10px;border-radius:5px;background:var(--navy);overflow:hidden;margin-top:6px}
+.assiduite-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--gold),var(--light-gold));transition:width .4s}
+
+/* Notifications */
+.notif-toggle{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--navy2);border-radius:12px;margin-bottom:16px}
+.notif-toggle span{flex:1;font-size:.9rem;color:#d5d9e3}
+.switch{position:relative;width:48px;height:26px;background:#3a4560;border-radius:13px;cursor:pointer;transition:background .2s;border:none;padding:0}
+.switch::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .2s}
+.switch.on{background:var(--gold)}.switch.on::after{transform:translateX(22px)}
+
+/* Déconnexion */
+.deconnexion{text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06)}
+
+/* Responsive */
+@media(max-width:600px){
+  .profil-card{padding:20px;gap:16px}
+  .profil-photo,.profil-photo-placeholder{width:72px;height:72px;font-size:1.6rem}
+  .espace{padding:80px 14px 40px}
+}
+
+/* Mode clair */
+:root[data-theme="light"] .profil-card,:root[data-theme="light"] .kpi,:root[data-theme="light"] .news-item,:root[data-theme="light"] .notif-toggle{background:#fff;border-color:#ddd}
+:root[data-theme="light"] .profil-infos h2,:root[data-theme="light"] .kpi-value,:root[data-theme="light"] .news-titre{color:#161e35}
+:root[data-theme="light"] td{color:#333}
+:root[data-theme="light"] th{background:#f0f0f0}
+:root[data-theme="light"] .modal{background:#f7f4ed;border-color:#d5d2ca}
+:root[data-theme="light"] .modal input,:root[data-theme="light"] .modal select{background:#fff;color:#161e35;border-color:#ccc}
+</style></head>
+<body class="sde-unifie">
+<header class="site-header"><div class="site-header-inner">
+<a class="site-brand" href="/" aria-label="Accueil SDE"><img src="/vitrine/logo-96.png" alt="" width="44" height="44"><span><b>S.D.E.</b><small>Le Réveil Spirituel des Nations</small></span></a>
+<button class="site-burger" aria-label="Ouvrir la navigation" aria-controls="site-menu" aria-expanded="false" type="button"><span></span><span></span><span></span></button>
+<nav class="site-menu" id="site-menu" aria-label="Navigation principale"><a href="/">Accueil</a><a href="/mouvement">Le Mouvement</a><a href="/programmes">Programmes</a><a href="/academy">Academy</a><a href="/enseignements">Enseignements</a><a href="/missions">Missions</a><a href="/priere">Prière</a><a href="/mon-espace" aria-current="page">Mon espace</a></nav>
+</div></header>
+
+<main class="espace" id="espace">
+<div class="espace-loading" id="loading"><div class="spinner"></div><p>Chargement de votre espace…</p></div>
+<div id="contenu-espace" hidden>
+<!-- Profil -->
+<h1 id="bonjour">Mon espace</h1>
+<p class="sous-titre" id="sous-titre">Bienvenue dans votre espace personnel SDE.</p>
+
+<div class="profil-card" id="profil-card">
+  <div class="photo-upload" id="photo-zone">
+    <div class="profil-photo-placeholder" id="profil-avatar">?</div>
+    <div class="overlay">Changer</div>
+    <input type="file" accept="image/jpeg,image/png,image/webp" id="photo-input" aria-label="Changer ma photo">
+  </div>
+  <div class="profil-infos">
+    <h2 id="profil-nom">—</h2>
+    <div class="matricule" id="profil-matricule"></div>
+    <div class="meta" id="profil-meta"></div>
+    <div class="profil-actions">
+      <button class="btn btn-primary" id="btn-profil" type="button">Modifier mon profil</button>
+      <button class="btn btn-outline" id="btn-mdp" type="button">Changer le mot de passe</button>
+    </div>
+  </div>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-grid">
+  <div class="kpi"><div class="kpi-label">Assiduité</div><div class="kpi-value" id="kpi-assiduite">—</div><div class="kpi-sub" id="kpi-assiduite-sub">Présences enregistrées</div><div class="assiduite-bar"><div class="assiduite-fill" id="assiduite-fill" style="width:0%"></div></div></div>
+  <div class="kpi"><div class="kpi-label">Cotisations</div><div class="kpi-value" id="kpi-cotisations">—</div><div class="kpi-sub" id="kpi-cotisations-sub">Total versé</div></div>
+  <div class="kpi"><div class="kpi-label">Prières déposées</div><div class="kpi-value" id="kpi-prieres">—</div><div class="kpi-sub">Sujets confiés au mouvement</div></div>
+  <div class="kpi"><div class="kpi-label">Statut</div><div class="kpi-value" id="kpi-statut">—</div><div class="kpi-sub" id="kpi-garnison">—</div></div>
+</div>
+
+<!-- Actualités -->
+<section class="section" id="section-actus">
+  <div class="section-head"><h3>📢 Actualités du mouvement</h3></div>
+  <div class="news-list" id="news-list"><p style="color:var(--muted)">Chargement…</p></div>
+</section>
+
+<!-- Prochains événements -->
+<section class="section" id="section-events">
+  <div class="section-head"><h3>📅 Prochains événements</h3></div>
+  <div class="news-list" id="events-list"><p style="color:var(--muted)">Chargement…</p></div>
+</section>
+
+<!-- Cotisations -->
+<section class="section" id="section-cotisations">
+  <div class="section-head"><h3>💰 Mes cotisations</h3><small id="cotis-total"></small></div>
+  <div class="table-wrap"><table><thead><tr><th>Mois</th><th>Montant</th><th>Statut</th><th>Date</th></tr></thead><tbody id="cotis-body"><tr><td colspan="4" style="color:var(--muted)">Chargement…</td></tr></tbody></table></div>
+</section>
+
+<!-- Assiduité -->
+<section class="section" id="section-assiduite">
+  <div class="section-head"><h3>📋 Mon assiduité</h3><small id="assiduite-total"></small></div>
+  <div class="table-wrap"><table><thead><tr><th>Date</th><th>Événement</th><th>Statut</th></tr></thead><tbody id="assiduite-body"><tr><td colspan="3" style="color:var(--muted)">Chargement…</td></tr></tbody></table></div>
+</section>
+
+<!-- Notifications -->
+<section class="section">
+  <div class="section-head"><h3>🔔 Notifications</h3></div>
+  <div class="notif-toggle"><span>Recevoir les notifications push du mouvement</span><button class="switch" id="notif-switch" type="button" aria-label="Activer les notifications"></button></div>
+</section>
+
+<!-- Outils SDE avancés -->
+<section class="section">
+  <div class="section-head"><h3>🛠 Outils avancés</h3></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="/mon-espace/os-v31" class="btn btn-outline">SDE OS v3.1 — Soldat Intégral</a>
+    <button class="btn btn-outline" id="btn-priere" type="button">Déposer un sujet de prière</button>
+    <button class="btn btn-outline" id="btn-absence" type="button">Signaler une absence</button>
+  </div>
+</section>
+
+<!-- Déconnexion -->
+<div class="deconnexion">
+  <button class="btn btn-danger" id="btn-deconnexion" type="button">Se déconnecter</button>
+</div>
+</div><!-- /contenu-espace -->
+</main>
+
+<!-- Modal profil -->
+<div class="modal-overlay" id="modal-profil">
+<div class="modal">
+<h2>Modifier mon profil</h2>
+<form id="form-profil">
+<label>Téléphone principal<input name="telephone" type="tel"></label>
+<label>Téléphone secondaire<input name="telephone2" type="tel"></label>
+<label>Quartier / Ville<input name="quartier"></label>
+<label>Date de naissance<input name="anniv" type="date"></label>
+<label>Sexe<select name="sexe"><option value="">—</option><option value="M">Masculin</option><option value="F">Féminin</option></select></label>
+<label>Situation familiale<input name="situation" placeholder="Marié(e), célibataire…"></label>
+<label>Église d'origine<input name="eglise"></label>
+<div class="feedback" id="profil-feedback"></div>
+<div class="modal-footer"><button type="button" class="btn btn-outline" id="btn-annuler-profil">Annuler</button><button type="submit" class="btn btn-primary">Enregistrer</button></div>
+</form></div></div>
+
+<!-- Modal mot de passe -->
+<div class="modal-overlay" id="modal-mdp">
+<div class="modal">
+<h2>Changer mon mot de passe</h2>
+<form id="form-mdp">
+<label>Mot de passe actuel<input required name="ancien" type="password" autocomplete="current-password"></label>
+<label>Nouveau mot de passe (8 caractères min.)<input required name="nouveau" type="password" autocomplete="new-password" minlength="8"></label>
+<div class="feedback" id="mdp-feedback"></div>
+<div class="modal-footer"><button type="button" class="btn btn-outline" id="btn-annuler-mdp">Annuler</button><button type="submit" class="btn btn-primary">Modifier</button></div>
+</form></div></div>
+
+<!-- Modal prière -->
+<div class="modal-overlay" id="modal-priere">
+<div class="modal">
+<h2>Déposer un sujet de prière</h2>
+<form id="form-priere">
+<label>Votre sujet<textarea name="sujet" rows="4" style="width:100%;padding:10px;border:1px solid rgba(255,255,255,.15);border-radius:10px;background:var(--navy);color:#fff;font-size:15px;resize:vertical" maxlength="2000" required></textarea></label>
+<label style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="checkbox" name="confidentiel" value="true"> Confidentiel (visible uniquement par les responsables)</label>
+<div class="feedback" id="priere-feedback"></div>
+<div class="modal-footer"><button type="button" class="btn btn-outline" id="btn-annuler-priere">Annuler</button><button type="submit" class="btn btn-primary">Envoyer</button></div>
+</form></div></div>
+
+<!-- Modal absence -->
+<div class="modal-overlay" id="modal-absence">
+<div class="modal">
+<h2>Signaler une absence</h2>
+<form id="form-absence">
+<label>Date de début<input required name="dateDebut" type="date"></label>
+<label>Date de fin (facultatif)<input name="dateFin" type="date"></label>
+<label>Motif<textarea name="motif" rows="3" style="width:100%;padding:10px;border:1px solid rgba(255,255,255,.15);border-radius:10px;background:var(--navy);color:#fff;font-size:15px;resize:vertical" maxlength="500" required></textarea></label>
+<div class="feedback" id="absence-feedback"></div>
+<div class="modal-footer"><button type="button" class="btn btn-outline" id="btn-annuler-absence">Annuler</button><button type="submit" class="btn btn-primary">Envoyer</button></div>
+</form></div></div>
+
+<footer class="site-footer"><div class="site-footer-inner"><p>© 2026 Soldats de l'Éternel — Tous droits réservés</p><div><a href="/contact#confidentialite">Politique de confidentialité</a></div></div></footer>
+
+<script>
+(()=>{
+"use strict";
+const $=s=>document.querySelector(s);
+const api=async(url,opts={})=>{
+  const r=await fetch(url,{credentials:"same-origin",cache:"no-store",...opts});
+  if(r.status===401||r.status===403){location.assign("/connexion?retour=/mon-espace");throw Error("non connecté");}
+  return r;
+};
+const jsonApi=async(url,opts={})=>{const r=await api(url,opts);return r.json();};
+const post=(url,body)=>jsonApi(url,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)});
+const patch=(url,body)=>jsonApi(url,{method:"PATCH",headers:{"content-type":"application/json"},body:JSON.stringify(body)});
+
+/* ═══ Modals ═══ */
+function openModal(id){document.getElementById(id).classList.add("open")}
+function closeModal(id){document.getElementById(id).classList.remove("open")}
+document.addEventListener("click",e=>{if(e.target.classList.contains("modal-overlay"))e.target.classList.remove("open")});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".modal-overlay.open").forEach(m=>m.classList.remove("open"))});
+
+/* ═══ Formatage ═══ */
+const fmt=n=>new Intl.NumberFormat("fr-CI").format(n);
+const fmtDate=d=>{try{return new Intl.DateTimeFormat("fr-CI",{day:"numeric",month:"long",year:"numeric"}).format(new Date(d+"T12:00:00Z"))}catch{return d}};
+const statutBadge=s=>s==="paye"?'<span class="badge badge-ok">Payé</span>':'<span class="badge badge-wait">En attente</span>';
+const presenceBadge=e=>({"P":'<span class="badge badge-ok">Présent</span>',"R":'<span class="badge badge-wait">Retard</span>',"E":'<span class="badge badge-wait">Excusé</span>',"A":'<span class="badge" style="background:rgba(226,92,92,.2);color:#e25c5c">Absent</span>'})[e]||e;
+
+/* ═══ Chargement principal ═══ */
+let membre={};
+async function charger(){
+  try{
+    const [moi, espace, histo, cotis, actus]=await Promise.all([
+      jsonApi("/api/moi"),
+      jsonApi("/api/mon-espace").catch(()=>null),
+      jsonApi("/api/mon-historique").catch(()=>null),
+      jsonApi("/api/mes-cotisations").catch(()=>null),
+      jsonApi("/api/actualites").catch(()=>null)
+    ]);
+    if(!moi.connecte){location.assign("/connexion?retour=/mon-espace");return;}
+
+    /* Profil */
+    const m=espace?.membre||{};
+    membre=m;
+    const nomComplet=(m.prenoms||moi.nom||"")+" "+(m.nom||"");
+    $("#bonjour").textContent="Bonjour, "+(m.prenoms||moi.nom||"Soldat")+" !";
+    $("#sous-titre").textContent="Matricule "+((m.matricule||moi.matricule||"—"))+" · Bienvenue dans votre espace personnel.";
+    $("#profil-nom").textContent=nomComplet.trim()||moi.nom||"Membre SDE";
+    $("#profil-matricule").textContent="Matricule : "+(m.matricule||moi.matricule||"—");
+    let metaHtml="";
+    if(m.statut)metaHtml+=m.statut;
+    if(m.fonction)metaHtml+=" · "+m.fonction;
+    if(m.pole)metaHtml+="<br>Pôle : "+m.pole;
+    if(m.telephone)metaHtml+="<br>📞 "+m.telephone;
+    if(m.email)metaHtml+="<br>✉ "+m.email;
+    if(m.adhesion)metaHtml+="<br>Membre depuis le "+fmtDate(m.adhesion);
+    $("#profil-meta").innerHTML=metaHtml;
+
+    /* Photo */
+    if(m.photoId){
+      const img=document.createElement("img");
+      img.src="/_blob/"+m.photoId;img.alt="Ma photo";img.className="profil-photo";
+      img.loading="lazy";
+      $("#profil-avatar").replaceWith(img);
+    } else {
+      const initiales=((m.prenoms||"")[0]||"")+((m.nom||"")[0]||"");
+      $("#profil-avatar").textContent=initiales.toUpperCase()||"?";
+    }
+
+    /* Pré-remplir le formulaire profil */
+    const fp=$("#form-profil");
+    for(const k of["telephone","telephone2","quartier","anniv","sexe","situation","eglise"]){
+      const input=fp.querySelector('[name="'+k+'"]');
+      if(input&&m[k])input.value=m[k];
+    }
+
+    /* KPIs Assiduité */
+    const presences=histo?.presences||[];
+    const nbPresent=presences.filter(p=>p.etat==="P"||p.etat==="R").length;
+    const totalEvts=presences.length;
+    const tauxAssiduite=totalEvts?Math.round(nbPresent/totalEvts*100):0;
+    $("#kpi-assiduite").textContent=tauxAssiduite+"%";
+    $("#kpi-assiduite-sub").textContent=nbPresent+" / "+totalEvts+" présences";
+    $("#assiduite-fill").style.width=tauxAssiduite+"%";
+
+    /* KPIs Cotisations */
+    const totalPaye=cotis?.totalPaye||0;
+    $("#kpi-cotisations").textContent=fmt(totalPaye)+" F";
+    $("#kpi-cotisations-sub").textContent=(cotis?.cotisations?.length||0)+" versement(s)";
+
+    /* KPIs Prières */
+    $("#kpi-prieres").textContent=String(histo?.totalPrieres||0);
+
+    /* KPIs Statut */
+    $("#kpi-statut").textContent=m.statut||"Nouveau";
+    const gNames=(espace?.garnisons||[]).map(g=>g.nom).filter(Boolean);
+    $("#kpi-garnison").textContent=gNames.length?gNames.join(" → "):"Aucune garnison";
+
+    /* Actualités */
+    const newsEl=$("#news-list");
+    const annonces=actus?.annonces||[];
+    if(annonces.length){
+      newsEl.innerHTML=annonces.map(a=>'<div class="news-item"><div class="news-date">'+fmtDate(a.date)+(a.categorie?' · '+a.categorie:'')+'</div><div class="news-titre">'+a.titre+'</div>'+(a.contenu?'<div class="news-extrait">'+a.contenu.slice(0,300)+'</div>':'')+'</div>').join("");
+    } else {
+      newsEl.innerHTML='<p style="color:var(--muted)">Aucune actualité récente.</p>';
+    }
+
+    /* Événements */
+    const evtEl=$("#events-list");
+    const evts2=actus?.evenements||[];
+    if(evts2.length){
+      evtEl.innerHTML=evts2.map(e=>'<div class="news-item evenement"><div class="news-date">'+fmtDate(e.date)+(e.heure?' à '+e.heure:'')+'</div><div class="news-titre">'+e.titre+'</div>'+(e.lieu?'<div class="evt-lieu">📍 '+e.lieu+'</div>':'')+'</div>').join("");
+    } else {
+      evtEl.innerHTML='<p style="color:var(--muted)">Aucun événement à venir.</p>';
+    }
+
+    /* Cotisations */
+    const cotisData=cotis?.cotisations||[];
+    if(cotisData.length){
+      $("#cotis-total").textContent="Total : "+fmt(totalPaye)+" FCFA";
+      $("#cotis-body").innerHTML=cotisData.map(c=>'<tr><td>'+c.mois+'</td><td>'+fmt(c.montant)+' F</td><td>'+statutBadge(c.statut)+'</td><td>'+fmtDate(c.date)+'</td></tr>').join("");
+    } else {
+      $("#cotis-body").innerHTML='<tr><td colspan="4" style="color:var(--muted)">Aucune cotisation enregistrée.</td></tr>';
+    }
+
+    /* Assiduité */
+    if(presences.length){
+      $("#assiduite-total").textContent=nbPresent+" présences sur "+totalEvts;
+      $("#assiduite-body").innerHTML=presences.slice(0,50).map(p=>'<tr><td>'+fmtDate(p.date)+'</td><td>'+p.titre+'</td><td>'+presenceBadge(p.etat)+'</td></tr>').join("");
+    } else {
+      $("#assiduite-body").innerHTML='<tr><td colspan="3" style="color:var(--muted)">Aucune présence enregistrée.</td></tr>';
+    }
+
+    /* Notifications push */
+    initNotifs();
+
+    /* Admin ? */
+    if(moi.niveau>=1){
+      const adminLink=document.createElement("a");adminLink.href="/administration";adminLink.className="btn btn-outline";adminLink.textContent="Espace administration";
+      $(".profil-actions").append(adminLink);
+    }
+
+    /* Afficher */
+    $("#loading").hidden=true;
+    $("#contenu-espace").hidden=false;
+  }catch(e){
+    console.error(e);
+    $("#loading").innerHTML='<p style="color:#e25c5c">Impossible de charger votre espace. <a href="/connexion?retour=/mon-espace" style="color:var(--gold)">Se reconnecter</a></p>';
+  }
+}
+
+/* ═══ Upload photo ═══ */
+$("#photo-input").addEventListener("change",async e=>{
+  const file=e.target.files[0];if(!file)return;
+  if(file.size>5*1024*1024){alert("Photo trop lourde (5 Mo max.)");return;}
+  try{
+    const r=await api("/api/ma-photo",{method:"POST",headers:{"content-type":file.type},body:file});
+    const result=await r.json();
+    if(result.ok){
+      const img=document.createElement("img");img.src=result.url;img.alt="Ma photo";img.className="profil-photo";
+      const avatar=document.querySelector(".profil-photo,.profil-photo-placeholder");
+      if(avatar)avatar.replaceWith(img);
+    }else{alert(result.message||"Erreur lors de l'envoi de la photo.");}
+  }catch{alert("Erreur réseau.");}
+});
+
+/* ═══ Formulaire profil ═══ */
+$("#btn-profil").addEventListener("click",()=>openModal("modal-profil"));
+$("#btn-annuler-profil").addEventListener("click",()=>closeModal("modal-profil"));
+$("#form-profil").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const data=Object.fromEntries(new FormData(e.currentTarget).entries());
+  const fb=$("#profil-feedback");fb.textContent="Enregistrement…";fb.dataset.ok="";
+  try{
+    const r=await patch("/api/mon-profil",data);
+    if(r.ok){fb.textContent="Profil mis à jour !";fb.dataset.ok="1";setTimeout(()=>location.reload(),1200);}
+    else{fb.textContent=r.message||"Erreur.";fb.dataset.ok="0";}
+  }catch{fb.textContent="Erreur réseau.";fb.dataset.ok="0";}
+});
+
+/* ═══ Mot de passe ═══ */
+$("#btn-mdp").addEventListener("click",()=>openModal("modal-mdp"));
+$("#btn-annuler-mdp").addEventListener("click",()=>closeModal("modal-mdp"));
+$("#form-mdp").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const data=Object.fromEntries(new FormData(e.currentTarget).entries());
+  const fb=$("#mdp-feedback");fb.textContent="Modification…";fb.dataset.ok="";
+  try{
+    const r=await post("/api/mot-de-passe",{ancien:data.ancien,nouveau:data.nouveau});
+    if(r.ok){fb.textContent="Mot de passe modifié !";fb.dataset.ok="1";e.currentTarget.reset();}
+    else{fb.textContent=r.message||"Erreur.";fb.dataset.ok="0";}
+  }catch(err){fb.textContent="Erreur réseau.";fb.dataset.ok="0";}
+});
+
+/* ═══ Prière ═══ */
+$("#btn-priere").addEventListener("click",()=>openModal("modal-priere"));
+$("#btn-annuler-priere").addEventListener("click",()=>closeModal("modal-priere"));
+$("#form-priere").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const data=Object.fromEntries(new FormData(e.currentTarget).entries());
+  const fb=$("#priere-feedback");fb.textContent="Envoi…";fb.dataset.ok="";
+  try{
+    const r=await post("/api/priere",{sujet:data.sujet,confidentiel:!!data.confidentiel});
+    if(r.ok){fb.textContent="Sujet déposé avec succès.";fb.dataset.ok="1";e.currentTarget.reset();}
+    else{fb.textContent=r.message||"Erreur.";fb.dataset.ok="0";}
+  }catch{fb.textContent="Erreur réseau.";fb.dataset.ok="0";}
+});
+
+/* ═══ Absence ═══ */
+$("#btn-absence").addEventListener("click",()=>openModal("modal-absence"));
+$("#btn-annuler-absence").addEventListener("click",()=>closeModal("modal-absence"));
+$("#form-absence").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const data=Object.fromEntries(new FormData(e.currentTarget).entries());
+  const fb=$("#absence-feedback");fb.textContent="Envoi…";fb.dataset.ok="";
+  try{
+    const r=await post("/api/absence",data);
+    if(r.ok){fb.textContent="Absence signalée.";fb.dataset.ok="1";e.currentTarget.reset();}
+    else{fb.textContent=r.message||"Erreur.";fb.dataset.ok="0";}
+  }catch{fb.textContent="Erreur réseau.";fb.dataset.ok="0";}
+});
+
+/* ═══ Notifications push ═══ */
+async function initNotifs(){
+  const sw=$("#notif-switch");
+  if(!("serviceWorker" in navigator && "PushManager" in window)){
+    sw.parentElement.querySelector("span").textContent="Notifications non supportées par ce navigateur";
+    sw.disabled=true;return;
+  }
+  try{
+    const reg=await navigator.serviceWorker.ready;
+    const sub=await reg.pushManager.getSubscription();
+    if(sub)sw.classList.add("on");
+  }catch{}
+  sw.addEventListener("click",async()=>{
+    try{
+      const reg=await navigator.serviceWorker.ready;
+      const existing=await reg.pushManager.getSubscription();
+      if(existing){
+        await api("/api/push",{method:"DELETE",headers:{"content-type":"application/json"},body:JSON.stringify({endpoint:existing.endpoint})});
+        await existing.unsubscribe();sw.classList.remove("on");
+      }else{
+        const keyR=await jsonApi("/api/vapid-public-key");
+        if(!keyR.key){alert("Les notifications ne sont pas encore configurées sur ce serveur.");return;}
+        const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(keyR.key)});
+        await post("/api/push",sub.toJSON());
+        sw.classList.add("on");
+      }
+    }catch(e){console.error(e);alert("Impossible d'activer les notifications : "+e.message);}
+  });
+}
+function urlBase64ToUint8Array(base64String){const padding="=".repeat((4-base64String.length%4)%4);const base64=(base64String+padding).replace(/-/g,"+").replace(/_/g,"/");const raw=atob(base64);return Uint8Array.from([...raw].map(c=>c.charCodeAt(0)));}
+
+/* ═══ Déconnexion ═══ */
+$("#btn-deconnexion").addEventListener("click",async()=>{
+  try{await api("/api/deconnexion",{method:"POST"}).catch(()=>{});}catch{}
+  document.cookie="sde_s=;path=/;max-age=0";
+  location.assign("/connexion");
+});
+
+/* ═══ Démarrage ═══ */
+charger();
+})();
+</script>
+</body></html>

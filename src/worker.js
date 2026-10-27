@@ -451,8 +451,25 @@ async function apiMonHistorique(req, env, u) {
   return json({ presences, prieres: prieres.slice(0, 50), totalPrieres: prieres.length, resume });
 }
 
+/* ───────── upload photo de profil par le membre ───────── */
+async function apiMaPhoto(req, env, u) {
+  if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 403);
+  if (req.method !== "POST") return erreur("invalid_argument", "Utilisez POST.");
+  const type = req.headers.get("content-type") || "";
+  if (!type.startsWith("image/")) return erreur("invalid_argument", "Envoyez une image (JPEG ou PNG).");
+  const corps = await req.arrayBuffer();
+  if (corps.byteLength > 5 * 1024 * 1024) return erreur("too_large", "Photo trop lourde (5 Mo maximum).", 413);
+  if (await bloque(env, "photo:" + u.email, 10)) return erreur("rate_limited", "Trop d'envois de photos : patientez un quart d'heure.", 429);
+  await compter(env, "photo:" + u.email);
+  const nid = jetonAleatoire(16);
+  await env.FICHIERS.put(nid, corps, { metadata: { type } });
+  await env.DB.prepare("INSERT INTO fichiers (id, type, taille, par, cree) VALUES (?, ?, ?, ?, ?)").bind(nid, type, corps.byteLength, u.email, Date.now()).run();
+  await ecrireDoc(env, "merge", "membres/" + u.membreId, { photoId: nid, modifiePar: u.id, modifieLe: Date.now() });
+  return json({ ok: true, photoId: nid, url: "/_blob/" + nid });
+}
+
 /* ───────── profil modifiable par le membre ───────── */
-const CHAMPS_MODIFIABLES = ["telephone", "quartier", "email", "situation"];
+const CHAMPS_MODIFIABLES = ["telephone", "telephone2", "quartier", "email", "situation", "sexe", "anniv", "eglise"];
 async function apiMonProfil(req, env, u) {
   if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 404);
   if (req.method !== "PATCH") return erreur("invalid_argument", "Utilisez PATCH.");
@@ -469,6 +486,41 @@ async function apiMonProfil(req, env, u) {
   maj.modifieLe = Date.now();
   await ecrireDoc(env, "merge", "membres/" + u.membreId, maj);
   return json({ ok: true });
+}
+
+/* ───────── cotisations du membre ───────── */
+async function apiMesCotisations(env, u) {
+  if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 404);
+  /* Les cotisations sont stockées dans la collection 'cotisations' avec le champ membreId */
+  const tous = await lireRequete(env, { path: "cotisations" });
+  const miennes = tous
+    .filter(c => c.data && c.data.membreId === u.membreId)
+    .map(c => ({ id: c.id, mois: c.data.mois || "", montant: c.data.montant || 0, devise: c.data.devise || "XOF", statut: c.data.statut || "en_attente", date: c.data.date || "", note: (c.data.note || "").slice(0, 200) }))
+    .sort((a, b) => (b.mois || "").localeCompare(a.mois || ""));
+  /* Total cotisations payées */
+  const totalPaye = miennes.filter(c => c.statut === "paye").reduce((s, c) => s + (Number(c.montant) || 0), 0);
+  return json({ cotisations: miennes.slice(0, 120), totalPaye, devise: "XOF" });
+}
+
+/* ───────── actualités du mouvement ───────── */
+async function apiActualites(env, u) {
+  if (!u.connecte) return erreur("refuse", "Connectez-vous.", 403);
+  const annonces = await lireRequete(env, { path: "annonces" });
+  const evts = await lireRequete(env, { path: "evenements" });
+  const jour = new Date().toISOString().slice(0, 10);
+  /* Annonces récentes (30 derniers jours) */
+  const trentaine = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+  const news = annonces
+    .filter(a => a.data && (a.data.date || "") >= trentaine)
+    .map(a => ({ type: "annonce", id: a.id, titre: (a.data.titre || "Annonce").slice(0, 200), contenu: (a.data.contenu || a.data.message || "").slice(0, 600), date: a.data.date || "", categorie: a.data.categorie || "" }))
+    .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  /* Prochains événements */
+  const prochains = evts
+    .filter(e => e.data && (e.data.date || "") >= jour)
+    .map(e => ({ type: "evenement", id: e.id, titre: (e.data.titre || "").slice(0, 200), date: e.data.date || "", heure: e.data.heure || "", lieu: (e.data.lieu || "").slice(0, 200) }))
+    .sort((a, b) => (a.date + (a.heure || "")).localeCompare(b.date + (b.heure || "")))
+    .slice(0, 10);
+  return json({ annonces: news.slice(0, 20), evenements: prochains });
 }
 
 /* ───────── demande d'absence ───────── */
@@ -1302,7 +1354,7 @@ async function traiter(req, env, ctx) {
           // Un seul espace interactif : les deux entrées principales ouvrent
           // directement l'application native, jamais une page de liens intermédiaire.
           // Les routes /outils restent disponibles pour les anciens favoris.
-          const fichier = p.endsWith("/os-v31")?"/os-v31/index.html":"/index.html";
+          const fichier = p.endsWith("/os-v31")?"/os-v31/index.html":(p==="/mon-espace"||p==="/administration")?"/vitrine/espace-membre.html":"/index.html";
           const r = await assetPortail(fichier);
           const n = new Response(r.body,r);
           n.headers.set("cache-control","private, no-store");
@@ -1398,6 +1450,9 @@ async function traiter(req, env, ctx) {
       if (p === "/api/mon-espace") return apiMonEspace(env, u);
       if (p === "/api/mon-historique") return apiMonHistorique(req, env, u);
       if (p === "/api/mon-profil" && req.method === "PATCH") return apiMonProfil(req, env, u);
+      if (p === "/api/ma-photo" && req.method === "POST") return apiMaPhoto(req, env, u);
+      if (p === "/api/mes-cotisations") return apiMesCotisations(env, u);
+      if (p === "/api/actualites") return apiActualites(env, u);
       if (p === "/api/priere" && req.method === "POST") return apiPriere(req, env, u, ctx);
       if (p === "/api/absence" && req.method === "POST") return apiAbsence(req, env, u, ctx);
       if (p === "/api/push" && (req.method === "POST" || req.method === "DELETE")) return apiPushSubscription(req, env, u);
