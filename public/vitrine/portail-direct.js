@@ -84,7 +84,13 @@
     const sync=()=>{
       if(!compte)return;
       const buttons=[...original.querySelectorAll('button[data-vue]')];
-      const disponibles=buttons.filter(b=>allowed(b.dataset.vue)&&!b.disabled);
+      const ordre=mode==="membre"?
+        ["espace","agenda","academie","portevoix","arsenal","mediatheque"]:
+        ["accueil","membres","agenda","garnisons","projets","secretariat",
+         "academie","portevoix","chambre","arsenal","mediatheque",
+         "finances","assistant","espace"];
+      const disponibles=buttons.filter(b=>allowed(b.dataset.vue)&&!b.disabled)
+        .sort((a,b)=>ordre.indexOf(a.dataset.vue)-ordre.indexOf(b.dataset.vue));
       const next=disponibles.map(b=>b.dataset.vue).join("|");
       if(next!==signature){
         signature=next;tabs.replaceChildren();
