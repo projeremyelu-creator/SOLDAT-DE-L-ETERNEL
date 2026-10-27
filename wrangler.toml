@@ -40,6 +40,7 @@ id = "d6c94ba3274f47718a4cacbcab96e5a3"
 [vars]
 # Adresses e-mail propriétaires (tous les droits ; elles ne peuvent servir à une inscription libre)
 PROPRIETAIRES = "infosoldat@gmail.com, projeremyelu@gmail.com"
+VAPID_SUBJECT = "mailto:infosoldat@gmail.com"
 # À activer APRÈS vérification de l'adresse Gmail et du domaine expéditeur Cloudflare :
 # NOTIFICATION_FROM = "notifications@mouvement-sde.org"
 # Voir docs/notifications-email-sde.md
@@ -47,6 +48,20 @@ PROPRIETAIRES = "infosoldat@gmail.com, projeremyelu@gmail.com"
 # [[send_email]]
 # name = "EMAIL"
 # destination_address = "infosoldat@gmail.com"
+
+# ── Notifications Push (VAPID) ──
+# Générer les clés : connectez-vous en propriétaire et appelez POST /api/generate-vapid
+# Puis ajoutez-les comme secrets Cloudflare :
+#   wrangler secret put VAPID_PUBLIC_KEY
+#   wrangler secret put VAPID_PRIVATE_KEY
+# VAPID_SUBJECT = "mailto:infosoldat@gmail.com"
+
+# ── WhatsApp Business Cloud API ──
+# Créer une app Meta Business : https://developers.facebook.com/
+# Puis ajoutez les secrets :
+#   wrangler secret put WHATSAPP_TOKEN
+#   wrangler secret put WHATSAPP_PHONE_ID
+#   wrangler secret put WHATSAPP_TO
 
 
 [observability]
