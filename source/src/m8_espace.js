@@ -1,8 +1,9 @@
   /* ════════════════════════ Espace soldat ════════════════════════ */
-  /* Chaque soldat reçoit un code personnel (ex. K7PM-Q2XD). La direction publie pour lui un résumé chiffré
-     (carte, présences, cotisations) dans « espace/<id dérivé du code> » : sans le code, le résumé est illisible,
-     et l’identifiant du document ne révèle pas le code (dérivation PBKDF2 lente). */
-  const ESP = { code: "", data: null, t: 0, err: "", charge: false, rafraichi: false, cle: new Map(), cartes: "", envoi: false };
+  /* Deux systèmes coexistent :
+     1. Direction : résumés chiffrés publiés pour chaque soldat (code personnel, AES-GCM).
+     2. Membre : inscription/connexion par email + mot de passe → API backend → accès direct au profil. */
+  const ESP = { code: "", data: null, t: 0, err: "", charge: false, rafraichi: false, cle: new Map(), cartes: "", envoi: false,
+    /* session email/mdp */ session: false, user: null, profil: null, historique: null, cotisations: null, actualites: null, mode: "connexion", onglet: "profil", photoEnvoi: false, profilEnvoi: false };
   const ALPHA_CODE = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
   const LIEN_APP = "https://claude.ai/artifact/GoENFgrqfSdyNhanWp5iaR";
   const lienApp = () => String(cfg().lienApp || LIEN_APP).trim() || LIEN_APP;
@@ -114,47 +115,68 @@
       if (ancien && ancien.docId && ancien.docId !== docId) { try { await S.db.doc("espace/" + ancien.docId).delete(); } catch (e) { /* déjà absent */ } }
       await S.db.doc("espace/" + docId).set(doc);
       await S.db.doc("acces/" + mid).set({ membreId: mid, code, docId, empreinte: emp, creeLe: Date.now(), creePar: S.me.id || null, majLe: Date.now() });
-      if (!silencieux) toast(ancien ? "Nouveau code créé : l’ancien ne fonctionne plus" : "Accès à l’espace soldat créé");
+      if (!silencieux) toast(ancien ? "Nouveau code créé : l'ancien ne fonctionne plus" : "Accès à l'espace soldat créé");
       return true;
     } catch (e) { toast(messageErreur(e), "err"); return false; }
   }
   async function retirerAcces(mid) {
     const a = accesDe(mid);
     if (!a) return;
-    const ok = await ecrire(async () => { if (a.docId) await S.db.doc("espace/" + a.docId).delete(); await S.db.doc("acces/" + mid).delete(); }, "Accès à l’espace soldat retiré");
+    const ok = await ecrire(async () => { if (a.docId) await S.db.doc("espace/" + a.docId).delete(); await S.db.doc("acces/" + mid).delete(); }, "Accès à l'espace soldat retiré");
     if (ok) { dernier.sheet = null; render(); }
   }
   function messageCode(m, code) {
-    return `Shalom ${prenomUsuel(m)} !\n\nVoici ton accès personnel à l’Espace soldat de S.D.E. DIGITAL : ta carte de membre, tes présences, tes cotisations, et un bouton pour déposer une requête de prière.\n\n1. Ouvre : ${lienApp()}\n2. Touche « Mon espace »\n3. Saisis ton code : ${code}\n\nGarde ce code pour toi : il ouvre ton espace.\n— ${cfg().nomCourt}`;
+    return `Shalom ${prenomUsuel(m)} !\n\nVoici ton accès personnel à l'Espace soldat de S.D.E. DIGITAL : ta carte de membre, tes présences, tes cotisations, et un bouton pour déposer une requête de prière.\n\n1. Ouvre : ${lienApp()}\n2. Touche « Mon espace »\n3. Saisis ton code : ${code}\n\nGarde ce code pour toi : il ouvre ton espace.\n— ${cfg().nomCourt}`;
   }
   /* Bloc dans la fiche du membre (direction) */
   function blocEspaceMembre(m) {
     if (!peutAdmin() || !S.pret.acces) return "";
     const a = accesDe(m.id);
-    if (!a) return `<div class="esp-bloc"><p class="hint" style="margin:0"><b>Espace soldat</b> · pas encore d’accès. Le soldat pourra consulter sa carte, ses présences et ses cotisations avec un code personnel.</p><div class="btn-row">${btn("esp-creer", "Créer son code d’accès", { ico: "i-plus", sm: true, data: `data-id="${esc(m.id)}"` })}</div></div>`;
-    return `<div class="esp-bloc"><p class="hint" style="margin:0"><b>Espace soldat</b> · code <span class="num esp-code">${esc(a.code)}</span>${a.majLe ? ` · résumé mis à jour ${esc(relLong(isoJour(new Date(a.majLe))))}` : ""}</p><div class="btn-row"><a class="btn btn-sm btn-primary" href="${esc(lienWa(m.telephone, messageCode(m, a.code)))}" target="_blank" rel="noopener">${I("i-msg")}Envoyer par WhatsApp</a>${btn("esp-copier", "Copier le message", { sm: true, data: `data-id="${esc(m.id)}"` })}${btn("esp-nouveau", "Nouveau code", { sm: true, data: `data-id="${esc(m.id)}"` })}${btn("esp-retirer", "Retirer l’accès", { sm: true, cls: "btn-danger", data: `data-id="${esc(m.id)}"` })}</div></div>`;
+    if (!a) return `<div class="esp-bloc"><p class="hint" style="margin:0"><b>Espace soldat</b> · pas encore d'accès. Le soldat pourra consulter sa carte, ses présences et ses cotisations avec un code personnel.</p><div class="btn-row">${btn("esp-creer", "Créer son code d'accès", { ico: "i-plus", sm: true, data: `data-id="${esc(m.id)}"` })}</div></div>`;
+    return `<div class="esp-bloc"><p class="hint" style="margin:0"><b>Espace soldat</b> · code <span class="num esp-code">${esc(a.code)}</span>${a.majLe ? ` · résumé mis à jour ${esc(relLong(isoJour(new Date(a.majLe))))}` : ""}</p><div class="btn-row"><a class="btn btn-sm btn-primary" href="${esc(lienWa(m.telephone, messageCode(m, a.code)))}" target="_blank" rel="noopener">${I("i-msg")}Envoyer par WhatsApp</a>${btn("esp-copier", "Copier le message", { sm: true, data: `data-id="${esc(m.id)}"` })}${btn("esp-nouveau", "Nouveau code", { sm: true, data: `data-id="${esc(m.id)}"` })}${btn("esp-retirer", "Retirer l'accès", { sm: true, cls: "btn-danger", data: `data-id="${esc(m.id)}"` })}</div></div>`;
   }
   /* Feuille de gestion de tous les accès */
   function ficheEspaces() {
     const actifs = membresActifs().slice().sort(parNom);
     const avec = actifs.filter((m) => accesDe(m.id)), sans = actifs.filter((m) => !accesDe(m.id));
-    return `<p class="hint" style="margin-top:0">Chaque soldat ouvre son espace avec un code personnel, depuis le lien de l’application, rubrique « Mon espace ». Son résumé (carte, présences, cotisations) se met à jour tout seul quand un administrateur utilise l’application.</p>
+    return `<p class="hint" style="margin-top:0">Chaque soldat ouvre son espace avec un code personnel, depuis le lien de l'application, rubrique « Mon espace ». Son résumé (carte, présences, cotisations) se met à jour tout seul quand un administrateur utilise l'application.</p>
       <p class="tally"><span><b>${nb(avec.length)}</b> soldats avec un code</span><span>${pluriel(sans.length, "sans code", "sans code")}</span></p>
       ${sans.length ? `<div class="btn-row" style="margin-bottom:12px">${btn("esp-creer-tous", `Créer les ${pluriel(sans.length, "code manquant", "codes manquants")}`, { ico: "i-plus", cls: "btn-primary", sm: true })}</div>` : ""}
       <div class="list">${actifs.map((m) => { const a = accesDe(m.id); return `<div class="row nolead sp-row"><span class="row-main"><span class="row-t">${esc(nomComplet(m))}</span><span class="row-m">${esc([m.matricule, a ? "Code " + a.code : "Pas de code", m.telephone ? telAffiche(m.telephone) : "Pas de numéro"].filter(Boolean).join(" · "))}</span></span><span class="row-r">${a ? `<a class="btn btn-sm" href="${esc(lienWa(m.telephone, messageCode(m, a.code)))}" target="_blank" rel="noopener" aria-label="${esc(`Envoyer son code à ${nomComplet(m)} par WhatsApp`)}">${I("i-msg")}<span class="hide-s">WhatsApp</span></a>` : btn("esp-creer", "Créer", { sm: true, data: `data-id="${esc(m.id)}"` })}</span></div>`; }).join("")}</div>`;
   }
   const ouvrirEspaces = () => ouvrir({ titre: "Espaces soldats", refresh: surveiller(() => ficheEspaces()), wide: true });
 
-  /* Côté soldat */
+  /* ────────────────── Côté soldat : inscription / connexion par email ────────────────── */
+
+  /* Appel API générique */
+  async function apiEspace(chemin, options = {}) {
+    const url = (location.origin || "") + chemin;
+    const rep = await fetch(url, { credentials: "same-origin", ...options });
+    const json = await rep.json().catch(() => null);
+    if (!rep.ok) throw new Error((json && json.message) || (json && json.erreur) || `Erreur ${rep.status}`);
+    return json;
+  }
+
+  /* Ancien système par code — conservé pour rétrocompatibilité */
   function chargerEspaceLocal() {
-    try { const o = JSON.parse(localStorage.getItem("sde-espace") || "null"); if (o && normCode(o.code)) { ESP.code = normCode(o.code); ESP.data = o.data || null; ESP.t = o.t || 0; } } catch (e) { /* stockage indisponible */ }
+    try {
+      const o = JSON.parse(localStorage.getItem("sde-espace") || "null");
+      if (o && normCode(o.code)) { ESP.code = normCode(o.code); ESP.data = o.data || null; ESP.t = o.t || 0; }
+      if (o && o.session) { ESP.session = true; }
+    } catch (e) { /* stockage indisponible */ }
   }
   function garderEspaceLocal() {
-    try { if (ESP.code) localStorage.setItem("sde-espace", JSON.stringify({ code: ESP.code, data: ESP.data, t: ESP.t })); else localStorage.removeItem("sde-espace"); } catch (e) { /* stockage indisponible */ }
+    try {
+      if (ESP.session) localStorage.setItem("sde-espace", JSON.stringify({ session: true }));
+      else if (ESP.code) localStorage.setItem("sde-espace", JSON.stringify({ code: ESP.code, data: ESP.data, t: ESP.t }));
+      else localStorage.removeItem("sde-espace");
+    } catch (e) { /* stockage indisponible */ }
   }
+
+  /* Ancien accès par code */
   async function ouvrirEspace(code, silencieux) {
     const n = normCode(code);
-    if (!n) { ESP.err = "Ce code n’est pas valide : il compte 8 caractères, par exemple K7PM-Q2XD."; render(); return; }
+    if (!n) { ESP.err = "Ce code n'est pas valide : il compte 8 caractères, par exemple K7PM-Q2XD."; render(); return; }
     if (!S.db) { ESP.err = "Connexion aux données indisponible : réessayez dans un instant."; render(); return; }
     if (!silencieux) { ESP.charge = true; ESP.err = ""; render(); }
     try {
@@ -168,18 +190,298 @@
         ESP.code = n; ESP.t = Date.now(); ESP.err = ""; ESP.cartes = "";
         garderEspaceLocal();
       }
-    } catch (e) { if (!silencieux) ESP.err = e && e.code === "code" ? "Ce code n’est pas valide." : "L’espace n’a pas pu être ouvert. Réessayez."; }
+    } catch (e) { if (!silencieux) ESP.err = e && e.code === "code" ? "Ce code n'est pas valide." : "L'espace n'a pas pu être ouvert. Réessayez."; }
     ESP.charge = false;
     render();
   }
-  function quitterEspace() { ESP.code = ""; ESP.data = null; ESP.t = 0; ESP.err = ""; ESP.cartes = ""; garderEspaceLocal(); render(); }
-  function formCode() {
-    const tel = telContact();
-    return `<section class="card esp-entree"><div class="esp-entree-i" aria-hidden="true">${I("i-card")}</div><h2 class="h3">Ouvrir mon espace</h2><p class="hint">Saisissez le code personnel reçu du secrétariat. Votre espace s’ouvrira ensuite directement sur cet appareil.</p>
-      <form class="form esp-form" id="f-esp" novalidate><label class="sr" for="esp-code">Code personnel</label><input class="inp esp-inp" id="esp-code" name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="K7PM-Q2XD" maxlength="14" inputmode="text"><button class="btn btn-primary" type="submit">${I("i-right")}Ouvrir</button></form>
-      ${ESP.err ? `<p class="note danger" role="alert">${esc(ESP.err)}</p>` : ""}
-      ${tel ? `<p class="hint" style="margin-top:12px">Pas encore de code ? <a class="link" href="${esc(lienWa(tel, "Shalom ! Je souhaite recevoir mon code d’accès à l’Espace soldat S.D.E. DIGITAL. Nom et prénoms : "))}" target="_blank" rel="noopener">Le demander par WhatsApp</a></p>` : ""}</section>`;
+  function quitterEspace() {
+    ESP.code = ""; ESP.data = null; ESP.t = 0; ESP.err = ""; ESP.cartes = "";
+    ESP.session = false; ESP.user = null; ESP.profil = null; ESP.historique = null; ESP.cotisations = null; ESP.actualites = null;
+    garderEspaceLocal();
+    render();
   }
+
+  /* ── Inscription / Connexion par email ── */
+
+  async function inscrireMembre(fd) {
+    const nom = String(fd.get("nom") || "").trim();
+    const prenoms = String(fd.get("prenoms") || "").trim();
+    const email = String(fd.get("email") || "").trim().toLowerCase();
+    const telephone = String(fd.get("telephone") || "").trim();
+    const mdp = String(fd.get("mdp") || "");
+    const mdp2 = String(fd.get("mdp2") || "");
+    if (!nom || !prenoms) { ESP.err = "Renseignez votre nom et vos prénoms."; render(); return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { ESP.err = "Adresse e-mail invalide."; render(); return; }
+    if (mdp.length < 8) { ESP.err = "Le mot de passe doit comporter au moins 8 caractères."; render(); return; }
+    if (mdp !== mdp2) { ESP.err = "Les deux mots de passe ne correspondent pas."; render(); return; }
+    ESP.charge = true; ESP.err = ""; render();
+    try {
+      await apiEspace("/api/inscription", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nom, prenoms, email, motDePasse: mdp, telephone })
+      });
+      ESP.session = true;
+      garderEspaceLocal();
+      await chargerProfilMembre();
+      toast("Inscription réussie ! Bienvenue, Soldat.");
+    } catch (e) {
+      ESP.err = e.message || "L'inscription a échoué. Réessayez.";
+    }
+    ESP.charge = false;
+    render();
+  }
+
+  async function connecterMembre(fd) {
+    const email = String(fd.get("email") || "").trim().toLowerCase();
+    const mdp = String(fd.get("mdp") || "");
+    if (!email) { ESP.err = "Renseignez votre adresse e-mail."; render(); return; }
+    if (!mdp) { ESP.err = "Renseignez votre mot de passe."; render(); return; }
+    ESP.charge = true; ESP.err = ""; render();
+    try {
+      await apiEspace("/api/connexion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, motDePasse: mdp })
+      });
+      ESP.session = true;
+      garderEspaceLocal();
+      await chargerProfilMembre();
+      toast("Connexion réussie !");
+    } catch (e) {
+      ESP.err = e.message || "Identifiants incorrects.";
+    }
+    ESP.charge = false;
+    render();
+  }
+
+  async function chargerProfilMembre() {
+    try {
+      const [moi, espace] = await Promise.all([
+        apiEspace("/api/moi"),
+        apiEspace("/api/mon-espace")
+      ]);
+      ESP.user = moi;
+      ESP.profil = espace;
+      ESP.session = true;
+      /* Charger l'historique et les cotisations en arrière-plan */
+      Promise.all([
+        apiEspace("/api/mon-historique").then((h) => { ESP.historique = h; render(); }).catch(() => {}),
+        apiEspace("/api/mes-cotisations").then((c) => { ESP.cotisations = c; render(); }).catch(() => {}),
+        apiEspace("/api/actualites").then((a) => { ESP.actualites = a; render(); }).catch(() => {})
+      ]);
+    } catch (e) {
+      /* Session expirée ou invalide */
+      ESP.session = false; ESP.user = null; ESP.profil = null;
+      garderEspaceLocal();
+    }
+  }
+
+  async function envoyerPhotoMembre(fichier) {
+    if (!fichier || !fichier.type.startsWith("image/")) { toast("Sélectionnez une image (JPEG ou PNG).", "err"); return; }
+    if (fichier.size > 5 * 1024 * 1024) { toast("Photo trop lourde (5 Mo maximum).", "err"); return; }
+    ESP.photoEnvoi = true; render();
+    try {
+      const r = await apiEspace("/api/ma-photo", { method: "POST", headers: { "Content-Type": fichier.type }, body: fichier });
+      if (ESP.profil && ESP.profil.membre) ESP.profil.membre.photoId = r.photoId;
+      toast("Photo mise à jour !");
+    } catch (e) { toast(e.message || "Erreur lors de l'envoi de la photo.", "err"); }
+    ESP.photoEnvoi = false; render();
+  }
+
+  async function modifierProfilMembre(fd) {
+    const champs = {};
+    for (const k of ["telephone", "telephone2", "quartier", "email", "situation", "sexe", "anniv", "eglise"]) {
+      const v = fd.get(k);
+      if (v !== null && v !== undefined) champs[k] = String(v).trim();
+    }
+    if (!Object.keys(champs).length) { toast("Aucune modification.", "err"); return; }
+    ESP.profilEnvoi = true; render();
+    try {
+      await apiEspace("/api/mon-profil", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(champs) });
+      /* Recharger le profil */
+      const espace = await apiEspace("/api/mon-espace");
+      ESP.profil = espace;
+      toast("Profil mis à jour !");
+    } catch (e) { toast(e.message || "Erreur lors de la mise à jour.", "err"); }
+    ESP.profilEnvoi = false; render();
+  }
+
+  async function deposerPriereApi(fd, form) {
+    const sujet = String(fd.get("sujet") || "").trim();
+    const conf = fd.get("conf") === "1";
+    if (!sujet) { toast("Écrivez votre sujet de prière.", "err"); return; }
+    ESP.envoi = true; render();
+    try {
+      await apiEspace("/api/priere", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sujet, confidentiel: conf }) });
+      toast("Requête de prière déposée !");
+      form.reset();
+    } catch (e) { toast(e.message || "Erreur lors du dépôt de la requête.", "err"); }
+    ESP.envoi = false; render();
+  }
+
+  /* ── Formulaire d'inscription / connexion ── */
+
+  function formEspace() {
+    const estInscr = ESP.mode === "inscription";
+    return `<section class="card esp-entree"><div class="esp-entree-i" aria-hidden="true">${I("i-card")}</div>
+      <h2 class="h3">${estInscr ? "Créer mon compte" : "Me connecter"}</h2>
+      <p class="hint">${estInscr ? "Renseignez vos informations pour accéder à votre espace personnel." : "Connectez-vous avec votre adresse e-mail et votre mot de passe."}</p>
+      <div class="esp-tabs" role="tablist">
+        <button class="esp-tab${estInscr ? "" : " active"}" type="button" data-act="esp-tab-conn" role="tab" aria-selected="${!estInscr}">Connexion</button>
+        <button class="esp-tab${estInscr ? " active" : ""}" type="button" data-act="esp-tab-inscr" role="tab" aria-selected="${estInscr}">Inscription</button>
+      </div>
+      ${estInscr ? formInscription() : formConnexion()}
+      ${ESP.err ? `<p class="note danger" role="alert">${esc(ESP.err)}</p>` : ""}
+    </section>`;
+  }
+
+  function formConnexion() {
+    return `<form class="form esp-form" id="f-esp-conn" novalidate>
+      ${champ("esp-email", "Adresse e-mail", `<input class="inp" id="esp-email" name="email" type="email" autocomplete="email" required placeholder="votre@email.com">`, { req: true })}
+      ${champ("esp-mdp", "Mot de passe", `<input class="inp" id="esp-mdp" name="mdp" type="password" autocomplete="current-password" required minlength="8" placeholder="••••••••">`, { req: true })}
+      <button class="btn btn-primary" type="submit">${I("i-right")}Me connecter</button>
+      <p class="hint" style="margin-top:8px"><button class="link" type="button" data-act="esp-mdp-oublie">Mot de passe oublié ?</button></p>
+    </form>`;
+  }
+
+  function formInscription() {
+    return `<form class="form esp-form" id="f-esp-inscr" novalidate>
+      ${champ("esp-nom", "Nom", `<input class="inp" id="esp-nom" name="nom" type="text" autocomplete="family-name" required placeholder="VOTRE NOM">`, { req: true })}
+      ${champ("esp-prenoms", "Prénoms", `<input class="inp" id="esp-prenoms" name="prenoms" type="text" autocomplete="given-name" required placeholder="Vos prénoms">`, { req: true })}
+      ${champ("esp-email-i", "Adresse e-mail", `<input class="inp" id="esp-email-i" name="email" type="email" autocomplete="email" required placeholder="votre@email.com">`, { req: true })}
+      ${champ("esp-tel", "Téléphone", `<input class="inp" id="esp-tel" name="telephone" type="tel" autocomplete="tel" placeholder="+229 XX XX XX XX">`, { hint: "Facultatif, mais utile pour vous joindre." })}
+      ${champ("esp-mdp-i", "Mot de passe", `<input class="inp" id="esp-mdp-i" name="mdp" type="password" autocomplete="new-password" required minlength="8" placeholder="Au moins 8 caractères">`, { req: true, hint: "8 caractères minimum." })}
+      ${champ("esp-mdp2", "Confirmer le mot de passe", `<input class="inp" id="esp-mdp2" name="mdp2" type="password" autocomplete="new-password" required minlength="8" placeholder="Retapez votre mot de passe">`, { req: true })}
+      <button class="btn btn-primary" type="submit">${I("i-right")}Créer mon compte</button>
+    </form>`;
+  }
+
+  /* ── Espace profil complet (après connexion) ── */
+
+  function espaceMembreApi() {
+    if (!ESP.profil || !ESP.profil.membre) return chargement("Chargement de votre espace…");
+    const m = ESP.profil.membre;
+    const gs = ESP.profil.garnisons || [];
+    const point = gs.find((g) => g.type === TYPE_POINT) || gs[0];
+    const photoUrl = m.photoId ? `/_blob/${m.photoId}` : "";
+    return `
+      <section class="card esp-id">
+        <div class="esp-id-h">
+          <div class="esp-avatar-w">
+            ${photoUrl ? `<img class="esp-photo" src="${esc(photoUrl)}" alt="Photo de profil">` : `<div class="esp-photo-placeholder">${I("i-user")}</div>`}
+            <label class="esp-photo-btn" title="Changer la photo">
+              <input type="file" accept="image/jpeg,image/png" id="esp-photo-input" hidden>
+              ${I("i-edit")}
+            </label>
+          </div>
+          <div>
+            <h2 class="esp-nom">${esc((m.prenoms || "") + " " + (m.nom || ""))}</h2>
+            <p class="hint" style="margin:2px 0 0">${esc([m.matricule, m.statut, m.fonction].filter(Boolean).join(" · "))}</p>
+            ${point ? `<p class="hint" style="margin:2px 0 0">${I("i-pin")} ${esc(point.nom)}</p>` : ""}
+          </div>
+        </div>
+      </section>
+
+      <div class="esp-onglets" role="tablist">
+        <button class="esp-tab${ESP.onglet === "profil" ? " active" : ""}" type="button" data-act="esp-onglet" data-onglet="profil" role="tab">Profil</button>
+        <button class="esp-tab${ESP.onglet === "presences" ? " active" : ""}" type="button" data-act="esp-onglet" data-onglet="presences" role="tab">Présences</button>
+        <button class="esp-tab${ESP.onglet === "cotisations" ? " active" : ""}" type="button" data-act="esp-onglet" data-onglet="cotisations" role="tab">Cotisations</button>
+        <button class="esp-tab${ESP.onglet === "priere" ? " active" : ""}" type="button" data-act="esp-onglet" data-onglet="priere" role="tab">Prière</button>
+        <button class="esp-tab${ESP.onglet === "actualites" ? " active" : ""}" type="button" data-act="esp-onglet" data-onglet="actualites" role="tab">Actualités</button>
+      </div>
+
+      ${ESP.onglet === "profil" ? ongletProfil(m) : ""}
+      ${ESP.onglet === "presences" ? ongletPresences() : ""}
+      ${ESP.onglet === "cotisations" ? ongletCotisations() : ""}
+      ${ESP.onglet === "priere" ? ongletPriere() : ""}
+      ${ESP.onglet === "actualites" ? ongletActualites() : ""}
+
+      <p class="hint esp-pied"><button class="link" type="button" data-act="esp-quitter">Me déconnecter</button></p>`;
+  }
+
+  function ongletProfil(m) {
+    return `<section class="card">
+      <p class="eyebrow">Modifier mon profil</p>
+      <form class="form" id="f-esp-profil" novalidate>
+        <div class="grid g2">
+          ${champ("ep-tel", "Téléphone", `<input class="inp" id="ep-tel" name="telephone" type="tel" value="${esc(m.telephone || "")}" placeholder="+229 XX XX XX XX">`)}
+          ${champ("ep-tel2", "Téléphone 2", `<input class="inp" id="ep-tel2" name="telephone2" type="tel" value="${esc(m.telephone2 || "")}" placeholder="Autre numéro">`)}
+        </div>
+        <div class="grid g2">
+          ${champ("ep-email", "E-mail", `<input class="inp" id="ep-email" name="email" type="email" value="${esc(m.email || "")}">`)}
+          ${champ("ep-quartier", "Quartier", `<input class="inp" id="ep-quartier" name="quartier" type="text" value="${esc(m.quartier || "")}" placeholder="Votre quartier">`)}
+        </div>
+        <div class="grid g2">
+          ${champ("ep-sexe", "Sexe", `<select class="inp" id="ep-sexe" name="sexe"><option value="">—</option><option value="M"${m.sexe === "M" ? " selected" : ""}>Homme</option><option value="F"${m.sexe === "F" ? " selected" : ""}>Femme</option></select>`)}
+          ${champ("ep-anniv", "Date de naissance", `<input class="inp" id="ep-anniv" name="anniv" type="date" value="${esc(m.anniv || "")}">`)}
+        </div>
+        <div class="grid g2">
+          ${champ("ep-situation", "Situation matrimoniale", `<select class="inp" id="ep-situation" name="situation"><option value="">—</option><option value="Célibataire"${m.situation === "Célibataire" ? " selected" : ""}>Célibataire</option><option value="Marié(e)"${m.situation === "Marié(e)" ? " selected" : ""}>Marié(e)</option><option value="Veuf/Veuve"${m.situation === "Veuf/Veuve" ? " selected" : ""}>Veuf / Veuve</option></select>`)}
+          ${champ("ep-eglise", "Église locale", `<input class="inp" id="ep-eglise" name="eglise" type="text" value="${esc(m.eglise || "")}" placeholder="Nom de votre église">`)}
+        </div>
+        <button class="btn btn-primary" type="submit"${ESP.profilEnvoi ? " disabled" : ""}>${I("i-check")}${ESP.profilEnvoi ? "Enregistrement…" : "Enregistrer les modifications"}</button>
+      </form>
+    </section>`;
+  }
+
+  function ongletPresences() {
+    const h = ESP.historique;
+    if (!h) return `<section class="card"><p class="hint">Chargement des présences…</p></section>`;
+    const presences = h.presences || [];
+    if (!presences.length) return `<section class="card"><p class="eyebrow">Mes présences</p><p class="hint">Aucune présence enregistrée pour le moment.</p></section>`;
+    const totalP = presences.filter((x) => x.etat === "P" || x.etat === "R").length;
+    const taux = presences.length ? Math.round((totalP / presences.length) * 100) : 0;
+    return `<section class="card">
+      <p class="eyebrow">Mes présences</p>
+      <p class="esp-big">${taux} %</p>
+      <p class="hint" style="margin-top:0">d'assiduité · ${pluriel(totalP, "présence", "présences")} sur ${pluriel(presences.length, "rassemblement", "rassemblements")}</p>
+      <ul class="esp-l">${presences.slice(0, 20).map((x) => {
+        const e = ETAT_PRES[x.etat] || ["?", ""];
+        return `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${e[1]}">${e[0]}</span></li>`;
+      }).join("")}</ul>
+    </section>`;
+  }
+
+  function ongletCotisations() {
+    const c = ESP.cotisations;
+    if (!c) return `<section class="card"><p class="hint">Chargement des cotisations…</p></section>`;
+    const cots = c.cotisations || [];
+    const payees = cots.filter((x) => x.statut === "paye");
+    return `<section class="card">
+      <p class="eyebrow">Mes cotisations</p>
+      ${c.totalPaye ? `<p class="hint">Total versé : <b>${esc(fcfa(c.totalPaye))}</b></p>` : ""}
+      ${!cots.length ? `<p class="hint">Aucune cotisation enregistrée.</p>` : `<ul class="esp-l">${cots.slice(0, 24).map((x) => `<li><span><b>${esc(x.mois)}</b><small>${esc(fcfa(x.montant))}</small></span><span class="chip ${x.statut === "paye" ? "ok" : "warn"}">${x.statut === "paye" ? "Payée" : "En attente"}</span></li>`).join("")}</ul>`}
+    </section>`;
+  }
+
+  function ongletPriere() {
+    const h = ESP.historique;
+    const prieres = h ? (h.prieres || []) : [];
+    return `<section class="card">
+      <p class="eyebrow">Déposer une requête de prière</p>
+      <form class="form" id="f-esp-priere" novalidate>
+        ${champ("esp-sujet", "Pour quoi souhaitez-vous que l'on prie ?", `<textarea class="inp" id="esp-sujet" name="sujet" rows="4" maxlength="800" placeholder="Votre sujet de prière…"></textarea>`)}
+        <label class="check"><input type="checkbox" name="conf" value="1"> Confidentielle : seule la direction la lira</label>
+        <button class="btn btn-primary" type="submit"${ESP.envoi ? " disabled" : ""}>${I("i-flame")}Déposer ma requête</button>
+      </form>
+      ${prieres.length ? `<p class="eyebrow" style="margin-top:20px">Mes requêtes passées</p><ul class="esp-l">${prieres.slice(0, 10).map((p) => `<li><span><b>${esc(p.sujet)}</b><small>${esc(fmtCourt(p.date))}${p.confidentiel ? " · Confidentielle" : ""}</small></span><span class="chip ${p.statut === "Exaucée" ? "ok" : "info"}">${esc(p.statut)}</span></li>`).join("")}</ul>` : ""}
+    </section>`;
+  }
+
+  function ongletActualites() {
+    const a = ESP.actualites;
+    if (!a) return `<section class="card"><p class="hint">Chargement des actualités…</p></section>`;
+    const annonces = a.annonces || [];
+    const evenements = a.evenements || [];
+    return `
+      ${evenements.length ? `<section class="card"><p class="eyebrow">Prochains rassemblements</p><ul class="esp-l">${evenements.map((e) => `<li><span><b>${esc(e.titre)}</b><small>${esc(fmtCourt(e.date))}${e.heure ? " · " + esc(e.heure) : ""}${e.lieu ? " · " + esc(e.lieu) : ""}</small></span></li>`).join("")}</ul></section>` : ""}
+      ${annonces.length ? `<section class="card"><p class="eyebrow">Dernières annonces</p><ul class="esp-l">${annonces.map((n) => `<li><span><b>${esc(n.titre)}</b><small>${esc(fmtCourt(n.date))}${n.categorie ? " · " + esc(n.categorie) : ""}</small></span>${n.contenu ? `<p class="hint" style="margin:4px 0 0">${esc(n.contenu.slice(0, 200))}${n.contenu.length > 200 ? "…" : ""}</p>` : ""}</li>`).join("")}</ul></section>` : ""}
+      ${!annonces.length && !evenements.length ? `<section class="card"><p class="hint">Aucune actualité pour le moment.</p></section>` : ""}`;
+  }
+
+  /* ── Ancien rendu avec données chiffrées (rétrocompatibilité) ── */
+
   const ETAT_PRES = { P: ["Présent", "ok"], R: ["En retard", "warn"], E: ["Excusé", "info"], A: ["Absent", "danger"] };
   function espaceSoldat(d) {
     const m = d.m, c = d.cotis || {}, pr = d.presences || {};
@@ -193,23 +495,47 @@
         <div class="esp-cartes" id="esp-cartes" aria-label="Ma carte de membre"><div class="esp-cv-w"><canvas id="esp-recto" aria-label="Recto de la carte"></canvas></div><div class="esp-cv-w"><canvas id="esp-verso" aria-label="Verso de la carte"></canvas></div></div>
         <div class="btn-row">${btn("esp-carte", "Recto (image)", { ico: "i-down", sm: true, data: 'data-face="recto"' })}${btn("esp-carte", "Verso (image)", { ico: "i-down", sm: true, data: 'data-face="verso"' })}${btn("esp-carte", "Carte en PDF", { ico: "i-down", sm: true, data: 'data-face="pdf"' })}</div></section>
       <div class="grid g3 esp-grid">
-        <section class="card"><p class="eyebrow">Mes présences</p><p class="esp-big">${pr.taux == null ? "—" : Math.round(pr.taux * 100) + " %"}</p><p class="hint" style="margin-top:0">${pr.taux == null ? "Pas encore de rassemblement pointé ces trois derniers mois." : `d’assiduité sur trois mois · ${pluriel((pr.p || 0) + (pr.r || 0), "présence", "présences")}`}</p>${(pr.liste || []).length ? `<ul class="esp-l">${pr.liste.slice(0, 8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul>` : ""}</section>
+        <section class="card"><p class="eyebrow">Mes présences</p><p class="esp-big">${pr.taux == null ? "—" : Math.round(pr.taux * 100) + " %"}</p><p class="hint" style="margin-top:0">${pr.taux == null ? "Pas encore de rassemblement pointé ces trois derniers mois." : `d'assiduité sur trois mois · ${pluriel((pr.p || 0) + (pr.r || 0), "présence", "présences")}`}</p>${(pr.liste || []).length ? `<ul class="esp-l">${pr.liste.slice(0, 8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul>` : ""}</section>
         <section class="card"><p class="eyebrow">Mes cotisations ${esc(String(c.annee || ""))}</p>${cellulesCotis(ec, c.annee || new Date().getFullYear(), true)}${cot}${c.verse ? `<p class="hint">Versé cette année : <b>${esc(fcfa(c.verse))}</b></p>` : ""}${autres.length ? `<ul class="esp-l">${autres.map(([t, v, a]) => `<li><span><b>${esc(t)}</b><small>${esc(a ? `${fcfa(v)} sur ${fcfa(a)}` : fcfa(v) + " versés")}</small></span>${a ? `<span class="chip ${v >= a ? "ok" : "warn"}">${v >= a ? "Soldé" : "En cours"}</span>` : ""}</li>`).join("")}</ul>` : ""}${d.offrandes && d.offrandes.total ? `<p class="hint">Offrandes, dîmes et dons ${esc(String(d.offrandes.annee))} : <b>${esc(fcfa(d.offrandes.total))}</b></p>` : ""}</section>
-        <section class="card"><p class="eyebrow">Requête de prière</p><form class="form" id="f-esp-priere" novalidate>${champ("esp-sujet", "Pour quoi souhaitez-vous que l’on prie ?", `<textarea class="inp" id="esp-sujet" name="sujet" rows="4" maxlength="800" placeholder="Votre sujet de prière…"></textarea>`)}<label class="check"><input type="checkbox" name="conf" value="1"> Confidentielle : seule la direction la lira</label><button class="btn btn-primary" type="submit"${ESP.envoi ? " disabled" : ""}>${I("i-flame")}Déposer ma requête</button></form><p class="hint" style="margin-top:8px">${peutEcrire() && accesRegistre() ? "Votre requête rejoint la Chambre Haute. Les requêtes confidentielles partent par WhatsApp vers la direction." : "Votre requête part par WhatsApp vers la direction, qui la confie aux intercesseurs."}</p></section>
+        <section class="card"><p class="eyebrow">Requête de prière</p><form class="form" id="f-esp-priere" novalidate>${champ("esp-sujet", "Pour quoi souhaitez-vous que l'on prie ?", `<textarea class="inp" id="esp-sujet" name="sujet" rows="4" maxlength="800" placeholder="Votre sujet de prière…"></textarea>`)}<label class="check"><input type="checkbox" name="conf" value="1"> Confidentielle : seule la direction la lira</label><button class="btn btn-primary" type="submit"${ESP.envoi ? " disabled" : ""}>${I("i-flame")}Déposer ma requête</button></form><p class="hint" style="margin-top:8px">${peutEcrire() && accesRegistre() ? "Votre requête rejoint la Chambre Haute. Les requêtes confidentielles partent par WhatsApp vers la direction." : "Votre requête part par WhatsApp vers la direction, qui la confie aux intercesseurs."}</p></section>
       </div>
       ${prochains.length ? `<h2 class="h3 acc-sec">Prochains rassemblements</h2><div class="list">${prochains.map(rowEvt).join("")}</div>` : ""}
       <p class="hint esp-pied">Résumé publié par la direction${ESP.t ? `, ouvert ${esc(relLong(isoJour(new Date(ESP.t))))}` : ""}. <button class="link" type="button" data-act="esp-quitter">Fermer mon espace sur cet appareil</button></p>`;
   }
+
+  /* ── Vue principale ── */
+
   VUES.espace = function () {
     let out = secHead("Mon espace soldat", { eyebrow: "Espace personnel", verset: ["Je mettrai mon esprit en vous, et vous vivrez.", "Ézéchiel 37.14"] });
     if (ESP.charge) return out + chargement("Ouverture de votre espace…");
-    if (!ESP.code || !ESP.data) {
-      if (S.etat === "absent") return out + nonConnecte("Votre espace soldat");
-      return out + formCode() + (peutAdmin() ? `<p class="hint" style="margin-top:14px">Direction : les codes se créent dans la fiche de chaque membre ou d’un coup avec ${btn("espaces", "Espaces soldats", { sm: true, ico: "i-card" })}</p>` : "");
+
+    /* Session email/mot de passe active */
+    if (ESP.session && ESP.profil) return out + espaceMembreApi();
+    if (ESP.session && !ESP.profil) {
+      /* Session marquée mais profil non chargé : tenter de le charger */
+      if (!ESP.charge) { ESP.charge = true; render(); chargerProfilMembre().then(() => { ESP.charge = false; render(); }); }
+      return out + chargement("Chargement de votre espace…");
     }
-    return out + (ESP.err ? `<p class="note warn">${esc(ESP.err)}</p>` : "") + espaceSoldat(ESP.data);
+
+    /* Ancien système par code */
+    if (ESP.code && ESP.data) return out + (ESP.err ? `<p class="note warn">${esc(ESP.err)}</p>` : "") + espaceSoldat(ESP.data);
+
+    /* Non connecté : afficher le formulaire */
+    if (S.etat === "absent") return out + nonConnecte("Votre espace soldat");
+    return out + formEspace() + (peutAdmin() ? `<p class="hint" style="margin-top:14px">Direction : les codes se créent dans la fiche de chaque membre ou d'un coup avec ${btn("espaces", "Espaces soldats", { sm: true, ico: "i-card" })}</p>` : "");
   };
+
+  /* ── Rendu cartes (ancien système) ── */
+
   async function apresRenduEspace() {
+    /* Tenter chargement session si marquée */
+    if (ESP.session && !ESP.profil && !ESP.charge) {
+      ESP.charge = true;
+      await chargerProfilMembre();
+      ESP.charge = false;
+      render();
+      return;
+    }
     if (S.db && ESP.code && !ESP.rafraichi) { ESP.rafraichi = true; ouvrirEspace(ESP.code, true); }
     const box = $("#esp-cartes");
     if (!box || !ESP.data) return;
@@ -233,12 +559,14 @@
     if (!ESP.cv) return;
     const base = baseFichierCarte(ESP.cv.m);
     if (face === "pdf") {
-      try { await telechargerBlob(`${base}.pdf`, pdfImages([await jpegDe(ESP.cv.recto), await jpegDe(ESP.cv.verso)])); } catch (e) { toast("Le PDF n’a pas pu être préparé.", "err"); }
+      try { await telechargerBlob(`${base}.pdf`, pdfImages([await jpegDe(ESP.cv.recto), await jpegDe(ESP.cv.verso)])); } catch (e) { toast("Le PDF n'a pas pu être préparé.", "err"); }
       return;
     }
     const cv = face === "verso" ? ESP.cv.verso : ESP.cv.recto;
     cv.toBlob((b) => { if (b) telechargerBlob(`${base}-${face}.png`, b); }, "image/png");
   }
+
+  /* ── Ancien dépôt de prière (rétrocompatibilité code) ── */
   async function deposerPriere(fd, form) {
     const sujet = String(fd.get("sujet") || "").trim();
     const conf = fd.get("conf") === "1";
@@ -257,11 +585,28 @@
     const texte = `Requête de prière${conf ? " (confidentielle)" : ""}\n${nomComplet(m)}${m.matricule ? " · " + m.matricule : ""}\n\n${sujet}`;
     window.open(lienWa(tel, texte), "_blank", "noopener");
     form.reset();
-    toast("WhatsApp s’ouvre avec votre requête : il reste à l’envoyer.");
+    toast("WhatsApp s'ouvre avec votre requête : il reste à l'envoyer.");
   }
+
+  /* ── Gestionnaires d'événements ── */
+
   document.addEventListener("submit", (ev) => {
     const f = ev.target;
     if (f.id === "f-esp") { ev.preventDefault(); ouvrirEspace(new FormData(f).get("code"), false); }
-    else if (f.id === "f-esp-priere") { ev.preventDefault(); deposerPriere(new FormData(f), f); }
+    else if (f.id === "f-esp-conn") { ev.preventDefault(); connecterMembre(new FormData(f)); }
+    else if (f.id === "f-esp-inscr") { ev.preventDefault(); inscrireMembre(new FormData(f)); }
+    else if (f.id === "f-esp-profil") { ev.preventDefault(); modifierProfilMembre(new FormData(f)); }
+    else if (f.id === "f-esp-priere") {
+      ev.preventDefault();
+      if (ESP.session) deposerPriereApi(new FormData(f), f);
+      else deposerPriere(new FormData(f), f);
+    }
   });
+
+  document.addEventListener("change", (ev) => {
+    if (ev.target.id === "esp-photo-input" && ev.target.files && ev.target.files[0]) {
+      envoyerPhotoMembre(ev.target.files[0]);
+    }
+  });
+
   chargerEspaceLocal();

@@ -25,4 +25,8 @@
     "esp-copier": (t) => { const m = membre(t.dataset.id), a = accesDe(t.dataset.id); if (m && a) ouvrirTexte("Code de l’espace soldat", messageCode(m, a.code), { wa: m.telephone || "", intro: "Message prêt à envoyer au soldat." }); },
     "esp-carte": (t) => telechargerCarteEspace(t.dataset.face),
     "esp-quitter": () => quitterEspace(),
+    "esp-tab-conn": () => { ESP.mode = "connexion"; ESP.err = ""; render(); },
+    "esp-tab-inscr": () => { ESP.mode = "inscription"; ESP.err = ""; render(); },
+    "esp-onglet": (t) => { ESP.onglet = t.dataset.onglet || "profil"; render(); },
+    "esp-mdp-oublie": () => { toast("Contactez le secrétariat pour réinitialiser votre mot de passe."); },
   });

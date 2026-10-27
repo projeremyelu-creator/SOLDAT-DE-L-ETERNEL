@@ -897,7 +897,7 @@ body.locked .fab-ia { display: none; }
 .esp-entree { max-width: 560px; text-align: left; }
 .esp-entree-i { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--info-soft); color: var(--meter); margin-bottom: 8px; flex: 0 0 auto; }
 .esp-entree-i .ico { width: 24px; height: 24px; }
-.esp-form { display: flex; gap: 8px; align-items: stretch; flex-direction: row; margin-top: 8px; }
+.esp-form { display: flex; gap: 8px; align-items: stretch; flex-direction: column; margin-top: 8px; }
 .esp-inp { flex: 1; min-width: 0; font-size: 1.25rem; letter-spacing: .12em; text-transform: uppercase; font-variant-numeric: tabular-nums; text-align: center; }
 .esp-promo { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 16px; border-left: 4px solid var(--gold-mark); }
 .esp-id-h { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; }
@@ -918,6 +918,16 @@ body.locked .fab-ia { display: none; }
 .esp-l b { font-size: .92rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .esp-l small { color: var(--muted); }
 .esp-pied { margin-top: 18px; }
+.esp-tabs, .esp-onglets { display: flex; gap: 0; border-bottom: 2px solid var(--line); margin: 12px 0; overflow-x: auto; }
+.esp-tab { background: none; border: none; padding: 8px 14px; font: inherit; font-weight: 600; font-size: .9rem; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color .15s, border-color .15s; white-space: nowrap; }
+.esp-tab.active { color: var(--gold-on-night, var(--meter)); border-bottom-color: var(--gold-on-night, var(--meter)); }
+.esp-tab:hover { color: var(--ink); }
+.esp-avatar-w { position: relative; flex: 0 0 auto; }
+.esp-photo { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; background: var(--track); }
+.esp-photo-placeholder { width: 72px; height: 72px; border-radius: 50%; background: var(--info-soft); display: grid; place-items: center; color: var(--muted); }
+.esp-photo-placeholder .ico { width: 32px; height: 32px; }
+.esp-photo-btn { position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--gold-mark); color: #fff; display: grid; place-items: center; cursor: pointer; border: 2px solid var(--bg); }
+.esp-photo-btn .ico { width: 14px; height: 14px; }
 .check { display: flex; gap: 8px; align-items: center; font-size: .9rem; margin: 4px 0 10px; }
 .dir-outils { margin-top: 4px; flex-wrap: wrap; }
 .inst-lien { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 8px 0 12px; }
