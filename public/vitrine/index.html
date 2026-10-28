@@ -182,6 +182,8 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.35rem); }
 .btn-theme:hover { color: var(--or-lum); border-color: var(--or-lum); }
 .btn-theme svg { width: 18px; height: 18px; }
 .btn-membre { padding: 8px 18px; font-size: .85rem; }
+.btn-portail { padding: 10px 22px; font-size: .88rem; gap: 8px; border-radius: 8px; box-shadow: 0 0 20px rgba(184,144,31,.2); }
+.btn-portail:hover { box-shadow: 0 0 30px rgba(184,144,31,.35); }
 
 /* Burger mobile */
 .burger { display: none; width: 42px; height: 42px; align-items: center; justify-content: center; border-radius: var(--r); color: var(--ivoire); flex-direction: column; gap: 5px; border: 1px solid rgba(255,255,255,.2); }
@@ -209,18 +211,28 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.35rem); }
 .hero { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--grad-hero); padding: 100px var(--gutter) 60px; }
 .hero-fond { position: absolute; inset: 0; }
 .hero-fond picture { display: contents; }
-.hero-fond img { width: 100%; height: 100%; object-fit: cover; opacity: .2; }
-.hero-voile { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(16,18,27,.7) 0%, rgba(16,18,27,.4) 40%, rgba(16,18,27,.85) 100%); }
+.hero-fond img { width: 100%; height: 100%; object-fit: cover; opacity: .25; filter: saturate(1.2); }
+.hero-voile { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,15,29,.65) 0%, rgba(10,15,29,.3) 35%, rgba(100,29,45,.15) 60%, rgba(10,15,29,.9) 100%); }
 :root[data-theme="light"] .hero-voile { background: linear-gradient(to bottom, rgba(247,244,237,.7) 0%, rgba(247,244,237,.4) 40%, rgba(247,244,237,.85) 100%); }
+.hero::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 45%, rgba(184,144,31,.06), transparent 70%); pointer-events: none; }
 .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .hero-contenu { position: relative; z-index: 2; text-align: center; max-width: 900px; }
 .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; background: rgba(184,144,31,.12); border: 1px solid rgba(184,144,31,.25); border-radius: 100px; font-size: .8rem; font-weight: 500; color: var(--or); margin-bottom: 24px; backdrop-filter: blur(8px); }
 .hero-badge .pulse { width: 8px; height: 8px; background: var(--or); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.5); } }
-.hero h1 { font-size: clamp(2rem, 6vw, 3.8rem); font-weight: 900; letter-spacing: .04em; text-transform: uppercase; line-height: 1.1; margin-bottom: 20px; }
+.hero h1 { font-size: clamp(2.2rem, 7vw, 4.5rem); font-weight: 900; letter-spacing: .04em; text-transform: uppercase; line-height: 1.05; margin-bottom: 16px; }
 .hero h1 .accent { background: var(--grad-or); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero-event-tag { display: inline-block; font-family: var(--f-titre); font-size: clamp(.85rem, 1.5vw, 1rem); letter-spacing: .12em; text-transform: uppercase; color: var(--or); margin-bottom: 16px; background: rgba(184,144,31,.1); border: 1px solid rgba(184,144,31,.2); padding: 6px 20px; border-radius: 100px; }
+.hero-date-lieu { font-family: var(--f-titre); font-size: clamp(.9rem, 2vw, 1.15rem); color: var(--texte-2); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 20px; }
+.hero-decompte { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
+.hero-decompte .dc { text-align: center; background: rgba(15,30,61,.6); border: 1px solid rgba(184,144,31,.25); border-radius: var(--r-lg); padding: 16px 20px; min-width: 80px; backdrop-filter: blur(8px); }
+.hero-decompte .dc b { display: block; font-size: clamp(2rem, 5vw, 3.2rem); font-family: var(--f-titre); font-weight: 900; color: var(--or); line-height: 1; }
+.hero-decompte .dc small { font-size: .7rem; color: var(--gris); text-transform: uppercase; letter-spacing: .08em; margin-top: 4px; display: block; }
+.hero-mission { font-family: var(--f-titre); font-size: clamp(.85rem, 1.8vw, 1.1rem); letter-spacing: .14em; text-transform: uppercase; color: var(--texte-2); margin-bottom: 28px; }
 .hero-sous { font-size: clamp(1rem, 2.5vw, 1.2rem); color: var(--texte-2); max-width: 700px; margin: 0 auto 32px; line-height: 1.6; }
 .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 40px; }
+.b-lg { padding: 16px 32px; font-size: 1.05rem; }
+@media (max-width: 500px) { .hero-decompte .dc { padding: 12px 14px; min-width: 64px; } .hero-decompte { gap: 10px; } }
 .hero-verset { margin-top: 12px; min-height: 70px; }
 .hero-verset blockquote { font-style: italic; color: var(--texte-2); font-size: .95rem; transition: opacity .4s var(--ease); max-width: 600px; margin: 0 auto; }
 .hero-verset cite { display: block; font-style: normal; color: var(--or); font-size: .8rem; margin-top: 6px; font-family: var(--f-titre); letter-spacing: .08em; }
@@ -239,6 +251,11 @@ html.anim .hero-sous { opacity: 0; animation: fondu-sous .8s var(--ease) forward
 html.anim .hero-actions { opacity: 0; animation: fondu-sous .8s var(--ease) forwards; }
 html.anim .hero-badge { opacity: 0; animation: badge-entree .6s var(--ease) forwards; }
 @keyframes badge-entree { from { opacity: 0; transform: translateY(-10px) scale(.9); } to { opacity: 1; transform: none; } }
+html.anim .hero-event-tag { opacity: 0; animation: badge-entree .5s var(--ease) .1s forwards; }
+html.anim .hero-date-lieu { opacity: 0; animation: fondu-sous .7s var(--ease) .4s forwards; }
+html.anim .hero-decompte { opacity: 0; animation: dc-entree .8s var(--ease) .5s forwards; }
+@keyframes dc-entree { from { opacity: 0; transform: translateY(20px) scale(.95); } to { opacity: 1; transform: none; } }
+html.anim .hero-mission { opacity: 0; animation: fondu-sous .7s var(--ease) .7s forwards; }
 
 /* Scroll indicator */
 .scroll-ind { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--gris); font-size: .75rem; animation: rebond 2s ease-in-out infinite; }
@@ -757,17 +774,14 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
     <a class="marque" href="#accueil"><span class="logo" aria-hidden="true"></span><span><b>S.D.E.</b><small>Soldats de l'Éternel</small></span></a>
 
     <nav class="nav-principal" id="nav-principal" aria-label="Navigation principale">
-      <!-- 1. Accueil -->
-      <a href="#accueil" class="nav-lien-direct" style="padding:8px 14px;font-size:.88rem;font-weight:500;color:var(--texte-2);border-radius:var(--r);transition:color .2s">Accueil</a>
-
-      <!-- 2. Le mouvement -->
-      <div class="nav-rubrique" data-rubrique="mouvement">
-        <button type="button" aria-expanded="false">Le mouvement <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+      <!-- 1. Découvrir SDE — vision, histoire, présence -->
+      <div class="nav-rubrique" data-rubrique="decouvrir">
+        <button type="button" aria-expanded="false">Découvrir SDE <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
         <div class="mega-menu">
           <div class="mega-menu-cols">
             <a href="#mouvement"><span class="mm-icone">✦</span><span><span class="mm-label">Qui sommes-nous</span><span class="mm-desc">Vision, mission et valeurs</span></span></a>
             <a href="#chiffres"><span class="mm-icone">📊</span><span><span class="mm-label">En chiffres</span><span class="mm-desc">Nations, pôles, axes, programmes</span></span></a>
-            <a href="#histoire"><span class="mm-icone">📜</span><span><span class="mm-label">Notre histoire</span><span class="mm-desc">Des origines à aujourd'hui</span></span></a>
+            <a href="#histoire"><span class="mm-icone">📜</span><span><span class="mm-label">Notre histoire</span><span class="mm-desc">Des origines à aujourd’hui</span></span></a>
             <a href="#responsables"><span class="mm-icone">👑</span><span><span class="mm-label">Couple leader</span><span class="mm-desc">Jérémy et Amy GLAZAÏ</span></span></a>
             <a href="#poles"><span class="mm-icone">⚙</span><span><span class="mm-label">Pôles et départements</span><span class="mm-desc">Cinq pôles au service</span></span></a>
             <a href="#presence"><span class="mm-icone">🌍</span><span><span class="mm-label">Présence internationale</span><span class="mm-desc">Six pays, un mouvement</span></span></a>
@@ -776,41 +790,33 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
         </div>
       </div>
 
-      <!-- 3. Programmes -->
-      <div class="nav-rubrique" data-rubrique="programmes">
-        <button type="button" aria-expanded="false">Programmes <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+      <!-- 2. Grandir — formations, ressources, programmes -->
+      <div class="nav-rubrique" data-rubrique="grandir">
+        <button type="button" aria-expanded="false">Grandir <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
         <div class="mega-menu">
           <div class="mega-menu-cols">
+            <a href="#programmes"><span class="mm-icone">📋</span><span><span class="mm-label">Programmes</span><span class="mm-desc">Traversée, Holy Talk, ALEPH 12…</span></span></a>
+            <a href="/vitrine/academy.html"><span class="mm-icone">🎓</span><span><span class="mm-label">Soldiers Academy</span><span class="mm-desc">Découvrir les formations</span></span></a>
+            <a href="#ressources"><span class="mm-icone">📖</span><span><span class="mm-label">Enseignements et livres</span><span class="mm-desc">Bibliothèque et publications</span></span></a>
             <a href="#agenda"><span class="mm-icone">📅</span><span><span class="mm-label">Agenda</span><span class="mm-desc">Calendrier des rassemblements</span></span></a>
             <a href="#infire"><span class="mm-icone">🔥</span><span><span class="mm-label">IN FIRE 2026</span><span class="mm-desc">Conférence internationale</span></span></a>
-            <a href="#programmes"><span class="mm-icone">📋</span><span><span class="mm-label">Tous les programmes</span><span class="mm-desc">Traversée, Academy, Holy Talk…</span></span></a>
+            <a href="#galerie"><span class="mm-icone">📸</span><span><span class="mm-label">Galerie</span><span class="mm-desc">Photos, vidéos et témoignages</span></span></a>
           </div>
         </div>
       </div>
 
-      <!-- 4. Ressources : tous les contenus au même endroit -->
-      <div class="nav-rubrique" data-rubrique="ressources">
-        <button type="button" aria-expanded="false">Ressources <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
-        <div class="mega-menu"><div class="mega-menu-cols">
-          <a href="#ressources"><span class="mm-icone" aria-hidden="true">📖</span><span><span class="mm-label">Enseignements et livres</span><span class="mm-desc">Bibliothèque et publications</span></span></a>
-          <a href="/vitrine/academy.html"><span class="mm-icone" aria-hidden="true">🎓</span><span><span class="mm-label">Soldiers Academy</span><span class="mm-desc">Découvrir les formations</span></span></a>
-          <a href="#galerie"><span class="mm-icone" aria-hidden="true">📸</span><span><span class="mm-label">Photos du mouvement</span><span class="mm-desc">Rencontres, missions et communion</span></span></a>
-          <a href="#galerie"><span class="mm-icone" aria-hidden="true">🎬</span><span><span class="mm-label">Vidéos, audios et témoignages</span><span class="mm-desc">À venir dans la médiathèque</span></span></a>
-        </div></div>
-      </div>
-      <!-- 5. S’engager : participer, prier, servir et soutenir -->
+      <!-- 3. S’engager — rejoindre, servir, soutenir -->
       <div class="nav-rubrique" data-rubrique="engager">
         <button type="button" aria-expanded="false">S’engager <svg class="chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
         <div class="mega-menu"><div class="mega-menu-cols">
           <a href="#rejoindre"><span class="mm-icone" aria-hidden="true">✦</span><span><span class="mm-label">Rejoindre SDE</span><span class="mm-desc">Découvrir, participer et servir</span></span></a>
           <a href="#engagement"><span class="mm-icone" aria-hidden="true">🧭</span><span><span class="mm-label">Trois chemins</span><span class="mm-desc">Communion · Formation · Action</span></span></a>
           <a href="#rejoindre" data-objet="Demande de prière"><span class="mm-icone" aria-hidden="true">🙏</span><span><span class="mm-label">Demander la prière</span><span class="mm-desc">Être accompagné dans la prière</span></span></a>
-          <a href="#programmes"><span class="mm-icone" aria-hidden="true">⛪</span><span><span class="mm-label">Programmes de prière</span><span class="mm-desc">Traversée et ALEPH 12</span></span></a>
           <a href="#soutenir"><span class="mm-icone" aria-hidden="true">💛</span><span><span class="mm-label">Dons et partenariats</span><span class="mm-desc">Soutenir les projets du mouvement</span></span></a>
           <a href="#contact"><span class="mm-icone" aria-hidden="true">✉</span><span><span class="mm-label">Nous contacter</span><span class="mm-desc">Échanger avec le secrétariat</span></span></a>
         </div></div>
       </div>
-      <a class="bouton b-or nav-membre-mobile" href="/connexion">Espace membre <svg aria-hidden="true"><use href="#i-cle"/></svg></a>
+      <a class="bouton b-or nav-membre-mobile" href="/connexion"><svg aria-hidden="true" style="width:16px;height:16px"><use href="#i-cle"/></svg> Mon Portail S.D.E</a>
     </nav>
 
     <div class="entete-droite">
@@ -819,7 +825,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
         <svg class="icone-theme-sombre" aria-hidden="true"><use href="#i-soleil"/></svg>
         <svg class="icone-theme-clair" aria-hidden="true" style="display:none"><use href="#i-lune"/></svg>
       </button>
-      <a class="bouton b-or btn-membre" href="/connexion"><svg aria-hidden="true" style="width:16px;height:16px"><use href="#i-cle"/></svg>Espace membre</a>
+      <a class="bouton b-or btn-membre btn-portail" href="/connexion"><svg aria-hidden="true" style="width:16px;height:16px"><use href="#i-cle"/></svg> Mon Portail S.D.E</a>
       <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav-principal" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -836,11 +842,14 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
     <canvas id="braises" aria-hidden="true"></canvas>
     <div class="hero-contenu">
       <div class="hero-badge"><span class="pulse"></span>Mouvement Prophético-Apostolique</div>
-      <h1>Une génération<br>de <span class="accent">soldats</span><br>pour les nations</h1>
-      <p class="hero-sous">Réveiller, restaurer, former, équiper et envoyer des hommes et des femmes pour l'accomplissement du dessein éternel de Dieu.</p>
+      <p class="hero-event-tag">🔥 Conférence internationale</p>
+      <h1><span class="accent">IN FIRE '26</span> —<br>Le grand réveil</h1>
+      <p class="hero-date-lieu">31 Octobre · Église MADEG · Cocody Deux-Plateaux, Abidjan</p>
+      <div class="hero-decompte" id="hero-decompte" aria-label="Compte à rebours"></div>
+      <p class="hero-mission">Réveiller · Restaurer · Former · Équiper · Envoyer</p>
       <div class="hero-actions">
-        <a class="bouton b-or" href="#mouvement">Découvrir le mouvement <svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
-        <a class="bouton b-contour" href="#rejoindre">Rejoindre SDE</a>
+        <a class="bouton b-or b-lg" href="#infire">S'inscrire / Rejoindre <svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
+        <a class="bouton b-contour" href="#mouvement">Découvrir le mouvement</a>
       </div>
       <div class="hero-verset">
         <blockquote id="verset-texte">« Et l'esprit entra en eux, et ils reprirent vie, et ils se tinrent sur leurs pieds : c'était une armée nombreuse, très nombreuse. »</blockquote>
@@ -2068,6 +2077,23 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
     document.getElementById("c-s").textContent = pad(Math.floor((ms % 6e4) / 1e3));
   }
   decompte(); setInterval(decompte, 1000);
+
+  /* Hero — compte à rebours grand format */
+  function heroDecompte() {
+    const hd = document.getElementById("hero-decompte");
+    if (!hd) return;
+    const ms = cible - Date.now();
+    if (ms <= 0) {
+      hd.innerHTML = Date.now() < fin
+        ? '<p style="color:var(--or);font-family:var(--f-titre);font-size:1.5rem;letter-spacing:.08em">EN COURS — REJOIGNEZ-NOUS</p>'
+        : '';
+      return;
+    }
+    const j = Math.floor(ms / 864e5), h = pad(Math.floor((ms % 864e5) / 36e5)),
+          m = pad(Math.floor((ms % 36e5) / 6e4)), s = pad(Math.floor((ms % 6e4) / 1e3));
+    hd.innerHTML = `<div class="dc"><b>${j}</b><small>Jours</small></div><div class="dc"><b>${h}</b><small>Heures</small></div><div class="dc"><b>${m}</b><small>Min</small></div><div class="dc"><b>${s}</b><small>Sec</small></div>`;
+  }
+  heroDecompte(); setInterval(heroDecompte, 1000);
 
   /* IN FIRE : confirmation envoyée au secrétariat */
   const fv = document.getElementById("f-venue");

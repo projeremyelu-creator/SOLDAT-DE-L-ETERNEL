@@ -145,8 +145,8 @@ test('mobile brand link returns to home and releases panel background', () => {
 });
 test('latest Academy page remains reachable from Resources, programme and training path', () => {
   const p = page(false);
-  const academy = p.d.querySelector('[data-rubrique="ressources"] a[href="/vitrine/academy.html"]');
-  assert.ok(academy, 'Resources must retain the new Academy registration page');
+  const academy = p.d.querySelector('[data-rubrique="ressources"] a[href="/vitrine/academy.html"]') || p.d.querySelector('[data-rubrique="grandir"] a[href="/vitrine/academy.html"]');
+  assert.ok(academy, 'Navigation must retain the Academy registration page');
   assert.ok([...p.d.querySelectorAll('#programmes a[href="/vitrine/academy.html"]')].length);
   assert.ok([...p.d.querySelectorAll('#rejoindre a[href="/vitrine/academy.html"]')].length);
   p.close();
