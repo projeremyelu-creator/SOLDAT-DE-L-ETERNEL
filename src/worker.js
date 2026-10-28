@@ -1,3 +1,4 @@
+import {dashboardMetrics} from "./dashboard-metrics.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {apiSdeOs31} from "./os-v31.js";
 import {notifySde,flushNotices,mailStatus,pushConfigured} from "./notifications.js";
@@ -661,7 +662,8 @@ async function apiTableauDeBord(req,env,u) {
   for(const x of r.results||[]){
     if(Object.prototype.hasOwnProperty.call(total,x.parent))total[x.parent]=Number(x.n)||0;
   }
-  return json({total});
+  const [evenements,formations,projets]=await Promise.all(["evenements","formations","projets"].map(path=>lireRequete(env,{path})));
+  return json({total,...dashboardMetrics(evenements,formations,projets)});
 }
 
 /* ───────── site vitrine : rendez-vous publics ───────── */
