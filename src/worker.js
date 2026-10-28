@@ -1,3 +1,6 @@
+import {eventRsvpApi,publishedEventTime} from "./event-rsvp.js";
+import {operationsApi} from "./operations.js";
+import {memberQrApi} from "./member-qr.js";
 import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {prayerWallApi} from "./prayer-wall.js";
@@ -676,7 +679,7 @@ async function apiPublic(env) {
     .filter((e) => e.date && e.date >= jour && TYPES_PUBLICS.includes(e.type) && e.prive !== true)
     .sort((a, b) => (a.date + (a.heure || "")).localeCompare(b.date + (b.heure || "")))
     .slice(0, 8)
-    .map((e) => ({ id: e.id, titre: String(e.titre || ""), type: e.type, date: e.date, heure: e.heure || "", fin: e.fin || "", lieu: String(e.lieu || ""), description: String(e.description || "").slice(0, 600) }));
+    .map((e) => ({ id: e.id, titre: String(e.titre || ""), type: e.type, date: e.date, heure: publishedEventTime(e), fin: e.fin || "", lieu: String(e.lieu || ""), description: String(e.description || "").slice(0, 600) }));
   return json({ evenements: evts }, 200, { "cache-control": "public, max-age=300" });
 }
 
@@ -1490,6 +1493,9 @@ async function traiter(req, env, ctx) {
       // Un cookie invalide ou expiré ne permet pas d'échapper au plafond anonyme.
       if (avecSession && !u.connecte && await rateLimitGlobal(env, ipGlobal))
         return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
+      const rsvp=await eventRsvpApi(req,env,u);if(rsvp)return rsvp;
+      const operations=await operationsApi(req,env,u,{list:path=>lireRequete(env,{path}),audit:(rubrique,op)=>portalAudit(env,u,rubrique,op)});if(operations)return operations;
+      const qr=await memberQrApi(req,env,u);if(qr)return qr;
       const mur=await prayerWallApi(req,env,u,ctx,{blocked:(key,max)=>bloque(env,key,max),count:key=>compter(env,key)});
       if(mur)return mur;
       const portail=await portalApi(req,env,u,{

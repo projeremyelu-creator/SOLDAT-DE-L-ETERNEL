@@ -42,13 +42,13 @@
   const welcome=node('section',undefined,'member-welcome');
   const hello=node('div',undefined,'member-greeting');hello.append(node('p','Bienvenue dans votre espace','dashboard-eyebrow'),node('h2',data.nom||portal.compte.nom||'Mon parcours SDE'),note('Grandir dans la foi. Marcher ensemble. Servir les nations.'));
   const initials=String(data.nom||portal.compte.nom||'SDE').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();hello.prepend(node('span',initials,'member-avatar'));welcome.append(hello);
-  const card=button('',()=>personalTab('carte'));card.dataset.plusModule='espace';card.className='member-card-preview';card.setAttribute('aria-label','Afficher ma carte de membre et mon QR Code officiel');
+  const card=button('',()=>portal.selectionner('carteqr'));card.dataset.plusModule='carteqr';card.className='member-card-preview';card.setAttribute('aria-label','Afficher ma carte de membre et mon QR Code officiel');
   const brand=node('span',undefined,'member-card-brand'),logo=document.createElement('img');logo.src='/vitrine/logo-96.png';logo.alt='';logo.width=34;logo.height=34;brand.append(logo,node('span','MOUVEMENT S.D.E.'));
   const identity=node('span',undefined,'member-card-identity');identity.append(node('strong',data.nom||portal.compte.nom||'Mon profil'),node('span',data.matricule||portal.compte.matricule||'Retrouver mon matricule'));
   const qr=node('span',undefined,'member-card-qr');qr.append(pictogram('qr'),node('span','Afficher mon QR Code'));
   card.append(brand,identity,qr,node('small','Ma carte de membre · Ouvrir →'));welcome.append(card);panel.append(welcome);
   const tiles=node('nav',undefined,'member-quick-grid');tiles.setAttribute('aria-label','Les essentiels de mon espace');
-  for(const [label,module,icon,tab]of [['Ma Carte','espace','card','carte'],['Mes Présences','espace','calendar','presences'],['Intercessions','mur','prayer'],['Bibliothèque','arsenal','book'],['Mes Engagements','engagements','service'],['Dons & Dîmes','contributions','gift']]){
+  for(const [label,module,icon,tab]of [['Ma Carte','carteqr','card'],['Mes Présences','espace','calendar','presences'],['Intercessions','mur','prayer'],['Bibliothèque','bibliotheque','book'],['Mes Engagements','engagements','service'],['Dons & Dîmes','contributions','gift']]){
    const b=tab?button('',()=>personalTab(tab)):route('',module);b.dataset.plusModule=module;b.className='member-quick-tile';b.append(pictogram(icon),node('span',label));tiles.append(b);
   }
   panel.append(tiles);
@@ -102,7 +102,7 @@
    const update=()=>{const seconds=Math.max(0,Math.floor((e.start-Date.now())/1000));timer.textContent=seconds?Math.floor(seconds/86400)+' j · '+String(Math.floor(seconds/3600)%24).padStart(2,'0')+' h · '+String(Math.floor(seconds/60)%60).padStart(2,'0')+' min · '+String(seconds%60).padStart(2,'0')+' s':'La rencontre a commencé. Consultez l’agenda.';if(!seconds){clearInterval(countdownTimer);countdownTimer=null}};
    countdownTimer=setInterval(update,1000);update();
   }
-  next.append(route('Voir mon agenda','agenda'),button('Ajouter au calendrier',()=>calendar(e)));panel.append(next);
+  next.append(route('Voir mon agenda','rendezvous'),button('Ajouter au calendrier',()=>calendar(e)));panel.append(next);
  }
  function renderEngagements(data){
   heading('Mes engagements');const e=data.engagements||{};
