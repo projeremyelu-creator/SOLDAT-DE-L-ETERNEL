@@ -17,8 +17,11 @@ export function deploymentEnvironment(source){
   env.CLOUDFLARE_API_KEY=key;env.CLOUDFLARE_EMAIL=email;
  }
  const account=String(source.CLOUDFLARE_ACCOUNT_ID||'').trim();
- if(account&&!/^[a-f0-9]{32}$/i.test(account))throw Error('Identifiant de compte Cloudflare invalide.');
- if(account)env.CLOUDFLARE_ACCOUNT_ID=account;else delete env.CLOUDFLARE_ACCOUNT_ID;
+ const accounts=[...new Set(account.match(/(?<![a-zA-Z0-9])[a-f0-9]{32}(?![a-zA-Z0-9])/gi)||[])];
+ if(accounts.length>1)throw Error('Plusieurs identifiants de compte Cloudflare : indiquez un compte unique.');
+ if(accounts.length===1)env.CLOUDFLARE_ACCOUNT_ID=accounts[0];else delete env.CLOUDFLARE_ACCOUNT_ID;
+ // Sans identifiant reconnu, Wrangler ne choisit automatiquement qu'un compte unique.
+ // Plusieurs comptes disponibles en CI provoquent une erreur, jamais un choix arbitraire.
  return env;
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
