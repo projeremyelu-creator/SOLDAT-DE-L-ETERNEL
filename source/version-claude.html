@@ -595,10 +595,12 @@ img.av { object-fit: cover; padding: 0; }
   background: radial-gradient(circle at 34% 30%, rgba(255,255,255,.9) 0 14%, rgba(255,255,255,0) 42%), var(--c);
   box-shadow: inset 0 -2px 3px rgba(0,0,0,.22), 0 0 0 1px rgba(0,0,0,.14), 0 0 9px 1px color-mix(in srgb, var(--c) 70%, transparent); }
 .led.off { box-shadow: inset 0 -2px 3px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.12); }
-.led.g { --c: var(--led-g); } .led.y { --c: var(--led-y); } .led.o { --c: var(--led-o); } .led.r { --c: var(--led-r); animation: led-pulse 1.8s ease-in-out infinite; }
+.led.g { --c: var(--led-g); } .led.y { --c: var(--led-y); } .led.o { --c: var(--led-o); animation: led-pulse-soft 2.5s ease-in-out infinite; } .led.r { --c: var(--led-r); animation: led-pulse 1.8s ease-in-out infinite; }
 .led.lg { width: 30px; height: 30px; }
+.led { transition: --c .3s ease, box-shadow .3s ease; }
 @keyframes led-pulse { 50% { box-shadow: inset 0 -2px 3px rgba(0,0,0,.22), 0 0 0 1px rgba(0,0,0,.14), 0 0 18px 5px color-mix(in srgb, var(--c) 75%, transparent); } }
-@media (prefers-reduced-motion: reduce) { .led.r, .arc, .mk .halo { animation: none !important; } }
+@keyframes led-pulse-soft { 50% { box-shadow: inset 0 -2px 3px rgba(0,0,0,.22), 0 0 0 1px rgba(0,0,0,.14), 0 0 12px 3px color-mix(in srgb, var(--c) 55%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .led.r, .led.o, .arc, .mk .halo { animation: none !important; } }
 .legend .led { width: 11px; height: 11px; margin-right: 5px; }
 .led-s { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--led-off); box-shadow: 0 0 6px var(--led-off); }
 .led-s.y { background: var(--led-y); box-shadow: 0 0 6px var(--led-y); } .led-s.o { background: var(--led-o); box-shadow: 0 0 6px var(--led-o); } .led-s.r { background: var(--led-r); box-shadow: 0 0 7px var(--led-r); }
@@ -620,6 +622,47 @@ button.vy-t.edit:focus-visible { outline: 2px solid var(--focus); outline-offset
 .vy-l { font-size: 12px; color: var(--muted); font-weight: 700; }
 .vy-v { font-size: 15px; }
 .vy-d { font-size: 12px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+
+/* v6 : Voyants enrichis — bordures colorées, icônes, barre de progression, solutions */
+.vy-t[data-etat="1"] { border-left: 3px solid var(--led-g); }
+.vy-t[data-etat="2"] { border-left: 3px solid var(--led-y); }
+.vy-t[data-etat="3"] { border-left: 3px solid var(--led-o); }
+.vy-t[data-etat="4"] { border-left: 3px solid var(--led-r); background: color-mix(in srgb, var(--led-r) 4%, var(--surface)); }
+.vy-t { transition: border-color .3s ease, background .3s ease, box-shadow .3s ease; }
+.vy-t[data-etat="4"]:not(button) { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--led-r) 20%, transparent); }
+
+/* Icônes dimension */
+.vy-ico { width: 18px; height: 18px; flex-shrink: 0; opacity: .7; margin-top: 1px; }
+.vy-t[data-etat="4"] .vy-ico { opacity: 1; }
+
+/* Barre de progression micro */
+.vy-prog { display: flex; height: 4px; border-radius: 999px; overflow: hidden; background: var(--track); margin-top: 4px; gap: 1px; }
+.vy-prog i { height: 100%; border-radius: 999px; transition: width .4s ease; }
+.vy-prog i.g { background: var(--led-g); } .vy-prog i.y { background: var(--led-y); } .vy-prog i.o { background: var(--led-o); } .vy-prog i.r { background: var(--led-r); }
+
+/* Callout solution pour voyants en alerte */
+.vy-sol { margin-top: 6px; padding: 6px 8px; border-radius: 8px; background: color-mix(in srgb, var(--led-o) 8%, var(--surface-2)); border: 1px solid color-mix(in srgb, var(--led-o) 20%, transparent); font-size: 11.5px; color: var(--muted); line-height: 1.4; display: flex; gap: 6px; align-items: flex-start; }
+.vy-t[data-etat="4"] .vy-sol { background: color-mix(in srgb, var(--led-r) 8%, var(--surface-2)); border-color: color-mix(in srgb, var(--led-r) 20%, transparent); }
+.vy-sol .ico { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; color: var(--led-o); }
+.vy-t[data-etat="4"] .vy-sol .ico { color: var(--led-r); }
+
+/* État général enrichi */
+.vy-h-etat { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; margin-bottom: 10px; }
+.vy-h-etat[data-g="1"] { background: color-mix(in srgb, var(--led-g) 8%, var(--surface-2)); }
+.vy-h-etat[data-g="2"] { background: color-mix(in srgb, var(--led-y) 8%, var(--surface-2)); }
+.vy-h-etat[data-g="3"] { background: color-mix(in srgb, var(--led-o) 8%, var(--surface-2)); }
+.vy-h-etat[data-g="4"] { background: color-mix(in srgb, var(--led-r) 8%, var(--surface-2)); animation: alerte-fond 2.5s ease-in-out infinite; }
+@keyframes alerte-fond { 50% { background: color-mix(in srgb, var(--led-r) 14%, var(--surface-2)); } }
+@media (prefers-reduced-motion: reduce) { .vy-h-etat[data-g="4"] { animation: none; } }
+.vy-h-etat .vy-etat-ico { width: 32px; height: 32px; flex-shrink: 0; }
+.vy-illus { width: 40px; height: 40px; flex-shrink: 0; }
+
+/* Tendance animée */
+.vy-tend { font-size: 11px; font-weight: 900; margin-left: 3px; }
+.vy-tend.up { color: var(--led-g); }
+.vy-tend.down { color: var(--led-r); animation: tend-bounce .6s ease; }
+@keyframes tend-bounce { 0% { transform: translateY(-3px); } 50% { transform: translateY(2px); } 100% { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .vy-tend.down { animation: none; } }
 .vy-sep { display: flex; align-items: center; gap: 6px; margin: 14px 0 0; font-size: 12.5px; font-weight: 700; color: var(--muted); }
 .vy-sep .ico { width: 14px; height: 14px; }
 .vy-hist { margin-top: 10px; font-size: 13.5px; }
@@ -4635,19 +4678,52 @@ body.locked .fab-ia { display: none; }
     return { auto, sante, global: fg ? fg.n : calcule, globalCalcule: calcule, globalForce: fg };
   }
   const led = (n, grand) => `<span class="led ${NIV_CLS[n] || "off"}${grand ? " lg" : ""}" aria-hidden="true"></span>`;
+  /* v6 : icônes SVG par dimension */
+  const VY_ICO = {
+    implication: '<svg class="vy-ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l2.5 5 5.5.8-4 3.9 1 5.3-5-2.6-5 2.6 1-5.3-4-3.9 5.5-.8z"/></svg>',
+    assiduite: '<svg class="vy-ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2v4M13 2v4M7 12l2 2 4-4"/></svg>',
+    cotis: '<svg class="vy-ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 6v4M8 12h4M10 8a2 2 0 011 3.7"/></svg>',
+    discipline: '<svg class="vy-ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l7 4v5c0 4-3 7-7 7s-7-3-7-7V6l7-4z"/><path d="M7 10l2 2 4-4"/></svg>',
+  };
+  /* v6 : solutions contextuelles par dimension et gravité */
+  const VY_SOLUTIONS = {
+    implication: { 3: "Proposer un rôle actif ou un service pour relancer l'engagement.", 4: "Visite pastorale recommandée. Proposer un mentorat ou un accompagnement personnalisé." },
+    assiduite: { 3: "Rappeler les horaires et proposer un covoiturage ou un accueil. Vérifier s'il y a un empêchement.", 4: "Contacter le soldat. Proposer une visite à domicile ou une connexion en ligne si empêchement physique." },
+    cotis: { 3: "Envoyer un rappel bienveillant. Proposer un échelonnement si difficulté financière.", 4: "Rencontre avec le secrétariat pour évaluer la situation. Envisager une exemption temporaire." },
+    discipline: { 3: "Suivi régulier de la mesure. Prière et accompagnement.", 4: "Intervention pastorale urgente. Conseil de discipline si nécessaire." },
+  };
+  /* v6 : barre de score micro */
+  const vyProg = (v) => {
+    if (!v.score && v.score !== 0) return "";
+    const s = Math.max(0, Math.min(100, v.score));
+    const cls = s >= 70 ? "g" : s >= 45 ? "y" : s >= 25 ? "o" : "r";
+    return `<div class="vy-prog" title="${s}%"><i class="${cls}" style="width:${s}%"></i></div>`;
+  };
   function tuileVoyant([k, l, v], mid) {
-    const corps = `${led(v.n)}<span class="vy-x"><span class="vy-l">${esc(l)}${v.force ? `<span class="vy-f">ajusté</span>` : ""}</span><b class="vy-v">${esc(v.lib)}${fleche(v.tend)}</b>${v.detail ? `<span class="vy-d">${esc(v.detail)}</span>` : ""}</span>`;
-    if (mid && peutAdmin() && S.pret.suivi) return `<button class="vy-t edit" type="button" data-act="${v.sante ? "veille-niveau" : "evaluer-membre"}" data-id="${esc(mid)}" data-k="${esc(k)}" aria-label="${esc(`Modifier le voyant ${l} : ${v.lib}`)}">${corps}${I("i-edit", "ico vy-e")}</button>`;
-    return `<div class="vy-t" data-k="${esc(k)}">${corps}</div>`;
+    const ico = VY_ICO[k] || "";
+    const sol = (v.n >= 3 && VY_SOLUTIONS[k] && VY_SOLUTIONS[k][v.n]) ? `<div class="vy-sol">${I("i-info", "ico")} ${esc(VY_SOLUTIONS[k][v.n])}</div>` : "";
+    const prog = vyProg(v);
+    const corps = `${ico}${led(v.n)}<span class="vy-x"><span class="vy-l">${esc(l)}${v.force ? `<span class="vy-f">ajusté</span>` : ""}</span><b class="vy-v">${esc(v.lib)}${fleche(v.tend)}</b>${v.detail ? `<span class="vy-d">${esc(v.detail)}</span>` : ""}${prog}${sol}</span>`;
+    if (mid && peutAdmin() && S.pret.suivi) return `<button class="vy-t edit" type="button" data-etat="${v.n}" data-act="${v.sante ? "veille-niveau" : "evaluer-membre"}" data-id="${esc(mid)}" data-k="${esc(k)}" aria-label="${esc(`Modifier le voyant ${l} : ${v.lib}`)}">${corps}${I("i-edit", "ico vy-e")}</button>`;
+    return `<div class="vy-t" data-k="${esc(k)}" data-etat="${v.n}">${corps}</div>`;
   }
+  /* v6 : illustrations SVG par état global */
+  const VY_ILLUS = {
+    0: '<svg class="vy-illus" viewBox="0 0 48 48" fill="none" stroke="var(--texte-2)" stroke-width="1.5" opacity=".5"><circle cx="24" cy="24" r="18" stroke-dasharray="4 3"/><path d="M18 24h12M24 18v12" stroke-linecap="round"/></svg>',
+    1: '<svg class="vy-illus" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="18" fill="color-mix(in srgb, var(--led-g) 12%, transparent)" stroke="var(--led-g)" stroke-width="1.5"/><path d="M16 24l6 6 10-12" stroke="var(--led-g)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    2: '<svg class="vy-illus" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="18" fill="color-mix(in srgb, var(--led-y) 12%, transparent)" stroke="var(--led-y)" stroke-width="1.5"/><path d="M24 16v10" stroke="var(--led-y)" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="32" r="1.5" fill="var(--led-y)"/></svg>',
+    3: '<svg class="vy-illus" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="18" fill="color-mix(in srgb, var(--led-o) 12%, transparent)" stroke="var(--led-o)" stroke-width="1.5"/><path d="M24 14l-10 18h20z" stroke="var(--led-o)" stroke-width="2" stroke-linejoin="round"/><path d="M24 22v5" stroke="var(--led-o)" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="30" r="1.3" fill="var(--led-o)"/></svg>',
+    4: '<svg class="vy-illus" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="18" fill="color-mix(in srgb, var(--led-r) 12%, transparent)" stroke="var(--led-r)" stroke-width="1.5"><animate attributeName="opacity" values=".7;1;.7" dur="2s" repeatCount="indefinite"/></circle><path d="M24 14l-10 18h20z" stroke="var(--led-r)" stroke-width="2.5" stroke-linejoin="round" fill="color-mix(in srgb, var(--led-r) 20%, transparent)"/><path d="M24 22v5" stroke="var(--led-r)" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="30" r="1.5" fill="var(--led-r)"/></svg>',
+  };
   function blocVoyants(m) {
     const v = voyantsDe(m);
     const s = accesDirection() && S.pret.suivi ? suiviDe(m.id) : null;
     const adm = peutAdmin() && S.pret.suivi;
     const relance = s && s.prochainSuivi ? (s.prochainSuivi <= aujourdhui() ? `<span class="chip warn">Suivi prévu ${esc(relLong(s.prochainSuivi))}</span>` : `<span class="chip">Prochain suivi le ${esc(fmtJour(s.prochainSuivi))}</span>`) : "";
     const gNote = v.globalForce ? `<p class="vy-d" style="margin:2px 0 0">${esc(v.globalForce.note || `Calcul automatique : ${ETAT_GLOBAL[v.globalCalcule]}`)}</p>` : "";
+    const illus = VY_ILLUS[v.global] || VY_ILLUS[0];
     let out = `<section class="voyants" aria-label="Voyants du membre">
-      <div class="vy-h">${led(v.global, true)}<div><p class="vy-k">État général${v.globalForce ? `<span class="vy-f">ajusté</span>` : ""}</p><p class="vy-g">${esc(ETAT_GLOBAL[v.global])}</p>${gNote}</div>${relance}${adm ? btn("evaluer-membre", "Modifier", { ico: "i-edit", sm: true, data: `data-id="${esc(m.id)}" data-k="global"` }) : ""}</div>
+      <div class="vy-h-etat" data-g="${v.global}"><div class="vy-h">${illus}${led(v.global, true)}<div><p class="vy-k">État général${v.globalForce ? `<span class="vy-f">ajusté</span>` : ""}</p><p class="vy-g">${esc(ETAT_GLOBAL[v.global])}</p>${gNote}</div>${relance}${adm ? btn("evaluer-membre", "Modifier", { ico: "i-edit", sm: true, data: `data-id="${esc(m.id)}" data-k="global"` }) : ""}</div></div>
       <div class="vy-grid">${v.auto.map((x) => tuileVoyant(x, m.id)).join("")}</div>`;
     if (accesDirection()) {
       if (!S.pret.suivi) out += chargement("Lecture du suivi pastoral…");
