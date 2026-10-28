@@ -648,6 +648,10 @@ html.anim .revele.vu { opacity: 1; transform: none; }
 html.anim .section { animation: section-in .5s ease-out both; }
 @keyframes section-in { from { opacity: 0; } to { opacity: 1; } }
 
+/* ── Compteur KPI animation pulse ── */
+@keyframes compte-pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
@@ -2162,10 +2166,41 @@ html.anim .section { animation: section-in .5s ease-out both; }
   window.addEventListener("scroll", () => { rh.classList.toggle("visible", window.scrollY > 600); }, { passive: true });
   rh.addEventListener("click", () => { window.scrollTo({ top: 0, behavior: reduit ? "auto" : "smooth" }); });
 
+  /* ═══════ Scroll reveal – éléments .revele ═══════ */
+  if ("IntersectionObserver" in window && !reduit) {
+    const obsRevele = new IntersectionObserver((es) => es.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add("vu"); obsRevele.unobserve(e.target); }
+    }), { threshold: .15, rootMargin: "0px 0px -40px 0px" });
+    document.querySelectorAll(".revele").forEach((el) => obsRevele.observe(el));
+  }
+
   /* ═══════ Barres de progression ═══════ */
   if ("IntersectionObserver" in window && !reduit) {
     const ib = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("vu"); ib.unobserve(e.target); } }), { threshold: .5 });
     document.querySelectorAll(".pj-barre").forEach((b) => ib.observe(b));
+  }
+
+  /* ═══════ Compteurs animés KPI ═══════ */
+  if ("IntersectionObserver" in window && !reduit) {
+    function animerCompte(el) {
+      const cible = parseInt(el.dataset.compte, 10);
+      if (isNaN(cible) || cible <= 0) return;
+      const duree = 1600; // ms
+      const debut = performance.now();
+      function pas(now) {
+        const t = Math.min((now - debut) / duree, 1);
+        /* ease-out cubic */
+        const ease = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(ease * cible);
+        if (t < 1) requestAnimationFrame(pas);
+      }
+      el.textContent = "0";
+      requestAnimationFrame(pas);
+    }
+    const obsCompte = new IntersectionObserver((es) => es.forEach((e) => {
+      if (e.isIntersecting) { animerCompte(e.target); obsCompte.unobserve(e.target); }
+    }), { threshold: .3 });
+    document.querySelectorAll("[data-compte]").forEach((el) => obsCompte.observe(el));
   }
 
   /* ═══════ Lightbox galerie ═══════ */

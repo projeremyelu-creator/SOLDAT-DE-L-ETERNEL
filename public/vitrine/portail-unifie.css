@@ -3,7 +3,10 @@
 @media(max-width:1180px){.site-menu{gap:12px}.site-menu>a{font-size:.79rem}.site-brand small{display:none}}
 @media(max-width:970px){.site-burger{display:flex}.site-menu{position:absolute;top:100%;left:0;right:0;display:none;flex-direction:column;align-items:stretch;gap:0;padding:12px 22px 24px;background:#11182a;border-bottom:1px solid #c8a451;max-height:80svh;overflow-y:auto}.site-menu[data-open=true]{display:flex}.site-menu>a{padding:12px 8px;font-size:1rem}.site-header-inner{min-height:68px}.home-hero{min-height:690px}.story-grid,.community-inner{grid-template-columns:1fr;gap:18px}.community-actions{justify-content:flex-start}.footer-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.wrap{width:calc(100% - 34px)}.home-hero{min-height:640px;padding:60px 0}.home-hero h1{font-size:clamp(3rem,12vw,4.8rem)}.home-overlay{background:linear-gradient(95deg,rgba(12,18,32,.96),rgba(12,18,32,.78))}.hero-actions,.community-actions{flex-direction:column;align-items:stretch}.announcement-inner{display:block}.announcement-inner .text-link{display:inline-flex;margin-top:18px}.story{padding:72px 0}.explore{padding:74px 0}.chapter-list>a{gap:14px;padding:20px 0}.chapter-index{width:24px}.chapter-info small{line-height:1.45}.community{padding:78px 0}.footer-grid{grid-template-columns:1fr;gap:26px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.action,.chapter-list>a{transition:none}.action:hover{transform:none}}
+/* ═══ Scroll reveal animations ═══ */
+html.anim .revele{opacity:0;transform:translateY(20px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);transition-delay:var(--d,0s)}
+html.anim .revele.vu{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.action,.chapter-list>a{transition:none}.action:hover{transform:none}html.anim .revele{opacity:1;transform:none}}
 /* Le même en-tête remplace les anciennes navigations des pages éditoriales. */
 body.sde-multipage-unifie .site-header{position:sticky}
 body.sde-multipage-unifie .entete,body.sde-multipage-unifie .nav-mobile,body.sde-multipage-unifie .sde-global-nav,body.sde-multipage-unifie .sde-mega-nav{display:none!important}

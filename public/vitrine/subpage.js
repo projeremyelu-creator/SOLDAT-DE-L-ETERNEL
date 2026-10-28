@@ -5,6 +5,13 @@
   const escape=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const page=document.body.dataset.sdePage;
   const start=()=>{
+    /* ═══ Scroll reveal .revele → .vu ═══ */
+    const reduit=document.documentElement.dataset.motion==="reduced"||window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if(!reduit) document.documentElement.classList.add("anim");
+    if("IntersectionObserver" in window && !reduit){
+      const obs=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("vu");obs.unobserve(e.target);}}),{threshold:.15,rootMargin:"0px 0px -40px 0px"});
+      document.querySelectorAll(".revele").forEach(el=>obs.observe(el));
+    } else { document.querySelectorAll(".revele").forEach(el=>el.classList.add("vu")); }
     // Sections publiques conservées : liens contextualisés entre pages.
     document.addEventListener("click",e=>{
       const link=e.target.closest("a[data-sujet]");
