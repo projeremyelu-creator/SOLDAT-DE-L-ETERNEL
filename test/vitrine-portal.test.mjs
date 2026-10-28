@@ -41,7 +41,8 @@ for (const page of pages) {
       assert.equal(p.d.querySelectorAll(".sde-global-nav a[aria-current='page']").length,1);
     }else{
       assert.equal(p.d.querySelectorAll('.site-menu').length,1);
-      for(const route of ['/','/mon-espace','/administration'])assert.ok(p.d.querySelector('.site-menu a[href="'+route+'"]'));
+      for(const route of ['/','/portail'])assert.ok(p.d.querySelector('.site-header a[href="'+route+'"]'));
+      assert.equal(p.d.querySelectorAll('.site-mega').length,3);
       const skip=p.d.querySelector('.skip[href^="#"]');assert.ok(skip,'lien de navigation clavier');assert.ok(p.d.querySelector(skip.getAttribute('href')),'cible du lien clavier');
       const btn=p.d.querySelector('.site-burger');btn.click();assert.equal(btn.getAttribute('aria-expanded'),'true');
     }

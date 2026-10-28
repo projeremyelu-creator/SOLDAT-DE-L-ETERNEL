@@ -41,10 +41,10 @@ test("MPA: 6 URLs HTML distinctes avec titre et URL canonique",()=>{
   }
   assert.equal(canonical.size,6);
 });
-test("MPA: navigation commune et accès directs aux espaces privés",()=>{
+test("MPA: trois groupes publics et portail unique",()=>{
  const d=dom("rejoindre"),doc=d.window.document;
- for(const route of ["/","/mouvement","/programmes","/academy","/enseignements","/missions","/priere","/mon-espace","/administration"])
-   assert.ok(doc.querySelector('.site-menu a[href="'+route+'"]'),route);
+ for(const route of ["/","/mouvement","/programmes","/academy","/enseignements","/missions","/priere","/portail"])
+   assert.ok(doc.querySelector('.site-header a[href="'+route+'"]'),route);
  const btn=doc.querySelector('.site-burger');assert.equal(btn.getAttribute('aria-controls'),'site-menu');
  btn.click();assert.equal(btn.getAttribute('aria-expanded'),'true');
  doc.querySelector('.site-menu a').click();assert.equal(btn.getAttribute('aria-expanded'),'false');d.window.close();

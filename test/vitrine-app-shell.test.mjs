@@ -31,10 +31,10 @@ test("interface publique : 13 pages chargent la navigation commune sans passerel
     const html=read(path(name+".html"));
     assert.ok(html.includes("/vitrine/"+(name==="index"?"sde-app-shell":"portail-unifie")+".css"),name+" CSS");
     assert.ok(html.includes("/vitrine/"+(name==="index"?"sde-app-shell":"portail-unifie")+".js"),name+" JS");
-    if(name!=="index")assert.ok(html.includes('href="/mon-espace"'),name+" accès membre");
+    if(name!=="index")assert.ok(html.includes('href="/portail"'),name+" accès membre");
     assert.ok(!html.includes('src="/sde-bridge.js'),name+" ne charge pas la passerelle privée");
     assert.ok(!html.includes('href="/sde-unified.css'),name+" CSS local obligatoire");
-    if(name!=="index")assert.ok(html.includes('href="/administration"'),name+" accès administrateur");
+    if(name!=="index")assert.ok(html.includes('href="/portail"'),name+" accès administrateur");
   }
 });
 test("interface publique : commandes, onglets mobiles, menu PC et annuaire de rubriques",()=>{

@@ -1,3 +1,4 @@
+import {prayerWallBackup} from "./prayer-wall.js";
 /* Compléments du portail : aucune identité de compte ne vient du corps client. */
 const reply=(data,status=200)=>Response.json(data,{status,headers:{'cache-control':'private, no-store'}});
 const fail=(message,status=400)=>reply({ok:false,message},status);
@@ -27,7 +28,7 @@ export async function portalAudit(env,u,rubrique,operation){
 }
 export async function portalBackup(env){
  await ensure(env);
- const result={};
+ const result={mur:await prayerWallBackup(env)};
  for(const [key,table]of [['etats','portail_etat'],['recuperations','portail_recuperations'],['audit','portail_audit']])result[key]=(await env.DB.prepare('SELECT * FROM '+table).all()).results||[];
  return result;
 }
