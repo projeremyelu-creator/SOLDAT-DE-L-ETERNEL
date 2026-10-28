@@ -1,8 +1,6 @@
 name: Vérifier les scripts
 on:
   pull_request:
-  push:
-    branches: [main]
 jobs:
   verifier:
     runs-on: ubuntu-latest
