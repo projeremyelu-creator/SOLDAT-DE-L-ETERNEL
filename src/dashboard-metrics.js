@@ -22,3 +22,21 @@ export function dashboardMetrics(events=[],formations=[],projects=[],today=new D
  }
  return {frequentation,academie,missions};
 }
+/* Même périmètre que le registre natif : actifs, date d'adhésion et garnison.
+ * Une absence non cochée compte après le début du pointage ; les excuses sont exclues.
+ */
+export function dashboardAttendance(events=[],members=[],garrisons=[],today=new Date().toISOString().slice(0,10)){
+ const groups=new Map(garrisons.map(g=>[g.id,g.data||{}]));
+ const within=(member,gid)=>{let id=member.garnisonId;const seen=new Set();while(id&&!seen.has(id)){if(id===gid)return true;seen.add(id);id=groups.get(id)?.parentId}return false};
+ const recent=events.map(e=>e.data||{}).filter(e=>typeof e.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(e.date)&&e.date<=today&&e.presents&&typeof e.presents==='object'&&!Array.isArray(e.presents)&&Object.values(e.presents).some(v=>[true,false,'retard','excuse'].includes(v))).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,7);
+ let presents=0,renseignes=0;
+ for(const e of recent)for(const {id,data:m={}}of members){
+  if(m.actif===false||(m.adhesion&&m.adhesion>e.date))continue;
+  const state=e.presents[id];
+  if(e.garnisonId&&groups.has(e.garnisonId)&&state===undefined&&!within(m,e.garnisonId))continue;
+  if(e.garnisonId&&groups.has(e.garnisonId)&&state===null&&!within(m,e.garnisonId))continue;
+  if(state==='excuse')continue;renseignes++;
+  if(state===true||state==='retard')presents++;
+ }
+ return {presents,renseignes,taux:renseignes?Math.round(100*presents/renseignes):null};
+}

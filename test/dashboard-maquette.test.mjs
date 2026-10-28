@@ -15,3 +15,11 @@ test('Dashboard : agrégats de fréquentation et de formation issus des seules d
  assert.equal((await f.call('/api/tableau-de-bord','alice')).status,403);
 }finally{f.close()}});
 test('Dashboard : sans données, aucune courbe ni pourcentage fictif',async()=>{const f=fixture();try{f.account('responsable','contributeur');const r=await f.call('/api/tableau-de-bord','responsable');assert.deepEqual(r.body.frequentation,[]);assert.equal(r.body.academie.modulesAttendus,0);assert.equal(r.body.missions.tachesTotal,0)}finally{f.close()}});
+test('Direction : actifs, taux explicite et urgences sans dossiers confidentiels',async()=>{const f=fixture();try{
+ f.account('editor','contributeur');f.doc('membres/a',{actif:true});f.doc('membres/b',{});f.doc('membres/c',{actif:true});f.doc('membres/d',{actif:false});
+ f.doc('evenements/e',{date:new Date().toISOString().slice(0,10),presents:{a:true,b:'retard',c:false,d:'excuse'}});
+ f.doc('prieres/p',{urgent:true,statut:'En prière',sujet:'SUJET A MASQUER',date:'2026-10-28'});f.doc('prieres/fin',{urgent:true,statut:'Exaucée'});f.doc('prieres_conf/secret',{urgent:true,sujet:'SECRET LEADER'});
+ const r=(await f.call('/api/tableau-de-bord','editor')).body;assert.equal(r.indicateurs.membresActifs,3);assert.equal(r.indicateurs.presence.taux,67);assert.equal(r.indicateurs.presence.renseignes,3);assert.equal(r.indicateurs.intercessions,1);assert.equal(r.urgences.length,1);assert.ok(!JSON.stringify(r).includes('SUJET A MASQUER'));assert.ok(!JSON.stringify(r).includes('SECRET LEADER'));assert.ok(r.actualiseLe);
+}finally{f.close()}});
+
+test('Assiduité native : absences nulles ou non cochées, adhésion et garnisons',async()=>{const f=fixture();try{f.account('admin','admin');for(const [id,data]of Object.entries({a:{garnisonId:'g'},b:{garnisonId:'g'},c:{garnisonId:'sub'},autre:{garnisonId:'else'},nouveau:{garnisonId:'g',adhesion:'2099-01-01'},archive:{garnisonId:'g',actif:false}}))f.doc('membres/'+id,data);f.doc('garnisons/g',{});f.doc('garnisons/sub',{parentId:'g'});f.doc('garnisons/else',{});f.doc('evenements/e',{date:'2026-01-01',garnisonId:'g',presents:{a:true,b:null}});const k=(await f.call('/api/tableau-de-bord','admin')).body.indicateurs;assert.equal(k.presence.taux,33);assert.equal(k.presence.renseignes,3)}finally{f.close()}});

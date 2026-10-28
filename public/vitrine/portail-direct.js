@@ -15,9 +15,9 @@
     portevoix:"Communication et annonces",chambre:"Prière et intercession",
     projets:"Projets et missions",secretariat:"Secrétariat et décisions",finances:"Finances et cotisations",
     arsenal:"Bibliothèque et enseignements",mediatheque:"Médiathèque",assistant:"Assistant Éliézer",
-    synthese:"Mon accueil",parcours:"Lecture et prière",preferences:"Mes rappels",gestion:"Centre de contrôle"
+    engagements:"Mes engagements",contributions:"Dons & Dîmes",synthese:"Mon accueil",parcours:"Lecture et prière",preferences:"Mes rappels",gestion:"Centre de contrôle"
   };
-  const personnel=new Set(["mur","priere","espace","agenda","academie","portevoix","arsenal","mediatheque","synthese","parcours","preferences"]);
+  const personnel=new Set(["mur","priere","espace","agenda","academie","portevoix","arsenal","mediatheque","synthese","engagements","contributions","parcours","preferences"]);
   const url=new URL(location.href);
   const demandé=url.searchParams.get("module")||"";
   const souhait=Object.prototype.hasOwnProperty.call(catalogue,demandé)?demandé:
@@ -199,15 +199,15 @@
       if(!compte)return;
       const buttons=[...original.querySelectorAll('button[data-vue]')];
       const ordre=mode==="membre"?
-        ["priere","academie","arsenal","mur","synthese","parcours","espace","agenda","preferences","portevoix","mediatheque"]:
-        ["synthese","accueil","chambre","mur","academie","arsenal","parcours","agenda","portevoix",
+        ["priere","academie","arsenal","mur","synthese","engagements","contributions","parcours","espace","agenda","preferences","portevoix","mediatheque"]:
+        ["synthese","engagements","contributions","accueil","chambre","mur","academie","arsenal","parcours","agenda","portevoix",
          "membres","garnisons","projets","secretariat","mediatheque",
          "finances","gestion","preferences","assistant","espace"];
       const disponibles=buttons.filter(b=>allowed(b.dataset.vue)&&!b.disabled);
       if(mode==="membre"&&!disponibles.some(b=>b.dataset.vue==="academie")){
         const b=element("button","");b.dataset.vue="academie";disponibles.push(b);
       }
-      for(const nom of ["synthese","parcours","preferences","gestion","mur"].filter(allowed)){
+      for(const nom of ["synthese","engagements","contributions","parcours","preferences","gestion","mur"].filter(allowed)){
         const b=element("button","");b.dataset.vue=nom;disponibles.push(b);
       }
       if(mode==="membre"){
@@ -221,10 +221,10 @@
         signature=next;tabs.replaceChildren();if(search)tabs.append(search);
         const groupes=mode==="membre"?[
           ["Vie spirituelle",new Set(["priere","mur","academie","arsenal"])],
-          ["Mon parcours",new Set(["synthese","parcours","espace","agenda","preferences"])],
+          ["Mon parcours",new Set(["synthese","engagements","contributions","parcours","espace","agenda","preferences"])],
           ["Communauté et ressources",new Set(["portevoix","mediatheque"])]
         ]:[
-          ["Vie spirituelle et communication",new Set(["mur","synthese","accueil","chambre","academie","arsenal","parcours","agenda","portevoix"])],
+          ["Vie spirituelle et communication",new Set(["mur","synthese","engagements","contributions","accueil","chambre","academie","arsenal","parcours","agenda","portevoix"])],
           ["Pilotage et organisation",new Set(["membres","garnisons","projets","secretariat","mediatheque"])],
           ["Finances et administration",new Set(["finances","gestion","preferences","assistant","espace"])]
         ];
@@ -256,7 +256,7 @@
         const cible=disponibles.find(b=>b.dataset.vue===souhait);
         if(cible){
           initial=true;
-          if(["mur","priere","synthese","parcours","preferences","gestion"].includes(souhait))selectionner(souhait);
+          if(["mur","priere","synthese","engagements","contributions","parcours","preferences","gestion"].includes(souhait))selectionner(souhait);
           else if(!cible.classList.contains("on")&&cible.getAttribute("aria-current")!=="page")cible.click();
         }
       }
