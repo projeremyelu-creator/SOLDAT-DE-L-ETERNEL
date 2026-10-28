@@ -933,6 +933,132 @@ body.locked .fab-ia { display: none; }
   .hero-v, .rapide, .chiffre { transition: none; }
 }
 
+/* ═══════════ Portail de connexion ═══════════ */
+body.login-mode .hdr, body.login-mode .nav, body.login-mode .banner, body.login-mode #fab-ia { display: none !important; }
+body.login-mode .shell { display: block; }
+body.login-mode .main { padding: 0; }
+body.login-mode .view { padding: 0; }
+.login-portal { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; background: linear-gradient(170deg, #080e1f 0%, #0f1e3d 40%, #1b2f5b 100%); position: relative; overflow: hidden; }
+.login-portal::before { content: ""; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3CradialGradient id='g'%3E%3Cstop offset='0' stop-color='%23e2c26a' stop-opacity='.06'/%3E%3Cstop offset='1' stop-color='%23e2c26a' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='80' r='60' fill='url(%23g)'/%3E%3C/svg%3E") center bottom / 120% auto no-repeat; pointer-events: none; }
+.login-inner { position: relative; z-index: 1; width: 100%; max-width: 440px; }
+.login-brand { text-align: center; margin-bottom: 32px; }
+.login-brand .logo { margin: 0 auto; }
+.login-brand-t { font-family: var(--f-display); font-weight: 700; font-size: 14px; letter-spacing: .16em; text-transform: uppercase; color: var(--on-night-muted); margin-top: 10px; }
+.login-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 28px 24px; backdrop-filter: blur(12px); }
+.login-tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,.12); margin: 0 0 24px; gap: 0; }
+.login-tab { flex: 1; padding: 12px 8px; background: none; border: 0; border-bottom: 2px solid transparent; font-family: var(--f-display); font-weight: 700; font-size: 14px; letter-spacing: .04em; color: var(--on-night-muted); cursor: pointer; text-align: center; transition: color .2s, border-color .2s; }
+.login-tab.on { color: #fff; border-bottom-color: var(--gold-on-night); }
+.login-lbl { display: block; font-family: var(--f-display); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--on-night-muted); margin-bottom: 6px; }
+.login-field { position: relative; margin-bottom: 18px; }
+.login-inp { width: 100%; padding: 12px 14px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; color: #fff; font-size: 15px; }
+.login-inp::placeholder { color: rgba(255,255,255,.35); }
+.login-inp:focus { outline: 2px solid var(--gold-on-night); border-color: transparent; }
+.login-eye { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: 0; color: var(--on-night-muted); padding: 6px; cursor: pointer; }
+.login-eye .ico { width: 18px; height: 18px; }
+.login-submit { width: 100%; padding: 14px; border: 0; border-radius: 10px; background: linear-gradient(135deg, var(--gold-mark) 0%, var(--gold-on-night) 100%); color: var(--night); font-family: var(--f-display); font-weight: 700; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; margin-top: 6px; transition: opacity .2s; }
+.login-submit:hover { opacity: .9; }
+.login-forgot { display: block; text-align: center; margin-top: 16px; color: var(--gold-on-night); font-size: 14px; background: none; border: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.login-esp { text-align: center; margin-top: 20px; }
+.login-esp .login-lbl { color: var(--on-night-muted); margin-bottom: 10px; }
+
+/* ═══════════ Espace membre redesign ═══════════ */
+.espm-hdr { background: linear-gradient(135deg, #0b1630 0%, #13254d 100%); color: #fff; border-radius: 16px 16px 0 0; padding: 20px 20px 16px; display: flex; align-items: center; justify-content: space-between; margin: -18px -16px 0; }
+@media (min-width: 1000px) { .espm-hdr { margin: -24px -16px 0; border-radius: 16px 16px 0 0; } }
+.espm-hdr-t { font-family: var(--f-display); font-weight: 700; font-size: 18px; letter-spacing: .1em; text-transform: uppercase; }
+.espm-hdr-bell { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.1); border: 0; color: var(--gold-on-night); display: grid; place-items: center; cursor: pointer; }
+.espm-welcome { padding: 20px; background: linear-gradient(180deg, #13254d 0%, var(--bg) 100%); margin: 0 -16px; color: #fff; }
+@media (min-width: 1000px) { .espm-welcome { margin: 0 -16px; } }
+.espm-hello { display: flex; align-items: center; gap: 14px; }
+.espm-hello-txt h2 { margin: 0; font-family: var(--f-display); font-size: 1.25rem; font-weight: 700; }
+.espm-hello-txt h2 .espm-mark { color: var(--gold-on-night); }
+.espm-hello-txt p { margin: 4px 0 0; font-size: 13px; color: var(--on-night-muted); }
+.espm-carte { background: linear-gradient(135deg, #1a1410 0%, #2a1f14 50%, #1a1410 100%); border: 1px solid rgba(226,194,106,.25); border-radius: 14px; padding: 18px; margin-top: 18px; display: flex; align-items: center; gap: 16px; }
+.espm-carte-info h3 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 16px; letter-spacing: .06em; text-transform: uppercase; color: #fff; }
+.espm-carte-info p { margin: 4px 0 0; font-size: 13px; color: var(--on-night-muted); }
+.espm-qr { width: 90px; height: 90px; background: #fff; border-radius: 10px; display: grid; place-items: center; flex: 0 0 auto; }
+.espm-qr canvas { width: 78px !important; height: 78px !important; }
+.espm-scan { display: block; width: 100%; margin-top: 12px; padding: 13px; border: 1.5px solid var(--gold-on-night); border-radius: 10px; background: transparent; color: var(--gold-on-night); font-family: var(--f-display); font-weight: 700; font-size: 14px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; transition: background .2s; }
+.espm-scan:hover { background: rgba(226,194,106,.1); }
+.espm-academy { background: linear-gradient(135deg, #1b2f5b 0%, #2c4377 100%); border-radius: 14px; padding: 16px 18px; margin-top: 16px; color: #fff; }
+.espm-academy-h { display: flex; align-items: center; justify-content: space-between; }
+.espm-academy-h h3 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 15px; }
+.espm-academy-h .ico { width: 22px; height: 22px; color: var(--gold-on-night); }
+.espm-academy-lvl { margin: 4px 0 0; font-size: 13px; color: var(--on-night-muted); }
+.espm-progress { height: 8px; background: rgba(255,255,255,.15); border-radius: 4px; margin-top: 10px; overflow: hidden; }
+.espm-progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold-mark), #e74c3c); border-radius: 4px; transition: width .6s ease; }
+.espm-academy-next { margin: 10px 0 0; font-size: 12.5px; color: var(--on-night-muted); }
+.espm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+.espm-act { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 18px 10px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); cursor: pointer; text-align: center; transition: border-color .2s, box-shadow .2s; }
+.espm-act:hover { border-color: var(--gold-mark); box-shadow: var(--shadow); }
+.espm-act-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; }
+.espm-act-ico .ico { width: 22px; height: 22px; }
+.espm-act-ico.c1 { background: var(--in-soft); color: var(--in); }
+.espm-act-ico.c2 { background: var(--out-soft); color: var(--out); }
+.espm-act-ico.c3 { background: var(--warn-soft); color: var(--warn); }
+.espm-act-ico.c4 { background: var(--ok-soft); color: var(--ok); }
+.espm-act-ico.c5 { background: var(--info-soft); color: var(--meter); }
+.espm-act-t { font-family: var(--f-display); font-weight: 700; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
+.espm-act-d { font-size: 11.5px; color: var(--muted); }
+.espm-rdv { margin-top: 18px; background: linear-gradient(135deg, #0b1630 0%, #1b2f5b 100%); border-radius: 14px; padding: 16px 18px; color: #fff; }
+.espm-rdv h3 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 14px; letter-spacing: .06em; text-transform: uppercase; }
+.espm-rdv-sub { margin: 2px 0 0; font-size: 12.5px; color: var(--on-night-muted); }
+.espm-rdv-body { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
+.espm-rdv-j { font-family: var(--f-display); font-weight: 700; font-size: 2.2rem; color: var(--gold-on-night); line-height: 1; }
+.espm-rdv-info { flex: 1; min-width: 0; }
+.espm-rdv-event { font-family: var(--f-display); font-weight: 700; font-size: 1.1rem; color: var(--gold-on-night); }
+.espm-rdv-date { font-size: 13px; color: var(--on-night-muted); margin-top: 2px; }
+.espm-rdv-lieu { font-size: 12.5px; color: var(--on-night-muted); margin-top: 2px; }
+
+/* ═══════════ Poste de commandement redesign ═══════════ */
+.cmd-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.cmd-top-left h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 24px; letter-spacing: .04em; text-transform: uppercase; }
+.cmd-top-left h1 .cmd-dot { color: var(--gold-mark); }
+.cmd-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; font-weight: 700; background: var(--surface); }
+.cmd-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.cmd-kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
+.cmd-kpi::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold-mark), var(--gold-on-night)); }
+.cmd-kpi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.cmd-kpi-ico { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--info-soft); color: var(--meter); }
+.cmd-kpi-ico .ico { width: 18px; height: 18px; }
+.cmd-kpi-n { font-family: var(--f-display); font-weight: 700; font-size: 2rem; line-height: 1.1; letter-spacing: -.01em; }
+.cmd-kpi-l { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.cmd-split { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 20px; }
+@media (min-width: 700px) { .cmd-split { grid-template-columns: 3fr 2fr; } }
+.cmd-chart { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; min-height: 260px; }
+.cmd-chart-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.cmd-chart-h h2 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; }
+.cmd-chart-cv { width: 100%; height: 200px; }
+.cmd-feed { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.cmd-feed h2 { margin: 0 0 14px; font-family: var(--f-display); font-weight: 700; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; }
+.cmd-feed-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--line); }
+.cmd-feed-item:first-of-type { border-top: 0; }
+.cmd-feed-dot { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: 0 0 auto; }
+.cmd-feed-dot.green { background: var(--ok-soft); color: var(--ok); }
+.cmd-feed-dot.blue { background: var(--in-soft); color: var(--in); }
+.cmd-feed-dot.gold { background: var(--warn-soft); color: var(--gold); }
+.cmd-feed-txt { flex: 1; min-width: 0; }
+.cmd-feed-txt b { font-size: 14px; display: block; }
+.cmd-feed-txt small { font-size: 12.5px; color: var(--muted); }
+.cmd-feed-more { display: block; text-align: center; margin-top: 10px; }
+.cmd-bottom { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 700px) { .cmd-bottom { grid-template-columns: 1fr 1fr; } }
+.cmd-academy { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.cmd-academy h2 { margin: 0 0 6px; font-family: var(--f-display); font-weight: 700; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; }
+.cmd-academy-sub { margin: 0 0 14px; font-size: 13px; color: var(--muted); }
+.cmd-academy-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.cmd-academy-bar .espm-progress { flex: 1; }
+.cmd-academy-bar span { font-size: 13px; font-weight: 700; color: var(--gold); white-space: nowrap; }
+.cmd-urgent { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.cmd-urgent h2 { margin: 0 0 14px; font-family: var(--f-display); font-weight: 700; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; }
+.cmd-urgent-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.cmd-urgent-item:first-of-type { border-top: 0; }
+.cmd-urgent-item .cmd-feed-dot { flex: 0 0 auto; }
+.cmd-urgent-txt { flex: 1; min-width: 0; }
+.cmd-urgent-txt b { font-size: 14px; display: block; }
+.cmd-urgent-txt small { font-size: 12.5px; color: var(--muted); }
+.cmd-urgent-btns { display: flex; gap: 6px; flex: 0 0 auto; }
+.cmd-urgent-btns .btn { min-width: 70px; }
+
 /* ═══════════ v10 · Rappels, espace soldat, installation ═══════════ */
 .rap-g { margin-bottom: 18px; }
 .rap-g .h3 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -1280,6 +1406,7 @@ body.locked .fab-ia { display: none; }
   const nomComplet = (m) => (m ? [String(m.nom || "").toUpperCase(), m.prenoms || ""].filter(Boolean).join(" ").trim() || "Sans nom" : "");
   const nomUsuel = (m) => (m ? [m.prenoms || "", String(m.nom || "").toUpperCase()].filter(Boolean).join(" ").trim() : "");
   const prenomUsuel = (m) => String(m.prenoms || "").trim().split(/\s+/)[0] || cap(String(m.nom || "").toLowerCase());
+  const salutation = () => { const h = new Date().getHours(); return h >= 18 || h < 5 ? "Bonsoir" : "Bonjour"; };
   const initiales = (m) => ((String(m.prenoms || "").trim()[0] || "") + (String(m.nom || "").trim()[0] || "")).toUpperCase() || "?";
   const avatar = (m, lg) => (m.photoId
     ? `<img class="av photo${lg ? " lg" : ""}" src="/_blob/${esc(m.photoId)}" alt="" loading="lazy" data-ini="${esc(initiales(m))}" data-av="a${1 + (hash(m.id || m.nom) % 6)}">`
@@ -1583,6 +1710,7 @@ body.locked .fab-ia { display: none; }
   function renderNow() {
     majSync();
     const c = cfg();
+    document.body.classList.toggle("login-mode", S.etat === "absent" && S.vue === "accueil");
     $("#brand-mark").textContent = c.nomCourt;
     $("#brand-sub").textContent = c.sousTitre;
     renderBanniere();
@@ -6818,7 +6946,29 @@ Aujourd’hui : ${dateFr(aujourdhui())}. Personne qui écrit : ${S.me.name || "u
     const salut = h >= 18 || h < 5 ? "Bonsoir" : "Bonjour";
     const prenom = (S.me.name || "").trim().split(/\s+/)[0] || "";
     const nbSoldats = accesRegistre() && S.pret.membres ? membresActifs().length : null;
-    let out = `<section class="acc-hero" aria-label="Accueil">
+
+    /* ── Portail de connexion (absent) ── */
+    if (S.etat === "absent") {
+      return `<div class="login-portal">
+        <div class="login-inner">
+          <div class="login-brand"><span class="logo lg" aria-hidden="true"></span><p class="login-brand-t">S.D.E. Administration</p></div>
+          <div class="login-card">
+            <div class="login-tabs"><button class="login-tab on" type="button">Connexion Administration</button><button class="login-tab" type="button">Accès Membre</button></div>
+            <div class="login-field"><label class="login-lbl">Identifiant</label><input class="login-inp" type="text" placeholder="Votre identifiant" autocomplete="username"></div>
+            <div class="login-field"><label class="login-lbl">Mot de passe</label><div style="position:relative"><input class="login-inp" type="password" placeholder="Votre mot de passe" autocomplete="current-password" id="login-pwd"><button class="login-eye" type="button" data-act="login-eye" aria-label="Afficher le mot de passe">${I("i-lock")}</button></div></div>
+            <button class="login-submit" type="button">Se connecter</button>
+            <button class="login-forgot" type="button">Récupérer son mot de passe</button>
+          </div>
+          <div class="login-esp"><p class="login-lbl">Les données du mouvement s’affichent dans Claude pour une personne connectée.</p></div>
+        </div>
+      </div>`;
+    }
+
+    /* ── Poste de commandement (connecté) ── */
+    let out = "";
+
+    /* Hero compact */
+    out += `<section class="acc-hero" aria-label="Accueil">
       <canvas class="hero-cv" id="hero-cv" aria-hidden="true"></canvas>
       <svg class="hero-vallee" viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true"><path d="M0 160 L0 98 C140 70 230 118 360 92 C500 64 560 112 700 86 C840 60 930 104 1060 80 C1120 70 1170 78 1200 74 L1200 160 Z"/><path class="v2" d="M0 160 L0 124 C180 104 300 140 470 118 C640 96 760 136 930 114 C1060 98 1140 110 1200 104 L1200 160 Z"/></svg>
       <div class="hero-c">
@@ -6829,14 +6979,48 @@ Aujourd’hui : ${dateFr(aujourdhui())}. Personne qui écrit : ${S.me.name || "u
         <div class="hero-a"><button class="btn btn-souffle" type="button" data-act="souffle">${I("i-spark")}Esprit, viens des quatre vents !</button>${nbSoldats != null ? `<p class="hero-armee" id="hero-armee" aria-live="polite"><b data-compte="${nbSoldats}">${nb(nbSoldats)}</b> soldats debout · ${esc(c.devise || "")}</p>` : `<p class="hero-armee">${esc(c.devise || "")}</p>`}</div>
       </div>
     </section>`;
-    if (S.etat === "absent") return out + nonConnecte("Les membres, l’agenda et la vie du mouvement");
+
+    /* Titre + badge Chiffres clés */
+    out += `<div class="cmd-top"><div class="cmd-top-left"><h1>Poste de commandement<span class="cmd-dot"> · </span>S.D.E.</h1></div><span class="cmd-badge">${I("i-report")} Chiffres clés</span></div>`;
+
+    /* KPI cards */
+    const cs = compteurs();
+    if (cs.length) out += `<div class="cmd-kpis">${cs.map((k) => `<div class="cmd-kpi"><div class="cmd-kpi-top"><div class="cmd-kpi-ico">${I(k.ico)}</div></div><div class="cmd-kpi-n" data-compte="${k.n == null ? "" : k.n}">${k.n == null ? "—" : nb(k.n)}</div><div class="cmd-kpi-l">${esc(k.l)}</div></div>`).join("")}</div>`;
+
+    if (!accesRegistre()) out += `<section class="card esp-promo"><div class="esp-entree-i" aria-hidden="true">${I("i-card")}</div><div><h2 class="h3" style="margin:0">Mon espace soldat</h2><p class="hint" style="margin:4px 0 10px">${ESP.data ? `Bonjour ${esc(prenomUsuel(ESP.data.m))} : votre carte, vos présences et vos cotisations vous attendent.` : "Avec votre code personnel : votre carte de membre, vos présences, vos cotisations et vos requêtes de prière."}</p><button class="btn btn-primary btn-sm" type="button" data-vue="espace">${I("i-right")}Ouvrir mon espace</button></div></section>`;
+
     out += actionsRapides();
     out += bandeauAujourdhui();
-    if (!accesRegistre()) out += `<section class="card esp-promo"><div class="esp-entree-i" aria-hidden="true">${I("i-card")}</div><div><h2 class="h3" style="margin:0">Mon espace soldat</h2><p class="hint" style="margin:4px 0 10px">${ESP.data ? `Bonjour ${esc(prenomUsuel(ESP.data.m))} : votre carte, vos présences et vos cotisations vous attendent.` : "Avec votre code personnel : votre carte de membre, vos présences, vos cotisations et vos requêtes de prière."}</p><button class="btn btn-primary btn-sm" type="button" data-vue="espace">${I("i-right")}Ouvrir mon espace</button></div></section>`;
-    const cs = compteurs();
-    if (cs.length) out += `<div class="chiffres">${cs.map((k) => `<button class="chiffre" type="button" data-vue="${k.vue}"><span class="chiffre-i" aria-hidden="true">${I(k.ico)}</span><b data-compte="${k.n == null ? "" : k.n}" data-suf="${esc(k.suf || "")}">${k.n == null ? "—" : nb(k.n) + (k.suf || "")}</b><span class="chiffre-l">${esc(k.l)}</span><small>${esc(k.d)}</small></button>`).join("")}</div>`;
+
+    /* Split: Évolution chart + Dernières activités */
+    out += `<div class="cmd-split">`;
+    out += `<div class="cmd-chart"><div class="cmd-chart-h"><h2>Évolution des présences & engagements</h2></div><canvas class="cmd-chart-cv" id="cmd-chart-cv" aria-label="Graphique des présences"></canvas></div>`;
+
+    /* Feed activités récentes */
     const pr = priorites();
-    if (pr.length) out += `<section class="prio" aria-labelledby="prio-t"><h2 class="h3" id="prio-t">À faire aujourd’hui</h2><div class="prio-l">${pr.map((p) => `<button class="prio-i ${p.cls}" type="button" data-act="${p.act}"${p.data ? " " + p.data : ""}><span class="prio-ico" aria-hidden="true">${I(p.ico)}</span><span class="prio-x"><b>${esc(p.t)}</b><small>${esc(p.d)}</small></span>${I("i-right", "ico prio-f")}</button>`).join("")}</div></section>`;
+    out += `<div class="cmd-feed"><h2>Dernières activités</h2>`;
+    if (pr.length) out += pr.slice(0, 5).map((p, i) => `<div class="cmd-feed-item"><div class="cmd-feed-dot ${["green", "blue", "gold"][i % 3]}">${I(p.ico)}</div><div class="cmd-feed-txt"><b>${esc(p.t)}</b><small>${esc(p.d)}</small></div></div>`).join("");
+    else out += `<p class="hint">Aucune activité récente.</p>`;
+    out += `</div></div>`;
+
+    /* Bottom: Academy + Urgent */
+    out += `<div class="cmd-bottom">`;
+
+    /* Academy management card */
+    if (accesRegistre()) {
+      const nbAcad = membresActifs().filter(m => m.academie).length;
+      const totalM = membresActifs().length || 1;
+      const pctAcad = Math.round((nbAcad / totalM) * 100);
+      out += `<div class="cmd-academy"><h2>Gestion de la Soldiers Academy</h2><p class="cmd-academy-sub">Formation et suivi des soldats</p><div class="cmd-academy-bar"><div class="espm-progress"><div class="espm-progress-bar" style="width:${pctAcad}%"></div></div><span>${nb(nbAcad)} / ${nb(totalM)}</span></div><button class="btn btn-sm btn-primary" type="button" data-vue="academie">${I("i-cap")} Gérer l’académie</button></div>`;
+    }
+
+    /* Demandes urgentes */
+    out += `<div class="cmd-urgent"><h2>Demandes urgentes</h2>`;
+    if (pr.length) out += pr.slice(0, 3).map((p) => `<div class="cmd-urgent-item"><div class="cmd-feed-dot gold">${I(p.ico)}</div><div class="cmd-urgent-txt"><b>${esc(p.t)}</b><small>${esc(p.d)}</small></div><div class="cmd-urgent-btns"><button class="btn btn-sm btn-primary" type="button" data-act="${p.act}"${p.data ? " " + p.data : ""}>Suivre</button></div></div>`).join("");
+    else out += `<p class="hint">Aucune demande urgente.</p>`;
+    out += `</div></div>`;
+
+    /* Cartes existantes */
     const cartes = [];
     const ann = carteAnnonces();
     if (ann) cartes.push(ann);
@@ -7381,28 +7565,63 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     const point = (d.garnisons || []).find((g) => g.type === TYPE_POINT) || (d.garnisons || [])[0];
     const ec = { payes: c.payes || {}, dus: c.dus || [], exempt: !!c.exempt };
     const retard = (c.retard || []).length;
-    const cot = c.exempt ? `<p class="hint">Exempté(e) de cotisation.</p>` : !ec.dus.length ? `<p class="hint">Aucune cotisation due en ${esc(String(c.annee || ""))}.</p>` : `<p class="esp-etat ${retard ? "du" : "ok"}">${retard ? `${retard} mois ${retard > 1 ? "restent" : "reste"} à régler${c.mensuel ? ` · ${esc(fcfa(retard * c.mensuel))}` : ""}` : "À jour, merci pour votre fidélité !"}</p>`;
-    const autres = [...(d.speciales || []).map((s) => [s.titre, s.verse, s.attendu]), ...(d.projets || []).map((p) => [p.titre, p.verse, p.attendu])];
-    const prochains = aVenir().slice(0, 3);
-    return `<section class="card esp-id"><div class="esp-id-h">${avatar({ ...m, id: m.id }, true)}<div><h2 class="esp-nom">${esc(nomComplet(m))}</h2><p class="hint" style="margin:2px 0 0">${esc([m.matricule, m.statut, m.fonction].filter(Boolean).join(" · "))}</p>${point ? `<p class="hint" style="margin:2px 0 0">${I("i-pin")} ${esc(point.nom)}</p>` : ""}</div></div>
-        <div class="esp-cartes" id="esp-cartes" aria-label="Ma carte de membre"><div class="esp-cv-w"><canvas id="esp-recto" aria-label="Recto de la carte"></canvas></div><div class="esp-cv-w"><canvas id="esp-verso" aria-label="Verso de la carte"></canvas></div></div>
-        <div class="btn-row">${btn("esp-carte", "Recto (image)", { ico: "i-down", sm: true, data: 'data-face="recto"' })}${btn("esp-carte", "Verso (image)", { ico: "i-down", sm: true, data: 'data-face="verso"' })}${btn("esp-carte", "Carte en PDF", { ico: "i-down", sm: true, data: 'data-face="pdf"' })}</div></section>
-      <div class="grid g3 esp-grid">
-        <section class="card"><p class="eyebrow">Mes présences</p><p class="esp-big">${pr.taux == null ? "—" : Math.round(pr.taux * 100) + " %"}</p><p class="hint" style="margin-top:0">${pr.taux == null ? "Pas encore de rassemblement pointé ces trois derniers mois." : `d’assiduité sur trois mois · ${pluriel((pr.p || 0) + (pr.r || 0), "présence", "présences")}`}</p>${(pr.liste || []).length ? `<ul class="esp-l">${pr.liste.slice(0, 8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul>` : ""}</section>
-        <section class="card"><p class="eyebrow">Mes cotisations ${esc(String(c.annee || ""))}</p>${cellulesCotis(ec, c.annee || new Date().getFullYear(), true)}${cot}${c.verse ? `<p class="hint">Versé cette année : <b>${esc(fcfa(c.verse))}</b></p>` : ""}${autres.length ? `<ul class="esp-l">${autres.map(([t, v, a]) => `<li><span><b>${esc(t)}</b><small>${esc(a ? `${fcfa(v)} sur ${fcfa(a)}` : fcfa(v) + " versés")}</small></span>${a ? `<span class="chip ${v >= a ? "ok" : "warn"}">${v >= a ? "Soldé" : "En cours"}</span>` : ""}</li>`).join("")}</ul>` : ""}${d.offrandes && d.offrandes.total ? `<p class="hint">Offrandes, dîmes et dons ${esc(String(d.offrandes.annee))} : <b>${esc(fcfa(d.offrandes.total))}</b></p>` : ""}</section>
-        <section class="card"><p class="eyebrow">Requête de prière</p><form class="form" id="f-esp-priere" novalidate>${champ("esp-sujet", "Pour quoi souhaitez-vous que l’on prie ?", `<textarea class="inp" id="esp-sujet" name="sujet" rows="4" maxlength="800" placeholder="Votre sujet de prière…"></textarea>`)}<label class="check"><input type="checkbox" name="conf" value="1"> Confidentielle : seule la direction la lira</label><button class="btn btn-primary" type="submit"${ESP.envoi ? " disabled" : ""}>${I("i-flame")}Déposer ma requête</button></form><p class="hint" style="margin-top:8px">${peutEcrire() && accesRegistre() ? "Votre requête rejoint la Chambre Haute. Les requêtes confidentielles partent par WhatsApp vers la direction." : "Votre requête part par WhatsApp vers la direction, qui la confie aux intercesseurs."}</p></section>
-      </div>
-      ${prochains.length ? `<h2 class="h3 acc-sec">Prochains rassemblements</h2><div class="list">${prochains.map(rowEvt).join("")}</div>` : ""}
-      <p class="hint esp-pied">Résumé publié par la direction${ESP.t ? `, ouvert ${esc(relLong(isoJour(new Date(ESP.t))))}` : ""}. <button class="link" type="button" data-act="esp-quitter">Fermer mon espace sur cet appareil</button></p>`;
+    const prochains = aVenir().slice(0, 1);
+    const prochain = prochains[0] || null;
+    const pctPres = pr.taux != null ? Math.round(pr.taux * 100) : null;
+
+    let out = "";
+
+    /* ── Dark header ── */
+    out += `<div class="espm-hdr"><span class="espm-hdr-t">Espace Membre</span><button class="espm-hdr-bell" type="button" aria-label="Notifications">${I("i-flag")}</button></div>`;
+
+    /* ── Welcome ── */
+    out += `<div class="espm-welcome"><div class="espm-hello">${avatar({ ...m, id: m.id }, true)}<div class="espm-hello-txt"><h2>${salutation()}, <span class="espm-mark">${esc(prenomUsuel(m))}</span></h2><p>${esc([m.statut, m.fonction].filter(Boolean).join(" · ") || "Soldat de l’Éternel")}</p></div></div>`;
+
+    /* ── MA CARTE S.D.E. with QR ── */
+    out += `<div class="espm-carte"><div class="espm-carte-info"><h3>Ma Carte S.D.E.</h3><p>${esc(m.matricule || "—")}${point ? ` · ${esc(point.nom)}` : ""}</p></div><div class="espm-qr"><canvas id="esp-qr-cv" aria-label="QR Code membre"></canvas></div></div>`;
+    out += `<button class="espm-scan" type="button" data-act="scanner">${I("i-search")} Scanner pour présence</button>`;
+    out += `</div>`;
+
+    /* ── Soldiers Academy progress ── */
+    out += `<div class="espm-academy"><div class="espm-academy-h"><h3>Soldiers Academy</h3>${I("i-cap")}</div><p class="espm-academy-lvl">Niveau 2 · ALEPH</p><div class="espm-progress"><div class="espm-progress-bar" style="width:${pctPres || 75}%"></div></div><p class="espm-academy-next">Prochain cours → bientôt disponible</p></div>`;
+
+    /* ── Action buttons grid ── */
+    out += `<div class="espm-actions">`;
+    out += `<button class="espm-act" type="button" data-vue="agenda"><div class="espm-act-ico c1">${I("i-cal")}</div><div class="espm-act-t">Mes Présences</div><div class="espm-act-d">${pctPres != null ? pctPres + " % d’assiduité" : "Voir mon historique"}</div></button>`;
+    out += `<button class="espm-act" type="button" data-act="esp-priere-ouvrir"><div class="espm-act-ico c2">${I("i-flame")}</div><div class="espm-act-t">Intercessions</div><div class="espm-act-d">Mur de prière</div></button>`;
+    out += `<button class="espm-act" type="button" data-vue="arsenal"><div class="espm-act-ico c3">${I("i-shelf")}</div><div class="espm-act-t">Bibliothèque</div><div class="espm-act-d">Ressources</div></button>`;
+    out += `<button class="espm-act" type="button" data-vue="projets"><div class="espm-act-ico c4">${I("i-proj")}</div><div class="espm-act-t">Mes Engagements</div><div class="espm-act-d">Missions</div></button>`;
+    out += `<button class="espm-act" type="button" data-vue="finances"><div class="espm-act-ico c5">${I("i-wallet")}</div><div class="espm-act-t">Dons & Dîmes</div><div class="espm-act-d">${c.verse ? esc(fcfa(c.verse)) + " versés" : "Voir mes contributions"}</div></button>`;
+    out += `</div>`;
+
+    /* ── Mon Prochain RDV ── */
+    if (prochain) {
+      const cible = decompte(prochain);
+      const jours = cible ? Math.max(0, Math.floor((cible - new Date()) / 864e5)) : null;
+      out += `<div class="espm-rdv"><h3>Mon Prochain RDV</h3><p class="espm-rdv-sub">${esc(prochain.lieu || prochain.type || "")}</p><div class="espm-rdv-body">${jours != null ? `<div class="espm-rdv-j">J-${jours}</div>` : ""}<div class="espm-rdv-info"><div class="espm-rdv-event">${esc(prochain.titre || "Rassemblement")}</div><div class="espm-rdv-date">${esc(fmtLong(prochain.date))}${prochain.heure ? " · " + esc(prochain.heure) : ""}</div>${prochain.lieu ? `<div class="espm-rdv-lieu">${I("i-pin")} ${esc(prochain.lieu)}</div>` : ""}</div></div></div>`;
+    }
+
+    /* ── Original detailed sections (preserved) ── */
+    out += `<div class="grid g3 esp-grid" style="margin-top:18px">
+        <section class="card"><p class="eyebrow">Mes présences</p><p class="esp-big">${pctPres == null ? "—" : pctPres + " %"}</p><p class="hint" style="margin-top:0">${pr.taux == null ? "Pas encore de rassemblement pointé ces trois derniers mois." : `d’assiduité sur trois mois · ${pluriel((pr.p || 0) + (pr.r || 0), "présence", "présences")}`}</p>${(pr.liste || []).length ? `<ul class="esp-l">${pr.liste.slice(0, 8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul>` : ""}</section>
+        <section class="card"><p class="eyebrow">Mes cotisations ${esc(String(c.annee || ""))}</p>${cellulesCotis(ec, c.annee || new Date().getFullYear(), true)}${c.exempt ? `<p class="hint">Exempté(e) de cotisation.</p>` : !ec.dus.length ? `<p class="hint">Aucune cotisation due en ${esc(String(c.annee || ""))}.</p>` : `<p class="esp-etat ${retard ? "du" : "ok"}">${retard ? `${retard} mois ${retard > 1 ? "restent" : "reste"} à régler` : "À jour !"}</p>`}</section>
+        <section class="card"><p class="eyebrow">Requête de prière</p><form class="form" id="f-esp-priere" novalidate>${champ("esp-sujet", "Pour quoi souhaitez-vous que l’on prie ?", `<textarea class="inp" id="esp-sujet" name="sujet" rows="4" maxlength="800" placeholder="Votre sujet de prière…"></textarea>`)}<label class="check"><input type="checkbox" name="conf" value="1"> Confidentielle : seule la direction la lira</label><button class="btn btn-primary" type="submit"${ESP.envoi ? " disabled" : ""}>${I("i-flame")}Déposer ma requête</button></form></section>
+      </div>`;
+
+    /* Member card (hidden, for downloads) */
+    out += `<div class="esp-cartes" id="esp-cartes" style="display:none" aria-label="Ma carte de membre"><div class="esp-cv-w"><canvas id="esp-recto" aria-label="Recto de la carte"></canvas></div><div class="esp-cv-w"><canvas id="esp-verso" aria-label="Verso de la carte"></canvas></div></div>`;
+    out += `<div class="btn-row" style="margin-top:12px">${btn("esp-carte", "Recto (image)", { ico: "i-down", sm: true, data: ‘data-face="recto"’ })}${btn("esp-carte", "Verso (image)", { ico: "i-down", sm: true, data: ‘data-face="verso"’ })}${btn("esp-carte", "Carte en PDF", { ico: "i-down", sm: true, data: ‘data-face="pdf"’ })}</div>`;
+
+    out += `<p class="hint esp-pied">Résumé publié par la direction${ESP.t ? `, ouvert ${esc(relLong(isoJour(new Date(ESP.t))))}` : ""}. <button class="link" type="button" data-act="esp-quitter">Fermer mon espace sur cet appareil</button></p>`;
+    return out;
   }
   VUES.espace = function () {
-    let out = secHead("Mon espace soldat", { eyebrow: "Espace personnel", verset: ["Je mettrai mon esprit en vous, et vous vivrez.", "Ézéchiel 37.14"] });
-    if (ESP.charge) return out + chargement("Ouverture de votre espace…");
+    if (ESP.charge) return secHead("Mon espace soldat", { eyebrow: "Espace personnel" }) + chargement("Ouverture de votre espace…");
     if (!ESP.code || !ESP.data) {
-      if (S.etat === "absent") return out + nonConnecte("Votre espace soldat");
-      return out + formCode() + (peutAdmin() ? `<p class="hint" style="margin-top:14px">Direction : les codes se créent dans la fiche de chaque membre ou d’un coup avec ${btn("espaces", "Espaces soldats", { sm: true, ico: "i-card" })}</p>` : "");
+      if (S.etat === "absent") return secHead("Mon espace soldat", { eyebrow: "Espace personnel" }) + nonConnecte("Votre espace soldat");
+      return secHead("Mon espace soldat", { eyebrow: "Espace personnel", verset: ["Je mettrai mon esprit en vous, et vous vivrez.", "Ézéchiel 37.14"] }) + formCode() + (peutAdmin() ? `<p class="hint" style="margin-top:14px">Direction : les codes se créent dans la fiche de chaque membre ou d’un coup avec ${btn("espaces", "Espaces soldats", { sm: true, ico: "i-card" })}</p>` : "");
     }
-    return out + (ESP.err ? `<p class="note warn">${esc(ESP.err)}</p>` : "") + espaceSoldat(ESP.data);
+    return (ESP.err ? `<p class="note warn">${esc(ESP.err)}</p>` : "") + espaceSoldat(ESP.data);
   };
   async function apresRenduEspace() {
     if (S.db && ESP.code && !ESP.rafraichi) { ESP.rafraichi = true; ouvrirEspace(ESP.code, true); }
@@ -8126,6 +8345,10 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     "mat-renum": (t) => boutonArme(t, "Confirmer la renumérotation", () => appliquerRenum()),
   });
   Object.assign(A, {
+    /* Login portal */
+    "login-eye": () => { const p = $("#login-pwd"); if (p) { p.type = p.type === "password" ? "text" : "password"; } },
+    scanner: () => { toast("Scanner de présence à venir dans une prochaine version."); },
+    "esp-priere-ouvrir": () => { const el = $("#f-esp-priere"); if (el) el.scrollIntoView({ behavior: "smooth", block: "center" }); },
     /* Accueil · Ézéchiel 37 */
     "hero-verset": (t) => { changerVerset(Number(t.dataset.i) || 0); clearInterval(HERO.timer); HERO.timer = 0; initHero(); },
     souffle: () => souffler(),
@@ -8163,6 +8386,9 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   });
 
   document.addEventListener("click", (ev) => {
+    /* Login tab switching */
+    const lt = ev.target.closest(".login-tab");
+    if (lt) { lt.parentElement.querySelectorAll(".login-tab").forEach((b) => b.classList.toggle("on", b === lt)); return; }
     const t = ev.target.closest("[data-act],[data-vue]");
     if (!t || t.disabled) return;
     if (t.dataset.vue && !t.dataset.act) { if ($("#sheet").contains(t)) fermer(); allerA(t.dataset.vue); return; }
