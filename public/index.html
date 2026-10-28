@@ -26,7 +26,7 @@ if(location.hostname==="mouvement-sde.org"&&location.pathname==="/mon-espace"&&!
 try{history.replaceState(null,"",location.pathname+location.search+"#espace")}catch(_){/* sans effet */}}
 </script>
 <link rel="stylesheet" href="/app.css">
-<link rel="stylesheet" href="/vitrine/sde-experience.css?v=20261028premium">
+<link rel="stylesheet" href="/vitrine/sde-experience.css?v=20261028maquette">
 <link rel="stylesheet" href="/sde-unified.css?v=20261025e">
 <link rel="stylesheet" href="/sde-private-ui.css?v=20261025e">
 <link rel="stylesheet" href="/vitrine/portail-direct.css?v=20261027c">
@@ -6978,13 +6978,13 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
       </div></section>`;
     /* Carte de membre */
     out += `<div class="esp-anime">`;
-    out += `<section class="card esp-id"><p class="eyebrow">${I("i-card")} Ma carte de membre</p>
+    out += `<section class="card esp-id" id="sde-personal-card" tabindex="-1" aria-label="Ma carte de membre"><p class="eyebrow">${I("i-card")} Ma carte de membre</p>
         <div class="esp-cartes" id="esp-cartes" aria-label="Ma carte de membre"><div class="esp-cv-w"><canvas id="esp-recto" aria-label="Recto de la carte"></canvas></div><div class="esp-cv-w"><canvas id="esp-verso" aria-label="Verso de la carte"></canvas></div></div>
         <div class="btn-row">${btn("esp-carte", "Recto (image)", { ico: "i-down", sm: true, data: 'data-face="recto"' })}${btn("esp-carte", "Verso (image)", { ico: "i-down", sm: true, data: 'data-face="verso"' })}${btn("esp-carte", "Carte en PDF", { ico: "i-down", sm: true, data: 'data-face="pdf"' })}</div></section>`;
     /* ── Groupe : Ma vie spirituelle ── */
     out += `<div class="esp-groupe"><p class="esp-groupe-t">${I("i-flame")} Ma vie spirituelle</p>`;
     out += `<div class="grid g3 esp-grid">`;
-    out += `<section class="card" style="--d:0"><p class="eyebrow">Mes présences</p><p class="esp-big">${tauxPc == null ? "—" : tauxPc + " %"}</p><p class="hint" style="margin-top:0">${pr.taux == null ? "Pas encore de rassemblement pointé ces trois derniers mois." : `d’assiduité sur trois mois · ${pluriel((pr.p || 0) + (pr.r || 0), "présence", "présences")}`}</p>${(pr.liste || []).length ? `<ul class="esp-l">${pr.liste.slice(0, 8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul>${pr.liste.length > 8 ? `<details class="esp-plus"><summary class="link">Voir les ${pr.liste.length} présences</summary><ul class="esp-l">${pr.liste.slice(8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul></details>` : ""}` : ""}</section>`;
+    out += `<section class="card" id="sde-personal-presences" tabindex="-1" aria-label="Mes présences" style="--d:0"><p class="eyebrow">Mes présences</p><p class="esp-big">${tauxPc == null ? "—" : tauxPc + " %"}</p><p class="hint" style="margin-top:0">${pr.taux == null ? "Pas encore de rassemblement pointé ces trois derniers mois." : `d’assiduité sur trois mois · ${pluriel((pr.p || 0) + (pr.r || 0), "présence", "présences")}`}</p>${(pr.liste || []).length ? `<ul class="esp-l">${pr.liste.slice(0, 8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul>${pr.liste.length > 8 ? `<details class="esp-plus"><summary class="link">Voir les ${pr.liste.length} présences</summary><ul class="esp-l">${pr.liste.slice(8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul></details>` : ""}` : ""}</section>`;
     out += `<section class="card" style="--d:1"><p class="eyebrow">Requête de prière</p><form class="form" id="f-esp-priere" novalidate>${champ("esp-sujet", "Pour quoi souhaitez-vous que l’on prie ?", `<textarea class="inp" id="esp-sujet" name="sujet" rows="4" maxlength="800" placeholder="Votre sujet de prière…"></textarea>`)}<label class="check"><input type="checkbox" name="conf" value="1"> Confidentielle : seule la direction la lira</label><button class="btn btn-primary" type="submit"${ESP.envoi ? " disabled" : ""}>${I("i-flame")}Déposer ma requête</button></form><p class="hint" style="margin-top:8px">${peutEcrire() && accesRegistre() ? "Votre requête rejoint la Chambre Haute. Les requêtes confidentielles partent par WhatsApp vers la direction." : (moiH().membreId ? "Votre requête rejoint la Chambre Haute, où les intercesseurs prient pour vous. Confidentielle, elle part par WhatsApp vers la direction." : "Votre requête part par WhatsApp vers la direction, qui la confie aux intercesseurs.")}</p></section>`;
     out += `${badgesSoldat(m, pr, c)}`;
     out += `</div>`;
@@ -8657,8 +8657,8 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
 </script>
 
 <script defer src="/vitrine/portail-espace.js?v=20261026"></script>
-<script defer src="/vitrine/portail-plus.js?v=20261027c"></script>
+<script defer src="/vitrine/portail-plus.js?v=20261028maquette"></script>
 <script defer src="/vitrine/portail-direct.js?v=20261028premium"></script>
-<script defer src="/vitrine/sde-experience.js?v=20261028premium"></script>
+<script defer src="/vitrine/sde-experience.js?v=20261028maquette"></script>
 </body>
 </html>

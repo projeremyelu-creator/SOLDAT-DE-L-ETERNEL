@@ -25,6 +25,16 @@ function EventBanner(){
   <a className="event-bar-action" href={state.phase==='finished'?'/enseignements':'/programmes#infire'}>{state.phase==='finished'?'Poursuivre le parcours':'Je participe'} <span aria-hidden="true">↗</span></a>
  </div>;
 }
+function EventHero(){
+ const [state,setState]=useState(()=>infireState());
+ useEffect(()=>{const id=setInterval(()=>setState(infireState()),1000);return()=>clearInterval(id)},[]);
+ const active=state.phase!=='finished';
+ useEffect(()=>{const hero=document.querySelector('.home-hero');hero?.classList.toggle('event-hero-active',active);return()=>hero?.classList.remove('event-hero-active')},[active]);
+ if(!active)return <><p className="eyebrow">Mouvement Prophético-Apostolique · Abidjan et les nations</p><h1>Une génération de <em>soldats</em> pour les nations.</h1><p className="lead">Réveiller. Restaurer. Former. Équiper. Envoyer. Une communauté engagée pour le réveil spirituel des nations.</p><div className="hero-actions"><a className="action gold" href="/contact#rejoindre">Rejoindre le mouvement →</a><a className="action ghost" href="/enseignements">Explorer les enseignements</a></div></>;
+ return <><p className="eyebrow hero-event-kicker">Conférence internationale · Mouvement S.D.E.</p><h1 className="hero-event-title"><span>IN FIRE <em>’26</em></span><strong>Le Réveil Spirituel<br/>des Nations</strong></h1><p className="hero-event-theme">« La Révélation des fils et filles de Dieu »</p><p className="hero-event-date"><time dateTime="2026-10-31T08:30:00Z">31 octobre 2026 · 08 h 30</time></p>
+ {state.phase==='upcoming'?<div className="hero-countdown" aria-label="Compte à rebours avant IN FIRE" aria-live="off">{[['days','Jours'],['hours','Heures'],['minutes','Minutes'],['seconds','Secondes']].map(([key,label])=><div key={key}><b>{String(state[key]).padStart(2,'0')}</b><span>{label}</span></div>)}</div>:<p className="hero-event-live">La conférence a commencé. Rejoignez-nous.</p>}
+ <p className="hero-mission-line">Réveiller · Restaurer · Former · Équiper · Envoyer</p><div className="hero-actions"><a className="action gold" href="/programmes#infire">S’inscrire / Rejoindre <span aria-hidden="true">→</span></a><a className="action ghost" href="/mouvement">Découvrir SDE</a></div><p className="hero-event-place">Entrée libre · Église MADEG · Cocody Deux-Plateaux Agban, Abidjan</p></>;
+}
 function MotionControl(){
  const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
  const [paused,setPaused]=useState(()=>reduced||read('sde-motion','on')==='paused');
@@ -97,5 +107,5 @@ function App(){
  const publicReader=location.pathname==='/academy'||location.pathname==='/enseignements'||document.body.dataset.sdePage==='academy';
  return <>{header&&createPortal(<MotionControl/>,header)}{portal?<PrivateExperience portal={portal}/>:publicReader&&<FocusControl/>}{document.querySelector('.home-hero')&&<MediaDock/>}</>;
 }
-function start(){const event=document.getElementById('sde-event-root');if(event)createRoot(event).render(<EventBanner/>);const host=document.createElement('div');host.id='sde-experience-root';document.body.append(host);createRoot(host).render(<App/>)}
+function start(){const hero=document.querySelector('.home-hero-content');if(hero)createRoot(hero).render(<EventHero/>);const event=document.getElementById('sde-event-root');if(event)createRoot(event).render(<EventBanner/>);const host=document.createElement('div');host.id='sde-experience-root';document.body.append(host);createRoot(host).render(<App/>)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();

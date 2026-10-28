@@ -25,16 +25,71 @@
   const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//SDE//Portail//FR','BEGIN:VEVENT','UID:'+escape(event.id)+'@mouvement-sde.org','DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''),dt,'SUMMARY:'+escape(event.titre),'LOCATION:'+escape(event.lieu),'BEGIN:VALARM','TRIGGER:-P'+(summary?.preferences?.delai||1)+'D','ACTION:DISPLAY','DESCRIPTION:Rappel SDE','END:VALARM','END:VEVENT','END:VCALENDAR'];
   const blob=new Blob([lines.join('\r\n')+'\r\n'],{type:'text/calendar;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='rencontre-sde.ics';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);feedback('Ouvrez le fichier dans votre calendrier pour enregistrer la rencontre et son rappel.');
  }
- function renderHome(data,totals){
-  heading(stateTitle('synthese'));panel.append(note('Shalom '+(data.nom||portal.compte.nom||'')+'. Retrouvez votre prochaine rencontre et votre parcours personnel.'));
-  if(!data.ficheLiee)panel.append(note('Votre compte est actif. Contactez le secrétariat pour le relier à votre fiche membre et retrouver vos informations personnelles.'));
+ function pictogram(name){
+  const paths={card:'M3 5h18v14H3zM7 9h3v3H7zM14 9h4M14 13h4M7 16h11',calendar:'M5 5h14v16H5zM8 2v6M16 2v6M5 10h14M8 14h2M14 14h2',prayer:'m7 3-3 7 8 11 8-11-3-7M12 4v12M7 10l5 6 5-6',book:'M12 5C8 2 5 3 2 4v16c3-2 6-2 10 0 4-2 7-2 10 0V4c-3-1-6-2-10 1v15',qr:'M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5M8 8h2v2H8zM14 8h2v2h-2zM8 14h2v2H8zM14 14h2v2h-2z'};
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.6');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');svg.setAttribute('aria-hidden','true');
+  const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[name]||paths.card);svg.append(path);return svg;
+ }
+ function personalTab(tab){
+  portal.selectionner('espace');
+  const select=()=>{const id=tab==='carte'?'sde-personal-card':'sde-personal-presences';const target=document.getElementById(id);if(!target)return false;target.focus({preventScroll:true});target.scrollIntoView?.({block:'start',behavior:'auto'});return true};
+  if(select())return;
+  const main=document.getElementById('main');if(!main)return;
+  const observer=new MutationObserver(()=>{if(new URL(location.href).searchParams.get('module')!=='espace'){observer.disconnect();return}if(select())observer.disconnect()});
+  observer.observe(main,{childList:true,subtree:true});setTimeout(()=>observer.disconnect(),2500);
+ }
+ function renderMemberWelcome(data){
+  const welcome=node('section',undefined,'member-welcome');
+  const hello=node('div',undefined,'member-greeting');hello.append(node('p','Bienvenue dans votre espace','dashboard-eyebrow'),node('h2',data.nom||portal.compte.nom||'Mon parcours SDE'),note('Grandir dans la foi. Marcher ensemble. Servir les nations.'));
+  const initials=String(data.nom||portal.compte.nom||'SDE').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();hello.prepend(node('span',initials,'member-avatar'));welcome.append(hello);
+  const card=button('',()=>personalTab('carte'));card.dataset.plusModule='espace';card.className='member-card-preview';card.setAttribute('aria-label','Afficher ma carte de membre et mon QR Code officiel');
+  const brand=node('span',undefined,'member-card-brand'),logo=document.createElement('img');logo.src='/vitrine/logo-96.png';logo.alt='';logo.width=34;logo.height=34;brand.append(logo,node('span','MOUVEMENT S.D.E.'));
+  const identity=node('span',undefined,'member-card-identity');identity.append(node('strong',data.nom||portal.compte.nom||'Mon profil'),node('span',data.matricule||portal.compte.matricule||'Retrouver mon matricule'));
+  const qr=node('span',undefined,'member-card-qr');qr.append(pictogram('qr'),node('span','Afficher mon QR Code'));
+  card.append(brand,identity,qr,node('small','Ma carte de membre · Ouvrir →'));welcome.append(card);panel.append(welcome);
+  const tiles=node('nav',undefined,'member-quick-grid');tiles.setAttribute('aria-label','Les essentiels de mon espace');
+  for(const [label,module,icon,tab]of [['Ma Carte','espace','card','carte'],['Mes Présences','espace','calendar','presences'],['Intercessions','mur','prayer'],['Bibliothèque','arsenal','book']]){
+   const b=tab?button('',()=>personalTab(tab)):route('',module);b.dataset.plusModule=module;b.className='member-quick-tile';b.append(pictogram(icon),node('span',label));tiles.append(b);
+  }
+  panel.append(tiles);
+ }
+ function ratio(done,total,label){
+  const block=node('div',undefined,'dashboard-progress');
+  const valid=Number(total)>0;const caption=valid?Number(done||0)+' / '+Number(total)+' '+label:'Aucune donnée de progression';block.append(note(caption));
+  if(valid){const p=node('progress');p.max=Number(total);p.value=Math.max(0,Math.min(Number(done)||0,p.max));p.setAttribute('aria-label',caption);block.append(p)}
+  return block;
+ }
+ function renderCommand(data,dashboard){
+  const totals=dashboard.total||dashboard;
+  heading('Le mouvement en un regard');panel.append(note('Votre poste de commandement · Données du mouvement, actualisées à l’ouverture.'));
+  const kpis=node('div',undefined,'command-kpis');
+  for(const [key,title,module]of [['membres','Membres','membres'],['evenements','Rencontres','agenda'],['projets','Projets et missions','projets'],['annonces','Annonces','portevoix']]){const c=route('',module);c.className='command-kpi';c.append(node('span',title),node('strong',totals[key]===undefined?'—':String(totals[key])),node('small','Ouvrir →'));kpis.append(c)}
+  panel.append(kpis);
+  const overview=node('div',undefined,'command-overview'),chart=box('Fréquentation');chart.classList.add('command-chart');chart.append(note('Personnes présentes et en retard aux sept derniers événements pointés.'));
+  const points=Array.isArray(dashboard.frequentation)?dashboard.frequentation:[];
+  if(!points.length)chart.append(node('p','Aucun pointage exploitable pour le moment.','dashboard-empty'));
+  else{
+   const bars=node('ul',undefined,'command-bars'),max=Math.max(1,...points.map(x=>Number(x.presents||0)+Number(x.retards||0)));
+   for(const p of points){const n=Number(p.presents||0)+Number(p.retards||0),li=node('li');const value=node('strong',String(n));const track=node('span',undefined,'command-bar-track'),bar=node('span',undefined,'command-bar');bar.style.height=Math.max(0,Math.min(100,n/max*100))+'%';track.append(bar);const date=node('time',String(p.date).slice(8,10)+'/'+String(p.date).slice(5,7));date.dateTime=p.date;li.setAttribute('aria-label',p.date+' · '+p.titre+' : '+n+' personnes présentes, dont '+Number(p.retards||0)+' en retard');li.append(value,track,date);bars.append(li)}
+   chart.append(bars);
+  }
+  chart.append(route('Ouvrir les pointages','agenda'));overview.append(chart);
+  const academy=box('Soldiers Academy');academy.classList.add('command-academy');
+  const a=dashboard.academie||{};academy.append(note(a.inscriptions===undefined?'Les indicateurs de formation apparaîtront avec les premières données.':a.inscriptions+' inscription(s) · '+a.certifies+' parcours certifié(s)'),ratio(a.modulesSuivis,a.modulesAttendus,'modules suivis'),route('Voir les formations','academie'));overview.append(academy);
+  const missions=box('Missions et projets');missions.classList.add('command-missions');const m=dashboard.missions||{};
+  missions.append(note(m.actifs===undefined?'Retrouvez les projets et leurs étapes.':m.actifs+' projet(s) actif(s) · '+m.termines+' terminé(s)'),ratio(m.tachesFaites,m.tachesTotal,'tâches terminées'),route('Suivre les missions','projets'));overview.append(missions);panel.append(overview);
+ }
+ function renderHome(data,dashboard){
+  const direction=location.pathname==='/administration';
+  panel.classList.add('maquette-dashboard');document.body.dataset.sdeDashboard=direction?'direction':'member';
+  if(direction)renderCommand(data,dashboard||{});else renderMemberWelcome(data);
+  if(!data.ficheLiee&&!direction)panel.append(note('Votre compte est actif. Contactez le secrétariat pour le relier à votre fiche membre et retrouver vos informations personnelles.'));
   const grid=node('div',undefined,'sde-plus-grid');
-  const events=box('Prochaines rencontres');events.append(list(data.evenements||[],'Aucune rencontre annoncée pour le moment.',(li,e)=>{li.append(node('strong',e.titre),note([e.date,e.heure,e.lieu].filter(Boolean).join(' · ')));const actions=node('div',undefined,'sde-plus-actions');actions.append(route('Voir l’agenda','agenda'),button('Ajouter au calendrier',()=>calendar(e)));li.append(actions)}));grid.append(events);
-  const formations=box('Ma formation');formations.append(list(data.formations||[],'Aucune formation liée à votre fiche. Découvrez Soldiers Academy.',(li,f)=>{li.append(node('strong',f.titre),note(f.statut||'Parcours en cours'));if(f.total){const p=node('progress');p.max=f.total;p.value=f.faits;p.setAttribute('aria-label',f.faits+' modules suivis sur '+f.total);li.append(p,note(f.faits+' / '+f.total+' modules suivis'))}}));formations.append(route('Ouvrir Soldiers Academy','academie'));grid.append(formations);
+  const events=box('Prochaines rencontres');events.classList.add('dashboard-agenda');events.append(list(data.evenements||[],'Aucune rencontre annoncée pour le moment.',(li,e)=>{li.append(node('strong',e.titre),note([e.date,e.heure,e.lieu].filter(Boolean).join(' · ')));const actions=node('div',undefined,'sde-plus-actions');actions.append(route('Voir l’agenda','agenda'),button('Ajouter au calendrier',()=>calendar(e)));li.append(actions)}));grid.append(events);
+  if(!direction){const formations=box('Soldiers Academy');formations.classList.add('member-academy');formations.append(list(data.formations||[],'Aucune formation liée à votre fiche. Découvrez Soldiers Academy.',(li,f)=>{li.append(node('strong',f.titre),note(f.statut||'Parcours en cours'),ratio(f.faits,f.total,'modules suivis'))}));formations.append(route('Poursuivre ma formation','academie'));grid.prepend(formations)}
+  const annonces=box('La vie du mouvement');annonces.append(list(data.annonces||[],'Aucune annonce publiée.',(li,a)=>li.append(node('strong',a.titre),note(a.texte))));annonces.append(route('Voir les annonces','portevoix'));grid.append(annonces);
   const reminders=box('Mes rappels');reminders.append(list(data.rappels||[],'Aucun rappel selon vos préférences.',(li,r)=>li.append(route(r.titre,r.module),note(r.date))));reminders.append(route('Régler mes rappels','preferences'));grid.append(reminders);
-  const annonces=box('Annonces et témoignages');annonces.append(list(data.annonces||[],'Aucune annonce publiée.',(li,a)=>li.append(node('strong',a.titre),note(a.texte))));annonces.append(route('Voir les annonces','portevoix'));grid.append(annonces);
-  const spirit=box('Grandir et servir');spirit.append(note('Un temps de lecture, de prière et une action de service chaque jour.'),route('Mon parcours de la semaine','parcours'),route('Bibliothèque et enseignements','arsenal'));grid.append(spirit);
-  if(totals){const count=box('Le mouvement en un regard');for(const [k,label]of [['membres','membres'],['evenements','rencontres'],['projets','projets'],['annonces','annonces']])count.append(note(Number(totals[k]||0)+' '+label));count.append(route('Ouvrir le centre de contrôle','gestion'));grid.prepend(count)}
+  if(direction){const tools=box('Accès de la direction');for(const [title,module]of [['Membres','membres'],['Pointages','agenda'],['Pôles','garnisons'],['Décisions','secretariat'],...(portal.compte.niveau>=2?[['Finances','finances']]:[])])tools.append(route(title,module));grid.append(tools)}
   panel.append(grid,status());
  }
  async function renderCourse(data,token){
@@ -91,9 +146,9 @@
   journal.append(list(audit.actions||[],'Aucune action enregistrée pour le moment.',(li,a)=>li.append(node('strong',[a.rubrique,a.operation].join(' · ')),note([a.nom||'Responsable',new Date(a.cree).toLocaleString('fr-CI',{timeZone:'Africa/Abidjan'})].join(' · ')))));grid.append(journal);
  }
  async function open(module){
-  const token=++serial;current=module;panel.hidden=false;panel.replaceChildren(node('p','Chargement de votre espace…','sde-plus-loading'));panel.setAttribute('aria-busy','true');
+  const token=++serial;current=module;panel.classList.remove('maquette-dashboard');delete document.body.dataset.sdeDashboard;panel.hidden=false;panel.replaceChildren(node('p','Chargement de votre espace…','sde-plus-loading'));panel.setAttribute('aria-busy','true');
   try{
-   let data;if(module==='synthese'){data=await api('/api/portail-resume');let totals=null;if(location.pathname==='/administration'&&portal.compte.niveau>=1)totals=(await api('/api/tableau-de-bord')).total;if(serial!==token)return;summary=data;panel.replaceChildren();renderHome(data,totals)}
+   let data;if(module==='synthese'){data=await api('/api/portail-resume');let totals=null;if(location.pathname==='/administration'&&portal.compte.niveau>=1)totals=await api('/api/tableau-de-bord');if(serial!==token)return;summary=data;panel.replaceChildren();renderHome(data,totals)}
    else if(module==='parcours'){data=await api('/api/mon-parcours-spirituel');if(serial!==token)return;panel.replaceChildren();await renderCourse(data,token)}
    else if(module==='academie'){data=await api('/api/portail-resume');if(serial!==token)return;panel.replaceChildren();renderAcademy(data)}
    else if(module==='preferences'){data=await api('/api/mes-preferences');if(serial!==token)return;panel.replaceChildren();renderPreferences(data)}
@@ -115,6 +170,6 @@
  }
  document.addEventListener('sde:ready',ready);
  document.addEventListener('sde:open',event=>{const m=event.detail.module;if(portal&&isCustom(m)&&(m!=='gestion'||portal.compte.niveau>=1)){event.preventDefault();void open(m)}});
- document.addEventListener('sde:navigate',event=>{const m=event.detail.module;setActive(m,event.detail.titre);if(!isCustom(m)&&panel){++serial;current=m;panel.hidden=true}});
+ document.addEventListener('sde:navigate',event=>{const m=event.detail.module;setActive(m,event.detail.titre);if(!isCustom(m)&&panel){++serial;current=m;panel.hidden=true;delete document.body.dataset.sdeDashboard}});
  if(window.SDEPortal)ready({detail:window.SDEPortal});
 })();

@@ -80,7 +80,7 @@ export async function portalApi(req,env,u,services){
   if(s.preferences.formations)for(const f of formations.filter(f=>f.date>=today&&f.date<=until))rappels.push({...f,type:'formations',module:'academie'});
   if(s.preferences.taches)for(const t of taches.filter(t=>t.date&&t.date<=until))rappels.push({...t,type:'taches',module:'projets'});
   if(s.preferences.lecture&&!s.parcours.lectures.includes((new Date().getUTCDay()+6)%7))rappels.push({id:'lecture-du-jour',titre:'Votre lecture biblique du jour',date:today,type:'lecture',module:'parcours'});
-  return reply({ok:true,nom:text(u.nom),ficheLiee:!!u.membreId,evenements,formations,annonces,taches,rappels,preferences:s.preferences,parcours:s.parcours});
+  return reply({ok:true,nom:text(u.nom),matricule:text(u.matricule,40),ficheLiee:!!u.membreId,evenements,formations,annonces,taches,rappels,preferences:s.preferences,parcours:s.parcours});
  }
  if(path==='/api/recuperations'){
   if(u.niveau<2)return fail('Réservé aux administrateurs.',403);
