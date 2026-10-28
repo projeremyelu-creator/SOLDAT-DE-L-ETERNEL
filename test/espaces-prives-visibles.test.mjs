@@ -10,18 +10,18 @@ const dynamique=lire("public/vitrine/portail-unifie.js");
 const direct=lire("public/vitrine/portail-direct.js");
 const style=lire("public/vitrine/portail-direct.css");
 
-test("Accueil SDE : deux accès privés réellement visibles sans ouvrir le menu",()=>{
+test("Accueil SDE : portail unique visible et deux espaces conservés",()=>{
  const d=new JSDOM(accueil).window.document;
  const liens=[...d.querySelectorAll(".site-access-top a")];
- assert.deepEqual(liens.map(a=>a.textContent.trim()),["Espace membre","Espace administrateur"]);
- assert.deepEqual(liens.map(a=>a.getAttribute("href")),["/mon-espace","/administration"]);
+ assert.equal(liens.length,1);assert.match(liens[0].textContent,/Mon Portail S.D.E/);
+ assert.equal(liens[0].getAttribute("href"),"/portail");
  assert.equal(d.querySelectorAll(".private-access-card").length,2);
  assert.equal(d.querySelector(".private-member").getAttribute("href"),"/mon-espace");
  assert.equal(d.querySelector(".private-admin").getAttribute("href"),"/administration");
  assert.ok(d.querySelector(".private-admin").textContent.includes("membres"));
  assert.ok(d.querySelector(".private-admin").textContent.includes("finances"));
  assert.match(dynamique,/site-access-top/);
- assert.match(dynamique,/Espace administrateur/);
+ assert.match(dynamique,/Mon Portail S.D.E/);
 });
 function interfacePrivee(path,niveau){
  const dom=new JSDOM('<!doctype html><html><head></head><body><div class="shell"><nav id="nav"></nav><main id="main">Chargement</main></div><button id="btn-reglages"></button></body></html>',{

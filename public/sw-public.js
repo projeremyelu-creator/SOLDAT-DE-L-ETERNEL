@@ -1,7 +1,7 @@
 /* SDE — service worker PUBLIC uniquement. Scope "/" sur mouvement-sde.org.
    Ne prend jamais en charge le sous-domaine privé app.mouvement-sde.org.
    Seuls les GET de pages publiques explicitement listées sont mis en cache. */
-const CACHE = "sde-public-shell-20261027-notifications";
+const CACHE = "sde-public-shell-20261028-premium";
 const PAGES = new Set([
   "/", "/index.html", "/vitrine/", "/vitrine/index.html",
   "/vitrine/mouvement", "/vitrine/programmes", "/vitrine/ressources",
@@ -9,7 +9,7 @@ const PAGES = new Set([
   "/vitrine/academy", "/vitrine/prieres", "/vitrine/temoignages",
   "/vitrine/soldiers-voice", "/vitrine/missions-humanitaires",
   "/mouvement", "/programmes", "/academy", "/enseignements",
-  "/missions", "/priere", "/contact", "/temoignages", "/soldiers-voice",
+  "/boutique", "/missions", "/priere", "/contact", "/temoignages", "/soldiers-voice",
   "/missions-humanitaires", "/rubriques"
 ]);
 const OFFLINE = "/vitrine/offline-public.html";

@@ -17,9 +17,7 @@
         '<a class="site-brand" href="/" aria-label="Soldats de l’Éternel — accueil">' +
         '<img src="/vitrine/logo-96.png" alt="" width="44" height="44"><span><b>S.D.E.</b><small>Le Réveil Spirituel des Nations</small></span></a>' +
         '<button class="site-burger" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Ouvrir la navigation"><span></span><span></span><span></span></button>' +
-        '<nav class="site-menu" id="site-menu" aria-label="Navigation principale">' +
-        routes.map(([href,label])=>'<a href="'+href+'">'+label+'</a>').join("") +
-        '</nav><div class="site-access-top" aria-label="Accès privés"><a href="/mon-espace">Espace membre</a><a href="/administration">Espace administrateur</a></div></div>';
+        '<nav class="site-menu" id="site-menu" aria-label="Navigation principale"><details class="site-mega"><summary>Découvrir SDE</summary><div class="site-mega-panel"><a href="/mouvement"><strong>Vision et mouvement</strong><small>Notre histoire et notre appel</small></a><a href="/missions"><strong>Missions</strong><small>Servir les nations</small></a></div></details><details class="site-mega"><summary>Grandir</summary><div class="site-mega-panel"><a href="/academy"><strong>Soldiers Academy</strong><small>Formation et discipleship</small></a><a href="/enseignements"><strong>Enseignements</strong><small>Lire, écouter et grandir</small></a><a href="/programmes"><strong>Programmes</strong><small>Rencontres et rassemblements</small></a></div></details><details class="site-mega"><summary>S’engager</summary><div class="site-mega-panel"><a href="/priere"><strong>Prière et intercession</strong><small>Prier et être accompagné</small></a><a href="/boutique"><strong>Tenues SDE</strong><small>Concepts de collection</small></a><a href="/contact#rejoindre"><strong>Nous rejoindre</strong><small>Faire votre premier pas</small></a></div></details></nav><div class="site-access-top" aria-label="Accès sécurisé"><a class="site-portal-cta" href="/portail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 10h12v11H6zM8 10V7a4 4 0 0 1 8 0v3"/></svg> Mon Portail S.D.E <span aria-hidden="true">→</span></a></div></div>';
       old.insertAdjacentElement("beforebegin",header);
       const footer=document.querySelector("footer");
       if(footer && !footer.classList.contains("site-footer")) {
@@ -45,7 +43,15 @@
       }
     });
     menu.addEventListener("click",e=>{
-      if(e.target.closest("a")){menu.dataset.open="false";btn.setAttribute("aria-expanded","false")}
+      if(e.target.closest("a")){menu.dataset.open="false";btn.setAttribute("aria-expanded","false");btn.setAttribute("aria-label","Ouvrir la navigation")}
+    });
+    const groups=[...menu.querySelectorAll("details.site-mega")];
+    for(const group of groups)group.addEventListener("toggle",()=>{
+      if(group.open)for(const other of groups)if(other!==group)other.open=false;
+    });
+    document.addEventListener("click",e=>{if(!e.target.closest(".site-mega"))for(const group of groups)group.open=false;});
+    menu.addEventListener("keydown",e=>{
+      if(e.key==="Escape"){const group=e.target.closest("details");if(group?.open){e.stopPropagation();group.open=false;group.querySelector("summary")?.focus();}}
     });
     const current=location.pathname;
     let logical=current;
@@ -89,6 +95,7 @@
       const today=new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:"Africa/Abidjan"}).format(new Date());
       const events=(Array.isArray(data.evenements)?data.evenements:[]).filter(e=>{
         if(!e||typeof e.date!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(e.date)||e.date<today||typeof e.titre!=="string"||!e.titre.trim())return false;
+        if(e.date==="2026-10-31"&&/^IN\s+FIRE\s+2026$/i.test(e.titre.trim())&&Date.now()>=Date.parse("2026-10-31T18:00:00Z"))return false;
         const d=new Date(e.date+"T12:00:00Z");
         return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===e.date;
       }).sort((a,b)=>(a.date+String(a.heure||"")).localeCompare(b.date+String(b.heure||"")));
@@ -96,7 +103,8 @@
       if(!e){status.textContent="Les prochaines dates seront annoncées dans l'agenda. Découvrez nos programmes ou contactez le secrétariat.";return;}
       const dateLabel=new Intl.DateTimeFormat("fr-CI",{day:"numeric",month:"long",year:"numeric",timeZone:"Africa/Abidjan"}).format(new Date(e.date+"T12:00:00Z"));
       const title=String(e.titre).slice(0,140);
-      const hour=/^([01]\d|2[0-3]):[0-5]\d$/.test(String(e.heure||""))?String(e.heure):"";
+      const infireOfficial=/^IN\s+FIRE\s+2026$/i.test(title.trim())&&e.date==="2026-10-31";
+      const hour=infireOfficial?"08:30":/^([01]\d|2[0-3]):[0-5]\d$/.test(String(e.heure||""))?String(e.heure):"";
       const place=typeof e.lieu==="string"?e.lieu.trim().slice(0,200):"";
       const card=document.getElementById("event-details");
       if(card){

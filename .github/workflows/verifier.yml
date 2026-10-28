@@ -10,4 +10,5 @@ jobs:
         with:
           node-version: '22.23.4'
       - run: npm ci --ignore-scripts
+      - run: npm run build:experience
       - run: npm test

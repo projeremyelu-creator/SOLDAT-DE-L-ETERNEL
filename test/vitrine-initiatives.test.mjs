@@ -35,7 +35,7 @@ test("quatre pages autonomes avec URLs uniques, SEO et formulaire", () => {
 });
 test("navigation commune disponible sur les quatre pages",()=>{
  for(const page of pages){const dom=init(page),d=dom.window.document;
- for(const route of ['/','/mon-espace','/administration','/priere'])assert.ok(d.querySelector('.site-menu a[href="'+route+'"]'));
+ for(const route of ['/','/portail','/priere'])assert.ok(d.querySelector('.site-header a[href="'+route+'"]'));
  const btn=d.querySelector('.site-burger');btn.click();assert.equal(btn.getAttribute('aria-expanded'),'true');dom.window.close();}
 });
 test("formulaires : confirmation du serveur indispensable ; aucune publication de témoignage", async () => {

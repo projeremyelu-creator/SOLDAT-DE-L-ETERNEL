@@ -15,7 +15,7 @@
    input.parentElement.insertAdjacentElement("afterend",toggle);
   }
   const mode=()=>new URL(location.href).searchParams.get("mode")||"connexion";
-  const retour=()=>new URL(location.href).searchParams.get("retour")==="/administration"?"/administration":"/mon-espace";
+  const retour=()=>{const r=new URL(location.href).searchParams.get("retour");return ["/administration","/mon-espace"].includes(r)?r:"/portail";};
   function afficher(nom){
    const selected=tabs.some(x=>x.dataset.mode===nom)?nom:"connexion";
    for(const p of panels)p.hidden=p.id!=="panel-"+selected;

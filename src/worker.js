@@ -1,3 +1,4 @@
+import {prayerWallApi} from "./prayer-wall.js";
 import {apiSdeOs31} from "./os-v31.js";
 import {notifySde,flushNotices,mailStatus,pushConfigured} from "./notifications.js";
 import {generateVapidKeys} from "./web-push.js";
@@ -1326,6 +1327,7 @@ async function traiter(req, env, ctx) {
     if (url.hostname === "mouvement-sde.org") {
       // Routage unifié : pages réelles, un guichet de connexion, deux espaces protégés.
       const pagesPubliques = {
+        "/boutique": "/vitrine/boutique.html",
         "/mouvement": "/vitrine/mouvement.html",
         "/programmes": "/vitrine/programmes.html",
         "/academy": "/vitrine/academy.html",
@@ -1366,11 +1368,16 @@ async function traiter(req, env, ctx) {
         if (p === "/" || p === "/index.html") return assetPortail("/vitrine/portail.html");
         if (p === "/vitrine/" || p === "/vitrine/index.html") return Response.redirect(url.origin + "/", 301);
         if (pagesPubliques[p]) return assetPortail(pagesPubliques[p]);
+        if (p === "/portail") {
+          const u=await utilisateur(req,env);
+          const destination=u.connecte?(u.niveau>=1?"/administration":"/mon-espace"):"/connexion?retour=%2Fportail";
+          return new Response(null,{status:302,headers:{location:url.origin+destination,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
+        }
         if (p === "/connexion") {
           const u = await utilisateur(req, env);
           if (u.connecte) {
             const retour = url.searchParams.get("retour");
-            const dest = retour === "/administration" && u.niveau >= 1 ? "/administration" : "/mon-espace";
+            const dest = retour === "/mon-espace" ? "/mon-espace" : u.niveau >= 1 ? "/administration" : "/mon-espace";
             return Response.redirect(url.origin + dest, 302);
           }
           const r = await assetPortail("/vitrine/connexion-unifiee.html");
@@ -1480,6 +1487,8 @@ async function traiter(req, env, ctx) {
       // Un cookie invalide ou expiré ne permet pas d'échapper au plafond anonyme.
       if (avecSession && !u.connecte && await rateLimitGlobal(env, ipGlobal))
         return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
+      const mur=await prayerWallApi(req,env,u,ctx,{blocked:(key,max)=>bloque(env,key,max),count:key=>compter(env,key)});
+      if(mur)return mur;
       const portail=await portalApi(req,env,u,{
         list:path=>lireRequete(env,{path}),write:(op,path,data)=>ecrireDoc(env,op,path,data),
         notify:(type,details)=>notifySde(env,ctx,type,details),
