@@ -208,6 +208,15 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.35rem); }
 .hero-points button[aria-pressed="true"] { width: 32px; }
 .hero-points button[aria-pressed="true"]::before { background: var(--or); width: 22px; border-radius: 4px; }
 
+/* Hero word reveal */
+html.anim .hero h1 .mot { display: inline-block; opacity: 0; transform: translateY(18px) scale(.96); filter: blur(4px); animation: mot-entree .55s var(--ease) forwards; }
+@keyframes mot-entree { to { opacity: 1; transform: none; filter: blur(0); } }
+html.anim .hero-sous { opacity: 0; animation: fondu-sous .8s var(--ease) forwards; }
+@keyframes fondu-sous { to { opacity: 1; } }
+html.anim .hero-actions { opacity: 0; animation: fondu-sous .8s var(--ease) forwards; }
+html.anim .hero-badge { opacity: 0; animation: badge-entree .6s var(--ease) forwards; }
+@keyframes badge-entree { from { opacity: 0; transform: translateY(-10px) scale(.9); } to { opacity: 1; transform: none; } }
+
 /* Scroll indicator */
 .scroll-ind { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--gris); font-size: .75rem; animation: rebond 2s ease-in-out infinite; }
 .scroll-ind svg { width: 20px; height: 20px; }
@@ -332,6 +341,23 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.35rem); }
 .frise-contenu p { font-size: .9rem; color: var(--texte-2); }
 
 /* ═══════════ PRÉSENCE INTERNATIONALE ═══════════ */
+/* Carte mini-monde interactive */
+.carte-monde { position: relative; max-width: 800px; margin: 0 auto 28px; }
+.carte-monde svg { width: 100%; height: auto; display: block; }
+.carte-monde .pays { fill: var(--surface-2); stroke: var(--bordure); stroke-width: .5; transition: fill .2s var(--ease); }
+.carte-monde .pays-sde { fill: rgba(184,144,31,.18); stroke: var(--or); stroke-width: .8; }
+.carte-monde .pin { cursor: pointer; }
+.carte-monde .pin circle.halo { fill: rgba(226,194,106,.3); animation: halo-pin 2.2s ease-out infinite; }
+@keyframes halo-pin { 0% { r: 6; opacity: .8; } 100% { r: 18; opacity: 0; } }
+.carte-monde .pin circle.pt { fill: var(--or); stroke: var(--fond); stroke-width: 1.5; r: 5; transition: r .2s var(--ease); }
+.carte-monde .pin:hover circle.pt { r: 7; }
+.carte-monde .pin text { font-size: 9px; font-family: var(--f-titre); font-weight: 700; fill: var(--texte); text-anchor: middle; pointer-events: none; }
+.pin-tooltip { position: absolute; background: var(--surface); border: 1px solid var(--or); border-radius: var(--r); padding: 10px 14px; font-size: .85rem; box-shadow: var(--ombre-carte); pointer-events: none; opacity: 0; transition: opacity .2s var(--ease); z-index: 5; white-space: nowrap; }
+.pin-tooltip.visible { opacity: 1; }
+.pin-tooltip b { color: var(--or); }
+.pin-tooltip small { display: block; color: var(--texte-2); font-size: .78rem; }
+@media (prefers-reduced-motion: reduce) { .carte-monde .pin circle.halo { animation: none; opacity: .3; } }
+
 .points { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
 .point { display: flex; gap: 14px; align-items: center; padding: 16px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--bordure); transition: all .2s var(--ease); }
 .point:hover { border-color: var(--or); }
@@ -598,6 +624,17 @@ h3 { font-size: clamp(1.1rem, 2.5vw, 1.35rem); }
   .res-toast { bottom: calc(80px + env(safe-area-inset-bottom)); }
 }
 
+/* ═══════════ BANDEAU ANNONCE ═══════════ */
+.bandeau-annonce { position: sticky; top: 0; z-index: 1100; background: var(--grad-or); color: #0f1e3d; font-family: var(--f-titre); font-size: .82rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; text-align: center; padding: 6px 40px 6px 16px; display: flex; align-items: center; justify-content: center; gap: 8px; overflow: hidden; }
+.bandeau-annonce a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.bandeau-annonce .ba-fermer { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px; color: inherit; opacity: .6; transition: opacity .2s; }
+.bandeau-annonce .ba-fermer:hover { opacity: 1; }
+.bandeau-annonce .ba-fermer svg { width: 16px; height: 16px; }
+.bandeau-annonce .ba-pulse { width: 6px; height: 6px; background: #641D2D; border-radius: 50%; animation: pulse 1.5s ease-in-out infinite; flex-shrink: 0; }
+.bandeau-annonce[hidden] { display: none; }
+.entete.ba-active { top: 33px; }
+@media (prefers-reduced-motion: reduce) { .bandeau-annonce .ba-pulse { animation: none; } }
+
 /* ═══════════ ANIMATIONS ═══════════ */
 /* Scroll reveal */
 html.anim .revele { opacity: 0; transform: translateY(20px); transition: opacity .6s var(--ease), transform .6s var(--ease); transition-delay: var(--d, 0s); }
@@ -624,6 +661,10 @@ html.anim .revele.vu { opacity: 1; transform: none; }
 /* ── v11 : Section fade-in ── */
 html.anim .section { animation: section-in .5s ease-out both; }
 @keyframes section-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── Compteur KPI animation pulse ── */
+@keyframes compte-pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {

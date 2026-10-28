@@ -109,13 +109,13 @@
         <p class="surtitre">Notre histoire</p>
         <h2 id="titre-histoire">Comment tout a commencé</h2>
       </div>
-      <ol class="frise frise-enrichie" style="list-style:none;padding:0">
-        <li class="revele" style="--d:0s"><div class="frise-num">1</div><div class="frise-contenu"><span class="frise-date">Origines</span><h3>La prière</h3><p>Tout commence par quelques personnes réunies dans un foyer pour chercher la face de Dieu. Une flamme s'allume.</p></div></li>
-        <li class="revele" style="--d:.1s"><div class="frise-num">2</div><div class="frise-contenu"><span class="frise-date">Fondation</span><h3>La communauté</h3><p>Une famille spirituelle se forme autour de la Parole. Les premiers soldats se reconnaissent et s'engagent.</p></div></li>
-        <li class="revele" style="--d:.15s"><div class="frise-num">3</div><div class="frise-contenu"><span class="frise-date">Organisation</span><h3>La structure</h3><p>Des responsables sont établis, des pôles se créent, des règles de vie commune guident le mouvement naissant.</p></div></li>
-        <li class="revele" style="--d:.2s"><div class="frise-num">4</div><div class="frise-contenu"><span class="frise-date">Programmes</span><h3>La formation</h3><p>Soldiers Academy et Love School voient le jour pour former des disciples et des leaders enracinés.</p></div></li>
-        <li class="revele" style="--d:.25s"><div class="frise-num">5</div><div class="frise-contenu"><span class="frise-date">Terrain</span><h3>Le service</h3><p>Missions humanitaires, actions solidaires et accompagnement des familles : la foi devient action concrète.</p></div></li>
-        <li class="revele" style="--d:.3s"><div class="frise-num">6</div><div class="frise-contenu"><span class="frise-date">International</span><h3>L'expansion</h3><p>Des points SDE s'ouvrent en Côte d'Ivoire, en Tunisie, au Burkina Faso, en Italie, au Canada et aux États-Unis.</p></div></li>
+      <ol class="frise" style="list-style:none;padding:0">
+        <li class="revele" style="--d:0s"><div class="frise-num">1</div><div class="frise-contenu"><h3>La prière</h3><p>Tout commence par quelques personnes réunies dans un foyer pour chercher la face de Dieu. Une flamme s'allume.</p></div></li>
+        <li class="revele" style="--d:.1s"><div class="frise-num">2</div><div class="frise-contenu"><h3>La communauté</h3><p>Une famille spirituelle se forme autour de la Parole. Les premiers soldats se reconnaissent et s'engagent.</p></div></li>
+        <li class="revele" style="--d:.15s"><div class="frise-num">3</div><div class="frise-contenu"><h3>La structure</h3><p>Des responsables sont établis, des pôles se créent, des règles de vie commune guident le mouvement naissant.</p></div></li>
+        <li class="revele" style="--d:.2s"><div class="frise-num">4</div><div class="frise-contenu"><h3>La formation</h3><p>Soldiers Academy et Love School voient le jour pour former des disciples et des leaders enracinés.</p></div></li>
+        <li class="revele" style="--d:.25s"><div class="frise-num">5</div><div class="frise-contenu"><h3>Le service</h3><p>Missions humanitaires, actions solidaires et accompagnement des familles : la foi devient action concrète.</p></div></li>
+        <li class="revele" style="--d:.3s"><div class="frise-num">6</div><div class="frise-contenu"><h3>L'expansion</h3><p>Des points SDE s'ouvrent en Côte d'Ivoire, en Tunisie, au Burkina Faso, en Italie, au Canada et aux États-Unis.</p></div></li>
       </ol>
     </div>
   </section>
@@ -126,6 +126,32 @@
         <h2 id="titre-presence">Six points SDE dans le monde</h2>
         <p class="chapo">Le siège est à Abidjan. Chaque point SDE rassemble les soldats de son pays pour la prière, la formation et la mission.</p>
       </div>
+      <div class="carte-monde revele" aria-label="Carte de la présence internationale SDE">
+        <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Carte du monde montrant les 6 points SDE">
+          <rect width="800" height="400" fill="var(--fond)" rx="12"/>
+          <g class="continents" opacity=".6">
+            <path class="pays" d="M80,60 L160,45 L200,70 L210,100 L230,120 L210,150 L195,170 L170,175 L140,160 L110,170 L90,150 L70,120 L60,90Z"/>
+            <path class="pays" d="M140,160 L170,175 L175,195 L165,210 L155,215 L145,200 L130,180Z"/>
+            <path class="pays" d="M155,215 L175,210 L200,220 L215,250 L220,290 L210,330 L190,360 L170,370 L155,350 L145,310 L140,270 L145,240Z"/>
+            <path class="pays" d="M370,55 L410,48 L430,55 L445,70 L440,90 L425,100 L410,95 L395,100 L380,90 L370,75Z"/>
+            <path class="pays" d="M370,130 L410,120 L440,130 L460,160 L465,200 L460,240 L445,270 L430,290 L410,300 L390,295 L375,275 L365,240 L360,200 L365,160Z"/>
+            <path class="pays" d="M450,45 L520,35 L600,40 L660,55 L700,80 L710,120 L690,150 L650,160 L600,155 L550,140 L510,120 L480,100 L460,80 L450,60Z"/>
+            <path class="pays" d="M620,240 L680,230 L720,250 L730,280 L710,310 L670,315 L640,300 L620,270Z"/>
+          </g>
+          <g class="zones-sde"><ellipse class="pays-sde" cx="405" cy="165" rx="30" ry="25" opacity=".5"/></g>
+          <g class="pin" data-pays="Côte d'Ivoire" data-info="Siège · Abidjan, Cocody Deux-Plateaux" data-tag="PT-01 · SIÈGE" data-tel="+225 07 78 68 95 73"><circle class="halo" cx="383" cy="172" r="6"/><circle class="pt" cx="383" cy="172"/><text x="383" y="162">CI</text></g>
+          <g class="pin" data-pays="Tunisie" data-info="Point SDE · Tunis" data-tag="PT-02 · Maghreb" data-tel="infosoldat@gmail.com"><circle class="halo" cx="400" cy="120" r="6"/><circle class="pt" cx="400" cy="120"/><text x="400" y="110">TN</text></g>
+          <g class="pin" data-pays="Burkina Faso" data-info="Point SDE · Ouagadougou" data-tag="PT-03 · Sahel" data-tel="infosoldat@gmail.com"><circle class="halo" cx="376" cy="155" r="6"/><circle class="pt" cx="376" cy="155"/><text x="376" y="145">BF</text></g>
+          <g class="pin" data-pays="Italie" data-info="Point SDE" data-tag="PT-04 · Europe sud" data-tel="infosoldat@gmail.com"><circle class="halo" cx="415" cy="85" r="6"/><circle class="pt" cx="415" cy="85"/><text x="415" y="75">IT</text></g>
+          <g class="pin" data-pays="Canada" data-info="Point SDE" data-tag="PT-05 · Amérique nord" data-tel="infosoldat@gmail.com"><circle class="halo" cx="155" cy="75" r="6"/><circle class="pt" cx="155" cy="75"/><text x="155" y="65">CA</text></g>
+          <g class="pin" data-pays="États-Unis" data-info="Point SDE" data-tag="PT-06 · Amérique nord" data-tel="infosoldat@gmail.com"><circle class="halo" cx="150" cy="115" r="6"/><circle class="pt" cx="150" cy="115"/><text x="150" y="105">US</text></g>
+          <g stroke="var(--or)" stroke-width=".6" stroke-dasharray="4 3" opacity=".35" fill="none">
+            <line x1="383" y1="172" x2="400" y2="120"/><line x1="383" y1="172" x2="376" y2="155"/><line x1="383" y1="172" x2="415" y2="85"/><line x1="383" y1="172" x2="155" y2="75"/><line x1="383" y1="172" x2="150" y2="115"/>
+          </g>
+        </svg>
+        <div class="pin-tooltip" id="pin-tooltip"></div>
+      </div>
+
       <div class="points">
         <div class="point siege"><span class="iso">CI</span><span><b>Côte d'Ivoire</b><small>Siège · Abidjan, Cocody Deux-Plateaux</small><span class="pt-contact">Contact : +225 07 78 68 95 73</span><span class="dog-tag" style="margin-top:8px"><b>PT-01</b> · SIÈGE</span></span></div>
         <div class="point"><span class="iso">TN</span><span><b>Tunisie</b><small>Point SDE · Tunis</small><span class="pt-contact">Contact : infosoldat@gmail.com</span><span class="dog-tag" style="margin-top:8px"><b>PT-02</b> · Maghreb</span></span></div>
