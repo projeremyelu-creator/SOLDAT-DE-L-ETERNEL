@@ -86,12 +86,36 @@
       const response=await fetch("/api/public",{credentials:"omit",cache:"no-store"});
       if(!response.ok)return;
       const data=await response.json();
-      const e=Array.isArray(data.evenements)?data.evenements[0]:null;
-      if(!e||!e.date||!e.titre)return;
-      const date=new Date(e.date+"T12:00:00Z");
-      if(Number.isNaN(date.getTime()))return;
-      status.textContent=String(e.titre).slice(0,140)+" · "+new Intl.DateTimeFormat("fr-CI",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}).format(date)+(e.heure?" à "+String(e.heure):"")+(e.lieu?" · "+String(e.lieu):"");
-    }catch(_) { /* Ne bloque jamais la vitrine si l'agenda est indisponible. */ }
+      const today=new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:"Africa/Abidjan"}).format(new Date());
+      const events=(Array.isArray(data.evenements)?data.evenements:[]).filter(e=>{
+        if(!e||typeof e.date!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(e.date)||e.date<today||typeof e.titre!=="string"||!e.titre.trim())return false;
+        const d=new Date(e.date+"T12:00:00Z");
+        return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===e.date;
+      }).sort((a,b)=>(a.date+String(a.heure||"")).localeCompare(b.date+String(b.heure||"")));
+      const e=events[0];
+      if(!e){status.textContent="Les prochaines dates seront annoncées dans l'agenda. Découvrez nos programmes ou contactez le secrétariat.";return;}
+      const dateLabel=new Intl.DateTimeFormat("fr-CI",{day:"numeric",month:"long",year:"numeric",timeZone:"Africa/Abidjan"}).format(new Date(e.date+"T12:00:00Z"));
+      const title=String(e.titre).slice(0,140);
+      const hour=/^([01]\d|2[0-3]):[0-5]\d$/.test(String(e.heure||""))?String(e.heure):"";
+      const place=typeof e.lieu==="string"?e.lieu.trim().slice(0,200):"";
+      const card=document.getElementById("event-details");
+      if(card){
+        document.getElementById("event-title").textContent=title;
+        const date=document.getElementById("event-date");date.textContent=dateLabel;date.dateTime=e.date;
+        const time=document.getElementById("event-time");time.textContent=hour;time.hidden=!hour;
+        document.getElementById("event-time-row").hidden=!hour;
+        const location=document.getElementById("event-place");location.textContent=place;location.hidden=!place;
+        document.getElementById("event-place-row").hidden=!place;
+        card.hidden=false;
+        const action=document.getElementById("event-action");
+        const infire=/^IN\s+FIRE\s+2026$/i.test(title.trim())&&e.date==="2026-10-31";
+        action.href=infire?"/programmes#infire":"/programmes#agenda";
+        action.textContent=infire?"Voir les détails et confirmer ma venue →":"Voir les informations pratiques →";
+        status.textContent="Retrouvez les informations pratiques et les modalités de participation dans nos programmes.";
+      }else{
+        status.textContent=title+" · "+dateLabel+(hour?" à "+hour:"")+(place?" · "+place:"");
+      }
+    }catch(_) { /* L'accès à l'agenda reste disponible en cas de panne réseau. */ }
   }
   function theme() {
     /* Restaurer le choix enregistré ou respecter la préférence système */
