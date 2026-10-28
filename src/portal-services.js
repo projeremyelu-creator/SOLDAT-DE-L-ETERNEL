@@ -1,3 +1,5 @@
+import {rsvpBackup,publishedEventTime} from "./event-rsvp.js";
+import {qrBackup} from "./member-qr.js";
 import {prayerWallBackup} from "./prayer-wall.js";
 /* Compléments du portail : aucune identité de compte ne vient du corps client. */
 const reply=(data,status=200)=>Response.json(data,{status,headers:{'cache-control':'private, no-store'}});
@@ -28,7 +30,7 @@ export async function portalAudit(env,u,rubrique,operation){
 }
 export async function portalBackup(env){
  await ensure(env);
- const result={mur:await prayerWallBackup(env)};
+ const result={mur:await prayerWallBackup(env),pointagesQr:await qrBackup(env),inscriptionsEvenements:await rsvpBackup(env)};
  for(const [key,table]of [['etats','portail_etat'],['recuperations','portail_recuperations'],['audit','portail_audit']])result[key]=(await env.DB.prepare('SELECT * FROM '+table).all()).results||[];
  return result;
 }
@@ -71,7 +73,7 @@ export async function portalApi(req,env,u,services){
   if(req.method!=='GET')return fail('Méthode refusée.',405);
   const s=await state(env,u),today=day(),until=new Date(Date.now()+s.preferences.delai*86400000).toISOString().slice(0,10);
   const [ev,forms,ads,projects]=await Promise.all(['evenements','formations','annonces','projets'].map(p=>list(p)));
-  const evenements=ev.filter(x=>x.data.date>=today&&(u.niveau>=1||x.data.prive!==true)).map(({id,data:d})=>({id,titre:text(d.titre),date:text(d.date,10),heure:text(d.heure,5),lieu:text(d.lieu),type:text(d.type)})).sort((a,b)=>(a.date+a.heure).localeCompare(b.date+b.heure)).slice(0,8);
+  const evenements=ev.filter(x=>x.data.date>=today&&(u.niveau>=1||x.data.prive!==true)).map(({id,data:d})=>({id,titre:text(d.titre),date:text(d.date,10),heure:publishedEventTime(d),lieu:text(d.lieu),type:text(d.type)})).sort((a,b)=>(a.date+a.heure).localeCompare(b.date+b.heure)).slice(0,8);
   const formations=forms.filter(f=>u.membreId&&f.data.participants?.[u.membreId]&&!['Retiré','Abandon'].includes(f.data.participants[u.membreId].statut)).map(({id,data:d})=>{const p=d.participants[u.membreId],modules=Array.isArray(d.modules)?d.modules:[];const prochaine=d.dateDebut>=today?d.dateDebut:(d.dateDebut&&(!d.dateFin||d.dateFin>=today)&&p.statut!=='Certifié'?today:'');return {id,titre:text(d.titre),date:text(prochaine,10),statut:text(p.statut),total:modules.length,faits:modules.filter(m=>p.suivis?.[m.id]).length,modules:modules.map(m=>({id:text(m.id),titre:text(m.titre),date:text(m.date,10),suivi:!!p.suivis?.[m.id]}))}}).slice(0,12);
   const annonces=ads.filter(a=>a.data.publie!==false&&(!a.data.expireLe||a.data.expireLe>=today)).sort((a,b)=>(b.data.creeLe||0)-(a.data.creeLe||0)).slice(0,5).map(({id,data:d})=>({id,titre:text(d.titre||'Annonce'),texte:text(d.contenu||d.texte,700),type:text(d.type)}));
   const taches=(projects||[]).flatMap(({id,data:d})=>Object.entries(d.taches||{}).map(([key,t])=>({id:key,...t})).filter(t=>u.membreId&&t.responsableId===u.membreId&&t.statut!=='Fait').map(t=>({id:text(t.id),projet:id,titre:text(t.titre),date:text(t.echeance,10)}))).slice(0,30);

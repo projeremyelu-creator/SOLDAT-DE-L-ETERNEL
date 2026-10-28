@@ -4,6 +4,7 @@ const fail=(message,status=400)=>json({ok:false,message},status);
 async function ensure(env){
  for(const sql of [
   'CREATE TABLE IF NOT EXISTS sde_mur_prieres (id TEXT PRIMARY KEY,auteur TEXT NOT NULL,nom TEXT NOT NULL,sujet TEXT NOT NULL,anonyme INTEGER NOT NULL,statut TEXT NOT NULL,cree INTEGER NOT NULL)',
+  'CREATE TABLE IF NOT EXISTS sde_mur_flags (priere TEXT PRIMARY KEY,urgent INTEGER NOT NULL DEFAULT 0)',
   'CREATE TABLE IF NOT EXISTS sde_mur_reactions (priere TEXT NOT NULL,compte TEXT NOT NULL,cree INTEGER NOT NULL,PRIMARY KEY(priere,compte))',
   'CREATE TABLE IF NOT EXISTS sde_mur_notifications (priere TEXT PRIMARY KEY,auteur TEXT NOT NULL,total INTEGER NOT NULL,maj INTEGER NOT NULL,lu INTEGER NOT NULL DEFAULT 0)'
  ])await env.DB.prepare(sql).run();
@@ -21,20 +22,22 @@ export async function prayerWallApi(req,env,u,ctx,services){
  await ensure(env);
  if(path==='/api/mur-priere'){
   if(req.method==='GET'){
-   const {results}=await env.DB.prepare("SELECT p.*,(SELECT COUNT(*) FROM sde_mur_reactions r WHERE r.priere=p.id) AS total,EXISTS(SELECT 1 FROM sde_mur_reactions r WHERE r.priere=p.id AND r.compte=?) AS jePrie FROM sde_mur_prieres p WHERE p.statut='publie' OR (p.auteur=? AND p.statut='en_attente') OR (?=1 AND p.statut='en_attente') ORDER BY p.cree DESC,p.id LIMIT 80").bind(u.id,u.id,u.niveau>=1?1:0).all();
+   const {results}=await env.DB.prepare("SELECT p.*,COALESCE(f.urgent,0) AS urgent,(SELECT COUNT(*) FROM sde_mur_reactions r WHERE r.priere=p.id) AS total,EXISTS(SELECT 1 FROM sde_mur_reactions r WHERE r.priere=p.id AND r.compte=?) AS jePrie FROM sde_mur_prieres p LEFT JOIN sde_mur_flags f ON f.priere=p.id WHERE p.statut='publie' OR (p.auteur=? AND p.statut='en_attente') OR (?=1 AND p.statut='en_attente') ORDER BY COALESCE(f.urgent,0) DESC,p.cree DESC,p.id LIMIT 80").bind(u.id,u.id,u.niveau>=1?1:0).all();
    const notices=await env.DB.prepare('SELECT priere,total,maj,lu FROM sde_mur_notifications WHERE auteur=? ORDER BY maj DESC LIMIT 20').bind(u.id).all();
-   return json({prieres:(results||[]).map(p=>({id:p.id,sujet:p.sujet,auteur:p.anonyme?'Anonyme':p.nom,anonyme:!!p.anonyme,statut:p.statut,cree:p.cree,total:Number(p.total),jePrie:!!p.jePrie,mien:p.auteur===u.id})),notifications:notices.results||[],moderateur:u.niveau>=1});
+   return json({prieres:(results||[]).map(p=>({id:p.id,sujet:p.sujet,urgent:!!p.urgent,auteur:p.anonyme?'Anonyme':p.nom,anonyme:!!p.anonyme,statut:p.statut,cree:p.cree,total:Number(p.total),jePrie:!!p.jePrie,mien:p.auteur===u.id})),notifications:notices.results||[],moderateur:u.niveau>=1});
   }
   if(req.method!=='POST')return fail('Méthode refusée.',405);
   const b=await req.json();
   if(b?.consentement!==true)return fail('Confirmez votre accord pour partager ce sujet avec les membres après validation.');
   if(typeof b.sujet!=='string'||b.sujet.trim().length<3||b.sujet.trim().length>600)return fail('Écrivez un sujet de 3 à 600 caractères.');
+  if(b.urgent!==undefined&&typeof b.urgent!=='boolean')return fail('Choix d’urgence invalide.');
   if(b.anonyme!==undefined&&typeof b.anonyme!=='boolean')return fail('Choix d’anonymat invalide.');
   const key='mur-priere:'+u.id;
   if(await services.blocked(key,5))return fail('Réessayez un peu plus tard.',429);
   await services.count(key);
   const id=crypto.randomUUID();
   await env.DB.prepare('INSERT INTO sde_mur_prieres(id,auteur,nom,sujet,anonyme,statut,cree) VALUES(?,?,?,?,?,?,?)').bind(id,u.id,String(u.nom||'Membre SDE').slice(0,100),b.sujet.trim(),b.anonyme===false?0:1,'en_attente',Date.now()).run();
+  await env.DB.prepare('INSERT INTO sde_mur_flags(priere,urgent) VALUES(?,?)').bind(id,b.urgent===true?1:0).run();
   return json({ok:true,id,statut:'en_attente'});
  }
  if(path==='/api/mur-priere/notifications/lues'&&req.method==='POST'){
@@ -74,6 +77,6 @@ export async function prayerWallApi(req,env,u,ctx,services){
 
 export async function prayerWallBackup(env){
  await ensure(env);const result={};
- for(const table of ["sde_mur_prieres","sde_mur_reactions","sde_mur_notifications"])result[table]=(await env.DB.prepare("SELECT * FROM "+table).all()).results||[];
+ for(const table of ["sde_mur_prieres","sde_mur_flags","sde_mur_reactions","sde_mur_notifications"])result[table]=(await env.DB.prepare("SELECT * FROM "+table).all()).results||[];
  return result;
 }

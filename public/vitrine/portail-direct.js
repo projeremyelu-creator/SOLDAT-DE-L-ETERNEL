@@ -10,14 +10,14 @@
   if(!mode)return;
 
   const catalogue={
-    mur:"Mur de prière",accueil:"Tableau de bord",espace:"Mon profil et ma carte",priere:"Mes prières",membres:"Membres et fiches",
+    rendezvous:"Événements & notifications",carteqr:"Ma carte QR",scanner:"Pointages & QR",pilotage:"Dashboard",annuaire:"Annuaire",bibliotheque:"Bibliothèque & lecteur","finance-direction":"Finances & missions","academy-direction":"Gestion Academy",mur:"Mur de prière",accueil:"Tableau de bord",espace:"Mon profil et ma carte",priere:"Mes prières",membres:"Membres et fiches",
     agenda:"Agenda et présences",garnisons:"Garnisons et pôles",academie:"Soldiers Academy",
     portevoix:"Communication et annonces",chambre:"Prière et intercession",
     projets:"Projets et missions",secretariat:"Secrétariat et décisions",finances:"Finances et cotisations",
     arsenal:"Bibliothèque et enseignements",mediatheque:"Médiathèque",assistant:"Assistant Éliézer",
     engagements:"Mes engagements",contributions:"Dons & Dîmes",synthese:"Mon accueil",parcours:"Lecture et prière",preferences:"Mes rappels",gestion:"Centre de contrôle"
   };
-  const personnel=new Set(["mur","priere","espace","agenda","academie","portevoix","arsenal","mediatheque","synthese","engagements","contributions","parcours","preferences"]);
+  const personnel=new Set(["rendezvous","carteqr","bibliotheque","mur","priere","espace","agenda","academie","portevoix","arsenal","mediatheque","synthese","engagements","contributions","parcours","preferences"]);
   const url=new URL(location.href);
   const demandé=url.searchParams.get("module")||"";
   const souhait=Object.prototype.hasOwnProperty.call(catalogue,demandé)?demandé:
@@ -39,6 +39,8 @@
     if(mode==="membre"&&!personnel.has(nom))return false;
     if(nom==="priere")return mode==="membre";
     if(nom==="gestion")return mode==="direction"&&compte?.niveau>=1;
+    if(["scanner","pilotage","annuaire","academy-direction"].includes(nom)&&compte?.niveau<1)return false;
+    if(nom==="finance-direction"&&compte?.niveau<2)return false;
     if(nom==="finances"&&compte?.niveau<2)return false;
     return true;
   }
@@ -162,6 +164,7 @@
       }catch(err){histoire.replaceChildren();histoire.append(element("li","",err.message));}
     }
     function selectionner(nom){
+      if(mode==="direction"&&nom==="synthese"&&window.SDEOpsReady)nom="pilotage";
       if(!compte||!allowed(nom))return;
       const ouverture=new CustomEvent("sde:open",{cancelable:true,detail:{module:nom}});
       document.dispatchEvent(ouverture);
@@ -199,15 +202,15 @@
       if(!compte)return;
       const buttons=[...original.querySelectorAll('button[data-vue]')];
       const ordre=mode==="membre"?
-        ["priere","academie","arsenal","mur","synthese","engagements","contributions","parcours","espace","agenda","preferences","portevoix","mediatheque"]:
-        ["synthese","engagements","contributions","accueil","chambre","mur","academie","arsenal","parcours","agenda","portevoix",
-         "membres","garnisons","projets","secretariat","mediatheque",
-         "finances","gestion","preferences","assistant","espace"];
+        ["priere","academie","arsenal","bibliotheque","mur","synthese","engagements","contributions","parcours","carteqr","espace","agenda","preferences","portevoix","mediatheque"]:
+        ["synthese","engagements","contributions","accueil","chambre","mur","academie","arsenal","bibliotheque","parcours","agenda","portevoix",
+         "membres","garnisons","scanner","projets","secretariat","mediatheque",
+         "finances","gestion","preferences","assistant","carteqr","espace"];
       const disponibles=buttons.filter(b=>allowed(b.dataset.vue)&&!b.disabled);
       if(mode==="membre"&&!disponibles.some(b=>b.dataset.vue==="academie")){
         const b=element("button","");b.dataset.vue="academie";disponibles.push(b);
       }
-      for(const nom of ["synthese","engagements","contributions","parcours","preferences","gestion","mur"].filter(allowed)){
+      for(const nom of ["synthese","carteqr","bibliotheque","scanner","engagements","contributions","parcours","preferences","gestion","mur"].filter(allowed)){
         const b=element("button","");b.dataset.vue=nom;disponibles.push(b);
       }
       if(mode==="membre"){
@@ -220,13 +223,13 @@
         const search=tabs.querySelector(".sde-plus-search");
         signature=next;tabs.replaceChildren();if(search)tabs.append(search);
         const groupes=mode==="membre"?[
-          ["Vie spirituelle",new Set(["priere","mur","academie","arsenal"])],
+          ["Vie spirituelle",new Set(["priere","mur","academie","arsenal","bibliotheque"])],
           ["Mon parcours",new Set(["synthese","engagements","contributions","parcours","espace","agenda","preferences"])],
           ["Communauté et ressources",new Set(["portevoix","mediatheque"])]
         ]:[
-          ["Vie spirituelle et communication",new Set(["mur","synthese","engagements","contributions","accueil","chambre","academie","arsenal","parcours","agenda","portevoix"])],
-          ["Pilotage et organisation",new Set(["membres","garnisons","projets","secretariat","mediatheque"])],
-          ["Finances et administration",new Set(["finances","gestion","preferences","assistant","espace"])]
+          ["Vie spirituelle et communication",new Set(["mur","synthese","engagements","contributions","accueil","chambre","academie","arsenal","bibliotheque","parcours","agenda","portevoix"])],
+          ["Pilotage et organisation",new Set(["membres","garnisons","scanner","projets","secretariat","mediatheque"])],
+          ["Finances et administration",new Set(["finances","gestion","preferences","assistant","carteqr","espace"])]
         ];
         let precedent="";
         for(const b of disponibles){
@@ -256,7 +259,7 @@
         const cible=disponibles.find(b=>b.dataset.vue===souhait);
         if(cible){
           initial=true;
-          if(["mur","priere","synthese","engagements","contributions","parcours","preferences","gestion"].includes(souhait))selectionner(souhait);
+          if(["carteqr","bibliotheque","scanner","pilotage","annuaire","finance-direction","academy-direction","mur","priere","synthese","engagements","contributions","parcours","preferences","gestion"].includes(souhait))selectionner(souhait);
           else if(!cible.classList.contains("on")&&cible.getAttribute("aria-current")!=="page")cible.click();
         }
       }
