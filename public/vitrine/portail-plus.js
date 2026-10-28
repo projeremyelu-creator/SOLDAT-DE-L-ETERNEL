@@ -1,9 +1,9 @@
 /* Accueils, parcours et rappels : même session et même routeur SDE. */
 (()=>{
  'use strict';
- const custom=new Set(['synthese','parcours','preferences','gestion']);
+ const custom=new Set(['synthese','parcours','preferences','gestion','engagements','contributions']);
  const readings=[['Jean 15.1-8','Demeurer en Christ','Confier sa journée à Jésus.'],['Jean 15.9-17','Marcher dans son amour','Prier pour sa famille et ses relations.'],['Psaume 23','Se laisser conduire','Présenter ses besoins et recevoir la paix.'],['Matthieu 6.5-15','Apprendre à prier','Intercéder pour les membres du mouvement.'],['Éphésiens 6.10-18','Persévérer dans la foi','Prier pour les responsables et les nations.'],['Romains 12.1-8','Servir avec ses dons','Discerner une action concrète de service.'],['Actes 2.42-47','Grandir en communauté','Remercier Dieu et prier pour les rencontres.']];
- let portal=null,panel=null,current='',serial=0,summary=null,menuMedia=null;
+ let portal=null,panel=null,current='',serial=0,summary=null,menuMedia=null,countdownTimer=null;
  const isCustom=m=>custom.has(m)||(m==='academie'&&location.pathname==='/mon-espace');
  const node=(tag,txt,cls)=>{const e=document.createElement(tag);if(txt!==undefined)e.textContent=txt;if(cls)e.className=cls;return e};
  const button=(txt,action,cls='sde-plus-button')=>{const b=node('button',txt,cls);b.type='button';b.addEventListener('click',action);return b};
@@ -15,7 +15,7 @@
  function list(items,empty,render){const ul=node('ul',undefined,'sde-plus-list');if(!items.length)ul.append(node('li',empty));else for(const item of items){const li=node('li');render(li,item);ul.append(li)}return ul}
  function status(){const f=node('p','','sde-plus-feedback');f.id='sde-plus-feedback';f.setAttribute('role','status');f.setAttribute('aria-live','polite');return f}
  function heading(text){const h=node('h2',text);h.tabIndex=-1;panel.append(h);return h}
- function stateTitle(module){const labels={synthese:portal?.compte.niveau>=1&&location.pathname==='/administration'?'Accueil de la direction':'Mon accueil',parcours:'Lecture et prière',preferences:'Mes rappels',gestion:'Centre de contrôle'};return labels[module]||module}
+ function stateTitle(module){const labels={synthese:portal?.compte.niveau>=1&&location.pathname==='/administration'?'Accueil de la direction':'Mon accueil',engagements:'Mes engagements',contributions:'Dons & Dîmes',parcours:'Lecture et prière',preferences:'Mes rappels',gestion:'Centre de contrôle'};return labels[module]||module}
  function setActive(module,title){const titleNode=document.getElementById('sde-current-module');if(titleNode)titleNode.textContent=title||stateTitle(module);if(menuMedia?.matches){document.getElementById('sde-direct-tabs').hidden=true;document.getElementById('sde-menu-toggle')?.setAttribute('aria-expanded','false')}for(const b of document.querySelectorAll('#sde-mobile-nav [data-plus-module]')){if(b.dataset.plusModule===module)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')}}
  function calendar(event){
   if(!/^\d{4}-\d{2}-\d{2}$/.test(event.date))return feedback('La date de cette rencontre est indisponible.',true);
@@ -26,7 +26,7 @@
   const blob=new Blob([lines.join('\r\n')+'\r\n'],{type:'text/calendar;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='rencontre-sde.ics';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);feedback('Ouvrez le fichier dans votre calendrier pour enregistrer la rencontre et son rappel.');
  }
  function pictogram(name){
-  const paths={card:'M3 5h18v14H3zM7 9h3v3H7zM14 9h4M14 13h4M7 16h11',calendar:'M5 5h14v16H5zM8 2v6M16 2v6M5 10h14M8 14h2M14 14h2',prayer:'m7 3-3 7 8 11 8-11-3-7M12 4v12M7 10l5 6 5-6',book:'M12 5C8 2 5 3 2 4v16c3-2 6-2 10 0 4-2 7-2 10 0V4c-3-1-6-2-10 1v15',qr:'M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5M8 8h2v2H8zM14 8h2v2h-2zM8 14h2v2H8zM14 14h2v2h-2z'};
+  const paths={card:'M3 5h18v14H3zM7 9h3v3H7zM14 9h4M14 13h4M7 16h11',calendar:'M5 5h14v16H5zM8 2v6M16 2v6M5 10h14M8 14h2M14 14h2',prayer:'m7 3-3 7 8 11 8-11-3-7M12 4v12M7 10l5 6 5-6',book:'M12 5C8 2 5 3 2 4v16c3-2 6-2 10 0 4-2 7-2 10 0V4c-3-1-6-2-10 1v15',service:'M3 7h18v14H3zM8 7V3h8v4M3 12h18M10 12v3h4v-3',gift:'M3 8h18v4H3zM5 12v9h14v-9M12 8v13M12 8C2 8 6 0 12 8c6-8 10 0 0 0',qr:'M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5M8 8h2v2H8zM14 8h2v2h-2zM8 14h2v2H8zM14 14h2v2h-2z'};
   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.6');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');svg.setAttribute('aria-hidden','true');
   const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[name]||paths.card);svg.append(path);return svg;
  }
@@ -48,7 +48,7 @@
   const qr=node('span',undefined,'member-card-qr');qr.append(pictogram('qr'),node('span','Afficher mon QR Code'));
   card.append(brand,identity,qr,node('small','Ma carte de membre · Ouvrir →'));welcome.append(card);panel.append(welcome);
   const tiles=node('nav',undefined,'member-quick-grid');tiles.setAttribute('aria-label','Les essentiels de mon espace');
-  for(const [label,module,icon,tab]of [['Ma Carte','espace','card','carte'],['Mes Présences','espace','calendar','presences'],['Intercessions','mur','prayer'],['Bibliothèque','arsenal','book']]){
+  for(const [label,module,icon,tab]of [['Ma Carte','espace','card','carte'],['Mes Présences','espace','calendar','presences'],['Intercessions','mur','prayer'],['Bibliothèque','arsenal','book'],['Mes Engagements','engagements','service'],['Dons & Dîmes','contributions','gift']]){
    const b=tab?button('',()=>personalTab(tab)):route('',module);b.dataset.plusModule=module;b.className='member-quick-tile';b.append(pictogram(icon),node('span',label));tiles.append(b);
   }
   panel.append(tiles);
@@ -60,17 +60,24 @@
   return block;
  }
  function renderCommand(data,dashboard){
-  const totals=dashboard.total||dashboard;
-  heading('Le mouvement en un regard');panel.append(note('Votre poste de commandement · Données du mouvement, actualisées à l’ouverture.'));
-  const kpis=node('div',undefined,'command-kpis');
-  for(const [key,title,module]of [['membres','Membres','membres'],['evenements','Rencontres','agenda'],['projets','Projets et missions','projets'],['annonces','Annonces','portevoix']]){const c=route('',module);c.className='command-kpi';c.append(node('span',title),node('strong',totals[key]===undefined?'—':String(totals[key])),node('small','Ouvrir →'));kpis.append(c)}
+  heading('Le mouvement en un regard');
+  const refresh=button('Actualiser les indicateurs',()=>open('synthese'));refresh.dataset.dashboardRefresh='';
+  const updated=dashboard.actualiseLe?new Date(dashboard.actualiseLe).toLocaleString('fr-CI',{timeZone:'Africa/Abidjan'}):'à l’ouverture';
+  panel.append(note('Votre poste de commandement · Actualisé '+updated),refresh);
+  const kpis=node('div',undefined,'command-kpis'),k=dashboard.indicateurs||{};
+  const entries=[['Membres actifs',k.membresActifs,'membres','Fiches non archivées'],['Taux de présence',k.presence?.taux===null?null:k.presence?.taux===undefined?undefined:k.presence.taux+' %','agenda','7 derniers événements pointés · actifs concernés, retards inclus, excuses exclues'],['Missions en cours',dashboard.missions?.actifs,'projets','Projets en préparation, en cours ou suspendus'],['Intercessions en cours',k.intercessions,'chambre','Requêtes non confidentielles']];
+  for(const [title,value,module,detail]of entries){const c=route('',module);c.className='command-kpi';c.append(node('span',title),node('strong',value===undefined||value===null?'—':String(value)),node('small',detail));kpis.append(c)}
   panel.append(kpis);
   const overview=node('div',undefined,'command-overview'),chart=box('Fréquentation');chart.classList.add('command-chart');chart.append(note('Personnes présentes et en retard aux sept derniers événements pointés.'));
   const points=Array.isArray(dashboard.frequentation)?dashboard.frequentation:[];
   if(!points.length)chart.append(node('p','Aucun pointage exploitable pour le moment.','dashboard-empty'));
   else{
    const bars=node('ul',undefined,'command-bars'),max=Math.max(1,...points.map(x=>Number(x.presents||0)+Number(x.retards||0)));
-   for(const p of points){const n=Number(p.presents||0)+Number(p.retards||0),li=node('li');const value=node('strong',String(n));const track=node('span',undefined,'command-bar-track'),bar=node('span',undefined,'command-bar');bar.style.height=Math.max(0,Math.min(100,n/max*100))+'%';track.append(bar);const date=node('time',String(p.date).slice(8,10)+'/'+String(p.date).slice(5,7));date.dateTime=p.date;li.setAttribute('aria-label',p.date+' · '+p.titre+' : '+n+' personnes présentes, dont '+Number(p.retards||0)+' en retard');li.append(value,track,date);bars.append(li)}
+   const detail=node('p','Sélectionnez une barre pour consulter le détail du pointage.','command-chart-detail');detail.setAttribute('role','status');
+   for(const p of points){const n=Number(p.presents||0)+Number(p.retards||0),li=node('li');const value=node('strong',String(n));const track=node('span',undefined,'command-bar-track'),bar=node('span',undefined,'command-bar');bar.style.height=Math.max(0,Math.min(100,n/max*100))+'%';track.append(bar);const date=node('time',String(p.date).slice(8,10)+'/'+String(p.date).slice(5,7));date.dateTime=p.date;
+    const label=p.date+' · '+p.titre+' : '+n+' présences, dont '+Number(p.retards||0)+' retards · '+Number(p.absents||0)+' absences marquées · '+Number(p.excuses||0)+' excuses';
+    const choose=button('',()=>{for(const b of bars.querySelectorAll('button'))b.setAttribute('aria-pressed','false');choose.setAttribute('aria-pressed','true');detail.textContent=label},'command-bar-button');choose.setAttribute('aria-label',label);choose.setAttribute('aria-pressed','false');choose.append(value,track,date);li.append(choose);bars.append(li)}
+   chart.append(detail);
    chart.append(bars);
   }
   chart.append(route('Ouvrir les pointages','agenda'));overview.append(chart);
@@ -78,15 +85,45 @@
   const a=dashboard.academie||{};academy.append(note(a.inscriptions===undefined?'Les indicateurs de formation apparaîtront avec les premières données.':a.inscriptions+' inscription(s) · '+a.certifies+' parcours certifié(s)'),ratio(a.modulesSuivis,a.modulesAttendus,'modules suivis'),route('Voir les formations','academie'));overview.append(academy);
   const missions=box('Missions et projets');missions.classList.add('command-missions');const m=dashboard.missions||{};
   missions.append(note(m.actifs===undefined?'Retrouvez les projets et leurs étapes.':m.actifs+' projet(s) actif(s) · '+m.termines+' terminé(s)'),ratio(m.tachesFaites,m.tachesTotal,'tâches terminées'),route('Suivre les missions','projets'));overview.append(missions);panel.append(overview);
+  const follow=node('div',undefined,'sde-plus-grid');
+  const urgent=box('Demandes urgentes');urgent.append(note(Number(dashboard.urgencesTotal||0)+' requête(s) non confidentielle(s) en attente d’intercession.'));
+  urgent.append(list(dashboard.urgences||[],'Aucune requête urgente en cours.',(li,r)=>li.append(node('strong','Requête urgente'),note(r.date||'Date non renseignée'))),route('Ouvrir les demandes','chambre'));follow.append(urgent);
+  const activity=box('Dernières mises à jour');activity.append(note('Métadonnées des dossiers enregistrés. Actualisez pour obtenir les dernières activités.'));
+  const names={membres:'Fiche membre',evenements:'Rencontre et pointage',projets:'Projet ou mission',formations:'Formation',annonces:'Annonce'};
+  activity.append(list(dashboard.activites||[],'Aucune mise à jour enregistrée.',(li,r)=>li.append(node('strong',names[r.rubrique]||'Dossier'),note(new Date(r.cree).toLocaleString('fr-CI',{timeZone:'Africa/Abidjan'})))));follow.append(activity);panel.append(follow);
+
+ }
+ function renderNextEvent(events){
+  const now=Date.now(),today=new Date(now).toISOString().slice(0,10);
+  const upcoming=(events||[]).filter(e=>/^\d{4}-\d{2}-\d{2}$/.test(e.date)).map(e=>({...e,start:/^([01]\d|2[0-3]):[0-5]\d$/.test(e.heure||'')?Date.parse(e.date+'T'+e.heure+':00Z'):null})).filter(e=>e.start===null?e.date>=today:e.start>now).sort((a,b)=>(a.date+(a.heure||'')).localeCompare(b.date+(b.heure||'')));
+  const e=upcoming[0];if(!e)return;
+  const next=box('Mon prochain rendez-vous');next.classList.add('member-next-event');next.append(node('strong',e.titre),note([e.date,e.heure,e.lieu].filter(Boolean).join(' · ')));
+  if(e.start!==null){const timer=node('p','','member-countdown');timer.setAttribute('aria-label','Temps restant avant la rencontre');next.append(timer);
+   const update=()=>{const seconds=Math.max(0,Math.floor((e.start-Date.now())/1000));timer.textContent=seconds?Math.floor(seconds/86400)+' j · '+String(Math.floor(seconds/3600)%24).padStart(2,'0')+' h · '+String(Math.floor(seconds/60)%60).padStart(2,'0')+' min · '+String(seconds%60).padStart(2,'0')+' s':'La rencontre a commencé. Consultez l’agenda.';if(!seconds){clearInterval(countdownTimer);countdownTimer=null}};
+   countdownTimer=setInterval(update,1000);update();
+  }
+  next.append(route('Voir mon agenda','agenda'),button('Ajouter au calendrier',()=>calendar(e)));panel.append(next);
+ }
+ function renderEngagements(data){
+  heading('Mes engagements');const e=data.engagements||{};
+  panel.append(note('Vos informations de service et vos tâches attribuées par les responsables.'));
+  const profile=box('Mon service');profile.append(list([e.pole&&'Pôle : '+e.pole,e.fonction&&'Fonction : '+e.fonction,e.garnison&&'Garnison : '+e.garnison].filter(Boolean),'Aucun service renseigné sur votre fiche.',(li,t)=>li.append(node('strong',t))));panel.append(profile);
+  const tasks=box('Mes tâches à suivre');tasks.append(list(data.taches||[],'Aucune tâche en attente attribuée à votre fiche.',(li,t)=>li.append(node('strong',t.titre),note(t.date?'Échéance : '+t.date:'Sans échéance renseignée'))));panel.append(tasks,note('Contactez votre responsable pour rejoindre un pôle ou mettre à jour un engagement.'),route('Retour à mon accueil','synthese'));
+ }
+ function renderContributions(data){
+  heading('Dons & Dîmes');panel.append(note('Retrouvez les cotisations enregistrées sur votre fiche. Pour un don ou une dîme, contactez le trésorier afin de connaître le canal officiel.'));
+  const money=(n,c)=>{try{return new Intl.NumberFormat('fr-CI',{style:'currency',currency:c}).format(Number(n)||0)}catch{return String(n)+' '+c}};
+  const totals=box('Mes versements enregistrés');const amounts=Object.entries(data.totaux||{XOF:data.totalPaye||0});for(const [currency,value]of amounts)totals.append(node('strong',money(value,currency)));if(!amounts.length)totals.append(note('Aucun versement enregistré.'));panel.append(totals);
+  const ledger=box('Historique de mes cotisations');ledger.append(list(data.cotisations||[],'Aucune cotisation enregistrée sur votre fiche.',(li,c)=>li.append(node('strong',c.mois+' · '+money(c.montant,c.devise||'XOF')),note([c.statut==='paye'?'Enregistrée comme payée':'En attente',c.date].filter(Boolean).join(' · ')))));panel.append(ledger,note('Un versement manquant ou incorrect ? Demandez une vérification à la trésorerie.'),route('Retour à mon accueil','synthese'));
  }
  function renderHome(data,dashboard){
   const direction=location.pathname==='/administration';
   panel.classList.add('maquette-dashboard');document.body.dataset.sdeDashboard=direction?'direction':'member';
-  if(direction)renderCommand(data,dashboard||{});else renderMemberWelcome(data);
+  if(direction)renderCommand(data,dashboard||{});else {renderMemberWelcome(data);renderNextEvent(data.evenements)}
   if(!data.ficheLiee&&!direction)panel.append(note('Votre compte est actif. Contactez le secrétariat pour le relier à votre fiche membre et retrouver vos informations personnelles.'));
   const grid=node('div',undefined,'sde-plus-grid');
   const events=box('Prochaines rencontres');events.classList.add('dashboard-agenda');events.append(list(data.evenements||[],'Aucune rencontre annoncée pour le moment.',(li,e)=>{li.append(node('strong',e.titre),note([e.date,e.heure,e.lieu].filter(Boolean).join(' · ')));const actions=node('div',undefined,'sde-plus-actions');actions.append(route('Voir l’agenda','agenda'),button('Ajouter au calendrier',()=>calendar(e)));li.append(actions)}));grid.append(events);
-  if(!direction){const formations=box('Soldiers Academy');formations.classList.add('member-academy');formations.append(list(data.formations||[],'Aucune formation liée à votre fiche. Découvrez Soldiers Academy.',(li,f)=>{li.append(node('strong',f.titre),note(f.statut||'Parcours en cours'),ratio(f.faits,f.total,'modules suivis'))}));formations.append(route('Poursuivre ma formation','academie'));grid.prepend(formations)}
+  if(!direction){const formations=box('Soldiers Academy');formations.classList.add('member-academy');formations.append(list(data.formations||[],'Aucune formation liée à votre fiche. Découvrez Soldiers Academy.',(li,f)=>{li.append(node('strong',f.titre),note(f.statut||'Parcours en cours'),ratio(f.faits,f.total,'modules suivis'));const next=(f.modules||[]).filter(m=>!m.suivi).sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'))[0];if(next)li.append(note('Prochain module : '+next.titre+(next.date?' · '+next.date:'')))}));formations.append(route('Poursuivre ma formation','academie'));grid.prepend(formations)}
   const annonces=box('La vie du mouvement');annonces.append(list(data.annonces||[],'Aucune annonce publiée.',(li,a)=>li.append(node('strong',a.titre),note(a.texte))));annonces.append(route('Voir les annonces','portevoix'));grid.append(annonces);
   const reminders=box('Mes rappels');reminders.append(list(data.rappels||[],'Aucun rappel selon vos préférences.',(li,r)=>li.append(route(r.titre,r.module),note(r.date))));reminders.append(route('Régler mes rappels','preferences'));grid.append(reminders);
   if(direction){const tools=box('Accès de la direction');for(const [title,module]of [['Membres','membres'],['Pointages','agenda'],['Pôles','garnisons'],['Décisions','secretariat'],...(portal.compte.niveau>=2?[['Finances','finances']]:[])])tools.append(route(title,module));grid.append(tools)}
@@ -146,9 +183,11 @@
   journal.append(list(audit.actions||[],'Aucune action enregistrée pour le moment.',(li,a)=>li.append(node('strong',[a.rubrique,a.operation].join(' · ')),note([a.nom||'Responsable',new Date(a.cree).toLocaleString('fr-CI',{timeZone:'Africa/Abidjan'})].join(' · ')))));grid.append(journal);
  }
  async function open(module){
-  const token=++serial;current=module;panel.classList.remove('maquette-dashboard');delete document.body.dataset.sdeDashboard;panel.hidden=false;panel.replaceChildren(node('p','Chargement de votre espace…','sde-plus-loading'));panel.setAttribute('aria-busy','true');
+  clearInterval(countdownTimer);countdownTimer=null;const token=++serial;current=module;panel.classList.remove('maquette-dashboard');delete document.body.dataset.sdeDashboard;panel.hidden=false;panel.replaceChildren(node('p','Chargement de votre espace…','sde-plus-loading'));panel.setAttribute('aria-busy','true');
   try{
    let data;if(module==='synthese'){data=await api('/api/portail-resume');let totals=null;if(location.pathname==='/administration'&&portal.compte.niveau>=1)totals=await api('/api/tableau-de-bord');if(serial!==token)return;summary=data;panel.replaceChildren();renderHome(data,totals)}
+   else if(module==='engagements'){data=await api('/api/portail-resume');if(serial!==token)return;panel.replaceChildren();renderEngagements(data)}
+   else if(module==='contributions'){if(!portal.compte.membreId){panel.replaceChildren();heading('Dons & Dîmes');panel.append(note('Contactez le secrétariat pour relier votre compte à votre fiche membre.'),route('Retour à mon accueil','synthese'))}else{data=await api('/api/mes-cotisations');if(serial!==token)return;panel.replaceChildren();renderContributions(data)}}
    else if(module==='parcours'){data=await api('/api/mon-parcours-spirituel');if(serial!==token)return;panel.replaceChildren();await renderCourse(data,token)}
    else if(module==='academie'){data=await api('/api/portail-resume');if(serial!==token)return;panel.replaceChildren();renderAcademy(data)}
    else if(module==='preferences'){data=await api('/api/mes-preferences');if(serial!==token)return;panel.replaceChildren();renderPreferences(data)}
@@ -170,6 +209,6 @@
  }
  document.addEventListener('sde:ready',ready);
  document.addEventListener('sde:open',event=>{const m=event.detail.module;if(portal&&isCustom(m)&&(m!=='gestion'||portal.compte.niveau>=1)){event.preventDefault();void open(m)}});
- document.addEventListener('sde:navigate',event=>{const m=event.detail.module;setActive(m,event.detail.titre);if(!isCustom(m)&&panel){++serial;current=m;panel.hidden=true;delete document.body.dataset.sdeDashboard}});
+ document.addEventListener('sde:navigate',event=>{const m=event.detail.module;setActive(m,event.detail.titre);if(!isCustom(m)&&panel){clearInterval(countdownTimer);countdownTimer=null;++serial;current=m;panel.hidden=true;delete document.body.dataset.sdeDashboard}});
  if(window.SDEPortal)ready({detail:window.SDEPortal});
 })();

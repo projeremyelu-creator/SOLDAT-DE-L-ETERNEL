@@ -70,17 +70,24 @@ export async function portalApi(req,env,u,services){
  if(path==='/api/portail-resume'){
   if(req.method!=='GET')return fail('Méthode refusée.',405);
   const s=await state(env,u),today=day(),until=new Date(Date.now()+s.preferences.delai*86400000).toISOString().slice(0,10);
-  const [ev,forms,ads,projects]=await Promise.all(['evenements','formations','annonces',...(u.niveau>=1?['projets']:[])].map(p=>list(p)));
+  const [ev,forms,ads,projects]=await Promise.all(['evenements','formations','annonces','projets'].map(p=>list(p)));
   const evenements=ev.filter(x=>x.data.date>=today&&(u.niveau>=1||x.data.prive!==true)).map(({id,data:d})=>({id,titre:text(d.titre),date:text(d.date,10),heure:text(d.heure,5),lieu:text(d.lieu),type:text(d.type)})).sort((a,b)=>(a.date+a.heure).localeCompare(b.date+b.heure)).slice(0,8);
   const formations=forms.filter(f=>u.membreId&&f.data.participants?.[u.membreId]&&!['Retiré','Abandon'].includes(f.data.participants[u.membreId].statut)).map(({id,data:d})=>{const p=d.participants[u.membreId],modules=Array.isArray(d.modules)?d.modules:[];const prochaine=d.dateDebut>=today?d.dateDebut:(d.dateDebut&&(!d.dateFin||d.dateFin>=today)&&p.statut!=='Certifié'?today:'');return {id,titre:text(d.titre),date:text(prochaine,10),statut:text(p.statut),total:modules.length,faits:modules.filter(m=>p.suivis?.[m.id]).length,modules:modules.map(m=>({id:text(m.id),titre:text(m.titre),date:text(m.date,10),suivi:!!p.suivis?.[m.id]}))}}).slice(0,12);
   const annonces=ads.filter(a=>a.data.publie!==false&&(!a.data.expireLe||a.data.expireLe>=today)).sort((a,b)=>(b.data.creeLe||0)-(a.data.creeLe||0)).slice(0,5).map(({id,data:d})=>({id,titre:text(d.titre||'Annonce'),texte:text(d.contenu||d.texte,700),type:text(d.type)}));
   const taches=(projects||[]).flatMap(({id,data:d})=>Object.entries(d.taches||{}).map(([key,t])=>({id:key,...t})).filter(t=>u.membreId&&t.responsableId===u.membreId&&t.statut!=='Fait').map(t=>({id:text(t.id),projet:id,titre:text(t.titre),date:text(t.echeance,10)}))).slice(0,30);
+  let engagements={pole:'',fonction:'',garnison:''};
+  if(u.membreId){
+   const fiche=await env.DB.prepare('SELECT data FROM docs WHERE path=?').bind('membres/'+u.membreId).first();
+   if(fiche){const m=JSON.parse(fiche.data);engagements.pole=text(m.pole);engagements.fonction=text(m.fonction);
+    if(m.garnisonId){const g=await env.DB.prepare('SELECT data FROM docs WHERE path=?').bind('garnisons/'+m.garnisonId).first();if(g)engagements.garnison=text(JSON.parse(g.data).nom)}
+   }
+  }
   const rappels=[];
   if(s.preferences.rencontres)for(const e of evenements.filter(e=>e.date<=until))rappels.push({...e,type:'rencontres',module:'agenda'});
   if(s.preferences.formations)for(const f of formations.filter(f=>f.date>=today&&f.date<=until))rappels.push({...f,type:'formations',module:'academie'});
-  if(s.preferences.taches)for(const t of taches.filter(t=>t.date&&t.date<=until))rappels.push({...t,type:'taches',module:'projets'});
+  if(s.preferences.taches)for(const t of taches.filter(t=>t.date&&t.date<=until))rappels.push({...t,type:'taches',module:'engagements'});
   if(s.preferences.lecture&&!s.parcours.lectures.includes((new Date().getUTCDay()+6)%7))rappels.push({id:'lecture-du-jour',titre:'Votre lecture biblique du jour',date:today,type:'lecture',module:'parcours'});
-  return reply({ok:true,nom:text(u.nom),matricule:text(u.matricule,40),ficheLiee:!!u.membreId,evenements,formations,annonces,taches,rappels,preferences:s.preferences,parcours:s.parcours});
+  return reply({ok:true,nom:text(u.nom),matricule:text(u.matricule,40),ficheLiee:!!u.membreId,evenements,formations,annonces,taches,engagements,rappels,preferences:s.preferences,parcours:s.parcours});
  }
  if(path==='/api/recuperations'){
   if(u.niveau<2)return fail('Réservé aux administrateurs.',403);

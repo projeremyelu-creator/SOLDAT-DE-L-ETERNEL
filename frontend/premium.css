@@ -195,3 +195,19 @@ html[data-theme=light] .command-kpi:not(:first-child){background:#fff;color:#334
 .sde-direct #sde-direct-tabs{margin:0;align-self:start}
 #sde-personal-card,#sde-personal-presences{scroll-margin-top:90px}
 #sde-personal-card:focus-visible,#sde-personal-presences:focus-visible{outline:3px solid #c8a451;outline-offset:4px}
+/* Hub personnel et suivi opérationnel. */
+.member-quick-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.member-next-event{margin:0 0 24px;padding:24px!important;background:radial-gradient(ellipse at top right,#ad844c22,transparent 70%),#19263c!important;border-color:#aa874a99!important}
+.member-next-event>strong{display:block;font-size:1.2rem;color:#f5dfac}
+.member-countdown{font:700 clamp(1.2rem,3vw,1.8rem)/1.4 "Saira Condensed",system-ui,sans-serif;color:#f2d38d;letter-spacing:.03em;font-variant-numeric:tabular-nums;margin:14px 0}
+.member-next-event button{margin:6px 8px 0 0}
+.command-bar-button{display:flex;align-items:center;flex-direction:column;gap:8px;width:100%;height:100%;padding:0;background:transparent;border:0;cursor:pointer;color:inherit;border-radius:6px}
+.command-bar-button .command-bar-track{min-height:0}
+.command-bar-button:hover .command-bar,.command-bar-button[aria-pressed=true] .command-bar{background:linear-gradient(0deg,#ba8055,#fff0ba)}
+.command-bar-button:focus-visible{outline:2px solid #f1d590;outline-offset:3px}
+.command-chart-detail{font-size:.8rem;line-height:1.5;color:#b8c7d9;min-height:3em}
+.command-kpi small{line-height:1.5}
+html[data-theme=light] .member-next-event{background:#fff9e9!important;color:#28394f}
+html[data-theme=light] .member-next-event>strong,html[data-theme=light] .member-countdown{color:#795b24}
+html[data-theme=light] .command-chart-detail{color:#40516a}
+@media(max-width:760px){.member-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.member-next-event{padding:20px!important}.command-chart-detail{min-height:4.5em}}

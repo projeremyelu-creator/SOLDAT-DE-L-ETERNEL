@@ -1,4 +1,5 @@
-import {dashboardMetrics} from "./dashboard-metrics.js";
+import {memberContributions} from "./member-contributions.js";
+import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {apiSdeOs31} from "./os-v31.js";
 import {notifySde,flushNotices,mailStatus,pushConfigured} from "./notifications.js";
@@ -501,17 +502,11 @@ async function apiMonProfil(req, env, u) {
 }
 
 /* ───────── cotisations du membre ───────── */
-async function apiMesCotisations(env, u) {
+async function apiMesCotisations(req, env, u) {
   if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 404);
-  /* Les cotisations sont stockées dans la collection 'cotisations' avec le champ membreId */
+  if(req.method!=="GET")return erreur("methode","GET uniquement.",405);
   const tous = await lireRequete(env, { path: "cotisations" });
-  const miennes = tous
-    .filter(c => c.data && c.data.membreId === u.membreId)
-    .map(c => ({ id: c.id, mois: c.data.mois || "", montant: c.data.montant || 0, devise: c.data.devise || "XOF", statut: c.data.statut || "en_attente", date: c.data.date || "", note: (c.data.note || "").slice(0, 200) }))
-    .sort((a, b) => (b.mois || "").localeCompare(a.mois || ""));
-  /* Total cotisations payées */
-  const totalPaye = miennes.filter(c => c.statut === "paye").reduce((s, c) => s + (Number(c.montant) || 0), 0);
-  return json({ cotisations: miennes.slice(0, 120), totalPaye, devise: "XOF" });
+  return json(memberContributions(tous,u.membreId));
 }
 
 /* ───────── actualités du mouvement ───────── */
@@ -662,8 +657,14 @@ async function apiTableauDeBord(req,env,u) {
   for(const x of r.results||[]){
     if(Object.prototype.hasOwnProperty.call(total,x.parent))total[x.parent]=Number(x.n)||0;
   }
-  const [evenements,formations,projets]=await Promise.all(["evenements","formations","projets"].map(path=>lireRequete(env,{path})));
-  return json({total,...dashboardMetrics(evenements,formations,projets)});
+  const [evenements,formations,projets,membres,prieres,garnisons]=await Promise.all(["evenements","formations","projets","membres","prieres","garnisons"].map(path=>lireRequete(env,{path})));
+  const metrics=dashboardMetrics(evenements,formations,projets);
+  const presence=dashboardAttendance(evenements,membres,garnisons);
+  const enPriere=prieres.filter(p=>(p.data.statut||"En prière")==="En prière");
+  const urgences=enPriere.filter(p=>p.data.urgent===true).map(p=>({date:String(p.data.date||"").slice(0,10)})).sort((a,b)=>b.date.localeCompare(a.date));
+  // Métadonnées de mises à jour uniquement, jamais le contenu des dossiers.
+  const recents=await env.DB.prepare("SELECT parent,maj FROM docs WHERE parent IN ('membres','evenements','projets','formations','annonces') ORDER BY maj DESC LIMIT 8").all();
+  return json({total,...metrics,indicateurs:{membresActifs:membres.filter(m=>m.data.actif!==false).length,presence,intercessions:enPriere.length},urgences:urgences.slice(0,5),urgencesTotal:urgences.length,activites:(recents.results||[]).map(r=>({rubrique:r.parent,cree:r.maj})),actualiseLe:Date.now()});
 }
 
 /* ───────── site vitrine : rendez-vous publics ───────── */
@@ -1513,7 +1514,7 @@ async function traiter(req, env, ctx) {
       if (p === "/api/mon-historique") return apiMonHistorique(req, env, u);
       if (p === "/api/mon-profil" && req.method === "PATCH") return apiMonProfil(req, env, u);
       if (p === "/api/ma-photo" && req.method === "POST") return apiMaPhoto(req, env, u);
-      if (p === "/api/mes-cotisations") return apiMesCotisations(env, u);
+      if (p === "/api/mes-cotisations") return apiMesCotisations(req, env, u);
       if (p === "/api/actualites") return apiActualites(env, u);
       if (p === "/api/priere" && req.method === "POST") return apiPriere(req, env, u, ctx);
       if (p === "/api/absence" && req.method === "POST") return apiAbsence(req, env, u, ctx);
