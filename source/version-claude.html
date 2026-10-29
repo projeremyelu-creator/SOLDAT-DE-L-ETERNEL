@@ -7610,7 +7610,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
 
     /* Member card (hidden, for downloads) */
     out += `<div class="esp-cartes" id="esp-cartes" style="display:none" aria-label="Ma carte de membre"><div class="esp-cv-w"><canvas id="esp-recto" aria-label="Recto de la carte"></canvas></div><div class="esp-cv-w"><canvas id="esp-verso" aria-label="Verso de la carte"></canvas></div></div>`;
-    out += `<div class="btn-row" style="margin-top:12px">${btn("esp-carte", "Recto (image)", { ico: "i-down", sm: true, data: ‘data-face="recto"’ })}${btn("esp-carte", "Verso (image)", { ico: "i-down", sm: true, data: ‘data-face="verso"’ })}${btn("esp-carte", "Carte en PDF", { ico: "i-down", sm: true, data: ‘data-face="pdf"’ })}</div>`;
+    out += `<div class="btn-row" style="margin-top:12px">${btn("esp-carte", "Recto (image)", { ico: "i-down", sm: true, data: 'data-face="recto"' })}${btn("esp-carte", "Verso (image)", { ico: "i-down", sm: true, data: 'data-face="verso"' })}${btn("esp-carte", "Carte en PDF", { ico: "i-down", sm: true, data: 'data-face="pdf"' })}</div>`;
 
     out += `<p class="hint esp-pied">Résumé publié par la direction${ESP.t ? `, ouvert ${esc(relLong(isoJour(new Date(ESP.t))))}` : ""}. <button class="link" type="button" data-act="esp-quitter">Fermer mon espace sur cet appareil</button></p>`;
     return out;
