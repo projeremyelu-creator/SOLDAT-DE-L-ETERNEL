@@ -73,3 +73,30 @@ body.sde-reference-admin{padding:24px;background:radial-gradient(ellipse at 10% 
 .sde-reference-login .access-identity{top:12%}.sde-reference-login .ref-account-links{display:none}
 .ref-access-targets:has([data-access-target='/mon-espace'][aria-pressed=true])~#panel-connexion .ref-account-links{display:flex}
 @media(max-width:600px){.sde-reference-login .access-identity{top:8%}}
+/* Poste de commandement mobile : lisibilité, profondeur et états explicites. */
+.sde-reference-admin .ref-command .ops-card{box-shadow:0 14px 28px #050d2280,inset 0 1px #ffffff10;border-radius:14px;background:linear-gradient(145deg,#202d48ee,#252039ee);backdrop-filter:blur(12px)}
+.sde-reference-admin .ref-command .ops-kpis .ops-card{min-height:122px;padding:17px 18px;justify-content:flex-end;overflow:hidden}
+.sde-reference-admin .ref-command .ops-kpis strong{font:800 clamp(32px,5vw,43px)/1.05 Arial,sans-serif!important;letter-spacing:-.04em;color:#f8f2df;text-shadow:0 2px 18px #d0a85655}
+.sde-reference-admin .ref-command .ops-kpis h3{font-size:12px!important;color:#d7dce9;margin-top:9px}
+.sde-reference-admin .ref-command .ops-kpis svg{width:20px;height:20px;right:16px;top:15px}
+.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(2) strong{color:#93dec2}
+.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(4) strong{color:#f4c1a0}
+.ref-presence-ring{position:absolute;right:13px;bottom:13px;width:35px;height:35px;border-radius:50%;background:conic-gradient(#65d9a8 var(--rate),#ffffff20 0);box-shadow:0 0 14px #4fca9860;mask:radial-gradient(farthest-side,transparent 59%,#000 63%)}
+.ref-kpi-alert{position:absolute;right:13px;bottom:14px;border-radius:20px;background:#8d4b20;color:#fff0d2;padding:3px 8px;font-size:10px;font-weight:700}
+.sde-reference-admin .ref-command-middle>.ops-card,.sde-reference-admin .ref-command-bottom>.ops-card{padding:20px}
+.sde-reference-admin .ref-activities li,.sde-reference-admin .ref-urgent-list li{padding:12px 2px;gap:12px}
+.sde-reference-admin .ref-activities strong,.sde-reference-admin .ref-urgent-list strong{font-size:12px;font-weight:650}
+.sde-reference-admin .ref-activities small,.sde-reference-admin .ref-urgent-list small{font-size:10px}
+.ref-empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;min-height:126px;padding:18px;color:#c7d0df}
+.ref-empty-state svg{width:26px;height:26px;color:#d8b878;filter:drop-shadow(0 0 10px #d9b76b55)}
+.ref-empty-state strong{font-size:12px;color:#f6ead0}.ref-empty-state p{margin:0;font-size:11px;line-height:1.5}
+.sde-reference-admin .ref-qr-action{margin-top:12px!important;background:linear-gradient(110deg,#9e7438,#d4b36b)!important;color:#141b2d!important;border:1px solid #ebd49b!important;box-shadow:0 0 18px #d5a95d55}
+.sde-reference-admin .ref-urgent-list button{min-height:34px!important;padding:6px 10px!important;font-size:10px!important;border-radius:8px!important}
+.sde-reference-admin .ref-urgent-list button:last-child{background:#185c4b!important;border:1px solid #67d6ad!important;color:#e8fff5!important}
+.sde-reference-admin .ref-command .ops-card{animation:ref-rise .4s ease both}
+.sde-reference-admin .ref-command .ops-card:nth-child(2){animation-delay:55ms}
+@keyframes ref-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.sde-reference-admin .ref-command button,.sde-reference-admin .sde-bottom-nav button{transition:transform .16s ease,background .16s ease,box-shadow .16s ease}
+.sde-reference-admin .ref-command button:active,.sde-reference-admin .sde-bottom-nav button:active{transform:scale(.96)}
+@media(max-width:760px){.sde-reference-admin .ref-command .ops-kpis .ops-card{padding:15px;min-height:128px}.sde-reference-admin .ref-command .ops-kpis strong{font-size:34px!important}.sde-reference-admin .sde-bottom-nav button[aria-current=page]{position:relative;background:#c9a4512b;color:#f7d98d;box-shadow:inset 0 2px #f0d58d66}.sde-reference-admin .sde-bottom-nav button[aria-current=page]:after{content:'';position:absolute;bottom:3px;width:19px;height:3px;border-radius:3px;background:#f0cf7a;box-shadow:0 0 9px #e8c66d}}
+@media(prefers-reduced-motion:reduce){.sde-reference-admin .ref-command .ops-card{animation:none}.sde-reference-admin .ref-command button,.sde-reference-admin .sde-bottom-nav button{transition:none}}
