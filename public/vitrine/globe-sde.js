@@ -159,6 +159,7 @@
   var o = [0, 0, 0, 0], o2 = [0, 0, 0, 0];
 
   /* ---------- Dessin ---------- */
+  function dimmed(i) { var f = sel >= 0 ? sel : hover; return f >= 0 && f !== i && f !== hq; }
   function draw(now) {
     var t = now - t0, still = reduced || paused || bodyPaused();
     prepare();
@@ -294,6 +295,20 @@
       p = pins[i]; proj(p.v[0], p.v[1], p.v[2], o);
       p.sx = o[0]; p.sy = o[1]; p.vis = o[2] > 0.06;
       if (!p.vis) continue;
+      /* braises : s'élèvent de chaque point (le siège en émet le plus) ; sans état, calculées depuis le temps */
+      if (!still) {
+        var nb = p.siege ? (W < 520 ? 8 : 15) : (W < 520 ? 3 : 6), rise = R * (p.siege ? 0.42 : 0.26);
+        for (var e = 0; e < nb; e++) {
+          var pe = ((t * (0.00018 + (e % 3) * 0.00005)) + e / nb + i * 0.137) % 1;
+          var ex = p.sx + Math.sin(e * 12.9898 + i * 4.1) * (4 + pe * 16) + Math.sin(pe * 6 + e) * 2.5;
+          var ey = p.sy - 4 - pe * rise;
+          var ra = Math.pow(1 - pe, 1.5) * (dimmed(i) ? 0.35 : 0.95);
+          ctx.globalAlpha = ra;
+          ctx.fillStyle = e % 9 === 4 && pe < 0.4 ? "rgb(214,64,70)" : e % 2 ? "rgb(" + GOLD + ")" : "#fff1c2";
+          ctx.beginPath(); ctx.arc(ex, ey, 0.7 + (1 - pe) * (p.siege ? 1.9 : 1.4), 0, 6.283); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
       var act = i === sel || i === hover, rr = (p.siege ? 6.5 : 4.6) + (act ? 2 : 0);
       var cyc = still ? 0.4 : ((t * 0.0007) + i * 0.17) % 1;
       ctx.strokeStyle = "rgba(" + GOLD + "," + (0.7 * (1 - cyc)).toFixed(3) + ")"; ctx.lineWidth = 1.6;
