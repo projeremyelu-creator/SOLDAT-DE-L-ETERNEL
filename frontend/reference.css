@@ -213,3 +213,24 @@ body.sde-reference-admin .ref-command-bottom>.ops-card:nth-child(1){animation-de
  .ref-kpi,.ref-activities li,.ref-command .ops-kpis svg{transition:none!important}
 }
 body[data-motion=paused] .ref-command *,body[data-motion=paused] .ops-panel,body[data-motion=paused] .ops-skeleton i{animation:none!important}
+
+/* Écran d'administration « Contenu du site » */
+body.sde-reference-admin .site-ed{display:grid;gap:16px}
+.site-ed-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.site-ed-field{display:grid;gap:6px;font-size:.85rem;min-width:0}
+.site-ed-field span{font-weight:700}
+.site-ed-field small{color:#aebbd0;margin:0;font-size:.76rem;line-height:1.4}
+.site-ed input:not([type=checkbox]),.site-ed textarea,.site-ed select{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid #a1845077;background:#0b1530cc;color:inherit;font:inherit}
+.site-ed input:focus-visible,.site-ed textarea:focus-visible,.site-ed select:focus-visible,.site-ed button:focus-visible{outline:2px solid #e2c26a;outline-offset:2px}
+body.sde-reference-admin .site-ed .site-ed-check{display:flex;flex-direction:row;justify-content:flex-start;text-align:left;gap:10px;align-items:center;margin-top:12px;font-size:.88rem}.site-ed-check input{width:18px;height:18px;flex:none}
+.site-ed-list{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.site-ed-prog{border:1px solid #a1845044;border-radius:12px;padding:14px;background:#0b153066}
+.site-ed-bar{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.site-ed-bar span{display:flex;gap:6px}
+.site-ed-bar button,.site-ed-actions button{min-height:36px;padding:0 12px;border-radius:8px;border:1px solid #a1845077;background:#152139;color:inherit;cursor:pointer}
+.site-ed-bar button:disabled,.site-ed-go:disabled{opacity:.45;cursor:not-allowed}
+.site-ed-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.site-ed-publish{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:16px;border-radius:12px;background:#0b153099;border:1px solid #a1845077;margin-bottom:24px}.site-ed-publish a{color:#e2c26a}
+.site-ed-publish p{margin:0;flex:1 1 220px}
+.site-ed-go{background:#D4AF37;color:#0b1530;font-weight:800;min-height:42px;padding:0 20px;border:0;border-radius:10px;cursor:pointer}
+@media (max-width:720px){.site-ed-grid{grid-template-columns:1fr}}
