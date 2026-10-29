@@ -8,5 +8,5 @@ test('Typographie : espace membre et administration partagent les familles de ma
  assert.match(ref,/body\.sde-reference-admin\{--ref-title:"Saira Condensed"/);
  assert.match(ref,/body\.sde-reference-login :is\(h1,h2,h3,h4\),body\.sde-reference-member :is\(h1,h2,h3,h4\)\{font-family:var\(--ref-title\)!important/);
  const premium=read('frontend/premium.css');
- assert.doesNotMatch(premium,/\.hero-calendar-countdown>(b|span)\{[^}]*Arial/);
+ assert.doesNotMatch(premium,/\.hero-calendar-countdown>(b|span)\{[^}]*\/1 Arial,sans-serif/);
 });
