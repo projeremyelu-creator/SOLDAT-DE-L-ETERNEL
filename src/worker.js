@@ -704,11 +704,46 @@ export function assainirSite(docs) {
     banniere: b.actif === false ? { texte: "", lien: "" } : { texte: txt(b.texte, 200), lien: lienSite(b.lien) }
   };
 }
-async function apiSite(env) {
+async function donneesSite(env) {
   const r = await env.DB.prepare("SELECT path, data FROM docs WHERE parent = 'site'").all();
   const docs = {};
   for (const x of r.results || []) { try { docs[String(x.path).split("/").pop()] = JSON.parse(x.data); } catch { /* document illisible : ignoré */ } }
-  return json(assainirSite(docs), 200, { "cache-control": "public, max-age=300" });
+  return assainirSite(docs);
+}
+async function apiSite(env) {
+  return json(await donneesSite(env), 200, { "cache-control": "public, max-age=300" });
+}
+
+/* Affichage côté serveur : le contenu publié est inséré dans la page avant l'envoi, sans clignotement.
+   Même rendu que subpage.js (hydratation, qui reste en place comme filet de sécurité). */
+const ech = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+export function htmlProgrammes(liste) {
+  return liste.map((p) => {
+    const lien = p.lien || "/contact#rejoindre", sujet = p.lien ? "" : ` data-sujet="${ech(p.titre)}"`;
+    return `<article class="programme revele vu${p.feu ? " feu" : ""}">${p.image ? `<img class="prog-img" src="${ech(p.image)}" alt="" width="600" height="260" loading="lazy">` : ""}${p.rythme ? `<span class="rythme">${ech(p.rythme)}</span>` : ""}<h3>${ech(p.titre)}</h3>${p.texte ? `<p>${ech(p.texte)}</p>` : ""}<a href="${ech(lien)}"${sujet}>${ech(p.libelle || "Participer")} <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>`;
+  }).join("");
+}
+export function htmlBanniere(b) {
+  if (!b?.texte) return "";
+  const style = "display:block;text-align:center;padding:.6rem 1rem;background:#D4AF37;color:#0b1530;font-weight:600;text-decoration:none";
+  return b.lien ? `<a class="site-banniere" href="${ech(b.lien)}" style="${style}">${ech(b.texte)}</a>` : `<p class="site-banniere" style="${style};margin:0">${ech(b.texte)}</p>`;
+}
+async function injecterSite(reponse, env, page) {
+  try {
+    if (typeof HTMLRewriter === "undefined" || !(reponse.headers.get("content-type") || "").includes("text/html")) return reponse;
+    const site = await donneesSite(env);
+    const aRien = !site.contact.email && !site.contact.telephone && !site.programmes.length && !site.banniere.texte;
+    if (aRien) return reponse;
+    let r = new HTMLRewriter();
+    const banniere = htmlBanniere(site.banniere);
+    if (banniere) r = r.on("body", { element(e) { e.prepend(banniere, { html: true }); } });
+    if (site.contact.email) r = r.on("#c-mail", { element(e) { e.setInnerContent(site.contact.email); } });
+    if (site.contact.telephone) r = r.on("#c-tel", { element(e) { e.setInnerContent(site.contact.telephone); } });
+    if (page === "programmes" && site.programmes.length) r = r.on(".programmes", { element(e) { e.setInnerContent(htmlProgrammes(site.programmes), { html: true }); } });
+    const n = r.transform(reponse);
+    n.headers.set("cache-control", "public, max-age=60");
+    return n;
+  } catch (e) { console.warn("Affichage serveur du site ignoré", e?.name || "Erreur"); return reponse; }
 }
 
 async function apiRessourcesPubliques(env){
@@ -1447,7 +1482,10 @@ async function traiter(req, env, ctx) {
       if (req.method === "GET" || req.method === "HEAD") {
         if (p === "/" || p === "/index.html") return assetPortail("/vitrine/portail.html");
         if (p === "/vitrine/" || p === "/vitrine/index.html") return Response.redirect(url.origin + "/", 301);
-        if (pagesPubliques[p]) return assetPortail(pagesPubliques[p]);
+        if (pagesPubliques[p]) {
+          const page = await assetPortail(pagesPubliques[p]);
+          return p === "/programmes" || p === "/contact" ? injecterSite(page, env, p === "/programmes" ? "programmes" : "contact") : page;
+        }
         if (p === "/portail") {
           const u=await utilisateur(req,env);
           const destination=u.connecte?(u.niveau>=1?"/administration":"/mon-espace"):"/connexion?retour=%2Fportail";

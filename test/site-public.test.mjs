@@ -63,3 +63,14 @@ test("la page Programmes remplace les cartes et garde le HTML si /api/site est v
   await attendre();
   assert.ok(d.window.document.querySelectorAll(".programmes .programme").length >= 8);
 });
+
+test("affichage serveur : cartes et bannière sont échappées et complètes", async () => {
+  const {htmlProgrammes, htmlBanniere} = await import("../src/worker.js");
+  const h = htmlProgrammes([{ titre: 'A <b>"x"</b>', rythme: "Chaque jeudi", texte: "T", lien: "", libelle: "", image: "/vitrine/illus/prog-brunch.svg", feu: true }]);
+  assert.match(h, /class="programme revele vu feu"/);
+  assert.match(h, /A &lt;b&gt;&quot;x&quot;&lt;\/b&gt;/);
+  assert.match(h, /href="\/contact#rejoindre" data-sujet=/);
+  assert.match(h, /Participer/);
+  assert.equal(htmlBanniere({ texte: "", lien: "" }), "");
+  assert.match(htmlBanniere({ texte: "Info <i>", lien: "/x" }), /href="\/x"[^>]*>Info &lt;i&gt;<\/a>/);
+});
