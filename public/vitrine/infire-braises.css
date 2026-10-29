@@ -1,0 +1,20 @@
+/* Compte à rebours IN FIRE : anneaux de progression et braises qui montent (calme si mouvement réduit ou pause). */
+.decompte{position:relative;isolation:isolate;gap:clamp(10px,2.4vw,22px);flex-wrap:wrap}
+.decompte-cel{position:relative;display:grid;place-items:center;width:clamp(72px,16vw,104px);aspect-ratio:1;border-radius:50%;
+ background:conic-gradient(var(--or,#D4AF37) calc(var(--p,0)*1%),rgba(226,194,106,.14) 0);
+ }
+.decompte-cel::before{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--fond,#0b1530);z-index:0}
+.decompte-cel>*{position:relative;z-index:1;grid-area:1/1}
+.decompte-cel b{align-self:center;margin-top:-.35em;font-variant-numeric:tabular-nums;will-change:transform}
+.decompte-cel small{align-self:end;margin-bottom:14%;font-size:.62rem}
+.decompte-braises{position:absolute;left:0;right:0;bottom:30%;height:140%;pointer-events:none;z-index:-1;overflow:visible}
+.decompte-braises i{position:absolute;bottom:0;width:4px;height:4px;border-radius:50%;background:#e2c26a;box-shadow:0 0 8px 2px rgba(226,194,106,.6);
+ opacity:0;animation:braise-monte var(--d,4.2s) linear var(--w,0s) infinite;left:var(--x,50%)}
+.decompte-braises i:nth-child(5n){background:#d6404a;box-shadow:0 0 8px 2px rgba(214,64,74,.55)}
+.decompte-braises i[hidden]{display:none}
+@keyframes braise-monte{0%{transform:translate(0,0) scale(1);opacity:0}12%{opacity:var(--a,.8)}100%{transform:translate(var(--dx,8px),-120px) scale(.2);opacity:0}}
+.decompte--proche .decompte-cel:last-child{animation:decompte-pouls 1s ease-in-out infinite}
+@keyframes decompte-pouls{50%{filter:drop-shadow(0 0 10px rgba(226,194,106,.75))}}
+@media (prefers-reduced-motion:reduce){.decompte-braises{display:none}.decompte--proche .decompte-cel:last-child{animation:none}}
+body[data-motion="paused"] .decompte-braises{display:none}
+body[data-motion="paused"] .decompte--proche .decompte-cel:last-child{animation:none}

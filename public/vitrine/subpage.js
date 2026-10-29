@@ -210,6 +210,22 @@
       const end=new Date("2026-10-31T18:00:00Z").getTime();
       const counter=$(".decompte");
       let timer=null;
+      const calm=()=>document.documentElement.dataset.motion==="reduced"||document.body.dataset.motion==="paused"||!!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      // Braises : décor discret derrière les chiffres ; leur nombre augmente à l'approche de l'événement.
+      let embers=[];
+      if(counter&&!calm()){
+        const layer=document.createElement("span");layer.className="decompte-braises";layer.setAttribute("aria-hidden","true");
+        for(let i=0;i<14;i++){const e=document.createElement("i");e.style.setProperty("--x",(4+i*6.9+(i%3)*2)+"%");e.style.setProperty("--w",(i*0.37%4.2).toFixed(2)+"s");e.style.setProperty("--d",(3.4+(i%4)*0.55).toFixed(2)+"s");e.style.setProperty("--dx",((i%2?1:-1)*(6+i%5*3))+"px");e.style.setProperty("--a",(0.55+(i%3)*0.15).toFixed(2));layer.append(e);embers.push(e);}
+        counter.append(layer);
+      }
+      const show=(el,value,frac)=>{
+        const text=String(value);
+        const cell=el.closest(".decompte-cel");
+        if(cell)cell.style.setProperty("--p",Math.round(Math.max(0,Math.min(1,frac))*100));
+        if(el.textContent===text)return;
+        el.textContent=text;
+        if(!calm()&&el.animate)el.animate([{transform:"translateY(-28%)",opacity:.15},{transform:"none",opacity:1}],{duration:380,easing:"cubic-bezier(.25,1,.5,1)"});
+      };
       const hide=(el)=>{if(el)el.hidden=true;};
       const tick=()=>{
         const now=Date.now();
@@ -230,10 +246,13 @@
           return;
         }
         const delta=deadline-now;
-        days.textContent=Math.floor(delta/864e5);
-        hours.textContent=Math.floor(delta%864e5/36e5);
-        mins.textContent=Math.floor(delta%36e5/6e4);
-        seconds.textContent=Math.floor(delta%6e4/1000);
+        const d=Math.floor(delta/864e5),h=Math.floor(delta%864e5/36e5),m=Math.floor(delta%36e5/6e4),sec=Math.floor(delta%6e4/1000);
+        const two=n=>String(n).padStart(2,"0");
+        show(days,d,Math.min(1,delta/(30*864e5)));show(hours,two(h),h/24);show(mins,two(m),m/60);show(seconds,two(sec),sec/60);
+        if(counter)counter.classList.toggle("decompte--proche",delta<864e5);
+        // 0 à 14 braises : 3 au-delà d'une semaine, toutes le dernier jour.
+        const visibles=Math.round(3+11*Math.max(0,Math.min(1,1-delta/(7*864e5))));
+        embers.forEach((e,i)=>{e.hidden=i>=visibles;});
       };
       timer=setInterval(tick,1000);tick();
     }
