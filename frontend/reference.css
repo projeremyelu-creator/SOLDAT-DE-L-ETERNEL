@@ -100,3 +100,116 @@ body.sde-reference-admin{padding:24px;background:radial-gradient(ellipse at 10% 
 .sde-reference-admin .ref-command button:active,.sde-reference-admin .sde-bottom-nav button:active{transform:scale(.96)}
 @media(max-width:760px){.sde-reference-admin .ref-command .ops-kpis .ops-card{padding:15px;min-height:128px}.sde-reference-admin .ref-command .ops-kpis strong{font-size:34px!important}.sde-reference-admin .sde-bottom-nav button[aria-current=page]{position:relative;background:#c9a4512b;color:#f7d98d;box-shadow:inset 0 2px #f0d58d66}.sde-reference-admin .sde-bottom-nav button[aria-current=page]:after{content:'';position:absolute;bottom:3px;width:19px;height:3px;border-radius:3px;background:#f0cf7a;box-shadow:0 0 9px #e8c66d}}
 @media(prefers-reduced-motion:reduce){.sde-reference-admin .ref-command .ops-card{animation:none}.sde-reference-admin .ref-command button,.sde-reference-admin .sde-bottom-nav button{transition:none}}
+
+/* ═══ Poste de commandement : typographie, lisibilité et fluidité (administration) ═══
+   Polices de la charte déjà chargées par l'application : Saira Condensed (titres, chiffres)
+   et Atkinson Hyperlegible (texte). Arial n'existe pas sur beaucoup de téléphones et retombait
+   sur une police à empattements ; plus aucun texte n'est en dessous de 12 px. */
+body.sde-reference-admin{--ref-title:"Saira Condensed","Arial Narrow",system-ui,sans-serif;--ref-text:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body.sde-reference-admin,body.sde-reference-admin button,body.sde-reference-admin input,body.sde-reference-admin select,body.sde-reference-admin textarea{font-family:var(--ref-text)!important}
+body.sde-reference-admin :is(h1,h2,h3,h4){font-family:var(--ref-title)!important;letter-spacing:.05em}
+body.sde-reference-admin .ops-panel{padding:22px 24px 30px}
+body.sde-reference-admin .ops-heading{margin-bottom:20px;min-height:36px}
+body.sde-reference-admin .ops-heading h2{font-size:clamp(1.45rem,1.1rem + 1.6vw,2rem);font-weight:700;line-height:1.1;letter-spacing:.07em;text-transform:uppercase;color:#fff}
+body.sde-reference-admin .ops-heading h2 em{color:#e2c26a;font-style:normal;letter-spacing:.05em}
+body.sde-reference-admin .ops-card h3{font-size:1.02rem!important;font-weight:700;line-height:1.2;letter-spacing:.07em;text-transform:uppercase;color:#f6f3ea}
+body.sde-reference-admin .ops-card:not(.ref-kpi)>strong{font-size:1.7rem!important}
+body.sde-reference-admin .ops-muted,body.sde-reference-admin .ops-card small{font-size:.8125rem;line-height:1.55;color:#cbcdd9}
+body.sde-reference-admin .ops-panel :is(button,a){min-height:36px;padding:7px 14px;font-size:.8125rem;font-weight:700;letter-spacing:.015em;border-radius:9px;transition:background .18s ease,transform .15s ease,border-color .18s ease,box-shadow .18s ease}
+body.sde-reference-admin .ops-panel :is(button,a):hover{border-color:#e2c26a99}
+body.sde-reference-admin .ops-panel button:active{transform:scale(.96)}
+body.sde-reference-admin .ops-panel :is(th,td){font-size:.875rem}
+body.sde-reference-admin .ops-panel thead th{font-size:.8125rem;letter-spacing:.04em}
+body.sde-reference-admin .ref-sidebar nav button{font-size:.9rem;min-height:42px;gap:11px;transition:background .18s ease,padding-left .18s ease,color .18s ease}
+body.sde-reference-admin .ref-sidebar nav button:hover{padding-left:17px;color:#fff}
+body.sde-reference-admin .ref-account>span:first-child{font-size:.75rem}
+body.sde-reference-admin .ref-account strong{font-size:.875rem;font-weight:700;max-width:190px}
+body.sde-reference-admin .ref-toolbar button{min-width:36px;min-height:36px}
+body.sde-reference-admin .ref-avatar{width:34px;height:34px;font-size:.75rem}
+
+/* Chiffres clés */
+.ref-command .ops-kpis{gap:14px}
+.ref-command .ops-kpis .ops-card{cursor:default}
+body.sde-reference-admin .ref-command .ops-kpis h3{font:400 .9rem/1.3 var(--ref-text)!important;letter-spacing:.01em!important;text-transform:none!important;margin-top:8px}
+body.sde-reference-admin .ref-command .ops-kpis strong{font-family:var(--ref-title)!important;font-weight:700!important;font-size:clamp(2.3rem,1.8rem + 2vw,2.9rem)!important;line-height:1!important;letter-spacing:.02em!important;font-variant-numeric:tabular-nums}
+body.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(n) strong{text-shadow:0 0 22px #e2c26a26}
+.ref-command .ops-kpis svg{width:18px;height:18px;right:13px;top:13px;color:#e2c26a;transition:transform .3s cubic-bezier(.2,.9,.3,1.4)}
+.ref-kpi{transition:transform .22s cubic-bezier(.2,.8,.3,1),border-color .22s ease,box-shadow .22s ease,background .22s ease}
+.ref-kpi h3{transition:color .2s ease}
+.ref-kpi:hover h3,.ref-kpi:focus-within h3{color:#f0d586!important}
+.ref-kpi:hover,.ref-kpi:focus-within{transform:translateY(-3px);border-color:#e2c26acc;box-shadow:0 12px 30px #03071a66,0 0 0 1px #e2c26a40,0 0 26px #e2c26a1f}
+.ref-kpi:hover svg{transform:scale(1.18) rotate(-6deg)}
+.ref-kpi:focus-within{outline:2px solid #f0d586;outline-offset:2px}
+.ref-command .ref-kpi>.ref-kpi-go{position:absolute;inset:0;width:100%;height:100%;min-height:0;margin:0;padding:0;border:0;border-radius:8px;background:transparent;cursor:pointer;outline:none;box-shadow:none;opacity:0}
+.ref-command .ref-kpi>.ref-kpi-go:active{transform:none}
+.ref-kpi:active{transform:translateY(-1px) scale(.985)}
+
+/* Ligne « en direct » */
+.ref-live{display:flex;align-items:center;gap:8px;margin:-4px 0 14px;font-size:.8125rem!important;color:#cdd0de;letter-spacing:.01em}
+.ref-live-dot{width:8px;height:8px;border-radius:50%;background:#58d3a0;box-shadow:0 0 0 0 #58d3a080;animation:ref-live 2.4s ease-out infinite;flex:none}
+@keyframes ref-live{0%{box-shadow:0 0 0 0 #58d3a099}70%,100%{box-shadow:0 0 0 9px #58d3a000}}
+
+/* Textes du bloc précédent relevés à 12 px minimum */
+body.sde-reference-admin .ref-kpi-alert{font-size:.75rem;padding:4px 10px;top:14px;left:16px;right:auto;bottom:auto}
+body.sde-reference-admin .ref-kpi:has(.ref-presence-ring) h3{padding-right:50px}
+body.sde-reference-admin .ref-empty-state strong{font-size:.95rem}
+body.sde-reference-admin .ref-empty-state p{font-size:.8125rem}
+body.sde-reference-admin .ref-activities strong,body.sde-reference-admin .ref-urgent-list strong{font-size:.9rem!important;font-weight:700!important}
+body.sde-reference-admin .ref-activities small,body.sde-reference-admin .ref-urgent-list small{font-size:.75rem!important}
+body.sde-reference-admin .ref-urgent-list button{font-size:.75rem!important;min-height:36px!important}
+
+/* Graphique et listes */
+.ref-command-chart>h3{padding-right:118px}
+.ref-command-chart .ref-chart-period{top:12px!important}
+.ref-command-middle>.ops-card,.ref-command-bottom>.ops-card{transition:border-color .22s ease,box-shadow .22s ease}
+.ref-command-middle>.ops-card:hover,.ref-command-bottom>.ops-card:hover{border-color:#e2c26a80;box-shadow:0 10px 28px #03071a55}
+.ref-chart-period{font-size:.75rem!important;padding:4px 10px!important;border-radius:999px!important}
+.ref-command-chart .ops-plot details,.ref-command-chart .ops-plot summary{font-size:.75rem!important}
+.ref-activities li{padding:11px 8px;margin:0 -8px;border-radius:9px;transition:background .18s ease,transform .18s ease}
+.ref-activities li:hover{background:#e2c26a14;transform:translateX(3px)}
+.ref-activities strong{font-size:.9rem!important;font-weight:700!important;line-height:1.35!important}
+.ref-activities small{font-size:.75rem!important;margin-top:3px!important;color:#c3bfd2!important}
+.ref-activity-icon{width:32px;height:32px}.ref-activity-icon svg{width:15px;height:15px}
+.ref-urgent-list li{padding:9px 6px;margin:0 -6px;border-radius:9px;transition:background .18s ease}
+.ref-urgent-list li:hover{background:#d7779c14}
+.ref-urgent-list strong{font-size:.9rem!important;font-weight:700!important}
+.ref-urgent-list small{font-size:.75rem!important;color:#c9bfcf!important}
+.ref-urgent-list button{font-size:.75rem!important;min-height:32px!important}
+.ref-urgent-icon{width:32px;height:32px}.ref-urgent-icon svg{width:15px;height:15px}
+.ref-small-action{font-size:.75rem!important;min-height:32px!important;padding:5px 14px!important}
+.ref-card-caption{font-size:.8125rem!important}
+.ref-academy-count{font-size:.8125rem!important}
+.ref-data-note{font-size:.75rem!important;line-height:1.55!important}
+.ops-progress progress{-webkit-appearance:none;appearance:none;height:11px;border:0;border-radius:999px;background:#ffffff1a;overflow:hidden}
+.ops-progress progress::-webkit-progress-bar{background:#ffffff1a;border-radius:999px}
+.ops-progress progress::-webkit-progress-value{background:linear-gradient(90deg,#b8913f,#f0d586);border-radius:999px;box-shadow:0 0 12px #e2c26a66}
+.ops-progress progress::-moz-progress-bar{background:linear-gradient(90deg,#b8913f,#f0d586);border-radius:999px}
+.ops-progress span{font-size:.8125rem!important}
+
+/* Entrée en scène, chargement */
+@keyframes ref-enter{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes ref-fade{from{opacity:0}to{opacity:1}}
+@keyframes ref-shimmer{to{background-position:-200% 0}}
+body.sde-reference-admin .ops-panel{animation:ref-fade .35s ease both}
+body.sde-reference-admin .ref-command>.ref-live,body.sde-reference-admin .ref-command .ref-kpi,body.sde-reference-admin .ref-command-middle>.ops-card,body.sde-reference-admin .ref-command-bottom>.ops-card,body.sde-reference-admin .ref-command>.ref-data-note{animation:ref-enter .6s cubic-bezier(.2,.8,.3,1) both}
+body.sde-reference-admin .ref-command .ref-kpi{animation-delay:calc(var(--i,0) * 80ms + 80ms)}
+body.sde-reference-admin .ref-command-middle>.ops-card:nth-child(1){animation-delay:.42s}body.sde-reference-admin .ref-command-middle>.ops-card:nth-child(2){animation-delay:.5s}
+body.sde-reference-admin .ref-command-bottom>.ops-card:nth-child(1){animation-delay:.58s}body.sde-reference-admin .ref-command-bottom>.ops-card:nth-child(2){animation-delay:.66s}
+.ref-activities li{animation:ref-enter .5s cubic-bezier(.2,.8,.3,1) both;animation-delay:calc(var(--i,0) * 70ms + .55s)}
+.ops-skeleton{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.ops-skeleton i{display:block;height:104px;border-radius:9px;background:linear-gradient(100deg,#ffffff0d 30%,#e2c26a26 50%,#ffffff0d 70%) 0 0/200% 100%;animation:ref-shimmer 1.4s linear infinite}
+@media(max-width:760px){
+ body.sde-reference-admin .ops-panel{padding:16px 14px 96px}
+ .ref-command .ops-kpis{gap:10px}
+ .ref-command .ops-kpis h3{font-size:.8125rem!important}
+ .ops-skeleton{grid-template-columns:1fr 1fr}
+ body.sde-reference-admin .ref-command .ops-kpis .ops-card.ref-kpi{min-height:142px}
+ body.sde-reference-admin .ops-panel :is(button,a){min-height:44px}
+ .ref-urgent-list button,.ref-small-action{min-height:40px!important}
+ body.sde-reference-admin .ref-sidebar nav button{min-height:46px;font-size:.95rem}
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-reference-admin .ops-panel,.ref-command *,.ops-skeleton i,.ref-live-dot{animation:none!important}
+ .ref-kpi,.ref-activities li,.ref-command .ops-kpis svg{transition:none!important}
+}
+body[data-motion=paused] .ref-command *,body[data-motion=paused] .ops-panel,body[data-motion=paused] .ops-skeleton i{animation:none!important}
