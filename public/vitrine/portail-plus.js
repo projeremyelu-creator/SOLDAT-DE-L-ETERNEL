@@ -52,7 +52,7 @@
  }
  function renderMemberShortcuts(){
   const tiles=node('nav',undefined,'member-quick-grid');tiles.setAttribute('aria-label','Les essentiels de mon espace');
-  for(const [label,module,icon,tab]of [['Mes Présences','espace','calendar','presences'],['Intercessions','mur','prayer'],['Bibliothèque','bibliotheque','book'],['Mes Engagements','engagements','service'],['Dons & Dîmes','contributions','gift']]){const b=tab?button('',()=>personalTab(tab)):route('',module);b.dataset.plusModule=module;b.className='member-quick-tile';b.append(pictogram(icon),node('span',label));tiles.append(b)}panel.append(tiles);
+  for(const [label,module,icon,tab]of [['Mon Bataillon','engagements','service'],['Mes Présences','espace','calendar','presences'],["L’Académie",'academie','book'],["Intercessions d’Urgence",'mur','prayer'],['Bibliothèque','bibliotheque','book'],['Intendance','contributions','gift']]){const b=tab?button('',()=>personalTab(tab)):route('',module);b.dataset.plusModule=module;b.className='member-quick-tile';b.append(pictogram(icon),node('span',label));tiles.append(b)}panel.append(tiles);
  }
  function renderMemberAcademy(data){
   const academy=box('Soldiers Academy');academy.classList.add('member-academy','ref-member-academy');
@@ -125,7 +125,7 @@
  function renderHome(data,dashboard){
   const direction=location.pathname==='/administration';
   panel.classList.add('maquette-dashboard');document.body.dataset.sdeDashboard=direction?'direction':'member';
-  if(direction)renderCommand(data,dashboard||{});else {renderMemberWelcome(data);renderMemberAcademy(data);renderMemberShortcuts();renderNextEvent(data.evenements)}
+  if(direction)renderCommand(data,dashboard||{});else {renderMemberWelcome(data);renderNextEvent(data.evenements);renderMemberShortcuts();renderMemberAcademy(data)}
   if(!data.ficheLiee&&!direction)panel.append(note('Votre compte est actif. Contactez le secrétariat pour le relier à votre fiche membre et retrouver vos informations personnelles.'));
   const grid=node('div',undefined,'sde-plus-grid ref-home-secondary');
   const events=box('Prochaines rencontres');events.classList.add('dashboard-agenda');events.append(list(data.evenements||[],'Aucune rencontre annoncée pour le moment.',(li,e)=>{li.append(node('strong',e.titre),note([e.date,e.heure,e.lieu].filter(Boolean).join(' · ')));const actions=node('div',undefined,'sde-plus-actions');actions.append(route('Voir l’agenda','agenda'),button('Ajouter au calendrier',()=>calendar(e)));li.append(actions)}));grid.append(events);
