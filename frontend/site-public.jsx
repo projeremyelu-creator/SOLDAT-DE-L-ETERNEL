@@ -15,22 +15,27 @@ export const PROGRAMMES_ACTUELS=[
  {titre:'Missions humanitaires',rythme:'Sur le terrain · Daloa et Cocody',texte:'Dons à l’orphelinat Tomorrow Hope de Daloa et soutien aux femmes veuves à Abidjan Cocody.',libelle:'S’engager',lien:'',image:IMAGES[8][0],feu:false}
 ];
 const lienValide=l=>!l||/^(\/(?!\/)|#|https:\/\/)/.test(l);
-export function verifier({contact,programmes,banniere}){
+const EMAIL=/^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/;
+const emailsDe=t=>[...new Set(String(t||'').split(/[\s,;]+/).map(a=>a.trim().toLowerCase()).filter(a=>EMAIL.test(a)))].slice(0,10);
+export function verifier({contact,programmes,banniere,secretariat}){
  const erreurs=[];
  if(contact.email&&!/^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(contact.email))erreurs.push('L’adresse e-mail de contact n’est pas valide.');
  if(contact.telephone&&!/^[+\d][\d\s().-]{5,}$/.test(contact.telephone))erreurs.push('Le numéro de téléphone n’est pas valide (chiffres, espaces et + uniquement).');
  programmes.forEach((p,i)=>{if(!p.titre.trim())erreurs.push('Programme '+(i+1)+' : le titre est obligatoire.');if(!lienValide(p.lien.trim()))erreurs.push('Programme '+(i+1)+' : le lien doit commencer par /, # ou https://.')});
  if(programmes.length>20)erreurs.push('Vingt programmes au maximum.');
  if(!lienValide(banniere.lien.trim()))erreurs.push('Bannière : le lien doit commencer par /, # ou https://.');
+ const adresses=emailsDe(secretariat?.emails);
+ if(secretariat?.actif&&!adresses.length)erreurs.push('Secrétariat : indiquez au moins une adresse e-mail valide, ou désactivez l’accès.');
+ if(secretariat&&String(secretariat.emails||'').split(/[\s,;]+/).filter(Boolean).some(a=>!EMAIL.test(a)))erreurs.push('Secrétariat : une des adresses n’est pas valide.');
  return erreurs;
 }
 async function db(body){const r=await fetch('/api/db',{method:'POST',credentials:'same-origin',cache:'no-store',headers:{'content-type':'application/json'},body:JSON.stringify(body)});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.message||'Le service est indisponible. Réessayez.');return d}
-const lire=async nom=>{const r=await db({op:'get',path:'site/'+nom});return r.exists?r.data:{}};
+const lire=async(nom,rubrique='site')=>{const r=await db({op:'get',path:rubrique+'/'+nom});return r.exists?r.data:{}};
 const complet=p=>({titre:p.titre||'',rythme:p.rythme||'',texte:p.texte||'',libelle:p.libelle||'',lien:p.lien||'',image:p.image||'',feu:p.feu===true});
 function Field({label,hint,children}){return <label className="site-ed-field"><span>{label}</span>{children}{hint&&<small>{hint}</small>}</label>}
 export function SitePublic(){
- const [etat,setEtat]=useState('chargement'),[contact,setContact]=useState({email:'',telephone:''}),[programmes,setProgrammes]=useState([]),[banniere,setBanniere]=useState({texte:'',lien:'',actif:true}),[erreurs,setErreurs]=useState([]),[message,setMessage]=useState(''),[occupe,setOccupe]=useState(false),[modifie,setModifie]=useState(false);
- useEffect(()=>{let vivant=true;Promise.all([lire('contact'),lire('programmes'),lire('banniere')]).then(([c,p,b])=>{if(!vivant)return;setContact({email:c.email||'',telephone:c.telephone||''});setProgrammes((Array.isArray(p.liste)?p.liste:[]).map(complet));setBanniere({texte:b.texte||'',lien:b.lien||'',actif:b.actif!==false});setEtat('pret')}).catch(e=>{if(vivant){setMessage(e.message);setEtat('erreur')}});return()=>{vivant=false}},[]);
+ const [etat,setEtat]=useState('chargement'),[contact,setContact]=useState({email:'',telephone:''}),[programmes,setProgrammes]=useState([]),[banniere,setBanniere]=useState({texte:'',lien:'',actif:true}),[secr,setSecr]=useState({actif:false,emails:''}),[erreurs,setErreurs]=useState([]),[message,setMessage]=useState(''),[occupe,setOccupe]=useState(false),[modifie,setModifie]=useState(false);
+ useEffect(()=>{let vivant=true;Promise.all([lire('contact'),lire('programmes'),lire('banniere'),lire('secretariat','reglages_site')]).then(([c,p,b,sc])=>{if(!vivant)return;setSecr({actif:sc.actif===true,emails:(Array.isArray(sc.emails)?sc.emails:[]).join('\n')});setContact({email:c.email||'',telephone:c.telephone||''});setProgrammes((Array.isArray(p.liste)?p.liste:[]).map(complet));setBanniere({texte:b.texte||'',lien:b.lien||'',actif:b.actif!==false});setEtat('pret')}).catch(e=>{if(vivant){setMessage(e.message);setEtat('erreur')}});return()=>{vivant=false}},[]);
  useEffect(()=>{if(!modifie)return;const avant=e=>{e.preventDefault();e.returnValue=''};window.addEventListener('beforeunload',avant);return()=>window.removeEventListener('beforeunload',avant)},[modifie]);
  const touche=f=>(...a)=>{setModifie(true);setMessage('');f(...a)};
  const champProg=(i,k,v)=>touche(()=>setProgrammes(l=>l.map((p,j)=>j===i?{...p,[k]:v}:p)))();
@@ -39,13 +44,14 @@ export function SitePublic(){
  const ajouter=()=>touche(()=>setProgrammes(l=>[...l,complet({libelle:'Participer'})]))();
  const importer=()=>touche(()=>setProgrammes(PROGRAMMES_ACTUELS.map(complet)))();
  async function publier(){
-  const nettoye={contact:{email:contact.email.trim(),telephone:contact.telephone.trim()},programmes:programmes.map(p=>({...p,titre:p.titre.trim(),lien:p.lien.trim()})),banniere:{...banniere,texte:banniere.texte.trim(),lien:banniere.lien.trim()}};
+  const nettoye={contact:{email:contact.email.trim(),telephone:contact.telephone.trim()},programmes:programmes.map(p=>({...p,titre:p.titre.trim(),lien:p.lien.trim()})),banniere:{...banniere,texte:banniere.texte.trim(),lien:banniere.lien.trim()},secretariat:secr};
   const e=verifier(nettoye);setErreurs(e);if(e.length){setMessage('');return}
   setOccupe(true);setMessage('');
   try{
    await db({op:'set',path:'site/contact',data:nettoye.contact});
    await db({op:'set',path:'site/programmes',data:{liste:nettoye.programmes,maj:Date.now()}});
    await db({op:'set',path:'site/banniere',data:nettoye.banniere});
+   await db({op:'set',path:'reglages_site/secretariat',data:{actif:secr.actif,emails:emailsDe(secr.emails)}});
    setModifie(false);setMessage('✓ Publié. Les pages publiques se mettent à jour d’ici 5 minutes au plus.');
   }catch(err){setMessage(err.message)}finally{setOccupe(false)}
  }
@@ -62,6 +68,11 @@ export function SitePublic(){
    <Field label="Message" hint="Bandeau en haut des pages Programmes et Contact (200 caractères)."><input value={banniere.texte} maxLength={200} onChange={e=>touche(setBanniere)({...banniere,texte:e.target.value})}/></Field>
    <Field label="Lien (facultatif)"><input value={banniere.lien} maxLength={300} onChange={e=>touche(setBanniere)({...banniere,lien:e.target.value})} placeholder="/programmes#infire"/></Field>
   </div><label className="site-ed-check"><input type="checkbox" checked={banniere.actif} onChange={e=>touche(setBanniere)({...banniere,actif:e.target.checked})}/> Afficher la bannière</label></section>
+  <section className="ops-card"><h3>Demandes reçues : accès du secrétariat</h3>
+   <p className="ops-muted">Par défaut, seuls les propriétaires voient les demandes du formulaire de contact. Vous pouvez donner cet accès à des membres du secrétariat : chacun doit se connecter avec le compte portant l’adresse indiquée, et reçoit un e-mail à chaque nouvelle demande, dès son arrivée.</p>
+   <label className="site-ed-check"><input type="checkbox" checked={secr.actif} onChange={e=>touche(setSecr)({...secr,actif:e.target.checked})}/> Donner accès au secrétariat</label>
+   <Field label="Adresses e-mail du secrétariat (une par ligne, dix au maximum)"><textarea rows={3} value={secr.emails} disabled={!secr.actif} onChange={e=>touche(setSecr)({...secr,emails:e.target.value})} placeholder="secretaire@exemple.org"/></Field>
+  </section>
   <section className="ops-card"><h3>Programmes ({programmes.length})</h3>
    {!programmes.length&&<div className="ref-empty-state"><strong>Aucun programme publié ici</strong><p>La page publique affiche ses programmes d’origine. Importez-les pour les modifier.</p><button type="button" className="ref-small-action" onClick={importer}>Importer les programmes actuels</button></div>}
    <ol className="site-ed-list">{programmes.map((p,i)=><li key={i} className="site-ed-prog">
