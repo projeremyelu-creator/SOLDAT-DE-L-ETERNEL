@@ -234,3 +234,9 @@ body.sde-reference-admin .site-ed .site-ed-check{display:flex;flex-direction:row
 .site-ed-publish p{margin:0;flex:1 1 220px}
 .site-ed-go{background:#D4AF37;color:#0b1530;font-weight:800;min-height:42px;padding:0 20px;border:0;border-radius:10px;cursor:pointer}
 @media (max-width:720px){.site-ed-grid{grid-template-columns:1fr}}
+
+/* Cadres translucides : l'ambiance partagée (étoiles, braises) transparaît discrètement derrière l'application. */
+.sde-reference-admin .shell{background:linear-gradient(103deg,#0d1a30e8 28%,#191a30e4 65%,#491c30dc)}
+.ref-sidebar{background:linear-gradient(170deg,#0d1b32ee,#10182bec)}
+.sde-reference-member .shell{background:radial-gradient(ellipse at 100% 0%,#58152bf0 0%,transparent 45%),#0d192cea}
+@media(prefers-reduced-motion:reduce){.sde-reference-admin .shell,.sde-reference-member .shell{background-attachment:scroll}}
