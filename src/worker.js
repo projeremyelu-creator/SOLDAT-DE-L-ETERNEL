@@ -5,7 +5,8 @@ import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {apiSdeOs31} from "./os-v31.js";
-import {notifySde,flushNotices,mailStatus,pushConfigured} from "./notifications.js";
+import {notifySde,flushNotices,mailStatus,pushConfigured,notificationConfigured} from "./notifications.js";
+import {SDE_MAIL_RECIPIENT} from "./notification-events.js";
 import {generateVapidKeys} from "./web-push.js";
 import {sendPortalReminders} from "./reminders.js";
 import {sdeOsApi} from "./sde-os.js";
@@ -34,6 +35,7 @@ const REGLES = [
   { path: "projets_fin", read: "admin", write: "admin" },
   { path: "acces", read: "admin", write: "admin" },
   { path: "site", read: "view", write: "admin" },
+  { path: "reglages_site", read: "admin", write: "admin" },
   { path: "espace", read: "view", write: "admin" },
   { path: "espace_membre", read: "admin", write: "admin" },
 ];
@@ -767,6 +769,8 @@ async function apiEngager(req, env, ctx) {
   const message = champ("message", 2000);
   const source = champ("source", 160);
 
+  /* Champ piège (invisible pour les personnes) : un robot le remplit, la demande est ignorée sans le lui dire. */
+  if (champ("piege", 200)) return json({ ok: true, message: "Votre demande a bien été transmise au secrétariat du mouvement. Nous vous recontacterons sous peu." });
   if (!nom) return erreur("champ_manquant", "Votre nom est obligatoire.");
   if (!tel && !email) return erreur("champ_manquant", "Indiquez au moins un téléphone ou un e-mail pour que l'équipe vous recontacte.");
   if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return erreur("email_invalide", "Adresse e-mail invalide.");
@@ -792,12 +796,54 @@ async function apiEngager(req, env, ctx) {
     .run();
 
   notifySde(env,ctx,"engagement",{nom,email,tel});
+  const suite = (async () => {
+    const sec = await secretariat(env);
+    await Promise.allSettled([alerterSecretariat(env, sec.emails, { objet, nom, tel, email, ville }), accuserReception(env, { nom, objet, email })]);
+  })().catch(() => {});
+  if (typeof ctx?.waitUntil === "function") ctx.waitUntil(suite);
   return json({ ok: true, message: "Votre demande a bien été transmise au secrétariat du mouvement. Nous vous recontacterons sous peu." });
 }
 
-/* Liste des demandes d'engagement (réservé admin + propriétaires) */
+/* Secrétariat : accès facultatif aux demandes, activé et alimenté par un administrateur
+   (document reglages_site/secretariat = { actif, emails[] }). Désactivé par défaut. */
+export async function secretariat(env) {
+  try {
+    const d = await lireDoc(env, "reglages_site/secretariat");
+    if (!d?.data || d.data.actif !== true) return { actif: false, emails: [] };
+    const emails = (Array.isArray(d.data.emails) ? d.data.emails : []).map((e) => String(e).trim().toLowerCase())
+      .filter((e) => /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(e)).slice(0, 10);
+    return { actif: true, emails };
+  } catch { return { actif: false, emails: [] }; }
+}
+/* Alerte immédiate (e-mail) aux membres du secrétariat désignés, en plus des alertes SDE habituelles. */
+async function alerterSecretariat(env, emails, d) {
+  if (!emails.length || !notificationConfigured(env)) return;
+  const ligne = (v) => String(v || "").replace(/[\r\n]+/g, " ").slice(0, 160);
+  const text = ["Nouvelle demande reçue sur mouvement-sde.org.", "", "Objet : " + ligne(d.objet), "Nom : " + ligne(d.nom),
+    d.tel ? "Téléphone : " + ligne(d.tel) : "", d.email ? "E-mail : " + ligne(d.email) : "", d.ville ? "Ville : " + ligne(d.ville) : "",
+    "", "À traiter : https://app.mouvement-sde.org/engagements"].filter((x) => x !== "").join("\n");
+  await Promise.allSettled(emails.map((to) => env.EMAIL.send({ from: String(env.NOTIFICATION_FROM), to, subject: "[SDE] Nouvelle demande : " + ligne(d.objet), text })));
+}
+/* Accusé de réception à la personne, si elle a laissé une adresse e-mail. */
+async function accuserReception(env, d) {
+  if (!d.email || !notificationConfigured(env)) return;
+  let contact = "";
+  try { contact = String((await lireDoc(env, "site/contact"))?.data?.email || ""); } catch { /* repli ci-dessous */ }
+  if (!/^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(contact)) contact = SDE_MAIL_RECIPIENT;
+  const text = ["Shalom " + String(d.nom).replace(/[\r\n]+/g, " ").slice(0, 80) + ",", "",
+    "Nous avons bien reçu votre demande (« " + String(d.objet).replace(/[\r\n]+/g, " ").slice(0, 100) + " »).",
+    "Le secrétariat du mouvement vous recontactera sous peu.", "", "Pour toute question : " + contact, "",
+    "Mouvement Prophético-Apostolique Soldats de l'Éternel"].join("\n");
+  try { await env.EMAIL.send({ from: String(env.NOTIFICATION_FROM), to: d.email, subject: "Votre demande a bien été reçue", text }); } catch (e) { console.warn("Accusé non envoyé", e?.name || "Erreur"); }
+}
+
+/* Liste des demandes d'engagement (propriétaires, et secrétariat désigné si l'option est activée) */
 async function apiEngagerAdmin(req, env, u) {
-  if (!u.connecte || u.niveau < 3) return erreur("refuse", "Réservé à l'équipe administrative.", 403);
+  if (!u.connecte) return erreur("refuse", "Réservé à l'équipe administrative.", 403);
+  if (u.niveau < 3) {
+    const sec = await secretariat(env);
+    if (!sec.actif || !sec.emails.includes(String(u.email || "").toLowerCase())) return erreur("refuse", "Réservé à l'équipe administrative.", 403);
+  }
   await env.DB.prepare(`CREATE TABLE IF NOT EXISTS engagements (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     cree INTEGER NOT NULL,
@@ -807,16 +853,18 @@ async function apiEngagerAdmin(req, env, u) {
     traite INTEGER NOT NULL DEFAULT 0,
     note TEXT
   )`).run();
+  await env.DB.prepare("ALTER TABLE engagements ADD COLUMN responsable TEXT").run().catch(() => {});
   const url = new URL(req.url);
   if (req.method === "PATCH") {
     let b; try { b = await req.json(); } catch { return erreur("invalid", "Corps JSON invalide."); }
     const id = parseInt(b.id, 10);
     if (!id) return erreur("invalid", "id requis.");
     await env.DB.prepare(`UPDATE engagements SET traite = ?, note = ? WHERE id = ?`).bind(b.traite ? 1 : 0, String(b.note || "").slice(0, 1000), id).run();
+    if (typeof b.responsable === "string") await env.DB.prepare(`UPDATE engagements SET responsable = ? WHERE id = ?`).bind(b.responsable.trim().slice(0, 120), id).run();
     return json({ ok: true });
   }
   const limite = Math.min(200, parseInt(url.searchParams.get("limite") || "100", 10));
-  const r = await env.DB.prepare(`SELECT id, cree, objet, pole, source, nom, tel, email, ville, message, traite, note FROM engagements ORDER BY traite ASC, cree DESC LIMIT ?`).bind(limite).all();
+  const r = await env.DB.prepare(`SELECT id, cree, objet, pole, source, nom, tel, email, ville, message, traite, note, responsable FROM engagements ORDER BY traite ASC, cree DESC LIMIT ?`).bind(limite).all();
   return json({ ok: true, engagements: r.results || [] });
 }
 
