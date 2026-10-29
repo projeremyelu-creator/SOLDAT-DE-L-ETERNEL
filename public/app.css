@@ -1143,3 +1143,89 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
 .inst-l { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .inst-l li { display: flex; gap: 10px; align-items: flex-start; }
 .inst-n { flex: 0 0 auto; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--night); color: #fff; font-size: .8rem; font-weight: 700; }
+
+/* ═══════════ v12 · Améliorations UX fluides ═══════════ */
+
+/* ── KPI cards glassmorphism ── */
+.chiffre { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 22px; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(15,30,61,.08), 0 1px 3px rgba(0,0,0,.04); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s cubic-bezier(.22,1,.36,1); }
+.chiffre:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(15,30,61,.14), 0 2px 6px rgba(0,0,0,.06); }
+.chiffre b { font-family: var(--f-display); font-weight: 800; font-size: 2.6rem; line-height: 1.05; letter-spacing: -.02em; }
+.chiffre small { font-size: 11.5px; color: var(--muted); margin-top: 2px; opacity: .7; }
+.chiffre-trend { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; margin-left: 6px; }
+.chiffre-trend.up { color: var(--ok); }
+.chiffre-trend.down { color: var(--danger); }
+.chiffre-spark { display: block; margin-top: 10px; height: 32px; width: 100%; }
+
+/* ── Nav sublimée ── */
+.nav-btn.on .ico { transform: scale(1.1); filter: drop-shadow(0 0 6px rgba(226,194,106,.4)); }
+.nav-btn.on::after { box-shadow: 0 0 10px rgba(226,194,106,.5); animation: nav-dot .25s ease-out, navGlow 2s ease-in-out .25s infinite; }
+
+/* ── Animations ── */
+@keyframes navGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(226,194,106,.5); }
+  50% { box-shadow: 0 0 18px rgba(226,194,106,.8), 0 0 30px rgba(226,194,106,.3); }
+}
+@keyframes urgPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: .4; }
+}
+@keyframes ringFill {
+  from { stroke-dashoffset: var(--circ, 226); }
+  to { stroke-dashoffset: var(--offset, 0); }
+}
+@keyframes skeletonShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes sparkDraw {
+  from { stroke-dashoffset: 300; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes floatUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Scroll-reveal ── */
+.cmd-reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); }
+.cmd-reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── Gauge circulaire ── */
+.cmd-gauge { position: relative; width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 80px; }
+.cmd-gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.cmd-gauge .gauge-bg { fill: none; stroke: var(--track); stroke-width: 6; }
+.cmd-gauge .gauge-fill { fill: none; stroke: var(--gold-mark); stroke-width: 6; stroke-linecap: round; stroke-dasharray: var(--circ, 226); stroke-dashoffset: var(--circ, 226); animation: ringFill 1.2s cubic-bezier(.22,1,.36,1) forwards; }
+.cmd-gauge .gauge-txt { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--f-display); font-size: 1.1rem; font-weight: 800; color: var(--ink); }
+
+/* ── États vides ── */
+.cmd-empty { text-align: center; padding: 32px 16px; }
+.cmd-empty svg { width: 64px; height: 64px; color: var(--muted); opacity: .5; margin-bottom: 12px; }
+.cmd-empty p { color: var(--muted); margin: 4px 0 0; font-size: .92rem; }
+.cmd-empty .btn { margin-top: 14px; }
+
+/* ── Bouton néon ── */
+.btn-neon { background: var(--ok); color: #fff; border: 0; border-radius: 8px; padding: 6px 14px; font-size: .85rem; font-weight: 700; cursor: pointer; box-shadow: 0 0 12px rgba(72,199,142,.3); transition: box-shadow .2s, transform .15s; }
+.btn-neon:hover { box-shadow: 0 0 20px rgba(72,199,142,.5); transform: translateY(-1px); }
+.btn-neon:active { transform: scale(.96); }
+
+/* ── Point urgent pulsant ── */
+.urg-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--danger); margin-right: 6px; animation: urgPulse 1.5s ease-in-out infinite; }
+
+/* ── Skeleton loader ── */
+.skeleton { background: linear-gradient(90deg, var(--surface-2) 25%, var(--line) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: skeletonShimmer 1.5s ease-in-out infinite; border-radius: 8px; }
+
+/* ── Sparkline animation ── */
+.chiffre-spark polyline { stroke-dasharray: 300; stroke-dashoffset: 0; animation: sparkDraw 1.2s ease-out; }
+
+/* ── Cards glassmorphism subtil ── */
+.card { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.prio-i { border-radius: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cmd-reveal { opacity: 1; transform: none; transition: none; }
+  .cmd-gauge .gauge-fill { animation: none; stroke-dashoffset: var(--offset, 0); }
+  .chiffre-spark polyline { animation: none; stroke-dashoffset: 0; }
+  .nav-btn.on::after { animation: nav-dot .25s ease-out; }
+  .urg-dot { animation: none; }
+  .skeleton { animation: none; }
+}

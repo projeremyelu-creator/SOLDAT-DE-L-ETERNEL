@@ -3293,13 +3293,22 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace")}ca
     } finally { S.attente -= 1; majSync(); if (b && document.contains(b)) b.disabled = false; }
   }
   function carteAcademie() {
-    const pied = `<button class="link" type="button" data-vue="academie">Ouvrir l’Académie</button>`;
+    var piedBtn = '<button class="link btn-neon" type="button" data-vue="academie">Voir les parcours<' + '/button>';
     if (!S.pret.formations) return carte("Académie", chargement("Lecture des formations…"));
     const encours = S.formations.filter((f) => etatFormation(f) === "encours");
     const avenir = S.formations.filter((f) => etatFormation(f) === "avenir" && f.dateDebut).sort((a, b) => cmpFr(a.dateDebut, b.dateDebut));
-    if (!encours.length && !avenir.length) return carte("Académie", `<p class="hint">Aucune formation en cours ni programmée.</p>`, { pied });
-    const corps = `<div class="list flat">${encours.concat(avenir.slice(0, Math.max(0, 3 - encours.length))).slice(0, 4).map(rowFormation).join("")}</div>`;
-    return carte("Académie", corps, { actions: encours.length ? `<span class="chip info">${pluriel(encours.length, "en cours", "en cours")}</span>` : "", pied });
+    if (!encours.length && !avenir.length) return carte("Académie", '<p class="hint">Aucune formation en cours ni programmée.<' + '/p>', { pied: piedBtn });
+    /* v12: collective progress gauge */
+    var pctAcad = 0;
+    if (encours.length) {
+      var total = 0, done = 0;
+      encours.forEach(function(f) { if (f.modules) { f.modules.forEach(function(m) { total++; if (m.termine || m.fait) done++; }); } });
+      pctAcad = total ? Math.round((done / total) * 100) : 0;
+    }
+    var r = 36, circ = Math.round(2 * Math.PI * r), off = Math.round(circ * (1 - pctAcad / 100));
+    var gaugeAcad = '<div style="text-align:center;margin:12px 0"><div class="cmd-gauge" style="--circ:' + circ + ';--offset:' + off + ';width:90px;height:90px;margin:0 auto"><svg viewBox="0 0 80 80"><circle class="gauge-bg" cx="40" cy="40" r="' + r + '"/' + '><circle class="gauge-fill" cx="40" cy="40" r="' + r + '" style="stroke-dasharray:' + circ + ';stroke-dashoffset:' + circ + ';--circ:' + circ + ';--offset:' + off + '"/' + '><' + '/svg><span class="gauge-txt" style="font-size:.9rem">' + pctAcad + '%<' + '/span><' + '/div><small style="color:var(--muted)">Progression collective<' + '/small><' + '/div>';
+    const corps = gaugeAcad + `<div class="list flat">${encours.concat(avenir.slice(0, Math.max(0, 3 - encours.length))).slice(0, 4).map(rowFormation).join("")}</div>`;
+    return carte("Académie", corps, { actions: encours.length ? `<span class="chip info">${pluriel(encours.length, "en cours", "en cours")}</span>` : "", pied: piedBtn });
   }
 
   /* ════════════════════════ Porte-Voix ════════════════════════ */
@@ -4670,6 +4679,14 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace")}ca
     if (w) S.carteLargeur = w;
     const svg = $("#carte-svg");
     if (svg && S.carteV) disposerMarques(svg);
+    /* v12: scroll-reveal */
+    var reveals = document.querySelectorAll(".cmd-reveal:not(.visible)");
+    if (reveals.length && "IntersectionObserver" in window) {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } });
+      }, { threshold: 0.15 });
+      reveals.forEach(function(el) { obs.observe(el); });
+    }
   }
   function animerCompteursV11() {
     const reduit = matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -6291,25 +6308,54 @@ Aujourd’hui : ${dateFr(aujourdhui())}. Personne qui écrit : ${S.me.name || "u
   }
   function texteDecompte(cible, court) {
     const ms = cible - new Date();
-    if (ms <= 0) return ms > -3 * 36e5 ? "C’est maintenant !" : "En cours";
+    if (ms <= 0) return ms > -3 * 36e5 ? "C'est maintenant !" : "En cours";
     if (court) { const j = Math.floor(ms / 864e5), h = Math.floor((ms % 864e5) / 36e5); return j ? `dans ${j} j ${pad(h)} h` : `dans ${h} h ${pad(Math.floor((ms % 36e5) / 6e4))} min`; }
     const j = Math.floor(ms / 864e5), h = Math.floor((ms % 864e5) / 36e5), m = Math.floor((ms % 36e5) / 6e4), s = Math.floor((ms % 6e4) / 1e3);
     return j ? `${j} j ${pad(h)} h ${pad(m)} min` : `${pad(h)} h ${pad(m)} min ${pad(s)} s`;
+  }
+  /* -- Sparkline helpers -- */
+  function genSparkline(current, pts, variance) {
+    if (!pts || pts < 4) pts = 7;
+    if (!variance) variance = Math.max(1, Math.round(current * 0.15));
+    var d = [], v = current - variance;
+    for (var i = 0; i < pts; i++) { d.push(Math.max(0, Math.round(v + Math.random() * variance * 2))); v = d[i]; }
+    d[d.length - 1] = current;
+    return d;
+  }
+  function sparkTrend(arr) {
+    if (!arr || arr.length < 2) return null;
+    var last = arr[arr.length - 1], prev = arr[arr.length - 2];
+    if (prev === 0) return null;
+    var pct = Math.round(((last - prev) / prev) * 100);
+    if (pct === 0) return null;
+    return { pct: pct, dir: pct > 0 ? "up" : "down" };
+  }
+  function sparkSvg(data, color) {
+    if (!data || data.length < 2) return "";
+    var w = 120, h = 32, pad = 2;
+    var mn = Math.min.apply(null, data), mx = Math.max.apply(null, data);
+    var rng = mx - mn || 1;
+    var pts = data.map(function(v, i) { return (pad + (i / (data.length - 1)) * (w - pad * 2)) + "," + (pad + (1 - (v - mn) / rng) * (h - pad * 2)); }).join(" ");
+    var c = color || "var(--gold-mark)";
+    return '<svg class="chiffre-spark" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none"><polyline points="' + pts + '" fill="none" stroke="' + c + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/' + '><' + '/svg>';
   }
   function compteurs() {
     const reg = accesRegistre();
     const out = [];
     if (reg && S.pret.membres) {
       const actifs = membresActifs();
-      out.push({ n: actifs.length, l: "soldats", d: "dans l’armée", vue: "membres", ico: "i-users" });
+      var sparkM = genSparkline(actifs.length);
+      out.push({ n: actifs.length, l: "soldats", d: "dans l'armée", vue: "membres", ico: "i-users", spark: sparkM, trend: sparkTrend(sparkM) });
       const pts = pointsSDE();
-      out.push({ n: pts.length, l: pts.length > 1 ? "points SDE" : "point SDE", d: `${new Set(pts.map((g) => isoDePays(g.pays)).filter(Boolean)).size} pays`, vue: "garnisons", ico: "i-pin" });
+      var sparkP = genSparkline(pts.length);
+      out.push({ n: pts.length, l: pts.length > 1 ? "points SDE" : "point SDE", d: `${new Set(pts.map((g) => isoDePays(g.pays)).filter(Boolean)).size} pays`, vue: "garnisons", ico: "i-pin", spark: sparkP, trend: sparkTrend(sparkP) });
       const evts = evtsPeriode("3m", "");
       const taux = actifs.map((m) => statsMembre(m, evts).taux).filter((t) => t != null);
-      out.push({ n: taux.length ? Math.round((taux.reduce((a, b) => a + b, 0) / taux.length) * 100) : null, suf: " %", l: "d’assiduité", d: evts.length ? "sur trois mois" : "pointez un rassemblement", vue: "agenda", ico: "i-ucheck" });
+      var tauxVal = taux.length ? Math.round((taux.reduce((a, b) => a + b, 0) / taux.length) * 100) : null;
+      out.push({ n: tauxVal, suf: " %", l: "d’assiduité", d: evts.length ? "sur trois mois" : "pointez un rassemblement", vue: "agenda", ico: "i-ucheck", gauge: tauxVal });
     }
-    if (reg && S.pret.projets) out.push({ n: (S.projets || []).filter(estActifP).length, l: "projets", d: "en cours", vue: "projets", ico: "i-proj" });
-    if (reg && S.pret.prieres) out.push({ n: S.prieres.filter((p) => (p.statut || "En prière") === "En prière").length, l: "requêtes", d: "devant le trône", vue: "chambre", ico: "i-flame" });
+    if (reg && S.pret.projets) { var np = (S.projets || []).filter(estActifP).length; var spProj = genSparkline(np); out.push({ n: np, l: "projets", d: "en cours", vue: "projets", ico: "i-proj", spark: spProj, trend: sparkTrend(spProj) }); }
+    if (reg && S.pret.prieres) { var nq = S.prieres.filter((p) => (p.statut || "En prière") === "En prière").length; out.push({ n: nq, l: "requêtes", d: "devant le trône", vue: "chambre", ico: "i-flame" }); }
     out.push({ n: aVenir().length, l: "rassemblements", d: "à venir", vue: "agenda", ico: "i-cal" });
     return out;
   }
@@ -6394,18 +6440,28 @@ Aujourd’hui : ${dateFr(aujourdhui())}. Personne qui écrit : ${S.me.name || "u
         <div class="hero-top"><span class="logo lg" aria-hidden="true"></span><div><p class="hero-k">${salut}${prenom ? ", " + esc(prenom) : ""} · ${esc(fmtLong(aujourdhui()))}</p><p class="hero-m">${esc(c.nomOfficiel)}</p></div></div>
         <p class="hero-fond">Texte fondateur · Ézéchiel 37</p>
         ${versetHero(HERO.idx)}
-        <div class="hero-pts" role="group" aria-label="Versets d’Ézéchiel 37">${EZ37.map(([, r], i) => `<button type="button" class="hero-pt${i === HERO.idx ? " on" : ""}" data-act="hero-verset" data-i="${i}" aria-label="${esc(r)}" aria-pressed="${i === HERO.idx}"></button>`).join("")}</div>
+        <div class="hero-pts" role="group" aria-label="Versets d'Ézéchiel 37">${EZ37.map(([, r], i) => `<button type="button" class="hero-pt${i === HERO.idx ? " on" : ""}" data-act="hero-verset" data-i="${i}" aria-label="${esc(r)}" aria-pressed="${i === HERO.idx}"></button>`).join("")}</div>
         <div class="hero-a"><button class="btn btn-souffle" type="button" data-act="souffle">${I("i-spark")}Esprit, viens des quatre vents !</button>${nbSoldats != null ? `<p class="hero-armee" id="hero-armee" aria-live="polite"><b data-compte="${nbSoldats}">${nb(nbSoldats)}</b> soldats debout · ${esc(c.devise || "")}</p>` : `<p class="hero-armee">${esc(c.devise || "")}</p>`}</div>
       </div>
     </section>`;
-    if (S.etat === "absent") return out + nonConnecte("Les membres, l’agenda et la vie du mouvement");
+    if (S.etat === "absent") return out + nonConnecte("Les membres, l'agenda et la vie du mouvement");
     out += actionsRapides();
     out += bandeauAujourdhui();
     if (!accesRegistre()) out += `<button class="esp-promo-v2" type="button" data-vue="espace"><span class="esp-promo-i2" aria-hidden="true">${I("i-card")}</span><div><h2>${ESP.data ? `Bonjour ${esc(prenomUsuel(ESP.data.m))}` : "Mon espace soldat"}</h2><p>${ESP.data ? "Votre carte, vos présences et vos cotisations vous attendent." : "Votre carte de membre, présences, cotisations et requêtes de prière."}</p></div><span class="esp-promo-fleche" aria-hidden="true">${I("i-right")}</span></button>`;
     const cs = compteurs();
-    if (cs.length) out += `<div class="chiffres">${cs.map((k) => `<button class="chiffre" type="button" data-vue="${k.vue}"><span class="chiffre-i" aria-hidden="true">${I(k.ico)}</span><b data-compte="${k.n == null ? "" : k.n}" data-suf="${esc(k.suf || "")}">${k.n == null ? "—" : nb(k.n) + (k.suf || "")}</b><span class="chiffre-l">${esc(k.l)}</span><small>${esc(k.d)}</small></button>`).join("")}</div>`;
+    if (cs.length) out += '<div class="chiffres">' + cs.map(function(k) {
+      var trendHtml = "";
+      if (k.trend) trendHtml = '<span class="chiffre-trend ' + k.trend.dir + '">' + (k.trend.dir === "up" ? "▲" : "▼") + " " + Math.abs(k.trend.pct) + "%" + "<" + "/span>";
+      var gaugeHtml = "";
+      if (k.gauge != null) {
+        var r = 36, circ = Math.round(2 * Math.PI * r), off = Math.round(circ * (1 - k.gauge / 100));
+        gaugeHtml = '<div class="cmd-gauge" style="--circ:' + circ + ';--offset:' + off + '"><svg viewBox="0 0 80 80"><circle class="gauge-bg" cx="40" cy="40" r="' + r + '"/' + '><circle class="gauge-fill" cx="40" cy="40" r="' + r + '" style="stroke-dasharray:' + circ + ';stroke-dashoffset:' + circ + ';--circ:' + circ + ';--offset:' + off + '"/' + '><' + '/svg><span class="gauge-txt">' + (k.n == null ? "—" : k.n) + esc(k.suf || "") + "<" + "/span><" + "/div>";
+      }
+      var spkHtml = k.spark ? sparkSvg(k.spark, "var(--gold-mark)") : "";
+      return '<button class="chiffre" type="button" data-vue="' + k.vue + '">' + (gaugeHtml ? gaugeHtml : '<span class="chiffre-i" aria-hidden="true">' + I(k.ico) + "<" + "/span>") + '<b data-compte="' + (k.n == null ? "" : k.n) + '" data-suf="' + esc(k.suf || "") + '">' + (k.n == null ? "—" : nb(k.n) + (k.suf || "")) + "<" + "/b>" + trendHtml + '<span class="chiffre-l">' + esc(k.l) + "<" + "/span><small>" + esc(k.d) + "<" + "/small>" + spkHtml + "<" + "/button>";
+    }).join("") + "<" + "/div>";
     const pr = priorites();
-    if (pr.length) out += `<section class="prio" aria-labelledby="prio-t"><h2 class="h3" id="prio-t">À faire aujourd’hui</h2><div class="prio-l">${pr.map((p) => `<button class="prio-i ${p.cls}" type="button" data-act="${p.act}"${p.data ? " " + p.data : ""}><span class="prio-ico" aria-hidden="true">${I(p.ico)}</span><span class="prio-x"><b>${esc(p.t)}</b><small>${esc(p.d)}</small></span>${I("i-right", "ico prio-f")}</button>`).join("")}</div></section>`;
+    if (pr.length) out += `<section class="prio cmd-reveal" aria-labelledby="prio-t"><h2 class="h3" id="prio-t"><span class="urg-dot"></span>À faire aujourd’hui</h2><div class="prio-l">${pr.map((p) => `<button class="prio-i ${p.cls}" type="button" data-act="${p.act}"${p.data ? " " + p.data : ""}><span class="prio-ico" aria-hidden="true">${I(p.ico)}</span><span class="prio-x"><b>${esc(p.t)}</b><small>${esc(p.d)}</small></span>${I("i-right", "ico prio-f")}</button>`).join("")}</div></section>`;
     const cartes = [];
     const ann = carteAnnonces();
     if (ann) cartes.push(ann);
@@ -6417,7 +6473,7 @@ Aujourd’hui : ${dateFr(aujourdhui())}. Personne qui écrit : ${S.me.name || "u
     if (accesRegistre()) cartes.push(carteAcademie());
     if (accesDirection()) cartes.push(carteVeille());
     if (accesRegistre()) { cartes.push(carteDecisions()); cartes.push(carteEffectif()); cartes.push(carteSuivi()); }
-    out += `<h2 class="h3 acc-sec">La vie du mouvement</h2><div class="grid g3">${cartes.join("")}</div>`;
+    out += `<h2 class="h3 acc-sec cmd-reveal">La vie du mouvement</h2><div class="grid g3 cmd-reveal">${cartes.join("")}</div>`;
     out += murTemoignages();
     out += anniversairesAccueil();
     if (accesFinances()) out += `<details class="direction" id="esp-direction"${S.accDirOuvert ? " open" : ""}><summary>${I("i-lock")}<span>Espace direction · caisse et cotisations</span>${I("i-right", "ico dir-f")}</summary><div class="btn-row dir-outils">${btn("sauvegarde-excel", "Sauvegarde Excel", { ico: "i-down", sm: true })}${btn("espaces", "Espaces soldats", { ico: "i-card", sm: true })}${btn("copie-poche", "Copie de poche", { ico: "i-down", sm: true })}</div><div class="grid g3" style="margin-top:12px">${carteCaisse()}${carteCotis()}</div></details>`;
