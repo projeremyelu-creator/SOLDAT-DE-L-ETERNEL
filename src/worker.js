@@ -664,7 +664,7 @@ async function apiTableauDeBord(req,env,u) {
   const metrics=dashboardMetrics(evenements,formations,projets);
   const presence=dashboardAttendance(evenements,membres,garnisons);
   const enPriere=prieres.filter(p=>(p.data.statut||"En prière")==="En prière");
-  const urgences=enPriere.filter(p=>p.data.urgent===true).map(p=>({date:String(p.data.date||"").slice(0,10)})).sort((a,b)=>b.date.localeCompare(a.date));
+  const urgences=enPriere.filter(p=>p.data.urgent===true).map(p=>({id:p.id,date:String(p.data.date||"").slice(0,10)})).sort((a,b)=>b.date.localeCompare(a.date));
   // Métadonnées de mises à jour uniquement, jamais le contenu des dossiers.
   const recents=await env.DB.prepare("SELECT parent,maj FROM docs WHERE parent IN ('membres','evenements','projets','formations','annonces') ORDER BY maj DESC LIMIT 8").all();
   return json({total,...metrics,indicateurs:{membresActifs:membres.filter(m=>m.data.actif!==false).length,presence,intercessions:enPriere.length},urgences:urgences.slice(0,5),urgencesTotal:urgences.length,activites:(recents.results||[]).map(r=>({rubrique:r.parent,cree:r.maj})),actualiseLe:Date.now()});

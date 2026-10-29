@@ -87,7 +87,7 @@ function PrivateExperience({portal}){
  const nav=[['synthese','Accueil','home'],['agenda','Agenda','calendar'],['academie','Academy','book'],['mur','Prière','prayer']];
  const shell=document.querySelector('.shell');
  return <><FocusControl allowed={['academie','arsenal','parcours','mediatheque','bibliotheque'].includes(module)}/>
-  <nav className="sde-bottom-nav" aria-label="Navigation mobile privée">{nav.map(([key,label,icon])=><button type="button" key={key} onClick={()=>open(key)} aria-current={module===key&&!tools?'page':undefined}><Icon name={icon}/><span>{label}</span></button>)}<button type="button" onClick={()=>setTools(!tools)} aria-expanded={tools} aria-controls="sde-direct-tabs"><Icon name="more"/><span>{tools?'Fermer':'Outils'}</span></button></nav>
+  <nav className="sde-bottom-nav" aria-label="Navigation mobile privée">{nav.map(([key,label,icon])=><button type="button" key={key} aria-label={label} onClick={()=>open(key)} aria-current={module===key&&!tools?'page':undefined}><Icon name={icon}/><span>{label}</span></button>)}<button type="button" onClick={()=>setTools(!tools)} aria-expanded={tools} aria-controls="sde-direct-tabs"><Icon name="more"/><span>{tools?'Fermer':'Outils'}</span></button></nav>
   {shell&&createPortal(<section id="sde-wall-panel" className="sde-wall-panel" hidden={!wall} aria-label="Mur de prière communautaire">{wall&&<PrayerWall/>}</section>,shell)}
  </>;
 }

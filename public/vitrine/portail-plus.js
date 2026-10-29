@@ -39,19 +39,25 @@
   observer.observe(main,{childList:true,subtree:true});setTimeout(()=>observer.disconnect(),2500);
  }
  function renderMemberWelcome(data){
-  const welcome=node('section',undefined,'member-welcome');
-  const hello=node('div',undefined,'member-greeting');hello.append(node('p','Bienvenue dans votre espace','dashboard-eyebrow'),node('h2',data.nom||portal.compte.nom||'Mon parcours SDE'),note('Grandir dans la foi. Marcher ensemble. Servir les nations.'));
-  const initials=String(data.nom||portal.compte.nom||'SDE').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();hello.prepend(node('span',initials,'member-avatar'));welcome.append(hello);
+  const welcome=node('section',undefined,'member-welcome'),hello=node('div',undefined,'member-greeting');
+  hello.append(node('p','Bienvenue,','dashboard-eyebrow'));
+  const name=node('h2',data.nom||portal.compte.nom||'Mon espace');name.append(node('span',' · S.D.E.','ref-name-sde'));hello.append(name);
+  hello.append(note('Rôle : '+(portal.compte.libRole||'Soldat')+' | Matricule : '+(data.matricule||portal.compte.matricule||'À renseigner')));
+  const avatar=node('span',undefined,'member-avatar');const photo=portal.compte.photo;
+  if(typeof photo==='string'&&/^(https:\/\/|\/_blob\/|data:image\/)/.test(photo)){const image=node('img');image.src=photo;image.alt='';avatar.append(image)}else avatar.textContent=String(data.nom||portal.compte.nom||'SDE').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();hello.append(avatar);welcome.append(hello);
   const card=button('',()=>portal.selectionner('carteqr'));card.dataset.plusModule='carteqr';card.className='member-card-preview';card.setAttribute('aria-label','Afficher ma carte de membre et mon QR Code officiel');
-  const brand=node('span',undefined,'member-card-brand'),logo=document.createElement('img');logo.src='/vitrine/logo-96.png';logo.alt='';logo.width=34;logo.height=34;brand.append(logo,node('span','MOUVEMENT S.D.E.'));
-  const identity=node('span',undefined,'member-card-identity');identity.append(node('strong',data.nom||portal.compte.nom||'Mon profil'),node('span',data.matricule||portal.compte.matricule||'Retrouver mon matricule'));
+  const identity=node('span',undefined,'member-card-identity ref-visually-hidden');identity.append(node('strong',data.nom||portal.compte.nom||'Mon profil'),node('span',data.matricule||portal.compte.matricule||''));
   const qr=node('span',undefined,'member-card-qr');qr.append(pictogram('qr'),node('span','Afficher mon QR Code'));
-  card.append(brand,identity,qr,node('small','Ma carte de membre · Ouvrir →'));welcome.append(card);panel.append(welcome);
+  card.append(node('span','MA CARTE S.D.E.','member-card-brand'),identity,node('span','QR Code','ref-qr-label'),qr,node('small','Scanner pour présence','ref-card-action'));welcome.append(card);panel.append(welcome);
+ }
+ function renderMemberShortcuts(){
   const tiles=node('nav',undefined,'member-quick-grid');tiles.setAttribute('aria-label','Les essentiels de mon espace');
-  for(const [label,module,icon,tab]of [['Ma Carte','carteqr','card'],['Mes Présences','espace','calendar','presences'],['Intercessions','mur','prayer'],['Bibliothèque','bibliotheque','book'],['Mes Engagements','engagements','service'],['Dons & Dîmes','contributions','gift']]){
-   const b=tab?button('',()=>personalTab(tab)):route('',module);b.dataset.plusModule=module;b.className='member-quick-tile';b.append(pictogram(icon),node('span',label));tiles.append(b);
-  }
-  panel.append(tiles);
+  for(const [label,module,icon,tab]of [['Mes Présences','espace','calendar','presences'],['Intercessions','mur','prayer'],['Bibliothèque','bibliotheque','book'],['Mes Engagements','engagements','service'],['Dons & Dîmes','contributions','gift']]){const b=tab?button('',()=>personalTab(tab)):route('',module);b.dataset.plusModule=module;b.className='member-quick-tile';b.append(pictogram(icon),node('span',label));tiles.append(b)}panel.append(tiles);
+ }
+ function renderMemberAcademy(data){
+  const academy=box('Soldiers Academy');academy.classList.add('member-academy','ref-member-academy');
+  const f=(data.formations||[])[0];if(f){academy.append(node('strong',f.titre),ratio(f.faits,f.total,'modules suivis'));const next=(f.modules||[]).filter(m=>!m.suivi).sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'))[0];if(next)academy.append(note('Prochain cours : '+next.titre+(next.date?' · '+next.date:'')))}else academy.append(note('Aucun parcours renseigné sur votre fiche.'));
+  const open=route('Ouvrir mon parcours','academie');open.classList.add('ref-stretched-link');academy.append(open);panel.append(academy);
  }
  function ratio(done,total,label){
   const block=node('div',undefined,'dashboard-progress');
@@ -97,9 +103,9 @@
   const now=Date.now(),today=new Date(now).toISOString().slice(0,10);
   const upcoming=(events||[]).filter(e=>/^\d{4}-\d{2}-\d{2}$/.test(e.date)).map(e=>({...e,start:/^([01]\d|2[0-3]):[0-5]\d$/.test(e.heure||'')?Date.parse(e.date+'T'+e.heure+':00Z'):null})).filter(e=>e.start===null?e.date>=today:e.start>now).sort((a,b)=>(a.date+(a.heure||'')).localeCompare(b.date+(b.heure||'')));
   const e=upcoming[0];if(!e)return;
-  const next=box('Mon prochain rendez-vous');next.classList.add('member-next-event');next.append(node('strong',e.titre),note([e.date,e.heure,e.lieu].filter(Boolean).join(' · ')));
+  const next=box('Mon Prochain RDV');next.classList.add('member-next-event');next.append(note('Compte à rebours'),node('strong',e.titre),note([e.date,e.heure].filter(Boolean).join(' · ')));
   if(e.start!==null){const timer=node('p','','member-countdown');timer.setAttribute('aria-label','Temps restant avant la rencontre');next.append(timer);
-   const update=()=>{const seconds=Math.max(0,Math.floor((e.start-Date.now())/1000));timer.textContent=seconds?Math.floor(seconds/86400)+' j · '+String(Math.floor(seconds/3600)%24).padStart(2,'0')+' h · '+String(Math.floor(seconds/60)%60).padStart(2,'0')+' min · '+String(seconds%60).padStart(2,'0')+' s':'La rencontre a commencé. Consultez l’agenda.';if(!seconds){clearInterval(countdownTimer);countdownTimer=null}};
+   const update=()=>{const seconds=Math.max(0,Math.floor((e.start-Date.now())/1000));timer.textContent=seconds?'J − '+Math.max(0,Math.round((Date.parse(e.date+'T00:00:00Z')-Date.parse(new Date(Date.now()).toISOString().slice(0,10)+'T00:00:00Z'))/86400000)):'En cours';if(!seconds){clearInterval(countdownTimer);countdownTimer=null}};
    countdownTimer=setInterval(update,1000);update();
   }
   next.append(route('Voir mon agenda','rendezvous'),button('Ajouter au calendrier',()=>calendar(e)));panel.append(next);
@@ -119,11 +125,10 @@
  function renderHome(data,dashboard){
   const direction=location.pathname==='/administration';
   panel.classList.add('maquette-dashboard');document.body.dataset.sdeDashboard=direction?'direction':'member';
-  if(direction)renderCommand(data,dashboard||{});else {renderMemberWelcome(data);renderNextEvent(data.evenements)}
+  if(direction)renderCommand(data,dashboard||{});else {renderMemberWelcome(data);renderMemberAcademy(data);renderMemberShortcuts();renderNextEvent(data.evenements)}
   if(!data.ficheLiee&&!direction)panel.append(note('Votre compte est actif. Contactez le secrétariat pour le relier à votre fiche membre et retrouver vos informations personnelles.'));
-  const grid=node('div',undefined,'sde-plus-grid');
+  const grid=node('div',undefined,'sde-plus-grid ref-home-secondary');
   const events=box('Prochaines rencontres');events.classList.add('dashboard-agenda');events.append(list(data.evenements||[],'Aucune rencontre annoncée pour le moment.',(li,e)=>{li.append(node('strong',e.titre),note([e.date,e.heure,e.lieu].filter(Boolean).join(' · ')));const actions=node('div',undefined,'sde-plus-actions');actions.append(route('Voir l’agenda','agenda'),button('Ajouter au calendrier',()=>calendar(e)));li.append(actions)}));grid.append(events);
-  if(!direction){const formations=box('Soldiers Academy');formations.classList.add('member-academy');formations.append(list(data.formations||[],'Aucune formation liée à votre fiche. Découvrez Soldiers Academy.',(li,f)=>{li.append(node('strong',f.titre),note(f.statut||'Parcours en cours'),ratio(f.faits,f.total,'modules suivis'));const next=(f.modules||[]).filter(m=>!m.suivi).sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'))[0];if(next)li.append(note('Prochain module : '+next.titre+(next.date?' · '+next.date:'')))}));formations.append(route('Poursuivre ma formation','academie'));grid.prepend(formations)}
   const annonces=box('La vie du mouvement');annonces.append(list(data.annonces||[],'Aucune annonce publiée.',(li,a)=>li.append(node('strong',a.titre),note(a.texte))));annonces.append(route('Voir les annonces','portevoix'));grid.append(annonces);
   const reminders=box('Mes rappels');reminders.append(list(data.rappels||[],'Aucun rappel selon vos préférences.',(li,r)=>li.append(route(r.titre,r.module),note(r.date))));reminders.append(route('Régler mes rappels','preferences'));grid.append(reminders);
   if(direction){const tools=box('Accès de la direction');for(const [title,module]of [['Membres','membres'],['Pointages','agenda'],['Pôles','garnisons'],['Décisions','secretariat'],...(portal.compte.niveau>=2?[['Finances','finances']]:[])])tools.append(route(title,module));grid.append(tools)}

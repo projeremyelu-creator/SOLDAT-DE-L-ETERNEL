@@ -59,6 +59,10 @@
   for(const [nom,endpoint] of [["connexion","/api/connexion"],["inscription","/api/inscription"],["activation","/api/activation"],["recuperation","/api/recuperation"]]){
    document.getElementById("form-"+nom)?.addEventListener("submit",e=>{e.preventDefault();envoyer(e.currentTarget,endpoint)});
   }
+  const targets=[...document.querySelectorAll('[data-access-target]')];
+  const selectTarget=target=>{for(const b of targets)b.setAttribute('aria-pressed',String(b.dataset.accessTarget===target))};
+  const initialTarget=new URL(location.href).searchParams.get('retour');selectTarget(initialTarget==='/mon-espace'?initialTarget:'/administration');
+  for(const button of targets)button.addEventListener('click',()=>{const url=new URL(location.href);url.searchParams.set('retour',button.dataset.accessTarget);history.replaceState({},'',url);selectTarget(button.dataset.accessTarget);afficher('connexion')});
   afficher(mode());
  };
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",debut,{once:true});else debut();
