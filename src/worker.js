@@ -33,6 +33,7 @@ const REGLES = [
   { path: "offrandes", read: "admin", write: "admin" },
   { path: "projets_fin", read: "admin", write: "admin" },
   { path: "acces", read: "admin", write: "admin" },
+  { path: "site", read: "view", write: "admin" },
   { path: "espace", read: "view", write: "admin" },
   { path: "espace_membre", read: "admin", write: "admin" },
 ];
@@ -681,6 +682,31 @@ async function apiPublic(env) {
     .slice(0, 8)
     .map((e) => ({ id: e.id, titre: String(e.titre || ""), type: e.type, date: e.date, heure: publishedEventTime(e), fin: e.fin || "", lieu: String(e.lieu || ""), description: String(e.description || "").slice(0, 600) }));
   return json({ evenements: evts }, 200, { "cache-control": "public, max-age=300" });
+}
+
+/* Contenu public modifiable : documents site/contact, site/programmes, site/banniere.
+   Écriture réservée aux administrateurs (REGLES) ; lecture publique en texte seul, champs filtrés. */
+const txt = (v, n) => String(v ?? "").replace(/[\u0000-\u001f\u007f]/g, " ").trim().slice(0, n);
+const lienSite = (v) => { const l = txt(v, 300); return /^(\/(?!\/)|#|https:\/\/)/.test(l) ? l : ""; };
+const imageProg = (v) => { const l = txt(v, 120); return /^\/vitrine\/illus\/[\w.-]+\.svg$/.test(l) ? l : ""; };
+export function assainirSite(docs) {
+  const c = docs.contact || {}, pr = docs.programmes || {}, b = docs.banniere || {};
+  const email = txt(c.email, 120), tel = txt(c.telephone, 40);
+  const liste = (Array.isArray(pr.liste) ? pr.liste : []).slice(0, 20).map((x) => ({
+    titre: txt(x?.titre, 120), rythme: txt(x?.rythme, 80), texte: txt(x?.texte, 400),
+    lien: lienSite(x?.lien), libelle: txt(x?.libelle, 40), image: imageProg(x?.image), feu: x?.feu === true
+  })).filter((x) => x.titre);
+  return {
+    contact: { email: /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(email) ? email : "", telephone: /^[+\d][\d\s().-]{5,}$/.test(tel) ? tel : "" },
+    programmes: liste,
+    banniere: b.actif === false ? { texte: "", lien: "" } : { texte: txt(b.texte, 200), lien: lienSite(b.lien) }
+  };
+}
+async function apiSite(env) {
+  const r = await env.DB.prepare("SELECT path, data FROM docs WHERE parent = 'site'").all();
+  const docs = {};
+  for (const x of r.results || []) { try { docs[String(x.path).split("/").pop()] = JSON.parse(x.data); } catch { /* document illisible : ignoré */ } }
+  return json(assainirSite(docs), 200, { "cache-control": "public, max-age=300" });
 }
 
 async function apiRessourcesPubliques(env){
@@ -1426,6 +1452,7 @@ async function traiter(req, env, ctx) {
         }
       }
       if (p === "/api/public") return apiPublic(env);
+      if (p === "/api/site" && req.method === "GET") return apiSite(env);
       if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
       if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
       if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
@@ -1485,6 +1512,7 @@ async function traiter(req, env, ctx) {
     if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
     if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
     if (p === "/api/priere-anonyme" && req.method === "POST") return apiPriereAnonyme(req,env,ctx);
+    if (p === "/api/site" && req.method === "GET") return apiSite(env);
     if (p === "/api/ressources-publiques" && req.method === "GET") return apiRessourcesPubliques(env);
     const telechargementPublic=p.match(/^\/api\/ressources-publiques\/([^/]+)\/telecharger$/);
     if(telechargementPublic&&req.method==="GET")return telechargerRessourcePublique(env,telechargementPublic[1]);
