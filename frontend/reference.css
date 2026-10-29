@@ -234,3 +234,12 @@ body.sde-reference-admin .site-ed .site-ed-check{display:flex;flex-direction:row
 .site-ed-publish p{margin:0;flex:1 1 220px}
 .site-ed-go{background:#D4AF37;color:#0b1530;font-weight:800;min-height:42px;padding:0 20px;border:0;border-radius:10px;cursor:pointer}
 @media (max-width:720px){.site-ed-grid{grid-template-columns:1fr}}
+
+/* Typographie unifiée : mêmes familles de marque sur la connexion, l'espace membre et l'administration. */
+body.sde-reference-login,body.sde-reference-member{--ref-title:"Saira Condensed","Arial Narrow",system-ui,sans-serif;--ref-text:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body.sde-reference-login,body.sde-reference-login button,body.sde-reference-login input,body.sde-reference-login select,body.sde-reference-login textarea,body.sde-reference-member,body.sde-reference-member button,body.sde-reference-member input,body.sde-reference-member select,body.sde-reference-member textarea,body.sde-reference-login .access-forgot,body.sde-reference-login .ref-account-links button,body.sde-reference-login .ref-access-targets button{font-family:var(--ref-text)!important}
+body.sde-reference-login :is(h1,h2,h3,h4),body.sde-reference-member :is(h1,h2,h3,h4){font-family:var(--ref-title)!important;letter-spacing:.05em}
+/* Finitions communes : chiffres alignés, titres équilibrés, paragraphes sans ligne orpheline. */
+body.sde-reference :is(h1,h2,h3){text-wrap:balance}
+body.sde-reference :is(p,li){text-wrap:pretty}
+body.sde-reference :is(strong,b,td,th,.ops-badge,progress+span,.ref-live){font-variant-numeric:tabular-nums}

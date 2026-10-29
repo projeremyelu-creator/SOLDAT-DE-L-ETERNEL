@@ -1593,3 +1593,8 @@ body.sde-unifie .bouton { font-family: var(--f-texte, "Atkinson Hyperlegible", s
 
 /* L'intro de sous-page reste en fond sombre */
 body.sde-unifie .sde-intro { color: #f7f4ed; }
+
+/* Finitions typographiques communes (voir aussi frontend/reference.css) */
+.decompte-cel b, .jour b, .frise-num { font-variant-numeric: tabular-nums; }
+p, li { text-wrap: pretty; }
+h3 { text-wrap: balance; }
