@@ -22,11 +22,53 @@
         location.href=u.toString();
       }
     });
+    hydraterSite();
     if(page==="ressources")setupRessources();
     if(page==="programmes")setupProgrammes();
     if(page==="rejoindre")setupRejoindre();
     if(page==="mouvement")setupPoles();
   };
+  /* Contenu public piloté depuis l'administration (/api/site) : le HTML écrit en dur reste le repli. */
+  let contactMail="infosoldat@gmail.com";
+  function hydraterSite(){
+    if(!["programmes","rejoindre"].includes(page))return;
+    fetch("/api/site").then(r=>r.ok?r.json():null).then(site=>{
+      if(!site||typeof site!=="object")return;
+      const c=site.contact||{};
+      if(c.email){
+        contactMail=c.email;
+        if($("#c-mail"))$("#c-mail").textContent=c.email;
+        document.querySelectorAll("[data-contact-mail]").forEach(a=>{a.textContent=c.email;if(a.tagName==="A")a.href="mailto:"+c.email;});
+      }
+      if(c.telephone&&$("#c-tel"))$("#c-tel").textContent=c.telephone;
+      const liste=Array.isArray(site.programmes)?site.programmes:[];
+      const grille=$(".programmes");
+      if(liste.length&&grille&&page==="programmes"){
+        grille.innerHTML=liste.map((p,i)=>{
+          const lien=p.lien||"/contact#rejoindre";
+          const sujet=p.lien?"":' data-sujet="'+escape(p.titre)+'"';
+          return '<article class="programme revele vu'+(p.feu?" feu":"")+'">'+(p.image?'<img class="prog-img" src="'+escape(p.image)+'" alt="" width="600" height="260" loading="lazy">':"")+
+            (p.rythme?'<span class="rythme">'+escape(p.rythme)+'</span>':"")+'<h3>'+escape(p.titre)+'</h3>'+(p.texte?'<p>'+escape(p.texte)+'</p>':"")+
+            '<a href="'+escape(lien)+'"'+sujet+'>'+escape(p.libelle||"Participer")+' <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>';
+        }).join("");
+      }
+      const select=$("#f-objet");
+      if(liste.length&&select){
+        const connus=new Set([...select.options].map(o=>o.value||o.textContent));
+        liste.forEach(p=>{if(!connus.has(p.titre)){const o=document.createElement("option");o.textContent=p.titre;select.append(o);}});
+        const sujet=new URLSearchParams(location.search).get("objet");
+        const found=sujet&&[...select.options].find(x=>x.value===sujet||x.textContent===sujet);
+        if(found)select.value=found.value;
+      }
+      const b=site.banniere||{};
+      if(b.texte&&!$(".site-banniere")){
+        const el=document.createElement(b.lien?"a":"p");
+        el.className="site-banniere";el.textContent=b.texte;if(b.lien)el.href=b.lien;
+        el.style.cssText="display:block;text-align:center;padding:.6rem 1rem;background:#D4AF37;color:#0b1530;font-weight:600;text-decoration:none";
+        document.body.prepend(el);
+      }
+    }).catch(()=>{});
+  }
   function setupRessources(){
     const filters=$("#res-filtres");
     filters?.addEventListener("click",e=>{
@@ -215,7 +257,7 @@
       error.hidden=true;
       const text="Shalom ! Demande depuis mouvement-sde.org\n\nObjet : "+g("objet")+"\nNom : "+g("nom")+"\nTéléphone : "+g("tel")+"\nVille : "+g("ville")+(g("msg")?"\nMessage : "+g("msg"):"");
       if($("#envoi-texte"))$("#envoi-texte").textContent=text;
-      if($("#envoi-mail"))$("#envoi-mail").href="mailto:infosoldat@gmail.com?subject="+encodeURIComponent("Demande SDE — "+g("objet"))+"&body="+encodeURIComponent(text);
+      if($("#envoi-mail"))$("#envoi-mail").href="mailto:"+contactMail+"?subject="+encodeURIComponent("Demande SDE — "+g("objet"))+"&body="+encodeURIComponent(text);
       const submit=form.querySelector('button[type="submit"]');submit.disabled=true;
       try{
         const r=await fetch("/api/engager",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({objet:g("objet"),nom:g("nom"),tel:g("tel"),email:g("mail"),ville:g("ville"),message:g("msg"),source:"mouvement-sde.org/vitrine/rejoindre"})});
