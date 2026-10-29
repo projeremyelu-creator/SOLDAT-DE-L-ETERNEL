@@ -1,0 +1,23 @@
+/* Marque SDE partagée entre mouvement-sde.org et app.mouvement-sde.org :
+   mêmes jetons (couleurs, courbes, durées) et même ambiance animée (étoiles et braises). */
+:root{
+ --sde-nuit:#0a1228;--sde-nuit-2:#11182a;--sde-or:#D4AF37;--sde-or-clair:#e2c26a;--sde-violet:#6B4FA0;--sde-braise:#d6404a;
+ --sde-ease:cubic-bezier(.25,1,.5,1);--sde-duree:380ms;--sde-rayon:14px;
+}
+.sde-ambiance{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block}
+html[data-theme="light"] .sde-ambiance{display:none}
+.sde-ambiance-ctl{position:fixed;left:12px;bottom:12px;z-index:60;min-width:44px;min-height:44px;padding:0 12px;border-radius:999px;border:1px solid rgba(226,194,106,.45);
+ background:rgba(10,18,40,.82);color:var(--sde-or-clair);font:600 .78rem/1 "Atkinson Hyperlegible",system-ui,sans-serif;letter-spacing:.04em;cursor:pointer;
+ backdrop-filter:blur(8px);transition:background var(--sde-duree) var(--sde-ease),border-color var(--sde-duree) var(--sde-ease)}
+.sde-ambiance-ctl:hover{background:rgba(26,38,74,.92);border-color:var(--sde-or-clair)}
+.sde-ambiance-ctl:focus-visible{outline:2px solid var(--sde-or-clair);outline-offset:3px}
+html[data-theme="light"] .sde-ambiance-ctl{display:none}
+@media(max-width:900px){.sde-ambiance-ctl{bottom:84px;left:8px;min-height:36px;font-size:.7rem}}
+@media print{.sde-ambiance,.sde-ambiance-ctl{display:none}}
+
+/* Connexion : le fond laisse voir l'ambiance, et la photographie se fond dans la nuit (plus de bords nets). */
+body.sde-reference-login{background:linear-gradient(115deg,#0a1228,#1a1630)}
+.sde-reference-login .access-main{background:transparent!important}
+.sde-reference-login .ref-soldiers{-webkit-mask-image:linear-gradient(90deg,transparent,#000 16%,#000 86%,transparent),linear-gradient(0deg,#000 60%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 16%,#000 86%,transparent),linear-gradient(0deg,#000 60%,transparent);mask-composite:intersect}
+.sde-reference-login .ref-crowd{-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent),linear-gradient(0deg,#000 70%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent),linear-gradient(0deg,#000 70%,transparent);mask-composite:intersect}
+.sde-reference-login .ref-gold-brand{mix-blend-mode:screen}
