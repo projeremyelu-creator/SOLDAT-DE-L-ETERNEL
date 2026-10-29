@@ -128,7 +128,7 @@ html[data-theme=dark] .sde-focus-mode :is(.section,.form-carte,.parcours,.niveau
 @media(max-width:400px){.site-header .site-brand img{width:36px;height:36px}.site-header .site-brand{gap:8px;min-width:0}.site-header .site-brand b{font-size:1.2rem}.site-header .site-brand small{display:none}.sde-media-launch{padding:9px 12px;font-size:.71rem}}
 /* Adaptation de la maquette desktop, mobile et tablette fournie par SDE. */
 .event-hero-active{min-height:720px;text-align:center;padding:64px 0 70px}
-.event-hero-active .home-photo{background-position:center 48%;opacity:.72}
+.event-hero-active .home-photo{background-image:url('/vitrine/photos/infire-accueil-maquette.webp');background-position:center 48%;opacity:.72}
 .event-hero-active .home-overlay{background:radial-gradient(ellipse at 50% 15%,#b7964540,transparent 50%),linear-gradient(90deg,#10182ee8,#10182a91 50%,#10182ed9),linear-gradient(0deg,#0d1429e8,transparent 70%)}
 .event-hero-active .home-hero-content{max-width:1080px;padding-top:0}
 .hero-event-kicker{font-size:.74rem;letter-spacing:.22em;margin-bottom:22px}
@@ -136,6 +136,7 @@ html[data-theme=dark] .sde-focus-mode :is(.section,.form-carte,.parcours,.niveau
 .hero-event-title>span{display:block;font-family:Georgia,"Times New Roman",serif;font-size:clamp(3.4rem,6.8vw,6.5rem);font-weight:500;letter-spacing:-.035em;color:#f5dca1;text-shadow:0 4px 25px #0009}
 .hero-event-title em{color:#f5dca1}
 .hero-event-title strong{display:block;font-family:"Saira Condensed",system-ui,sans-serif;font-size:clamp(2.6rem,5.7vw,5.3rem);text-transform:uppercase;letter-spacing:.015em;font-weight:700;color:#fff8e6;margin-top:13px}
+.event-hero-active .hero-event-title strong{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.6rem,5.7vw,5.3rem);font-weight:700;color:#f5dca1;text-shadow:0 4px 25px #0009}
 .hero-event-theme{font-family:Georgia,serif;font-size:clamp(1rem,2vw,1.3rem);color:#e2d5bf;margin-bottom:18px}
 .hero-event-date{font-size:1.1rem;letter-spacing:.07em;font-weight:800;text-transform:uppercase;color:#fff;margin-bottom:22px}
 .hero-countdown{display:flex;justify-content:center;gap:10px;margin:18px 0 23px}
@@ -143,6 +144,7 @@ html[data-theme=dark] .sde-focus-mode :is(.section,.form-carte,.parcours,.niveau
 .hero-countdown b{display:block;font-family:"Saira Condensed",system-ui,sans-serif;font-weight:700;font-variant-numeric:tabular-nums;font-size:2.5rem;line-height:1.1;color:#fff8e6}
 .hero-countdown span{display:block;font-size:.65rem;letter-spacing:.09em;text-transform:uppercase;margin-top:3px;color:#cfbd9e}
 .hero-mission-line{font-size:.92rem;color:#f4e5c7;margin-bottom:22px}.event-hero-active .hero-actions{justify-content:center;margin:24px 0 18px}.hero-event-place{font-size:.79rem;color:#d2d6e2;margin-bottom:0}.hero-event-live{font-weight:700;color:#f5dca1}
+.event-hero-active .hero-calendar-countdown{align-items:center;gap:8px;margin:16px 0 20px}.hero-calendar-countdown>b{display:grid;place-items:center;min-width:58px;height:58px;padding:4px 10px;border:1px solid #e2c27d80;border-radius:7px;background:#10182dbb;color:#fff;font:700 2.2rem/1 Arial,sans-serif;font-variant-numeric:tabular-nums}.hero-calendar-countdown>span{color:#fff;font:700 2rem/1 Arial,sans-serif}.event-hero-active .hero-actions .gold{min-height:44px;border-radius:999px;padding:10px 25px;background:linear-gradient(110deg,#d5ad5c,#f0d18a);color:#151a29}.event-hero-active .hero-mission-line{color:#fff;letter-spacing:.02em}.event-hero-active .home-photo{opacity:.85}.event-hero-active .home-overlay{background:radial-gradient(ellipse at 52% 0%,#d5b86d59,transparent 42%),linear-gradient(90deg,#4e17177a,#111a2d40 50%,#11274170),linear-gradient(0deg,#0c1429e8,transparent 62%)}
 .maquette-dashboard{--dash-bg:#111b2e;--dash-card:#19263c;--dash-line:#c8a45144;background:var(--dash-bg);color:#eef1f6!important;padding:32px!important}
 .maquette-dashboard .sde-plus-note{color:#b9c6d9;line-height:1.6}
 .maquette-dashboard>h2,.maquette-dashboard h3,.maquette-dashboard .sde-plus-list strong{color:#f0e7d2}
