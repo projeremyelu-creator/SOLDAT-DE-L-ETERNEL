@@ -105,9 +105,12 @@
     });
     const list=$("#agenda-liste");
     const buttons=$("#agenda-filtres");
+    // Les types réels de l'agenda (Culte, Conférence, Évangélisation, « Prière et intercession »…)
+    // sont regroupés sous les trois filtres affichés.
+    const groupe=t=>/^pri[èe]re/i.test(t||"")?"Prière":/^formation/i.test(t||"")?"Formation":"Rencontre";
     const filter=()=>{
       const type=buttons?.querySelector(".actif")?.dataset.filtre||"tous";
-      list?.querySelectorAll(".rdv").forEach(card=>card.hidden=type!=="tous"&&card.dataset.type!==type);
+      list?.querySelectorAll(".rdv").forEach(card=>card.hidden=type!=="tous"&&groupe(card.dataset.type)!==type);
     };
     buttons?.addEventListener("click",e=>{
       const b=e.target.closest("button[data-filtre]");
@@ -173,6 +176,7 @@
           hide(counter);
           // L'édition est terminée : on retire les actions d'inscription et de trajet.
           hide($('[data-ics="infire"]'));hide($("#b-yango"));hide($("#yango-aide"));
+          document.querySelectorAll(".if-orateurs,.if-lieu").forEach(hide);
           const venue=$("#f-venue");
           if(venue){hide(venue);const h=venue.previousElementSibling;if(h&&h.tagName==="H3")hide(h);}
           if(timer)clearInterval(timer);
