@@ -7540,7 +7540,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     "bilan-evt": (t) => {
       const e = evt(t.dataset.id); if (!e) return;
       const np = nbPresents(e), nr = nbEtat(e, "retard"), nx = nbEtat(e, "excuse"), vi = compteur(e, "visiteurs"), nv = compteur(e, "nouveaux");
-      ouvrirTexte("Bilan de présence", `${e.titre} — ${fmtJour(e.date)}\nTotal : ${pluriel(np + vi + nv, "personne", "personnes")}\n• ${plnp, "membre présent", "membres présents")} sur ${nb(membresActifs().filter((m) => concerne(e, m)).length)}${nr ? `, dont ${pluriel(nr, "retard", "retards")}` : ""}${nx ? `\n• ${pluriel(nx, "absence excusée", "absences excusées")}` : ""}\n• ${pluriel(vi, "visiteur", "visiteurs")}\n• ${pluriel(nv, "nouveau venu", "nouveaux venus")}`, { wa: "" });
+      ouvrirTexte("Bilan de présence", `${e.titre} — ${fmtJour(e.date)}\nTotal : ${pluriel(np + vi + nv, "personne", "personnes")}\n• ${pluriel(np, "membre présent", "membres présents")} sur ${nb(membresActifs().filter((m) => concerne(e, m)).length)}${nr ? `, dont ${pluriel(nr, "retard", "retards")}` : ""}${nx ? `\n• ${pluriel(nx, "absence excusée", "absences excusées")}` : ""}\n• ${pluriel(vi, "visiteur", "visiteurs")}\n• ${pluriel(nv, "nouveau venu", "nouveaux venus")}`, { wa: "" });
     },
     reglages: () => ouvrirReglages(),
     fvue: (t) => { S.fvue = t.dataset.v; S.limite = 80; render(); },
@@ -8218,7 +8218,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   VUES.plus = function () { return blocCompteH() + plusOrigH(); };
 
   /* — Espace soldat d’un compte relié à une fiche — */
-  const ESPC = { charge: false, data: null, err: "", majLe: null, demae: false };
+  const ESPC = { charge: false, data: null, err: "", majLe: null, demande: false };
   async function chargerEspaceCompte() {
     ESPC.charge = true; ESPC.demande = true;
     try {
