@@ -28,10 +28,10 @@ test('Les pages publiques chargent toutes les nouvelles versions du CSS',()=>{
     'academy','boutique','prieres','missions-humanitaires','soldiers-voice',
     'temoignages','404','formulaire','soldiers-award'];
   for(const page of pages){
-    const doc=new JSDOM(read('public/vitrine/'+page+'.html')).window.document;
-    assert.ok(doc.querySelector('link[href*="sde-sitewide-2026.css?v=20261030footerfix"]'),page);
-    if(doc.querySelector('link[href*="ivoire-pages.css"]'))
-      assert.ok(doc.querySelector('link[href*="ivoire-pages.css?v=20261030footerfix"]'),page);
+    const html=read('public/vitrine/'+page+'.html');
+    assert.ok(html.includes('sde-sitewide-2026.css?v=20261030footerfix'),page);
+    if(html.includes('ivoire-pages.css'))
+      assert.ok(html.includes('ivoire-pages.css?v=20261030footerfix'),page);
   }
 });
 
