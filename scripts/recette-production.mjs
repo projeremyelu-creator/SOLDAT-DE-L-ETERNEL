@@ -32,6 +32,8 @@ export const CONTROLES = Object.freeze([
   {path:'/soldiers-voice',type:'page-publique'},
   {path:'/missions-humanitaires',type:'page-publique'},
   {path:'/rubriques',type:'page-publique'},
+  {path:'/poles',type:'page-publique'},
+  {path:'/soldiers-award',type:'page-publique'},
 ]);
 
 function verifierReponse(origine,controle,reponse,corps) {
