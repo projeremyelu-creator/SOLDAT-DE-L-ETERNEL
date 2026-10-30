@@ -1,0 +1,69 @@
+/* Pages intérieures du site — Ivoire • Treillis • Or (même langage que la vitrine d'entrée). */
+html body.sde-ivoire{--iv-ivoire:#f6f2e8;--iv-papier:#fffdf8;--iv-ligne:#e6dcc6;--iv-treillis:#2f3b25;--iv-treillis-2:#25301e;--iv-or:#b8923a;--iv-or-clair:#d8b766;--iv-encre:#232619;--iv-texte:#3c4033;--iv-serif:"Libre Caslon Text","Cormorant Garamond",Georgia,serif;--iv-cond:"Saira Condensed","Arial Narrow",sans-serif;background:var(--iv-ivoire)!important;color:var(--iv-encre)!important}
+html body.sde-ivoire :is(main,#contenu,.site-footer,.pied){margin-left:auto!important;background:transparent!important}
+html body.sde-ivoire .sde-rail{display:none!important}
+/* En-tête de page : bandeau vert treillis capitonné */
+html body.sde-ivoire .sde-intro{background-color:var(--iv-treillis-2)!important;background-image:linear-gradient(45deg,#ffffff07 25%,transparent 25%,transparent 75%,#ffffff07 75%),linear-gradient(-45deg,#ffffff07 25%,transparent 25%,transparent 75%,#ffffff07 75%)!important;background-size:46px 46px!important;border-bottom:3px solid var(--iv-or)!important;color:#f4ecd8!important}
+html body.sde-ivoire .sde-intro h1{font:400 clamp(1.9rem,4vw,3rem)/1.1 var(--iv-serif)!important;color:#f4ecd8!important;-webkit-text-fill-color:currentColor!important;background:none!important;letter-spacing:.01em!important;text-transform:none!important}
+html body.sde-ivoire .sde-intro :is(p,.sde-crumbs){color:#e6dcc0!important;font-family:var(--iv-cond)!important;font-style:normal!important}
+html body.sde-ivoire .sde-intro a{color:var(--iv-or-clair)!important}
+html body.sde-ivoire :is(.sde-kicker,.surtitre){background:none!important;border:1px solid var(--iv-or)!important;border-left-width:1px!important;color:var(--iv-or)!important;border-radius:3px!important}
+html body.sde-ivoire .sde-intro .sde-kicker{color:var(--iv-or-clair)!important;border-color:var(--iv-or-clair)!important}
+html body.sde-ivoire .sde-page-actions a,html body.sde-ivoire .bouton.b-or{background:linear-gradient(180deg,#c9a24a,#a8822f)!important;color:#fff!important;border:0!important;border-radius:6px!important;font-family:var(--iv-cond)!important;letter-spacing:.04em;text-transform:uppercase}
+html body.sde-ivoire :is(.sde-page-actions a.sde-secondary,.bouton.b-contour){background:#fffdf8!important;color:#7d6020!important;border:1px solid var(--iv-or)!important}
+/* Sections en panneaux ivoire à bandeau vert treillis numéroté */
+html body.sde-ivoire .section>.enveloppe{background:var(--iv-papier)!important;border:1px solid var(--iv-ligne)!important;box-shadow:0 10px 26px #4a3b1414!important}
+html body.sde-ivoire .section .tete-section{background:linear-gradient(90deg,var(--iv-treillis),var(--iv-treillis-2)) top/100% 54px no-repeat!important;border-bottom:0!important}
+html body.sde-ivoire .section .tete-section::before{background:#1f2819!important;border-right-color:#4b5a37!important;color:var(--iv-or-clair)!important;font-family:var(--iv-serif)!important}
+html body.sde-ivoire .section .tete-section h2{font-family:var(--iv-serif)!important;font-weight:400!important;color:#f4ecd8!important}
+html body.sde-ivoire .section .tete-section h2 em{color:var(--iv-or-clair)!important}
+html body.sde-ivoire .section .tete-section .surtitre{border:0!important;color:#d9cfae!important}
+html body.sde-ivoire .section .tete-section .chapo,html body.sde-ivoire .chapo{color:var(--iv-texte)!important;font-family:var(--iv-serif)!important;font-style:italic}
+html body.sde-ivoire :is(.section,.sde-initiative-section,.sde-initiative-lead) :is(p,li,small,dd,dt,label,span:not(.num):not(.rythme)){color:var(--iv-texte)}
+html body.sde-ivoire :is(.section,.sde-initiative-section,.sde-initiative-lead) :is(h2,h3,h4){color:var(--iv-encre);-webkit-text-fill-color:currentColor;background:none}
+html body.sde-ivoire :is(.sde-initiative-section,.sde-initiative-lead){background:transparent!important}
+html body.sde-ivoire :is(.sde-initiative-lead h2,.sde-initiative-section h2){font-family:var(--iv-serif)!important;font-weight:400!important}
+/* Cartes ivoire */
+html body.sde-ivoire :is(.vmi-carte,.programme,.pole,.soutenir-carte,.etape-carte,.sde-initiative-card,.faq-liste details,.formulaire,.contact>div,.kpi,.rdv,.carte,.sde-initiative-grid>*){background:#fffaf0!important;border:1px solid var(--iv-ligne)!important;box-shadow:0 4px 14px #4a3b140d!important;color:var(--iv-encre)!important}
+html body.sde-ivoire :is(.vmi-carte,.programme,.soutenir-carte,.pole) h3,html body.sde-ivoire .pole-titre{color:var(--iv-treillis)!important;font-family:var(--iv-serif)!important}
+html body.sde-ivoire .programme .rythme{background:#eef0e2!important;border-color:#cfd3b6!important;color:#4d5a32!important}
+html body.sde-ivoire :is(.programme a,.sde-lead-actions a,.section a:not(.bouton)){color:#8a6a22!important}
+html body.sde-ivoire .kpi .kpi-chiffre{color:var(--iv-encre)!important;font-family:var(--iv-serif)!important}html body.sde-ivoire .kpi .kpi-sous{color:#4d7a3a!important}html body.sde-ivoire .kpi .kpi-icone{color:var(--iv-or)!important}
+html body.sde-ivoire .rdv .jour{background:#fffdf8!important;border-color:var(--iv-ligne)!important;color:var(--iv-encre)!important}
+/* Formulaires */
+html body.sde-ivoire :is(input,select,textarea){background:#fffdf8!important;color:var(--iv-encre)!important;border:1px solid #d9ccad!important}
+html body.sde-ivoire :is(input,select,textarea):focus{outline:2px solid var(--iv-or)!important;outline-offset:1px}
+html body.sde-ivoire .formulaire button[type=submit]{background:linear-gradient(180deg,#c9a24a,#a8822f)!important;color:#fff!important;border:0!important}
+/* Pied de page */
+html body.sde-ivoire :is(.site-footer,.pied){background:var(--iv-papier)!important;border-top:1px solid var(--iv-ligne)!important;color:var(--iv-texte)!important}
+html body.sde-ivoire :is(.site-footer,.pied) a{color:#8a6a22!important}
+html body.sde-ivoire .sde-further{background:var(--iv-papier)!important;color:var(--iv-encre)!important}
+/* Fonds sombres hérités → ivoire */
+html body.sde-ivoire :is(.section,.infire.section,.eglises,.sde-parcours){background:transparent!important}
+html body.sde-ivoire :is(.valeur,.orga-carte,.ressource-carte,.projet-carte,.colonne,.niveau-carte,.bio,.carte-acces,.if-aside,.contact,.cta-band,.parcours,.form-carte,.merch-note,.sde-initiative-form,.point.point-interactif){background:#fffaf0!important;border:1px solid var(--iv-ligne)!important;color:var(--iv-encre)!important;box-shadow:0 4px 14px #4a3b140d!important;backdrop-filter:none!important}
+html body.sde-ivoire :is(.valeur,.orga-carte,.ressource-carte,.projet-carte,.colonne,.niveau-carte,.bio,.carte-acces,.if-aside,.contact,.cta-band,.parcours,.form-carte,.merch-note,.sde-initiative-form) *{color:inherit}
+html body.sde-ivoire :is(.valeur,.orga-carte,.ressource-carte,.projet-carte,.colonne,.niveau-carte,.bio,.carte-acces,.if-aside,.cta-band) :is(h3,h4,strong,b){color:var(--iv-treillis)!important;-webkit-text-fill-color:currentColor!important}
+html body.sde-ivoire :is(.orga-leader,.niveau-carte.vedette){border:2px solid var(--iv-or-clair)!important}
+html body.sde-ivoire :is(.frise-num,.parcours-icone,.iso,.dog-tag,.badge-acad){background:var(--iv-treillis)!important;color:#f4ecd8!important;border-color:var(--iv-or)!important}
+html body.sde-ivoire :is(.ticket){background:#fffaf0!important;border:1px solid var(--iv-ligne)!important;color:var(--iv-encre)!important}
+html body.sde-ivoire .ticket.urgent{border-color:#b02a2a!important}
+html body.sde-ivoire .galerie-legende{background:linear-gradient(0deg,#25301ee6,transparent)!important;color:#f4ecd8!important}
+html body.sde-ivoire .section .enveloppe button:not(.bouton):not([type=submit]){background:#fffaf0!important;color:var(--iv-encre)!important;border:1px solid var(--iv-ligne)!important}
+html body.sde-ivoire :is(.agenda-filtres button.actif,.section button.actif,.section button[aria-pressed=true]){background:linear-gradient(180deg,#c9a24a,#a8822f)!important;color:#fff!important}
+html body.sde-ivoire .globe-sde{background:radial-gradient(circle at 50% 40%,#3a4a2d,#1f2819)!important;border-radius:12px}
+html body.sde-ivoire .globe-aide{background:transparent!important;color:var(--iv-texte)!important}
+/* En-tête des pages intérieures : menus déroulants lisibles */
+html body.sde-ivoire .site-menu :is(a,summary){color:var(--iv-encre)!important}
+html body.sde-ivoire .site-menu summary:hover,html body.sde-ivoire .site-menu a:hover{color:var(--iv-or)!important}
+html body.sde-ivoire .site-mega-panel{background:var(--iv-papier)!important;border:1px solid var(--iv-ligne)!important;box-shadow:0 14px 30px #4a3b1426!important}
+html body.sde-ivoire .site-mega-panel strong{color:var(--iv-encre)!important}html body.sde-ivoire .site-mega-panel small{color:var(--iv-texte)!important}
+html body.sde-ivoire .site-brand b{font:400 1.45rem/1 var(--iv-serif)!important;letter-spacing:.01em!important;color:var(--iv-encre)!important}
+html body.sde-ivoire .site-brand small{display:none!important}
+html body.sde-ivoire .site-brand img.site-logo{border-right:0!important;padding-right:0!important}
+html body.sde-ivoire .site-header .btn-theme,html body.sde-ivoire .site-header [aria-label*="hème"]{display:none!important}
+html body.sde-ivoire .sde-shell-toolbar{background:var(--iv-papier)!important;border-bottom:1px solid var(--iv-ligne)!important}
+html body.sde-ivoire .sde-shell-toolbar a{background:#fffaf0!important;color:var(--iv-encre)!important;border-color:var(--iv-ligne)!important}
+html body.sde-ivoire .section .tete-section h2,html body.sde-ivoire .section .tete-section h2 *{color:#f4ecd8!important;-webkit-text-fill-color:#f4ecd8!important;background:none!important}
+html body.sde-ivoire .section .tete-section h2 em{color:var(--iv-or-clair)!important;-webkit-text-fill-color:var(--iv-or-clair)!important}
+@media(max-width:600px){html body.sde-ivoire .site-brand>span{display:block!important}html body.sde-ivoire .site-brand b{font-size:1rem!important;white-space:nowrap}html body.sde-ivoire .site-portal-cta{font-size:.72rem!important;padding:8px 10px!important}}
+@media(max-width:420px){html body.sde-ivoire .site-brand>span{display:none!important}}
