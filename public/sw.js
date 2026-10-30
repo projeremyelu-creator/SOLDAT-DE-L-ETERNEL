@@ -1,124 +1,132 @@
-/* Service Worker — Soldats de l'Éternel
-   Cache les pages publiques. Ne met jamais en cache les données pastorales ou personnelles.
-   Stratégies :
-   - Navigations → réseau d'abord, cache en secours, page hors-ligne en dernier recours
-   - Polices & icônes (fonts.gstatic.com, icône SDE) → stale-while-revalidate
-   - Fichiers statiques → stale-while-revalidate
-   - API, blobs, médias, pastoral, OS privé → jamais mis en cache */
-const CACHE = "sde-v11";
-const PRECACHE = ["/", "/vitrine/", "/manifest.webmanifest", "/offline.html", "/icone-192.png", "/icone-512.png", "/app.css"];
-const EXCLUS = ["/api/", "/_blob/", "/m/", "/pastoral", "/suivi/", "/os-v31"];
+/* SDE OS — service worker privé, cache minimal et notifications sécurisées.
+   Les API, la connexion, l'administration, les dossiers membres et les
+   réponses comportant des cookies ou Cache-Control: private/no-store
+   ne sont JAMAIS copiés dans Cache Storage. */
+const CACHE = "sde-v12-public-only-20261030";
+const PRECACHE = ["/offline.html", "/icone-192.png", "/icone-512.png"];
+const PUBLIC_PAGES = new Set([
+  "/mouvement", "/programmes", "/academy", "/enseignements", "/missions",
+  "/priere", "/contact", "/temoignages", "/soldiers-voice",
+  "/missions-humanitaires", "/rubriques", "/boutique",
+  "/pole-reveil", "/pole-social", "/pole-logistique", "/pole-medias",
+  "/pole-formation"
+]);
+const ASSET_PATH = /^\/(?:_v\/[a-f0-9]{7,16}\/)?(?:vitrine\/[^?#]+|app\.(?:css|js)|icone-(?:192|512)\.png|logo[^/]*)\.(?:css|js|png|webp|jpe?g|svg|webmanifest)$/i;
+const EXCLUS = [
+  "/api/", "/_blob/", "/m/", "/pastoral", "/suivi/", "/os-v31",
+  "/mon-espace", "/administration", "/connexion", "/portail",
+  "/espace-membre", "/tableau-membre", "/tableau-administration",
+  "/inscription", "/formulaire"
+];
 
-self.addEventListener("install", (e) => {
-  e.waitUntil(
-    caches.open(CACHE)
-      .then((c) => c.addAll(PRECACHE))
-      .then(() => self.skipWaiting())
-  );
-});
-
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys()
-      .then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
-});
-
-/* Nettoyage automatique : supprimer les entrées les plus anciennes au-delà de la limite */
-const MAX_CACHE = 80;
-async function limiterCache() {
-  const c = await caches.open(CACHE);
-  const ks = await c.keys();
-  if (ks.length > MAX_CACHE) {
-    const suppr = ks.slice(0, ks.length - MAX_CACHE);
-    await Promise.all(suppr.map((r) => c.delete(r)));
-  }
+function publicResponse(response, kind) {
+  if (!response || !response.ok || response.type === "opaqueredirect") return false;
+  const cc = (response.headers.get("cache-control") || "").toLowerCase();
+  if (/\b(?:private|no-store|no-cache)\b/.test(cc)) return false;
+  if (response.headers.has("set-cookie")) return false;
+  const type = (response.headers.get("content-type") || "").toLowerCase();
+  return kind === "page" ? type.includes("text/html") : !type.includes("text/html");
 }
 
-self.addEventListener("fetch", (e) => {
-  const u = new URL(e.request.url);
-  if (e.request.method !== "GET") return;
+self.addEventListener("install", event => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    await Promise.all(PRECACHE.map(async path => {
+      try {
+        const response = await fetch(path, {cache:"reload",credentials:"omit"});
+        if (publicResponse(response, "asset")) await cache.put(path, response);
+      } catch (_) { /* cache hors ligne facultatif */ }
+    }));
+    await self.skipWaiting();
+  })());
+});
+self.addEventListener("activate", event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    // Supprimer le cache historique susceptible de contenir des pages privées.
+    await Promise.all(keys.filter(k => k.startsWith("sde-v") && k !== CACHE).map(k => caches.delete(k)));
+    await self.clients.claim();
+  })());
+});
+self.addEventListener("fetch", event => {
+  const req = event.request;
+  if (req.method !== "GET") return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
+  const path = url.pathname;
+  if (EXCLUS.some(prefix => path === prefix || path.startsWith(prefix + "/") || (prefix.endsWith("/") && path.startsWith(prefix)))) return;
 
-  /* Requêtes cross-origin : ne gérer que les polices Google */
-  if (u.origin !== location.origin) {
-    if (u.hostname === "fonts.gstatic.com" || u.hostname === "fonts.googleapis.com") {
-      e.respondWith(
-        caches.match(e.request).then((r) => {
-          const fetching = fetch(e.request).then((nr) => {
-            if (nr.ok) { const c = nr.clone(); caches.open(CACHE).then((k) => k.put(e.request, c)); }
-            return nr;
-          }).catch(() => null);
-          return r || fetching;
-        })
-      );
-    }
-    return;
-  }
-
-  /* Exclure les chemins sensibles */
-  if (EXCLUS.some((p) => u.pathname.startsWith(p))) return;
-
-  /* Navigations : réseau → cache → hors-ligne */
-  if (e.request.mode === "navigate") {
-    e.respondWith(
-      fetch(e.request)
-        .then((r) => {
-          if (r.ok) { const c = r.clone(); caches.open(CACHE).then((k) => k.put(e.request, c)); }
-          return r;
-        })
-        .catch(() =>
-          caches.match(e.request).then((r) =>
-            r || caches.match("/offline.html").then((f) =>
-              f || new Response("Hors connexion — reconnectez-vous pour accéder au site.", { status: 503, headers: { "content-type": "text/plain; charset=utf-8" } })
-            )
-          )
-        )
-    );
-    return;
-  }
-
-  /* Ressources statiques : stale-while-revalidate */
-  e.respondWith(
-    caches.match(e.request).then((cached) => {
-      const fetching = fetch(e.request).then((nr) => {
-        if (nr.ok) {
-          const c = nr.clone();
-          caches.open(CACHE).then((k) => { k.put(e.request, c); limiterCache(); });
+  if (req.mode === "navigate") {
+    // La page d'accueil du domaine privé nécessite une session : ne pas la cacher.
+    if (!PUBLIC_PAGES.has(path)) return;
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(req);
+        if (publicResponse(response,"page")) {
+          const cache = await caches.open(CACHE);
+          await cache.put(req,response.clone());
         }
-        return nr;
-      }).catch(() => null);
-      return cached || fetching;
-    })
-  );
+        return response;
+      } catch (_) {
+        return (await caches.match(req)) || (await caches.match("/offline.html")) ||
+          new Response("Connexion indisponible.",{status:503,headers:{"content-type":"text/plain;charset=utf-8"}});
+      }
+    })());
+    return;
+  }
+  // Aucun cache des ressources non autorisées, même si leur URL paraît statique.
+  if (!ASSET_PATH.test(path)) return;
+  event.respondWith((async () => {
+    try {
+      const response = await fetch(req);
+      if (publicResponse(response,"asset")) {
+        const cache = await caches.open(CACHE);
+        await cache.put(req,response.clone());
+      }
+      return response;
+    } catch (_) {
+      return (await caches.match(req)) ||
+        new Response("Ressource hors ligne indisponible.",{status:503});
+    }
+  })());
 });
 
-/* ───────── Notifications push ───────── */
-self.addEventListener("push", (e) => {
-  let data = { title: "MPA SDE", body: "Nouvelle notification", url: "/" };
-  try { if (e.data) data = Object.assign(data, e.data.json()); } catch (_) {}
-  e.waitUntil(
-    self.registration.showNotification(data.title, {
-      body: data.body,
-      icon: "/icone-192.png",
-      badge: "/icone-192.png",
-      data: { url: data.url || "/" },
-    })
-  );
+function notificationDestination(value) {
+  try {
+    const target = new URL(String(value||"/mon-espace"),self.location.origin);
+    if (target.origin !== self.location.origin) return "/mon-espace";
+    if (target.pathname.startsWith("/api/") || target.pathname.startsWith("/_blob/")) return "/mon-espace";
+    return target.pathname + target.search + target.hash;
+  } catch (_) { return "/mon-espace"; }
+}
+self.addEventListener("push",event=>{
+  let data={};
+  try {data=event.data?.json()||{}} catch (_) {}
+  const title=String(data.title||"SDE · Soldats de l'Éternel").slice(0,140);
+  const body=String(data.body||"Nouvelle notification SDE").slice(0,260);
+  event.waitUntil(self.registration.showNotification(title,{
+    body,
+    icon:"/icone-192.png",
+    badge:"/icone-192.png",
+    data:{url:notificationDestination(data.url)},
+    tag:String(data.tag||"sde-info").replace(/[^a-z0-9_-]/gi,"-").slice(0,100)
+  }));
 });
-
-self.addEventListener("notificationclick", (e) => {
-  e.notification.close();
-  const dest = (e.notification.data && e.notification.data.url) || "/";
-  e.waitUntil(
-    clients.matchAll({ type: "window", includeUncontrolled: true }).then((cs) => {
-      for (const c of cs) { if (new URL(c.url).pathname === dest && "focus" in c) return c.focus(); }
-      return clients.openWindow(dest);
-    })
-  );
+self.addEventListener("notificationclick",event=>{
+  event.notification.close();
+  const dest=notificationDestination(event.notification?.data?.url);
+  event.waitUntil((async()=>{
+    const windows=await self.clients.matchAll({type:"window",includeUncontrolled:true});
+    for (const client of windows) {
+      try {
+        const u=new URL(client.url);
+        if (u.origin === self.location.origin && u.pathname === new URL(dest,self.location.origin).pathname)
+          return client.focus();
+      } catch (_) {}
+    }
+    return self.clients.openWindow(dest);
+  })());
 });
-
-/* Message de mise à jour : le client peut envoyer un message pour forcer le SW à s'activer */
-self.addEventListener("message", (e) => {
-  if (e.data === "skipWaiting") self.skipWaiting();
+self.addEventListener("message",event=>{
+  if (event.data==="skipWaiting") self.skipWaiting();
 });
