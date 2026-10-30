@@ -32,7 +32,7 @@ test('Recette production : les deux domaines couvrent dix parcours GET sans auth
  assert.equal(bilan.total,20);
  assert.equal(bilan.reussis,20);
  assert.equal(bilan.ok,true);
- assert.equal(rapports.length,16);
+ assert.equal(rapports.length,20);
  assert.ok(f.appels.every(a=>a.opts.method==='GET'&&a.opts.redirect==='manual'&&!a.opts.headers.cookie));
  assert.ok(f.appels.some(a=>a.url==='https://mouvement-sde.org/'));
  assert.ok(f.appels.some(a=>a.url==='https://app.mouvement-sde.org/administration'));
