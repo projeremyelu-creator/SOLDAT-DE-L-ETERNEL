@@ -1,0 +1,53 @@
+/* Application native (registre, fiches, voyants, formulaires) — palette Ivoire • Treillis • Or.
+   Les variables de app.css sont redéfinies : toutes les rubriques suivent sans exception. */
+:root[data-sde-palette="ivoire"][data-sde-palette]{
+ --night:#2f3b25;--night-2:#3a4a2d;--night-3:#4b5d38;
+ --gold:#8a6a22;--gold-mark:#b8923a;--gold-on-night:#d8b766;--on-night:#f4ecd8;--on-night-muted:#d9cfae;
+ --bg:#f6f2e8;--surface:#fffdf8;--surface-2:#f3ecdc;--line:#e6dcc6;--line-strong:#d4c6a4;
+ --ink:#232619;--muted:#5f6355;
+ --in:#2f5f8a;--out:#a5532a;--in-soft:#e8eef3;--out-soft:#f6e6dc;
+ --ok:#3e6b2e;--ok-soft:#e6eedc;--warn:#8a5a00;--warn-soft:#f6ead0;--danger:#a3261d;--danger-soft:#f7e2de;
+ --info-soft:#efe9da;--track:#e9e1cf;--meter:#8a6a22;
+ --btn:#a8822f;--btn-ink:#ffffff;--focus:#b8923a;--scrim:rgba(35,38,25,.45);
+ --shadow:0 1px 2px rgba(74,59,20,.08),0 12px 30px rgba(74,59,20,.14);
+ --av-1:#e9eedd;--av-2:#f3e6cf;--av-3:#e1ecd9;--av-4:#f3e1d6;--av-5:#ece5d6;--av-6:#dfe9e3;
+ --f-display:"Libre Caslon Text","Cormorant Garamond",Georgia,serif;
+ color-scheme:light;
+}
+:root[data-sde-palette="ivoire"] body{background:#f6f2e8!important;color:#232619}
+/* En-tête et menu latéral vert treillis */
+:root[data-sde-palette="ivoire"] .hdr{background:#fffdf8!important;color:#232619!important;border-bottom:1px solid #e6dcc6!important;box-shadow:0 2px 14px #3b2f1010}
+:root[data-sde-palette="ivoire"] .hdr :is(.brand-mark,.brand-sub,.sync-t){color:#232619!important}
+:root[data-sde-palette="ivoire"] .hdr .brand-mark{font-family:"Libre Caslon Text",Georgia,serif!important;letter-spacing:.01em}
+:root[data-sde-palette="ivoire"] .hdr .hdr-btn{background:#fffaf0!important;color:#5f4a17!important;border:1px solid #e6dcc6!important}
+:root[data-sde-palette="ivoire"] .nav{background:linear-gradient(180deg,#2f3b25,#25301e)!important;border-right:1px solid #4b5a37!important}
+:root[data-sde-palette="ivoire"] .nav :is(button,a){color:#f1ead6!important}
+:root[data-sde-palette="ivoire"] .nav :is(button,a)[aria-current]{background:linear-gradient(90deg,#b8923a66,#b8923a22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #d8b766!important}
+:root[data-sde-palette="ivoire"] .nav :is(.nav-sec,.nav-h,small){color:#d9cfae!important}
+/* Cartes, lignes du registre, fiches */
+:root[data-sde-palette="ivoire"] :is(.card,.list,.stat,.row,.field){background:#fffdf8;border-color:#e6dcc6}
+:root[data-sde-palette="ivoire"] .row{color:#232619}
+:root[data-sde-palette="ivoire"] .row-t{font-weight:700;color:#232619}
+:root[data-sde-palette="ivoire"] .row-m{color:#5f6355}
+:root[data-sde-palette="ivoire"] .sec-title,:root[data-sde-palette="ivoire"] .sheet-t,:root[data-sde-palette="ivoire"] .h3{font-family:"Libre Caslon Text",Georgia,serif!important;font-weight:400!important;letter-spacing:.01em!important;text-transform:none!important;color:#232619}
+:root[data-sde-palette="ivoire"] .sheet{background:#fffdf8!important;color:#232619!important;border:1px solid #e6dcc6}
+:root[data-sde-palette="ivoire"] .sheet-h{background:linear-gradient(90deg,#2f3b25,#25301e)!important;border-bottom:2px solid #b8923a!important}
+:root[data-sde-palette="ivoire"] .sheet-h .sheet-t{color:#f4ecd8!important}
+:root[data-sde-palette="ivoire"] .sheet-h .icon-btn{background:#fffdf81a!important;color:#f4ecd8!important;border-color:#d8b76666!important}
+:root[data-sde-palette="ivoire"] .sheet-f{background:#fffdf8!important}
+/* Boutons : or plein pour l'action principale, contour or sinon */
+:root[data-sde-palette="ivoire"] .btn-primary{background:linear-gradient(180deg,#c9a24a,#a8822f)!important;color:#fff!important;border:0!important}
+:root[data-sde-palette="ivoire"] .btn:not(.btn-primary){background:#fffaf0;color:#5f4a17;border-color:#d4c6a4}
+:root[data-sde-palette="ivoire"] .chip{background:#f3ecdc;color:#3c4033;border-color:#e6dcc6}
+:root[data-sde-palette="ivoire"] .chip.ok{background:#e6eedc;color:#3e6b2e}
+:root[data-sde-palette="ivoire"] :is(.inp,input,select,textarea){background:#fffdf8;color:#232619;border-color:#d4c6a4}
+:root[data-sde-palette="ivoire"] :is(.inp,input,select,textarea):focus{outline:2px solid #b8923a;outline-offset:1px}
+/* Bandeau d'accueil (verset) en vert treillis */
+:root[data-sde-palette="ivoire"] :is(.hero,.accueil-hero,.dash-hero){background:radial-gradient(600px 300px at 80% 20%,#405332,transparent 70%),linear-gradient(135deg,#34452b,#22301c)!important;color:#f4ecd8!important;border:2px solid #d8b766!important}
+:root[data-sde-palette="ivoire"] .loading{color:#5f6355}
+:root[data-sde-palette="ivoire"] .acc-hero{background-color:#25301e!important;background-image:radial-gradient(620px 320px at 80% 20%,#43573a,transparent 70%),linear-gradient(45deg,#ffffff07 25%,transparent 25%,transparent 75%,#ffffff07 75%),linear-gradient(-45deg,#ffffff07 25%,transparent 25%,transparent 75%,#ffffff07 75%)!important;background-size:auto,46px 46px,46px 46px!important;border:2px solid #d8b766!important;color:#f4ecd8!important}
+:root[data-sde-palette="ivoire"] .acc-hero :is(.hero-k,.hero-m,p,blockquote,span){color:#f4ecd8}
+:root[data-sde-palette="ivoire"] .acc-hero .hero-fond{color:#d8b766!important}
+:root[data-sde-palette="ivoire"] .acc-hero .hero-vallee{opacity:.35}
+:root[data-sde-palette="ivoire"] .nav{box-shadow:none}
+:root[data-sde-palette="ivoire"] .ava,.ident .ava{color:#2f3b25}
