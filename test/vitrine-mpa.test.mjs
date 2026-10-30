@@ -60,6 +60,14 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
         // Les coordonnées sont désormais regroupées dans le pied de page Contact.
         assert.ok(normalize(a.textContent).startsWith(normalize(b.textContent)));
         assert.ok(target.querySelector('a[href="mailto:infosoldat@gmail.com"]'));
+      }else if(name==="projets"&&id==="projets"){
+        // Les textes d'origine sont inchangés ; seuls deux CTA de navigation
+        // explicites ont été ajoutés aux cartes IN FIRE et Médiathèque.
+        const editable=b.cloneNode(true);
+        const links=[...editable.querySelectorAll(".sde-projet-cta")];
+        assert.equal(links.length,2,"Deux liens directs attendus sur les projets");
+        for(const link of links)link.remove();
+        assert.equal(normalize(editable.textContent),normalize(a.textContent),name+"/"+id);
       }else assert.equal(normalize(b.textContent),normalize(a.textContent),name+"/"+id);
       assert.equal(b.querySelectorAll("img").length,a.querySelectorAll("img").length,name+"/"+id+" images");
       assert.equal(b.querySelectorAll("form").length,a.querySelectorAll("form").length,name+"/"+id+" forms");
