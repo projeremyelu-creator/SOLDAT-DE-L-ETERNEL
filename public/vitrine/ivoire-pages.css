@@ -67,3 +67,128 @@ html body.sde-ivoire .section .tete-section h2,html body.sde-ivoire .section .te
 html body.sde-ivoire .section .tete-section h2 em{color:var(--iv-or-clair)!important;-webkit-text-fill-color:var(--iv-or-clair)!important}
 @media(max-width:600px){html body.sde-ivoire .site-brand>span{display:block!important}html body.sde-ivoire .site-brand b{font-size:1rem!important;white-space:nowrap}html body.sde-ivoire .site-portal-cta{font-size:.72rem!important;padding:8px 10px!important}}
 @media(max-width:420px){html body.sde-ivoire .site-brand>span{display:none!important}}
+
+/* Page Programmes — Agenda : cartes harmonisées et lisibles sur smartphone.
+   S'applique au seul #agenda, sans toucher aux contenus ni à l'agenda privé. */
+html body.sde-ivoire[data-sde-page="programmes"] #agenda{
+  scroll-margin-top:clamp(88px,12vw,116px);
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .enveloppe{
+  min-width:0;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .tete-section{
+  margin-bottom:20px;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .agenda-filtres{
+  display:flex;justify-content:flex-start;align-items:center;flex-wrap:wrap;
+  gap:9px;margin:0 0 22px;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .agenda-filtres button{
+  min-height:44px;padding:10px 17px;border-radius:999px;
+  font:700 .9rem/1.25 "Atkinson Hyperlegible",system-ui,sans-serif;
+  border:1px solid #d8c6a0!important;
+  background:#fffdf8;color:#34402d;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .agenda-filtres button.actif{
+  border-color:#a8822f!important;background:#a8822f!important;color:#fff!important;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .agenda-filtres button:focus-visible,
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .rdv-actions :is(a,button):focus-visible{
+  outline:3px solid #aa7b19!important;outline-offset:3px;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda #agenda-liste{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:16px;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv{
+  min-width:0;margin:0!important;padding:clamp(18px,3vw,28px)!important;
+  background:#fffdf8!important;border:1px solid #dfd1b6!important;
+  border-radius:20px!important;
+  box-shadow:0 7px 21px rgba(55,43,25,.055);
+  transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv .quand{
+  gap:14px;align-items:center;margin-bottom:14px;
+  font-size:clamp(.88rem,1.5vw,1rem);color:#454b40;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv .jour{
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  flex:0 0 76px;min-width:76px;min-height:72px;
+  border:1px solid #e5d7b9!important;border-radius:15px!important;
+  background:#f6f0e5!important;color:#26351e!important;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv .jour b{
+  font-size:1.65rem;line-height:1.1;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv .rythme{
+  display:inline-flex;align-items:center;padding:3px 9px;
+  background:#e5eadc!important;color:#364e30!important;
+  border-radius:6px;border:1px solid #cad5c0!important;
+  font-size:.77rem;letter-spacing:.04em;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv h3{
+  margin:0 0 10px;color:#29372a!important;
+  font:600 clamp(1.2rem,2.3vw,1.55rem)/1.28 "Cormorant Garamond",Georgia,serif!important;
+  letter-spacing:.015em;overflow-wrap:anywhere;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv p{
+  margin:0 0 12px;line-height:1.55;
+  font-size:clamp(.9rem,1.4vw,1rem);color:#4a5047!important;
+  overflow-wrap:anywhere;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .rdv-actions{
+  display:flex;align-items:center;flex-wrap:wrap;gap:10px;
+  margin-top:16px;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .rdv-actions :is(a,button){
+  display:inline-flex;justify-content:center;align-items:center;gap:8px;
+  min-height:44px;max-width:100%;
+  padding:10px 14px!important;
+  border:1px solid #b68f45!important;border-radius:9px!important;
+  font:700 .88rem/1.3 "Atkinson Hyperlegible",system-ui,sans-serif!important;
+  text-decoration:none!important;white-space:normal;text-align:center;cursor:pointer;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .rdv-actions a{
+  color:#fff!important;background:#44623d!important;border-color:#44623d!important;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .rdv-actions button{
+  color:#5d451f!important;background:#fff8e9!important;
+}
+@media(min-width:980px){
+  html body.sde-ivoire[data-sde-page="programmes"] #agenda #agenda-liste{
+    grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;
+  }
+}
+@media(max-width:600px){
+  html body.sde-ivoire[data-sde-page="programmes"] #agenda{
+    scroll-margin-top:92px;
+  }
+  html body.sde-ivoire[data-sde-page="programmes"] #agenda #agenda-liste{gap:12px}
+  html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv{
+    padding:20px 17px!important;border-radius:18px!important;
+  }
+  html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv .jour{
+    flex-basis:65px;min-width:65px;min-height:65px;
+  }
+  html body.sde-ivoire[data-sde-page="programmes"] #agenda .rdv-actions{
+    align-items:stretch;
+  }
+}
+@media(max-width:390px){
+  html body.sde-ivoire[data-sde-page="programmes"] #agenda .rdv-actions :is(a,button){
+    width:100%;
+  }
+}
+@media(hover:hover) and (pointer:fine){
+  html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv:hover{
+    transform:translateY(-2px);border-color:#bf9953!important;
+    box-shadow:0 12px 28px rgba(55,43,25,.09);
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv{
+    transition:none!important;transform:none!important;
+  }
+}
+body[data-motion=paused].sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv{
+  transition:none!important;transform:none!important;
+}
