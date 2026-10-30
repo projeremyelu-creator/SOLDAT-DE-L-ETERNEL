@@ -392,3 +392,11 @@ html:not([data-theme=light]) body.sde-reference .ref-command .ops-kpis .ref-kpi>
 html:not([data-theme=light]) body.sde-reference .ref-command .ops-kpis .ref-kpi>h3{grid-column:2;grid-row:2;order:2;margin:2px 0 0;font-size:.82rem;color:#c9ced5}
 html:not([data-theme=light]) body.sde-reference :is(.ops-heading h2,.ref-feature h3,.ref-kpi strong,.soldier-date strong,.soldier-ring strong,.ref-flow strong,.soldier-card-body strong){font-family:"Cinzel",Georgia,serif!important;font-weight:600!important}
 html:not([data-theme=light]) body.sde-reference .ref-kpi .ref-kpi-alert{position:absolute;top:10px;right:12px;left:auto}
+/* Logo officiel dans le menu latéral de l'application */
+.ref-gold-brand{background:url(/vitrine/logo-sde.webp) center/contain no-repeat!important;width:84px!important;height:84px!important;margin:4px auto 10px}
+/* Lisibilité des rubriques membres (Mes engagements, etc.) en palette militaire sombre */
+html:not([data-theme=light]):not([data-sde-palette=ivoire]) .sde-plus-panel>h2{color:#ece6d8!important;font-family:"Cinzel",Georgia,serif!important;letter-spacing:.06em}
+html:not([data-theme=light]):not([data-sde-palette=ivoire]) .sde-plus-panel>:is(p,.sde-plus-note){color:#cfd4da!important}
+html:not([data-theme=light]):not([data-sde-palette=ivoire]) .sde-plus-card{background:linear-gradient(180deg,#131e29,#0e1720)!important;border:1px solid #3c4a2b!important;border-radius:6px!important;color:#e6e9ee!important;box-shadow:inset 0 1px 0 #c9a14a1f,0 10px 26px #0007!important}
+html:not([data-theme=light]):not([data-sde-palette=ivoire]) .sde-plus-card h3{color:#e4c477!important}
+html:not([data-theme=light]):not([data-sde-palette=ivoire]) .sde-plus-card :is(li,p,span,small){color:#d6dbe1!important}
