@@ -110,3 +110,49 @@ test("Le sous-domaine app initialise le portail connecté et sa navigation premi
   assert.equal(ctx.w.location.pathname,"/administration");
  } finally {ctx.dom.window.close()}
 });
+
+test("Mobile SDE : les rubriques sont repliables, accessibles et pilotables au clavier",async()=>{
+  const ctx=await create("/mon-espace",0);
+  try {
+    const toggle=ctx.w.document.querySelector("#sde-direct-menu-toggle");
+    assert.ok(toggle,"Le bouton des rubriques doit exister sur la page privée");
+    assert.equal(toggle.type,"button");
+    assert.equal(toggle.getAttribute("aria-controls"),"sde-direct-tabs");
+    assert.equal(toggle.getAttribute("aria-expanded"),"false");
+    assert.equal(ctx.tabs.classList.contains("sde-direct-tabs-open"),false);
+    assert.equal(toggle.textContent,"Afficher les rubriques");
+    toggle.click();
+    assert.equal(toggle.getAttribute("aria-expanded"),"true");
+    assert.equal(ctx.tabs.classList.contains("sde-direct-tabs-open"),true);
+    assert.equal(ctx.w.document.activeElement,ctx.tabs.querySelector("button"));
+    ctx.tabs.querySelector("button").dispatchEvent(
+      new ctx.w.KeyboardEvent("keydown",{key:"Escape",bubbles:true,cancelable:true})
+    );
+    assert.equal(toggle.getAttribute("aria-expanded"),"false");
+    assert.equal(ctx.tabs.classList.contains("sde-direct-tabs-open"),false);
+    assert.equal(ctx.w.document.activeElement,toggle);
+  }finally{ctx.dom.window.close()}
+});
+test("Mobile SDE : choisir une rubrique replie le menu et conserve la navigation directe",async()=>{
+  const ctx=await create("/mon-espace",0);
+  try {
+    ctx.w.matchMedia=query=>({matches:query.includes("760px")});
+    const toggle=ctx.w.document.querySelector("#sde-direct-menu-toggle");
+    toggle.click();
+    assert.equal(toggle.getAttribute("aria-expanded"),"true");
+    ctx.tabs.querySelector('[data-module="agenda"]').click();
+    await tick();
+    assert.equal(ctx.main.textContent,"Module : agenda");
+    assert.equal(ctx.w.location.pathname,"/mon-espace");
+    assert.equal(toggle.getAttribute("aria-expanded"),"false");
+    assert.equal(ctx.tabs.classList.contains("sde-direct-tabs-open"),false);
+  }finally{ctx.dom.window.close()}
+});
+test("Mobile SDE : grille repliée uniquement en petit écran, zones tactiles et focus visibles",()=>{
+  const css=readFileSync("public/vitrine/portail-direct.css","utf8");
+  assert.match(css,/#sde-direct-menu-toggle\{display:none\}/);
+  assert.match(css,/@media\(max-width:760px\)/);
+  assert.match(css,/body\.sde-direct #sde-direct-tabs:not\(\.sde-direct-tabs-open\)\{display:none!important\}/);
+  assert.match(css,/#sde-direct-menu-toggle:focus-visible/);
+  assert.match(css,/min-height:48px/);
+});

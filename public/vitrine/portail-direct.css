@@ -107,3 +107,21 @@ body.sde-direct{--sde-direct-night:#11182a;--sde-direct-gold:#c8a451}
  .sde-direct #sde-priere-panel{margin:12px 10px;padding:20px 16px}
  .sde-priere-submit{width:100%}
 }
+
+/* Étape 3 — navigation mobile compacte : contenu immédiatement visible.
+   Le clavier et les lecteurs d'écran utilisent le même bouton que le tactile. */
+#sde-direct-menu-toggle{display:none}
+@media(max-width:760px){
+  #sde-direct-menu-toggle{
+    display:flex;align-items:center;justify-content:space-between;
+    width:calc(100% - 26px);margin:12px 13px 4px;padding:12px 16px;
+    min-height:48px;background:#273650;color:#f7f4ed;
+    border:1px solid #c8a451;border-radius:12px;
+    font:800 .92rem/1.35 "Atkinson Hyperlegible",system-ui,sans-serif;
+    text-align:left;cursor:pointer
+  }
+  #sde-direct-menu-toggle::after{content:"⌄";font-size:1.35rem;line-height:1}
+  #sde-direct-menu-toggle[aria-expanded="true"]::after{content:"⌃"}
+  #sde-direct-menu-toggle:focus-visible{outline:3px solid #edd089;outline-offset:3px}
+  body.sde-direct #sde-direct-tabs:not(.sde-direct-tabs-open){display:none!important}
+}
