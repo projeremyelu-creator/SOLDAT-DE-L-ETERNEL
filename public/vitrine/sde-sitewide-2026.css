@@ -981,7 +981,7 @@ body[data-motion="paused"].sde-unifie.sde-accueil-maquette .sde-pole-officiel-li
 /* Les huit liens desktop débordaient de la fenêtre à 1280 px.
    Conserver le menu complet sur écrans larges et passer à un menu
    déroulant accessible sur les ordinateurs compacts. */
-@media(min-width:901px) and (max-width:1450px){
+@media(min-width:901px) and (max-width:1550px){
   html body.sde-unifie .site-header .site-header-inner{
     display:flex!important;
     flex-wrap:nowrap!important;
@@ -1072,5 +1072,25 @@ body[data-motion="paused"].sde-unifie.sde-accueil-maquette .sde-pole-officiel-li
   html body.sde-unifie:not(.sde-ivoire) .site-header .site-menu{
     background:#11182a!important;
     border:1px solid #c8a451!important;
+  }
+}
+
+/* Écrans larges : la navigation complète a besoin de plus de 1320 px. */
+@media(min-width:1551px){
+  html body.sde-unifie .site-header .site-header-inner{
+    width:min(1640px,calc(100% - 40px))!important;
+    max-width:1640px!important;
+    gap:clamp(9px,.9vw,16px)!important;
+  }
+  html body.sde-unifie .site-header .site-menu{
+    gap:clamp(9px,.9vw,15px)!important;
+    min-width:0!important;
+  }
+  html body.sde-unifie .site-header .site-brand b{
+    font-size:clamp(1.22rem,1.5vw,1.52rem)!important;
+    white-space:nowrap!important;
+  }
+  html body.sde-unifie .site-header .site-menu>a{
+    font-size:clamp(.8rem,.82vw,.9rem)!important;
   }
 }
