@@ -43,7 +43,7 @@ test('Deux tableaux de bord : même correctif CSS mobile, sans changement de dro
  const css=read('public/vitrine/tableaux-de-bord.css');
  assert.ok(css.includes('grid-template-areas:"brand logout" "links links"'));
  for(const path of ['public/vitrine/tableau-membre.html','public/vitrine/tableau-administration.html']){
-  assert.match(read(path),/tableaux-de-bord\\.css\\?v=[a-zA-Z0-9_-]+/);
+  assert.ok(read(path).includes('tableaux-de-bord.css?v='));
   assert.ok(read(path).includes('data-dashboard='));
  }
  const admin=read('public/vitrine/tableau-administration.html');
