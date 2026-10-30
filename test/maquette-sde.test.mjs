@@ -84,3 +84,19 @@ test("maquette fidèle : rail latéral, panneaux numérotés, logo monogramme",(
  assert.ok(charte.includes("counter(panneau,decimal-leading-zero)"),"numérotation des sections");
  assert.ok(css.includes('content:"03"')&&css.includes('content:"02"'),"bandeaux 02 et 03 de l'application");
 });
+
+test("les deux nouvelles maquettes sont des thèmes privés facultatifs et persistants",()=>{
+ const shell=read("frontend/reference-shell.jsx");
+ const css=read("frontend/palette-themes.css");
+ const entry=read("frontend/experience.css");
+ for(const t of ["militaire","ivoire","violet"])assert.ok(shell.includes("'"+t+"'"),t);
+ assert.ok(shell.includes("localStorage.getItem('sde-private-palette')"),"préférence enregistrée");
+ assert.ok(shell.includes("setAttribute('data-sde-palette',palette)"),"préférence appliquée à l'espace privé");
+ assert.ok(shell.includes('aria-pressed={palette===id}')&&shell.includes('aria-label="Choisir la palette graphique"'),"sélecteur accessible");
+ assert.ok(shell.includes("portal.selectionner(m)"),"navigation privée préservée");
+ assert.ok(entry.includes('@import "./palette-themes.css";'),"feuille chargée par le build");
+ for(const t of ['data-sde-palette="ivoire"','data-sde-palette="violet"'])assert.ok(css.includes(t),t);
+ assert.ok(css.includes('body.sde-reference'),"styles limités aux espaces privés");
+ assert.ok(css.includes('.soldier-qr'),"QR existant valorisé");
+ assert.ok(css.includes('.ref-tabbar'),"navigation smartphone");
+});
