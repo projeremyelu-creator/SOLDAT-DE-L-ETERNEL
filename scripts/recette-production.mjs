@@ -113,7 +113,13 @@ export async function recetteProduction({fetcher=fetch,domaines=DOMAINES,control
   const resultats=[];
   for(const origine of domaines){
     for(const controle of controles){
-      const url=origine+controle.path;
+      // Le site charge les bundles via /_v/<sha>/ : vérifier le même actif
+      // que celui réellement chargé par les navigateurs, pas une ancienne
+      // réponse du cache Cloudflare sur l'URL non versionnée.
+      const rev=String(process.env.SDE_EXPECTED_REV||'').replace(/[^a-f0-9]/gi,'').slice(0,12);
+      const controleVersionne=rev&&['marque-application','style-pilotage'].includes(controle.type);
+      const chemin=controleVersionne?'/_v/'+rev+controle.path:controle.path;
+      const url=origine+chemin;
       let detail='';
       let reussi=false;
       for(let i=0;i<essais&&!reussi;i++){
@@ -131,7 +137,7 @@ export async function recetteProduction({fetcher=fetch,domaines=DOMAINES,control
           if(i+1<essais)await attente(1000*(i+1));
         }
       }
-      const resultat={domaine:origine,path:controle.path,controle:controle.type,ok:reussi,...(!reussi?{erreur:detail}:{})};
+      const resultat={domaine:origine,path:chemin,controle:controle.type,ok:reussi,...(!reussi?{erreur:detail}:{})};
       resultats.push(resultat);rapport(resultat);
     }
   }
