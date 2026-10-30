@@ -189,3 +189,24 @@ test("Ivoire · Treillis · Or sur tout le site public",()=>{
  for(const p of ["mouvement","programmes","rejoindre","prieres","ressources","projets","academy"]){const h=read("public/vitrine/"+p+".html");assert.ok(/<body class="[^"]*sde-ivoire/.test(h),p);assert.ok(h.includes("ivoire-pages.css"),p+" feuille");assert.ok(h.includes("SDE - Mouvement"),p+" marque");}
  assert.ok(read("public/vitrine/ivoire-pages.css").includes("--iv-treillis:#2f3b25"));
 });
+
+test("identité SDE Mouvement : logo officiel non superposé et en-tête mobile lisible",()=>{
+ const themes=read("frontend/palette-themes.css");
+ const chrome=read("frontend/reference-shell.jsx");
+ assert.ok(chrome.includes('ref-identity-ivoire'),"identité spécifique ivoire");
+ assert.ok(chrome.includes('SDE - MOUVEMENT'),"nom de la marque");
+ assert.ok(chrome.includes('logo-96.webp'),"logo officiel dans la barre");
+ assert.ok(themes.includes('body.sde-reference .ref-sidebar .ref-gold-brand::after'),"règle de suppression du monogramme");
+ assert.ok(themes.includes('content:none!important;display:none!important'),"pas de texte sur la flamme du logo");
+ assert.ok(themes.includes('logo-sde.webp'),"logo officiel dans la barre latérale");
+ assert.ok(themes.includes('.ref-identity-ivoire strong')&&themes.includes('text-overflow:ellipsis'),"en-tête téléphone sans chevauchement");
+});
+test("transition de chargement SDE : une seule fermeture et au plus quatre secondes",()=>{
+ const js=read("public/vitrine/sde-splash.js");
+ const css=read("public/vitrine/sde-splash.css");
+ assert.ok(js.includes('fermeturePlanifiee = true'),"pas de fermetures répétées");
+ assert.ok(js.includes('if (fermeturePlanifiee) return'),"fermeture idempotente");
+ assert.ok(js.includes('setTimeout(fermer, 4000)'),"garde-fou d'affichage");
+ assert.ok(js.includes('prefers-reduced-motion'),"accessibilité des animations");
+ assert.ok(css.includes('.sde-splash.is-done'),"fondu de la transition");
+});
