@@ -577,3 +577,5 @@ html body.sde-unifie.sde-subpage #projets .projet-carte .sde-projet-cta:hover{
 html body.sde-unifie.sde-subpage #projets .projet-carte :is(.sde-projet-lien,.sde-projet-cta):focus-visible{
   outline:3px solid #b48c35!important;outline-offset:3px!important;
 }
+/* Cartes de pôle : liens vers les pages dédiées */
+a.pole{display:block;color:inherit;text-decoration:none}

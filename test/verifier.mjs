@@ -6,7 +6,7 @@ import { readFileSync } from "node:fs";
 import vm from "node:vm";
 import { execFileSync } from "node:child_process";
 
-const pages = ["public/index.html", "public/vitrine/index.html", "public/vitrine/engagements.html", "public/vitrine/formulaire.html", "public/vitrine/academy.html", "public/vitrine/mouvement.html", "public/vitrine/programmes.html", "public/vitrine/ressources.html", "public/vitrine/rejoindre.html", "public/vitrine/projets.html", "public/vitrine/plus.html", "public/vitrine/prieres.html", "public/vitrine/temoignages.html", "public/vitrine/soldiers-voice.html", "public/vitrine/soldiers-award.html", "public/vitrine/missions-humanitaires.html", "public/vitrine/offline-public.html", "public/offline.html"];
+const pages = ["public/index.html", "public/vitrine/index.html", "public/vitrine/engagements.html", "public/vitrine/formulaire.html", "public/vitrine/academy.html", "public/vitrine/mouvement.html", "public/vitrine/programmes.html", "public/vitrine/ressources.html", "public/vitrine/rejoindre.html", "public/vitrine/projets.html", "public/vitrine/plus.html", "public/vitrine/prieres.html", "public/vitrine/temoignages.html", "public/vitrine/soldiers-voice.html", "public/vitrine/soldiers-award.html", "public/vitrine/pole-reveil.html", "public/vitrine/pole-social.html", "public/vitrine/pole-logistique.html", "public/vitrine/pole-medias.html", "public/vitrine/pole-formation.html", "public/vitrine/missions-humanitaires.html", "public/vitrine/offline-public.html", "public/offline.html"];
 pages.push("public/os-v31/index.html", "public/os/index.html");
 let erreurs = 0;
 for (const page of pages) {
