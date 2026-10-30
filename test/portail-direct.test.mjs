@@ -32,9 +32,9 @@ test("L'entrée membre et l'entrée direction servent directement un seul moteur
  assert.match(oldHtml,/portail-direct\.css/);
 });
 const tick=()=>new Promise(resolve=>setTimeout(resolve,20));
-async function create(path,level){
+async function create(path,level,origin="https://mouvement-sde.org"){
  const dom=new JSDOM("<!doctype html><html><head></head><body><button id='btn-reglages' type='button'>Ouvrir réglages natifs</button><nav id='nav'></nav><main id='main'>Prêt</main></body></html>",{
-  url:"https://mouvement-sde.org"+path,runScripts:"outside-only",pretendToBeVisual:true
+  url:origin+path,runScripts:"outside-only",pretendToBeVisual:true
  });
  const w=dom.window,nav=w.document.getElementById("nav"),main=w.document.getElementById("main"),opened=[];
  w.document.getElementById("btn-reglages").addEventListener("click",()=>opened.push("reglages"));
@@ -92,6 +92,20 @@ test("Le bouton Réglages du bandeau commun conserve le menu natif",async()=>{
 test("Aucune page privée n'est redirigée vers une nouvelle application externe",()=>{
  const workerSource=readFileSync("src/worker.js","utf8");
  assert.match(workerSource,/const fichier = p\.endsWith\("\/os-v31"\)\?"\/os-v31\/index\.html":"\/index\.html"/);
- assert.ok(!direct.includes("app.mouvement-sde.org"));
  assert.ok(!direct.includes("iframe"));
+});
+
+test("Le sous-domaine app initialise le portail connecté et sa navigation premium",async()=>{
+ const ctx=await create("/administration",3,"https://app.mouvement-sde.org");
+ try {
+  assert.ok(ctx.tabs,"la navigation privée doit être montée sur app");
+  assert.equal(ctx.w.SDEPortal?.compte?.connecte,true);
+  assert.equal(typeof ctx.w.SDEPortal?.selectionner,"function");
+  assert.equal(ctx.w.document.querySelector('#sde-direct-top a[href="https://mouvement-sde.org/"]')?.textContent,"Site public");
+  ctx.w.SDEPortal.selectionner("membres");
+  await tick();
+  assert.ok(ctx.opened.includes("membres"));
+  assert.equal(ctx.w.location.origin,"https://app.mouvement-sde.org");
+  assert.equal(ctx.w.location.pathname,"/administration");
+ } finally {ctx.dom.window.close()}
 });
