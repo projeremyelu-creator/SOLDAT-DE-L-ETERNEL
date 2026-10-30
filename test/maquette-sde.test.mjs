@@ -101,6 +101,8 @@ test("la palette terracotta de la maquette est proposée et devient le choix ini
  for(const t of ["militaire","ivoire","violet","terracotta"])assert.ok(shell.includes("'"+t+"'"),t);
  assert.ok(shell.includes("return PALETTES.some(([id])=>id===p)?p:'terracotta'"));
  assert.ok(shell.includes("localStorage.getItem('sde-private-palette')"),"préférence enregistrée");
+ for(const t of ["militaire","ivoire","violet"])assert.ok(shell.includes("'"+t+"'"),t);
+ assert.ok(shell.includes("localStorage.getItem('sde-private-palette')"),"préférence enregistrée");
  assert.ok(shell.includes("setAttribute('data-sde-palette',palette)"),"préférence appliquée à l'espace privé");
  assert.ok(shell.includes('aria-pressed={palette===id}')&&shell.includes('aria-label="Choisir la palette graphique"'),"sélecteur accessible");
  assert.ok(shell.includes("portal.selectionner(m)"),"navigation privée préservée");
@@ -174,4 +176,12 @@ test("logo officiel et verset fondateur Ézéchiel 37",()=>{
  assert.ok(h.includes('src="/vitrine/logo-96.webp"')&&h.includes("logo-sde.webp"),"logo officiel");
  assert.ok(h.includes("Ézéchiel 37.10")&&h.includes("Ézéchiel 37.9"),"verset fondateur");
  assert.ok(read("public/vitrine/portail-unifie.js").includes('class="site-logo"'),"logo sur les pages intérieures");
+});
+test("maquette 02 Ivoire · Treillis · Or : vitrine, chargement, espaces privés",()=>{
+ const h=read("public/vitrine/portail.html");
+ for(const t of ["sde-ivoire","infire-banniere.webp","Bâtissons ensemble pour un plus grand impact","Bienvenue dans l’espace des Soldats de l’Éternel","Entrer dans l’espace","Accéder à l’accueil","SDE - Mouvement"])assert.ok(h.includes(t),t);
+ const app=read("public/index.html");assert.ok(app.includes('id="sde-splash"')&&app.includes("La vision en marche")&&app.includes("Chargement de votre espace"),"écran de chargement");
+ assert.ok(read("public/vitrine/sde-splash.css").includes("prefers-reduced-motion"),"mouvement réduit respecté");
+ assert.ok(shell.includes("['ivoire','Ivoire · Treillis · Or']"),"palette Ivoire disponible");
+ for(const t of ["Bonjour, {prenom}","Avançons ensemble, pour un plus grand impact.","Suivi, coordination et développement du mouvement.","Ajouter une prière"])assert.ok(ops.includes(t),t);
 });
