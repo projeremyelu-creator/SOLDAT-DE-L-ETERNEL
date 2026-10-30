@@ -68,3 +68,12 @@ test("refonte étape 6 : Anniversaires et Suivi des pôles réservés à l'admin
  assert.ok(read("src/operations.js").includes("anniv:str(m.data.anniv,10)"),"date d'anniversaire dans l'annuaire réservé");
  for(const t of ["Examiner les adhésions","Publier une annonce","Consulter le suivi des pôles","Vérifier les opérations financières"])assert.ok(ops.includes(t),t);
 });
+test("charte visuelle de la maquette : couleurs, typographies, lion, événement phare",()=>{
+ const charte=read("public/vitrine/sde-maquette.css");
+ for(const t of ["--m-nuit:#0a121b","--m-or:#c9a14a","--m-treillis:#5f6d3a","Cinzel","Cormorant Garamond"])assert.ok(charte.includes(t),t);
+ assert.ok(charte.includes('html:not([data-theme="light"])'),"le thème clair reste disponible");
+ assert.ok(css.includes("url(/vitrine/illus/lion-sde.webp)"),"carte de membre au lion");
+ assert.ok(ops.includes("function FeatureEvent")&&ops.includes("Événement phare"));
+ for(const p of ["index","mouvement","programmes","rejoindre","ressources"]){const h=read("public/vitrine/"+p+".html");assert.ok(h.includes("sde-maquette.css"),p);assert.ok(h.includes("family=Cinzel"),p+" polices");}
+ assert.ok(read("public/vitrine/index.html").includes('document.documentElement.setAttribute("data-theme", "dark");'),"sombre par défaut");
+});

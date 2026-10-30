@@ -20,7 +20,7 @@
 <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","name":"Mouvement Prophético-Apostolique Soldats de l'Éternel","alternateName":"MPA SDE","url":"https://mouvement-sde.org","logo":"https://mouvement-sde.org/vitrine/logo.png","description":"Mouvement chrétien prophético-apostolique pour le réveil spirituel des nations.","founder":[{"@type":"Person","name":"Jérémy Octave GLAZAÏ"},{"@type":"Person","name":"Amy Berté GLAZAÏ"}],"address":{"@type":"PostalAddress","addressLocality":"Abidjan","addressRegion":"Cocody Deux-Plateaux","addressCountry":"CI"},"contactPoint":{"@type":"ContactPoint","telephone":"+225-07-78-68-95-73","contactType":"customer service","availableLanguage":"French"},"sameAs":[]},{"@context":"https://schema.org","@type":"Event","name":"IN FIRE 2026","image":"https://mouvement-sde.org/vitrine/infire-2026/affiche-officielle.png","startDate":"2026-10-31T08:30:00+00:00","endDate":"2026-10-31T18:00:00+00:00","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name":"Église MADEG","address":{"@type":"PostalAddress","streetAddress":"Cocody Deux-Plateaux Agban","addressLocality":"Abidjan","addressCountry":"CI"}},"organizer":{"@type":"Organization","name":"MPA SDE","url":"https://mouvement-sde.org"},"performer":[{"@type":"Person","name":"Jérémy l'Élu GLAZAÏ"},{"@type":"Person","name":"Samuel ZEREOUE"}],"description":"Conférence internationale annuelle pour le réveil spirituel des nations. Thème : La révélation des fils et filles de Dieu.","isAccessibleForFree":true},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Qu'est-ce que le mouvement Soldats de l'Éternel ?","acceptedAnswer":{"@type":"Answer","text":"SDE est un mouvement chrétien prophético-apostolique fondé à Abidjan par Jérémy Octave et Amy Berté GLAZAÏ. Il rassemble des croyants autour de cinq axes : réveiller, restaurer, former, équiper et envoyer."}},{"@type":"Question","name":"Comment rejoindre SDE ?","acceptedAnswer":{"@type":"Answer","text":"Remplissez le formulaire sur cette page ou écrivez au secrétariat via WhatsApp au +225 07 78 68 95 73."}}]}]</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@400;500;600;700;800;900&family=Saira+Stencil+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@400;500;600;700;800;900&family=Saira+Stencil+One&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════ DESIGN SYSTEM SDE — HARMONISÉ avec l'application ═══════════ */
 :root {
@@ -741,6 +741,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
 <link rel="stylesheet" href="/vitrine/sde-app-shell.css?v=20261025f">
 <link rel="stylesheet" href="/vitrine/sde-dynamique.css?v=20261026a">
 <link rel="stylesheet" href="/vitrine/globe-sde.css?v=20261029b">
+<link rel="stylesheet" href="/vitrine/sde-maquette.css?v=20261030a">
 </head>
 <body data-cosmique>
 
@@ -845,7 +846,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
     <div class="hero-contenu">
       <div class="hero-badge"><span class="pulse"></span>Mouvement Prophético-Apostolique Soldat De l’Éternel</div>
       <p class="hero-event-tag">🔥 Événement phare · IN FIRE 2026</p>
-      <h1><span class="accent">Une génération enracinée</span> en Jésus-Christ,<br>prête à servir</h1>
+      <h1><span class="accent">Une génération enracinée</span><br>en Jésus-Christ, prête à servir</h1>
       <p class="hero-intro">Le Mouvement Prophético-Apostolique Soldat De l’Éternel rassemble des hommes et des femmes autour de Jésus-Christ, de la prière, de la formation et du service. Nous voulons contribuer à l’édification des croyants et au réveil spirituel des nations.</p>
       <p class="hero-intro">Nous croyons que chacun peut grandir dans la foi, découvrir sa place et mettre ses dons au service de Dieu et de son prochain.</p>
       <p class="hero-date-lieu">31 Octobre · Église MADEG · Cocody Deux-Plateaux, Abidjan</p>
@@ -2010,8 +2011,8 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
   const saved = getTheme();
   if (saved) setTheme(saved);
   else {
-    const pref = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-    setTheme(pref);
+    /* Charte « Militaire Premium » : thème sombre par défaut, le thème clair reste au choix du visiteur. */
+    document.documentElement.setAttribute("data-theme", "dark");
   }
   btnTheme.addEventListener("click", () => {
     const cur = document.documentElement.getAttribute("data-theme");
