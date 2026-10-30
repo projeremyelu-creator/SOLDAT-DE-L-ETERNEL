@@ -67,7 +67,7 @@ test('Bandeau membre SDE : identité cohérente et sans raccourcis administratif
 });
 test('Bandeau responsive SDE : mise en page en flux, contraste, focus et touch targets',()=>{
  const css=readFileSync('frontend/palette-themes.css','utf8');
- const section=css.slice(css.lastIndexOf('/* En-tête privé SDE — correction'));
+ const section=css.slice(css.lastIndexOf('En-tête privé SDE — correction'));
  assert.ok(section.length>3000,'Correctifs de bandeau attendus');
  assert.match(section,/position:static!important/);
  assert.match(section,/transform:none!important/);
