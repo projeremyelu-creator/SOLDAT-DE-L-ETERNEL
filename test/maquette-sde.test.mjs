@@ -190,11 +190,11 @@ test("Ivoire · Treillis · Or sur tout le site public",()=>{
  assert.ok(read("public/vitrine/ivoire-pages.css").includes("--iv-treillis:#2f3b25"));
 });
 
-test("identité SDE DIGITAL : marque lisible, logo officiel et en-tête sans chevauchement",()=>{
+test("identité SDE - MOUVEMENT : marque lisible, logo officiel et en-tête sans chevauchement",()=>{
  const themes=read("frontend/palette-themes.css");
  const chrome=read("frontend/reference-shell.jsx");
  assert.ok(chrome.includes('ref-brand-compact'),"identité compacte commune aux thèmes");
- assert.ok(chrome.includes('SDE DIGITAL'),"nom du tableau de bord");
+ assert.ok(chrome.includes('SDE - MOUVEMENT'),"nom du Mouvement dans les espaces privés");
  assert.ok(chrome.includes("admin?'Administration':'Espace membre'"),"rôle explicite dans le sous-titre");
  assert.ok(chrome.includes('logo-96.webp'),"logo officiel dans la barre");
  assert.ok(!chrome.includes('ref-menu-button"'),"pas de deuxième hamburger en plus du menu des rubriques");

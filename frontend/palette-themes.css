@@ -526,7 +526,7 @@ html body.sde-reference .ref-toolbar .ref-palette-menu{
    width:30px!important;height:30px!important;
  }
  html body.sde-reference .ref-toolbar .ref-brand-caption strong{
-   font-size:14px!important;letter-spacing:.01em!important;
+   font-size:13px!important;letter-spacing:0!important;
  }
  html body.sde-reference .ref-toolbar .ref-brand-caption small{
    font-size:10px!important;
@@ -548,7 +548,7 @@ html body.sde-reference .ref-toolbar .ref-palette-menu{
  html body.sde-reference .ref-toolbar .ref-brand-compact img{
    width:26px!important;height:26px!important;
  }
- html body.sde-reference .ref-toolbar .ref-brand-caption strong{font-size:12px!important}
+ html body.sde-reference .ref-toolbar .ref-brand-caption strong{font-size:11px!important}
  html body.sde-reference .ref-toolbar .ref-toolbar-actions{gap:2px!important}
  html body.sde-reference .ref-toolbar .ref-toolbar-actions>button{
    min-width:40px!important;min-height:44px!important;padding:6px!important;

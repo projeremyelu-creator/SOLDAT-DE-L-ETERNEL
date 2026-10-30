@@ -22,7 +22,7 @@ test('Bandeau privé SDE : une marque courte, un seul menu mobile et aucune supe
    const top=c.d.querySelector('#sde-operations-nav .ref-toolbar.ops-top-nav');
    assert.ok(top);
    assert.equal(top.querySelectorAll('.ref-digital-identity').length,1);
-   assert.equal(top.querySelector('.ref-brand-caption strong')?.textContent,'SDE DIGITAL');
+   assert.equal(top.querySelector('.ref-brand-caption strong')?.textContent,'SDE - MOUVEMENT');
    assert.equal(top.querySelector('.ref-brand-caption small')?.textContent,'Administration');
    assert.equal(top.querySelector('.ref-menu-button'),null,'Le hamburger redondant ne doit pas être affiché');
    assert.equal(top.querySelector('.ref-account')?.getAttribute('aria-label'),'Ouvrir mon compte : Compte alice');
@@ -58,7 +58,7 @@ test('Bandeau membre SDE : identité cohérente et sans raccourcis administratif
  const c=await page('/mon-espace','soldat');
  try{
    const top=c.d.querySelector('#sde-operations-nav .ops-top-nav');
-   assert.equal(top.querySelector('.ref-brand-caption strong')?.textContent,'SDE DIGITAL');
+   assert.equal(top.querySelector('.ref-brand-caption strong')?.textContent,'SDE - MOUVEMENT');
    assert.equal(top.querySelector('.ref-brand-caption small')?.textContent,'Espace membre');
    assert.equal(top.querySelector('.ref-account'),null);
    assert.equal(top.querySelector('.ref-menu-button'),null);
