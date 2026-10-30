@@ -30,6 +30,11 @@ export const CONTROLES = Object.freeze([
   {path:'/contact',type:'page-publique'},
   {path:'/temoignages',type:'page-publique'},
   {path:'/soldiers-voice',type:'page-publique'},
+  {path:'/pole-reveil',type:'page-publique'},
+  {path:'/pole-social',type:'page-publique'},
+  {path:'/pole-logistique',type:'page-publique'},
+  {path:'/pole-medias',type:'page-publique'},
+  {path:'/pole-formation',type:'page-publique'},
   {path:'/missions-humanitaires',type:'page-publique'},
   {path:'/rubriques',type:'page-publique'},
 ]);
