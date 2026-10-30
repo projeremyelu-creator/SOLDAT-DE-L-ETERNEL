@@ -1,0 +1,32 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Charte « SDE Digital — Militaire Premium » (site public)
+   Bleu nuit et graphite · accents or · repères vert treillis.
+   Thème sombre uniquement : le thème clair conserve sa charte.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{--m-nuit:#0a121b;--m-graphite:#101923;--m-carte:#131e29;--m-carte-2:#0e1720;--m-olive:#2b3421;--m-olive-2:#3c4a2b;--m-treillis:#5f6d3a;--m-treillis-clair:#8d9c57;--m-or:#c9a14a;--m-or-clair:#e4c477;--m-or-fonce:#97762c;--m-texte:#ece6d8;--m-texte-2:#aab1b9;--m-rouge:#8f1d22;--m-titre:"Cinzel","Saira Condensed",Georgia,serif;--m-italique:"Cormorant Garamond",Georgia,serif}
+html:not([data-theme="light"]) body{background:radial-gradient(1200px 600px at 15% -10%,#16243a 0%,transparent 60%),radial-gradient(900px 500px at 100% 0%,#1b2417 0%,transparent 55%),var(--m-nuit)}
+/* Titres en capitales romaines, sous-titres en italique */
+html:not([data-theme="light"]) .tete-section h2,html:not([data-theme="light"]) .hero h1,html:not([data-theme="light"]) .sde-intro h1,html:not([data-theme="light"]) .sde-initiative-lead h2{font-family:var(--m-titre);font-weight:600;letter-spacing:.03em;color:var(--m-texte)}
+html:not([data-theme="light"]) .hero h1 .accent{color:var(--m-or-clair);background:none;-webkit-text-fill-color:currentColor}
+html:not([data-theme="light"]) .tete-section .chapo,html:not([data-theme="light"]) .sde-intro>p{font-family:var(--m-italique);font-style:italic;font-size:1.18rem;line-height:1.5;color:#d9d2c2}
+/* Bandeau de section : numéro + intitulé, vert treillis et or (comme « 01 TABLEAU DE BORD ») */
+html:not([data-theme="light"]) .tete-section .surtitre,html:not([data-theme="light"]) .sde-kicker{display:inline-flex;align-items:center;gap:12px;padding:7px 16px 7px 14px;border:1px solid var(--m-olive-2);border-left:3px solid var(--m-or);border-radius:3px;background:linear-gradient(90deg,var(--m-olive) 0%,#1a2116 100%);color:var(--m-or-clair);font:600 .78rem/1 var(--m-titre);letter-spacing:.22em;text-transform:uppercase}
+/* Cartes sombres structurées, filet olive, liseré or */
+html:not([data-theme="light"]) :is(.vmi-carte,.programme,.pole,.soutenir-carte,.etape-carte,.sde-initiative-card,.faq-liste details,.formulaire,.contact>div){background:linear-gradient(180deg,var(--m-carte) 0%,var(--m-carte-2) 100%);border:1px solid var(--m-olive-2);border-radius:6px;box-shadow:inset 0 1px 0 #c9a14a1f,0 10px 28px #0006}
+html:not([data-theme="light"]) :is(.vmi-carte,.programme,.soutenir-carte) h3{font-family:var(--m-titre);font-weight:600;letter-spacing:.04em;color:var(--m-or-clair)}
+html:not([data-theme="light"]) .programme .rythme{background:var(--m-olive);color:var(--m-treillis-clair);border:1px solid var(--m-olive-2);border-radius:3px;text-transform:uppercase;letter-spacing:.12em;font-size:.68rem}
+html:not([data-theme="light"]) .pole .num{color:var(--m-or);font-family:var(--m-titre);letter-spacing:.14em}
+/* Boutons : or plein pour l'action principale, contour or pour les autres */
+html:not([data-theme="light"]) .bouton.b-or{background:linear-gradient(180deg,var(--m-or-clair),var(--m-or) 55%,var(--m-or-fonce));color:#1a1408;border:1px solid #f0d58f66;border-radius:4px;box-shadow:0 6px 18px #c9a14a33;font-weight:700;letter-spacing:.02em}
+html:not([data-theme="light"]) .bouton.b-contour{border:1px solid var(--m-or);color:var(--m-or-clair);background:#0a121b99;border-radius:4px}
+/* En-tête et pied de page graphite avec filet or */
+html:not([data-theme="light"]) .entete{background:linear-gradient(180deg,#0b131ce6,#0b131cc7);border-bottom:1px solid #c9a14a40;backdrop-filter:blur(10px)}
+html:not([data-theme="light"]) .pied{background:linear-gradient(180deg,#0c141d,#080d13);border-top:1px solid #c9a14a40}
+html:not([data-theme="light"]) .pied h3{font-family:var(--m-titre);letter-spacing:.16em;color:var(--m-or)}
+/* Repère rouge des devises (filet vertical de la maquette) */
+html:not([data-theme="light"]) .hero-mission{border-left:3px solid var(--m-rouge);padding-left:12px;letter-spacing:.2em;text-transform:uppercase;font-size:.8rem;color:#d9d2c2}
+html:not([data-theme="light"]) .montants li{background:var(--m-carte);border-color:var(--m-or-fonce)}
+/* Photo d'accueil : traitement doré et nuit, comme les visuels de la maquette */
+html:not([data-theme="light"]) .hero-fond img{filter:saturate(.55) sepia(.35) brightness(.5) contrast(1.05)}
+html:not([data-theme="light"]) .hero-voile{background:linear-gradient(180deg,#0a121b99 0%,#0a121b55 40%,#0a121bf0 100%),radial-gradient(800px 400px at 50% 30%,#c9a14a1f,transparent 70%)}
+html:not([data-theme="light"]) .hero h1{font-size:clamp(2rem,4.6vw,3.6rem);line-height:1.1}

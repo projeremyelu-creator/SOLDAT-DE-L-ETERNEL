@@ -16,7 +16,7 @@ export async function operationsApi(req,env,u,{list,audit}){
   }
   const [members,forms,events,garrisons]=await Promise.all(['membres','formations','evenements','garnisons'].map(list));
   const recent=events.filter(e=>e.data.date<=new Date().toISOString().slice(0,10)&&e.data.presents&&Object.values(e.data.presents).some(v=>[true,false,'retard','excuse'].includes(v))).sort((a,b)=>String(b.data.date).localeCompare(String(a.data.date))).slice(0,7);
-  return response({membres:members.map(m=>({id:m.id,nom:str([m.data.prenoms,m.data.nom].filter(Boolean).join(' ')||'Membre'),matricule:str(m.data.matricule,60),fonction:str(m.data.fonction),pole:str(m.data.pole),statut:str(m.data.statut),actif:m.data.actif!==false,presence:dashboardAttendance(recent,[m],garrisons).taux,formations:forms.filter(f=>f.data.participants?.[m.id]&&!['Abandon','Retiré'].includes(f.data.participants[m.id].statut)).map(f=>({titre:str(f.data.titre),certifie:f.data.participants[m.id].statut==='Certifié'}))}))});
+  return response({membres:members.map(m=>({id:m.id,nom:str([m.data.prenoms,m.data.nom].filter(Boolean).join(' ')||'Membre'),matricule:str(m.data.matricule,60),fonction:str(m.data.fonction),pole:str(m.data.pole),statut:str(m.data.statut),anniv:str(m.data.anniv,10),actif:m.data.actif!==false,presence:dashboardAttendance(recent,[m],garrisons).taux,formations:forms.filter(f=>f.data.participants?.[m.id]&&!['Abandon','Retiré'].includes(f.data.participants[m.id].statut)).map(f=>({titre:str(f.data.titre),certifie:f.data.participants[m.id].statut==='Certifié'}))}))});
  }
  if(path==='/api/budget-validation'){
   if(req.method!=='POST')return fail('POST uniquement.',405);

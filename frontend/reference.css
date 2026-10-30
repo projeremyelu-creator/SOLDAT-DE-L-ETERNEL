@@ -37,7 +37,6 @@ body.sde-reference-admin{padding:24px;background:radial-gradient(ellipse at 10% 
 #sde-reference-sidebar{grid-column:1;grid-row:1/span 2;align-self:stretch;min-width:0}.sde-reference-admin #sde-operations-nav{grid-column:2;grid-row:1;min-width:0}.sde-reference-admin #sde-operations-panel,.sde-reference-admin .main,.sde-reference-admin #sde-plus-panel,.sde-reference-admin #sde-priere-panel,.sde-reference-admin .sde-wall-panel{grid-column:2;grid-row:2}
 .ref-sidebar{height:100%;min-height:calc(100svh - 50px);padding:15px 0;background:linear-gradient(170deg,#0d1b32,#10182b);border-right:1px solid #6b758342}.ref-sidebar>a:first-child{display:block;margin:0 10px 25px}.ref-sidebar .ref-gold-brand{--brand-scale:.76}.ref-sidebar nav{display:flex;flex-direction:column;gap:7px}.ref-sidebar nav button{display:flex;align-items:center;gap:10px;min-height:37px;padding:8px 13px;border:0;border-left:2px solid transparent;background:none;color:#dbdce4;text-align:left;font-size:11px;line-height:1.4;cursor:pointer}.ref-sidebar nav button svg{width:16px;height:16px;flex:none;color:#bbb9b5}.ref-sidebar nav [aria-current=page]{border-left-color:#d4b76a;color:#efcf83;background:linear-gradient(90deg,#b1914c4f,#a5813511)}.ref-sidebar nav [aria-current=page] svg{color:#ebc568}.ref-sidebar nav button:hover{background:#bb9c4920}.ref-member-link{display:block;margin:35px 13px 0;color:#bca779;font-size:9px;text-decoration:none}
 .ref-toolbar.ops-top-nav{position:relative;display:flex;justify-content:flex-end;align-items:center;gap:8px;min-height:46px;height:46px;padding:5px 15px;border:0;border-bottom:1px solid #73758b44;background:transparent;backdrop-filter:none;flex-wrap:nowrap;overflow:visible;box-sizing:border-box}
-.ref-digital-identity{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;gap:1px;text-align:center;pointer-events:none;white-space:nowrap;color:#f5efe0}.ref-digital-identity strong{font:600 12px/1.1 "Saira Condensed","Arial Narrow",system-ui,sans-serif;letter-spacing:.13em;color:#f4e6c3}.ref-digital-identity strong span{color:#d8b76a}.ref-digital-identity small{font:400 8px/1.2 "Atkinson Hyperlegible",system-ui,sans-serif;letter-spacing:.08em;color:#c1c5d0}
 .ref-toolbar-actions{display:flex;align-items:center;gap:7px}.ref-toolbar button{display:inline-flex;align-items:center;justify-content:center;min-width:27px;min-height:27px;margin:0;padding:4px;border:0;border-radius:5px;background:transparent;color:#ddd6c4;font-size:11px;cursor:pointer}.ref-toolbar button>svg{width:15px;height:15px}.ref-toolbar .ref-account{gap:8px;text-align:right;padding:0;margin-left:5px}.ref-account>span:first-child{display:block;font-size:9px;line-height:1.25;color:#d9d9e5}.ref-account strong{display:block;font-size:10px;font-weight:400;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ref-avatar{display:flex;align-items:center;justify-content:center;width:28px;height:28px;flex:none;overflow:hidden;border-radius:50%;border:1px solid #dbc58a;color:#ead59b;background:#353243;font-size:9px}.ref-avatar img{width:100%;height:100%;object-fit:cover}.ref-member-space,.ref-menu-button{display:none!important}
 .ref-switcher{position:absolute;top:43px;right:15px;z-index:90;padding:18px;width:330px;max-width:calc(100vw - 30px);background:#17243a;border:1px solid #b49d68;border-radius:8px;box-shadow:0 20px 50px #0008}.ref-switcher label{display:block;font-size:11px}.ref-switcher input{display:block;width:100%;height:38px;padding:8px;margin-top:8px;background:#0e1b31;color:white;border:1px solid #65748b;border-radius:5px;font-size:16px}.ref-switcher>div{display:flex;flex-direction:column;max-height:50vh;overflow:auto;margin-top:8px}.ref-switcher>div button{text-align:left;justify-content:flex-start;border-radius:3px;padding:8px;color:#e7dfcc}.ref-switcher .ref-switch-close{float:right;font-size:10px;color:#dac28e}
@@ -66,7 +65,6 @@ body.sde-reference-admin{padding:24px;background:radial-gradient(ellipse at 10% 
 .sde-reference-member .ops-panel{padding:15px 16px 85px}.sde-reference-member .ops-heading h2{font-size:18px}.sde-reference-member[data-sde-tools=true] #sde-direct-tabs{display:grid!important;position:fixed;inset:42px 12px 65px;max-height:none;min-height:0;width:auto;z-index:80;border:1px solid #baa16d;border-radius:10px;overflow:auto;background:#142039}
 @media(max-width:1000px){.sde-reference-admin{padding:12px!important}.sde-reference-admin .shell{grid-template-columns:145px minmax(0,1fr);min-height:calc(100svh - 24px)}.ref-sidebar nav button{font-size:10px;padding-left:10px;gap:8px}.ref-sidebar .ref-gold-brand{--brand-scale:.65}.ref-command-middle{grid-template-columns:minmax(0,1.65fr) minmax(180px,1fr)}.ref-command .ops-kpis{gap:8px}.ref-command .ops-kpis .ops-card{padding:10px}.ref-command .ops-kpis strong{font-size:24px!important}}
 @media(max-width:760px){body.sde-reference-admin{padding:0!important}.sde-reference-admin .shell{display:block!important;min-height:100svh;border:0;border-radius:0;overflow:visible}.sde-reference-admin #sde-reference-sidebar{position:relative;z-index:70}.sde-reference-admin .ref-sidebar{display:none;position:fixed;left:0;top:46px;bottom:0;width:190px;z-index:70;border:1px solid #ae965f;box-shadow:20px 0 50px #0008;overflow:auto}.sde-reference-admin .ref-sidebar.is-open{display:block}.sde-reference-admin .ref-toolbar{justify-content:space-between;background:#111c32;border-bottom:1px solid #b0935a55}.ref-menu-button{display:inline-flex!important}.ref-command .ops-kpis{grid-template-columns:1fr 1fr}.ref-command-middle,.ref-command-bottom{grid-template-columns:1fr}.ref-command-middle>.ops-card{min-height:230px}.sde-reference-admin .ops-panel{padding:16px 12px 90px}.sde-reference-admin .ops-heading h2{font-size:14px}.sde-reference .ops-grid{grid-template-columns:1fr}.sde-reference .ops-panel input,.sde-reference .ops-panel textarea,.sde-reference .ops-panel select{font-size:16px}.ref-command-chart .ops-canvas{height:190px}}
-@media(max-width:600px){.ref-digital-identity{max-width:44vw;overflow:hidden}.ref-digital-identity strong{font-size:9px;letter-spacing:.08em}.ref-digital-identity small{display:none}}
 @media(prefers-reduced-motion:reduce){.sde-reference *{scroll-behavior:auto!important}}
 /* Fondu de la scène source dans le fond marine, sans rectangle de découpe visible. */
 .ref-login-art{mask-image:linear-gradient(0deg,#000 70%,transparent),linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-composite:intersect}
@@ -81,10 +79,7 @@ body.sde-reference-admin{padding:24px;background:radial-gradient(ellipse at 10% 
 .sde-reference-admin .ref-command .ops-kpis strong{font:800 clamp(32px,5vw,43px)/1.05 Arial,sans-serif!important;letter-spacing:-.04em;color:#f8f2df;text-shadow:0 2px 18px #d0a85655}
 .sde-reference-admin .ref-command .ops-kpis h3{font-size:12px!important;color:#d7dce9;margin-top:9px}
 .sde-reference-admin .ref-command .ops-kpis svg{width:20px;height:20px;right:16px;top:15px}
-.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(2) strong{color:#f0bd68}
-.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(4) strong{color:#e7c87a}
 .ref-presence-ring{position:absolute;right:13px;bottom:13px;width:35px;height:35px;border-radius:50%;background:conic-gradient(#65d9a8 var(--rate),#ffffff20 0);box-shadow:0 0 14px #4fca9860;mask:radial-gradient(farthest-side,transparent 59%,#000 63%)}
-.ref-presence-summary{display:flex;align-items:center;gap:11px;min-height:46px;margin-top:8px;padding:8px 10px;border:1px solid #74d4a833;border-radius:10px;background:#0d1a2c88}.ref-presence-summary .ref-presence-ring{position:relative;right:auto;bottom:auto;flex:0 0 34px;width:34px;height:34px}.ref-presence-summary strong{display:flex;flex:1;justify-content:space-between;gap:10px;color:#e7e8ec;font-size:12px}.ref-presence-summary strong b{color:#87e5b5}.ref-presence-summary button{min-height:32px;margin:0;padding:6px 10px;border:1px solid #d9b55b99;border-radius:8px;background:#152239;color:#f2d184;font-size:11px;white-space:nowrap}
 .ref-kpi-alert{position:absolute;right:13px;bottom:14px;border-radius:20px;background:#8d4b20;color:#fff0d2;padding:3px 8px;font-size:10px;font-weight:700}
 .sde-reference-admin .ref-command-middle>.ops-card,.sde-reference-admin .ref-command-bottom>.ops-card{padding:20px}
 .sde-reference-admin .ref-activities li,.sde-reference-admin .ref-urgent-list li{padding:12px 2px;gap:12px}
@@ -243,6 +238,106 @@ body.sde-reference-admin .site-ed .site-ed-check{display:flex;flex-direction:row
 .ref-sidebar{background:linear-gradient(170deg,#0d1b32ee,#10182bec)}
 .sde-reference-member .shell{background:radial-gradient(ellipse at 100% 0%,#58152bf0 0%,transparent 45%),#0d192cea}
 @media(prefers-reduced-motion:reduce){.sde-reference-admin .shell,.sde-reference-member .shell{background-attachment:scroll}}
+/* Maquette « SDE Digital — Militaire Premium » : citation du menu et sous-titres */
+.ref-quote{margin:18px 16px 8px;padding-top:14px;border-top:1px solid #d4af3733;font:italic 400 .86rem/1.5 'Atkinson Hyperlegible',Georgia,serif;color:#e2c26acc}
+.ops-subtitle{margin:4px 0 0;font:italic 400 .95rem/1.4 'Atkinson Hyperlegible',Georgia,serif;letter-spacing:.04em;color:#e2c26a}
+.ops-welcome{margin:6px 0 0;font:400 .88rem/1.5 'Atkinson Hyperlegible',system-ui,sans-serif;color:#c9d0dd;max-width:60ch}
+/* Demandes d'adhésion en attente (maquette 03) */
+.ref-command-requests{margin:13px 0 0}.ref-request-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+.ref-request-list li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:8px 10px;border:1px solid #d4af3724;border-radius:10px;background:#0a122866}
+.ref-request-list strong{display:block;font-weight:700}.ref-request-list small{color:#aeb7c7}
+.ref-request-initials{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:1px solid #d4af3766;color:#e2c26a;font:600 .8rem 'Saira Condensed',sans-serif;letter-spacing:.06em}
+.ref-request-list .ref-small-action:disabled{opacity:.5;cursor:wait}
+/* Synthèse financière et avancement (maquette 03) */
+.ref-command-glance{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:13px}.ref-command-glance .ops-card{margin:0;position:relative}
+.ref-link-more{position:absolute;right:16px;top:16px;background:none;border:0;color:#e2c26a;text-decoration:underline;font:inherit;font-size:.82rem;cursor:pointer}
+.ref-flow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.ref-flow>div{padding:10px 12px;border-radius:10px;border:1px solid #ffffff1a;background:#0a122866}
+.ref-flow small{display:block;color:#aeb7c7}.ref-flow strong{font:600 1.3rem 'Saira Condensed',sans-serif}.ref-flow-in strong{color:#7ed8a8}.ref-flow-out strong{color:#f0868c}
+.ref-flow-net{margin:12px 0 4px}.ref-flow-net strong{color:#e2c26a}
+.ref-bars{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:9px}.ref-bars li{display:grid;grid-template-columns:minmax(0,1fr) 38% auto;gap:10px;align-items:center}
+.ref-bar{height:8px;border-radius:99px;background:#ffffff1c;overflow:hidden}.ref-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#b08d2a,#e2c26a);transition:width .95s cubic-bezier(.25,1,.5,1)}
+@media(prefers-reduced-motion:reduce){.ref-bar i{transition:none}}body[data-motion=paused] .ref-bar i{transition:none}
+@media(max-width:760px){.ref-command-glance{grid-template-columns:1fr}}
+/* Mon espace Soldat (maquette 02) */
+.soldier-space{display:grid;gap:14px}.soldier-top{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:14px}
+.soldier-profile{display:grid;gap:6px;justify-items:start}.soldier-medal{display:grid;place-items:center;width:84px;height:84px;border-radius:50%;border:2px solid #d4af37;color:#e2c26a;font:500 1.9rem 'Saira Condensed',sans-serif;background:#0a122899}
+.soldier-tag{padding:2px 10px;border-radius:99px;border:1px solid #7ed8a866;color:#7ed8a8;font-size:.78rem}
+.soldier-card{border-radius:16px;padding:16px 20px;color:#1b1608;background:linear-gradient(135deg,#f0d77f,#c9a227 55%,#9a7a1a);border:1px solid #fff3;box-shadow:0 14px 40px #0008}
+.soldier-card-head{display:flex;justify-content:space-between;gap:10px;font:600 .9rem 'Saira Condensed',sans-serif;letter-spacing:.1em}.soldier-card-head small{font-size:.65rem;opacity:.75}
+.soldier-card-body{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-top:14px}.soldier-card-body strong{display:block;font:600 1.5rem 'Saira Condensed',sans-serif;letter-spacing:.06em}.soldier-card-body p{margin:2px 0;font-size:.8rem;font-weight:700}
+.soldier-qr{width:96px;height:96px;background:#fff;padding:6px;border-radius:8px}
+.soldier-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.soldier-grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.soldier-date{display:inline-grid;place-items:center;padding:6px 14px;border:1px solid #d4af3755;border-radius:10px;margin-right:10px}.soldier-date strong{font:600 1.8rem 'Saira Condensed',sans-serif;color:#e2c26a}
+.soldier-space blockquote{margin:8px 0;padding-left:12px;border-left:2px solid #d4af37;font-style:italic;color:#c9d0dd}.soldier-space cite{display:block;font-size:.8rem;color:#aeb7c7}
+@media(max-width:900px){.soldier-top,.soldier-grid,.soldier-grid-2{grid-template-columns:1fr}}
+/* Barre d'onglets mobile (maquette 04) et progression Academy */
+.ref-tabbar{display:none}
+@media(max-width:760px){.ref-tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(5,1fr);padding:6px 6px calc(6px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#0d1b32ee,#0a1228);border-top:1px solid #d4af3744;backdrop-filter:blur(10px)}
+.ref-tabbar button{display:grid;justify-items:center;gap:2px;min-height:48px;background:none;border:0;color:#aeb7c7;font:500 .7rem 'Atkinson Hyperlegible',system-ui,sans-serif;cursor:pointer}
+.ref-tabbar button svg{width:22px;height:22px}.ref-tabbar button[aria-current=page]{color:#e2c26a}body.sde-reference-admin,body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}}
+.soldier-ring{--rate:0%;display:grid;place-items:center;width:84px;height:84px;border-radius:50%;background:conic-gradient(#7ed8a8 var(--rate),#ffffff1f 0);position:relative}.soldier-ring:before{content:"";position:absolute;inset:8px;border-radius:50%;background:#0d1b32}.soldier-ring strong{position:relative;font:600 1.15rem 'Saira Condensed',sans-serif}
+.soldier-list{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:8px}.soldier-list li{display:flex;gap:10px;align-items:center}.soldier-list small{display:block;color:#aeb7c7}
+.ops-filters{display:flex;gap:8px;margin:10px 0}.ops-filters button{padding:6px 14px;border-radius:99px;border:1px solid #d4af3744;background:none;color:inherit;cursor:pointer}.ops-filters button[aria-pressed=true]{background:#d4af3722;border-color:#d4af37;color:#e2c26a}
+.ops-actions{display:flex;flex-wrap:wrap;gap:6px}.ops-actions a,.ops-actions button{padding:4px 10px;border-radius:8px;border:1px solid #d4af3744;background:none;color:#e2c26a;font:inherit;font-size:.85rem;cursor:pointer;text-decoration:none}
+.ref-priority{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 0}.ref-priority>span{font:600 .85rem 'Saira Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#e2c26a;margin-right:6px}
+.ref-priority button{padding:6px 14px;border-radius:99px;border:1px solid #d4af3755;background:#0a122866;color:inherit;font:inherit;font-size:.85rem;cursor:pointer}.ref-priority button:hover{border-color:#d4af37;color:#e2c26a}
+/* ═══════════════ Charte « SDE Digital — Militaire Premium » (application) ═══════════════ */
+html:not([data-theme=light]) body.sde-reference{--m-carte:#131e29;--m-carte-2:#0e1720;--m-olive:#2b3421;--m-olive-2:#3c4a2b;--m-treillis:#6f7f3f;--m-or:#c9a14a;--m-or-clair:#e4c477;--m-or-fonce:#97762c;--m-texte:#ece6d8;--m-titre:"Cinzel","Saira Condensed",Georgia,serif;--m-italique:"Cormorant Garamond",Georgia,serif;background:radial-gradient(1100px 600px at 10% -10%,#16243a,transparent 60%),radial-gradient(900px 500px at 100% 0,#1a2316,transparent 55%),#0a121b}
+html:not([data-theme=light]) body.sde-reference .ref-sidebar{background:linear-gradient(180deg,#0e1620,#0a1118);border-right:1px solid var(--m-olive-2)}
+html:not([data-theme=light]) body.sde-reference .ref-sidebar nav button[aria-current=page]{background:linear-gradient(90deg,#c9a14a3d,#c9a14a14);color:var(--m-or-clair);box-shadow:inset 3px 0 0 var(--m-or);border-radius:3px}
+html:not([data-theme=light]) body.sde-reference .ref-quote{font-family:var(--m-italique);font-size:1.02rem;color:#d8cfb8}
+/* En-tête d'écran en bandeau numéroté vert treillis */
+html:not([data-theme=light]) body.sde-reference .ops-heading{padding:10px 16px;border:1px solid var(--m-olive-2);border-left:3px solid var(--m-or);border-radius:4px;background:linear-gradient(90deg,var(--m-olive),#161d13 70%,#11170f)}
+html:not([data-theme=light]) body.sde-reference .ops-heading h2{font-family:var(--m-titre);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--m-texte)}
+html:not([data-theme=light]) body.sde-reference .ops-heading h2 em{color:var(--m-or-clair);font-style:normal}
+html:not([data-theme=light]) body.sde-reference .ops-eyebrow{color:var(--m-or);letter-spacing:.2em;text-transform:uppercase;font-size:.7rem}
+html:not([data-theme=light]) body.sde-reference :is(.ops-subtitle){font-family:var(--m-italique);font-size:1.12rem;color:#d8cfb8}
+/* Cartes sombres structurées, filet olive et liseré or */
+html:not([data-theme=light]) body.sde-reference .ops-card{background:linear-gradient(180deg,var(--m-carte),var(--m-carte-2));border:1px solid var(--m-olive-2);border-radius:6px;box-shadow:inset 0 1px 0 #c9a14a1f,0 10px 26px #0007}
+html:not([data-theme=light]) body.sde-reference .ops-card>h3{color:var(--m-texte);font-weight:700;letter-spacing:.01em}
+html:not([data-theme=light]) body.sde-reference :is(.ref-kpi strong,.soldier-date strong,.soldier-ring strong,.ref-flow strong){font-family:var(--m-titre);font-weight:600;color:var(--m-texte)}
+html:not([data-theme=light]) body.sde-reference .ref-kpi>svg{color:var(--m-or)}
+/* Boutons or */
+html:not([data-theme=light]) body.sde-reference :is(.ref-small-action,.ops-card button[data-act],.soldier-space .ops-card>button,.ref-request-list .ref-small-action){background:linear-gradient(180deg,var(--m-or-clair),var(--m-or) 55%,var(--m-or-fonce));color:#1a1408;border:1px solid #f0d58f66;border-radius:4px;font-weight:700}
+html:not([data-theme=light]) body.sde-reference .ref-priority button,html:not([data-theme=light]) body.sde-reference .ops-actions :is(a,button){border-color:var(--m-or-fonce);color:var(--m-or-clair);border-radius:4px}
+html:not([data-theme=light]) body.sde-reference .soldier-tag{background:#1f3a25;border-color:#4fb36a66;color:#8fdc9f}
+html:not([data-theme=light]) body.sde-reference .soldier-ring{background:conic-gradient(#4fb36a var(--rate),#ffffff1a 0)}
+html:not([data-theme=light]) body.sde-reference .ref-bar i{background:linear-gradient(90deg,var(--m-treillis),#a5b35f)}
+/* Carte de membre en or avec le lion, comme sur la maquette */
+.soldier-card{position:relative;overflow:hidden;background:linear-gradient(118deg,#f1da92 0%,#d2ab55 38%,#b48c35 56%,#1a140b 56.2%,#0f0c08 100%);border:1px solid #f3dc9a88}
+.soldier-card::after{content:"";position:absolute;inset:0 0 0 52%;background:url(/vitrine/illus/lion-sde.webp) center/cover no-repeat;opacity:.9;-webkit-mask-image:linear-gradient(90deg,transparent,#000 35%);mask-image:linear-gradient(90deg,transparent,#000 35%);pointer-events:none}
+.soldier-card>*{position:relative;z-index:1}.soldier-card-body>div{max-width:52%}
+.soldier-card-head small,.soldier-card-head span{color:#2a1f0b}
+.soldier-qr{box-shadow:0 4px 14px #0009}
+/* Événement phare (IN FIRE) : photo dorée et dégradé nuit */
+.ref-feature{position:relative;overflow:hidden;min-height:220px;display:flex;align-items:flex-end;padding:22px;border-radius:6px;border:1px solid #3c4a2b;background:#0d141c}
+.ref-feature img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) sepia(.85) saturate(1.6) brightness(.72) contrast(1.08)}
+.ref-feature::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0a121bf2 0%,#0a121bb3 45%,#0a121b33 100%),radial-gradient(400px 220px at 75% 20%,#e4c47744,transparent 70%)}
+.ref-feature>div{position:relative;z-index:1;max-width:460px}
+.ref-feature-tag{display:inline-block;padding:4px 10px;border:1px solid #c9a14a;border-radius:3px;color:#e4c477;font:600 .68rem/1 "Cinzel",serif;letter-spacing:.2em;text-transform:uppercase}
+.ref-feature h3{margin:10px 0 4px;font:600 clamp(1.8rem,4vw,2.6rem)/1.05 "Cinzel","Saira Condensed",serif;color:#f1e6c8;letter-spacing:.04em}
+.ref-feature p{margin:4px 0;color:#e7dcc3}.ref-feature .ref-feature-sub{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:#d8c48f}
+.ref-feature .ref-small-action{margin-top:12px}
+.ref-feature{margin:0 0 14px}
+/* Finitions charte : superpositions, boutons or homogènes, liens « Voir » */
+.ref-feature::before{z-index:1}.ref-feature>div{z-index:2}
+.ref-feature::before{background:linear-gradient(90deg,#0a121b 0%,#0a121be6 38%,#0a121b66 70%,#0a121b22 100%),radial-gradient(420px 240px at 78% 25%,#e4c47740,transparent 70%)}
+.ref-feature .ref-feature-sub{color:#e4c477}
+html:not([data-theme=light]) body.sde-reference .ops-panel button:not(.ref-kpi-go):not(.ref-link-more):not([aria-pressed]){background:#0a121b99;border:1px solid #97762c;color:#e4c477;border-radius:4px;box-shadow:none}
+html:not([data-theme=light]) body.sde-reference .ops-panel :is(.ref-small-action,.ref-feature .ref-small-action,.ref-request-list .ref-small-action,.soldier-space .ops-card>button){background:linear-gradient(180deg,#e4c477,#c9a14a 55%,#97762c);color:#1a1408;border:1px solid #f0d58f66;border-radius:4px;font-weight:700}
+html:not([data-theme=light]) body.sde-reference .ops-panel .ops-filters button[aria-pressed]{border-radius:99px}
+.ref-link-more{position:absolute;right:16px;top:18px;padding:0;background:none!important;border:0!important;color:#e4c477!important;text-decoration:underline;text-underline-offset:3px;font-size:.82rem;box-shadow:none!important}
+.ref-command-glance .ops-card>h3{padding-right:96px}.ref-command-glance .ref-bars,.ref-command-glance .ref-flow{margin-top:16px}
+.soldier-card-head{flex-direction:column;align-items:flex-start;gap:2px}
+html:not([data-theme=light]) body.sde-reference .ops-panel .ref-small-action{background:linear-gradient(180deg,#e4c477,#c9a14a 55%,#97762c)!important;border:1px solid #f0d58f66!important;border-radius:4px!important;color:#1a1408!important;font-weight:700}
+.ref-link-more{top:16px}
+@media(max-width:600px){.soldier-card{background:linear-gradient(118deg,#f1da92 0%,#d2ab55 45%,#b48c35 66%,#1a140b 66.2%,#0f0c08 100%)}.soldier-card::after{inset:0 0 0 64%}.soldier-card-body>div{max-width:66%}.soldier-card-body strong{font-size:1.1rem;white-space:nowrap}.soldier-qr{width:70px;height:70px;padding:4px}}
+/* Ajouts de la branche principale (espace membre premium, identité SDE DIGITAL) */
+.ref-digital-identity{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;gap:1px;text-align:center;pointer-events:none;white-space:nowrap;color:#f5efe0}.ref-digital-identity strong{font:600 12px/1.1 "Saira Condensed","Arial Narrow",system-ui,sans-serif;letter-spacing:.13em;color:#f4e6c3}.ref-digital-identity strong span{color:#d8b76a}.ref-digital-identity small{font:400 8px/1.2 "Atkinson Hyperlegible",system-ui,sans-serif;letter-spacing:.08em;color:#c1c5d0}
+@media(max-width:600px){.ref-digital-identity{max-width:44vw;overflow:hidden}.ref-digital-identity strong{font-size:9px;letter-spacing:.08em}.ref-digital-identity small{display:none}}
+.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(2) strong{color:#f0bd68}
+.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(4) strong{color:#e7c87a}
+.ref-presence-summary{display:flex;align-items:center;gap:11px;min-height:46px;margin-top:8px;padding:8px 10px;border:1px solid #74d4a833;border-radius:10px;background:#0d1a2c88}.ref-presence-summary .ref-presence-ring{position:relative;right:auto;bottom:auto;flex:0 0 34px;width:34px;height:34px}.ref-presence-summary strong{display:flex;flex:1;justify-content:space-between;gap:10px;color:#e7e8ec;font-size:12px}.ref-presence-summary strong b{color:#87e5b5}.ref-presence-summary button{min-height:32px;margin:0;padding:6px 10px;border:1px solid #d9b55b99;border-radius:8px;background:#152239;color:#f2d184;font-size:11px;white-space:nowrap}
 
 /* Espace membre : bureau large, navigation latérale et contenu réel du portail. */
 @media(min-width:761px){
@@ -276,3 +371,5 @@ body.sde-reference-admin .site-ed .site-ed-check{display:flex;flex-direction:row
  .sde-reference-member .ref-home-secondary{display:none!important}
  .sde-reference-member .sde-bottom-nav{display:flex!important}
 }
+/* Une seule barre basse sur mobile : la navigation existante du portail l’emporte quand elle est présente. */
+body:has(.sde-bottom-nav) .ref-tabbar{display:none!important}

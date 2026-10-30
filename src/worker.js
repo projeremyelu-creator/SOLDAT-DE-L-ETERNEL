@@ -294,15 +294,19 @@ async function apiInscription(req, env, ctx) {
 }
 async function apiConnexionMdp(req, env) {
   const b = await req.json();
-  const email = normEmail(b.email), ip = ipDe(req);
-  if (await bloque(env, "e:" + email, 8) || await bloque(env, "ip:" + ip, 40)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure avant de réessayer.", 429);
-  const c = EMAIL_OK.test(email) ? await env.DB.prepare("SELECT email, mdp, activation FROM comptes WHERE email = ?").bind(email).first() : null;
+  /* Identifiant : adresse e-mail ou matricule du membre. */
+  const saisie = normEmail(b.email), ip = ipDe(req);
+  if (await bloque(env, "e:" + saisie, 8) || await bloque(env, "ip:" + ip, 40)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure avant de réessayer.", 429);
+  let c = null;
+  if (EMAIL_OK.test(saisie)) c = await env.DB.prepare("SELECT email, mdp, activation FROM comptes WHERE email = ?").bind(saisie).first();
+  else if (/^[a-z0-9][a-z0-9 ._-]{2,39}$/i.test(saisie)) c = await env.DB.prepare("SELECT email, mdp, activation FROM comptes WHERE upper(matricule) = upper(?)").bind(saisie).first();
+  const email = c ? c.email : saisie;
   if (!c || !c.mdp || !(await verifierMdp(b.motDePasse, c.mdp))) {
-    await compter(env, "e:" + email); await compter(env, "ip:" + ip);
+    await compter(env, "e:" + saisie); await compter(env, "ip:" + ip);
     if (c && !c.mdp && c.activation) return erreur("activation", "Ce compte n’est pas encore activé : choisissez « J’ai un code d’activation ».", 401);
-    return erreur("refuse", "Adresse e-mail ou mot de passe incorrect.", 401);
+    return erreur("refuse", "Les informations saisies ne permettent pas de vous connecter. Vérifiez votre matricule et votre mot de passe.", 401);
   }
-  await effacer(env, "e:" + email);
+  await effacer(env, "e:" + saisie);
   return json({ ok: true }, 200, { "set-cookie": await ouvrirSession(env, email) });
 }
 async function apiActivation(req, env) {
@@ -508,6 +512,24 @@ async function apiMonProfil(req, env, u) {
 }
 
 /* ───────── cotisations du membre ───────── */
+/* Progression personnelle dans la Soldiers Academy : modules suivis / modules des formations où le membre est inscrit. */
+async function apiMonParcoursAcademy(req, env, u) {
+  if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 404);
+  if (req.method !== "GET") return erreur("methode", "GET uniquement.", 405);
+  const formations = await lireRequete(env, { path: "formations" });
+  let faits = 0, total = 0, inscrit = 0, certifie = 0;
+  for (const { data: d = {} } of formations) {
+    const p = d.participants && d.participants[u.membreId];
+    if (!p || typeof p !== "object" || ["Abandon", "Retiré"].includes(p.statut)) continue;
+    const modules = Array.isArray(d.modules) ? d.modules.filter((m) => m && m.id) : [];
+    inscrit++;
+    if (p.statut === "Certifié") certifie++;
+    total += modules.length;
+    faits += modules.filter((m) => p.suivis && p.suivis[m.id]).length;
+  }
+  return json({ ok: true, formations: inscrit, certifie, modulesFaits: faits, modulesTotal: total, pourcentage: total ? Math.round((100 * faits) / total) : null });
+}
+
 async function apiMesCotisations(req, env, u) {
   if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 404);
   if(req.method!=="GET")return erreur("methode","GET uniquement.",405);
@@ -1670,6 +1692,7 @@ async function traiter(req, env, ctx) {
       if (p === "/api/mon-profil" && req.method === "PATCH") return apiMonProfil(req, env, u);
       if (p === "/api/ma-photo" && req.method === "POST") return apiMaPhoto(req, env, u);
       if (p === "/api/mes-cotisations") return apiMesCotisations(req, env, u);
+      if (p === "/api/mon-parcours-academy") return apiMonParcoursAcademy(req, env, u);
       if (p === "/api/actualites") return apiActualites(env, u);
       if (p === "/api/priere" && req.method === "POST") return apiPriere(req, env, u, ctx);
       if (p === "/api/absence" && req.method === "POST") return apiAbsence(req, env, u, ctx);

@@ -20,7 +20,7 @@
 <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","name":"Mouvement Prophético-Apostolique Soldats de l'Éternel","alternateName":"MPA SDE","url":"https://mouvement-sde.org","logo":"https://mouvement-sde.org/vitrine/logo.png","description":"Mouvement chrétien prophético-apostolique pour le réveil spirituel des nations.","founder":[{"@type":"Person","name":"Jérémy Octave GLAZAÏ"},{"@type":"Person","name":"Amy Berté GLAZAÏ"}],"address":{"@type":"PostalAddress","addressLocality":"Abidjan","addressRegion":"Cocody Deux-Plateaux","addressCountry":"CI"},"contactPoint":{"@type":"ContactPoint","telephone":"+225-07-78-68-95-73","contactType":"customer service","availableLanguage":"French"},"sameAs":[]},{"@context":"https://schema.org","@type":"Event","name":"IN FIRE 2026","image":"https://mouvement-sde.org/vitrine/infire-2026/affiche-officielle.png","startDate":"2026-10-31T08:30:00+00:00","endDate":"2026-10-31T18:00:00+00:00","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name":"Église MADEG","address":{"@type":"PostalAddress","streetAddress":"Cocody Deux-Plateaux Agban","addressLocality":"Abidjan","addressCountry":"CI"}},"organizer":{"@type":"Organization","name":"MPA SDE","url":"https://mouvement-sde.org"},"performer":[{"@type":"Person","name":"Jérémy l'Élu GLAZAÏ"},{"@type":"Person","name":"Samuel ZEREOUE"}],"description":"Conférence internationale annuelle pour le réveil spirituel des nations. Thème : La révélation des fils et filles de Dieu.","isAccessibleForFree":true},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Qu'est-ce que le mouvement Soldats de l'Éternel ?","acceptedAnswer":{"@type":"Answer","text":"SDE est un mouvement chrétien prophético-apostolique fondé à Abidjan par Jérémy Octave et Amy Berté GLAZAÏ. Il rassemble des croyants autour de cinq axes : réveiller, restaurer, former, équiper et envoyer."}},{"@type":"Question","name":"Comment rejoindre SDE ?","acceptedAnswer":{"@type":"Answer","text":"Remplissez le formulaire sur cette page ou écrivez au secrétariat via WhatsApp au +225 07 78 68 95 73."}}]}]</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@400;500;600;700;800;900&family=Saira+Stencil+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@400;500;600;700;800;900&family=Saira+Stencil+One&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
 <style>
 /* ═══════════ DESIGN SYSTEM SDE — HARMONISÉ avec l'application ═══════════ */
 :root {
@@ -734,13 +734,14 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
 <link rel="stylesheet" href="/vitrine/experience.css?v=20261024c">
 <link rel="stylesheet" href="/vitrine/hybride.css?v=20261024c">
 <link rel="stylesheet" href="/vitrine/portal.css?v=20261025b">
-<link rel="stylesheet" href="/vitrine/mpa.css?v=20261025d">
+<link rel="stylesheet" href="/vitrine/mpa.css?v=20261030d">
 <link rel="stylesheet" href="/vitrine/sde-unified.css?v=20261025f">
 <link rel="stylesheet" href="/vitrine/modern-2026.css?v=20261025e">
 <link rel="manifest" href="/vitrine/manifest.webmanifest">
 <link rel="stylesheet" href="/vitrine/sde-app-shell.css?v=20261025f">
 <link rel="stylesheet" href="/vitrine/sde-dynamique.css?v=20261026a">
 <link rel="stylesheet" href="/vitrine/globe-sde.css?v=20261029b">
+<link rel="stylesheet" href="/vitrine/sde-maquette.css?v=20261030a">
 </head>
 <body data-cosmique>
 
@@ -826,6 +827,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
         <svg class="icone-theme-sombre" aria-hidden="true"><use href="#i-soleil"/></svg>
         <svg class="icone-theme-clair" aria-hidden="true" style="display:none"><use href="#i-lune"/></svg>
       </button>
+      <a class="bouton b-contour btn-soutien" href="#soutenir">Soutenir le mouvement</a>
       <a class="bouton b-or btn-membre btn-portail" href="/connexion"><svg aria-hidden="true" style="width:16px;height:16px"><use href="#i-cle"/></svg> Mon Portail S.D.E</a>
       <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav-principal" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
     </div>
@@ -842,15 +844,18 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
     <div class="hero-voile"></div>
     <canvas id="braises" aria-hidden="true"></canvas>
     <div class="hero-contenu">
-      <div class="hero-badge"><span class="pulse"></span>Mouvement Prophético-Apostolique</div>
-      <p class="hero-event-tag">🔥 Conférence internationale</p>
-      <h1><span class="accent">IN FIRE '26</span> —<br>Le grand réveil</h1>
+      <div class="hero-badge"><span class="pulse"></span>Mouvement Prophético-Apostolique Soldat De l’Éternel</div>
+      <p class="hero-event-tag">🔥 Événement phare · IN FIRE 2026</p>
+      <h1><span class="accent">Une génération enracinée</span><br>en Jésus-Christ, prête à servir</h1>
+      <p class="hero-intro">Le Mouvement Prophético-Apostolique Soldat De l’Éternel rassemble des hommes et des femmes autour de Jésus-Christ, de la prière, de la formation et du service. Nous voulons contribuer à l’édification des croyants et au réveil spirituel des nations.</p>
+      <p class="hero-intro">Nous croyons que chacun peut grandir dans la foi, découvrir sa place et mettre ses dons au service de Dieu et de son prochain.</p>
       <p class="hero-date-lieu">31 Octobre · Église MADEG · Cocody Deux-Plateaux, Abidjan</p>
       <div class="hero-decompte" id="hero-decompte" aria-label="Compte à rebours"></div>
       <p class="hero-mission">Réveiller · Restaurer · Former · Équiper · Envoyer</p>
       <div class="hero-actions">
-        <a class="bouton b-or b-lg" href="#infire">S'inscrire / Rejoindre <svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
-        <a class="bouton b-contour" href="#mouvement">Découvrir le mouvement</a>
+        <a class="bouton b-or b-lg" href="#mouvement">Découvrir le Mouvement <svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
+        <a class="bouton b-contour" href="#rejoindre">Rejoindre le mouvement</a>
+        <a class="bouton b-contour" href="#programmes">Voir les programmes</a>
       </div>
       <div class="hero-verset">
         <blockquote id="verset-texte">« Et l'esprit entra en eux, et ils reprirent vie, et ils se tinrent sur leurs pieds : c'était une armée nombreuse, très nombreuse. »</blockquote>
@@ -1189,7 +1194,57 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
   </section>
 
   <!-- ═══════════ LE MOUVEMENT ═══════════ -->
-  <section class="section" id="mouvement" aria-labelledby="titre-mouvement">
+  <!-- ═══════════ VISION ET CINQ ENGAGEMENTS (document de référence) ═══════════ -->
+  <section class="section" id="vision-engagements" aria-labelledby="titre-vision">
+    <div class="enveloppe">
+      <div class="tete-section revele">
+        <p class="surtitre">Réveiller · Restaurer · Former · Équiper · Envoyer</p>
+        <h2 id="titre-vision">Notre vision</h2>
+        <p class="chapo">Nous désirons voir une génération affermie dans la Parole, conduite par l’Esprit de Dieu et engagée dans une vie de prière, de sainteté, de fraternité et de service.</p>
+      </div>
+      <h3 class="revele">Nos cinq engagements</h3>
+      <div class="vmi">
+        <div class="vmi-carte revele"><h3>Réveiller</h3><p>Encourager chacun à rechercher Dieu, à prier et à demeurer attentif à la direction du Saint-Esprit.</p></div>
+        <div class="vmi-carte revele" style="--d:.08s"><h3>Restaurer</h3><p>Accompagner les personnes dans leur croissance et leur affermissement en Jésus-Christ.</p></div>
+        <div class="vmi-carte revele" style="--d:.16s"><h3>Former</h3><p>Transmettre les fondements bibliques et développer le caractère chrétien.</p></div>
+        <div class="vmi-carte revele" style="--d:.24s"><h3>Équiper</h3><p>Aider les membres à reconnaître leurs dons et à se préparer au service.</p></div>
+        <div class="vmi-carte revele" style="--d:.32s"><h3>Envoyer</h3><p>Mobiliser les croyants pour l’évangélisation, les missions et les actions solidaires.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ À PROPOS : HISTOIRE ET FONDEMENTS (document de référence) ═══════════ -->
+  <section class="section" id="a-propos" aria-labelledby="titre-a-propos">
+    <div class="enveloppe">
+      <div class="tete-section revele">
+        <p class="surtitre">À propos du Mouvement SDE</p>
+        <h2 id="titre-a-propos">Notre histoire</h2>
+        <p class="chapo">Le Mouvement Soldat De l’Éternel est né d’un désir de servir Dieu et de voir des vies transformées par Jésus-Christ. Il rassemble des personnes désireuses de grandir dans la foi, d’approfondir la Parole et de prendre part à une œuvre collective de prière, de formation et de service.</p>
+        <p class="chapo">Au fil des rencontres et des programmes, le mouvement développe des espaces de communion fraternelle, d’enseignement, d’évangélisation et d’action sociale. Son histoire continue de s’écrire à travers les personnes que Dieu rassemble et les missions accomplies ensemble.</p>
+      </div>
+      <h3 class="revele">Nos fondements</h3>
+      <ul class="fondements revele">
+        <li>Jésus-Christ au centre de notre foi et de notre service.</li>
+        <li>La Bible comme fondement de notre enseignement.</li>
+        <li>La prière comme expression de notre dépendance envers Dieu.</li>
+        <li>La formation comme préparation au service.</li>
+        <li>La fraternité et la solidarité comme témoignages de l’amour du prochain.</li>
+      </ul>
+    </div>
+  </section>
+
+<section class="section" id="leadership" aria-labelledby="titre-leadership">
+    <div class="enveloppe">
+      <div class="tete-section revele">
+        <p class="surtitre">Leadership</p>
+        <h2 id="titre-leadership">Une équipe au service de la vision</h2>
+        <p class="chapo">Le Mouvement SDE est conduit par une équipe engagée dans la prière, l’enseignement, la coordination et le service. Ses responsables accompagnent les membres et contribuent à la mise en œuvre des activités du mouvement.</p>
+      </div>
+      <p class="leadership-noms revele"><strong>Leader :</strong> Serviteur Jérémy l’Élu<br><strong>Coordination administrative :</strong> Amy Glazaï</p>
+    </div>
+  </section>
+
+    <section class="section" id="mouvement" aria-labelledby="titre-mouvement">
     <div class="enveloppe">
       <div class="tete-section revele">
         <p class="surtitre">Le mouvement</p>
@@ -1391,15 +1446,15 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
     <div class="enveloppe">
       <div class="tete-section revele">
         <p class="surtitre">Pôles et départements</p>
-        <h2 id="titre-poles">Cinq pôles au service de la mission</h2>
+        <h2 id="titre-poles">Nos cinq pôles</h2>
       </div>
       <p class="intro-poles">Touchez un pôle pour découvrir sa mission, ses départements et ses projets.</p>
       <div class="poles">
-        <button type="button" class="pole revele" data-pole="1" aria-haspopup="dialog" style="--d:0.00s"><span class="pole-img"><img src="/vitrine/illus/pole-1.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 1</span><span class="pole-titre">Réveil, évangélisation et missions</span><span class="pole-acc">Allumer le feu et le porter aux nations</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
-        <button type="button" class="pole revele" data-pole="2" aria-haspopup="dialog" style="--d:0.08s"><span class="pole-img"><img src="/vitrine/illus/pole-2.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 2</span><span class="pole-titre">Impact social et humanitaire</span><span class="pole-acc">L'amour de Dieu rendu visible</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
-        <button type="button" class="pole revele" data-pole="3" aria-haspopup="dialog" style="--d:0.16s"><span class="pole-img"><img src="/vitrine/illus/pole-3.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 3</span><span class="pole-titre">Logistique et organisation</span><span class="pole-acc">Tout préparer pour que Dieu agisse</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
-        <button type="button" class="pole revele" data-pole="4" aria-haspopup="dialog" style="--d:0.24s"><span class="pole-img"><img src="/vitrine/illus/pole-4.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 4</span><span class="pole-titre">Communication, médias et digital</span><span class="pole-acc">Faire entendre le message partout</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
-        <button type="button" class="pole revele" data-pole="5" aria-haspopup="dialog" style="--d:0.32s"><span class="pole-img"><img src="/vitrine/illus/pole-5.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 5</span><span class="pole-titre">Formation et développement intégral</span><span class="pole-acc">Former des disciples et des leaders complets</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
+        <button type="button" class="pole revele" data-pole="1" aria-haspopup="dialog" style="--d:0.00s"><span class="pole-img"><img src="/vitrine/illus/pole-1.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 1</span><span class="pole-titre">Réveil, évangélisation &amp; missions</span><span class="pole-acc">Prière, intercession, annonce de l’Évangile et missions.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
+        <button type="button" class="pole revele" data-pole="2" aria-haspopup="dialog" style="--d:0.08s"><span class="pole-img"><img src="/vitrine/illus/pole-2.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 2</span><span class="pole-titre">Impact social &amp; humanitaire</span><span class="pole-acc">Actions de solidarité et accompagnement des personnes en situation de vulnérabilité.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
+        <button type="button" class="pole revele" data-pole="3" aria-haspopup="dialog" style="--d:0.16s"><span class="pole-img"><img src="/vitrine/illus/pole-3.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 3</span><span class="pole-titre">Logistique &amp; organisation</span><span class="pole-acc">Préparation des activités, coordination des équipes et accueil des participants.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
+        <button type="button" class="pole revele" data-pole="4" aria-haspopup="dialog" style="--d:0.24s"><span class="pole-img"><img src="/vitrine/illus/pole-4.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 4</span><span class="pole-titre">Communication, médias &amp; digital</span><span class="pole-acc">Création et diffusion des supports, communication du mouvement et outils numériques.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
+        <button type="button" class="pole revele" data-pole="5" aria-haspopup="dialog" style="--d:0.32s"><span class="pole-img"><img src="/vitrine/illus/pole-5.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 5</span><span class="pole-titre">Formation &amp; développement intégral</span><span class="pole-acc">Formation biblique, croissance du caractère et préparation au service.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
       </div>
     </div>
   </section>
@@ -1409,17 +1464,17 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
     <div class="enveloppe">
       <div class="tete-section revele">
         <p class="surtitre">Programmes et projets</p>
-        <h2 id="titre-programmes">Des rendez-vous pour grandir ensemble</h2>
+        <h2 id="titre-programmes">Nos programmes</h2>
         <p class="chapo">Chaque programme a son équipe. Écrivez-nous pour y participer ou le soutenir.</p>
       </div>
       <div class="programmes">
-        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-traversee.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Chaque mois</span><h3>Traversée Prophétique Mensuelle</h3><p>Un temps de prière et de consécration pour entrer dans le mois avec Dieu.</p><a href="#rejoindre" data-sujet="Traversée Prophétique Mensuelle">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme revele feu"><img class="prog-img" src="/vitrine/illus/prog-infire.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Chaque année</span><h3>IN FIRE</h3><p>La conférence internationale pour le réveil spirituel des nations.</p><a href="#infire">Voir l'édition 2026 <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-academy.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Parcours</span><h3>Soldiers Academy</h3><p>Un parcours pour former des disciples solides et des leaders au service du Royaume.</p><a href="/vitrine/academy.html">Se préinscrire <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-holytalk.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Partage et célébration</span><h3>Holy Talk &amp; Holy Day</h3><p>Des espaces d'échange sur la foi et la vie, et des journées de célébration.</p><a href="#rejoindre" data-sujet="Holy Talk &amp; Holy Day">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-missions.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Sur le terrain</span><h3>Missions et actions solidaires</h3><p>Évangélisation, visites et soutien concret aux personnes dans le besoin.</p><a href="#rejoindre" data-sujet="Missions et actions solidaires">S'engager <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-brunch.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Communion fraternelle</span><h3>Holy Brunch</h3><p>Un moment convivial pour se rencontrer, partager un repas et fortifier les liens.</p><a href="#rejoindre" data-sujet="Holy Brunch">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
-        <article class="programme revele feu"><img class="prog-img" src="/vitrine/illus/prog-aleph12.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Début d'année</span><h3>ALEPH 12</h3><p>12 jours de prière et de jeûne : déclarations et orientations prophétiques pour posséder et recommander l'année à Dieu.</p><a href="#rejoindre" data-sujet="ALEPH 12">Participer <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
+        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-traversee.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Chaque mois</span><h3>Traversée Prophétique Mensuelle</h3><p>Un rendez-vous régulier de prière, d’édification et de recherche de la direction de Dieu pour la nouvelle saison.</p><a href="/vitrine/programmes">Découvrir le programme <svg aria-hidden="true"><use href="#i-fleche"/></svg></a> <a href="#rejoindre" data-sujet="Traversée Prophétique Mensuelle">M’inscrire</a></article>
+        <article class="programme revele feu"><img class="prog-img" src="/vitrine/illus/prog-infire.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Chaque année</span><h3>IN FIRE</h3><p>Un rassemblement de louange, de prière et d’enseignement pour affermir les croyants et raviver leur engagement envers Dieu.</p><a href="/vitrine/programmes">Découvrir le programme <svg aria-hidden="true"><use href="#i-fleche"/></svg></a> <a href="#rejoindre" data-sujet="IN FIRE 2026">M’inscrire</a></article>
+        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-academy.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Parcours</span><h3>Soldiers Academy</h3><p>Un parcours de formation consacré aux fondements bibliques, au caractère chrétien, au leadership et au service.</p><a href="/vitrine/academy.html">Découvrir le programme <svg aria-hidden="true"><use href="#i-fleche"/></svg></a> <a href="/vitrine/academy.html">M’inscrire</a></article>
+        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-holytalk.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Partage et célébration</span><h3>Holy Talk &amp; Holy Day</h3><p>Des temps d’échange, d’enseignement et de communion fraternelle autour de la foi et de la vie quotidienne.</p><a href="/vitrine/programmes">Découvrir le programme <svg aria-hidden="true"><use href="#i-fleche"/></svg></a> <a href="#rejoindre" data-sujet="HolyTalk &amp; HolyDay">M’inscrire</a></article>
+        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-missions.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Sur le terrain</span><h3>Missions et actions solidaires</h3><p>Des initiatives d’évangélisation et de solidarité pour servir les personnes et les communautés.</p><a href="/vitrine/programmes">Découvrir le programme <svg aria-hidden="true"><use href="#i-fleche"/></svg></a> <a href="#rejoindre" data-sujet="Missions et actions solidaires">M’inscrire</a></article>
+        <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-brunch.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Communion fraternelle</span><h3>Holy Brunch</h3><p>Un moment convivial pour se retrouver, échanger et fortifier la communion fraternelle.</p><a href="/vitrine/programmes">Découvrir le programme <svg aria-hidden="true"><use href="#i-fleche"/></svg></a> <a href="#rejoindre" data-sujet="Holy Brunch">M’inscrire</a></article>
+        <article class="programme revele feu"><img class="prog-img" src="/vitrine/illus/prog-aleph12.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Début d'année</span><h3>ALEPH 12</h3><p>Douze jours de prière et de jeûne consacrés à la recherche de Dieu et à la consécration de l’année.</p><a href="/vitrine/programmes">Découvrir le programme <svg aria-hidden="true"><use href="#i-fleche"/></svg></a> <a href="#rejoindre" data-sujet="ALEPH 12">M’inscrire</a></article>
         <article class="programme revele"><img class="prog-img" src="/vitrine/illus/prog-humanitaire.svg" alt="" width="600" height="260" loading="lazy"><span class="rythme">Sur le terrain · Daloa et Cocody</span><h3>Missions humanitaires</h3><p>Dons à l'orphelinat Tomorrow Hope de Daloa et soutien aux femmes veuves à Abidjan Cocody.</p><a href="#rejoindre" data-sujet="Missions humanitaires (Daloa, Cocody)">S'engager <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>
       </div>
     </div>
@@ -1661,8 +1716,10 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
     <div class="enveloppe">
       <div class="tete-section revele">
         <p class="surtitre">Soutenir le mouvement</p>
-        <h2 id="titre-soutenir">Chaque contribution a un but précis</h2>
-        <p class="chapo">Vos contributions financent directement les projets du mouvement. Voici ce à quoi elles servent et comment soutenir.</p>
+        <h2 id="titre-soutenir">Contribuer à la mission</h2>
+        <p class="chapo">Votre soutien contribue aux programmes, aux formations et aux actions solidaires du mouvement. Chaque contribution est reçue avec reconnaissance et suivie par l’équipe responsable.</p>
+        <ul class="montants" aria-label="Montants proposés"><li>5 000 FCFA</li><li>10 000 FCFA</li><li>25 000 FCFA</li><li>Autre montant</li></ul>
+        <p><a class="bouton b-or" href="#contact">Choisir mon mode de contribution</a></p>
       </div>
       <div class="soutenir-grille">
         <div class="soutenir-carte revele">
@@ -1696,8 +1753,8 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
     <div class="enveloppe">
       <div class="tete-section revele">
         <p class="surtitre">Rejoindre SDE</p>
-        <h2 id="titre-rejoindre">Envie de marcher avec nous ?</h2>
-        <p class="chapo">Choisissez votre chemin selon votre besoin. Chaque étape vous indique la marche à suivre.</p>
+        <h2 id="titre-rejoindre">Votre parcours peut commencer ici</h2>
+        <p class="chapo">Vous souhaitez découvrir le mouvement, participer à ses programmes ou servir au sein d’un pôle ? Remplissez le formulaire. L’équipe SDE pourra vous contacter pour échanger avec vous.</p>
       </div>
       <div class="parcours-rejoindre">
         <a class="etape-carte revele" href="#f-rejoindre" style="--d:0s"><div class="ec-num">1</div><h3>Découvrir</h3><p>Je veux en savoir plus sur le mouvement et ses activités.</p></a>
@@ -1719,9 +1776,9 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
           <p class="legende">Les champs marqués <span class="oblig">obligatoire</span> sont nécessaires pour vous recontacter.</p>
           <div class="champs">
             <div class="champ"><label for="f-nom">Nom et prénoms <span class="oblig">obligatoire</span></label><input id="f-nom" name="nom" autocomplete="name" autocapitalize="words" maxlength="120" required aria-required="true"></div>
-            <div class="champ"><label for="f-tel">Téléphone ou WhatsApp <span class="oblig">obligatoire</span></label><input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="07 00 00 00 00" maxlength="25" required aria-required="true" aria-describedby="f-tel-aide"><small class="aide" id="f-tel-aide">Avec l'indicatif si vous êtes hors de Côte d'Ivoire, par exemple +216 pour la Tunisie ou +1 pour le Canada.</small></div>
-            <div class="champ"><label for="f-mail">E-mail <span class="facult">facultatif</span></label><input id="f-mail" name="mail" type="email" autocomplete="email"></div>
-            <div class="champ"><label for="f-ville">Ville et pays <span class="oblig">obligatoire</span></label><input id="f-ville" name="ville" autocomplete="address-level2" placeholder="Abidjan, Côte d'Ivoire" maxlength="80" required aria-required="true"></div>
+            <div class="champ"><label for="f-tel">Téléphone / WhatsApp <span class="oblig">obligatoire</span></label><input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="07 00 00 00 00" maxlength="25" required aria-required="true" aria-describedby="f-tel-aide"><small class="aide" id="f-tel-aide">Avec l'indicatif si vous êtes hors de Côte d'Ivoire, par exemple +216 pour la Tunisie ou +1 pour le Canada.</small></div>
+            <div class="champ"><label for="f-mail">Adresse e-mail <span class="facult">facultatif</span></label><input id="f-mail" name="mail" type="email" autocomplete="email"></div>
+            <div class="champ"><label for="f-ville">Commune ou ville <span class="oblig">obligatoire</span></label><input id="f-ville" name="ville" autocomplete="address-level2" placeholder="Abidjan, Côte d'Ivoire" maxlength="80" required aria-required="true"></div>
           </div>
           <div class="champ"><label for="f-objet">Votre demande</label><select id="f-objet" name="objet"><option>Découvrir le mouvement</option><option>Devenir membre</option><option>Traversée Prophétique Mensuelle</option><option>IN FIRE</option><option>Soldiers Academy</option><option>Holy Talk &amp; Holy Day</option><option>Missions et actions solidaires</option><option>ALEPH 12</option><option>Missions humanitaires (Daloa, Cocody)</option><option>Holy Brunch</option><option>Servir dans un pôle</option><option>Rejoindre une formation</option><option>Demande de prière</option><option>Tenues SDE</option><option>Autre</option></select></div>
 <div id="f-adhesion" hidden>
@@ -1734,10 +1791,10 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
           <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label for="f-piege">Ne pas remplir</label><input id="f-piege" name="site_web" type="text" tabindex="-1" autocomplete="off"></div>
           <label class="accord" for="f-accord"><input id="f-accord" name="accord" type="checkbox" required><span>J'accepte que ces informations soient enregistrées par le secrétariat du mouvement SDE (infosoldat@gmail.com) pour me recontacter. Le mouvement ne vend ni ne cède ces informations à d'autres organisations. <span class="oblig">obligatoire</span></span></label>
           <p class="erreur" id="f-erreur" role="alert" hidden></p>
-          <button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-fleche"/></svg>Envoyer au secrétariat</button>
+          <button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-fleche"/></svg>Envoyer ma demande</button>
           <div class="envoi" id="envoi" hidden>
-            <b id="envoi-titre">Votre demande a bien été reçue.</b>
-            <p id="envoi-msg" style="color:var(--gris);font-size:.95rem">Le secrétariat du mouvement a reçu votre message et vous recontactera sous peu. Un e-mail de confirmation peut être envoyé en complément.</p>
+            <b id="envoi-titre">Merci pour votre démarche.</b>
+            <p id="envoi-msg" style="color:var(--gris);font-size:.95rem">Votre demande a bien été transmise à l’équipe du Mouvement SDE.</p>
             <pre id="envoi-texte"></pre>
             <div class="actions">
               <a class="bouton b-contour" id="envoi-mail" href="#"><svg aria-hidden="true"><use href="#i-msg"/></svg>Doubler par e-mail</a>
@@ -1832,7 +1889,8 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
   <div class="enveloppe">
     <div>
       <a class="marque" href="#accueil"><span class="logo" aria-hidden="true"></span><span><b>S.D.E.</b><small>Soldats de l'Éternel</small></span></a>
-      <p>Mouvement prophético-apostolique pour le réveil spirituel des nations. Réveiller · Restaurer · Former · Équiper · Envoyer.</p>
+      <p>Mouvement Prophético-Apostolique Soldat De l’Éternel — Le Réveil Spirituel des Nations.</p>
+      <nav class="pied-liens" aria-label="Liens du pied de page"><a href="#accueil">Accueil</a> · <a href="#a-propos">Notre histoire</a> · <a href="#programmes">Programmes</a> · <a href="/vitrine/missions-humanitaires">Missions</a> · <a href="/vitrine/ressources">Ressources</a> · <a href="#rejoindre">Nous rejoindre</a> · <a href="#contact">Contact</a> · <a href="#confidentialite">Mentions légales</a> · <a href="#confidentialite">Politique de confidentialité</a></nav>
     </div>
     <div><h3>Le mouvement</h3><ul><li><a href="#mouvement">Qui sommes-nous</a></li><li><a href="#histoire">Notre histoire</a></li><li><a href="#responsables">Couple leader</a></li><li><a href="#poles">Pôles</a></li><li><a href="#presence">Présence internationale</a></li></ul></div>
     <div><h3>Participer</h3><ul><li><a href="#infire">IN FIRE 2026</a></li><li><a href="#programmes">Programmes</a></li><li><a href="#ressources">Ressources</a></li><li><a href="#rejoindre">Rejoindre SDE</a></li><li><a href="#soutenir">Soutenir</a></li><li><a href="#membres">Espace membre</a></li><li><a href="#faq">FAQ</a></li><li><a href="#confidentialite">Confidentialité</a></li></ul></div>
@@ -1962,8 +2020,8 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
   const saved = getTheme();
   if (saved) setTheme(saved);
   else {
-    const pref = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-    setTheme(pref);
+    /* Charte « Militaire Premium » : thème sombre par défaut, le thème clair reste au choix du visiteur. */
+    document.documentElement.setAttribute("data-theme", "dark");
   }
   btnTheme.addEventListener("click", () => {
     const cur = document.documentElement.getAttribute("data-theme");
