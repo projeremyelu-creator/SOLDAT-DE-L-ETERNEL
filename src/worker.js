@@ -1549,7 +1549,8 @@ async function traiter(req, env, ctx) {
         "/soldiers-voice": "/vitrine/soldiers-voice.html",
         "/soldiers-award": "/vitrine/soldiers-award.html",
         "/missions-humanitaires": "/vitrine/missions-humanitaires.html",
-        "/rubriques": "/vitrine/plus.html"
+        "/rubriques": "/vitrine/plus.html",
+        "/poles": "/vitrine/poles.html"
       };
       const assetPortail = async (nom) => {
         // ASSETS applique ses redirections HTML même derrière le Worker :
