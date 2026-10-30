@@ -7475,7 +7475,13 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     if (etat && document.contains(etat)) etat.textContent = bilan + (arret ? " " + messageErreur(arret) : "");
     toast(restants ? `Import interrompu : ${bilan}` : `${bilan.replace(/\.$/, "")} dans le registre.`, restants ? "err" : "");
   }
-  const cellCSV = (v) => { v = String(v ?? ""); return /[";\r\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v; };
+  // Ne jamais laisser un texte fourni par un utilisateur être évalué comme une
+  // formule dans Excel/LibreOffice lors de l'ouverture d'un CSV.
+  const celluleSureCSV = (v) => {
+    const texte = String(v ?? "");
+    return /^[\s\uFEFF]*[=+@-]/.test(texte) ? "'" + texte : texte;
+  };
+  const cellCSV = (v) => { v = celluleSureCSV(v); return /[";\r\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v; };
   const versCSV = (rows) => "﻿" + rows.map((r) => r.map(cellCSV).join(";")).join("\r\n");
   async function telecharger(nom, contenu) {
     if (!S.dl) { ouvrirTexte("Contenu à copier", contenu, { intro: "Le téléchargement n’est pas disponible dans cette vue : copiez le contenu puis collez-le dans un fichier." }); return; }
@@ -8083,18 +8089,22 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
         const toutes = [];
         let page = 1, pages = 1;
         while (page <= pages) {
-          const r = await fetch("/api/formulaire-admin?page=" + page, { credentials: "same-origin" });
+          const r = await fetch("/api/formulaire-admin?page=" + page, { credentials: "same-origin",cache:"no-store" });
+          if (!r.ok) throw new Error("Page du formulaire indisponible");
           const j = await r.json();
-          toutes.push(...(j.reponses || []));
-          pages = j.pages || 1;
+          if (!Array.isArray(j.reponses) || !Number.isInteger(j.pages) || j.pages < 1 || j.pages > 500)
+            throw new Error("Réponse de pagination invalide");
+          toutes.push(...j.reponses);
+          pages = j.pages;
           page++;
         }
         if (!toutes.length) { toast("Aucune réponse à exporter."); return; }
         const cols = ["id", "nom", "prenom", "statut_matrimonial", "profession", "date_naissance", "lieu_naissance", "telephone", "email", "ville", "message", "satisfaction_2026", "activites_marquantes", "points_ameliorer", "propositions_2027", "domaines_prioritaires", "created_at"];
-        const csvEsc = (v) => { const s = String(v ?? "").replace(/"/g, '""'); return s.includes(",") || s.includes('"') || s.includes("\n") ? '"' + s + '"' : s; };
+        const csvEsc = (v) => { const s = celluleSureCSV(v).replace(/"/g, '""'); return s.includes(",") || s.includes('"') || s.includes("\n") || s.includes("\r") ? '"' + s + '"' : s; };
         const csv = "﻿" + cols.join(",") + "\n" + toutes.map((r) => cols.map((c) => csvEsc(r[c])).join(",")).join("\n");
-        telecharger("formulaires-sde.csv", csv);
-        toast("Export terminé !");
+        // Le service de téléchargement fournit lui-même le retour de succès
+        // ou une option de copie en cas de refus; ne pas annoncer un succès anticipé.
+        await telecharger("formulaires-sde.csv", csv);
       } catch (e) { toast("Impossible d'exporter.", "err"); }
     },
     "basculer-theme": () => {
