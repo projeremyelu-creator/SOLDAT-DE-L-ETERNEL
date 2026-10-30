@@ -1,0 +1,110 @@
+/* Audit réel des pages PUBLIQUES uniquement.
+   Ne se connecte pas, n'ouvre aucun dossier personnel et n'effectue aucune écriture API.
+   Exécution dans GitHub Actions avec Chromium, captures à consulter par le propriétaire. */
+import {chromium} from 'playwright';
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {join} from 'node:path';
+
+const domain='https://mouvement-sde.org';
+const out='audit-mobile-sde';
+mkdirSync(out,{recursive:true});
+const cases=[
+ {path:'/',name:'accueil-360',width:360,height:800},
+ {path:'/',name:'accueil-390',width:390,height:844},
+ {path:'/programmes',name:'programmes-390',width:390,height:844},
+ {path:'/mouvement',name:'mouvement-390',width:390,height:844},
+ {path:'/',name:'accueil-desktop',width:1280,height:900}
+];
+const report={date:new Date().toISOString(),domain,checks:[],issues:[],notes:[]};
+const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+
+function issue(label,description,critical=false){
+ report.issues.push({label,description,critical});
+ console.log((critical?'ERREUR':'OBSERVATION')+' '+label+': '+description);
+}
+try{
+ for(const c of cases){
+  const ctx=await browser.newContext({viewport:{width:c.width,height:c.height},deviceScaleFactor:1,isMobile:c.width<700,hasTouch:c.width<700,colorScheme:'light',locale:'fr-CI'});
+  const page=await ctx.newPage();
+  const pageErrors=[];
+  page.on('pageerror',error=>pageErrors.push(String(error.message||error).slice(0,250)));
+  try{
+   const response=await page.goto(domain+c.path,{waitUntil:'domcontentloaded',timeout:60000});
+   await page.waitForTimeout(1700);
+   const view=await page.evaluate(()=>{
+    const toRect=el=>{
+     if(!el)return null;
+     const r=el.getBoundingClientRect();
+     return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height};
+    };
+    const intersects=(a,b)=>!!(a&&b&&a.left<b.right-2&&a.right>b.left+2&&a.top<b.bottom-2&&a.bottom>b.top+2);
+    const brand=toRect(document.querySelector('.site-brand'));
+    const portal=toRect(document.querySelector('.site-access-top'));
+    const burger=toRect(document.querySelector('.site-burger'));
+    const logo=toRect(document.querySelector('.site-logo'));
+    const quote=document.querySelector('.m-verset p');
+    const quoteBg=document.querySelector('.m-verset');
+    const cssColor=quote?getComputedStyle(quote).color:null;
+    const cssBg=quoteBg?getComputedStyle(quoteBg).backgroundColor:null;
+    function ratio(fg,bg){
+     const col=s=>{const m=String(s).match(/rgba?\\(([^)]+)\\)/);
+      if(!m)return null;
+      const x=m[1].split(/[ ,/]+/).map(Number);
+      if(x.length<3||x.slice(0,3).some(v=>!Number.isFinite(v)))return null;
+      return x.slice(0,3).map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});
+     };
+     const a=col(fg),b=col(bg);if(!a||!b)return null;
+     const L=x=>.2126*x[0]+.7152*x[1]+.0722*x[2];
+     return Math.round(((Math.max(L(a),L(b))+.05)/(Math.min(L(a),L(b))+.05))*100)/100;
+    }
+    const poleLinks=[...document.querySelectorAll('a.sde-pole-officiel-lien')];
+    const posters=[...document.querySelectorAll('img.sde-event-poster')];
+    return {
+     title:document.title,
+     viewport:innerWidth,
+     bodyWidth:document.body.scrollWidth,
+     documentWidth:document.documentElement.scrollWidth,
+     overflowX:Math.max(0,document.documentElement.scrollWidth-innerWidth,document.body.scrollWidth-innerWidth),
+     logoPresent:!!(logo&&logo.width>10),
+     brandPortalOverlap:intersects(brand,portal),
+     brandBurgerOverlap:intersects(brand,burger),
+     quoteContrast:ratio(cssColor,cssBg),quoteTextColor:cssColor,quoteBgColor:cssBg,
+     poleLinks:poleLinks.length,
+     brokenPoleImages:poleLinks.filter(a=>{let i=a.querySelector('img');return !i||!i.complete||i.naturalWidth===0}).length,
+     tpaPosters:posters.length,
+     tpaPosterLoaded:posters.every(i=>i.complete&&i.naturalWidth>0),
+     heading:document.querySelector('h1')?.textContent?.trim().slice(0,95)||'',
+     loadMs:Math.round(performance.getEntriesByType('navigation')[0]?.duration||0)
+    };
+   });
+   const row={...c,status:response?.status()||0,url:page.url(),...view,pageErrors};
+   report.checks.push(row);
+   const screenshot=join(out,c.name+'.png');
+   await page.screenshot({path:screenshot,fullPage:false,animations:'disabled'});
+   if(row.status!==200)issue(c.name,'HTTP '+row.status,true);
+   if(row.overflowX>16)issue(c.name,'débordement horizontal de '+row.overflowX+' px',true);
+   if(c.width<700&&row.brandPortalOverlap)issue(c.name,'le nom chevauche le bouton du portail',true);
+   if(c.width<700&&row.brandBurgerOverlap)issue(c.name,'le nom chevauche le menu',true);
+   if(c.path==='/'&&row.quoteContrast!==null&&row.quoteContrast<4.5)issue(c.name,'contraste du verset '+row.quoteContrast+':1',true);
+   if(c.path==='/'&&(row.poleLinks!==5||row.brokenPoleImages>0))issue(c.name,'cartes/emblèmes pôles manquants ou images indisponibles',true);
+   if(c.path==='/'&&(!row.tpaPosters||!row.tpaPosterLoaded))issue(c.name,'affiche TPA absente ou non chargée',true);
+   if(row.pageErrors.length)issue(c.name,row.pageErrors.slice(0,3).join(' | '));
+   console.log('AUDIT '+c.name+' '+JSON.stringify(row));
+  } catch(error){
+   issue(c.name,String(error.message||error).slice(0,500),true);
+  } finally{await ctx.close();}
+ }
+ // Requêtes de vérification en lecture seule : jamais de connexion ou d'écriture.
+ for(const path of ['/api/moi','/api/notifications-status','/api/vapid-public-key']){
+  try{
+   const response=await fetch(domain+path,{redirect:'manual',signal:AbortSignal.timeout(12000)});
+   report.notes.push({path,status:response.status,cacheControl:response.headers.get('cache-control')||null});
+   if(path==='/api/notifications-status'&&response.status!==403)
+    issue(path,'statut de configuration sensible non protégé : HTTP '+response.status,true);
+  }catch(e){issue(path,'vérification indisponible : '+String(e.message||e).slice(0,130));}
+ }
+}finally{await browser.close();}
+writeFileSync(join(out,'rapport.json'),JSON.stringify(report,null,2)+'\n');
+const critical=report.issues.filter(x=>x.critical);
+console.log('BILAN_MOBILE '+JSON.stringify({pages:report.checks.length,observations:report.issues.length,critiques:critical.length}));
+if(critical.length)process.exitCode=1;
