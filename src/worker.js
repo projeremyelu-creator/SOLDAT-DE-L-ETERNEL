@@ -4,7 +4,7 @@ import {memberQrApi} from "./member-qr.js";
 import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {prayerWallApi} from "./prayer-wall.js";
-import {apiSdeOs31} from "./os-v31.js";
+import {apiSdeOs31,SDE_OS_31} from "./os-v31.js";
 import {notifySde,flushNotices,mailStatus,pushConfigured,notificationConfigured} from "./notifications.js";
 import {SDE_MAIL_RECIPIENT} from "./notification-events.js";
 import {generateVapidKeys} from "./web-push.js";
@@ -668,9 +668,22 @@ async function apiTableauDeBord(req,env,u) {
   const presence=dashboardAttendance(evenements,membres,garnisons);
   const enPriere=prieres.filter(p=>(p.data.statut||"En prière")==="En prière");
   const urgences=enPriere.filter(p=>p.data.urgent===true).map(p=>({id:p.id,date:String(p.data.date||"").slice(0,10)})).sort((a,b)=>b.date.localeCompare(a.date));
+  // Uniquement des agrégats de pilotage : aucune coordonnée ni aucun message
+  // de candidature ne quitte la table protégée via cette route.
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS engagements (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, cree INTEGER NOT NULL, objet TEXT,
+    pole TEXT, source TEXT, nom TEXT NOT NULL, tel TEXT, email TEXT, ville TEXT,
+    message TEXT, traite INTEGER NOT NULL DEFAULT 0, note TEXT
+  )`).run();
+  const [demandesAdhesion,site]=await Promise.all([
+    env.DB.prepare("SELECT COUNT(*) AS n FROM engagements WHERE traite = 0").first(),
+    donneesSite(env)
+  ]);
+  // Sans surcharge du CMS, la page Programmes conserve ses huit cartes publiques natives.
+  const programmesPublies=(site.programmes||[]).filter(p=>p.titre).length||8;
   // Métadonnées de mises à jour uniquement, jamais le contenu des dossiers.
   const recents=await env.DB.prepare("SELECT parent,maj FROM docs WHERE parent IN ('membres','evenements','projets','formations','annonces') ORDER BY maj DESC LIMIT 8").all();
-  return json({total,...metrics,indicateurs:{membresActifs:membres.filter(m=>m.data.actif!==false).length,presence,intercessions:enPriere.length},urgences:urgences.slice(0,5),urgencesTotal:urgences.length,activites:(recents.results||[]).map(r=>({rubrique:r.parent,cree:r.maj})),actualiseLe:Date.now()});
+  return json({total,...metrics,indicateurs:{membresActifs:membres.filter(m=>m.data.actif!==false).length,presence,intercessions:enPriere.length,demandesAdhesion:Number(demandesAdhesion?.n)||0,poles:SDE_OS_31.poles.length,programmesPublies},urgences:urgences.slice(0,5),urgencesTotal:urgences.length,activites:(recents.results||[]).map(r=>({rubrique:r.parent,cree:r.maj})),actualiseLe:Date.now()});
 }
 
 /* ───────── site vitrine : rendez-vous publics ───────── */
