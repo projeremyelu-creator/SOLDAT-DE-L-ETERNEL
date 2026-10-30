@@ -1,0 +1,12 @@
+/* Écran de chargement « SDE - Mouvement » (maquette 02 — Ivoire • Treillis • Or) */
+.sde-splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;align-content:center;gap:18px;padding:24px;text-align:center;background:radial-gradient(700px 420px at 50% 38%,#3a4a2d 0%,#26321f 55%,#1b2416 100%);color:#efe6cc;font-family:"Saira Condensed","Arial Narrow",sans-serif;transition:opacity .45s cubic-bezier(.25,1,.5,1),visibility .45s}
+.sde-splash.is-done{opacity:0;visibility:hidden}
+.sde-splash img{width:min(240px,48vw);height:auto;filter:drop-shadow(0 0 28px #e2b85a66) drop-shadow(0 8px 20px #0008);animation:sde-splash-glow 2.4s ease-in-out infinite alternate}
+.sde-splash p{margin:0;font-size:clamp(1.05rem,2.4vw,1.45rem);letter-spacing:.02em}
+.sde-splash-bar{width:min(380px,74vw);height:16px;padding:2px;border:1.5px solid #c9a24a;border-radius:99px;background:#1b2416}
+.sde-splash-bar i{display:block;height:100%;width:8%;border-radius:inherit;background:linear-gradient(90deg,#a8822f,#e6c877);animation:sde-splash-fill 2.2s cubic-bezier(.25,1,.5,1) forwards}
+.sde-splash .sde-splash-vision{color:#d9b866;font-size:clamp(1rem,2.2vw,1.3rem)}
+@keyframes sde-splash-fill{to{width:88%}}
+@keyframes sde-splash-glow{to{filter:drop-shadow(0 0 40px #e2b85a99) drop-shadow(0 8px 20px #0008)}}
+@media(prefers-reduced-motion:reduce){.sde-splash,.sde-splash img,.sde-splash-bar i{animation:none;transition:none}.sde-splash-bar i{width:70%}}
+body[data-motion=paused] .sde-splash img,body[data-motion=paused] .sde-splash-bar i{animation:none}

@@ -400,3 +400,64 @@ html:not([data-theme=light]):not([data-sde-palette=ivoire]) .sde-plus-panel>:is(
 html:not([data-theme=light]):not([data-sde-palette=ivoire]) .sde-plus-card{background:linear-gradient(180deg,#131e29,#0e1720)!important;border:1px solid #3c4a2b!important;border-radius:6px!important;color:#e6e9ee!important;box-shadow:inset 0 1px 0 #c9a14a1f,0 10px 26px #0007!important}
 html:not([data-theme=light]):not([data-sde-palette=ivoire]) .sde-plus-card h3{color:#e4c477!important}
 html:not([data-theme=light]):not([data-sde-palette=ivoire]) .sde-plus-card :is(li,p,span,small){color:#d6dbe1!important}
+/* ═══════════ Accueil membre et poste de commandement (maquettes 01 et 02) ═══════════ */
+.sv-hello{margin:0 0 16px}.sv-hello h1{margin:0;font:600 clamp(1.7rem,3vw,2.5rem)/1.1 "Cinzel",Georgia,serif;color:#ece6d8}.sv-hello>p:first-of-type{margin:6px 0 0;color:#cfd4da}
+.sv-hello-admin{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.sv-top{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1.6fr);grid-template-areas:"card tiles" "card academy";gap:14px;margin-bottom:14px}
+.sv-card{grid-area:card}.sv-tiles{grid-area:tiles;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.sv-academy{grid-area:academy;margin:0!important;display:flex;gap:16px;align-items:center;padding:0!important;overflow:hidden}
+.sv-academy img{width:38%;max-width:200px;align-self:stretch;object-fit:cover}.sv-academy>div{padding:14px 16px 14px 0}.sv-academy h3{margin:0 0 6px}.sv-meta{font-size:.82rem;opacity:.8}
+.sv-tile{position:relative;display:grid;align-content:start;gap:4px;padding:14px;text-align:left;border-radius:6px;border:1px solid #3c4a2b;background:linear-gradient(180deg,#131e29,#0e1720);color:inherit;cursor:pointer;font:inherit}
+.sv-tile>svg{width:26px;height:26px;color:#c9a14a}.sv-tile span{font-size:.9rem;opacity:.85}.sv-tile strong{font-size:1.25rem}.sv-tile small{font-size:.74rem;opacity:.75}
+.sv-ok{color:#4fb36a}.sv-wait{color:#d9534f}
+.sv-check{position:absolute;right:12px;bottom:14px;width:24px;height:24px;border-radius:50%;background:#2f7a43;color:#fff;display:grid;place-items:center}.sv-check svg{width:14px;height:14px}
+.sv-bar{display:block;height:5px;border-radius:9px;background:#ffffff1f;position:relative;overflow:hidden;margin-top:4px}.sv-bar::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--p);background:linear-gradient(90deg,#97762c,#e4c477);border-radius:inherit}
+.sv-avatar{display:grid;place-items:center;width:70px;height:70px;border-radius:50%;border:2px solid #c9a14a;font:500 1.6rem "Cinzel",Georgia,serif;flex:none}
+.sv-pill{display:inline-block;margin-top:6px;padding:2px 10px;border-radius:99px;background:#c9a14a;color:#1a1408;font-size:.72rem;font-weight:700}
+.sv-card-name{position:relative;z-index:1;margin-top:14px}.sv-card-name strong{display:block;font:600 1.05rem "Cinzel",Georgia,serif;letter-spacing:.06em}.sv-card-name span{font-size:.8rem;opacity:.8}
+.sv-card .soldier-card-body{align-items:center}
+.sv-bottom{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin:14px 0}
+.sv-links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.sv-links button{display:flex;gap:10px;align-items:center;text-align:left;padding:12px;border-radius:6px;border:1px solid #3c4a2b;background:#0a121b66;color:inherit;font:inherit;cursor:pointer}.sv-links svg{width:24px;height:24px;color:#c9a14a;flex:none}.sv-links small{display:block;font-size:.76rem;opacity:.75}
+.sv-cot-note{font-size:.85rem;opacity:.8}.ref-link-inline{background:none;border:0;padding:0;color:#e4c477;text-decoration:underline;cursor:pointer;font:inherit}
+.sv-admin-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:13px;margin-top:13px}.sv-admin-grid>.ops-card{margin:0!important}
+.sv-poles{position:relative}.sv-pole-list{list-style:none;margin:8px 0 0;padding:0;display:grid}.sv-pole-list li{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #ffffff12}
+.sv-pole-num{font:600 1.15rem "Cinzel",Georgia,serif;color:#c9a14a}.sv-pole-count{display:flex;gap:6px;align-items:center;font-size:.82rem;opacity:.85}.sv-pole-count svg{width:16px;height:16px}
+@media(max-width:1000px){.sv-top{grid-template-columns:1fr;grid-template-areas:"card" "tiles" "academy"}.sv-bottom,.sv-admin-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.sv-tiles{grid-template-columns:1fr}.sv-links{grid-template-columns:1fr}}
+/* Palette Ivoire · Treillis · Or : reproduction fidèle de la maquette 02 */
+html[data-sde-palette=ivoire] body.sde-reference{--iv-serif:"Libre Caslon Text","Cormorant Garamond",Georgia,serif;--iv-cond:"Saira Condensed","Arial Narrow",sans-serif}
+html[data-sde-palette=ivoire] body.sde-reference .ops-heading{display:none!important}
+html[data-sde-palette=ivoire] body.sde-reference .sv-hello h1{font:400 clamp(1.9rem,3.4vw,2.7rem)/1.1 var(--iv-serif);color:#232619}
+html[data-sde-palette=ivoire] body.sde-reference .sv-hello>p:first-of-type{font:400 1.15rem var(--iv-cond);color:#4b4f40}
+html[data-sde-palette=ivoire] body.sde-reference .sv-hello :is(.ops-subtitle,.ops-welcome){display:none}
+html[data-sde-palette=ivoire] body.sde-reference .ref-identity-ivoire{display:flex;align-items:center;gap:10px}
+html[data-sde-palette=ivoire] body.sde-reference .ref-identity-ivoire strong{font:400 1.15rem var(--iv-serif)!important;letter-spacing:.02em!important;color:#232619!important}
+html[data-sde-palette=ivoire] body.sde-reference .ref-identity-ivoire img{width:30px;height:30px}
+html[data-sde-palette=ivoire] body.sde-reference :is(.sv-tile,.sv-links button){background:#fffdf8;border-color:#e6dcc6;color:#232619;box-shadow:0 4px 12px #4a3b140f}
+html[data-sde-palette=ivoire] body.sde-reference .sv-tile>svg,html[data-sde-palette=ivoire] body.sde-reference .sv-links svg{color:#b8923a}
+html[data-sde-palette=ivoire] body.sde-reference .sv-tile strong{font:400 1.35rem var(--iv-serif)}
+html[data-sde-palette=ivoire] body.sde-reference .sv-bar{background:#e9e1cf}
+html[data-sde-palette=ivoire] body.sde-reference .sv-ok{color:#232619}html[data-sde-palette=ivoire] body.sde-reference .sv-wait{color:#b02a2a}
+/* Carte de membre : vert treillis, lauriers et « SDE » en filigrane (sans le lion) */
+html[data-sde-palette=ivoire] body.sde-reference .sv-card{background:radial-gradient(420px 260px at 72% 30%,#405332,transparent 70%),linear-gradient(135deg,#34452b,#22301c)!important;border:2px solid #d8b766!important;color:#f4ecd8!important;box-shadow:0 14px 30px #2b351f40!important}
+html[data-sde-palette=ivoire] body.sde-reference .sv-card::after{content:"SDE";background:none!important;-webkit-mask-image:none;mask-image:none;inset:auto 18px 10px auto;font:700 4.6rem/1 var(--iv-serif);color:#ffffff12;opacity:1}
+html[data-sde-palette=ivoire] body.sde-reference .sv-card::before{content:"";position:absolute;left:10px;top:50%;width:150px;height:150px;transform:translateY(-50%);border-radius:50%;border:1px dashed #d8b76644;pointer-events:none}
+html[data-sde-palette=ivoire] body.sde-reference .sv-card :is(.soldier-card-head span,.soldier-card-head small,.soldier-card-body small,.soldier-card-body p){color:#e9dfc2!important}
+html[data-sde-palette=ivoire] body.sde-reference .sv-card .soldier-card-body strong{color:#f4ecd8!important;font-family:var(--iv-serif)!important;font-weight:400!important}
+html[data-sde-palette=ivoire] body.sde-reference .sv-avatar{color:#f4ecd8;border-color:#d8b766;background:#2a3822}
+html[data-sde-palette=ivoire] body.sde-reference .sv-pill{background:#d8b766;color:#2a2410}
+html[data-sde-palette=ivoire] body.sde-reference .sv-card .soldier-card-body>div{max-width:none}
+html[data-sde-palette=ivoire] body.sde-reference .ref-feature{display:none}
+html[data-sde-palette=ivoire] body.sde-reference :is(.sv-academy,.sv-res,.sv-priere,.sv-poles) h3{font:400 1.3rem var(--iv-serif)!important;color:#232619!important;text-transform:none!important;letter-spacing:0!important}
+html[data-sde-palette=ivoire] body.sde-reference .ops-panel .ref-small-action,html[data-sde-palette=ivoire] body.sde-reference .soldier-space .ops-card>button,html[data-sde-palette=ivoire] body.sde-reference .sv-academy button{background:linear-gradient(180deg,#c9a24a,#a8822f)!important;color:#fff!important;border:0!important;border-radius:5px!important;font-family:var(--iv-cond)!important;font-size:.95rem!important;padding:8px 16px!important}
+html[data-sde-palette=ivoire] body.sde-reference .sv-pole-list li{border-color:#eadfc8}html[data-sde-palette=ivoire] body.sde-reference .sv-pole-num{color:#b8923a;font-family:var(--iv-serif)}
+html[data-sde-palette=ivoire] body.sde-reference .ref-link-more,html[data-sde-palette=ivoire] body.sde-reference .ref-link-inline{color:#8a6a22!important}
+html[data-sde-palette=ivoire] body.sde-reference .sv-cot-note{color:#4b4f40}
+html[data-sde-palette=ivoire] body.sde-reference .ref-sidebar>a{display:flex!important;align-items:center;gap:10px;text-decoration:none!important;color:#f4ecd8!important}
+html[data-sde-palette=ivoire] body.sde-reference .ref-sidebar .ref-gold-brand{display:block!important;width:42px!important;height:42px!important;margin:0!important;background:url(/vitrine/logo-sde.webp) center/contain no-repeat!important}
+html[data-sde-palette=ivoire] body.sde-reference .sv-tile{display:grid!important;justify-items:start;align-content:start;gap:4px!important;min-height:118px;padding:14px 16px!important}
+html[data-sde-palette=ivoire] body.sde-reference .sv-hello h1{font-family:"Libre Caslon Text","Cormorant Garamond",Georgia,serif!important;letter-spacing:0!important;font-weight:400!important}
+html[data-sde-palette=ivoire] body.sde-reference .ref-empty-state :is(strong,p){color:#4b4f40!important}
+html[data-sde-palette=ivoire] body.sde-reference .ref-empty-state svg{color:#b8923a}
+html[data-sde-palette=ivoire] body.sde-reference .sv-priere blockquote{color:#4b4f40!important;border-left-color:#b8923a}
+html[data-sde-palette=ivoire] body.sde-reference .sv-priere cite{color:#6a6a5a}
+html[data-sde-palette=ivoire] body.sde-reference .ops-panel .soldier-space .sv-academy>div>button{background:linear-gradient(180deg,#c9a24a,#a8822f)!important;color:#fff!important;border:0!important;border-radius:5px!important}
