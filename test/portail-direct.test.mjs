@@ -37,6 +37,7 @@ async function create(path,level,origin="https://mouvement-sde.org"){
   url:origin+path,runScripts:"outside-only",pretendToBeVisual:true
  });
  const w=dom.window,nav=w.document.getElementById("nav"),main=w.document.getElementById("main"),opened=[];
+ w.document.addEventListener("sde:open",event=>opened.push(event.detail.module));
  w.document.getElementById("btn-reglages").addEventListener("click",()=>opened.push("reglages"));
  w.fetch=async()=>({ok:true,json:async()=>({connecte:true,role:level>1?"admin":level===1?"contributeur":"soldat",niveau:level,libRole:"Test"})});
  for(const name of ["accueil","espace","agenda","academie","membres","portevoix","finances","projets"]){
@@ -57,7 +58,7 @@ async function create(path,level,origin="https://mouvement-sde.org"){
 }
 test("Un membre voit les onglets utiles et change de module en un clic sans changer de page",async()=>{
  const ctx=await create("/mon-espace",0);
- assert.equal(ctx.opened[0],"espace");
+ assert.equal(ctx.opened[0],"espace-soldat");
  const noms=[...ctx.tabs.querySelectorAll("button")].map(x=>x.dataset.module);
  assert.ok(noms.includes("espace")&&noms.includes("agenda")&&noms.includes("academie"));
  assert.ok(!noms.includes("membres")&&!noms.includes("finances")&&!noms.includes("projets"));
