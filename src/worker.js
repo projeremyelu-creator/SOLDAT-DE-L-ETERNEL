@@ -1506,6 +1506,17 @@ export default {
     ctx.waitUntil(Promise.all([flushNotices(env),sendPortalReminders(env)]));
   },
   async fetch(req, env, ctx) {
+    /* Ressources publiées sous /_v/<révision>/… : même fichier, adresse unique par déploiement (cache toujours à jour). */
+    {
+      const u = new URL(req.url), m = u.pathname.match(/^\/_v\/[a-f0-9]{6,40}(\/.+\.(?:js|css))$/i);
+      if (m && (req.method === "GET" || req.method === "HEAD")) {
+        const r = await env.ASSETS.fetch(new Request(new URL(m[1], u.origin), req));
+        const n = new Response(r.body, r);
+        if (r.ok) n.headers.set("cache-control", "public, max-age=31536000, immutable");
+        n.headers.set("x-content-type-options", "nosniff");
+        return n;
+      }
+    }
     if (!migrationFaite) { migrationFaite = true; try { await migrer(env); } catch (e) { /* non bloquant */ } }
     // Toute erreur non anticipée (y compris rate-limit/DB avant le routeur API)
     // est convertie en réponse neutre : aucun détail SQL n'atteint le visiteur.

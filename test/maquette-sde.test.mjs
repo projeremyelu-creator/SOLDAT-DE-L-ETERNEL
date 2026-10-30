@@ -235,3 +235,7 @@ test("fréquentation du site dans le poste de commandement",()=>{
  const fn=worker.slice(worker.indexOf("async function apiVisites"),worker.indexOf("async function apiFormulaire"));
  assert.ok(fn.includes('searchParams.get("historique") === "1"')&&fn.includes("length: 14"),"historique 14 jours");
 });
+test("ressources servies sous un chemin versionné à chaque déploiement",()=>{
+ assert.ok(worker.includes("/^\\/_v\\/[a-f0-9]{6,40}(\\/.+\\.(?:js|css))$/i"),"route /_v/");
+ assert.ok(read(".github/workflows/deployer.yml").includes("node scripts/version-chemins.mjs"));
+});
