@@ -106,3 +106,31 @@ test("accueil réellement servi (portail.html) refait selon la maquette",()=>{
  assert.equal((h.match(/class="site-access-top"/g)||[]).length,1);
  const js=read("public/vitrine/portail-unifie.js");assert.ok(js.includes("sde-rail")&&js.includes("--sde-rail-top"),"rail sur toutes les pages publiques");
 });
+
+test("correctif mobile : le vrai accueil reste responsive, pas de bureau rétréci",()=>{
+ const worker=read("src/worker.js");
+ const html=read("public/vitrine/portail.html");
+ const css=read("public/vitrine/portail-unifie.css");
+ const legacy=read("public/vitrine/sde-maquette.css");
+ assert.ok(worker.includes('return assetPortail("/vitrine/portail.html")'),"accueil servi par le worker");
+ assert.ok(html.includes('width=device-width, initial-scale=1'),"viewport mobile réel");
+ assert.ok(css.includes("Correctifs mobile 30 octobre 2026"),"correctifs page active");
+ for(const key of [
+   "body.sde-unifie .site-header-inner",
+   "body.sde-unifie .site-burger",
+   "body.sde-unifie .home-hero h1",
+   "body.sde-unifie .site-menu",
+   "body.sde-unifie .meeting-card"
+ ])assert.ok(css.includes(key),key);
+ assert.ok(legacy.includes("Lisibilité de l'ancienne vitrine sur téléphone"),"compatibilité ancienne vitrine");
+ assert.ok(legacy.includes(".hero-decompte")&&legacy.includes(".sde-shell-toolbar"),"compte à rebours et raccourcis adaptatifs");
+ assert.ok(!css.includes("transform:scale(.5)"),"pas de réduction visuelle artificielle");
+});
+
+test("maquette récente : panneaux de l'accueil adaptés au format smartphone",()=>{
+ const css=read("public/vitrine/accueil-maquette.css");
+ assert.ok(css.includes("Responsive post-refonte"),"styles dédiés au nouvel accueil");
+ for(const s of [".m-main",".m-band h2",".m-kpis",".m-feature-body",".private-access-grid"])
+   assert.ok(css.includes(s),s);
+ assert.ok(css.includes("@media(max-width:360px)"),"écrans étroits");
+});
