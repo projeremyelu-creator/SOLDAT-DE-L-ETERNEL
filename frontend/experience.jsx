@@ -12,7 +12,7 @@ async function api(path,method='GET',body){
  return data;
 }
 function Icon({name}){
- const paths={home:'M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9',calendar:'M5 5h14v16H5zM8 2v6M16 2v6M5 10h14',book:'M12 5C8 2 4 3 2 4v16c3-2 6-2 10 0 4-2 7-2 10 0V4c-3-1-6-2-10 1v15',prayer:'M8 3 5 9v5l7 8 7-8V9l-3-6M12 4v12M8 9l4 7 4-7',more:'M4 6h16M4 12h16M4 18h16',focus:'M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5',moon:'M20 15A9 9 0 0 1 9 3a9 9 0 1 0 11 12',pause:'M8 4v16M16 4v16',play:'m7 4 14 8-14 8Z',lock:'M6 10h12v11H6zM8 10V7a4 4 0 0 1 8 0v3'};
+ const paths={home:'M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9',calendar:'M5 5h14v16H5zM8 2v6M16 2v6M5 10h14',members:'M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M16 3a4 4 0 0 1 0 8M22 21v-2a4 4 0 0 0-3-3.87M12 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0',money:'M12 2v20M17 5H9a4 4 0 0 0 0 8h6a4 4 0 0 1 0 8H5',book:'M12 5C8 2 4 3 2 4v16c3-2 6-2 10 0 4-2 7-2 10 0V4c-3-1-6-2-10 1v15',prayer:'M8 3 5 9v5l7 8 7-8V9l-3-6M12 4v12M8 9l4 7 4-7',more:'M4 6h16M4 12h16M4 18h16',focus:'M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5',moon:'M20 15A9 9 0 0 1 9 3a9 9 0 1 0 11 12',pause:'M8 4v16M16 4v16',play:'m7 4 14 8-14 8Z',lock:'M6 10h12v11H6zM8 10V7a4 4 0 0 1 8 0v3'};
  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name]||paths.more}/></svg>;
 }
 function EventBanner(){
@@ -84,10 +84,14 @@ function PrivateExperience({portal}){
  },[portal]);
  useEffect(()=>{document.body.dataset.sdeTools=String(tools);return()=>{delete document.body.dataset.sdeTools}},[tools]);
  const open=name=>{setTools(false);portal.selectionner(name)};
- const nav=[['synthese','Accueil','home'],['agenda','Agenda','calendar'],['academie','Academy','book'],['mur','Prière','prayer']];
+ const direction=location.pathname==='/administration';
+ const nav=direction?[
+  ['synthese','Accueil','home'],['membres','Membres','members'],['agenda','Agenda','calendar'],
+  ...(portal.compte.niveau>=2?[['finances','Finances','money']]:[['projets','Pôles','book']])
+ ]:[['synthese','Accueil','home'],['espace','Profil','members'],['rendezvous','Agenda','calendar'],['contributions','Cotisations','money']];
  const shell=document.querySelector('.shell');
  return <><FocusControl allowed={['academie','arsenal','parcours','mediatheque','bibliotheque'].includes(module)}/>
-  <nav className="sde-bottom-nav" aria-label="Navigation mobile privée">{nav.map(([key,label,icon])=><button type="button" key={key} aria-label={label} onClick={()=>open(key)} aria-current={module===key&&!tools?'page':undefined}><Icon name={icon}/><span>{label}</span></button>)}<button type="button" onClick={()=>setTools(!tools)} aria-expanded={tools} aria-controls="sde-direct-tabs"><Icon name="more"/><span>{tools?'Fermer':'Outils'}</span></button></nav>
+  <nav className="sde-bottom-nav" aria-label="Navigation mobile privée">{nav.map(([key,label,icon])=><button type="button" key={key} aria-label={label} onClick={()=>open(key)} aria-current={module===key&&!tools?'page':undefined}><Icon name={icon}/><span>{label}</span></button>)}<button type="button" aria-label={tools?'Fermer les rubriques':'Plus de rubriques'} aria-current={tools?'page':undefined} aria-expanded={tools} aria-controls="sde-direct-tabs" onClick={()=>setTools(!tools)}><Icon name="more"/><span>{tools?'Fermer':'Plus'}</span></button></nav>
   {shell&&createPortal(<section id="sde-wall-panel" className="sde-wall-panel" hidden={!wall} aria-label="Mur de prière communautaire">{wall&&<PrayerWall/>}</section>,shell)}
  </>;
 }
