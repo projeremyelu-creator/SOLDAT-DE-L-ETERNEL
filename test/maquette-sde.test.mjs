@@ -126,3 +126,11 @@ test("correctif mobile : le vrai accueil reste responsive, pas de bureau rétré
  assert.ok(legacy.includes(".hero-decompte")&&legacy.includes(".sde-shell-toolbar"),"compte à rebours et raccourcis adaptatifs");
  assert.ok(!css.includes("transform:scale(.5)"),"pas de réduction visuelle artificielle");
 });
+
+test("maquette récente : panneaux de l'accueil adaptés au format smartphone",()=>{
+ const css=read("public/vitrine/accueil-maquette.css");
+ assert.ok(css.includes("Responsive post-refonte"),"styles dédiés au nouvel accueil");
+ for(const s of [".m-main",".m-band h2",".m-kpis",".m-feature-body",".private-access-grid"])
+   assert.ok(css.includes(s),s);
+ assert.ok(css.includes("@media(max-width:360px)"),"écrans étroits");
+});
