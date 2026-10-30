@@ -55,6 +55,20 @@
     menu.addEventListener("click",e=>{
       if(e.target.closest("a")){menu.dataset.open="false";btn.setAttribute("aria-expanded","false");btn.setAttribute("aria-label","Ouvrir la navigation")}
     });
+    // Fermer le menu mobile si l'utilisateur touche en dehors ou agrandit la fenêtre.
+    document.addEventListener("pointerdown",e=>{
+      if(menu.dataset.open!=="true"||e.target.closest(".site-header"))return;
+      menu.dataset.open="false";
+      btn.setAttribute("aria-expanded","false");
+      btn.setAttribute("aria-label","Ouvrir la navigation");
+    });
+    addEventListener("resize",()=>{
+      if(innerWidth>900&&menu.dataset.open==="true"){
+        menu.dataset.open="false";
+        btn.setAttribute("aria-expanded","false");
+        btn.setAttribute("aria-label","Ouvrir la navigation");
+      }
+    });
     const groups=[...menu.querySelectorAll("details.site-mega")];
     for(const group of groups)group.addEventListener("toggle",()=>{
       if(group.open)for(const other of groups)if(other!==group)other.open=false;
