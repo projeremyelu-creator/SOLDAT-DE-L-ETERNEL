@@ -29,9 +29,12 @@ test('TPA : date officielle, affiche, programme et partage WhatsApp',()=>{
 test('SEO : schémas JSON-LD vérifiables sur accueil et programmes',()=>{
  for(const path of ['public/vitrine/portail.html','public/vitrine/programmes.html']){
   const html=read(path);
-  const json=html.match(/<script id="sde-jsonld-2026" type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/);
-  assert.ok(json,`schéma absent : ${path}`);
-  const data=JSON.parse(json[1]);
+  const open='<script id="sde-jsonld-2026" type="application/ld+json">';
+  const start=html.indexOf(open);
+  assert.ok(start>=0,`schéma absent : ${path}`);
+  const end=html.indexOf('</script>',start+open.length);
+  assert.ok(end>start,`fermeture du schéma absente : ${path}`);
+  const data=JSON.parse(html.slice(start+open.length,end));
   assert.ok(data['@graph'].some(item=>item['@type']==='Event'&&item.startDate==='2026-12-18T20:00:00+00:00'));
  }
 });
