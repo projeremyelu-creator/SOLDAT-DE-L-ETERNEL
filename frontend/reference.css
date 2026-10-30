@@ -472,3 +472,17 @@ html[data-sde-palette=ivoire] body.sde-reference .ref-visits-kpis>div{background
 html[data-sde-palette=ivoire] body.sde-reference .ref-visits-kpis strong{color:#232619;font-family:"Libre Caslon Text",Georgia,serif;font-weight:400}
 html[data-sde-palette=ivoire] body.sde-reference .ref-visits-kpis>div:first-child strong{color:#3e6b2e}
 @media(max-width:760px){.ref-visits-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Événement phare : respiration lumineuse très discrète, sans masque sur le texte. */
+@keyframes sde-feature-sheen {
+  0%,100% { box-shadow: inset 0 0 0 1px rgba(217,179,92,.16),0 8px 20px rgba(0,0,0,.17); }
+  50% { box-shadow: inset 0 0 0 1px rgba(217,179,92,.50),0 8px 28px rgba(217,179,92,.11); }
+}
+.sde-reference-admin .ref-feature {
+  animation: sde-feature-sheen 7s ease-in-out infinite;
+}
+@media (prefers-reduced-motion:reduce) {
+  .sde-reference-admin .ref-feature { animation:none; }
+}
+html body[data-motion="paused"] .sde-reference-admin .ref-feature { animation:none; }
