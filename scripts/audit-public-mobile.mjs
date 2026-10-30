@@ -31,6 +31,14 @@ try{
   try{
    const response=await page.goto(domain+c.path,{waitUntil:'domcontentloaded',timeout:60000});
    await page.waitForTimeout(1700);
+   if(c.path==='/'){
+    const images=await page.locator('.sde-pole-officiel-lien img, img.sde-event-poster').all();
+    for(const img of images){
+     await img.evaluate(el=>{el.loading='eager';});
+    }
+    await page.waitForTimeout(900);
+    await page.evaluate(()=>scrollTo(0,0));
+   }
    const view=await page.evaluate(()=>{
     const toRect=el=>{
      if(!el)return null;
@@ -47,7 +55,7 @@ try{
     const cssColor=quote?getComputedStyle(quote).color:null;
     const cssBg=quoteBg?getComputedStyle(quoteBg).backgroundColor:null;
     function ratio(fg,bg){
-     const col=s=>{const m=String(s).match(/rgba?\\(([^)]+)\\)/);
+     const col=s=>{const m=String(s).match(/rgba?\(([^)]+)\)/);
       if(!m)return null;
       const x=m[1].split(/[ ,/]+/).map(Number);
       if(x.length<3||x.slice(0,3).some(v=>!Number.isFinite(v)))return null;
