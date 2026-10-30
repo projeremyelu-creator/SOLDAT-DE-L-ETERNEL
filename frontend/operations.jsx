@@ -68,7 +68,7 @@ function FinanceGlance({portal}){
  </div>
 }
 function SoldierSpace({portal}){
- const card=useData('/api/ma-carte-qr'),me=useData('/api/mon-espace'),news=useData('/api/actualites');
+ const card=useData('/api/ma-carte-qr'),me=useData('/api/mon-espace'),news=useData('/api/actualites'),acad=useData('/api/mon-parcours-academy');
  const next=news.data?.evenements?.[0];
  const day=iso=>{const t=new Date(iso+'T12:00:00');return Number.isNaN(t.getTime())?{d:'',m:''}:{d:t.getDate(),m:t.toLocaleDateString('fr-FR',{month:'short'}).toUpperCase()}};
  const m=me.data?.membre||{},c=card.data;
@@ -81,9 +81,13 @@ function SoldierSpace({portal}){
    <section className="soldier-card" aria-label="Carte de membre"><div className="soldier-card-head"><span>SOLDAT DE L’ÉTERNEL</span><small>DISCIPLINE · UNITÉ · IMPACT</small></div><div className="soldier-card-body"><div><small>CARTE DE MEMBRE</small><strong>{c?.matricule||'—'}</strong><p>{c?.nom||''}</p><p>MEMBRE ACTIF</p>{(m.pole)&&<p>PÔLE : {String(m.pole).toUpperCase()}</p>}</div>{qr&&<img src={qr} alt="QR Code personnel de présence" className="soldier-qr"/>}</div></section>
   </div>
   <div className="soldier-grid">
-   <Card title="Mon parcours Academy"><p>Suivez vos modules et votre progression.</p><NativeButton portal={portal} module="academie">Accéder aux formations →</NativeButton></Card>
+   <Card title="Mon parcours Academy">{acad.data?.modulesTotal>0?<><div className="soldier-ring" role="img" aria-label={`Progression Academy ${acad.data.pourcentage} %`} style={{'--rate':acad.data.pourcentage+'%'}}><strong>{acad.data.pourcentage} %</strong></div><p><strong>{acad.data.modulesFaits} / {acad.data.modulesTotal}</strong> modules complétés</p></>:<p>Suivez vos modules et votre progression.</p>}<NativeButton portal={portal} module="academie">Accéder aux formations →</NativeButton></Card>
    <Card title="Prochaine rencontre">{next?<><div className="soldier-date"><strong>{nd.d}</strong><span>{nd.m}</span></div><p><strong>{next.titre}</strong></p><small>{[next.heure,next.lieu].filter(Boolean).join(' · ')}</small></>:<p className="ops-muted">Aucune rencontre programmée pour le moment.</p>}<NativeButton portal={portal} module="rendezvous">Voir tous les événements →</NativeButton></Card>
    <Card title="Mes cotisations"><p>Consultez l’historique de vos dons et cotisations.</p><NativeButton portal={portal} module="contributions">Voir mes cotisations →</NativeButton></Card>
+  </div>
+  <div className="soldier-grid soldier-grid-2">
+   <Card title="Mon agenda"><ul className="soldier-list">{(news.data?.evenements||[]).slice(0,3).map(e=>{const t=day(e.date);return <li key={e.id}><span className="soldier-date"><strong>{t.d}</strong><span>{t.m}</span></span><div><strong>{e.titre}</strong><small>{[e.heure,e.lieu].filter(Boolean).join(' · ')}</small></div></li>})}</ul>{news.data&&!news.data.evenements?.length&&<p className="ops-muted">Aucune rencontre programmée.</p>}<NativeButton portal={portal} module="rendezvous">Voir tout</NativeButton></Card>
+   <Card title="Dernières annonces"><ul className="soldier-list">{(news.data?.annonces||[]).slice(0,3).map(a=><li key={a.id}><div><strong>{a.titre}</strong><small>{a.date}</small></div></li>)}</ul>{news.data&&!news.data.annonces?.length&&<p className="ops-muted">Aucune annonce récente.</p>}</Card>
   </div>
   <div className="soldier-grid soldier-grid-2">
    <Card title="Mon carnet de prière"><p>Consignez vos sujets de prière et suivez leur évolution.</p><blockquote>« Persévérez dans la prière, veillez-y avec actions de grâce. » <cite>Colossiens 4:2</cite></blockquote><NativeButton portal={portal} module="priere">Ouvrir mon carnet →</NativeButton></Card>

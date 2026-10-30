@@ -272,3 +272,10 @@ body.sde-reference-admin .site-ed .site-ed-check{display:flex;flex-direction:row
 .soldier-date{display:inline-grid;place-items:center;padding:6px 14px;border:1px solid #d4af3755;border-radius:10px;margin-right:10px}.soldier-date strong{font:600 1.8rem 'Saira Condensed',sans-serif;color:#e2c26a}
 .soldier-space blockquote{margin:8px 0;padding-left:12px;border-left:2px solid #d4af37;font-style:italic;color:#c9d0dd}.soldier-space cite{display:block;font-size:.8rem;color:#aeb7c7}
 @media(max-width:900px){.soldier-top,.soldier-grid,.soldier-grid-2{grid-template-columns:1fr}}
+/* Barre d'onglets mobile (maquette 04) et progression Academy */
+.ref-tabbar{display:none}
+@media(max-width:760px){.ref-tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(5,1fr);padding:6px 6px calc(6px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#0d1b32ee,#0a1228);border-top:1px solid #d4af3744;backdrop-filter:blur(10px)}
+.ref-tabbar button{display:grid;justify-items:center;gap:2px;min-height:48px;background:none;border:0;color:#aeb7c7;font:500 .7rem 'Atkinson Hyperlegible',system-ui,sans-serif;cursor:pointer}
+.ref-tabbar button svg{width:22px;height:22px}.ref-tabbar button[aria-current=page]{color:#e2c26a}body.sde-reference-admin,body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}}
+.soldier-ring{--rate:0%;display:grid;place-items:center;width:84px;height:84px;border-radius:50%;background:conic-gradient(#7ed8a8 var(--rate),#ffffff1f 0);position:relative}.soldier-ring:before{content:"";position:absolute;inset:8px;border-radius:50%;background:#0d1b32}.soldier-ring strong{position:relative;font:600 1.15rem 'Saira Condensed',sans-serif}
+.soldier-list{list-style:none;margin:0 0 8px;padding:0;display:grid;gap:8px}.soldier-list li{display:flex;gap:10px;align-items:center}.soldier-list small{display:block;color:#aeb7c7}
