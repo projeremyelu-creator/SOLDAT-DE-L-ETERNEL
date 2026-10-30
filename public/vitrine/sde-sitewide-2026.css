@@ -958,3 +958,21 @@ html body.sde-unifie :is(#poles-accueil,#programmes-accueil,#espaces-prives,#age
 body[data-motion="paused"].sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien{
   transition:none!important;transform:none!important;
 }
+
+/* Audit Chromium : correction du débordement ordinateur à partir de 1280 px. */
+/* L'ancienne maquette réservait 200 px à un rail latéral. Dans la version
+   ivoire, ce rail est masqué : décaler un contenu de 1240 px créait un
+   débordement de presque 200 px sur les écrans de 1280 px. */
+@media(min-width:1280px){
+  html body.sde-unifie.sde-accueil-maquette.sde-ivoire main.m-main,
+  html body.sde-unifie.sde-accueil-maquette.sde-ivoire #contenu.m-main{
+    box-sizing:border-box!important;
+    width:min(1240px,calc(100% - 36px))!important;
+    max-width:calc(100% - 36px)!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    padding-left:clamp(18px,2.2vw,32px)!important;
+    padding-right:clamp(18px,2.2vw,32px)!important;
+    min-width:0!important;
+  }
+}
