@@ -100,6 +100,33 @@ try{
    report.checks.push(row);
    const screenshot=join(out,c.name+'.png');
    await page.screenshot({path:screenshot,fullPage:false,animations:'disabled'});
+   // INTERACTIONS_NAVI : le menu et le changement de thème doivent fonctionner sur un vrai téléphone.
+   if(c.name==='accueil-390'){
+    try{
+     const burger=page.locator('.site-header .site-burger').first();
+     if(await burger.count()!==1)issue(c.name,'bouton du menu mobile absent',true);
+     else{
+      await burger.click({timeout:4000});
+      const opened=await burger.getAttribute('aria-expanded');
+      const menuOpen=await page.locator('.site-header .site-menu').first().getAttribute('data-open');
+      if(opened!=='true'||menuOpen!=='true')issue(c.name,'le menu ne s’ouvre pas correctement',true);
+      await page.keyboard.press('Escape');
+      const closed=await burger.getAttribute('aria-expanded');
+      const menuClosed=await page.locator('.site-header .site-menu').first().getAttribute('data-open');
+      if(closed!=='false'||menuClosed!=='false')issue(c.name,'le menu ne se ferme pas avec Échap',true);
+      report.notes.push({test:'menu-mobile',opened,menuOpen,closed,menuClosed});
+     }
+     const toggle=page.locator('.site-header .site-theme-toggle').first();
+     if(await toggle.count()!==1)issue(c.name,'commande de thème absente',true);
+     else{
+      const themeBefore=await page.locator('html').getAttribute('data-theme');
+      await toggle.click({timeout:4000});
+      const themeAfter=await page.locator('html').getAttribute('data-theme');
+      if(themeAfter===themeBefore || !['light','dark'].includes(themeAfter))issue(c.name,'bouton clair/sombre sans changement réel',true);
+      report.notes.push({test:'theme-mobile',before:themeBefore,after:themeAfter});
+     }
+    }catch(e){issue(c.name,'interaction mobile en échec : '+String(e.message||e).slice(0,240),true);}
+   }
    if(row.status!==200)issue(c.name,'HTTP '+row.status,true);
    if(row.overflowX>16)issue(c.name,'débordement horizontal de '+row.overflowX+' px',true);
    if(c.width<700&&row.brandPortalOverlap)issue(c.name,'le nom chevauche le bouton du portail',true);
