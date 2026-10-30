@@ -1,0 +1,26 @@
+name: Recette de production SDE
+on:
+  workflow_run:
+    workflows: ["Déployer sur Cloudflare"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: recette-production-sde
+  cancel-in-progress: true
+
+jobs:
+  recette:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.4'
+      - name: Vérifier les pages et les accès anonymes réels des deux domaines
+        run: node scripts/recette-production.mjs
