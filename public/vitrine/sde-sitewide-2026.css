@@ -577,3 +577,69 @@ html body.sde-unifie.sde-subpage #projets .projet-carte .sde-projet-cta:hover{
 html body.sde-unifie.sde-subpage #projets .projet-carte :is(.sde-projet-lien,.sde-projet-cta):focus-visible{
   outline:3px solid #b48c35!important;outline-offset:3px!important;
 }
+
+/* Correction structurelle du pied de page public.
+   L'ancienne règle html body.sde-ivoire :is(main,#contenu,.site-footer,.pied)
+   héritait de la spécificité de #contenu, imposant un fond transparent.
+   Le footer a maintenant sa propre surface de contraste, même en mode clair. */
+html body.sde-unifie.sde-ivoire footer.site-footer,
+html body.sde-unifie.sde-subpage footer.site-footer{
+  background:#172b25!important;background-color:#172b25!important;
+  background-image:linear-gradient(135deg,#14271f,#20392c 70%,#172b25)!important;
+  border-top:2px solid #d7b567!important;
+  color:#f7f3e8!important;-webkit-text-fill-color:#f7f3e8!important;
+  opacity:1!important;isolation:isolate;
+}
+html body.sde-unifie footer.site-footer .footer-grid,
+html body.sde-unifie footer.site-footer .wrap,
+html body.sde-unifie footer.site-footer .footer-grid>div,
+html body.sde-unifie footer.site-footer nav{
+  background:transparent!important;background-image:none!important;
+  color:#f7f3e8!important;-webkit-text-fill-color:#f7f3e8!important;
+  opacity:1!important;
+}
+html body.sde-unifie footer.site-footer .footer-grid :is(p,small,strong,span,li,.footer-brand),
+html body.sde-unifie footer.site-footer .footer-grid>div *:not(a){
+  color:#f7f3e8!important;-webkit-text-fill-color:#f7f3e8!important;
+  opacity:1!important;text-shadow:none!important;
+}
+html body.sde-unifie footer.site-footer :is(a,a span){
+  color:#f6d58e!important;-webkit-text-fill-color:#f6d58e!important;
+  opacity:1!important;text-shadow:none!important;
+}
+html body.sde-unifie footer.site-footer a:hover{
+  color:#fff3c5!important;-webkit-text-fill-color:#fff3c5!important;
+  text-decoration:underline;
+}
+html body.sde-unifie footer.site-footer :is(a,button):focus-visible{
+  outline:3px solid #f4cf74!important;outline-offset:3px;
+}
+/* Compteurs chargés côté client dans le footer : aucune écriture blanche
+   sur le fond ivoire de l'ancienne palette, même hors .footer-grid. */
+html body.sde-unifie footer.site-footer> :is(section,div) :is(span,strong,b,small){
+  color:#f7f3e8!important;-webkit-text-fill-color:#f7f3e8!important;
+  opacity:1!important;
+}
+/* Raccourcis entre contenu existant et nouveaux référentiels. */
+html body.sde-unifie.sde-subpage .sde-institution-teaser{
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  max-width:1100px;margin:26px auto;padding:25px 22px;
+  border:1px solid #d7b567;border-radius:18px;
+  background:#173229!important;color:#f9f2e4!important;text-align:center;
+}
+html body.sde-unifie.sde-subpage .sde-institution-teaser :is(strong,p){
+  color:#f9f2e4!important;-webkit-text-fill-color:#f9f2e4!important;
+  line-height:1.55;margin:0;
+}
+html body.sde-unifie.sde-subpage .sde-institution-teaser strong{
+  font-size:clamp(1.25rem,2.2vw,1.55rem);
+}
+html body.sde-unifie.sde-subpage .sde-institution-teaser a{
+  min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+  padding:11px 18px;border-radius:9px;background:#f6e6bc!important;
+  color:#273d2d!important;-webkit-text-fill-color:#273d2d!important;
+  font-weight:750;text-decoration:none;
+}
+@media(max-width:600px){
+  html body.sde-unifie.sde-subpage .sde-institution-teaser{margin:18px 14px;}
+}
