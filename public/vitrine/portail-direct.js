@@ -4,7 +4,7 @@
  */
 (() => {
   "use strict";
-  if (location.hostname !== "mouvement-sde.org") return;
+  if (!new Set(["mouvement-sde.org", "app.mouvement-sde.org"]).has(location.hostname)) return;
   const mode=location.pathname==="/mon-espace"?"membre":
     location.pathname==="/administration"?"direction":null;
   if(!mode)return;
@@ -55,7 +55,7 @@
     const logo=document.createElement("img");
     logo.src="/vitrine/logo-96.png";logo.alt="";logo.width=36;logo.height=36;
     brand.prepend(logo);head.append(brand);
-    const publique=link("/","Site public");head.append(publique);
+    const publique=link("https://mouvement-sde.org/","Site public");head.append(publique);
     const membre=link("/mon-espace","Mon espace");head.append(membre);
     if(mode==="membre")membre.setAttribute("aria-current","page");
     const direction=link("/administration","Administration");

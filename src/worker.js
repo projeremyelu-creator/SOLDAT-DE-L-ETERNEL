@@ -4,7 +4,7 @@ import {memberQrApi} from "./member-qr.js";
 import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {prayerWallApi} from "./prayer-wall.js";
-import {apiSdeOs31} from "./os-v31.js";
+import {apiSdeOs31,SDE_OS_31} from "./os-v31.js";
 import {notifySde,flushNotices,mailStatus,pushConfigured,notificationConfigured} from "./notifications.js";
 import {SDE_MAIL_RECIPIENT} from "./notification-events.js";
 import {generateVapidKeys} from "./web-push.js";
@@ -690,9 +690,22 @@ async function apiTableauDeBord(req,env,u) {
   const presence=dashboardAttendance(evenements,membres,garnisons);
   const enPriere=prieres.filter(p=>(p.data.statut||"En prière")==="En prière");
   const urgences=enPriere.filter(p=>p.data.urgent===true).map(p=>({id:p.id,date:String(p.data.date||"").slice(0,10)})).sort((a,b)=>b.date.localeCompare(a.date));
+  // Uniquement des agrégats de pilotage : aucune coordonnée ni aucun message
+  // de candidature ne quitte la table protégée via cette route.
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS engagements (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, cree INTEGER NOT NULL, objet TEXT,
+    pole TEXT, source TEXT, nom TEXT NOT NULL, tel TEXT, email TEXT, ville TEXT,
+    message TEXT, traite INTEGER NOT NULL DEFAULT 0, note TEXT
+  )`).run();
+  const [demandesAdhesion,site]=await Promise.all([
+    env.DB.prepare("SELECT COUNT(*) AS n FROM engagements WHERE traite = 0").first(),
+    donneesSite(env)
+  ]);
+  // Sans surcharge du CMS, la page Programmes conserve ses huit cartes publiques natives.
+  const programmesPublies=(site.programmes||[]).filter(p=>p.titre).length||8;
   // Métadonnées de mises à jour uniquement, jamais le contenu des dossiers.
   const recents=await env.DB.prepare("SELECT parent,maj FROM docs WHERE parent IN ('membres','evenements','projets','formations','annonces') ORDER BY maj DESC LIMIT 8").all();
-  return json({total,...metrics,indicateurs:{membresActifs:membres.filter(m=>m.data.actif!==false).length,presence,intercessions:enPriere.length},urgences:urgences.slice(0,5),urgencesTotal:urgences.length,activites:(recents.results||[]).map(r=>({rubrique:r.parent,cree:r.maj})),actualiseLe:Date.now()});
+  return json({total,...metrics,indicateurs:{membresActifs:membres.filter(m=>m.data.actif!==false).length,presence,intercessions:enPriere.length,demandesAdhesion:Number(demandesAdhesion?.n)||0,poles:SDE_OS_31.poles.length,programmesPublies},urgences:urgences.slice(0,5),urgencesTotal:urgences.length,activites:(recents.results||[]).map(r=>({rubrique:r.parent,cree:r.maj})),actualiseLe:Date.now()});
 }
 
 /* ───────── site vitrine : rendez-vous publics ───────── */
@@ -823,6 +836,8 @@ async function apiEngager(req, env, ctx) {
   const ville = champ("ville", 120);
   const objet = champ("objet", 160) || "Prise de contact";
   const pole = champ("pole", 160);
+  const programme = champ("programme", 160);
+  const motivation = champ("motivation", 2000);
   const message = champ("message", 2000);
   const source = champ("source", 160);
 
@@ -832,6 +847,11 @@ async function apiEngager(req, env, ctx) {
   if (!tel && !email) return erreur("champ_manquant", "Indiquez au moins un téléphone ou un e-mail pour que l'équipe vous recontacte.");
   if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return erreur("email_invalide", "Adresse e-mail invalide.");
   if (tel && tel.replace(/\D/g, "").length < 7) return erreur("tel_invalide", "Numéro de téléphone trop court.");
+  if (objet === "Devenir membre") {
+    if (!tel || !email || !ville || !pole || !programme || !motivation) return erreur("champ_manquant", "Pour adhérer, renseignez téléphone, e-mail, ville, pôle, programme et motivation.");
+    if (!["Réveil, évangélisation & missions", "Impact social & humanitaire", "Logistique & organisation", "Communication, médias & digital", "Formation & développement intégral"].includes(pole)) return erreur("pole_invalide", "Choisissez un pôle proposé.");
+    if (!["Traversée Prophétique Mensuelle", "IN FIRE", "Soldiers Academy", "Holy Talk & Holy Day", "Missions & actions solidaires", "Holy Brunch", "ALEPH 12"].includes(programme)) return erreur("programme_invalide", "Choisissez un programme proposé.");
+  }
   const ipPublic = "engagement:" + ipDe(req);
   if (await bloque(env, ipPublic, 30)) return erreur("rate_limited", "Trop de demandes récentes. Réessayez plus tard.", 429);
   await compter(env, ipPublic);
@@ -849,7 +869,7 @@ async function apiEngager(req, env, ctx) {
   await env.DB.prepare(`CREATE INDEX IF NOT EXISTS engagements_cree ON engagements(traite, cree)`).run();
 
   await env.DB.prepare(`INSERT INTO engagements (cree, objet, pole, source, nom, tel, email, ville, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .bind(Date.now(), objet, pole, source, nom, tel, email, ville, message)
+    .bind(Date.now(), objet, pole, source, nom, tel, email, ville, objet === "Devenir membre" ? `Programme : ${programme}\nMotivation : ${motivation}${message ? `\nMessage : ${message}` : ""}` : message)
     .run();
 
   notifySde(env,ctx,"engagement",{nom,email,tel});
@@ -1461,7 +1481,8 @@ async function traiter(req, env, ctx) {
     const url = new URL(req.url);
     const p = url.pathname;
     if (url.hostname === "www.mouvement-sde.org") return Response.redirect("https://mouvement-sde.org" + p + url.search, 301);
-    if (url.hostname === "mouvement-sde.org") {
+    const appHost = url.hostname === "app.mouvement-sde.org";
+    if (url.hostname === "mouvement-sde.org" || appHost) {
       // Routage unifié : pages réelles, un guichet de connexion, deux espaces protégés.
       const pagesPubliques = {
         "/boutique": "/vitrine/boutique.html",
@@ -1502,7 +1523,16 @@ async function traiter(req, env, ctx) {
         throw new Error("Boucle de redirections asset");
       };
       if (req.method === "GET" || req.method === "HEAD") {
-        if (p === "/" || p === "/index.html") return assetPortail("/vitrine/portail.html");
+        if (p === "/" || p === "/index.html") {
+          if (appHost) {
+            const compte = await utilisateur(req, env);
+            const destination = compte.connecte
+              ? (compte.niveau >= 1 ? "/administration" : "/mon-espace")
+              : "/connexion?retour=%2Fportail";
+            return new Response(null, {status:302, headers:{location:url.origin + destination, "cache-control":"private, no-store", "x-robots-tag":"noindex, nofollow"}});
+          }
+          return assetPortail("/vitrine/portail.html");
+        }
         if (p === "/vitrine/" || p === "/vitrine/index.html") return Response.redirect(url.origin + "/", 301);
         if (pagesPubliques[p]) {
           const page = await assetPortail(pagesPubliques[p]);
@@ -1526,8 +1556,13 @@ async function traiter(req, env, ctx) {
           n.headers.set("x-robots-tag", "noindex, nofollow");
           return n;
         }
-        if (p === "/os-v31" || p === "/os-v31/")
-          return Response.redirect(url.origin + "/mon-espace/os-v31" + url.search + url.hash, 302);
+        if (p === "/os-v31" || p === "/os-v31/") {
+          return new Response(null, {status:302, headers:{
+            location:url.origin + "/mon-espace/os-v31" + url.search + url.hash,
+            "cache-control":"private, no-store",
+            "x-robots-tag":"noindex, nofollow"
+          }});
+        }
         // Ressources JS/CSS privées, sous le même domaine ; aucune donnée métier statique.
         if (p === "/os-v31/sde-os.js" || p === "/os-v31/sde-os.css") {
           const r = await assetPortail(p);

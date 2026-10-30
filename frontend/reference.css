@@ -79,8 +79,6 @@ body.sde-reference-admin{padding:24px;background:radial-gradient(ellipse at 10% 
 .sde-reference-admin .ref-command .ops-kpis strong{font:800 clamp(32px,5vw,43px)/1.05 Arial,sans-serif!important;letter-spacing:-.04em;color:#f8f2df;text-shadow:0 2px 18px #d0a85655}
 .sde-reference-admin .ref-command .ops-kpis h3{font-size:12px!important;color:#d7dce9;margin-top:9px}
 .sde-reference-admin .ref-command .ops-kpis svg{width:20px;height:20px;right:16px;top:15px}
-.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(2) strong{color:#93dec2}
-.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(4) strong{color:#f4c1a0}
 .ref-presence-ring{position:absolute;right:13px;bottom:13px;width:35px;height:35px;border-radius:50%;background:conic-gradient(#65d9a8 var(--rate),#ffffff20 0);box-shadow:0 0 14px #4fca9860;mask:radial-gradient(farthest-side,transparent 59%,#000 63%)}
 .ref-kpi-alert{position:absolute;right:13px;bottom:14px;border-radius:20px;background:#8d4b20;color:#fff0d2;padding:3px 8px;font-size:10px;font-weight:700}
 .sde-reference-admin .ref-command-middle>.ops-card,.sde-reference-admin .ref-command-bottom>.ops-card{padding:20px}
@@ -334,3 +332,44 @@ html:not([data-theme=light]) body.sde-reference .ops-panel .ops-filters button[a
 html:not([data-theme=light]) body.sde-reference .ops-panel .ref-small-action{background:linear-gradient(180deg,#e4c477,#c9a14a 55%,#97762c)!important;border:1px solid #f0d58f66!important;border-radius:4px!important;color:#1a1408!important;font-weight:700}
 .ref-link-more{top:16px}
 @media(max-width:600px){.soldier-card{background:linear-gradient(118deg,#f1da92 0%,#d2ab55 45%,#b48c35 66%,#1a140b 66.2%,#0f0c08 100%)}.soldier-card::after{inset:0 0 0 64%}.soldier-card-body>div{max-width:66%}.soldier-card-body strong{font-size:1.1rem;white-space:nowrap}.soldier-qr{width:70px;height:70px;padding:4px}}
+/* Ajouts de la branche principale (espace membre premium, identité SDE DIGITAL) */
+.ref-digital-identity{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;gap:1px;text-align:center;pointer-events:none;white-space:nowrap;color:#f5efe0}.ref-digital-identity strong{font:600 12px/1.1 "Saira Condensed","Arial Narrow",system-ui,sans-serif;letter-spacing:.13em;color:#f4e6c3}.ref-digital-identity strong span{color:#d8b76a}.ref-digital-identity small{font:400 8px/1.2 "Atkinson Hyperlegible",system-ui,sans-serif;letter-spacing:.08em;color:#c1c5d0}
+@media(max-width:600px){.ref-digital-identity{max-width:44vw;overflow:hidden}.ref-digital-identity strong{font-size:9px;letter-spacing:.08em}.ref-digital-identity small{display:none}}
+.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(2) strong{color:#f0bd68}
+.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(4) strong{color:#e7c87a}
+.ref-presence-summary{display:flex;align-items:center;gap:11px;min-height:46px;margin-top:8px;padding:8px 10px;border:1px solid #74d4a833;border-radius:10px;background:#0d1a2c88}.ref-presence-summary .ref-presence-ring{position:relative;right:auto;bottom:auto;flex:0 0 34px;width:34px;height:34px}.ref-presence-summary strong{display:flex;flex:1;justify-content:space-between;gap:10px;color:#e7e8ec;font-size:12px}.ref-presence-summary strong b{color:#87e5b5}.ref-presence-summary button{min-height:32px;margin:0;padding:6px 10px;border:1px solid #d9b55b99;border-radius:8px;background:#152239;color:#f2d184;font-size:11px;white-space:nowrap}
+
+/* Espace membre : bureau large, navigation latérale et contenu réel du portail. */
+@media(min-width:761px){
+ body.sde-reference-member{padding:24px;background:radial-gradient(ellipse at 10% 0%,#272c3822,transparent),#080f1c}
+ .sde-reference-member .shell{display:grid!important;grid-template-columns:166px minmax(0,1fr);grid-template-rows:46px minmax(0,1fr);width:100%;max-width:1420px;min-height:calc(100svh - 48px);margin:0 auto;border:1px solid #bda776;border-radius:18px;overflow:clip;background:linear-gradient(103deg,#0d1a30 28%,#191a30 65%,#491c30);box-shadow:0 0 0 3px #a3957830,inset 0 1px #ead4a355}
+ .sde-reference-member #sde-reference-sidebar{display:block;grid-column:1;grid-row:1/span 2;min-width:0}
+ .sde-reference-member #sde-operations-nav{grid-column:2;grid-row:1;min-width:0}
+ .sde-reference-member #sde-operations-panel,.sde-reference-member .main,.sde-reference-member #sde-plus-panel,.sde-reference-member #sde-priere-panel,.sde-reference-member .sde-wall-panel{grid-column:2;grid-row:2;min-width:0}
+ .sde-reference-member .ref-toolbar{justify-content:flex-end}
+ .sde-reference-member .ref-member-space{display:none!important}
+ .sde-reference-member .member-welcome{display:grid;grid-template-columns:minmax(250px,.8fr) minmax(360px,1.2fr);gap:20px;align-items:center;margin:0 0 18px}
+ .sde-reference-member .member-greeting{padding:0 54px 0 0;min-height:0;margin:0}
+ .sde-reference-member .member-greeting>.dashboard-eyebrow{font-size:13px!important}
+ .sde-reference-member .member-greeting h2{font-size:24px!important}
+ .sde-reference-member .member-greeting>.sde-plus-note{font-size:11px!important}
+ .sde-reference-member .member-card-preview{min-height:190px;padding:20px;grid-template-columns:minmax(0,1fr) 94px;gap:12px 18px;background:radial-gradient(ellipse at 82% 0%,#ead9ad45,transparent 50%),linear-gradient(120deg,#ddc286,#f3dfa8 55%,#b99655);box-shadow:0 12px 28px #0005;color:#171b25}
+ .sde-reference-member .member-card-brand{font-size:16px!important;color:#20202a}
+ .sde-reference-member .member-quick-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+ .sde-reference-member .member-quick-tile{min-height:102px;font-size:12px!important;box-shadow:0 8px 18px #0003}
+ .sde-reference-member .member-quick-tile:nth-child(3){grid-column:auto;flex-direction:column;justify-content:center;min-height:102px}
+ .sde-reference-member .member-quick-tile:nth-child(3) svg{order:0}
+ .sde-reference-member .ref-home-secondary{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .sde-reference-member .ref-home-secondary>*{min-width:0}
+ .sde-reference-member .sde-bottom-nav{display:none!important}
+ .sde-reference-member .ops-panel{padding:22px 24px 30px}
+}
+@media(max-width:760px){
+ .sde-reference-member .shell{display:block!important;width:100%;max-width:480px;min-height:100svh;margin:0 auto;border:0;border-radius:0;overflow:visible}
+ .sde-reference-member #sde-reference-sidebar{display:none!important}
+ .sde-reference-member .ref-digital-identity{left:50%;max-width:38vw}
+ .sde-reference-member .ref-home-secondary{display:none!important}
+ .sde-reference-member .sde-bottom-nav{display:flex!important}
+}
+/* Une seule barre basse sur mobile : la navigation existante du portail l’emporte quand elle est présente. */
+body:has(.sde-bottom-nav) .ref-tabbar{display:none!important}
