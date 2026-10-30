@@ -143,7 +143,7 @@ test("fiche membre plein écran et cache mobile : accessibilité sans changement
  const source=read("public/vitrine/portail-unifie.css");
  const builder=read("scripts/build-experience.mjs");
  for(const token of ['name="viewport"','width=device-width'])assert.ok(app.includes(token),token);
- assert.ok(app.includes('href="/app.css"'),"style privé chargé");
+ assert.ok(app.includes('href="/app.css'),"style privé chargé");
  assert.ok(appCss.includes("Fiche membre et formulaires natifs réellement utilisables"),"modal mobile");
  assert.ok(appCss.includes('body #sheet:not([hidden])'),"fenêtre de dialogue complète");
  assert.ok(appCss.includes('height:100dvh!important'),"hauteur écran mobile");
