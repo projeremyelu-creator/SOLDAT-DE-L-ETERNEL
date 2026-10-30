@@ -1535,10 +1535,11 @@ async function traiter(req, env, ctx) {
           return n;
         }
         if (p === "/os-v31" || p === "/os-v31/") {
-          const r = Response.redirect(url.origin + "/mon-espace/os-v31" + url.search + url.hash, 302);
-          r.headers.set("cache-control", "private, no-store");
-          r.headers.set("x-robots-tag", "noindex, nofollow");
-          return r;
+          return new Response(null, {status:302, headers:{
+            location:url.origin + "/mon-espace/os-v31" + url.search + url.hash,
+            "cache-control":"private, no-store",
+            "x-robots-tag":"noindex, nofollow"
+          }});
         }
         // Ressources JS/CSS privées, sous le même domaine ; aucune donnée métier statique.
         if (p === "/os-v31/sde-os.js" || p === "/os-v31/sde-os.css") {
