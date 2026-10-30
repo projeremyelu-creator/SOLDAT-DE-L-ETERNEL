@@ -15,3 +15,67 @@ test('Scanner : rencontre obligatoire, aucune caméra automatique, navigation s�
 test('Finances et événements : période du graphique et inscription utilisables',async()=>{const c=await page();try{c.f.doc('finances/'+new Date().toISOString().slice(0,7)+'/ops/e',{date:new Date().toISOString().slice(0,10),sens:'E',montant:1000});c.w.SDEPortal.selectionner('finance-direction');await waitFor(()=>c.d.querySelectorAll('.ops-plot tbody tr').length===12);assert.equal(c.d.querySelectorAll('.ops-plot tbody tr').length,12);const select=c.d.querySelector('.ops-panel select');select.value='3';select.dispatchEvent(new c.w.Event('change',{bubbles:true}));await waitFor(()=>c.d.querySelectorAll('.ops-plot tbody tr').length===3);assert.equal(c.d.querySelectorAll('.ops-plot tbody tr').length,3);c.w.SDEPortal.selectionner('rendezvous');await waitFor(()=>[...c.d.querySelectorAll('.ops-panel button')].some(b=>b.textContent==='Confirmer ma participation'));[...c.d.querySelectorAll('.ops-panel button')].find(b=>b.textContent==='Confirmer ma participation').click();await waitFor(()=>c.d.querySelector('.ops-panel')?.textContent.includes('Annuler mon inscription'));assert.equal(c.f.sql.prepare("SELECT participe FROM portail_inscriptions_evenements WHERE compte='alice'").get().participe,1)}finally{c.close()}});
 test('Contenu du site : l’administrateur importe, publie, et /api/site reflète la publication',async()=>{const c=await page();try{c.w.confirm=()=>true;c.w.SDEPortal.selectionner('site-public');await waitFor(()=>c.d.querySelector('.site-ed'));[...c.d.querySelectorAll('.site-ed button')].find(b=>b.textContent==='Importer les programmes actuels').click();await waitFor(()=>c.d.querySelectorAll('.site-ed-prog').length===8);const set=(el,v)=>{const proto=el.tagName==='TEXTAREA'?c.w.HTMLTextAreaElement.prototype:c.w.HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(proto,'value').set.call(el,v);el.dispatchEvent(new c.w.Event('input',{bubbles:true}))};set(c.d.querySelector('.site-ed input[type=email]'),'contact@mouvement-sde.org');await tick();c.d.querySelector('.site-ed-go').click();await waitFor(()=>/Publié/.test(c.d.querySelector('.site-ed-publish p').textContent));const r=await c.f.call('/api/site','alice','GET');assert.equal(r.body.contact.email,'contact@mouvement-sde.org');assert.equal(r.body.programmes.length,8);assert.equal(r.body.programmes[1].lien,'#infire');assert.deepEqual(c.errors,[])}finally{c.close()}});
 test('Contenu du site : refusé aux comptes non administrateurs',async()=>{const c=await page('/administration','contributeur');try{c.w.SDEPortal.selectionner('site-public');await tick();assert.equal(c.d.querySelector('.site-ed'),null);const r=await c.f.call('/api/db','alice','POST',{op:'set',path:'site/contact',data:{email:'x@y.zz'}});assert.equal(r.status,403)}finally{c.close()}});
+
+test('Bandeau privé SDE : une marque courte, un seul menu mobile et aucune superposition par duplication',async()=>{
+ const c=await page('/administration','admin');
+ try{
+   const top=c.d.querySelector('#sde-operations-nav .ref-toolbar.ops-top-nav');
+   assert.ok(top);
+   assert.equal(top.querySelectorAll('.ref-digital-identity').length,1);
+   assert.equal(top.querySelector('.ref-brand-caption strong')?.textContent,'SDE DIGITAL');
+   assert.equal(top.querySelector('.ref-brand-caption small')?.textContent,'Administration');
+   assert.equal(top.querySelector('.ref-menu-button'),null,'Le hamburger redondant ne doit pas être affiché');
+   assert.equal(top.querySelector('.ref-account')?.getAttribute('aria-label'),'Ouvrir mon compte : Compte alice');
+   assert.equal(c.d.querySelectorAll('.ref-tabbar').length,1);
+   assert.ok(c.d.querySelector('#sde-direct-menu-toggle'),'Les rubriques existantes restent accessibles');
+   assert.deepEqual(c.errors,[]);
+ }finally{c.close()}
+});
+test('Bandeau privé SDE : accès directs Recherche, Apparence, Notifications et Mon compte',async()=>{
+ const c=await page('/administration','admin');
+ try{
+   const top=c.d.querySelector('.ops-top-nav');
+   const find=top.querySelector('[aria-label="Rechercher une rubrique"]');
+   const theme=top.querySelector('[aria-label="Choisir l’apparence de mon espace"]');
+   const reminders=top.querySelector('[aria-label="Notifications et rappels"]');
+   const account=top.querySelector('.ref-account');
+   assert.ok(find&&theme&&reminders&&account);
+   find.click();await tick();
+   assert.ok(c.d.querySelector('.ref-switcher input[type=search]'));
+   assert.equal(find.getAttribute('aria-expanded'),'true');
+   theme.click();await tick();
+   assert.equal(c.d.querySelector('.ref-switcher'),null);
+   assert.ok(c.d.querySelector('.ref-palette-menu'));
+   assert.equal(theme.getAttribute('aria-expanded'),'true');
+   c.d.dispatchEvent(new c.w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+   await tick();assert.equal(c.d.querySelector('.ref-palette-menu'),null);
+   reminders.click();await tick();
+   assert.equal(new URLSearchParams(c.w.location.search).get('module'),'preferences');
+   assert.deepEqual(c.errors,[]);
+ }finally{c.close()}
+});
+test('Bandeau membre SDE : identité cohérente et sans raccourcis administratifs',async()=>{
+ const c=await page('/mon-espace','soldat');
+ try{
+   const top=c.d.querySelector('#sde-operations-nav .ops-top-nav');
+   assert.equal(top.querySelector('.ref-brand-caption strong')?.textContent,'SDE DIGITAL');
+   assert.equal(top.querySelector('.ref-brand-caption small')?.textContent,'Espace membre');
+   assert.equal(top.querySelector('.ref-account'),null);
+   assert.equal(top.querySelector('.ref-menu-button'),null);
+   assert.deepEqual(c.errors,[]);
+ }finally{c.close()}
+});
+test('Bandeau responsive SDE : mise en page en flux, contraste, focus et touch targets',()=>{
+ const css=readFileSync('frontend/palette-themes.css','utf8');
+ const section=css.slice(css.lastIndexOf('En-tête privé SDE — correction'));
+ assert.ok(section.length>3000,'Correctifs de bandeau attendus');
+ assert.match(section,/position:static!important/);
+ assert.match(section,/transform:none!important/);
+ assert.match(section,/justify-content:space-between!important/);
+ assert.match(section,/min-width:44px!important;min-height:44px!important/);
+ assert.match(section,/focus-visible/);
+ assert.match(section,/@media\(max-width:760px\)/);
+ assert.match(section,/@media\(max-width:380px\)/);
+ assert.match(section,/\.ref-account-copy\{display:none!important\}/);
+ assert.match(section,/\.ref-menu-button/);
+});
