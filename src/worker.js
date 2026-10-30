@@ -1534,8 +1534,12 @@ async function traiter(req, env, ctx) {
           n.headers.set("x-robots-tag", "noindex, nofollow");
           return n;
         }
-        if (p === "/os-v31" || p === "/os-v31/")
-          return Response.redirect(url.origin + "/mon-espace/os-v31" + url.search + url.hash, 302);
+        if (p === "/os-v31" || p === "/os-v31/") {
+          const r = Response.redirect(url.origin + "/mon-espace/os-v31" + url.search + url.hash, 302);
+          r.headers.set("cache-control", "private, no-store");
+          r.headers.set("x-robots-tag", "noindex, nofollow");
+          return r;
+        }
         // Ressources JS/CSS privées, sous le même domaine ; aucune donnée métier statique.
         if (p === "/os-v31/sde-os.js" || p === "/os-v31/sde-os.css") {
           const r = await assetPortail(p);
