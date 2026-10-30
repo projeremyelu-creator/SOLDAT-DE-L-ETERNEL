@@ -52,7 +52,8 @@ self.addEventListener("fetch", event => {
   const req = event.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return;
+  const origin = self.location?.origin || (typeof location !== "undefined" ? location.origin : "");
+  if (url.origin !== origin) return;
   const path = url.pathname;
   if (EXCLUS.some(prefix => path === prefix || path.startsWith(prefix + "/") || (prefix.endsWith("/") && path.startsWith(prefix)))) return;
 
