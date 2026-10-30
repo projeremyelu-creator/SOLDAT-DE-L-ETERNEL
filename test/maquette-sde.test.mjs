@@ -230,3 +230,8 @@ test("compteur de visites en temps réel et versets quotidiens défilants",async
  assert.ok(fn.includes("/^[a-z0-9]{16,40}$/")&&fn.includes('bloque(env, cle, 30)'),"entrée validée et limitée");
  for(const p of ["portail","mouvement","programmes"])assert.ok(read("public/vitrine/"+p+".html").includes("sde-versets.js"),p);
 });
+test("fréquentation du site dans le poste de commandement",()=>{
+ assert.ok(ops.includes("function VisitsGlance")&&ops.includes("'/api/visites?historique=1',30000")&&ops.includes("<VisitsGlance/>"));
+ const fn=worker.slice(worker.indexOf("async function apiVisites"),worker.indexOf("async function apiFormulaire"));
+ assert.ok(fn.includes('searchParams.get("historique") === "1"')&&fn.includes("length: 14"),"historique 14 jours");
+});
