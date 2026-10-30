@@ -976,3 +976,101 @@ body[data-motion="paused"].sde-unifie.sde-accueil-maquette .sde-pole-officiel-li
     min-width:0!important;
   }
 }
+
+/* Audit Chromium : menu compact pour écrans intermédiaires (901–1450 px). */
+/* Les huit liens desktop débordaient de la fenêtre à 1280 px.
+   Conserver le menu complet sur écrans larges et passer à un menu
+   déroulant accessible sur les ordinateurs compacts. */
+@media(min-width:901px) and (max-width:1450px){
+  html body.sde-unifie .site-header .site-header-inner{
+    display:flex!important;
+    flex-wrap:nowrap!important;
+    align-items:center!important;
+    gap:clamp(8px,1.1vw,15px)!important;
+    width:min(100% - 28px,1320px)!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+  html body.sde-unifie .site-header .site-brand{
+    flex:0 1 auto!important;
+    min-width:0!important;
+    gap:8px!important;
+    margin-right:auto!important;
+  }
+  html body.sde-unifie .site-header .site-brand b{
+    font-size:clamp(1.05rem,1.7vw,1.4rem)!important;
+    white-space:nowrap!important;
+    letter-spacing:0!important;
+  }
+  html body.sde-unifie .site-header .site-header-inner>.site-support{
+    display:none!important;
+  }
+  html body.sde-unifie .site-header .site-header-inner>.site-access-top{
+    flex:0 0 auto!important;
+    width:auto!important;
+    margin:0!important;
+    order:2!important;
+  }
+  html body.sde-unifie .site-header .site-header-inner>.site-burger{
+    order:5!important;
+    display:flex!important;
+    flex:0 0 44px!important;
+    min-width:44px!important;
+    width:44px!important;
+    height:44px!important;
+    margin:0!important;
+  }
+  html body.sde-unifie .site-header .site-header-inner>.site-theme-toggle{
+    order:3!important;flex:0 0 42px!important;
+    width:42px!important;height:44px!important;margin:0!important;
+  }
+  html body.sde-unifie .site-header .site-header-inner>.sde-motion-button{
+    order:4!important;flex:0 0 42px!important;
+    width:42px!important;height:44px!important;margin:0!important;
+  }
+  html body.sde-unifie .site-header .site-menu{
+    display:none!important;
+    position:absolute!important;
+    top:100%!important;left:auto!important;right:12px!important;
+    width:min(370px,calc(100% - 24px))!important;
+    max-height:calc(100svh - 110px)!important;
+    overflow-y:auto!important;
+    align-items:stretch!important;
+    flex-direction:column!important;
+    gap:3px!important;
+    padding:12px!important;
+    border-radius:0 0 14px 14px!important;
+    box-shadow:0 18px 32px rgba(0,0,0,.20)!important;
+    z-index:50!important;
+  }
+  html body.sde-unifie .site-header .site-menu[data-open="true"]{
+    display:flex!important;
+  }
+  html body.sde-unifie .site-header .site-menu a,
+  html body.sde-unifie .site-header .site-menu summary{
+    width:100%!important;
+    white-space:normal!important;
+    min-height:44px!important;
+    padding:11px 12px!important;
+    border-radius:8px!important;
+    text-decoration:none!important;
+    line-height:1.3!important;
+  }
+  html body.sde-unifie.sde-ivoire .site-header .site-menu{
+    background:#fffdf8!important;
+    border:1px solid #d9c59c!important;
+    color:#243229!important;
+  }
+  html body.sde-unifie.sde-ivoire .site-header .site-menu a,
+  html body.sde-unifie.sde-ivoire .site-header .site-menu summary{
+    color:#243229!important;
+    -webkit-text-fill-color:#243229!important;
+  }
+  html body.sde-unifie.sde-ivoire .site-header .site-menu a:hover{
+    background:#f4ecd9!important;
+  }
+  html body.sde-unifie:not(.sde-ivoire) .site-header .site-menu{
+    background:#11182a!important;
+    border:1px solid #c8a451!important;
+  }
+}
