@@ -12,8 +12,3 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run build:experience
       - run: npm test
-      - name: Diagnostic
-        if: always()
-        run: |
-          npm test > /tmp/out.txt 2>&1 || true
-          grep -nE "^\s*(not ok|error:|expected|actual|message:)|AssertionError|Error:" /tmp/out.txt | head -40 | while IFS= read -r l; do echo "::error::${l:0:400}"; done
