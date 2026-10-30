@@ -81,9 +81,10 @@ body.sde-reference-admin{padding:24px;background:radial-gradient(ellipse at 10% 
 .sde-reference-admin .ref-command .ops-kpis strong{font:800 clamp(32px,5vw,43px)/1.05 Arial,sans-serif!important;letter-spacing:-.04em;color:#f8f2df;text-shadow:0 2px 18px #d0a85655}
 .sde-reference-admin .ref-command .ops-kpis h3{font-size:12px!important;color:#d7dce9;margin-top:9px}
 .sde-reference-admin .ref-command .ops-kpis svg{width:20px;height:20px;right:16px;top:15px}
-.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(2) strong{color:#93dec2}
-.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(4) strong{color:#f4c1a0}
+.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(2) strong{color:#f0bd68}
+.sde-reference-admin .ref-command .ops-kpis .ops-card:nth-child(4) strong{color:#e7c87a}
 .ref-presence-ring{position:absolute;right:13px;bottom:13px;width:35px;height:35px;border-radius:50%;background:conic-gradient(#65d9a8 var(--rate),#ffffff20 0);box-shadow:0 0 14px #4fca9860;mask:radial-gradient(farthest-side,transparent 59%,#000 63%)}
+.ref-presence-summary{display:flex;align-items:center;gap:11px;min-height:46px;margin-top:8px;padding:8px 10px;border:1px solid #74d4a833;border-radius:10px;background:#0d1a2c88}.ref-presence-summary .ref-presence-ring{position:relative;right:auto;bottom:auto;flex:0 0 34px;width:34px;height:34px}.ref-presence-summary strong{display:flex;flex:1;justify-content:space-between;gap:10px;color:#e7e8ec;font-size:12px}.ref-presence-summary strong b{color:#87e5b5}.ref-presence-summary button{min-height:32px;margin:0;padding:6px 10px;border:1px solid #d9b55b99;border-radius:8px;background:#152239;color:#f2d184;font-size:11px;white-space:nowrap}
 .ref-kpi-alert{position:absolute;right:13px;bottom:14px;border-radius:20px;background:#8d4b20;color:#fff0d2;padding:3px 8px;font-size:10px;font-weight:700}
 .sde-reference-admin .ref-command-middle>.ops-card,.sde-reference-admin .ref-command-bottom>.ops-card{padding:20px}
 .sde-reference-admin .ref-activities li,.sde-reference-admin .ref-urgent-list li{padding:12px 2px;gap:12px}
