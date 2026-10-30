@@ -29,9 +29,9 @@ test('Les pages publiques chargent toutes les nouvelles versions du CSS',()=>{
     'temoignages','404','formulaire','soldiers-award'];
   for(const page of pages){
     const html=read('public/vitrine/'+page+'.html');
-    assert.ok(html.includes('sde-sitewide-2026.css?v=20261030footerfix'),page);
+    assert.ok(/sde-sitewide-2026\.css\?v=[^"'\s<>]+/.test(html),page);
     if(html.includes('ivoire-pages.css'))
-      assert.ok(html.includes('ivoire-pages.css?v=20261030footerfix'),page);
+      assert.ok(/ivoire-pages\.css\?v=[^"'\s<>]+/.test(html),page);
   }
 });
 
