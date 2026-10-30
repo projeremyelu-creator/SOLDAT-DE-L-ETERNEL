@@ -370,3 +370,84 @@ html[data-sde-palette="terracotta"] body.sde-reference .ref-request-list small{c
  html[data-sde-palette="terracotta"] body.sde-reference :is(.ref-command-overview,.ref-command-programs){grid-template-columns:1fr!important}
  html[data-sde-palette="terracotta"] body.sde-reference .ref-poles-list li{grid-template-columns:24px minmax(0,1fr) auto 22px}
 }
+
+/* Maquette SDE - MOUVEMENT 02 : ivoire, treillis, or. */
+html[data-sde-palette="ivoire"] body.sde-reference{
+ --pal-bg:#f8f7f2;--pal-surface:#fffefa;--pal-paper:#faf9f5;--pal-ink:#1d251b;--pal-muted:#67695e;
+ --pal-line:#dedbd0;--pal-accent:#8c7735;--pal-accent-light:#b39a53;--pal-side1:#142413;--pal-side2:#273823;
+ --pal-side-active:#766a32;--pal-nav:#1d2d1b;--pal-head:#fbfaf6;--pal-tint:#ede9d7;
+}
+html[data-sde-palette="ivoire"] body.sde-reference .shell{background:#fbfaf6!important;border-color:#d5d1c6!important;border-radius:8px!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ref-sidebar{background:linear-gradient(155deg,#142413,#283722 80%,#172718)!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ref-sidebar .ref-gold-brand{margin:0 8px!important;height:54px!important;gap:5px;background-image:url('/vitrine/logo-96.webp')!important;background-size:40px 40px!important;background-position:left center!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ref-sidebar .ref-gold-brand::after{content:"SDE";padding-left:42px;font:normal 23px Georgia,serif;color:#f8f3e4}
+html[data-sde-palette="ivoire"] body.sde-reference .ref-sidebar nav button[aria-current="page"]{background:linear-gradient(100deg,#615a2b,#8a7935)!important;box-shadow:none!important;border-left:0!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ref-toolbar.ops-top-nav{background:#fbfaf6!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ref-digital-identity{position:static;transform:none;display:flex;align-items:center;gap:6px;margin-right:auto;text-align:left}
+html[data-sde-palette="ivoire"] body.sde-reference .ref-digital-identity img{object-fit:contain}
+html[data-sde-palette="ivoire"] body.sde-reference .ref-digital-identity strong{font:normal clamp(18px,2.2vw,28px)/1 Georgia,serif!important;letter-spacing:.015em!important;color:#1b2519!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ops-heading{border-bottom:0!important;margin-bottom:10px!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ops-heading h2{font:normal clamp(1.55rem,2.4vw,2.1rem)/1.15 Georgia,serif!important;color:#1c2519!important;text-transform:none!important;letter-spacing:0!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ops-heading .ops-subtitle{margin:2px 0;color:#72746b!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ops-panel .ops-card{background:#fffefa!important;border-color:#e4e1d8!important;box-shadow:0 3px 12px #28322310!important;border-radius:9px!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ops-panel :is(.ref-small-action,.ref-qr-action,.access-submit),html[data-sde-palette="ivoire"] body.sde-reference .ops-heading>button{background:linear-gradient(110deg,#8b7330,#a98d41)!important;color:#fffdf5!important;border-color:#a48940!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ref-command .ops-kpis .ref-kpi>strong{color:#20271c!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ref-command-overview,html[data-sde-palette="ivoire"] body.sde-reference .ref-command-programs{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(240px,.9fr);gap:12px;margin:12px 0}
+html[data-sde-palette="ivoire"] body.sde-reference :is(.ref-command-overview,.ref-command-programs)>.ops-card{min-width:0;margin:0}
+html[data-sde-palette="ivoire"] body.sde-reference .ref-poles-list,html[data-sde-palette="ivoire"] body.sde-reference .ref-command-programs .soldier-list{list-style:none;padding:0;margin:10px 0}
+html[data-sde-palette="ivoire"] body.sde-reference :is(.ref-poles-list,.ref-command-programs .soldier-list) li{padding:8px 0;border-bottom:1px solid #e8e4d9}
+html[data-sde-palette="ivoire"] body.sde-reference .soldier-card{background:radial-gradient(circle at 80% 55%,#caad6730,transparent 42%),linear-gradient(130deg,#35442c,#1a2d1e 74%)!important}
+html[data-sde-palette="ivoire"] body.sde-reference .soldier-card::after{background:url('/vitrine/logo-sde.png') center/contain no-repeat;inset:0 0 0 46%;opacity:.16;-webkit-mask-image:none;mask-image:none}
+html[data-sde-palette="ivoire"] body.sde-reference .soldier-tag{background:#d8bd78!important;border-color:#c4a558!important;color:#26331d!important}
+html[data-sde-palette="ivoire"] body.sde-reference .ref-tabbar button[aria-current="page"]{color:#907834!important}
+@media(min-width:761px){
+ html[data-sde-palette="ivoire"] body.sde-reference-member{padding:20px!important;background:#f8f7f2!important}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .shell{display:grid!important;grid-template-columns:188px minmax(0,1fr);grid-template-rows:60px minmax(0,1fr);max-width:1420px!important;min-height:calc(100svh - 40px);margin:auto}
+ html[data-sde-palette="ivoire"] body.sde-reference-member #sde-reference-sidebar{display:block!important;grid-area:1/1/span 2}
+ html[data-sde-palette="ivoire"] body.sde-reference-member #sde-operations-nav{grid-area:1/2}
+ html[data-sde-palette="ivoire"] body.sde-reference-member #sde-operations-panel{grid-area:2/2;min-width:0}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-top{grid-template-columns:1.3fr .7fr}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-card{grid-column:1;grid-row:1;min-height:190px}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-profile{grid-column:2;grid-row:1}
+}
+@media(max-width:760px){
+ html[data-sde-palette="ivoire"] body.sde-reference{background:#f8f7f2!important;padding-bottom:calc(64px + env(safe-area-inset-bottom))!important}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .shell{max-width:none!important;background:#f8f7f2!important}
+ html[data-sde-palette="ivoire"] body.sde-reference-member #sde-reference-sidebar{display:none!important}
+ html[data-sde-palette="ivoire"] body.sde-reference .ref-toolbar.ops-top-nav{height:54px;min-height:54px;padding:6px 10px!important}
+ html[data-sde-palette="ivoire"] body.sde-reference .ref-digital-identity{max-width:none;overflow:visible}
+ html[data-sde-palette="ivoire"] body.sde-reference .ref-digital-identity img{width:26px;height:26px}
+ html[data-sde-palette="ivoire"] body.sde-reference .ref-digital-identity strong{font-size:clamp(13px,3.5vw,18px)!important}
+ html[data-sde-palette="ivoire"] body.sde-reference .ref-member-space{display:none!important}
+ html[data-sde-palette="ivoire"] body.sde-reference-admin .ref-menu-button{order:-1;display:inline-flex!important}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .ref-toolbar-actions>button:first-child{display:inline-flex!important}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-top{display:flex;flex-direction:column;gap:9px}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-card{order:-1;min-height:155px}
+ html[data-sde-palette="ivoire"] body.sde-reference .ops-panel{padding:16px 13px 90px!important}
+ html[data-sde-palette="ivoire"] body.sde-reference :is(.ref-command-overview,.ref-command-programs){grid-template-columns:1fr!important}
+ html[data-sde-palette="ivoire"] body.sde-reference-admin .ref-command .ops-kpis .ref-kpi{min-height:92px!important;padding:12px!important}
+}
+html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-top{grid-template-columns:minmax(0,.95fr) minmax(0,1.25fr)}
+html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;min-width:0}
+html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-summary .ops-card{min-width:0;margin:0;padding:14px!important;display:flex;flex-direction:column;justify-content:center;gap:5px}
+html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-summary .ops-card h3{font-size:12px!important;color:#323c2a!important;margin:0}
+html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-summary .ops-card strong{font-size:16px!important;line-height:1.25!important;overflow-wrap:anywhere;color:#242b20!important}
+html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-summary .ops-card button{padding:4px 6px!important;align-self:flex-start}
+html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-academy-feature{display:grid;grid-template-columns:190px minmax(0,1fr);align-items:center;gap:20px;min-height:110px;background:#fffefa;border:1px solid #e4e1d8;border-radius:9px;overflow:hidden;box-shadow:0 3px 12px #28322310}
+html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-academy-feature img{width:100%;height:115px;object-fit:cover}
+html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-academy-feature h3{margin:0 0 3px;color:#1d251b;font:normal 18px Georgia,serif}
+html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-academy-feature p{margin:0 0 6px;color:#4b5045;font-size:12px}
+html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-academy-feature button{background:#9a7e36!important;color:#fff!important;border-color:#a98d41!important}
+@media(min-width:761px){html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-card{grid-column:auto;grid-row:auto;min-height:170px}}
+@media(max-width:760px){
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-summary{grid-template-columns:1fr;gap:8px}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-summary .ops-card{min-height:60px;display:grid;grid-template-columns:1fr auto;align-items:center;padding:9px 12px!important}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-summary .ops-card h3{grid-column:1;grid-row:1;font-size:11px!important}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-summary .ops-card strong{grid-column:1;grid-row:2;font-size:14px!important}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-summary .ops-card :is(button,small){grid-column:2;grid-row:1/span 2}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-academy-feature{grid-template-columns:76px minmax(0,1fr);gap:10px;min-height:80px}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-academy-feature img{height:88px}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-academy-feature h3{font-size:15px}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-academy-feature p{font-size:10px}
+ html[data-sde-palette="ivoire"] body.sde-reference-member .soldier-academy-feature button{font-size:10px!important}
+}

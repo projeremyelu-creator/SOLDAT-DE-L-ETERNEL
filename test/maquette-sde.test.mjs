@@ -94,12 +94,12 @@ test("maquette fidèle : rail latéral, panneaux numérotés, logo monogramme",(
  assert.ok(css.includes('content:"03"')&&css.includes('content:"02"'),"bandeaux 02 et 03 de l'application");
 });
 
-test("la palette terracotta de la maquette est proposée et devient le choix initial",()=>{
+test("la palette ivoire de la nouvelle maquette devient le choix initial",()=>{
  const shell=read("frontend/reference-shell.jsx");
  const css=read("frontend/palette-themes.css");
  const entry=read("frontend/experience.css");
  for(const t of ["militaire","ivoire","violet","terracotta"])assert.ok(shell.includes("'"+t+"'"),t);
- assert.ok(shell.includes("return PALETTES.some(([id])=>id===p)?p:'terracotta'"));
+ assert.ok(shell.includes("return PALETTES.some(([id])=>id===p)?p:'ivoire'"));
  assert.ok(shell.includes("localStorage.getItem('sde-private-palette')"),"préférence enregistrée");
  assert.ok(shell.includes("setAttribute('data-sde-palette',palette)"),"préférence appliquée à l'espace privé");
  assert.ok(shell.includes('aria-pressed={palette===id}')&&shell.includes('aria-label="Choisir la palette graphique"'),"sélecteur accessible");
@@ -109,6 +109,13 @@ test("la palette terracotta de la maquette est proposée et devient le choix ini
  assert.ok(css.includes('body.sde-reference'),"styles limités aux espaces privés");
  assert.ok(css.includes('.soldier-qr'),"QR existant valorisé");
  assert.ok(css.includes('.ref-tabbar'),"navigation smartphone");
+});
+test("nouvelle entrée privée : identité, visuel IN FIRE et chargement accessibles",()=>{
+ const html=read("public/vitrine/entree-privee.html"),styles=read("public/vitrine/entree-privee.css"),js=read("public/vitrine/entree-privee.js");
+ for(const value of ["SDE - MOUVEMENT","IN FIRE","Bâtissons ensemble pour un plus grand impact","/connexion?retour=%2Fportail","entry-transition","Chargement de votre espace","entry-mobile-nav"])assert.ok(html.includes(value),value);
+ assert.ok(styles.includes("prefers-reduced-motion:reduce")&&js.includes("prefers-reduced-motion: reduce"));
+ assert.ok(worker.includes('assetPortail("/vitrine/entree-privee.html")'));
+ assert.ok(shell.includes('aria-label="SDE - MOUVEMENT"'));
 });
 test("accueil réellement servi (portail.html) refait selon la maquette",()=>{
  const h=read("public/vitrine/portail.html");

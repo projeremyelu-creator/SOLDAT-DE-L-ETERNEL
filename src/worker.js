@@ -1542,8 +1542,15 @@ async function traiter(req, env, ctx) {
         }
         if (p === "/portail") {
           const u=await utilisateur(req,env);
-          const destination=u.connecte?(u.niveau>=1?"/administration":"/mon-espace"):"/connexion?retour=%2Fportail";
-          return new Response(null,{status:302,headers:{location:url.origin+destination,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
+          if (u.connecte) {
+            const destination=u.niveau>=1?"/administration":"/mon-espace";
+            return new Response(null,{status:302,headers:{location:url.origin+destination,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
+          }
+          const r=await assetPortail("/vitrine/entree-privee.html");
+          const n=new Response(r.body,r);
+          n.headers.set("cache-control","no-store");
+          n.headers.set("x-robots-tag","noindex, nofollow");
+          return n;
         }
         if (p === "/connexion") {
           const u = await utilisateur(req, env);

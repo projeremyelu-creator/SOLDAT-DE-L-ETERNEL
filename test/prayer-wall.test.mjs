@@ -38,7 +38,8 @@ test('Mur : auteur nominatif issu du compte, retrait interdit à un autre membre
  const p=(await f.call('/api/mur-priere','bob')).body.prieres[0];assert.equal(p.auteur,'Compte alice');assert.equal(p.mien,false);
 }finally{f.close()}});
 test('Portail unique : destination calculée par le rôle serveur et retour membre conservé',async()=>{const f=setup();try{
- for(const [id,want]of [[null,'/connexion?retour=%2Fportail'],['alice','/mon-espace'],['admin','/administration']]){
+ const entree=await f.request('/portail',null);assert.equal(entree.status,200);
+ for(const [id,want]of [['alice','/mon-espace'],['admin','/administration']]){
  const r=await f.request('/portail',id);assert.equal(r.status,302);assert.equal(new URL(r.headers.get('location')).pathname+new URL(r.headers.get('location')).search,want);
  }
  const r=await f.request('/connexion','admin');assert.equal(new URL(r.headers.get('location')).pathname,'/administration');
