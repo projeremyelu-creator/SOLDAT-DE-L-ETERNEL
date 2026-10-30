@@ -190,16 +190,18 @@ test("Ivoire · Treillis · Or sur tout le site public",()=>{
  assert.ok(read("public/vitrine/ivoire-pages.css").includes("--iv-treillis:#2f3b25"));
 });
 
-test("identité SDE Mouvement : logo officiel non superposé et en-tête mobile lisible",()=>{
+test("identité SDE DIGITAL : marque lisible, logo officiel et en-tête sans chevauchement",()=>{
  const themes=read("frontend/palette-themes.css");
  const chrome=read("frontend/reference-shell.jsx");
- assert.ok(chrome.includes('ref-identity-ivoire'),"identité spécifique ivoire");
- assert.ok(chrome.includes('SDE - MOUVEMENT'),"nom de la marque");
+ assert.ok(chrome.includes('ref-brand-compact'),"identité compacte commune aux thèmes");
+ assert.ok(chrome.includes('SDE DIGITAL'),"nom du tableau de bord");
+ assert.ok(chrome.includes("admin?'Administration':'Espace membre'"),"rôle explicite dans le sous-titre");
  assert.ok(chrome.includes('logo-96.webp'),"logo officiel dans la barre");
+ assert.ok(!chrome.includes('ref-menu-button"'),"pas de deuxième hamburger en plus du menu des rubriques");
  assert.ok(themes.includes('body.sde-reference .ref-sidebar .ref-gold-brand::after'),"règle de suppression du monogramme");
  assert.ok(themes.includes('content:none!important;display:none!important'),"pas de texte sur la flamme du logo");
  assert.ok(themes.includes('logo-sde.webp'),"logo officiel dans la barre latérale");
- assert.ok(themes.includes('.ref-identity-ivoire strong')&&themes.includes('text-overflow:ellipsis'),"en-tête téléphone sans chevauchement");
+ assert.ok(themes.includes('.ref-brand-caption strong')&&themes.includes('text-overflow:ellipsis'),"en-tête sans chevauchement");
 });
 test("transition de chargement SDE : une seule fermeture et au plus quatre secondes",()=>{
  const js=read("public/vitrine/sde-splash.js");
