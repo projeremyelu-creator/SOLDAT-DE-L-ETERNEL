@@ -99,3 +99,5 @@ body.sde-portal .burger { display: none !important; }
 @media(max-width:900px){.btn-soutien{display:none}}
 #vision-engagements .vmi{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
 #vision-engagements h3{font-family:'Saira Condensed',sans-serif;letter-spacing:.04em}
+#a-propos .fondements{margin:10px 0 0;padding-left:1.2rem;display:grid;gap:6px;max-width:62ch}
+.programme a+a{margin-left:12px;color:var(--or,#e2c26a)}
