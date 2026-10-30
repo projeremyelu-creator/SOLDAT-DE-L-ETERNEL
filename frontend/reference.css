@@ -244,3 +244,9 @@ body.sde-reference-admin .site-ed .site-ed-check{display:flex;flex-direction:row
 .ref-quote{margin:18px 16px 8px;padding-top:14px;border-top:1px solid #d4af3733;font:italic 400 .86rem/1.5 'Atkinson Hyperlegible',Georgia,serif;color:#e2c26acc}
 .ops-subtitle{margin:4px 0 0;font:italic 400 .95rem/1.4 'Atkinson Hyperlegible',Georgia,serif;letter-spacing:.04em;color:#e2c26a}
 .ops-welcome{margin:6px 0 0;font:400 .88rem/1.5 'Atkinson Hyperlegible',system-ui,sans-serif;color:#c9d0dd;max-width:60ch}
+/* Demandes d'adhésion en attente (maquette 03) */
+.ref-command-requests{margin:13px 0 0}.ref-request-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+.ref-request-list li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:8px 10px;border:1px solid #d4af3724;border-radius:10px;background:#0a122866}
+.ref-request-list strong{display:block;font-weight:700}.ref-request-list small{color:#aeb7c7}
+.ref-request-initials{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:1px solid #d4af3766;color:#e2c26a;font:600 .8rem 'Saira Condensed',sans-serif;letter-spacing:.06em}
+.ref-request-list .ref-small-action:disabled{opacity:.5;cursor:wait}
