@@ -51,3 +51,53 @@
 :root[data-sde-palette="ivoire"] .acc-hero .hero-vallee{opacity:.35}
 :root[data-sde-palette="ivoire"] .nav{box-shadow:none}
 :root[data-sde-palette="ivoire"] .ava,.ident .ava{color:#2f3b25}
+
+/* ═══════ Fenêtres « Voyants du soldat » et « Modifier la fiche » : reproduction fidèle de la maquette (nuit, or, voyants lumineux) ═══════ */
+:root .sheet.sheet:is(:has(#f-eval),:has(#f-membre)){--ink:#f1ead6;--muted:#c9c3b2;--surface:#0f1a33;--surface-2:#16233f;--line:#25365c;--line-strong:#33476f;--focus:#e2c26a;
+ --vf-serif:"Libre Caslon Text","Noto Serif",Georgia,serif;--vf-cond:"Saira Condensed","Arial Narrow",sans-serif;
+ background:linear-gradient(180deg,#111d38,#0c1529)!important;color:#f1ead6!important;border:1px solid #1f2d4d!important;box-shadow:0 24px 60px #000a!important}
+:root .sheet.sheet:is(:has(#f-eval),:has(#f-membre)) .sheet-h{background:transparent!important;border-bottom:1px solid #22325a!important;padding-top:18px}
+:root .sheet.sheet:has(#f-eval) .sheet-t{font:400 clamp(1.5rem,5vw,1.9rem)/1.1 var(--vf-serif)!important;text-transform:uppercase!important;letter-spacing:.02em!important;color:#f6f1e3!important}
+:root .sheet.sheet:has(#f-membre) .sheet-t{font:700 clamp(1.35rem,4.6vw,1.7rem)/1.1 var(--vf-cond)!important;text-transform:uppercase!important;letter-spacing:.02em!important;color:#f6f1e3!important}
+:root .sheet.sheet:is(:has(#f-eval),:has(#f-membre)) .sheet-h .icon-btn{background:transparent!important;border:0!important;color:#e2c26a!important}
+:root .sheet.sheet:has(#f-membre) .sheet-h .icon-btn{color:#f6f1e3!important}
+/* Carte d'identité vert treillis cerclée d'or */
+#f-eval .ident{padding:18px 20px;border:2.5px solid #d4ad48;border-radius:12px;background:linear-gradient(135deg,#34421f,#273217);box-shadow:inset 0 1px 0 #ffffff14,0 8px 20px #0006}
+#f-eval .ident .av{width:64px!important;height:64px!important;border-radius:50%!important;background:#2f4a2b!important;color:#f1ead6!important;font:400 1.6rem var(--vf-serif)!important;border:0!important}
+#f-eval .ident h3{font:400 clamp(1.15rem,4vw,1.5rem)/1.15 var(--vf-serif);text-transform:uppercase;letter-spacing:.02em;color:#f6f1e3}
+#f-eval .ident p{color:#e2c26a!important;font:400 1.02rem var(--vf-serif)}
+/* Note de confidentialité */
+#f-eval>.note{display:flex;gap:12px;padding:16px 18px;border-radius:10px;background:#1b2a4c!important;border:0!important;color:#ece4cf!important;font:400 1rem/1.5 var(--vf-serif)}
+#f-eval>.note svg{flex:none;width:22px;height:22px;color:#ece4cf}
+/* Titres de section avec filet or */
+#f-eval .fs.eval>legend,#f-membre .fs>legend,#f-eval>.h3{display:flex;align-items:center;gap:14px;width:100%;font:700 1.25rem/1 var(--vf-cond)!important;letter-spacing:.02em!important;text-transform:uppercase!important;color:#f1ead6!important;margin:6px 0 12px}
+#f-eval .fs.eval>legend::after,#f-eval>.h3::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#d4ad48,#d4ad4833)}
+#f-membre .fs>legend{color:#e2c26a!important;font-size:1.15rem!important}
+#f-eval .fs.eval{border:0;padding:0;margin:0 0 14px}
+/* Voyants lumineux */
+#f-eval .eval-c{display:flex;flex-wrap:wrap;gap:12px}
+#f-eval .eval-o span{min-height:44px;padding:8px 20px;border-radius:999px;background:#0e1830!important;border:2px solid #8a7a52;color:#f1ead6;font:400 1.05rem var(--vf-serif)!important;box-shadow:none;transition:box-shadow .2s ease,background .2s ease}
+#f-eval .eval-o span .led{display:none}
+#f-eval .eval-o.g span{border-color:#4fc86a;box-shadow:0 0 10px #4fc86a55}
+#f-eval .eval-o.y span{border-color:#e8c93a;box-shadow:0 0 10px #e8c93a55}
+#f-eval .eval-o.o span{border-color:#e98a3a;box-shadow:0 0 10px #e98a3a55}
+#f-eval .eval-o.r span{border-color:#e0464b;box-shadow:0 0 10px #e0464b55}
+#f-eval .eval-o:not(.g):not(.y):not(.o):not(.r) span{border-color:#4fc86a;box-shadow:0 0 10px #4fc86a55}
+#f-eval .eval-o input:checked+span{background:#16223f!important;box-shadow:0 0 0 1px currentColor inset,0 0 18px var(--glow,#e2c26a88)!important;font-weight:700!important}
+#f-eval .eval-o.g input:checked+span{--glow:#4fc86aaa}#f-eval .eval-o.y input:checked+span{--glow:#e8c93aaa}#f-eval .eval-o.o input:checked+span{--glow:#e98a3aaa}#f-eval .eval-o.r input:checked+span{--glow:#e0464baa}
+#f-eval .eval-o input:focus-visible+span{outline:2px solid #e2c26a;outline-offset:3px}
+/* Champs */
+:root .sheet.sheet:is(:has(#f-eval),:has(#f-membre)) :is(.inp,input:not([type=radio]):not([type=checkbox]),select,textarea){min-height:52px;padding:12px 18px;border-radius:12px;background:linear-gradient(180deg,#14233f,#0f1a33)!important;border:1.5px solid #2c3f68!important;color:#f1ead6!important;font:400 1.1rem var(--vf-serif)!important}
+#f-eval .fs.eval .inp{border-color:#b8923a!important;background:#0c1529!important;margin-top:12px}
+:root .sheet.sheet:is(:has(#f-eval),:has(#f-membre)) ::placeholder{color:#8f8a7c}
+#f-membre :is(.field>label,.field>.lab,label.lab){font:400 1.15rem var(--vf-serif)!important;color:#e2c26a!important}
+#f-membre .hint,#f-eval .hint{color:#b9b2a0}
+/* Bouton d'enregistrement bordeaux pleine largeur */
+:root .sheet.sheet:is(:has(#f-eval),:has(#f-membre)) .sheet-f{background:linear-gradient(180deg,#0f1a33,#0c1529)!important;border-top:1px solid #22325a!important;flex-wrap:nowrap}
+:root .sheet.sheet:is(:has(#f-eval),:has(#f-membre)) .sheet-f .btn-primary{flex:1;min-height:54px;border-radius:10px!important;background:linear-gradient(180deg,#8e1622,#6a0f18)!important;border:1.5px solid #d4ad48!important;color:#fff!important;font:700 1.15rem var(--vf-cond)!important;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 8px 22px #e2a24a33}
+:root .sheet.sheet:is(:has(#f-eval),:has(#f-membre)) .sheet-f .btn-ghost{background:transparent!important;color:#c9c3b2!important;border:1px solid #33476f!important}
+@media(prefers-reduced-motion:reduce){#f-eval .eval-o span{transition:none}}
+:root .sheet.sheet:is(:has(#f-eval),:has(#f-membre)) :is(.field,.fs,.check){background:transparent!important;border:0!important;box-shadow:none!important;padding-left:0;padding-right:0}
+:root .sheet.sheet:is(:has(#f-eval),:has(#f-membre)) .sheet-b{background:transparent!important}
+#f-eval .ident{margin-top:4px}
+:root .sheet.sheet.sheet:has(#f-eval) #f-eval .fs.eval .inp{border-color:#b8923a!important;background:#0c1529!important}

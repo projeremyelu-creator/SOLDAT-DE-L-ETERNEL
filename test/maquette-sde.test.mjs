@@ -215,3 +215,8 @@ test("application native (fiches, voyants, registre) en Ivoire · Treillis · Or
  assert.ok(app.includes("ivoire-app.css")&&app.includes('d.setAttribute("data-sde-palette"'),"palette appliquée avant affichage");
  for(const t of ["--surface:#fffdf8","--night:#2f3b25",".sheet-h",".acc-hero"])assert.ok(css.includes(t),t);
 });
+test("fenêtres Voyants du soldat et Modifier la fiche fidèles à la maquette",()=>{
+ const css=read("public/vitrine/ivoire-app.css");
+ for(const t of [":has(#f-eval)",":has(#f-membre)","#f-eval .eval-o.g span","#f-eval .ident","#8e1622"])assert.ok(css.includes(t),t);
+ assert.ok(css.includes("prefers-reduced-motion"));
+});
