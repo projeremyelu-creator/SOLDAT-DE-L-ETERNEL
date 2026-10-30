@@ -21,7 +21,7 @@
   const url=new URL(location.href);
   const demandé=url.searchParams.get("module")||"";
   const souhait=Object.prototype.hasOwnProperty.call(catalogue,demandé)?demandé:
-    mode==="membre"?"espace":"accueil";
+    mode==="membre"?"espace-soldat":"accueil";
   const body=document.body;
   body.classList.add("sde-direct",mode==="membre"?"sde-direct-member":"sde-direct-admin");
   let compte=null,initial=false,signature="",navCourant="",priereOuverte=false,historiqueCharge=false,vueExterne="";
@@ -261,9 +261,10 @@
       }
       if(!initial){
         const cible=disponibles.find(b=>b.dataset.vue===souhait);
-        if(cible){
+        const moduleExterne=["carteqr","bibliotheque","scanner","pilotage","annuaire","finance-direction","site-public","espace-soldat","adhesions","anniversaires","suivi-poles","academy-direction","mur","priere","synthese","engagements","contributions","parcours","preferences","gestion"].includes(souhait);
+        if(cible||(moduleExterne&&allowed(souhait))){
           initial=true;
-          if(["carteqr","bibliotheque","scanner","pilotage","annuaire","finance-direction","site-public","espace-soldat","adhesions","anniversaires","suivi-poles","academy-direction","mur","priere","synthese","engagements","contributions","parcours","preferences","gestion"].includes(souhait))selectionner(souhait);
+          if(moduleExterne)selectionner(souhait);
           else if(!cible.classList.contains("on")&&cible.getAttribute("aria-current")!=="page")cible.click();
         }
       }

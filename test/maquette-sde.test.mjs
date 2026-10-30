@@ -16,11 +16,20 @@ test("maquette : demandes en attente, finances et avancement utilisent les vraie
  assert.ok(ops.includes("ce n’est pas le solde bancaire"),"pas de faux solde");
  assert.ok(/portal\.compte\.niveau<2\|\|d===false\)return null/.test(ops),"finances réservées au niveau 2");
 });
+test("le commandement présente les cinq pôles et les programmes avec des données de l'API",()=>{
+ assert.ok(ops.includes('function CommandPoles({portal})'));
+ assert.ok(ops.includes("useData('/api/annuaire-portail')"));
+ assert.ok(ops.includes('Les cinq pôles'));
+ assert.ok(ops.includes('function CommandPrograms({portal})'));
+ assert.ok(ops.includes("useData('/api/actualites')"));
+ assert.ok(ops.includes('<div className="ref-command-overview"><PendingRequests/><CommandPoles portal={portal}/></div>'));
+});
 test("maquette : « Mon espace Soldat » est branché pour les membres seulement",()=>{
  assert.ok(ops.includes("Mon espace Soldat")&&ops.includes("Grandir · Servir · Impacter"));
  assert.ok(ops.includes("active==='espace-soldat'&&!direction"));
  assert.ok(direct.includes('"espace-soldat":"Mon espace Soldat"'));
  assert.ok(direct.includes('nom==="espace-soldat"&&mode!=="membre"'));
+ assert.ok(ops.includes("location.pathname==='/mon-espace'&&(!initial||initial==='synthese'))portal.selectionner('espace-soldat')"),"l'accueil réel s'ouvre après le montage React");
  for(const t of ["Soldiers Academy","Prochain rendez-vous","Mes cotisations","Mon carnet de prière","Colossiens 4:2","Mes ressources","Reprendre ma formation","Voir mon agenda","Ouvrir les ressources"])assert.ok(ops.includes(t),t);
 });
 test("maquette : progression Academy calculée côté serveur pour le membre connecté",()=>{
@@ -85,11 +94,12 @@ test("maquette fidèle : rail latéral, panneaux numérotés, logo monogramme",(
  assert.ok(css.includes('content:"03"')&&css.includes('content:"02"'),"bandeaux 02 et 03 de l'application");
 });
 
-test("les deux nouvelles maquettes sont des thèmes privés facultatifs et persistants",()=>{
+test("la palette terracotta de la maquette est proposée et devient le choix initial",()=>{
  const shell=read("frontend/reference-shell.jsx");
  const css=read("frontend/palette-themes.css");
  const entry=read("frontend/experience.css");
- for(const t of ["militaire","ivoire","violet"])assert.ok(shell.includes("'"+t+"'"),t);
+ for(const t of ["militaire","ivoire","violet","terracotta"])assert.ok(shell.includes("'"+t+"'"),t);
+ assert.ok(shell.includes("return PALETTES.some(([id])=>id===p)?p:'terracotta'"));
  assert.ok(shell.includes("localStorage.getItem('sde-private-palette')"),"préférence enregistrée");
  assert.ok(shell.includes("setAttribute('data-sde-palette',palette)"),"préférence appliquée à l'espace privé");
  assert.ok(shell.includes('aria-pressed={palette===id}')&&shell.includes('aria-label="Choisir la palette graphique"'),"sélecteur accessible");
