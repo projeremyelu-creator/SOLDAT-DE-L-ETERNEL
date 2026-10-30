@@ -1753,7 +1753,7 @@ async function traiter(req, env, ctx) {
       if (p === "/api/priere" && req.method === "POST") return apiPriere(req, env, u, ctx);
       if (p === "/api/absence" && req.method === "POST") return apiAbsence(req, env, u, ctx);
       if (p === "/api/push" && (req.method === "POST" || req.method === "DELETE")) return apiPushSubscription(req, env, u);
-      if (p === "/api/vapid-public-key" && req.method === "GET") return json({ key: env.VAPID_PUBLIC_KEY || null });
+      if (p === "/api/vapid-public-key" && req.method === "GET") return json({ key: pushConfigured(env) ? env.VAPID_PUBLIC_KEY : null });
       if (p === "/api/generate-vapid" && req.method === "POST") {
         if (u.niveau < 3) return erreur("refuse", "Réservé au propriétaire.", 403);
         const keys = await generateVapidKeys();
