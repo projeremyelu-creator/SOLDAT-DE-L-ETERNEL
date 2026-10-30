@@ -1229,3 +1229,85 @@ button.row:active { transform: scale(.98); background: var(--surface-2); }
   .urg-dot { animation: none; }
   .skeleton { animation: none; }
 }
+
+
+/* 2026-10-30 — Fiche membre et formulaires natifs réellement utilisables au doigt.
+   Se limite à la couche présentation : les droits des dossiers pastoraux et
+   les données personnelles restent gérés par les mêmes fonctions existantes.
+   Le second media query couvre aussi le cas Android « Site pour ordinateur »
+   (viewport CSS agrandi mais écran matériel tactile). */
+@media (max-width: 759px), (hover: none) and (pointer: coarse) and (max-width: 1199px) {
+  body #scrim:not([hidden]){
+    position:fixed!important;inset:0!important;
+    z-index:2400!important;
+  }
+  body #sheet:not([hidden]){
+    position:fixed!important;inset:0!important;
+    left:0!important;right:0!important;top:0!important;bottom:0!important;
+    width:100%!important;max-width:none!important;min-width:0!important;
+    height:100dvh!important;max-height:100dvh!important;min-height:0!important;
+    margin:0!important;padding:0!important;transform:none!important;
+    border-radius:0!important;z-index:2401!important;animation:none!important;
+    display:flex!important;flex-direction:column!important;
+    overscroll-behavior:contain;
+  }
+  body #sheet .sheet-h{
+    display:flex;align-items:center;gap:12px;
+    padding:calc(12px + env(safe-area-inset-top, 0px)) 16px 12px;
+    min-height:64px;box-sizing:border-box;
+    flex:none;position:sticky;top:0;z-index:2;
+    background:var(--surface);border-bottom:1px solid var(--line);
+  }
+  body #sheet .sheet-t{font-size:clamp(19px,4.5vw,23px);line-height:1.25;min-width:0}
+  body #sheet .sheet-h .icon-btn{
+    display:grid;place-items:center;min-width:44px;min-height:44px;
+    flex:none;touch-action:manipulation;
+  }
+  body #sheet .sheet-b{
+    box-sizing:border-box;flex:1 1 auto;min-height:0;width:100%;
+    padding:16px 16px calc(26px + env(safe-area-inset-bottom, 0px));
+    overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  body #sheet .sheet-b > :first-child{margin-top:0}
+  body #sheet .sheet-b :is(.card,.voyants,.kv,.table-wrap,.ident,.form,.fs){max-width:100%;min-width:0}
+  body #sheet .sheet-b .ident{gap:12px;align-items:flex-start;flex-wrap:wrap}
+  body #sheet .sheet-b .ident h3{font-size:clamp(17px,3.9vw,21px);line-height:1.3}
+  body #sheet .sheet-b .voyants{padding:12px;border-radius:12px}
+  body #sheet .sheet-b .vy-h{align-items:center;gap:10px}
+  body #sheet .sheet-b .vy-h>div{flex:1 1 150px;min-width:0}
+  body #sheet .sheet-b .vy-grid{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;margin-top:12px;min-width:0;
+  }
+  body #sheet .sheet-b .vy-t{
+    min-width:0;min-height:72px;padding:12px;gap:8px;
+    overflow-wrap:anywhere;align-items:flex-start;
+  }
+  body #sheet .sheet-b button.vy-t.edit{
+    min-height:72px;padding-right:28px;touch-action:manipulation;
+  }
+  body #sheet .sheet-b .vy-l{font-size:12px;line-height:1.3}
+  body #sheet .sheet-b .vy-v{font-size:15px;line-height:1.25}
+  body #sheet .sheet-b .vy-d{font-size:12px;line-height:1.35}
+  body #sheet .sheet-b .vy-sep{line-height:1.45;flex-wrap:wrap}
+  body #sheet .sheet-b .kv>div{
+    grid-template-columns:minmax(0,1fr);gap:4px;
+    padding:12px 0;
+  }
+  body #sheet .sheet-b .kv dt{font-size:12px;line-height:1.4}
+  body #sheet .sheet-b .kv dd{font-size:15px;line-height:1.55;overflow-wrap:anywhere}
+  body #sheet .sheet-b :is(.btn,.btn-primary,.btn-row button){
+    min-height:44px;max-width:100%;white-space:normal;
+    text-align:center;touch-action:manipulation;
+  }
+  body #sheet .sheet-b .btn-row{display:flex;flex-wrap:wrap;gap:8px}
+  body #sheet .sheet-b :is(input,select,textarea){font-size:16px}
+}
+@media(max-width:430px){
+  body #sheet .sheet-b .vy-grid{grid-template-columns:minmax(0,1fr)}
+  body #sheet .sheet-b button.vy-t.edit{min-height:62px}
+}
+@media (prefers-reduced-motion: reduce){
+  body #sheet:not([hidden]){animation:none!important;transition:none!important}
+}
