@@ -33,7 +33,7 @@ test("les domaines restent séparés par leurs privilèges, non par leur identit
  assert.ok(worker.includes('if (url.hostname === "mouvement-sde.org")'));
  assert.ok(worker.includes("sde-(unified"),"fichiers visuels communs autorisés sur le domaine public");
  assert.ok(worker.includes("bridge"),"passerelle JS publique explicitement autorisée");
- assert.ok(worker.includes('if (!u.connecte || u.niveau < 3)'));
+ assert.ok(worker.includes('if (p.startsWith("/administration") && u.niveau < 1)'),"l'administration reste réservée aux responsables connectés");
 });
 test("passerelle de navigation privée vers les pages publiques",()=>{
  const d=new JSDOM('<header class="hdr"><div class="hdr-in"><a class="hdr-site" href="https://mouvement-sde.org/"><svg></svg></a></div></header><div id="banner"></div><div id="main"></div>',{url:"https://app.mouvement-sde.org/",runScripts:"outside-only"});

@@ -117,13 +117,17 @@
             <img src="/vitrine/infire-2026/affiche-officielle.png" alt="Affiche officielle IN FIRE 2026 — Samuel Z. et Jérémy l'Élu, samedi 31 octobre 8h30, Église MADEG Cocody" width="800" height="1067" loading="lazy" decoding="async" style="display:block;width:100%;height:auto;">
           </a>
           <h3>Confirmer ma venue</h3>
+          <p>Accueil et installation dès 08 h 00 · conférence annoncée à 08 h 30. Votre confirmation sera enregistrée par le secrétariat.</p>
           <form id="f-venue" novalidate>
             <label for="v-nom">Votre nom</label>
             <input id="v-nom" name="nom" autocomplete="name" required placeholder="Nom et prénoms">
+            <label for="v-tel">Téléphone ou WhatsApp</label>
+            <input id="v-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" required placeholder="+225 07 00 00 00 00">
             <label for="v-nb">Nombre de personnes</label>
             <select id="v-nb" name="nb"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6 ou plus</option></select>
+            <label for="v-accord"><input id="v-accord" name="accord" type="checkbox" required> J’accepte que le secrétariat SDE enregistre ces informations pour confirmer ma venue et me recontacter.</label>
             <p class="v-erreur" id="v-err" hidden></p>
-            <button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-msg"/></svg>Confirmer par WhatsApp</button>
+            <button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-msg"/></svg>Confirmer ma venue</button>
           </form>
           <div class="if-faq">
             <details><summary>L'entrée est-elle payante ?</summary><p>Non. IN FIRE est une conférence ouverte et gratuite pour tous.</p></details>

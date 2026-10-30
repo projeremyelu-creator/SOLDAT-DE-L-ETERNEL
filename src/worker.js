@@ -801,6 +801,8 @@ async function apiEngager(req, env, ctx) {
   const ville = champ("ville", 120);
   const objet = champ("objet", 160) || "Prise de contact";
   const pole = champ("pole", 160);
+  const programme = champ("programme", 160);
+  const motivation = champ("motivation", 2000);
   const message = champ("message", 2000);
   const source = champ("source", 160);
 
@@ -810,6 +812,11 @@ async function apiEngager(req, env, ctx) {
   if (!tel && !email) return erreur("champ_manquant", "Indiquez au moins un téléphone ou un e-mail pour que l'équipe vous recontacte.");
   if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return erreur("email_invalide", "Adresse e-mail invalide.");
   if (tel && tel.replace(/\D/g, "").length < 7) return erreur("tel_invalide", "Numéro de téléphone trop court.");
+  if (objet === "Devenir membre") {
+    if (!tel || !email || !ville || !pole || !programme || !motivation) return erreur("champ_manquant", "Pour adhérer, renseignez téléphone, e-mail, ville, pôle, programme et motivation.");
+    if (!["Réveil, évangélisation & missions", "Impact social & humanitaire", "Logistique & organisation", "Communication, médias & digital", "Formation & développement intégral"].includes(pole)) return erreur("pole_invalide", "Choisissez un pôle proposé.");
+    if (!["Traversée Prophétique Mensuelle", "IN FIRE", "Soldiers Academy", "Holy Talk & Holy Day", "Missions & actions solidaires", "Holy Brunch", "ALEPH 12"].includes(programme)) return erreur("programme_invalide", "Choisissez un programme proposé.");
+  }
   const ipPublic = "engagement:" + ipDe(req);
   if (await bloque(env, ipPublic, 30)) return erreur("rate_limited", "Trop de demandes récentes. Réessayez plus tard.", 429);
   await compter(env, ipPublic);
@@ -827,7 +834,7 @@ async function apiEngager(req, env, ctx) {
   await env.DB.prepare(`CREATE INDEX IF NOT EXISTS engagements_cree ON engagements(traite, cree)`).run();
 
   await env.DB.prepare(`INSERT INTO engagements (cree, objet, pole, source, nom, tel, email, ville, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .bind(Date.now(), objet, pole, source, nom, tel, email, ville, message)
+    .bind(Date.now(), objet, pole, source, nom, tel, email, ville, objet === "Devenir membre" ? `Programme : ${programme}\nMotivation : ${motivation}${message ? `\nMessage : ${message}` : ""}` : message)
     .run();
 
   notifySde(env,ctx,"engagement",{nom,email,tel});
