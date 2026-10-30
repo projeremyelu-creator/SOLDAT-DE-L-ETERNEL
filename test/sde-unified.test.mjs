@@ -30,7 +30,7 @@ test("les domaines restent séparés par leurs privilèges, non par leur identit
  assert.ok(wrangler.includes('pattern = "mouvement-sde.org"'));
  assert.ok(wrangler.includes('pattern = "app.mouvement-sde.org"'));
  const worker=readFileSync("src/worker.js","utf8");
- assert.ok(worker.includes('if (url.hostname === "mouvement-sde.org")'));
+ assert.ok(worker.includes('if (url.hostname === "mouvement-sde.org" || appHost)'));
  assert.ok(worker.includes("sde-(unified"),"fichiers visuels communs autorisés sur le domaine public");
  assert.ok(worker.includes("bridge"),"passerelle JS publique explicitement autorisée");
  assert.ok(worker.includes('if (p.startsWith("/administration") && u.niveau < 1)'),"l'administration reste réservée aux responsables connectés");

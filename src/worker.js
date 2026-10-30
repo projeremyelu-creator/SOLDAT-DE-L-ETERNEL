@@ -1459,7 +1459,8 @@ async function traiter(req, env, ctx) {
     const url = new URL(req.url);
     const p = url.pathname;
     if (url.hostname === "www.mouvement-sde.org") return Response.redirect("https://mouvement-sde.org" + p + url.search, 301);
-    if (url.hostname === "mouvement-sde.org") {
+    const appHost = url.hostname === "app.mouvement-sde.org";
+    if (url.hostname === "mouvement-sde.org" || appHost) {
       // Routage unifié : pages réelles, un guichet de connexion, deux espaces protégés.
       const pagesPubliques = {
         "/boutique": "/vitrine/boutique.html",
@@ -1500,7 +1501,16 @@ async function traiter(req, env, ctx) {
         throw new Error("Boucle de redirections asset");
       };
       if (req.method === "GET" || req.method === "HEAD") {
-        if (p === "/" || p === "/index.html") return assetPortail("/vitrine/portail.html");
+        if (p === "/" || p === "/index.html") {
+          if (appHost) {
+            const compte = await utilisateur(req, env);
+            const destination = compte.connecte
+              ? (compte.niveau >= 1 ? "/administration" : "/mon-espace")
+              : "/connexion?retour=%2Fportail";
+            return new Response(null, {status:302, headers:{location:url.origin + destination, "cache-control":"private, no-store", "x-robots-tag":"noindex, nofollow"}});
+          }
+          return assetPortail("/vitrine/portail.html");
+        }
         if (p === "/vitrine/" || p === "/vitrine/index.html") return Response.redirect(url.origin + "/", 301);
         if (pagesPubliques[p]) {
           const page = await assetPortail(pagesPubliques[p]);
@@ -1524,8 +1534,13 @@ async function traiter(req, env, ctx) {
           n.headers.set("x-robots-tag", "noindex, nofollow");
           return n;
         }
-        if (p === "/os-v31" || p === "/os-v31/")
-          return Response.redirect(url.origin + "/mon-espace/os-v31" + url.search + url.hash, 302);
+        if (p === "/os-v31" || p === "/os-v31/") {
+          return new Response(null, {status:302, headers:{
+            location:url.origin + "/mon-espace/os-v31" + url.search + url.hash,
+            "cache-control":"private, no-store",
+            "x-robots-tag":"noindex, nofollow"
+          }});
+        }
         // Ressources JS/CSS privées, sous le même domaine ; aucune donnée métier statique.
         if (p === "/os-v31/sde-os.js" || p === "/os-v31/sde-os.css") {
           const r = await assetPortail(p);
