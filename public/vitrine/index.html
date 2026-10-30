@@ -427,6 +427,7 @@ html.anim .hero-mission { opacity: 0; animation: fondu-sous .7s var(--ease) .7s 
 .intro-poles { text-align: center; color: var(--texte-2); margin-bottom: 20px; font-size: .95rem; }
 .poles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
 .pole { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--r-lg); overflow: hidden; text-align: left; transition: all var(--duree) var(--ease); cursor: pointer; }
+a.pole { display: block; color: inherit; text-decoration: none; }
 .pole:hover { border-color: var(--or); transform: translateY(-3px); box-shadow: var(--ombre-carte); }
 .pole-img img { width: 100%; height: 140px; object-fit: cover; }
 .pole-corps { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
@@ -1490,11 +1491,11 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
       </div>
       <p class="intro-poles">Touchez un pôle pour découvrir sa mission, ses départements et ses projets.</p>
       <div class="poles">
-        <button type="button" class="pole revele" data-pole="1" aria-haspopup="dialog" style="--d:0.00s"><span class="pole-img"><img src="/vitrine/illus/pole-1.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 1</span><span class="pole-titre">Réveil, évangélisation &amp; missions</span><span class="pole-acc">Prière, intercession, annonce de l’Évangile et missions.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
-        <button type="button" class="pole revele" data-pole="2" aria-haspopup="dialog" style="--d:0.08s"><span class="pole-img"><img src="/vitrine/illus/pole-2.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 2</span><span class="pole-titre">Impact social &amp; humanitaire</span><span class="pole-acc">Actions de solidarité et accompagnement des personnes en situation de vulnérabilité.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
-        <button type="button" class="pole revele" data-pole="3" aria-haspopup="dialog" style="--d:0.16s"><span class="pole-img"><img src="/vitrine/illus/pole-3.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 3</span><span class="pole-titre">Logistique &amp; organisation</span><span class="pole-acc">Préparation des activités, coordination des équipes et accueil des participants.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
-        <button type="button" class="pole revele" data-pole="4" aria-haspopup="dialog" style="--d:0.24s"><span class="pole-img"><img src="/vitrine/illus/pole-4.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 4</span><span class="pole-titre">Communication, médias &amp; digital</span><span class="pole-acc">Création et diffusion des supports, communication du mouvement et outils numériques.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
-        <button type="button" class="pole revele" data-pole="5" aria-haspopup="dialog" style="--d:0.32s"><span class="pole-img"><img src="/vitrine/illus/pole-5.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 5</span><span class="pole-titre">Formation &amp; développement intégral</span><span class="pole-acc">Formation biblique, croissance du caractère et préparation au service.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></button>
+        <a class="pole revele" data-pole="1" href="/pole-reveil" style="--d:0.00s"><span class="pole-img"><img src="/vitrine/illus/pole-1.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 1</span><span class="pole-titre">Réveil, évangélisation &amp; missions</span><span class="pole-acc">Prière, intercession, annonce de l’Évangile et missions.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></a>
+        <a class="pole revele" data-pole="2" href="/pole-social" style="--d:0.08s"><span class="pole-img"><img src="/vitrine/illus/pole-2.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 2</span><span class="pole-titre">Impact social &amp; humanitaire</span><span class="pole-acc">Actions de solidarité et accompagnement des personnes en situation de vulnérabilité.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></a>
+        <a class="pole revele" data-pole="3" href="/pole-logistique" style="--d:0.16s"><span class="pole-img"><img src="/vitrine/illus/pole-3.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 3</span><span class="pole-titre">Logistique &amp; organisation</span><span class="pole-acc">Préparation des activités, coordination des équipes et accueil des participants.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></a>
+        <a class="pole revele" data-pole="4" href="/pole-medias" style="--d:0.24s"><span class="pole-img"><img src="/vitrine/illus/pole-4.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 4</span><span class="pole-titre">Communication, médias &amp; digital</span><span class="pole-acc">Création et diffusion des supports, communication du mouvement et outils numériques.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></a>
+        <a class="pole revele" data-pole="5" href="/pole-formation" style="--d:0.32s"><span class="pole-img"><img src="/vitrine/illus/pole-5.svg" alt="" width="1200" height="600" loading="lazy"></span><span class="pole-corps"><span class="num">Pôle 5</span><span class="pole-titre">Formation &amp; développement intégral</span><span class="pole-acc">Formation biblique, croissance du caractère et préparation au service.</span><span class="pole-plus">Découvrir <svg aria-hidden="true"><use href="#i-fleche"/></svg></span></span></a>
       </div>
     </div>
   </section>
@@ -2437,6 +2438,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
     const C = POLES_COORD;
     return `<details class="fp-coord"><summary>Coordination inter-pôles et redevabilité</summary><h4>Principes de collaboration</h4><ul class="fp-liste">${C.principes.map((x) => `<li>${htm(x)}</li>`).join("")}</ul><h4>Mécanismes de redevabilité</h4><ul class="fp-liste">${C.redevabilite.map((x) => `<li>${htm(x)}</li>`).join("")}</ul></details><p class="fp-cri">${htm(C.cri)}</p>`;
   }
+  const POLES_PAGES = { 1: "/pole-reveil", 2: "/pole-social", 3: "/pole-logistique", 4: "/pole-medias", 5: "/pole-formation" };
   const fp = document.getElementById("fiche-pole"), fpc = document.getElementById("fp-corps");
   let polActif = 1, dernierBouton = null;
   function afficherPole(n, sens) {
@@ -2450,7 +2452,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
       ${vueProfil(n)}
       <blockquote class="fp-verset">« ${P.verset[0]} »<cite>${P.verset[1]}</cite></blockquote>
       ${vueCoordination()}
-      <div class="fp-actions"><button type="button" class="bouton b-or" data-fp="servir">Servir dans ce pôle <svg aria-hidden="true"><use href="#i-fleche"/></svg></button><button type="button" class="bouton b-contour" data-fp="contact">Écrire au mouvement</button></div>`;
+      <div class="fp-actions"><button type="button" class="bouton b-or" data-fp="servir">Servir dans ce pôle <svg aria-hidden="true"><use href="#i-fleche"/></svg></button><a class="bouton b-contour" href="${POLES_PAGES[n]}">Page complète du pôle</a><button type="button" class="bouton b-contour" data-fp="contact">Écrire au mouvement</button></div>`;
     /* Les boutons amènent au formulaire interne #rejoindre avec le pôle pré-rempli,
        plutôt que de rediriger vers WhatsApp. Les demandes sont enregistrées côté
        secrétariat (infosoldat@gmail.com) via /api/engager. */
@@ -2480,7 +2482,6 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
   function ouvrirPole(n, bouton) { dernierBouton = bouton || null; afficherPole(n); if (fp.showModal) fp.showModal(); else fp.setAttribute("open", ""); document.body.style.overflow = "hidden"; }
   function fermerPole() { if (fp.open) fp.close(); }
   fp.addEventListener("close", () => { document.body.style.overflow = ""; try { history.replaceState(null, "", "#poles"); } catch (e) {} if (dernierBouton) dernierBouton.focus({ preventScroll: true }); });
-  document.querySelectorAll(".pole[data-pole]").forEach((b) => b.addEventListener("click", () => ouvrirPole(+b.dataset.pole, b)));
   fp.addEventListener("click", (e) => {
     if (e.target === fp) return fermerPole();
     const a = e.target.closest("[data-fp]"); if (!a) return;
@@ -2495,7 +2496,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
   fpc.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
   fpc.addEventListener("touchend", (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 70) afficherPole(dx < 0 ? (polActif === 5 ? 1 : polActif + 1) : (polActif === 1 ? 5 : polActif - 1), dx < 0 ? 1 : -1); }, { passive: true });
   const mh = location.hash.match(/^#pole-([1-5])$/);
-  if (mh) { document.getElementById("poles").scrollIntoView(); ouvrirPole(+mh[1]); }
+  if (mh) { location.replace(POLES_PAGES[mh[1]]); }
 
   /* ═══════ Retour en haut ═══════ */
   const rh = document.getElementById("retour-haut");
