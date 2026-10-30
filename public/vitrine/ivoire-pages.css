@@ -1,6 +1,6 @@
 /* Pages intérieures du site — Ivoire • Treillis • Or (même langage que la vitrine d'entrée). */
 html body.sde-ivoire{--iv-ivoire:#f6f2e8;--iv-papier:#fffdf8;--iv-ligne:#e6dcc6;--iv-treillis:#2f3b25;--iv-treillis-2:#25301e;--iv-or:#b8923a;--iv-or-clair:#d8b766;--iv-encre:#232619;--iv-texte:#3c4033;--iv-serif:"Libre Caslon Text","Cormorant Garamond",Georgia,serif;--iv-cond:"Saira Condensed","Arial Narrow",sans-serif;background:var(--iv-ivoire)!important;color:var(--iv-encre)!important}
-html body.sde-ivoire :is(main,#contenu,.site-footer,.pied){margin-left:auto!important;background:transparent!important}
+html body.sde-ivoire :is(main,#contenu){margin-left:auto!important;background:transparent!important}
 html body.sde-ivoire .sde-rail{display:none!important}
 /* En-tête de page : bandeau vert treillis capitonné */
 html body.sde-ivoire .sde-intro{background-color:var(--iv-treillis-2)!important;background-image:linear-gradient(45deg,#ffffff07 25%,transparent 25%,transparent 75%,#ffffff07 75%),linear-gradient(-45deg,#ffffff07 25%,transparent 25%,transparent 75%,#ffffff07 75%)!important;background-size:46px 46px!important;border-bottom:3px solid var(--iv-or)!important;color:#f4ecd8!important}
@@ -35,8 +35,8 @@ html body.sde-ivoire :is(input,select,textarea){background:#fffdf8!important;col
 html body.sde-ivoire :is(input,select,textarea):focus{outline:2px solid var(--iv-or)!important;outline-offset:1px}
 html body.sde-ivoire .formulaire button[type=submit]{background:linear-gradient(180deg,#c9a24a,#a8822f)!important;color:#fff!important;border:0!important}
 /* Pied de page */
-html body.sde-ivoire :is(.site-footer,.pied){background:var(--iv-papier)!important;border-top:1px solid var(--iv-ligne)!important;color:var(--iv-texte)!important}
-html body.sde-ivoire :is(.site-footer,.pied) a{color:#8a6a22!important}
+html body.sde-ivoire :is(.site-footer,.pied){background:#172b25!important;border-top:2px solid #d7b567!important;color:#fff8e7!important}
+html body.sde-ivoire :is(.site-footer,.pied) a{color:#f0d18c!important}
 html body.sde-ivoire .sde-further{background:var(--iv-papier)!important;color:var(--iv-encre)!important}
 /* Fonds sombres hérités → ivoire */
 html body.sde-ivoire :is(.section,.infire.section,.eglises,.sde-parcours){background:transparent!important}
