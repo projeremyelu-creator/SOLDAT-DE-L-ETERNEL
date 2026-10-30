@@ -945,6 +945,37 @@ async function apiEngagerAdmin(req, env, u) {
   return json({ ok: true, engagements: r.results || [] });
 }
 
+/* Compteur de visites du site public : visites du jour, total, visiteurs en ligne (signal toutes les 45 s, fenêtre de 90 s). */
+async function apiVisites(req, env) {
+  const t = Date.now(), jour = new Date(t).toISOString().slice(0, 10);
+  await env.DB.batch([
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS visites_jour (jour TEXT PRIMARY KEY, n INTEGER NOT NULL DEFAULT 0)"),
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS visites_presence (id TEXT PRIMARY KEY, vu INTEGER NOT NULL)"),
+  ]);
+  if (req.method === "POST") {
+    let b = {}; try { b = await req.json(); } catch { return erreur("invalid", "Corps JSON invalide."); }
+    const id = String(b.id || "");
+    if (!/^[a-z0-9]{16,40}$/.test(id)) return erreur("invalid", "Identifiant de visite invalide.");
+    const ops = [env.DB.prepare("INSERT INTO visites_presence (id, vu) VALUES (?, ?) ON CONFLICT(id) DO UPDATE SET vu = excluded.vu").bind(id, t)];
+    if (b.nouvelle === true) {
+      const cle = "visite:" + ipDe(req);
+      if (!(await bloque(env, cle, 30))) {
+        await compter(env, cle);
+        ops.push(env.DB.prepare("INSERT INTO visites_jour (jour, n) VALUES (?, 1) ON CONFLICT(jour) DO UPDATE SET n = n + 1").bind(jour));
+      }
+    }
+    if (Math.random() < 0.1) ops.push(env.DB.prepare("DELETE FROM visites_presence WHERE vu < ?").bind(t - 600000));
+    await env.DB.batch(ops);
+  } else if (req.method !== "GET") return erreur("methode", "GET ou POST uniquement.", 405);
+  const [jourR, totalR, ligneR] = await env.DB.batch([
+    env.DB.prepare("SELECT n FROM visites_jour WHERE jour = ?").bind(jour),
+    env.DB.prepare("SELECT COALESCE(SUM(n), 0) AS n FROM visites_jour"),
+    env.DB.prepare("SELECT COUNT(*) AS n FROM visites_presence WHERE vu > ?").bind(t - 90000),
+  ]);
+  const n = (r) => Number(r?.results?.[0]?.n) || 0;
+  return json({ ok: true, aujourdhui: n(jourR), total: n(totalR), enLigne: Math.max(1, n(ligneR)) }, 200, { "cache-control": "no-store" });
+}
+
 async function apiFormulaire(req, env, ctx) {
   if (req.method !== "POST") return erreur("methode", "POST uniquement.", 405);
   let fd;
@@ -1598,6 +1629,7 @@ async function traiter(req, env, ctx) {
       }
       if (p === "/api/public") return apiPublic(env);
       if (p === "/api/site" && req.method === "GET") return apiSite(env);
+      if (p === "/api/visites") return apiVisites(req, env);
       if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
       if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
       if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
@@ -1658,6 +1690,7 @@ async function traiter(req, env, ctx) {
     if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
     if (p === "/api/priere-anonyme" && req.method === "POST") return apiPriereAnonyme(req,env,ctx);
     if (p === "/api/site" && req.method === "GET") return apiSite(env);
+    if (p === "/api/visites") return apiVisites(req, env);
     if (p === "/api/ressources-publiques" && req.method === "GET") return apiRessourcesPubliques(env);
     const telechargementPublic=p.match(/^\/api\/ressources-publiques\/([^/]+)\/telecharger$/);
     if(telechargementPublic&&req.method==="GET")return telechargerRessourcePublique(env,telechargementPublic[1]);

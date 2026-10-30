@@ -1,0 +1,25 @@
+/* Bande des versets quotidiens et compteur de visites — Ivoire • Treillis • Or */
+.sde-versets{position:relative;z-index:5;display:flex;align-items:center;gap:0;min-height:46px;background:linear-gradient(90deg,#2f3b25,#25301e);border-bottom:2px solid #b8923a;color:#f4ecd8;overflow:hidden}
+.sde-versets-tag{flex:none;align-self:stretch;display:grid;place-items:center;padding:0 16px;background:linear-gradient(180deg,#c9a24a,#a8822f);color:#fff;font:700 .78rem/1 "Saira Condensed","Arial Narrow",sans-serif;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.sde-versets-fenetre{flex:1;min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.sde-versets-piste{display:flex;width:max-content;animation:sde-versets var(--duree,90s) linear infinite}
+.sde-versets-groupe{display:flex;flex:none}
+.sde-verset{display:inline-flex;align-items:baseline;gap:10px;padding:0 34px;white-space:nowrap;font:italic 400 1rem/46px "Libre Caslon Text","Cormorant Garamond",Georgia,serif;color:#f4ecd8}
+.sde-verset::after{content:"✦";margin-left:34px;color:#d8b766;font-style:normal}
+.sde-verset q{quotes:"« " " »"}
+.sde-verset cite{font:600 .74rem "Saira Condensed",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#d8b766;font-style:normal}
+.sde-verset.jour q{color:#fff}
+.sde-versets:hover .sde-versets-piste,.sde-versets:focus-within .sde-versets-piste,.sde-versets.en-pause .sde-versets-piste{animation-play-state:paused}
+.sde-versets-pause{flex:none;align-self:stretch;width:46px;border:0;border-left:1px solid #4b5a37;background:#25301e;color:#d8b766;font-size:.8rem;cursor:pointer}
+.sde-versets-pause:focus-visible{outline:2px solid #d8b766;outline-offset:-3px}
+@keyframes sde-versets{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.sde-versets-piste{animation:none}.sde-versets-fenetre{overflow-x:auto}}
+body[data-motion=paused] .sde-versets-piste{animation-play-state:paused}
+@media(max-width:600px){.sde-versets-tag{padding:0 10px;font-size:.66rem}.sde-verset{font-size:.92rem;padding:0 22px}}
+.sde-compteur{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px 22px;padding:12px 16px;margin:0 0 10px;border-bottom:1px solid #e6dcc6;font:400 .92rem "Saira Condensed","Arial Narrow",sans-serif;color:#3c4033}
+.sde-compteur b{font:700 1.15rem "Libre Caslon Text",Georgia,serif;color:#8a6a22;margin-right:4px}
+.sde-compteur-point{width:10px;height:10px;border-radius:50%;background:#3e9b4f;box-shadow:0 0 0 0 #3e9b4f88;animation:sde-pouls 2s ease-out infinite}
+@keyframes sde-pouls{70%{box-shadow:0 0 0 8px #3e9b4f00}100%{box-shadow:0 0 0 0 #3e9b4f00}}
+@media(prefers-reduced-motion:reduce){.sde-compteur-point{animation:none}}
+html:not([data-theme="light"]) body:not(.sde-ivoire) .sde-compteur{color:#d6dbe1;border-color:#ffffff1a}
+html:not([data-theme="light"]) body:not(.sde-ivoire) .sde-compteur b{color:#e4c477}
