@@ -15,7 +15,7 @@ function versionnerHtml(dossier){
   if(entree.isDirectory())versionnerHtml(chemin);
   else if(entree.isFile()&&entree.name.endsWith('.html')){
    const html=readFileSync(chemin,'utf8');
-   const actualise=html.replace(/([?&]v=)[^&"'\\s<>]+/g,`$1${revision}`);
+   const actualise=html.replace(/([?&]v=)[^&"'\s<>]+/g,`$1${revision}`);
    if(actualise!==html)writeFileSync(chemin,actualise);
   }
  }
