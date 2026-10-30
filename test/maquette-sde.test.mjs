@@ -45,3 +45,10 @@ test("refonte : accueil, textes du document de référence",()=>{
  for(const t of ["Une génération enracinée","Nos cinq engagements","Nos fondements","Nos programmes","Nos cinq pôles","Découvrir le programme","M’inscrire","Prière, intercession, annonce de l’Évangile et missions."])assert.ok(home.includes(t),t);
  assert.ok(home.includes('id="form-rejoindre"')&&home.includes('id="hero-decompte"'),"formulaire et compte à rebours conservés");
 });
+test("refonte étape 4 : Rejoindre, Soutenir et pied de page selon le document",()=>{
+ const home=read("public/vitrine/index.html"),rej=read("public/vitrine/rejoindre.html"),proj=read("public/vitrine/projets.html"),sub=read("public/vitrine/subpage.js");
+ for(const h of [home,rej]){for(const t of ["Votre parcours peut commencer ici","Commune ou ville","Pôle d’intérêt prioritaire","Programme souhaité","Envoyer ma demande","Merci pour votre démarche.","Votre demande a bien été transmise à l’équipe du Mouvement SDE."])assert.ok(h.includes(t),t);assert.ok(h.includes('name="pole"'));}
+ for(const h of [home,proj])for(const t of ["Contribuer à la mission","5 000 FCFA","10 000 FCFA","25 000 FCFA","Autre montant","Choisir mon mode de contribution"])assert.ok(h.includes(t),t);
+ assert.ok(sub.includes('pole:g("pole")'),"le pôle est transmis à l'API");
+ assert.ok(home.includes("Politique de confidentialité")&&home.includes("Mentions légales"));
+});

@@ -279,7 +279,7 @@
       if($("#envoi-mail"))$("#envoi-mail").href="mailto:"+contactMail+"?subject="+encodeURIComponent("Demande SDE — "+g("objet"))+"&body="+encodeURIComponent(text);
       const submit=form.querySelector('button[type="submit"]');submit.disabled=true;
       try{
-        const r=await fetch("/api/engager",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({objet:g("objet"),nom:g("nom"),tel:g("tel"),email:g("mail"),ville:g("ville"),message:g("msg"),piege:g("site_web"),source:"mouvement-sde.org/vitrine/rejoindre"})});
+        const r=await fetch("/api/engager",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({objet:g("objet"),nom:g("nom"),tel:g("tel"),email:g("mail"),ville:g("ville"),pole:g("pole"),message:g("msg"),piege:g("site_web"),source:"mouvement-sde.org/vitrine/rejoindre"})});
         const data=await r.json();
         if(!r.ok||!data.ok)throw Error(data.message||"L'envoi a échoué");
         $("#envoi-titre").textContent="✓ Votre demande a été transmise au secrétariat.";

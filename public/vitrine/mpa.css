@@ -103,3 +103,5 @@ body.sde-portal .burger { display: none !important; }
 .programme a+a{margin-left:12px;color:var(--or,#e2c26a)}
 .sde-lead-actions{margin-top:10px}.sde-lead-actions a{color:var(--or,#e2c26a)}
 .leadership-noms{font-size:1.05rem;line-height:1.8}
+.pied-liens{margin-top:12px;font-size:.88rem;line-height:1.9}.pied-liens a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.montants{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:14px 0}.montants li{padding:6px 14px;border:1px solid #d4af3766;border-radius:99px;color:var(--or,#e2c26a);font-weight:600}
