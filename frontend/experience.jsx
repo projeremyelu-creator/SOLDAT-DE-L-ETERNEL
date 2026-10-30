@@ -1,7 +1,7 @@
 import React,{useEffect,useState,useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {createPortal} from 'react-dom';
-import {infireState} from './event-clock.js';
+import {infireState,tpaState} from './event-clock.js';
 
 const read=(key,fallback)=>{try{return localStorage.getItem(key)??fallback}catch{return fallback}};
 const write=(key,value)=>{try{localStorage.setItem(key,value)}catch{}};
@@ -16,13 +16,23 @@ function Icon({name}){
  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name]||paths.more}/></svg>;
 }
 function EventBanner(){
- const [state,setState]=useState(()=>infireState());
- useEffect(()=>{const id=setInterval(()=>setState(infireState()),1000);return()=>clearInterval(id)},[]);
- const upcoming=state.phase==='upcoming';
- return <div className={'event-bar-inner '+state.phase}>
-  <a href="/programmes#infire"><span className="event-live-dot" aria-hidden="true"/><strong>IN FIRE <span>2026</span></strong><span className="event-bar-date">{state.phase==='finished'?'Merci pour ces temps de communion':state.phase==='ongoing'?'La conférence a commencé · Rejoignez-nous':'31 octobre · 08:30 · Abidjan'}</span></a>
-  {upcoming&&<div className="event-clock" aria-label="Temps restant avant IN FIRE" aria-live="off">{[['days','j'],['hours','h'],['minutes','min'],['seconds','s']].map(([key,label])=><span key={key}><b>{String(state[key]).padStart(2,'0')}</b><small>{label}</small></span>)}</div>}
-  <a className="event-bar-action" href={state.phase==='finished'?'/enseignements':'/programmes#infire'}>{state.phase==='finished'?'Poursuivre le parcours':'Je participe'} <span aria-hidden="true">↗</span></a>
+ const [state,setState]=useState(()=>({infire:infireState(),tpa:tpaState()}));
+ useEffect(()=>{const id=setInterval(()=>setState({infire:infireState(),tpa:tpaState()}),1000);return()=>clearInterval(id)},[]);
+ const infire=state.infire;
+ const tpa=state.tpa;
+ if(infire.phase==='finished'&&tpa.phase!=='hidden'){
+  const upcoming=tpa.phase==='upcoming';
+  return <div className={'event-bar-inner '+(upcoming?'upcoming':'ongoing')}>
+   <a href="/programmes#agenda"><span className="event-live-dot" aria-hidden="true"/><strong>TPA <span>2026</span></strong><span className="event-bar-date">Traversée Prophétique Annuelle · Vendredi 18 décembre · 20h00 · Google Meet</span></a>
+   {upcoming&&<div className="event-clock" aria-label="Temps restant avant la Traversée Prophétique Annuelle" aria-live="off">{[['days','j'],['hours','h'],['minutes','min'],['seconds','s']].map(([key,label])=><span key={key}><b>{String(tpa[key]).padStart(2,'0')}</b><small>{label}</small></span>)}</div>}
+   <a className="event-bar-action" href="/programmes#agenda">Découvrir la TPA <span aria-hidden="true">↗</span></a>
+  </div>;
+ }
+ const upcoming=infire.phase==='upcoming';
+ return <div className={'event-bar-inner '+infire.phase}>
+  <a href="/programmes#infire"><span className="event-live-dot" aria-hidden="true"/><strong>IN FIRE <span>2026</span></strong><span className="event-bar-date">{infire.phase==='finished'?'Merci pour ces temps de communion':infire.phase==='ongoing'?'La conférence a commencé · Rejoignez-nous':'31 octobre · 08:30 · Abidjan'}</span></a>
+  {upcoming&&<div className="event-clock" aria-label="Temps restant avant IN FIRE" aria-live="off">{[['days','j'],['hours','h'],['minutes','min'],['seconds','s']].map(([key,label])=><span key={key}><b>{String(infire[key]).padStart(2,'0')}</b><small>{label}</small></span>)}</div>}
+  <a className="event-bar-action" href={infire.phase==='finished'?'/enseignements':'/programmes#infire'}>{infire.phase==='finished'?'Poursuivre le parcours':'Je participe'} <span aria-hidden="true">↗</span></a>
  </div>;
 }
 function EventHero(){
