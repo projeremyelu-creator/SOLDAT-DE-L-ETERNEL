@@ -5,8 +5,8 @@ import {createPortal} from 'react-dom';
 import Chart from 'chart.js/auto';
 import qrcode from 'qrcode-generator';
 import {SitePublic} from './site-public.jsx';
-const modules=new Set(['carteqr','scanner','pilotage','finance-direction','academy-direction','annuaire','bibliotheque','rendezvous','site-public']);
-const titles={carteqr:'Ma carte de présence',scanner:'Scanner & activités',pilotage:'Poste de commandement','finance-direction':'Finances & missions','academy-direction':'Gestion de la Soldiers Academy',annuaire:'Annuaire des membres',bibliotheque:'Bibliothèque & enseignements',rendezvous:'Événements & notifications','site-public':'Contenu du site public'};
+const modules=new Set(['carteqr','scanner','pilotage','finance-direction','academy-direction','annuaire','bibliotheque','rendezvous','site-public','espace-soldat']);
+const titles={carteqr:'Ma carte de présence',scanner:'Scanner & activités',pilotage:'Poste de commandement','finance-direction':'Finances & missions','academy-direction':'Gestion de la Soldiers Academy',annuaire:'Annuaire des membres',bibliotheque:'Bibliothèque & enseignements',rendezvous:'Événements & notifications','site-public':'Contenu du site public','espace-soldat':'Mon espace Soldat'};
 async function api(path,method='GET',body){const r=await fetch(path,{method,credentials:'same-origin',cache:'no-store',headers:{'content-type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.message||'Le service est indisponible. Réessayez.');return d}
 const calm=()=>!!(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches||document.body?.dataset.motion==='paused');
 /* Compteur animé : part de la dernière valeur affichée, jamais de zéro à chaque actualisation. */
@@ -67,6 +67,30 @@ function FinanceGlance({portal}){
   <Card title="Avancement des pôles et missions" className="ref-glance-progress"><button type="button" className="ref-link-more" onClick={()=>portal.selectionner('projets')}>Voir tout</button>{missions.length?<ul className="ref-bars">{missions.map(m=>{const pct=Math.round(100*m.faits/m.total);return <li key={m.id}><span>{m.titre}</span><span className="ref-bar" role="img" aria-label={m.titre+' : '+pct+' %'}><i style={{width:pct+'%'}}/></span><strong>{pct} %</strong></li>})}</ul>:<div className="ref-empty-state"><RefIcon name="mission"/><strong>Aucune mission avec tâches</strong><p>L’avancement apparaîtra dès que des tâches seront renseignées.</p></div>}</Card>
  </div>
 }
+function SoldierSpace({portal}){
+ const card=useData('/api/ma-carte-qr'),me=useData('/api/mon-espace'),news=useData('/api/actualites');
+ const next=news.data?.evenements?.[0];
+ const day=iso=>{const t=new Date(iso+'T12:00:00');return Number.isNaN(t.getTime())?{d:'',m:''}:{d:t.getDate(),m:t.toLocaleDateString('fr-FR',{month:'short'}).toUpperCase()}};
+ const m=me.data?.membre||{},c=card.data;
+ const qr=c?(()=>{const q=qrcode(0,'M');q.addData(c.code,'Byte');q.make();return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(q.createSvgTag({cellSize:4,scalable:true}))})():'';
+ const nd=next?day(next.date):null;
+ return <div className="soldier-space">
+  <p className="ops-subtitle">Grandir · Servir · Impacter</p>
+  <div className="soldier-top">
+   <Card title="Mon profil" className="soldier-profile"><span className="soldier-medal" aria-hidden="true">{String(c?.nom||m.nom||'SDE').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase()}</span><strong>{c?.nom||[m.prenoms,m.nom].filter(Boolean).join(' ')||'Membre SDE'}</strong>{m.adhesion&&<small>Membre depuis {m.adhesion}</small>}<span className="soldier-tag">Membre actif</span><NativeButton portal={portal} module="espace">Modifier mon profil</NativeButton></Card>
+   <section className="soldier-card" aria-label="Carte de membre"><div className="soldier-card-head"><span>SOLDAT DE L’ÉTERNEL</span><small>DISCIPLINE · UNITÉ · IMPACT</small></div><div className="soldier-card-body"><div><small>CARTE DE MEMBRE</small><strong>{c?.matricule||'—'}</strong><p>{c?.nom||''}</p><p>MEMBRE ACTIF</p>{(m.pole)&&<p>PÔLE : {String(m.pole).toUpperCase()}</p>}</div>{qr&&<img src={qr} alt="QR Code personnel de présence" className="soldier-qr"/>}</div></section>
+  </div>
+  <div className="soldier-grid">
+   <Card title="Mon parcours Academy"><p>Suivez vos modules et votre progression.</p><NativeButton portal={portal} module="academie">Accéder aux formations →</NativeButton></Card>
+   <Card title="Prochaine rencontre">{next?<><div className="soldier-date"><strong>{nd.d}</strong><span>{nd.m}</span></div><p><strong>{next.titre}</strong></p><small>{[next.heure,next.lieu].filter(Boolean).join(' · ')}</small></>:<p className="ops-muted">Aucune rencontre programmée pour le moment.</p>}<NativeButton portal={portal} module="rendezvous">Voir tous les événements →</NativeButton></Card>
+   <Card title="Mes cotisations"><p>Consultez l’historique de vos dons et cotisations.</p><NativeButton portal={portal} module="contributions">Voir mes cotisations →</NativeButton></Card>
+  </div>
+  <div className="soldier-grid soldier-grid-2">
+   <Card title="Mon carnet de prière"><p>Consignez vos sujets de prière et suivez leur évolution.</p><blockquote>« Persévérez dans la prière, veillez-y avec actions de grâce. » <cite>Colossiens 4:2</cite></blockquote><NativeButton portal={portal} module="priere">Ouvrir mon carnet →</NativeButton></Card>
+   <Card title="Mes documents"><p>Cartes, attestations, ressources personnelles</p><NativeButton portal={portal} module="espace">Ouvrir mes documents →</NativeButton></Card>
+  </div>
+ </div>
+}
 function Command({portal}){
  const state=useData('/api/tableau-de-bord',60000),activity=useData('/api/pointage-qr',60000),[stamp,setStamp]=useState(Date.now()),[,tickAge]=useState(0);
  useEffect(()=>{if(state.data)setStamp(Date.now())},[state.data]);
@@ -89,7 +113,7 @@ export function Operations({portal}){
  useEffect(()=>{const shell=document.querySelector('.shell');if(!shell)return;const scan=()=>{const candidate=shell.querySelector('.member-card-qr');const next=candidate&&!candidate.closest('[hidden]')?candidate:null;setQrHost(old=>old===next?old:next)};scan();const observer=new MutationObserver(scan);observer.observe(shell,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden']});return()=>observer.disconnect()},[]);
  useEffect(()=>{if(active)contentHost?.querySelector('.ops-heading h2')?.focus({preventScroll:true})},[active,version]);
  const direction=location.pathname==='/administration'&&portal.compte.niveau>=1;
- const nav=direction?[['pilotage','Dashboard'],...(portal.compte.niveau>=2?[['finance-direction','Finances & missions']]:[]),['annuaire','Annuaire'],['academy-direction','Academy'],['scanner','Pointages & QR'],...(portal.compte.niveau>=2?[['site-public','Contenu du site']]:[])]:[['synthese','Mon accueil'],['carteqr','Ma carte QR'],['bibliotheque','Bibliothèque'],['rendezvous','Événements']];
- let content=active==='carteqr'?<PersonalQr portal={portal}/>:active==='scanner'?<Scanner/>:active==='pilotage'?<Command portal={portal}/>:active==='finance-direction'?<Finance portal={portal}/>:active==='academy-direction'?<Academy portal={portal}/>:active==='annuaire'?<Directory portal={portal}/>:active==='bibliotheque'?<Library/>:active==='rendezvous'?<Events portal={portal}/>:active==='site-public'&&portal.compte.niveau>=2?<SitePublic/>:null;
+ const nav=direction?[['pilotage','Dashboard'],...(portal.compte.niveau>=2?[['finance-direction','Finances & missions']]:[]),['annuaire','Annuaire'],['academy-direction','Academy'],['scanner','Pointages & QR'],...(portal.compte.niveau>=2?[['site-public','Contenu du site']]:[])]:[['espace-soldat','Mon espace Soldat'],['synthese','Mon accueil'],['carteqr','Ma carte QR'],['bibliotheque','Bibliothèque'],['rendezvous','Événements']];
+ let content=active==='carteqr'?<PersonalQr portal={portal}/>:active==='scanner'?<Scanner/>:active==='pilotage'?<Command portal={portal}/>:active==='finance-direction'?<Finance portal={portal}/>:active==='academy-direction'?<Academy portal={portal}/>:active==='annuaire'?<Directory portal={portal}/>:active==='bibliotheque'?<Library/>:active==='rendezvous'?<Events portal={portal}/>:active==='site-public'&&portal.compte.niveau>=2?<SitePublic/>:active==='espace-soldat'&&!direction?<SoldierSpace portal={portal}/>:null;
  return <>{qrHost&&createPortal(<CompactQr/>,qrHost)}<ReferenceChrome portal={portal} current={currentModule}/>{contentHost&&active&&createPortal(<section className="ops-panel" key={active+version} aria-label={titles[active]}><header className="ops-heading"><div><span className="ops-eyebrow">S.D.E. · {direction?'Administration':'Espace membre'}</span><h2 tabIndex={-1}>{active==='pilotage'?<>POSTE DE COMMANDEMENT <em>• S.D.E.</em></>:titles[active]}</h2>{active==='pilotage'&&<p className="ops-subtitle">Superviser · Coordonner · Multiplier</p>}{active==='pilotage'&&<p className="ops-welcome">Bienvenue, {String(portal.compte.nom||'').trim().split(/\s+/)[0]||'Soldat'} — ensemble pour des disciples équipés et un impact durable.</p>}</div><button aria-label="Actualiser les données" onClick={()=>setVersion(v=>v+1)}>{active==='pilotage'?'Chiffres clés':'Actualiser'}</button></header>{content}</section>,contentHost)}</>;
 }
