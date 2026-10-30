@@ -75,6 +75,27 @@
     const role=element("span","sde-direct-access",mode==="membre"?"Espace membre":"Espace administrateur");
     head.append(role);
     const tabs=element("nav");tabs.id="sde-direct-tabs";tabs.setAttribute("aria-label","Rubriques de l'espace privé");
+    // Mobile : les rubriques ne doivent pas repousser le tableau de bord sous
+    // une longue grille. Le bouton les dévoile sur demande, sans changer de page.
+    const mobileMenu=element("button","sde-direct-menu-toggle","Afficher les rubriques");
+    mobileMenu.id="sde-direct-menu-toggle";mobileMenu.type="button";
+    mobileMenu.setAttribute("aria-controls",tabs.id);
+    mobileMenu.setAttribute("aria-expanded","false");
+    const afficherMenu=(ouvert)=>{
+      tabs.classList.toggle("sde-direct-tabs-open",ouvert);
+      mobileMenu.setAttribute("aria-expanded",String(ouvert));
+      mobileMenu.textContent=ouvert?"Masquer les rubriques":"Afficher les rubriques";
+    };
+    mobileMenu.addEventListener("click",()=>{
+      const ouvert=mobileMenu.getAttribute("aria-expanded")!=="true";
+      afficherMenu(ouvert);
+      if(ouvert)tabs.querySelector("button")?.focus();
+    });
+    tabs.addEventListener("keydown",event=>{
+      if(event.key==="Escape"&&tabs.classList.contains("sde-direct-tabs-open")){
+        event.preventDefault();afficherMenu(false);mobileMenu.focus();
+      }
+    });
     header.append(head);
     const intro=element("div","sde-direct-intro");
     const eyebrow=element("p","sde-direct-eyebrow","MOUVEMENT SDE · LE RÉVEIL SPIRITUEL DES NATIONS");
@@ -143,8 +164,10 @@
         finally{envoiPriere.disabled=false;}
       });
     }
-    if(main?.parentElement)main.parentElement.insertBefore(tabs,panneau||main);
-    else header.append(tabs);
+    if(main?.parentElement){
+      main.parentElement.insertBefore(mobileMenu,panneau||main);
+      main.parentElement.insertBefore(tabs,panneau||main);
+    }else header.append(mobileMenu,tabs);
     const original=document.getElementById("nav");
     if(!original){etat.textContent="Les modules de gestion n’ont pas été chargés. Rechargez la page.";return;}
     async function lireHistorique(){
@@ -198,6 +221,8 @@
         else b.removeAttribute("aria-current");
       }
       navCourant=nom;
+      // Après un choix sur smartphone, afficher directement le module choisi.
+      if(window.matchMedia?.("(max-width: 760px)")?.matches)afficherMenu(false);
       document.dispatchEvent(new CustomEvent("sde:navigate",{detail:{module:nom,titre:catalogue[nom]}}));
       if(nom==="priere")panneau?.querySelector("h2")?.focus?.();
     }
