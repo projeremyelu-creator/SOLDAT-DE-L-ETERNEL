@@ -1548,6 +1548,11 @@ async function traiter(req, env, ctx) {
         "/temoignages": "/vitrine/temoignages.html",
         "/soldiers-voice": "/vitrine/soldiers-voice.html",
         "/soldiers-award": "/vitrine/soldiers-award.html",
+        "/pole-reveil": "/vitrine/pole-reveil.html",
+        "/pole-social": "/vitrine/pole-social.html",
+        "/pole-logistique": "/vitrine/pole-logistique.html",
+        "/pole-medias": "/vitrine/pole-medias.html",
+        "/pole-formation": "/vitrine/pole-formation.html",
         "/missions-humanitaires": "/vitrine/missions-humanitaires.html",
         "/rubriques": "/vitrine/plus.html"
       };
