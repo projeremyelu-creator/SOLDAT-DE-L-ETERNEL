@@ -313,3 +313,48 @@ html[data-motion="reduced"] body.sde-unifie.sde-subpage.sde-ivoire #infire .deco
 body[data-motion="paused"].sde-unifie.sde-subpage.sde-ivoire #infire .decompte-cel{
   animation:none!important;transform:none!important;transition:none!important;
 }
+
+/* Sections d'initiative : textes hors cartes et formulaires toujours lisibles. */
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section:is(.sde-initiative-section,.sde-initiative-lead)>.enveloppe>p:not(.sde-initiative-note),
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.sde-initiative-section .sde-initiative-split>div>p:not(.sde-initiative-note){
+  color:#e4eee5!important;-webkit-text-fill-color:#e4eee5!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.sde-initiative-section .sde-initiative-note{
+  color:#f9f1df!important;-webkit-text-fill-color:#f9f1df!important;
+  border-left:3px solid #d7b567!important;
+  background:rgba(10,26,22,.46)!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.sde-initiative-section .sde-initiative-note a,
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.sde-initiative-lead .sde-lead-actions a{
+  color:#f2d68f!important;-webkit-text-fill-color:#f2d68f!important;
+}
+/* Petites pages /rubriques : titre direct non couvert par .tete-section. */
+html body.sde-unifie.sde-subpage.sde-ivoire[data-sde-page="plus"] main#contenu>section.section>.enveloppe>h2{
+  color:#fff8e6!important;-webkit-text-fill-color:#fff8e6!important;
+  font-size:clamp(1.7rem,3vw,2.3rem);line-height:1.25;
+  margin-bottom:22px;
+}
+/* Formulaire 2026–27 : lisibilité de l'accueil et des panneaux de collecte. */
+html body.sde-subpage[data-sde-page="formulaire"]{
+  background:#f6f2e8!important;color:#29382b!important;
+}
+html body.sde-subpage[data-sde-page="formulaire"] main .form-carte{
+  background:#fffdf8!important;color:#29382b!important;
+  border:1px solid #dfceb0!important;border-radius:16px!important;
+  box-shadow:0 10px 24px rgba(26,45,33,.08)!important;
+}
+html body.sde-subpage[data-sde-page="formulaire"] main .form-carte :is(h2,h3,label,p){
+  color:#2d3a31!important;
+}
+html body.sde-subpage[data-sde-page="formulaire"] main .form-carte :is(input,textarea,select){
+  background:#fff!important;color:#202c25!important;
+  border:1px solid #b8ac96!important;
+}
+/* Page d'erreur du portail : cohérente, mais sans toucher à la connexion privée. */
+html body.sde-unifie.sde-ivoire:not(.sde-subpage) .site-footer{
+  background:#172b25!important;color:#faf3e2!important;
+  border-top:2px solid #c9a557!important;
+}
+html body.sde-unifie.sde-ivoire:not(.sde-subpage) .site-footer a{
+  color:#f1d690!important;
+}
