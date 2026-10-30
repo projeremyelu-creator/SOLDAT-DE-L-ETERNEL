@@ -622,6 +622,31 @@ html.anim .hero-mission { opacity: 0; animation: fondu-sous .7s var(--ease) .7s 
 .fp-verset { border-left: 3px solid var(--or); padding: 12px 16px; font-style: italic; font-size: .92rem; color: var(--texte-2); margin: 20px 0; }
 .fp-verset cite { display: block; font-style: normal; color: var(--or); font-size: .8rem; margin-top: 6px; font-family: var(--f-titre); }
 .fp-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.fp-vm { display: grid; gap: 10px; margin: 0 0 8px; }
+.fp-vm-bloc { padding: 12px 14px; background: var(--surface-2); border-radius: var(--r); border-left: 3px solid var(--or); }
+.fp-vm-bloc h3 { margin: 0 0 4px; }
+.fp-vm-bloc p { font-size: .9rem; color: var(--texte-2); margin: 0; }
+.fp-kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.fp-kpi { padding: 12px; background: var(--surface-2); border-radius: var(--r); }
+.fp-kpi b { display: block; font-size: .88rem; margin-bottom: 2px; }
+.fp-kpi p { font-size: .84rem; color: var(--texte-2); margin: 0; }
+.fp-domaines { display: grid; gap: 10px; }
+.fp-domaine { padding: 12px 14px; border: 1px solid var(--bordure); border-radius: var(--r); }
+.fp-domaine > b { display: block; font-size: .9rem; margin-bottom: 4px; color: var(--texte); }
+.fp-domaine p { font-size: .86rem; color: var(--texte-2); margin: 0; }
+.fp-sous { margin: 0; padding-left: 18px; }
+.fp-sous li { font-size: .86rem; color: var(--texte-2); margin-bottom: 3px; }
+.fp-structure { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.fp-structure li { font-size: .86rem; color: var(--texte-2); }
+.fp-structure b { display: block; color: var(--texte); font-size: .88rem; }
+.fp-profil { margin: 0; padding-left: 18px; }
+.fp-profil li { font-size: .88rem; color: var(--texte-2); margin-bottom: 5px; }
+.fp-coord { margin: 14px 0 0; border: 1px solid var(--bordure); border-radius: var(--r); padding: 10px 14px; }
+.fp-coord summary { cursor: pointer; font-weight: 700; font-size: .9rem; color: var(--or); }
+.fp-coord h4 { font-size: .82rem; margin: 12px 0 4px; color: var(--texte); }
+.fp-cri { margin: 16px 0 0; text-align: center; font-family: var(--f-titre); font-weight: 700; letter-spacing: .03em; color: var(--or); font-size: .92rem; }
+@media (max-width: 560px) { .fp-kpis { grid-template-columns: minmax(0, 1fr); } }
+
 .fp-nav { display: flex; justify-content: space-between; padding: 12px 24px; border-top: 1px solid var(--bordure); }
 .fp-nav button { font-size: .85rem; color: var(--or); display: flex; align-items: center; gap: 4px; }
 .fp-corps.change { animation: glisse-corps .3s var(--ease); }
