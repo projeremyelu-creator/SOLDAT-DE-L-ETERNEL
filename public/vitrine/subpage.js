@@ -183,15 +183,17 @@
     const form=$("#f-venue");
     form?.addEventListener("submit",async e=>{
       e.preventDefault();
-      const nom=$("#v-nom")?.value.trim()||"",nb=$("#v-nb")?.value||"1",msg=$("#v-err"),button=form.querySelector("button[type=submit]");
+      const nom=$("#v-nom")?.value.trim()||"",tel=$("#v-tel")?.value.trim()||"",nb=$("#v-nb")?.value||"1",msg=$("#v-err"),button=form.querySelector("button[type=submit]");
       if(nom.length<2){msg.hidden=false;msg.textContent="Indiquez votre nom.";$("#v-nom").focus();return;}
+      if(tel.replace(/\D/g,"").length<7){msg.hidden=false;msg.textContent="Indiquez un numéro de téléphone valide.";$("#v-tel").focus();return;}
+      if(!$("#v-accord")?.checked){msg.hidden=false;msg.textContent="Confirmez votre accord pour l’enregistrement de ces informations.";$("#v-accord").focus();return;}
       button.disabled=true;
       try{
-        const r=await fetch("/api/engager",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({objet:"IN FIRE 2026 — Confirmation de venue",nom,message:"Nombre de personnes : "+nb,source:"mouvement-sde.org/vitrine/programmes"})});
+        const r=await fetch("/api/engager",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({objet:"IN FIRE 2026 — Confirmation de venue",nom,tel,message:"Nombre de personnes : "+nb,source:"mouvement-sde.org/vitrine/programmes"})});
         if(!r.ok)throw Error("échec");
         const json=await r.json();
         if(!json.ok)throw Error("échec");
-        msg.textContent="✓ Votre confirmation a bien été reçue au secrétariat.";
+        msg.textContent="✓ Votre venue a été enregistrée. Le secrétariat peut vous recontacter au numéro indiqué.";
         msg.style.color="#7ed8a8";msg.hidden=false;form.reset();
       }catch(_){
         msg.hidden=false;msg.textContent="Envoi indisponible. Vous pouvez contacter infosoldat@gmail.com.";
@@ -263,6 +265,9 @@
     const subject=new URLSearchParams(location.search).get("objet");
     const select=$("#f-objet");
     if(subject&&select){const found=[...select.options].find(x=>x.value===subject||x.textContent===subject);if(found)select.value=found.value;}
+    const adhesion=$("#f-adhesion"),mail=$("#f-mail");
+    const syncAdhesion=()=>{const active=select?.value==="Devenir membre";if(adhesion)adhesion.hidden=!active;if(mail){mail.required=active;mail.closest(".champ")?.querySelector(".facult")?.replaceChildren(active?"obligatoire":"facultatif");}for(const id of ["f-pole","f-programme","f-motivation"]){const input=$("#"+id);if(input)input.required=active;}};
+    select?.addEventListener("change",syncAdhesion);syncAdhesion();
     const error=$("#f-erreur"),box=$("#envoi");
     form.addEventListener("submit",async e=>{
       e.preventDefault();
@@ -271,15 +276,21 @@
       if(!g("nom"))missing.push("votre nom");
       if(g("tel").replace(/\D/g,"").length<8)missing.push("un numéro de téléphone valide");
       if(!g("ville"))missing.push("votre ville");
+      if(g("objet")==="Devenir membre"){
+        if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(g("mail")))missing.push("une adresse e-mail valide");
+        if(!g("pole"))missing.push("un pôle d’intérêt");
+        if(!g("programme"))missing.push("un programme");
+        if(!g("motivation"))missing.push("votre motivation");
+      }
       if(!d.get("accord"))missing.push("votre accord");
       if(missing.length){error.hidden=false;error.textContent="Il manque "+missing.join(", ")+".";return;}
       error.hidden=true;
-      const text="Shalom ! Demande depuis mouvement-sde.org\n\nObjet : "+g("objet")+"\nNom : "+g("nom")+"\nTéléphone : "+g("tel")+"\nVille : "+g("ville")+(g("msg")?"\nMessage : "+g("msg"):"");
+      const text="Shalom ! Demande depuis mouvement-sde.org\n\nObjet : "+g("objet")+"\nNom : "+g("nom")+"\nTéléphone : "+g("tel")+"\nVille : "+g("ville")+(g("pole")?"\nPôle : "+g("pole"):"")+(g("programme")?"\nProgramme : "+g("programme"):"")+(g("motivation")?"\nMotivation : "+g("motivation"):"")+(g("msg")?"\nMessage : "+g("msg"):"");
       if($("#envoi-texte"))$("#envoi-texte").textContent=text;
       if($("#envoi-mail"))$("#envoi-mail").href="mailto:"+contactMail+"?subject="+encodeURIComponent("Demande SDE — "+g("objet"))+"&body="+encodeURIComponent(text);
       const submit=form.querySelector('button[type="submit"]');submit.disabled=true;
       try{
-        const r=await fetch("/api/engager",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({objet:g("objet"),nom:g("nom"),tel:g("tel"),email:g("mail"),ville:g("ville"),message:g("msg"),piege:g("site_web"),source:"mouvement-sde.org/vitrine/rejoindre"})});
+        const r=await fetch("/api/engager",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({objet:g("objet"),nom:g("nom"),tel:g("tel"),email:g("mail"),ville:g("ville"),pole:g("pole"),programme:g("programme"),motivation:g("motivation"),message:g("msg"),piege:g("site_web"),source:"mouvement-sde.org/vitrine/rejoindre"})});
         const data=await r.json();
         if(!r.ok||!data.ok)throw Error(data.message||"L'envoi a échoué");
         $("#envoi-titre").textContent="✓ Votre demande a été transmise au secrétariat.";
