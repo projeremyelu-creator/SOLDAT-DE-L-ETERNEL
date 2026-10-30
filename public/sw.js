@@ -11,7 +11,7 @@ const PUBLIC_PAGES = new Set([
   "/pole-reveil", "/pole-social", "/pole-logistique", "/pole-medias",
   "/pole-formation"
 ]);
-const ASSET_PATH = /^\/(?:_v\/[a-f0-9]{7,16}\/)?(?:vitrine\/[^?#]+|app\.(?:css|js)|icone-(?:192|512)\.png|logo[^/]*)\.(?:css|js|png|webp|jpe?g|svg|webmanifest)$/i;
+const ASSET_PATH = /^\/(?:_v\/[a-f0-9]{7,16}\/)?(?:vitrine\/[^?#]+\.(?:css|js|png|webp|jpe?g|svg|webmanifest)|app\.(?:css|js)|icone-(?:192|512)\.png|logo[^/]*\.(?:png|webp|svg))$/i;
 const EXCLUS = [
   "/api/", "/_blob/", "/m/", "/pastoral", "/suivi/", "/os-v31",
   "/mon-espace", "/administration", "/connexion", "/portail",
