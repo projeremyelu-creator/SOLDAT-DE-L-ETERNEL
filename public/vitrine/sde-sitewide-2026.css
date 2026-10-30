@@ -620,3 +620,167 @@ html body.sde-unifie footer.site-footer> :is(section,div) :is(span,strong,b,smal
   color:#f7f3e8!important;-webkit-text-fill-color:#f7f3e8!important;
   opacity:1!important;
 }
+
+
+/* Correctif mobile en-tête + verset 2026-10-30 v2 : captures du 30 octobre. */
+/* Zone de citation ivoire : la règle générale .m-welcome p utilisait
+   auparavant une spécificité supérieure et produisait du blanc sur blanc. */
+html body.sde-unifie.sde-accueil-maquette #contenu .m-welcome blockquote.m-verset {
+  background:#fff8e9!important;
+  border-left:5px solid #a44531!important;
+  border-radius:0 8px 8px 0;
+  padding:clamp(17px,3vw,25px)!important;
+  opacity:1!important;
+}
+html body.sde-unifie.sde-accueil-maquette #contenu .m-welcome blockquote.m-verset p {
+  color:#21342b!important;
+  -webkit-text-fill-color:#21342b!important;
+  opacity:1!important;
+  font:italic 500 clamp(1.08rem,2.5vw,1.3rem)/1.65 "Libre Caslon Text",Georgia,serif!important;
+  letter-spacing:normal!important;
+  text-shadow:none!important;
+  overflow-wrap:break-word;
+}
+html body.sde-unifie.sde-accueil-maquette #contenu .m-welcome blockquote.m-verset cite {
+  display:block;
+  margin-top:12px;
+  color:#654514!important;
+  -webkit-text-fill-color:#654514!important;
+  opacity:1!important;
+  text-shadow:none!important;
+  font-size:clamp(.75rem,1.6vw,.89rem)!important;
+  line-height:1.5!important;
+  letter-spacing:.09em!important;
+}
+@media(max-width:760px) {
+  /* Deux rangées explicites : identité et commandes, puis accès au portail.
+     Aucun chevauchement même sur un téléphone de 320 px. */
+  html body.sde-unifie .site-header .site-header-inner {
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) repeat(3,42px)!important;
+    grid-template-rows:minmax(46px,auto) minmax(44px,auto)!important;
+    align-items:center!important;
+    column-gap:5px!important;
+    row-gap:7px!important;
+    width:calc(100% - 24px)!important;
+    min-width:0!important;
+    max-width:100%!important;
+    padding:8px 0 10px!important;
+    flex-wrap:initial!important;
+    min-height:0!important;
+  }
+  html body.sde-unifie .site-header .site-header-inner>.site-brand {
+    grid-column:1!important;
+    grid-row:1!important;
+    margin:0!important;
+    min-width:0!important;
+    max-width:100%!important;
+    width:100%!important;
+    display:flex!important;
+    flex:none!important;
+    align-items:center!important;
+    gap:6px!important;
+    overflow:visible!important;
+  }
+  html body.sde-unifie .site-header .site-brand img.site-logo {
+    width:40px!important;
+    height:40px!important;
+    min-width:40px!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    flex:none!important;
+  }
+  html body.sde-unifie .site-header .site-brand>span {
+    display:block!important;
+    flex:1 1 auto!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+  html body.sde-unifie .site-header .site-brand b {
+    display:block!important;
+    width:100%!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    overflow-wrap:normal!important;
+    font-size:clamp(.84rem,3.4vw,1.1rem)!important;
+    line-height:1.13!important;
+    letter-spacing:0!important;
+    color:#20271f!important;
+    -webkit-text-fill-color:#20271f!important;
+  }
+  html body.sde-unifie .site-header .site-brand small {display:none!important}
+  html body.sde-unifie .site-header .site-header-inner>.site-burger {
+    grid-column:2!important;grid-row:1!important;
+    display:flex!important;order:initial!important;
+    position:relative!important;
+    width:42px!important;height:44px!important;min-width:42px!important;
+    margin:0!important;
+    padding:8px!important;
+  }
+  html body.sde-unifie .site-header .site-header-inner>.site-theme-toggle {
+    grid-column:3!important;grid-row:1!important;
+    position:relative!important;
+    width:42px!important;height:44px!important;min-width:42px!important;
+    margin:0!important;padding:8px!important;
+    order:initial!important;
+  }
+  html body.sde-unifie .site-header .site-header-inner>.sde-motion-button {
+    grid-column:4!important;grid-row:1!important;
+    position:relative!important;
+    width:42px!important;height:44px!important;min-width:42px!important;
+    margin:0!important;padding:8px!important;
+    order:initial!important;
+  }
+  html body.sde-unifie .site-header .site-header-inner>.site-access-top {
+    grid-column:1 / -1!important;
+    grid-row:2!important;
+    display:flex!important;
+    order:initial!important;
+    align-items:center!important;
+    justify-content:center!important;
+    margin:0!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  html body.sde-unifie .site-header .site-access-top .site-portal-cta {
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:8px!important;
+    width:min(100%,280px)!important;
+    max-width:100%!important;
+    min-height:44px!important;
+    padding:9px 16px!important;
+    font-size:.84rem!important;
+    line-height:1.25!important;
+    white-space:normal!important;
+    text-align:center!important;
+    border-radius:10px!important;
+  }
+  html body.sde-unifie .site-header .site-menu{
+    position:absolute!important;
+    top:100%!important;left:0!important;right:0!important;
+    width:100%!important;max-height:min(70svh,540px)!important;
+    z-index:20!important;
+  }
+  html body.sde-unifie .site-header .site-menu[data-open="true"] {display:flex!important}
+  html body.sde-unifie .site-header .site-menu:not([data-open="true"]) {display:none!important}
+}
+@media(max-width:355px) {
+  html body.sde-unifie .site-header .site-header-inner{
+    grid-template-columns:minmax(0,1fr) repeat(3,40px)!important;
+    column-gap:3px!important;
+  }
+  html body.sde-unifie .site-header .site-header-inner>.site-burger,
+  html body.sde-unifie .site-header .site-header-inner>.site-theme-toggle,
+  html body.sde-unifie .site-header .site-header-inner>.sde-motion-button {
+    width:40px!important;min-width:40px!important;
+  }
+  html body.sde-unifie .site-header .site-brand img.site-logo{
+    width:36px!important;height:36px!important;min-width:36px!important;
+  }
+  html body.sde-unifie .site-header .site-brand b{
+    font-size:.82rem!important;
+  }
+}
