@@ -93,3 +93,23 @@ test('Recette production : feuille globale ou pages non actualisées détectées
    assert.equal(bilan.ok,false);
  }
 });
+
+test('Recette production : cibler les fichiers versionnés de Cloudflare',async()=>{
+ const avant=process.env.SDE_EXPECTED_REV;
+ try{
+  process.env.SDE_EXPECTED_REV='abcdef1234567890';
+  const f=simulateur();
+  const kinds=['marque-application','style-pilotage'];
+  const bilan=await recetteProduction({
+   fetcher:f.fetcher,domaines:[DOMAINES[0]],
+   controles:CONTROLES.filter(x=>kinds.includes(x.type)),
+   essais:1
+  });
+  assert.equal(bilan.ok,true);
+  assert.equal(bilan.total,2);
+  assert.ok(f.appels.every(x=>new URL(x.url).pathname.startsWith('/_v/abcdef123456/')));
+ }finally{
+  if(avant===undefined)delete process.env.SDE_EXPECTED_REV;
+  else process.env.SDE_EXPECTED_REV=avant;
+ }
+});
