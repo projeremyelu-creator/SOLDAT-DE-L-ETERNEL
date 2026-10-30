@@ -79,3 +79,43 @@ test('Bandeau responsive SDE : mise en page en flux, contraste, focus et touch t
  assert.match(section,/\.ref-account-copy\{display:none!important\}/);
  assert.match(section,/\.ref-menu-button/);
 });
+
+test('Événement phare : informations réelles et accès au programme conservés',async()=>{
+ const c=await page('/administration?module=pilotage','admin');
+ try{
+   await waitFor(()=>c.d.querySelector('.ref-command .ref-feature h3'));
+   const hero=c.d.querySelector('.ref-command .ref-feature');
+   assert.ok(hero);
+   assert.equal(hero.getAttribute('aria-label'),'Événement phare');
+   assert.match(hero.textContent,/Rencontre du jour/);
+   const action=[...hero.querySelectorAll('button')].find(b=>/Voir le programme/.test(b.textContent));
+   assert.ok(action);
+   action.click();await tick();
+   assert.equal(new URLSearchParams(c.w.location.search).get('module'),'rendezvous');
+   assert.deepEqual(c.errors,[]);
+ }finally{c.close()}
+});
+test('Lisibilité du visuel IN FIRE : priorité à des lettres claires sur photo sombre',()=>{
+ const source=readFileSync('frontend/palette-themes.css','utf8');
+ const region=source.slice(source.indexOf('Recette du 30/10 : lisibilité réelle'));
+ assert.ok(region.length>2500);
+ assert.match(region,/html\[data-sde-palette\] body\.sde-reference-admin \.ref-command \.ref-feature :is\(h3,p\)/);
+ assert.match(region,/color:#fff9e9!important/);
+ assert.match(region,/color:#f0d68e!important/);
+ assert.match(region,/linear-gradient\(90deg,rgba\(6,14,29,\.97\)/);
+ assert.match(region,/text-shadow:0 2px 9px/);
+ assert.match(region,/ref-feature button\.ref-small-action/);
+ assert.match(region,/@media\(max-width:760px\)/);
+});
+test('Animations du pilotage : courtes, accessibles et désactivables',()=>{
+ const region=readFileSync('frontend/palette-themes.css','utf8').split('Animations institutionnelles brèves')[1];
+ assert.ok(region);
+ assert.match(region,/@keyframes sde-command-arrive/);
+ assert.match(region,/@keyframes sde-feature-sheen/);
+ assert.match(region,/\.sv-hello-admin/);
+ assert.match(region,/\.ref-command-overview/);
+ assert.match(region,/\.ref-command \.ref-feature/);
+ assert.match(region,/@media\(prefers-reduced-motion:reduce\)/);
+ assert.match(region,/body\[data-motion=paused\]/);
+ assert.match(region,/animation:none!important/);
+});

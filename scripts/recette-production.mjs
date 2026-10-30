@@ -15,7 +15,9 @@ export const CONTROLES = Object.freeze([
   {path:'/api/moi',type:'session-anonyme'},
   {path:'/api/notifications-status',type:'statut-admin-protege'},
   {path:'/vitrine/portail-direct.js',type:'script'},
-  {path:'/vitrine/portail-direct.css',type:'style'}
+  {path:'/vitrine/portail-direct.css',type:'style'},
+  {path:'/vitrine/operations-assets/portail-operations.js',type:'marque-application'},
+  {path:'/vitrine/sde-experience.css',type:'style-pilotage'}
 ]);
 
 function verifierReponse(origine,controle,reponse,corps) {
@@ -59,6 +61,15 @@ function verifierReponse(origine,controle,reponse,corps) {
     if(!/connexion|mot de passe/i.test(corps))erreur('Formulaire de connexion introuvable');
     if(!/no-store/.test(reponse.headers.get('cache-control')||''))erreur('Formulaire de connexion mis en cache');
     if(!/noindex/i.test(reponse.headers.get('x-robots-tag')||''))erreur('Formulaire de connexion indexable');
+  }
+  if(controle.type==='marque-application'){
+    if(!/javascript/i.test(type))erreur('Interface privée non servie en JavaScript');
+    if(!corps.includes('SDE - MOUVEMENT'))erreur('Ancien bandeau détecté : la marque institutionnelle est absente du bundle');
+  }
+  if(controle.type==='style-pilotage'){
+    if(!type.includes('text/css'))erreur('Styles du pilotage inaccessibles');
+    if(!corps.includes('sde-feature-sheen')||!corps.includes('ref-feature'))
+      erreur('Styles de contraste et animations du pilotage absents');
   }
   if(controle.type==='script'){
     if(!/javascript/i.test(type))erreur('Script privé sans type JavaScript');

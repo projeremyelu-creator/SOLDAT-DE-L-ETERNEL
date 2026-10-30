@@ -557,3 +557,134 @@ html body.sde-reference .ref-toolbar .ref-palette-menu{
    min-width:40px!important;max-width:40px!important;
  }
 }
+
+/* Recette du 30/10 : lisibilité réelle de l'événement phare sur photo.
+   Les thèmes clairs imposaient --pal-ink (texte sombre) sur un fond nuit.
+   Les couleurs ci-dessous sont définies SUR LA PHOTO, quelle que soit la palette. */
+html body.sde-reference-admin .ref-command .ref-feature,
+html[data-sde-palette] body.sde-reference-admin .ref-command .ref-feature {
+  position:relative;isolation:isolate;
+  background:#0a121b!important;color:#f9f1df!important;
+  border:1px solid #c8a451!important;border-radius:12px!important;
+  box-shadow:0 12px 26px #090f1d25!important;
+}
+html body.sde-reference-admin .ref-command .ref-feature::before,
+html[data-sde-palette] body.sde-reference-admin .ref-command .ref-feature::before {
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(90deg,rgba(6,14,29,.97) 0%,rgba(6,14,29,.90) 38%,rgba(6,14,29,.68) 68%,rgba(6,14,29,.38) 100%)!important;
+}
+html body.sde-reference-admin .ref-command .ref-feature>div {
+  position:relative;z-index:3;max-width:min(600px,100%);
+  min-width:0;overflow-wrap:anywhere;
+}
+html[data-sde-palette] body.sde-reference-admin .ref-command .ref-feature :is(h3,p),
+html body.sde-reference-admin .ref-command .ref-feature :is(h3,p) {
+  color:#fff9e9!important;
+  text-shadow:0 2px 9px rgba(0,0,0,.65)!important;
+  opacity:1!important;
+}
+html[data-sde-palette] body.sde-reference-admin .ref-command .ref-feature h3 {
+  margin:10px 0 8px;
+  font-size:clamp(1.75rem,4vw,2.65rem)!important;
+  font-weight:700!important;line-height:1.14!important;letter-spacing:.035em;
+}
+html[data-sde-palette] body.sde-reference-admin .ref-command .ref-feature .ref-feature-sub {
+  color:#f0d68e!important;
+  font-size:clamp(.82rem,1.8vw,1rem)!important;
+  line-height:1.5!important;letter-spacing:.055em!important;
+}
+html[data-sde-palette] body.sde-reference-admin .ref-command .ref-feature p:not(.ref-feature-sub) {
+  font-size:clamp(.875rem,1.8vw,1rem)!important;
+  line-height:1.55!important;
+}
+html[data-sde-palette] body.sde-reference-admin .ref-command .ref-feature .ref-feature-tag {
+  display:inline-flex;align-items:center;min-height:30px;
+  color:#f8db86!important;background:#091321cc!important;
+  border:1px solid #dfbb66!important;
+  font-size:.76rem!important;letter-spacing:.12em!important;
+}
+html[data-sde-palette] body.sde-reference-admin .ref-command .ref-feature button.ref-small-action {
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:46px!important;margin-top:14px!important;
+  padding:10px 18px!important;background:#a34229!important;
+  color:#fff!important;border:1px solid #b85a3d!important;
+  border-radius:9px!important;font-weight:750!important;
+  font-size:.95rem!important;text-shadow:none!important;
+}
+html[data-sde-palette] body.sde-reference-admin .ref-command .ref-feature button.ref-small-action:focus-visible{
+  outline:3px solid #f5d786!important;outline-offset:3px!important;
+}
+@media(max-width:760px){
+  html[data-sde-palette] body.sde-reference-admin .ref-command .ref-feature {
+    min-height:280px!important;padding:22px 19px!important;
+    align-items:center!important;
+  }
+  html[data-sde-palette] body.sde-reference-admin .ref-command .ref-feature::before {
+    background:linear-gradient(90deg,rgba(6,14,29,.98),rgba(6,14,29,.85) 66%,rgba(6,14,29,.55))!important;
+  }
+  html[data-sde-palette] body.sde-reference-admin .ref-command .ref-feature>div{
+    max-width:100%!important;
+  }
+}
+
+/* Animations institutionnelles brèves du poste de commandement :
+   entrée des sections + accent de lumière sur l'événement, sans boucle
+   agressive. Les indicateurs numériques conservent leur animation existante. */
+@keyframes sde-command-arrive {
+  from{opacity:0;transform:translate3d(0,16px,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@keyframes sde-feature-sheen {
+  from{transform:translateX(-140%);opacity:0}
+  25%{opacity:.55}
+  to{transform:translateX(160%);opacity:0}
+}
+body.sde-reference-admin .ref-command .sv-hello-admin{
+  animation:sde-command-arrive .55s cubic-bezier(.18,.7,.3,1) both;
+}
+body.sde-reference-admin .ref-command .ref-command-overview,
+body.sde-reference-admin .ref-command .ref-command-programs{
+  animation:sde-command-arrive .58s cubic-bezier(.18,.7,.3,1) both;
+}
+body.sde-reference-admin .ref-command .ref-command-overview{animation-delay:.12s}
+body.sde-reference-admin .ref-command .ref-command-programs{animation-delay:.18s}
+body.sde-reference-admin .ref-command .ref-feature{
+  animation:sde-command-arrive .65s cubic-bezier(.18,.7,.3,1) .24s both;
+}
+body.sde-reference-admin .ref-command .ref-feature::after{
+  content:"";position:absolute;z-index:2;inset:0;pointer-events:none;
+  background:linear-gradient(100deg,transparent 32%,#f7e0a328 50%,transparent 68%);
+  transform:translateX(-140%);
+  animation:sde-feature-sheen 1.5s ease-out .72s both;
+}
+@media(hover:hover) and (pointer:fine){
+  body.sde-reference-admin .ref-command .ref-feature{
+    transition:box-shadow .25s ease,border-color .25s ease;
+  }
+  body.sde-reference-admin .ref-command .ref-feature:hover{
+    box-shadow:0 15px 33px #090f1d50!important;border-color:#f0cf76!important;
+  }
+  body.sde-reference-admin .ref-command .ref-kpi{
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  body.sde-reference-admin .ref-command .ref-kpi:hover{
+    transform:translateY(-3px);
+    box-shadow:0 9px 24px #10172022;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body.sde-reference-admin .ref-command .sv-hello-admin,
+  body.sde-reference-admin .ref-command .ref-command-overview,
+  body.sde-reference-admin .ref-command .ref-command-programs,
+  body.sde-reference-admin .ref-command .ref-feature,
+  body.sde-reference-admin .ref-command .ref-feature::after{
+    animation:none!important;transition:none!important;transform:none!important;
+  }
+}
+body[data-motion=paused].sde-reference-admin .ref-command .sv-hello-admin,
+body[data-motion=paused].sde-reference-admin .ref-command .ref-command-overview,
+body[data-motion=paused].sde-reference-admin .ref-command .ref-command-programs,
+body[data-motion=paused].sde-reference-admin .ref-command .ref-feature,
+body[data-motion=paused].sde-reference-admin .ref-command .ref-feature::after{
+  animation:none!important;transition:none!important;transform:none!important;
+}

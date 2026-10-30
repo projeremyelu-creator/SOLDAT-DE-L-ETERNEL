@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {DOMAINES,CONTROLES,recetteProduction} from '../scripts/recette-production.mjs';
 
 const html=(text,extra={})=>new Response('<!doctype html><title>SDE</title>'+text,{status:200,headers:{'content-type':'text/html; charset=UTF-8',...extra}});
-function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=false,sessionExposee=false,erreurDomaine=false}={}){
+function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=false,sessionExposee=false,erreurDomaine=false,marqueObsolete=false,stylePilotageObsolete=false}={}){
   const appels=[];
   const fetcher=async(url,opts)=>{
     const u=new URL(url),p=u.pathname;
@@ -19,20 +19,20 @@ function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=fals
       :new Response(null,{status:302,headers:{location:(lienExterne?'https://autre-site.example':u.origin)+'/connexion?retour='+encodeURIComponent(p)}});
     if(p==='/api/moi')return Response.json({connecte:sessionExposee});
     if(p==='/api/notifications-status')return Response.json({erreur:'refuse'},{status:403});
-    if(p.endsWith('.js'))return new Response('const id="sde-direct-tabs";',{headers:{'content-type':'text/javascript'}});
-    if(p.endsWith('.css'))return new Response(styleObsolete?'.obsolete{}':'#sde-direct-menu-toggle{}',{headers:{'content-type':'text/css'}});
+    if(p.endsWith('.js'))return new Response(p.includes('operations-assets')?(marqueObsolete?'const brand="SDE DIGITAL";':'const brand="SDE - MOUVEMENT";'):'const id="sde-direct-tabs";',{headers:{'content-type':'text/javascript'}});
+    if(p.endsWith('.css'))return new Response(p.includes('sde-experience')?(stylePilotageObsolete?'.obsolete{}':'.ref-feature{}@keyframes sde-feature-sheen{}'):(styleObsolete?'.obsolete{}':'#sde-direct-menu-toggle{}'),{headers:{'content-type':'text/css'}});
     throw Error('Route non prévue : '+p);
   };
   return {fetcher,appels};
 }
 
-test('Recette production : les deux domaines couvrent huit parcours GET sans authentification',async()=>{
+test('Recette production : les deux domaines couvrent dix parcours GET sans authentification',async()=>{
  const f=simulateur(),rapports=[];
  const bilan=await recetteProduction({fetcher:f.fetcher,essais:1,rapport:r=>rapports.push(r)});
- assert.equal(bilan.total,16);
- assert.equal(bilan.reussis,16);
+ assert.equal(bilan.total,20);
+ assert.equal(bilan.reussis,20);
  assert.equal(bilan.ok,true);
- assert.equal(rapports.length,16);
+ assert.equal(rapports.length,20);
  assert.ok(f.appels.every(a=>a.opts.method==='GET'&&a.opts.redirect==='manual'&&!a.opts.headers.cookie));
  assert.ok(f.appels.some(a=>a.url==='https://mouvement-sde.org/'));
  assert.ok(f.appels.some(a=>a.url==='https://app.mouvement-sde.org/administration'));
@@ -59,8 +59,8 @@ test('Recette production : CSS obsolète et session anonyme connectée échouent
 test('Recette production : une panne d’un domaine est signalée sans masquer l’autre',async()=>{
  const f=simulateur({erreurDomaine:true});
  const bilan=await recetteProduction({fetcher:f.fetcher,essais:1});
- assert.equal(bilan.total,16);
- assert.equal(bilan.reussis,8);
+ assert.equal(bilan.total,20);
+ assert.equal(bilan.reussis,10);
  assert.equal(bilan.ok,false);
  assert.ok(bilan.resultats.some(r=>r.domaine===DOMAINES[1]&&!r.ok&&r.erreur.includes('DNS')));
 });
@@ -71,4 +71,13 @@ test('Recette production : les erreurs réseau transitoires sont réessayées',a
  const bilan=await recetteProduction({fetcher,domaines:[DOMAINES[0]],controles:CONTROLES.slice(0,1),essais:2,attente:async ms=>delais.push(ms)});
  assert.equal(bilan.ok,true);
  assert.deepEqual(delais,[1000]);
+});
+
+test('Recette production : bandeau obsolète et anciens styles d’événement détectés',async()=>{
+ for(const [param,type] of [[{marqueObsolete:true},'marque-application'],[{stylePilotageObsolete:true},'style-pilotage']]){
+   const f=simulateur(param);
+   const bilan=await recetteProduction({fetcher:f.fetcher,domaines:[DOMAINES[0]],controles:CONTROLES.filter(c=>c.type===type),essais:1});
+   assert.equal(bilan.ok,false);
+   assert.equal(bilan.reussis,0);
+ }
 });
