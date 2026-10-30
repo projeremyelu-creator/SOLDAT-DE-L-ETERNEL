@@ -27,6 +27,7 @@
       ["Missions et solidarité", "/vitrine/projets#engagement", "Agir pour les autres"],
       ["Dons et soutien", "/vitrine/projets#soutenir", "Soutenir le mouvement"],
       ["Soldiers Voice", "/vitrine/soldiers-voice", "Groupe musical et louange"],
+      ["Soldier’s Award", "/vitrine/soldiers-award", "Honneur et reconnaissance"],
       ["Missions humanitaires", "/vitrine/missions-humanitaires", "Bénévolat et solidarité"]
     ]}
   ];
