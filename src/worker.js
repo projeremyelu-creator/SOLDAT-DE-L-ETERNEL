@@ -1525,6 +1525,7 @@ async function traiter(req, env, ctx) {
     if (url.hostname === "mouvement-sde.org" || appHost) {
       // Routage unifié : pages réelles, un guichet de connexion, deux espaces protégés.
       const pagesPubliques = {
+        "/formulaire": "/vitrine/formulaire.html",
         "/boutique": "/vitrine/boutique.html",
         "/mouvement": "/vitrine/mouvement.html",
         "/programmes": "/vitrine/programmes.html",
@@ -1619,7 +1620,9 @@ async function traiter(req, env, ctx) {
           const u = await utilisateur(req, env);
           if (!u.connecte) {
             const cible=p.startsWith("/administration")?"/administration":"/mon-espace";
-            return Response.redirect(url.origin + "/connexion?retour=" + encodeURIComponent(cible), 302);
+            const mode=url.searchParams.get("mode");
+            const modeValide=["inscription","activation","recuperation"].includes(mode)?"&mode="+encodeURIComponent(mode):"";
+            return Response.redirect(url.origin + "/connexion?retour=" + encodeURIComponent(cible) + modeValide, 302);
           }
           if (p.startsWith("/administration") && u.niveau < 1)
             return erreur("refuse", "Accès réservé aux responsables autorisés.", 403);
@@ -1639,9 +1642,7 @@ async function traiter(req, env, ctx) {
       if (p === "/api/public") return apiPublic(env);
       if (p === "/api/site" && req.method === "GET") return apiSite(env);
       if (p === "/api/visites") return apiVisites(req, env);
-      if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
-      if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
-      if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
+      // Les formulaires publics passent par les contrôles d'origine et de débit ci-dessous.
       // Les routes sensibles conservent les contrôles serveur existants :
       // aucun contenu, document ou fichier privé n'est rendu statique.
       const routeInterne = p.startsWith("/api/") || p.startsWith("/_blob/") || p.startsWith("/m/");
