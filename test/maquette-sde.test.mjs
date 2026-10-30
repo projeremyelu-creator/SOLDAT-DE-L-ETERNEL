@@ -210,3 +210,8 @@ test("transition de chargement SDE : une seule fermeture et au plus quatre secon
  assert.ok(js.includes('prefers-reduced-motion'),"accessibilité des animations");
  assert.ok(css.includes('.sde-splash.is-done'),"fondu de la transition");
 });
+test("application native (fiches, voyants, registre) en Ivoire · Treillis · Or",()=>{
+ const app=read("public/index.html"),css=read("public/vitrine/ivoire-app.css");
+ assert.ok(app.includes("ivoire-app.css")&&app.includes('d.setAttribute("data-sde-palette"'),"palette appliquée avant affichage");
+ for(const t of ["--surface:#fffdf8","--night:#2f3b25",".sheet-h",".acc-hero"])assert.ok(css.includes(t),t);
+});

@@ -34,6 +34,8 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
 <link rel="stylesheet" href="/vitrine/portail-direct.css?v=20261027c">
 <link rel="stylesheet" href="/vitrine/portail-plus.css?v=20261027c">
 <link rel="stylesheet" href="/vitrine/sde-marque.css?v=20261029a">
+<link rel="stylesheet" href="/vitrine/ivoire-app.css?v=20261030a">
+<script>/* Palette des espaces privés appliquée avant le premier affichage (Ivoire · Treillis · Or par défaut). */try{var d=document.documentElement,v=localStorage.getItem("sde-private-palette-version")==="ivoire-03"?localStorage.getItem("sde-private-palette"):"ivoire";d.setAttribute("data-sde-palette",/^(ivoire|terracotta|militaire|violet)$/.test(v||"")?v:"ivoire")}catch(e){document.documentElement.setAttribute("data-sde-palette","ivoire")}</script>
 <script defer src="/sde-bridge.js?v=20261025e"></script>
 <script>/* Thème : applique le choix utilisateur avant le premier paint */
 (function(){try{var t=localStorage.getItem("sde-theme");if(t){document.documentElement.setAttribute("data-theme",t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==="light"?"#eef0f5":"#0f1e3d";}}catch(e){}}());
