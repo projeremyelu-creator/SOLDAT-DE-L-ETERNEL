@@ -706,8 +706,14 @@ html body.sde-unifie.sde-accueil-maquette #contenu .m-welcome blockquote.m-verse
     font-size:clamp(.84rem,3.4vw,1.1rem)!important;
     line-height:1.13!important;
     letter-spacing:0!important;
+  }
+  html body.sde-unifie.sde-ivoire .site-header .site-brand b {
     color:#20271f!important;
     -webkit-text-fill-color:#20271f!important;
+  }
+  html body.sde-unifie:not(.sde-ivoire) .site-header .site-brand b {
+    color:#fff7e4!important;
+    -webkit-text-fill-color:#fff7e4!important;
   }
   html body.sde-unifie .site-header .site-brand small {display:none!important}
   html body.sde-unifie .site-header .site-header-inner>.site-burger {
