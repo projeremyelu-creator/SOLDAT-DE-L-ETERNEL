@@ -240,3 +240,7 @@ body.sde-reference-admin .site-ed .site-ed-check{display:flex;flex-direction:row
 .ref-sidebar{background:linear-gradient(170deg,#0d1b32ee,#10182bec)}
 .sde-reference-member .shell{background:radial-gradient(ellipse at 100% 0%,#58152bf0 0%,transparent 45%),#0d192cea}
 @media(prefers-reduced-motion:reduce){.sde-reference-admin .shell,.sde-reference-member .shell{background-attachment:scroll}}
+/* Maquette « SDE Digital — Militaire Premium » : citation du menu et sous-titres */
+.ref-quote{margin:18px 16px 8px;padding-top:14px;border-top:1px solid #d4af3733;font:italic 400 .86rem/1.5 'Atkinson Hyperlegible',Georgia,serif;color:#e2c26acc}
+.ops-subtitle{margin:4px 0 0;font:italic 400 .95rem/1.4 'Atkinson Hyperlegible',Georgia,serif;letter-spacing:.04em;color:#e2c26a}
+.ops-welcome{margin:6px 0 0;font:400 .88rem/1.5 'Atkinson Hyperlegible',system-ui,sans-serif;color:#c9d0dd;max-width:60ch}
