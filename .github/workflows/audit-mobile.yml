@@ -1,0 +1,40 @@
+name: Audit mobile réel SDE — navigateur public
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/audit-mobile.yml'
+      - 'scripts/audit-public-mobile.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sde-audit-mobile-public
+  cancel-in-progress: true
+
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.4'
+      - name: Installer Chromium pour les contrôles visuels
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.0
+          npx playwright install --with-deps chromium
+      - name: Vérifier les pages publiques et la protection anonyme
+        run: node scripts/audit-public-mobile.mjs
+      - name: Conserver captures mobiles et rapport technique
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-mobile-public-sde
+          path: audit-mobile-sde/
+          if-no-files-found: warn
+          retention-days: 7
