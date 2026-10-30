@@ -17,7 +17,21 @@ export const CONTROLES = Object.freeze([
   {path:'/vitrine/portail-direct.js',type:'script'},
   {path:'/vitrine/portail-direct.css',type:'style'},
   {path:'/vitrine/operations-assets/portail-operations.js',type:'marque-application'},
-  {path:'/vitrine/sde-experience.css',type:'style-pilotage'}
+  {path:'/vitrine/sde-experience.css',type:'style-pilotage'},
+  {path:'/vitrine/sde-sitewide-2026.css',type:'styles-site'},
+  {path:'/formulaire',type:'page-publique'},
+  {path:'/boutique',type:'page-publique'},
+  {path:'/mouvement',type:'page-publique'},
+  {path:'/programmes',type:'page-publique'},
+  {path:'/academy',type:'page-publique'},
+  {path:'/enseignements',type:'page-publique'},
+  {path:'/missions',type:'page-publique'},
+  {path:'/priere',type:'page-publique'},
+  {path:'/contact',type:'page-publique'},
+  {path:'/temoignages',type:'page-publique'},
+  {path:'/soldiers-voice',type:'page-publique'},
+  {path:'/missions-humanitaires',type:'page-publique'},
+  {path:'/rubriques',type:'page-publique'},
 ]);
 
 function verifierReponse(origine,controle,reponse,corps) {
@@ -70,6 +84,15 @@ function verifierReponse(origine,controle,reponse,corps) {
     if(!type.includes('text/css'))erreur('Styles du pilotage inaccessibles');
     if(!corps.includes('sde-feature-sheen')||!corps.includes('ref-feature'))
       erreur('Styles de contraste et animations du pilotage absents');
+  }
+  if(controle.type==='page-publique'){
+    if(!type.includes('text/html'))erreur('Page publique non HTML');
+    if(!corps.includes('/vitrine/sde-sitewide-2026.css'))erreur('Thème public global absent sur la page');
+  }
+  if(controle.type==='styles-site'){
+    if(!type.includes('text/css'))erreur('Thème SDE global non servi');
+    if(!corps.includes('--sde-forest')||!corps.includes('sde-further')||!corps.includes('sde-site-countdown-reveal'))
+      erreur('Thème vert-or ou animations manquants');
   }
   if(controle.type==='script'){
     if(!/javascript/i.test(type))erreur('Script privé sans type JavaScript');
