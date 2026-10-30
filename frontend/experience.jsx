@@ -88,7 +88,7 @@ function PrivateExperience({portal}){
  const nav=direction?[
   ['synthese','Accueil','home'],['membres','Membres','members'],['agenda','Agenda','calendar'],
   ...(portal.compte.niveau>=2?[['finances','Finances','money']]:[['projets','Pôles','book']])
- ]:[['synthese','Accueil','home'],['espace','Profil','members'],['rendezvous','Agenda','calendar'],['contributions','Cotisations','money']];
+ ]:[['synthese','Accueil','home'],['agenda','Agenda','calendar'],['academie','Academy','book'],['mur','Prière','prayer']];
  const shell=document.querySelector('.shell');
  return <><FocusControl allowed={['academie','arsenal','parcours','mediatheque','bibliotheque'].includes(module)}/>
   <nav className="sde-bottom-nav" aria-label="Navigation mobile privée">{nav.map(([key,label,icon])=><button type="button" key={key} aria-label={label} onClick={()=>open(key)} aria-current={module===key&&!tools?'page':undefined}><Icon name={icon}/><span>{label}</span></button>)}<button type="button" aria-label={tools?'Fermer les rubriques':'Plus de rubriques'} aria-current={tools?'page':undefined} aria-expanded={tools} aria-controls="sde-direct-tabs" onClick={()=>setTools(!tools)}><Icon name="more"/><span>{tools?'Fermer':'Plus'}</span></button></nav>
