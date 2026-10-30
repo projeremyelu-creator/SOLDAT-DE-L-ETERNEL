@@ -134,3 +134,28 @@ test("maquette récente : panneaux de l'accueil adaptés au format smartphone",(
    assert.ok(css.includes(s),s);
  assert.ok(css.includes("@media(max-width:360px)"),"écrans étroits");
 });
+
+test("fiche membre plein écran et cache mobile : accessibilité sans changement métier",()=>{
+ const app=read("public/index.html");
+ const appCss=read("public/app.css");
+ const home=read("public/vitrine/portail.html");
+ const oldHome=read("public/vitrine/index.html");
+ const source=read("public/vitrine/portail-unifie.css");
+ const builder=read("scripts/build-experience.mjs");
+ for(const token of ['name="viewport"','width=device-width'])assert.ok(app.includes(token),token);
+ assert.ok(app.includes('href="/app.css'),"style privé chargé");
+ assert.ok(appCss.includes("Fiche membre et formulaires natifs réellement utilisables"),"modal mobile");
+ assert.ok(appCss.includes('body #sheet:not([hidden])'),"fenêtre de dialogue complète");
+ assert.ok(appCss.includes('height:100dvh!important'),"hauteur écran mobile");
+ assert.ok(appCss.includes('overflow-y:auto'),"défilement membre");
+ assert.ok(appCss.includes('(pointer: coarse)'),"mode ordinateur Android traité");
+ assert.ok(appCss.includes('.vy-grid'),"voyants adaptés");
+ assert.ok(source.includes('Correctifs mobile 30 octobre 2026'),"nouvelle feuille publique");
+ assert.ok(home.includes('/vitrine/portail-unifie.css?v='),"style principal public");
+ assert.ok(home.includes('/vitrine/accueil-maquette.css?v='),"style accueil actif");
+ assert.ok(home.includes('/vitrine/sde-maquette.css?v='),"style charte publique");
+ assert.ok(oldHome.includes('/vitrine/sde-maquette.css?v='),"style ancienne vitrine");
+ assert.ok(builder.includes("versionnerHtml('public')"),"invalidation des assets gérée automatiquement");
+ assert.ok(app.includes('Veille pastorale · visible par la direction seulement'),"accès pastoral inchangé");
+ assert.ok(app.includes('sheet.hidden = true'),"fermeture du dialogue conservée");
+});
