@@ -71,13 +71,42 @@ html body.sde-ivoire .section .tete-section h2 em{color:var(--iv-or-clair)!impor
 /* Page Programmes — Agenda : cartes harmonisées et lisibles sur smartphone.
    S'applique au seul #agenda, sans toucher aux contenus ni à l'agenda privé. */
 html body.sde-ivoire[data-sde-page="programmes"] #agenda{
+  position:relative;isolation:isolate;overflow:hidden;
   scroll-margin-top:clamp(88px,12vw,116px);
+  padding-block:clamp(46px,7vw,86px)!important;
+  background:linear-gradient(135deg,#172b25 0%,#2d4434 52%,#172820 100%)!important;
+  border-top:1px solid #b8a16e;
+  border-bottom:1px solid #b8a16e;
+}
+/* Profondeur discrète, sans image externe ni texture pénalisant le chargement. */
+html body.sde-ivoire[data-sde-page="programmes"] #agenda::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 560px 340px at 92% 7%,rgba(215,184,100,.17),transparent 72%),
+    radial-gradient(ellipse 620px 450px at 2% 85%,rgba(7,18,17,.38),transparent 75%);
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda::after{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:repeating-linear-gradient(135deg,transparent 0,transparent 42px,rgba(255,243,194,.025) 43px,transparent 44px);
 }
 html body.sde-ivoire[data-sde-page="programmes"] #agenda .enveloppe{
-  min-width:0;
+  min-width:0;position:relative;z-index:1;
 }
 html body.sde-ivoire[data-sde-page="programmes"] #agenda .tete-section{
-  margin-bottom:20px;
+  margin-bottom:24px;max-width:780px;
+  color:#f8f2e4!important;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .tete-section .surtitre{
+  color:#e9c777!important;-webkit-text-fill-color:#e9c777!important;
+  font-weight:700!important;letter-spacing:.13em;
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .tete-section h2{
+  color:#fdf6e5!important;-webkit-text-fill-color:#fdf6e5!important;
+  text-shadow:0 3px 12px rgba(0,0,0,.25);
+}
+html body.sde-ivoire[data-sde-page="programmes"] #agenda .tete-section .chapo{
+  color:#e0e9de!important;-webkit-text-fill-color:#e0e9de!important;
+  line-height:1.6!important;
 }
 html body.sde-ivoire[data-sde-page="programmes"] #agenda .agenda-filtres{
   display:flex;justify-content:flex-start;align-items:center;flex-wrap:wrap;
