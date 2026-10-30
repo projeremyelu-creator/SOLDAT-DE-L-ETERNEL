@@ -77,3 +77,10 @@ test("charte visuelle de la maquette : couleurs, typographies, lion, événement
  for(const p of ["index","mouvement","programmes","rejoindre","ressources"]){const h=read("public/vitrine/"+p+".html");assert.ok(h.includes("sde-maquette.css"),p);assert.ok(h.includes("family=Cinzel"),p+" polices");}
  assert.ok(read("public/vitrine/index.html").includes('document.documentElement.setAttribute("data-theme", "dark");'),"sombre par défaut");
 });
+test("maquette fidèle : rail latéral, panneaux numérotés, logo monogramme",()=>{
+ const home=read("public/vitrine/index.html"),charte=read("public/vitrine/sde-maquette.css");
+ assert.ok(home.includes('class="sde-rail"')&&home.includes("pour la moisson."),"rail et citation");
+ assert.ok(home.includes('<span class="monogramme" aria-hidden="true">SDE</span>'),"monogramme");
+ assert.ok(charte.includes("counter(panneau,decimal-leading-zero)"),"numérotation des sections");
+ assert.ok(css.includes('content:"03"')&&css.includes('content:"02"'),"bandeaux 02 et 03 de l'application");
+});
