@@ -94,12 +94,12 @@ test("maquette fidèle : rail latéral, panneaux numérotés, logo monogramme",(
  assert.ok(css.includes('content:"03"')&&css.includes('content:"02"'),"bandeaux 02 et 03 de l'application");
 });
 
-test("la palette terracotta de la maquette est proposée et devient le choix initial",()=>{
+test("palettes proposées ; Ivoire · Treillis · Or est le choix initial partout",()=>{
  const shell=read("frontend/reference-shell.jsx");
  const css=read("frontend/palette-themes.css");
  const entry=read("frontend/experience.css");
  for(const t of ["militaire","ivoire","violet","terracotta"])assert.ok(shell.includes("'"+t+"'"),t);
- assert.ok(shell.includes("return PALETTES.some(([id])=>id===p)?p:'terracotta'"));
+ assert.ok(shell.includes("return PALETTES.some(([id])=>id===p)?p:'ivoire'")&&shell.includes("'ivoire-03'"),"Ivoire par défaut");
  assert.ok(shell.includes("localStorage.getItem('sde-private-palette')"),"préférence enregistrée");
  for(const t of ["militaire","ivoire","violet"])assert.ok(shell.includes("'"+t+"'"),t);
  assert.ok(shell.includes("localStorage.getItem('sde-private-palette')"),"préférence enregistrée");
@@ -184,4 +184,8 @@ test("maquette 02 Ivoire · Treillis · Or : vitrine, chargement, espaces privé
  assert.ok(read("public/vitrine/sde-splash.css").includes("prefers-reduced-motion"),"mouvement réduit respecté");
  assert.ok(shell.includes("['ivoire','Ivoire · Treillis · Or']"),"palette Ivoire disponible");
  for(const t of ["Bonjour, {prenom}","Avançons ensemble, pour un plus grand impact.","Suivi, coordination et développement du mouvement.","Ajouter une prière"])assert.ok(ops.includes(t),t);
+});
+test("Ivoire · Treillis · Or sur tout le site public",()=>{
+ for(const p of ["mouvement","programmes","rejoindre","prieres","ressources","projets","academy"]){const h=read("public/vitrine/"+p+".html");assert.ok(/<body class="[^"]*sde-ivoire/.test(h),p);assert.ok(h.includes("ivoire-pages.css"),p+" feuille");assert.ok(h.includes("SDE - Mouvement"),p+" marque");}
+ assert.ok(read("public/vitrine/ivoire-pages.css").includes("--iv-treillis:#2f3b25"));
 });
