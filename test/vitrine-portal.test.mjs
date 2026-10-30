@@ -42,7 +42,7 @@ for (const page of pages) {
     }else{
       assert.equal(p.d.querySelectorAll('.site-menu').length,1);
       for(const route of ['/','/portail'])assert.ok(p.d.querySelector('.site-header a[href="'+route+'"]'));
-      assert.equal(p.d.querySelectorAll('.site-mega').length,3);
+      assert.equal(p.d.querySelectorAll('.site-mega').length,4);
       const skip=p.d.querySelector('.skip[href^="#"]');assert.ok(skip,'lien de navigation clavier');assert.ok(p.d.querySelector(skip.getAttribute('href')),'cible du lien clavier');
       const btn=p.d.querySelector('.site-burger');btn.click();assert.equal(btn.getAttribute('aria-expanded'),'true');
     }

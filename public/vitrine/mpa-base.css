@@ -404,6 +404,7 @@ html.anim .hero-mission { opacity: 0; animation: fondu-sous .7s var(--ease) .7s 
 .intro-poles { text-align: center; color: var(--texte-2); margin-bottom: 20px; font-size: .95rem; }
 .poles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
 .pole { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--r-lg); overflow: hidden; text-align: left; transition: all var(--duree) var(--ease); cursor: pointer; }
+a.pole { display: block; color: inherit; text-decoration: none; }
 .pole:hover { border-color: var(--or); transform: translateY(-3px); box-shadow: var(--ombre-carte); }
 .pole-img img { width: 100%; height: 140px; object-fit: cover; }
 .pole-corps { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
