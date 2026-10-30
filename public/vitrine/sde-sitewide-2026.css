@@ -790,3 +790,171 @@ html body.sde-unifie.sde-accueil-maquette #contenu .m-welcome blockquote.m-verse
     font-size:.82rem!important;
   }
 }
+
+
+/* SDE Digital Experience 2027 — cartes des pôles, TPA, contraste, responsive. */
+/* Les composants ci-dessous sont publics et ne touchent ni aux dossiers
+   pastoraux ni aux permissions des deux tableaux de bord sécurisés. */
+html body.sde-unifie.sde-accueil-maquette .m-programmes,
+html body.sde-unifie.sde-accueil-maquette .m-poles{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));
+  gap:clamp(13px,2vw,22px);
+  align-items:stretch;
+}
+html body.sde-unifie.sde-accueil-maquette .m-programmes>.m-prog,
+html body.sde-unifie.sde-accueil-maquette .m-poles>.m-pole{
+  min-width:0;
+  height:100%;
+}
+html body.sde-unifie.sde-accueil-maquette .m-programmes .sde-featured-program{
+  position:relative;
+  border:2px solid #b99444!important;
+  background:#fffaf0!important;
+  color:#233127!important;
+  box-shadow:0 12px 32px rgba(38,56,32,.11)!important;
+}
+html body.sde-unifie.sde-accueil-maquette .sde-featured-program :is(h3,p,time,strong){
+  color:#233127!important;
+  -webkit-text-fill-color:#233127!important;
+  opacity:1!important;
+}
+html body.sde-unifie.sde-accueil-maquette .sde-featured-program .m-rythme{
+  color:#33472c!important;
+  -webkit-text-fill-color:#33472c!important;
+}
+html body.sde-unifie.sde-accueil-maquette .sde-event-poster-link{
+  display:block;min-width:0;border-radius:12px;overflow:hidden;
+  background:#142c35;margin:0 0 14px;
+  outline-offset:4px;
+}
+html body.sde-unifie.sde-accueil-maquette .sde-event-poster{
+  display:block;width:100%;height:auto;
+  aspect-ratio:1/1;object-fit:contain;
+  border-radius:12px;
+}
+html body.sde-unifie.sde-accueil-maquette .sde-featured-program .m-prog-actions{
+  display:flex;flex-wrap:wrap;gap:9px;
+  margin-top:auto;
+}
+html body.sde-unifie.sde-accueil-maquette .sde-featured-program .m-prog-actions a{
+  min-height:44px;
+  display:inline-flex;align-items:center;
+  padding:9px 12px;border-radius:9px;
+  background:#f6e8c4;color:#543a19!important;
+  -webkit-text-fill-color:#543a19!important;
+  border:1px solid #d2ae5b;
+  text-decoration:none;font-weight:800;
+  line-height:1.3;
+}
+html body.sde-unifie.sde-accueil-maquette .sde-featured-program .m-prog-actions a:hover{
+  background:#efdcaa;
+}
+html body.sde-unifie.sde-accueil-maquette .m-poles>.sde-pole-officiel{
+  display:flex;
+  border:1px solid #d8c39b!important;
+  background:#fffdf7!important;
+  padding:0!important;
+  border-radius:17px!important;
+  overflow:hidden;
+}
+html body.sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien{
+  min-width:0;width:100%;
+  display:flex;flex-direction:column;align-items:flex-start;
+  gap:9px;padding:clamp(17px,2.2vw,23px);
+  color:#26372b!important;
+  -webkit-text-fill-color:#26372b!important;
+  text-decoration:none!important;
+  transition:box-shadow .2s ease,transform .2s ease;
+}
+html body.sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien img{
+  display:block;align-self:center;
+  width:min(160px,80%);
+  height:auto;
+  aspect-ratio:1/1;
+  object-fit:contain;
+  margin:0 auto 7px;
+  filter:drop-shadow(0 7px 10px rgba(20,28,24,.11));
+}
+html body.sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien .m-pole-num{
+  color:#745116!important;
+  -webkit-text-fill-color:#745116!important;
+  font-size:.8rem;font-weight:800;
+  letter-spacing:.055em;
+}
+html body.sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien h3{
+  color:#223a2a!important;
+  -webkit-text-fill-color:#223a2a!important;
+  font-size:clamp(1.16rem,2vw,1.34rem);
+  line-height:1.3;margin:0;
+  overflow-wrap:anywhere;
+}
+html body.sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien p{
+  color:#394539!important;
+  -webkit-text-fill-color:#394539!important;
+  font-size:.96rem;
+  line-height:1.6;
+  margin:0 0 10px;
+  opacity:1!important;
+}
+html body.sde-unifie.sde-accueil-maquette .sde-pole-decouvrir{
+  color:#65410b!important;
+  -webkit-text-fill-color:#65410b!important;
+  font-weight:800;
+  margin-top:auto;
+  text-decoration:underline;
+  text-decoration-thickness:1px;
+  text-underline-offset:4px;
+}
+@media(hover:hover) and (pointer:fine){
+  html body.sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien:hover{
+    transform:translateY(-2px);
+    box-shadow:0 11px 29px rgba(32,47,35,.15);
+  }
+}
+/* Cibles tactiles et focus visibles sur le site public, y compris dans le menu. */
+html body.sde-unifie :is(.site-header,.m-panel,.sde-initiative-section,main) :is(a,button,summary):focus-visible{
+  outline:3px solid #bd892e!important;
+  outline-offset:3px!important;
+}
+html body.sde-unifie :is(.m-panel,.section,.sde-initiative-section) :is(h1,h2,h3,p,a){
+  overflow-wrap:break-word;
+}
+html body.sde-unifie .m-panel :is(.m-btn,.iv-cta,.sde-pole-officiel-lien){
+  min-height:44px;
+}
+html body.sde-unifie.sde-subpage main#contenu>section.section .tete-section{
+  scroll-margin-top:110px;
+}
+html body.sde-unifie :is(#poles-accueil,#programmes-accueil,#espaces-prives,#agenda,#poles,#programmes){
+  scroll-margin-top:110px;
+}
+@media(max-width:760px){
+  html body.sde-unifie.sde-accueil-maquette .m-programmes,
+  html body.sde-unifie.sde-accueil-maquette .m-poles{
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));
+  }
+  html body.sde-unifie.sde-accueil-maquette .sde-featured-program .m-prog-actions a{
+    flex:1 1 140px;justify-content:center;text-align:center;
+  }
+}
+@media(max-width:480px){
+  html body.sde-unifie.sde-accueil-maquette .m-programmes,
+  html body.sde-unifie.sde-accueil-maquette .m-poles{
+    grid-template-columns:minmax(0,1fr);
+  }
+  html body.sde-unifie.sde-accueil-maquette .m-poles>.sde-pole-officiel{
+    max-width:100%;
+  }
+  html body.sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien{
+    padding:18px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html body.sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien{
+    transition:none!important;transform:none!important;
+  }
+}
+body[data-motion="paused"].sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien{
+  transition:none!important;transform:none!important;
+}
