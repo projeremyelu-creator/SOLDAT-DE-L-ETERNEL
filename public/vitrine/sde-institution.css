@@ -1,0 +1,116 @@
+/* Pages institutionnelles SDE — Pôles et SOLDIER’S AWARD. */
+html body.sde-unifie.sde-subpage .sde-doc-main{background:#f6f1e7!important;color:#273a2e!important}
+html body.sde-unifie.sde-subpage .sde-doc-hero{
+  background:linear-gradient(120deg,#132820,#304b36 60%,#182d25)!important;
+  border-bottom:2px solid #c8a75c!important;
+  color:#fff8e6!important;padding:clamp(48px,7vw,90px) clamp(18px,4vw,50px);
+  text-align:center;position:relative;overflow:hidden;
+}
+html body.sde-unifie.sde-subpage .sde-doc-hero::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;
+  background:radial-gradient(ellipse at 85% 4%,#d1b96e45,transparent 65%);
+}
+html body.sde-unifie.sde-subpage .sde-doc-hero>*{position:relative;z-index:1}
+html body.sde-unifie.sde-subpage .sde-doc-hero h1{
+  color:#fff8e6!important;-webkit-text-fill-color:#fff8e6!important;
+  font:600 clamp(2.2rem,5vw,3.6rem)/1.13 "Cormorant Garamond",Georgia,serif!important;
+  margin:12px auto 20px;max-width:24ch;
+}
+html body.sde-unifie.sde-subpage .sde-doc-hero p{
+  color:#f7f0df!important;-webkit-text-fill-color:#f7f0df!important;
+  max-width:68ch;line-height:1.65;margin:12px auto;
+}
+html body.sde-unifie.sde-subpage .sde-doc-hero .sde-doc-eyebrow{
+  color:#f0d184!important;-webkit-text-fill-color:#f0d184!important;
+  font:800 .83rem/1.5 "Saira Condensed",system-ui,sans-serif!important;
+  text-transform:uppercase;letter-spacing:.13em;
+}
+html body.sde-unifie.sde-subpage .sde-doc-hero nav{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:28px;
+}
+html body.sde-unifie.sde-subpage .sde-doc-hero nav a,
+html body.sde-unifie.sde-subpage .sde-doc-link{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 20px;min-height:44px;border-radius:9px;
+  background:#f8efd8!important;color:#33472d!important;
+  -webkit-text-fill-color:#33472d!important;border:1px solid #c9ac62!important;
+  text-decoration:none;font-weight:750;
+}
+html body.sde-unifie.sde-subpage .sde-doc-section{
+  padding:clamp(40px,6vw,68px) clamp(16px,4vw,52px);
+  max-width:1260px;margin:auto;scroll-margin-top:106px;
+}
+html body.sde-unifie.sde-subpage .sde-doc-section>h2{
+  color:#1b3328!important;-webkit-text-fill-color:#1b3328!important;
+  font:600 clamp(1.9rem,3.5vw,2.75rem)/1.18 "Cormorant Garamond",Georgia,serif!important;
+  margin:0 0 16px;text-align:center;
+}
+html body.sde-unifie.sde-subpage .sde-doc-section>p,
+html body.sde-unifie.sde-subpage .sde-doc-coordination>ul{
+  color:#34483a!important;-webkit-text-fill-color:#34483a!important;
+  max-width:75ch;margin:12px auto 26px;line-height:1.6;
+}
+html body.sde-unifie.sde-subpage .sde-doc-section .sde-doc-note{
+  padding:12px 18px;background:#e9e1d2!important;border-left:4px solid #aa813a;
+  border-radius:7px;color:#2b3d31!important;-webkit-text-fill-color:#2b3d31!important;
+}
+html body.sde-unifie.sde-subpage .sde-doc-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;
+}
+html body.sde-unifie.sde-subpage .sde-doc-card{
+  background:#fffdf8!important;border:1px solid #d9c6a0;border-radius:18px;
+  padding:clamp(18px,2.5vw,28px);box-shadow:0 8px 28px #0e281013;color:#27372c!important;
+  min-width:0;
+}
+html body.sde-unifie.sde-subpage .sde-doc-card :is(p,h2,h3,li,summary,strong){
+  color:#27392d!important;-webkit-text-fill-color:#27392d!important;
+}
+html body.sde-unifie.sde-subpage .sde-doc-card :is(p,li){
+  line-height:1.56;overflow-wrap:anywhere;
+}
+html body.sde-unifie.sde-subpage .sde-doc-card-head{
+  display:flex;align-items:center;gap:15px;margin-bottom:14px;
+}
+html body.sde-unifie.sde-subpage .sde-doc-card h2,
+html body.sde-unifie.sde-subpage .sde-doc-card h3{
+  margin:0;font-size:clamp(1.2rem,2vw,1.65rem);line-height:1.25;
+  font-family:"Atkinson Hyperlegible",system-ui,sans-serif;
+}
+html body.sde-unifie.sde-subpage .sde-doc-index{
+  flex:none;width:46px;height:46px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  background:#233d30;color:#f4da9b!important;font-weight:800;
+}
+html body.sde-unifie.sde-subpage .sde-doc-card details{
+  margin-top:13px;border:1px solid #e2d4b8;border-radius:10px;
+  background:#faf4e8;padding:12px 14px;
+}
+html body.sde-unifie.sde-subpage .sde-doc-card summary{
+  cursor:pointer;font-weight:700;list-style:revert;
+  min-height:30px;
+}
+html body.sde-unifie.sde-subpage .sde-doc-card details[open]{
+  border-color:#bc9857;
+}
+html body.sde-unifie.sde-subpage .sde-doc-card summary:focus-visible,
+html body.sde-unifie.sde-subpage .sde-doc-main a:focus-visible{
+  outline:3px solid #b89441;outline-offset:3px;
+}
+html body.sde-unifie.sde-subpage .sde-doc-reference,
+html body.sde-unifie.sde-subpage .sde-award-en{
+  font-size:.88rem;opacity:.85;
+}
+html body.sde-unifie.sde-subpage .sde-doc-coordination{
+  background:#e9e1d2!important;border-radius:18px;margin-bottom:42px;
+  max-width:min(1200px,calc(100% - 32px));
+}
+html body.sde-unifie.sde-subpage .sde-doc-coordination>ul{
+  max-width:74ch;margin-inline:auto;
+}
+@media(max-width:760px){
+  html body.sde-unifie.sde-subpage .sde-doc-grid{grid-template-columns:minmax(0,1fr)}
+  html body.sde-unifie.sde-subpage .sde-doc-section{padding:35px 16px}
+}
+@media(prefers-reduced-motion:reduce){
+  html body.sde-unifie.sde-subpage .sde-doc-card details{scroll-behavior:auto}
+}
