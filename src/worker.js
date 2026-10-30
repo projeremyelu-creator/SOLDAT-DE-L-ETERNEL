@@ -1511,6 +1511,8 @@ async function traiter(req, env, ctx) {
             n.headers.set("x-content-type-options", "nosniff");
             n.headers.set("x-frame-options", "DENY");
             n.headers.set("referrer-policy", "strict-origin-when-cross-origin");
+            /* Pages HTML : toujours revalider, pour que chaque déploiement soit visible immédiatement (navigateurs, PWA, cache intermédiaire). */
+            if ((n.headers.get("content-type") || "").includes("text/html") && !/no-store/.test(n.headers.get("cache-control") || "")) n.headers.set("cache-control", "no-cache, must-revalidate");
             return n;
           }
           const location = r.headers.get("location");
