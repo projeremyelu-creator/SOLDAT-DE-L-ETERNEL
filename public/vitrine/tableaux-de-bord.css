@@ -72,3 +72,110 @@ body.sde-tableau{min-height:100vh;background:#f4f5f7;color:#1e2637;font-family:"
 @media(max-width:880px){.sde-dash-shell{grid-template-columns:1fr}.sde-dash-side{position:static;height:auto;padding:8px 10px;background:#192640}.sde-dash-side-caption,.sde-dash-side-footer{display:none}.sde-dash-side nav{flex-direction:row;overflow-x:auto;gap:6px;padding:0 6px;scrollbar-width:thin}.sde-dash-side nav a{white-space:nowrap;font-size:.86rem;padding:11px 12px;border-left:0;border-bottom:3px solid transparent}.sde-dash-side nav a[aria-current="page"]{border-bottom-color:#e7c878}.sde-dash-main{padding:30px 18px 70px}.sde-dash-header-inner{gap:10px}.sde-dash-logo small{display:none}.sde-dash-header nav{margin-left:auto}.sde-dash-header nav a{font-size:.78rem;padding:8px}}
 @media(max-width:600px){.sde-dash-header-inner{padding:9px 12px;flex-wrap:wrap}.sde-dash-header nav{gap:0}.sde-dash-logo img{width:32px;height:32px}.sde-dash-logo strong{font-size:1rem}.sde-dash-signout{padding:7px 9px;font-size:.78rem;min-height:36px}.sde-dash-header nav a{padding:7px;font-size:.77rem}.sde-dash-metrics,[data-dashboard="administration"] .sde-dash-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.sde-dash-metrics article{padding:15px}.sde-dash-two,.sde-profile{grid-template-columns:1fr}.sde-dash-heading{flex-wrap:wrap;gap:10px}.sde-dash-role{order:-1}.sde-panel{padding:18px}.sde-dash-heading h1{font-size:2.4rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* SDE OS — qualité mobile, accès directs et accessibilité (2026-10-30). */
+.sde-tableau :is(.sde-panel,.sde-dash-metrics article,.sde-dash-heading,.sde-dash-quick){
+  min-width:0;
+}
+.sde-tableau .sde-panel :is(h2,h3,p,li,dt,dd),
+.sde-tableau .sde-dash-metrics article :is(span,strong,small){
+  overflow-wrap:break-word;
+}
+.sde-tableau .sde-panel-actions a,
+.sde-tableau .sde-dash-quick a{
+  min-height:44px;
+  align-items:center;
+  line-height:1.35;
+}
+.sde-tableau .sde-dash-form :is(input,textarea,select){
+  min-height:46px;
+  font-size:16px;
+}
+.sde-tableau .sde-panel-actions a:focus-visible,
+.sde-tableau .sde-dash-side nav a:focus-visible,
+.sde-tableau .sde-dash-quick a:focus-visible{
+  outline:3px solid #c8a451!important;
+  outline-offset:3px!important;
+}
+@media(max-width:880px){
+  .sde-tableau .sde-dash-side nav{
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+  }
+  .sde-tableau .sde-dash-side nav a{
+    flex:none;
+    scroll-snap-align:start;
+    min-height:46px;
+  }
+}
+@media(max-width:600px){
+  .sde-tableau .sde-dash-header-inner{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:"brand logout" "links links";
+    gap:8px;
+    padding:9px 12px;
+    align-items:center;
+  }
+  .sde-tableau .sde-dash-logo{
+    grid-area:brand;
+    min-width:0;
+    max-width:100%;
+    margin:0;
+    white-space:normal;
+    gap:7px;
+  }
+  .sde-tableau .sde-dash-logo strong{font-size:1.02rem}
+  .sde-tableau .sde-dash-header nav{
+    grid-area:links;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    justify-content:flex-start;
+    gap:6px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+    padding-bottom:2px;
+  }
+  .sde-tableau .sde-dash-header nav a{
+    flex:none;
+    min-height:44px;
+    font-size:.82rem;
+    padding:8px 11px;
+    white-space:nowrap;
+  }
+  .sde-tableau .sde-dash-signout{
+    grid-area:logout;
+    justify-self:end;
+    min-height:44px;
+    font-size:.82rem;
+    padding:8px 12px;
+  }
+  .sde-tableau .sde-dash-shell{max-width:100%;min-width:0}
+  .sde-tableau .sde-dash-main{padding:25px 14px 72px}
+  .sde-tableau .sde-dash-metrics article{min-height:108px;padding:15px 12px}
+  .sde-tableau .sde-dash-metrics article strong{
+    font-size:clamp(1.4rem,6.8vw,2.2rem);
+    line-height:1.12;
+  }
+  .sde-tableau .sde-panel{padding:19px 16px;border-radius:15px}
+  .sde-tableau .sde-dash-heading h1{font-size:clamp(2rem,8vw,2.5rem)}
+  .sde-tableau .sde-panel-actions{
+    display:flex;flex-wrap:wrap;gap:9px;
+  }
+  .sde-tableau .sde-panel-actions a{flex:1 1 180px}
+}
+@media(max-width:370px){
+  .sde-tableau .sde-dash-metrics,
+  .sde-tableau[data-dashboard="administration"] .sde-dash-metrics{
+    grid-template-columns:minmax(0,1fr);
+  }
+  .sde-tableau .sde-dash-quick a{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  .sde-tableau :is(a,button,.sde-panel){
+    transition:none!important;
+    scroll-behavior:auto!important;
+  }
+}
