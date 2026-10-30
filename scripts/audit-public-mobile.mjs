@@ -13,7 +13,11 @@ const cases=[
  {path:'/',name:'accueil-390',width:390,height:844},
  {path:'/programmes',name:'programmes-390',width:390,height:844},
  {path:'/mouvement',name:'mouvement-390',width:390,height:844},
- {path:'/',name:'accueil-desktop',width:1280,height:900}
+ {path:'/',name:'accueil-tablette',width:768,height:1024},
+ {path:'/',name:'accueil-1024',width:1024,height:768},
+ {path:'/',name:'accueil-desktop',width:1280,height:900},
+ {path:'/programmes',name:'programmes-desktop',width:1280,height:900},
+ {path:'/mouvement',name:'mouvement-desktop',width:1280,height:900}
 ];
 const report={date:new Date().toISOString(),domain,checks:[],issues:[],notes:[]};
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
