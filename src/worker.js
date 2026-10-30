@@ -973,7 +973,16 @@ async function apiVisites(req, env) {
     env.DB.prepare("SELECT COUNT(*) AS n FROM visites_presence WHERE vu > ?").bind(t - 90000),
   ]);
   const n = (r) => Number(r?.results?.[0]?.n) || 0;
-  return json({ ok: true, aujourdhui: n(jourR), total: n(totalR), enLigne: Math.max(1, n(ligneR)) }, 200, { "cache-control": "no-store" });
+  const corps = { ok: true, aujourdhui: n(jourR), total: n(totalR), enLigne: Math.max(1, n(ligneR)) };
+  if (req.method === "GET" && new URL(req.url).searchParams.get("historique") === "1") {
+    const debut = new Date(t - 13 * 86400000).toISOString().slice(0, 10);
+    const rows = (await env.DB.prepare("SELECT jour, n FROM visites_jour WHERE jour >= ? ORDER BY jour").bind(debut).all()).results || [];
+    const parJour = new Map(rows.map((r) => [r.jour, Number(r.n) || 0]));
+    corps.historique = Array.from({ length: 14 }, (_, i) => { const j = new Date(t - (13 - i) * 86400000).toISOString().slice(0, 10); return { jour: j, n: parJour.get(j) || 0 }; });
+    corps.semaine = corps.historique.slice(-7).reduce((x, r) => x + r.n, 0);
+    corps.enLigne = n(ligneR);
+  }
+  return json(corps, 200, { "cache-control": "no-store" });
 }
 
 async function apiFormulaire(req, env, ctx) {
