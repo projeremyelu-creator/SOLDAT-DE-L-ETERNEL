@@ -220,3 +220,13 @@ test("fenêtres Voyants du soldat et Modifier la fiche fidèles à la maquette",
  for(const t of [":has(#f-eval)",":has(#f-membre)","#f-eval .eval-o.g span","#f-eval .ident","#8e1622"])assert.ok(css.includes(t),t);
  assert.ok(css.includes("prefers-reduced-motion"));
 });
+test("compteur de visites en temps réel et versets quotidiens défilants",async()=>{
+ const js=read("public/vitrine/sde-versets.js"),css=read("public/vitrine/sde-versets.css");
+ assert.ok(js.includes('"/api/visites"')&&js.includes("setInterval(signal, 45000)"),"signal périodique");
+ assert.ok(js.includes("Ézéchiel 37.10")&&js.includes("Verset du jour"));
+ assert.ok(css.includes("prefers-reduced-motion")&&js.includes("sde-versets-pause"),"pause et mouvement réduit");
+ assert.ok(worker.includes('if (p === "/api/visites") return apiVisites(req, env);'));
+ const fn=worker.slice(worker.indexOf("async function apiVisites"),worker.indexOf("async function apiFormulaire"));
+ assert.ok(fn.includes("/^[a-z0-9]{16,40}$/")&&fn.includes('bloque(env, cle, 30)'),"entrée validée et limitée");
+ for(const p of ["portail","mouvement","programmes"])assert.ok(read("public/vitrine/"+p+".html").includes("sde-versets.js"),p);
+});
