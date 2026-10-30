@@ -65,6 +65,10 @@ try{
      const L=x=>.2126*x[0]+.7152*x[1]+.0722*x[2];
      return Math.round(((Math.max(L(a),L(b))+.05)/(Math.min(L(a),L(b))+.05))*100)/100;
     }
+    const overflowElements=[...document.querySelectorAll('body *')].map(el=>{
+      const r=el.getBoundingClientRect();const style=getComputedStyle(el);
+      return {tag:el.tagName.toLowerCase(),id:el.id||'',classes:String(el.className||'').slice(0,95),left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),position:style.position};
+    }).filter(x=>x.right>innerWidth+12&&x.width>24&&x.left<innerWidth).sort((a,b)=>b.right-a.right).slice(0,15);
     const poleLinks=[...document.querySelectorAll('a.sde-pole-officiel-lien')];
     const posters=[...document.querySelectorAll('img.sde-event-poster')];
     return {
@@ -73,6 +77,7 @@ try{
      bodyWidth:document.body.scrollWidth,
      documentWidth:document.documentElement.scrollWidth,
      overflowX:Math.max(0,document.documentElement.scrollWidth-innerWidth,document.body.scrollWidth-innerWidth),
+     overflowElements,
      logoPresent:!!(logo&&logo.width>10),
      brandPortalOverlap:intersects(brand,portal),
      brandBurgerOverlap:intersects(brand,burger),
