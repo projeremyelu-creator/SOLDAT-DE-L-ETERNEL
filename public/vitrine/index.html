@@ -734,7 +734,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
 <link rel="stylesheet" href="/vitrine/experience.css?v=20261024c">
 <link rel="stylesheet" href="/vitrine/hybride.css?v=20261024c">
 <link rel="stylesheet" href="/vitrine/portal.css?v=20261025b">
-<link rel="stylesheet" href="/vitrine/mpa.css?v=20261025d">
+<link rel="stylesheet" href="/vitrine/mpa.css?v=20261030a">
 <link rel="stylesheet" href="/vitrine/sde-unified.css?v=20261025f">
 <link rel="stylesheet" href="/vitrine/modern-2026.css?v=20261025e">
 <link rel="manifest" href="/vitrine/manifest.webmanifest">
@@ -826,6 +826,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
         <svg class="icone-theme-sombre" aria-hidden="true"><use href="#i-soleil"/></svg>
         <svg class="icone-theme-clair" aria-hidden="true" style="display:none"><use href="#i-lune"/></svg>
       </button>
+      <a class="bouton b-contour btn-soutien" href="#soutenir">Soutenir le mouvement</a>
       <a class="bouton b-or btn-membre btn-portail" href="/connexion"><svg aria-hidden="true" style="width:16px;height:16px"><use href="#i-cle"/></svg> Mon Portail S.D.E</a>
       <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav-principal" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
     </div>
@@ -842,15 +843,18 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
     <div class="hero-voile"></div>
     <canvas id="braises" aria-hidden="true"></canvas>
     <div class="hero-contenu">
-      <div class="hero-badge"><span class="pulse"></span>Mouvement Prophético-Apostolique</div>
-      <p class="hero-event-tag">🔥 Conférence internationale</p>
-      <h1><span class="accent">IN FIRE '26</span> —<br>Le grand réveil</h1>
+      <div class="hero-badge"><span class="pulse"></span>Mouvement Prophético-Apostolique Soldat De l’Éternel</div>
+      <p class="hero-event-tag">🔥 Événement phare · IN FIRE 2026</p>
+      <h1><span class="accent">Une génération enracinée</span> en Jésus-Christ,<br>prête à servir</h1>
+      <p class="hero-intro">Le Mouvement Prophético-Apostolique Soldat De l’Éternel rassemble des hommes et des femmes autour de Jésus-Christ, de la prière, de la formation et du service. Nous voulons contribuer à l’édification des croyants et au réveil spirituel des nations.</p>
+      <p class="hero-intro">Nous croyons que chacun peut grandir dans la foi, découvrir sa place et mettre ses dons au service de Dieu et de son prochain.</p>
       <p class="hero-date-lieu">31 Octobre · Église MADEG · Cocody Deux-Plateaux, Abidjan</p>
       <div class="hero-decompte" id="hero-decompte" aria-label="Compte à rebours"></div>
       <p class="hero-mission">Réveiller · Restaurer · Former · Équiper · Envoyer</p>
       <div class="hero-actions">
-        <a class="bouton b-or b-lg" href="#infire">S'inscrire / Rejoindre <svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
-        <a class="bouton b-contour" href="#mouvement">Découvrir le mouvement</a>
+        <a class="bouton b-or b-lg" href="#mouvement">Découvrir le Mouvement <svg aria-hidden="true"><use href="#i-fleche"/></svg></a>
+        <a class="bouton b-contour" href="#rejoindre">Rejoindre le mouvement</a>
+        <a class="bouton b-contour" href="#programmes">Voir les programmes</a>
       </div>
       <div class="hero-verset">
         <blockquote id="verset-texte">« Et l'esprit entra en eux, et ils reprirent vie, et ils se tinrent sur leurs pieds : c'était une armée nombreuse, très nombreuse. »</blockquote>
@@ -1185,6 +1189,25 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
   </section>
 
   <!-- ═══════════ LE MOUVEMENT ═══════════ -->
+  <!-- ═══════════ VISION ET CINQ ENGAGEMENTS (document de référence) ═══════════ -->
+  <section class="section" id="vision-engagements" aria-labelledby="titre-vision">
+    <div class="enveloppe">
+      <div class="tete-section revele">
+        <p class="surtitre">Réveiller · Restaurer · Former · Équiper · Envoyer</p>
+        <h2 id="titre-vision">Notre vision</h2>
+        <p class="chapo">Nous désirons voir une génération affermie dans la Parole, conduite par l’Esprit de Dieu et engagée dans une vie de prière, de sainteté, de fraternité et de service.</p>
+      </div>
+      <h3 class="revele">Nos cinq engagements</h3>
+      <div class="vmi">
+        <div class="vmi-carte revele"><h3>Réveiller</h3><p>Encourager chacun à rechercher Dieu, à prier et à demeurer attentif à la direction du Saint-Esprit.</p></div>
+        <div class="vmi-carte revele" style="--d:.08s"><h3>Restaurer</h3><p>Accompagner les personnes dans leur croissance et leur affermissement en Jésus-Christ.</p></div>
+        <div class="vmi-carte revele" style="--d:.16s"><h3>Former</h3><p>Transmettre les fondements bibliques et développer le caractère chrétien.</p></div>
+        <div class="vmi-carte revele" style="--d:.24s"><h3>Équiper</h3><p>Aider les membres à reconnaître leurs dons et à se préparer au service.</p></div>
+        <div class="vmi-carte revele" style="--d:.32s"><h3>Envoyer</h3><p>Mobiliser les croyants pour l’évangélisation, les missions et les actions solidaires.</p></div>
+      </div>
+    </div>
+  </section>
+
   <section class="section" id="mouvement" aria-labelledby="titre-mouvement">
     <div class="enveloppe">
       <div class="tete-section revele">
@@ -1822,7 +1845,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
   <div class="enveloppe">
     <div>
       <a class="marque" href="#accueil"><span class="logo" aria-hidden="true"></span><span><b>S.D.E.</b><small>Soldats de l'Éternel</small></span></a>
-      <p>Mouvement prophético-apostolique pour le réveil spirituel des nations. Réveiller · Restaurer · Former · Équiper · Envoyer.</p>
+      <p>Mouvement Prophético-Apostolique Soldat De l’Éternel — Le Réveil Spirituel des Nations.</p>
     </div>
     <div><h3>Le mouvement</h3><ul><li><a href="#mouvement">Qui sommes-nous</a></li><li><a href="#histoire">Notre histoire</a></li><li><a href="#responsables">Couple leader</a></li><li><a href="#poles">Pôles</a></li><li><a href="#presence">Présence internationale</a></li></ul></div>
     <div><h3>Participer</h3><ul><li><a href="#infire">IN FIRE 2026</a></li><li><a href="#programmes">Programmes</a></li><li><a href="#ressources">Ressources</a></li><li><a href="#rejoindre">Rejoindre SDE</a></li><li><a href="#soutenir">Soutenir</a></li><li><a href="#membres">Espace membre</a></li><li><a href="#faq">FAQ</a></li><li><a href="#confidentialite">Confidentialité</a></li></ul></div>

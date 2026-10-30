@@ -93,3 +93,9 @@ body.sde-portal .burger { display: none !important; }
   body.sde-portal { padding-bottom:calc(86px + env(safe-area-inset-bottom, 0px)); }
   .sde-subpage .sde-page-footer { padding-bottom:calc(110px + env(safe-area-inset-bottom, 0px)); }
 }
+/* Refonte étape 1 : accueil selon le document de référence */
+.hero-intro{max-width:60ch;margin:0 0 10px;font:400 1.02rem/1.6 'Atkinson Hyperlegible',system-ui,sans-serif;color:#e8ecf5}
+.hero-actions{flex-wrap:wrap}.btn-soutien{white-space:nowrap}
+@media(max-width:900px){.btn-soutien{display:none}}
+#vision-engagements .vmi{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+#vision-engagements h3{font-family:'Saira Condensed',sans-serif;letter-spacing:.04em}
