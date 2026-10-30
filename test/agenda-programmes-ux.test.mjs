@@ -14,11 +14,12 @@ test('Agenda public : cartes, titres et filtres conservés',()=>{
   assert.equal(agenda.querySelector('h2')?.textContent,'Les prochains rendez-vous');
   assert.equal(agenda.querySelectorAll('#agenda-filtres button[data-filtre]').length,4);
   const cards=[...agenda.querySelectorAll('#agenda-liste .programme.rdv')];
-  assert.equal(cards.length,3);
-  assert.deepEqual(cards.map(c=>c.dataset.type),['Rencontre','Prière','Formation']);
+  assert.equal(cards.length,4);
+  assert.deepEqual(cards.map(c=>c.dataset.type),['Rencontre','Prière','Prière','Formation']);
   assert.match(cards[0].textContent,/IN FIRE 2026/);
-  assert.match(cards[1].textContent,/Traversée Prophétique Mensuelle/);
-  assert.match(cards[2].textContent,/Soldiers Academy/);
+  assert.match(cards[1].textContent,/Traversée Prophétique Annuelle/);
+  assert.match(cards[2].textContent,/Traversée Prophétique Mensuelle/);
+  assert.match(cards[3].textContent,/Soldiers Academy/);
   assert.equal(cards[0].querySelector('[data-ics]')?.dataset.ics,'infire');
   assert.equal(cards[0].querySelector('.rdv-actions a')?.getAttribute('href'),'#infire');
 });

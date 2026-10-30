@@ -406,7 +406,8 @@ html.anim .hero-mission { opacity: 0; animation: fondu-sous .7s var(--ease) .7s 
 .pole { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--r-lg); overflow: hidden; text-align: left; transition: all var(--duree) var(--ease); cursor: pointer; }
 a.pole { display: block; color: inherit; text-decoration: none; }
 .pole:hover { border-color: var(--or); transform: translateY(-3px); box-shadow: var(--ombre-carte); }
-.pole-img img { width: 100%; height: 140px; object-fit: cover; }
+.pole-img { background: radial-gradient(ellipse at center, rgba(226,194,106,.08), rgba(10,20,30,.4)); display: flex; align-items: center; justify-content: center; padding: 10px; }
+.pole-img img { display: block; width: auto; height: 160px; max-width: 90%; object-fit: contain; }
 .pole-corps { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
 .pole .num { font-size: .75rem; color: var(--or); font-family: var(--f-titre); letter-spacing: .1em; }
 .pole-titre { font-family: var(--f-titre); font-size: .95rem; font-weight: 600; }
@@ -603,8 +604,8 @@ a.pole { display: block; color: inherit; text-decoration: none; }
 .fiche-pole { border: none; background: transparent; padding: 0; max-width: 720px; width: 95vw; border-radius: var(--r-lg); overflow: hidden; }
 .fiche-pole::backdrop { background: rgba(0,0,0,.7); }
 .fp-boite { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--r-lg); max-height: 90vh; display: flex; flex-direction: column; }
-.fp-image { position: relative; }
-.fp-image img { width: 100%; height: 200px; object-fit: cover; }
+.fp-image { position: relative; background: radial-gradient(ellipse at center, rgba(226,194,106,.1), rgba(10,20,30,.5)); display: flex; align-items: center; justify-content: center; padding: 14px; }
+.fp-image img { display: block; width: auto; height: 220px; max-width: 85%; object-fit: contain; }
 .fp-fermer { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,.5); color: #fff; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; }
 .fp-corps { padding: 28px 24px; overflow-y: auto; flex: 1; }
 .fp-corps .num { font-size: .75rem; color: var(--or); font-family: var(--f-titre); letter-spacing: .1em; }
