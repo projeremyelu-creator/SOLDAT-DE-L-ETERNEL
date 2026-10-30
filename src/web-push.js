@@ -124,19 +124,28 @@ export async function sendPushNotification(sub, payload, env) {
   }
 }
 
-/* ── Envoi groupé à tous les abonnés ── */
-export async function broadcastPush(env, payload) {
-  const pubKey = env.VAPID_PUBLIC_KEY;
-  if (!pubKey || !env.VAPID_PRIVATE_KEY) return { sent: 0, total: 0 };
+/* ── Envoi groupé, avec ciblage obligatoire pour les alertes de direction.
+   Une notification de gestion ne doit jamais être envoyée aux soldats. ── */
+export async function broadcastPush(env, payload, {audience="all", send=sendPushNotification}={}) {
+  if (!env.VAPID_PUBLIC_KEY || !env.VAPID_PRIVATE_KEY) return { sent: 0, total: 0 };
+  if (!["all","direction"].includes(audience)) return {sent:0,total:0};
 
   await env.DB.prepare("CREATE TABLE IF NOT EXISTS push_subs (userId TEXT NOT NULL, endpoint TEXT NOT NULL, p256dh TEXT, auth TEXT, cree INTEGER, PRIMARY KEY (userId, endpoint))").run();
-  const { results } = await env.DB.prepare("SELECT userId, endpoint, p256dh, auth FROM push_subs").all();
-  if (!results?.length) return { sent: 0, total: 0 };
+  // Le lien avec comptes exclut aussi les abonnements orphelins.
+  const { results } = await env.DB.prepare(
+    "SELECT s.userId, s.endpoint, s.p256dh, s.auth, c.role, c.email FROM push_subs s JOIN comptes c ON c.id=s.userId"
+  ).all();
+  const proprietaires = new Set(String(env.PROPRIETAIRES || "")
+    .split(",").map(email=>email.trim().toLowerCase()).filter(Boolean));
+  const abonnements = (results || []).filter(sub=>audience!=="direction" ||
+    sub.role==="admin" || sub.role==="proprietaire" ||
+    proprietaires.has(String(sub.email||"").toLowerCase()));
+  if (!abonnements.length) return {sent:0,total:0};
 
   let sent = 0;
   const expired = [];
-  for (const sub of results) {
-    const r = await sendPushNotification(sub, payload, env);
+  for (const sub of abonnements) {
+    const r = await send(sub, payload, env);
     if (r.ok) sent++;
     else if (r.reason === "expired") expired.push(sub);
   }
@@ -146,7 +155,7 @@ export async function broadcastPush(env, payload) {
     await env.DB.prepare("DELETE FROM push_subs WHERE userId = ? AND endpoint = ?").bind(sub.userId, sub.endpoint).run();
   }
 
-  return { sent, total: results.length, expired: expired.length };
+  return { sent, total: abonnements.length, expired: expired.length };
 }
 
 /* ── Génération d'une paire de clés VAPID (à usage unique lors de la configuration) ── */

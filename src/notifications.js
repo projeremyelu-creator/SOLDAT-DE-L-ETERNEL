@@ -34,7 +34,7 @@ async function sendPending(env,row){
  }catch(error){console.warn("Envoi SDE non confirmé",error?.name||"Erreur");return false;}
 }
 
-/* ── Envoi push à tous les abonnés ── */
+/* ── Alertes de direction : ne pas notifier les appareils des simples membres. ── */
 async function sendPush(env, note) {
   if (!pushConfigured(env)) return;
   try {
@@ -42,7 +42,7 @@ async function sendPush(env, note) {
       title: note.subject.replace("[SDE] ", ""),
       body: note.text.split("\n").find(l => l.startsWith("Opération")) || "Nouvelle notification SDE",
       url: "/administration",
-    });
+    }, {audience:"direction"});
   } catch (e) { console.warn("Push broadcast échoué", e?.message || e); }
 }
 
