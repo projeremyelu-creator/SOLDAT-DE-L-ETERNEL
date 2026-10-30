@@ -95,3 +95,21 @@ test('Inscription et connexion par matricule : persistance SQLite, session et es
     assert.ok(signin.headers.get('set-cookie')?.includes('sde_s='));
   }finally{f.close()}
 });
+
+test('Notifications : le serveur ne publie la clé VAPID que si les deux secrets existent',async()=>{
+  const f=fixture();
+  try{
+    f.account('owner','proprietaire');f.account('alice','soldat');
+    const key=()=>f.call('/api/vapid-public-key');
+    assert.equal((await key()).body.key,null);
+    f.env.VAPID_PUBLIC_KEY='cle-publique-de-test';
+    assert.equal((await key()).body.key,null,'Pas d’invitation sans clé privée');
+    f.env.VAPID_PRIVATE_KEY='cle-privee-de-test';
+    assert.equal((await key()).body.key,'cle-publique-de-test');
+    assert.equal((await f.call('/api/notifications-status','alice')).status,403);
+    assert.equal((await f.call('/api/notifications-status','owner')).body.push,true);
+    delete f.env.VAPID_PRIVATE_KEY;
+    assert.equal((await f.call('/api/notifications-status','owner')).body.push,false);
+    assert.equal((await key()).body.key,null);
+  }finally{f.close()}
+});
