@@ -6,8 +6,8 @@ const ops=read("frontend/operations.jsx"),shell=read("frontend/reference-shell.j
 test("maquette : menu administrateur, citation et sous-titre du poste de commandement",()=>{
  for(const l of ["'Vue générale'","'Membres'","'Pôles'","'Communication'"])assert.ok(shell.includes(l),l);
  assert.ok(shell.includes("Des outils au service d’une vision éternelle."));
- assert.ok(ops.includes("Superviser · Coordonner · Multiplier"));
- assert.ok(ops.includes("ensemble pour des disciples équipés et un impact durable"));
+ assert.ok(ops.includes("Superviser · Coordonner · Faire grandir"));
+ assert.ok(ops.includes("bienvenue dans l’espace de pilotage du Mouvement SDE"));
 });
 test("maquette : demandes en attente, finances et avancement utilisent les vraies API",()=>{
  assert.ok(ops.includes("Demandes d’adhésion en attente")&&ops.includes("/api/engager-admin"));
@@ -21,7 +21,7 @@ test("maquette : « Mon espace Soldat » est branché pour les membres seulement
  assert.ok(ops.includes("active==='espace-soldat'&&!direction"));
  assert.ok(direct.includes('"espace-soldat":"Mon espace Soldat"'));
  assert.ok(direct.includes('nom==="espace-soldat"&&mode!=="membre"'));
- for(const t of ["Mon parcours Academy","Prochaine rencontre","Mes cotisations","Mon carnet de prière","Colossiens 4:2","Mes documents"])assert.ok(ops.includes(t),t);
+ for(const t of ["Soldiers Academy","Prochain rendez-vous","Mes cotisations","Mon carnet de prière","Colossiens 4:2","Mes ressources","Reprendre ma formation","Voir mon agenda","Ouvrir les ressources"])assert.ok(ops.includes(t),t);
 });
 test("maquette : progression Academy calculée côté serveur pour le membre connecté",()=>{
  assert.ok(worker.includes('p === "/api/mon-parcours-academy"'));
@@ -51,4 +51,20 @@ test("refonte étape 4 : Rejoindre, Soutenir et pied de page selon le document",
  for(const h of [home,proj])for(const t of ["Contribuer à la mission","5 000 FCFA","10 000 FCFA","25 000 FCFA","Autre montant","Choisir mon mode de contribution"])assert.ok(h.includes(t),t);
  assert.ok(sub.includes('pole:g("pole")'),"le pôle est transmis à l'API");
  assert.ok(home.includes("Politique de confidentialité")&&home.includes("Mentions légales"));
+});
+test("refonte étapes 5 et 6 : connexion par matricule ou e-mail, textes du document",()=>{
+ const login=read("public/vitrine/connexion-unifiee.html");
+ for(const t of ["Bienvenue dans votre espace SDE","Matricule ou adresse e-mail","Mot de passe oublié","Première connexion ?"])assert.ok(login.includes(t),t);
+ assert.ok(/name="email" type="text"/.test(login),"le champ accepte un matricule");
+ const fn=worker.slice(worker.indexOf("async function apiConnexionMdp"),worker.indexOf("async function apiActivation"));
+ assert.ok(fn.includes("upper(matricule) = upper(?)")&&fn.includes(".bind(saisie)"),"recherche paramétrée par matricule");
+ assert.ok(fn.includes("Les informations saisies ne permettent pas de vous connecter."));
+ assert.ok(fn.includes('bloque(env, "e:" + saisie, 8)'),"limitation des essais conservée");
+});
+test("refonte étape 6 : Anniversaires et Suivi des pôles réservés à l'administration",()=>{
+ assert.ok(ops.includes("active==='anniversaires'&&direction?<Birthdays/>")&&ops.includes("active==='suivi-poles'&&direction?<PoleTracking"));
+ assert.ok(direct.includes('["anniversaires","suivi-poles"].includes(nom)&&(mode!=="direction"||!(compte?.niveau>=1))'));
+ for(const l of ["'anniversaires','Anniversaires'","'suivi-poles','Pôles'","'site-public','Programmes'","'bibliotheque','Ressources'"])assert.ok(shell.includes(l),l);
+ assert.ok(read("src/operations.js").includes("anniv:str(m.data.anniv,10)"),"date d'anniversaire dans l'annuaire réservé");
+ for(const t of ["Examiner les adhésions","Publier une annonce","Consulter le suivi des pôles","Vérifier les opérations financières"])assert.ok(ops.includes(t),t);
 });

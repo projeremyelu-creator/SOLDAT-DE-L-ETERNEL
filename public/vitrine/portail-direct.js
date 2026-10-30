@@ -10,12 +10,12 @@
   if(!mode)return;
 
   const catalogue={
-    rendezvous:"Événements & notifications",carteqr:"Ma carte QR",scanner:"Pointages & QR",pilotage:"Dashboard",annuaire:"Annuaire",bibliotheque:"Bibliothèque & lecteur","finance-direction":"Finances & missions","site-public":"Contenu du site",adhesions:"Demandes d’adhésion","espace-soldat":"Mon espace Soldat","academy-direction":"Gestion Academy",mur:"Mur de prière",accueil:"Tableau de bord",espace:"Mon profil et ma carte",priere:"Mes prières",membres:"Membres et fiches",
-    agenda:"Agenda et présences",garnisons:"Garnisons et pôles",academie:"Soldiers Academy",
+    rendezvous:"Événements & notifications",carteqr:"Ma carte",scanner:"Pointages & QR",pilotage:"Dashboard",annuaire:"Annuaire",bibliotheque:"Ressources","finance-direction":"Finances & missions","site-public":"Contenu du site",adhesions:"Demandes d’adhésion",anniversaires:"Anniversaires des membres","suivi-poles":"Suivi des pôles","espace-soldat":"Mon espace Soldat","academy-direction":"Gestion Academy",mur:"Mur de prière",accueil:"Tableau de bord",espace:"Mon profil",priere:"Prières",membres:"Membres et fiches",
+    agenda:"Mon agenda",garnisons:"Garnisons et pôles",academie:"Formations",
     portevoix:"Communication et annonces",chambre:"Prière et intercession",
     projets:"Projets et missions",secretariat:"Secrétariat et décisions",finances:"Finances et cotisations",
     arsenal:"Bibliothèque et enseignements",mediatheque:"Médiathèque",assistant:"Assistant Éliézer",
-    engagements:"Mes engagements",contributions:"Dons & Dîmes",synthese:"Mon accueil",parcours:"Lecture et prière",preferences:"Mes rappels",gestion:"Centre de contrôle"
+    engagements:"Mes engagements",contributions:"Cotisations",synthese:"Mon accueil",parcours:"Lecture et prière",preferences:"Notifications",gestion:"Centre de contrôle"
   };
   const personnel=new Set(["espace-soldat","rendezvous","carteqr","bibliotheque","mur","priere","espace","agenda","academie","portevoix","arsenal","mediatheque","synthese","engagements","contributions","parcours","preferences"]);
   const url=new URL(location.href);
@@ -41,6 +41,7 @@
     if(nom==="gestion")return mode==="direction"&&compte?.niveau>=1;
     if(["scanner","pilotage","annuaire","academy-direction"].includes(nom)&&compte?.niveau<1)return false;
     if(nom==="finance-direction"&&compte?.niveau<2)return false;
+    if(["anniversaires","suivi-poles"].includes(nom)&&(mode!=="direction"||!(compte?.niveau>=1)))return false;
     if(nom==="adhesions"&&(mode!=="direction"||!(compte?.niveau>=1)))return false;
     if(nom==="espace-soldat"&&mode!=="membre")return false;
     if(nom==="site-public"&&(mode!=="direction"||!(compte?.niveau>=2)))return false;
@@ -262,7 +263,7 @@
         const cible=disponibles.find(b=>b.dataset.vue===souhait);
         if(cible){
           initial=true;
-          if(["carteqr","bibliotheque","scanner","pilotage","annuaire","finance-direction","site-public","espace-soldat","adhesions","academy-direction","mur","priere","synthese","engagements","contributions","parcours","preferences","gestion"].includes(souhait))selectionner(souhait);
+          if(["carteqr","bibliotheque","scanner","pilotage","annuaire","finance-direction","site-public","espace-soldat","adhesions","anniversaires","suivi-poles","academy-direction","mur","priere","synthese","engagements","contributions","parcours","preferences","gestion"].includes(souhait))selectionner(souhait);
           else if(!cible.classList.contains("on")&&cible.getAttribute("aria-current")!=="page")cible.click();
         }
       }
