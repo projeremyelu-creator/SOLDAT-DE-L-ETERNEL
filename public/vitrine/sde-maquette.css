@@ -99,7 +99,7 @@ html:not([data-theme="light"]) .scroll-ind{display:none}
 html:not([data-theme="light"]) .programme{border-radius:4px!important}
 html:not([data-theme="light"]) .programme .prog-img{border-radius:3px;filter:saturate(.55) sepia(.35) brightness(.85)}
 html:not([data-theme="light"]) .pole{border-radius:4px!important}
-html:not([data-theme="light"]) .pole .pole-img img{filter:saturate(.55) sepia(.35) brightness(.85)}
+html:not([data-theme="light"]) .pole .pole-img img{filter:drop-shadow(0 6px 18px rgba(226,194,106,.3))}
 html:not([data-theme="light"]) .rdv,html:not([data-theme="light"]) .programme.rdv{border-radius:4px!important}
 html:not([data-theme="light"]) .agenda-filtres button{border-radius:3px;border:1px solid var(--m-olive-2);background:#0d151e;color:#d8dde3}
 html:not([data-theme="light"]) .agenda-filtres button.actif{background:linear-gradient(180deg,var(--m-or-clair),var(--m-or));color:#1a1408;border-color:#f0d58f66}
