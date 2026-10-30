@@ -1547,6 +1547,7 @@ async function traiter(req, env, ctx) {
         "/contact": "/vitrine/rejoindre.html",
         "/temoignages": "/vitrine/temoignages.html",
         "/soldiers-voice": "/vitrine/soldiers-voice.html",
+        "/soldiers-award": "/vitrine/soldiers-award.html",
         "/missions-humanitaires": "/vitrine/missions-humanitaires.html",
         "/rubriques": "/vitrine/plus.html"
       };

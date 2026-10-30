@@ -9,6 +9,7 @@
     ["Enseignements et ressources","/vitrine/ressources","Bibliothèque"],
     ["Témoignages","/vitrine/temoignages","Communauté"],
     ["Soldiers Voice","/vitrine/soldiers-voice","Musique"],
+    ["Soldier’s Award","/vitrine/soldiers-award","Honneur"],
     ["Missions humanitaires","/vitrine/missions-humanitaires","Solidarité"],
     ["Projets et dons","/vitrine/projets","Engagement"],
     ["Rejoindre SDE","/vitrine/rejoindre","Adhésion"],

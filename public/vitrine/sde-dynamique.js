@@ -19,6 +19,7 @@
     "#poles": "agir",
     "#engagement": "agir",
     "/vitrine/soldiers-voice": "agir",
+    "/vitrine/soldiers-award": "agir",
     "/vitrine/missions-humanitaires": "agir"
   };
   const nettoyer = (valeur) => String(valeur || "").normalize("NFD")

@@ -5,7 +5,7 @@ const DOCS = new Set([
   "/vitrine/","/vitrine/mouvement","/vitrine/programmes",
   "/vitrine/ressources","/vitrine/rejoindre","/vitrine/projets",
   "/vitrine/plus","/vitrine/academy","/vitrine/prieres",
-  "/vitrine/temoignages","/vitrine/soldiers-voice",
+  "/vitrine/temoignages","/vitrine/soldiers-voice","/vitrine/soldiers-award",
   "/vitrine/missions-humanitaires"
 ]);
 const STATIC = new Set([
