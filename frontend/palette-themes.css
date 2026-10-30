@@ -109,8 +109,7 @@ html[data-sde-palette="violet"] body.sde-reference .ref-sidebar .ref-gold-brand:
 :is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference .ops-muted{
  color:var(--pal-muted)!important;font-size:12px!important;line-height:1.55!important;
 }
-:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference .ops-panel .ops-card,
-:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference .soldier-card:not(.soldier-card){
+:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference .ops-panel .ops-card{
  border:1px solid var(--pal-line)!important;border-radius:10px!important;
  background:var(--pal-surface)!important;color:var(--pal-ink)!important;
  box-shadow:0 3px 12px #29231d0b!important;
@@ -210,4 +209,34 @@ html[data-sde-palette="violet"] body.sde-reference .soldier-card{
 }
 @media(prefers-reduced-motion:reduce){
  .ref-palette-menu *{transition:none!important;animation:none!important}
+}
+
+/* « Mon profil » natif : cohérence avec la maquette violette et la maquette ivoire. */
+:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference-member[data-sde-module="espace"] .esp-hero{
+ background:var(--pal-surface)!important;border:1px solid var(--pal-line)!important;color:var(--pal-ink)!important;
+ border-radius:11px!important;box-shadow:0 4px 16px #0000000a!important;
+}
+:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference-member[data-sde-module="espace"] .esp-hero-nom{
+ color:var(--pal-ink)!important;font-family:Georgia,serif!important;
+}
+:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference-member[data-sde-module="espace"] .esp-hero-meta,
+:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference-member[data-sde-module="espace"] .esp-hero-verset{
+ color:var(--pal-muted)!important;
+}
+:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference-member[data-sde-module="espace"] .esp-hero-stat,
+:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference-member[data-sde-module="espace"] .esp-anime .card{
+ background:var(--pal-surface)!important;border:1px solid var(--pal-line)!important;color:var(--pal-ink)!important;box-shadow:0 2px 9px #0000000c!important;
+}
+:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference-member[data-sde-module="espace"] .esp-id{
+ background:linear-gradient(135deg,var(--pal-side2),var(--pal-side1))!important;color:#fff0db!important;border:1px solid var(--pal-accent-light)!important;
+}
+:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference-member[data-sde-module="espace"] .esp-anime .eyebrow,
+:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference-member[data-sde-module="espace"] .esp-groupe-t{
+ color:var(--pal-accent)!important;
+}
+:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference-member[data-sde-module="espace"] .esp-anime .hint{
+ color:var(--pal-muted)!important;
+}
+:is(html[data-sde-palette="ivoire"],html[data-sde-palette="violet"]) body.sde-reference-member[data-sde-module="espace"] .esp-anime .btn-primary{
+ background:linear-gradient(120deg,#b48f4b,#e6c988)!important;color:#241b12!important;border:1px solid #bc9650!important;border-radius:5px!important;
 }
