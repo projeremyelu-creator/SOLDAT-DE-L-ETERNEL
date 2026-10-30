@@ -381,3 +381,14 @@ html:not([data-theme=light]) body.sde-reference .ops-panel .ref-small-action{bac
 }
 /* Une seule barre basse sur mobile : la navigation existante du portail l’emporte quand elle est présente. */
 body:has(.sde-bottom-nav) .ref-tabbar{display:none!important}
+/* Bandeau d'écran numéroté comme la maquette : 02 espace membre, 03 administration */
+html:not([data-theme=light]) body.sde-reference .ops-heading{position:relative;padding-left:74px}
+html:not([data-theme=light]) body.sde-reference .ops-heading::before{content:"02";position:absolute;left:0;top:0;bottom:0;width:58px;display:grid;place-items:center;background:#1a2014;border-right:1px solid #3c4a2b;font:600 1.3rem "Cinzel",Georgia,serif;color:#ece6d8;border-radius:4px 0 0 4px}
+html:not([data-theme=light]) body.sde-reference-admin .ops-heading::before{content:"03"}
+/* Indicateurs : icône or à gauche, grand chiffre et libellé à droite */
+html:not([data-theme=light]) body.sde-reference .ref-command .ops-kpis .ref-kpi{display:grid!important;grid-template-columns:52px 1fr;grid-template-rows:auto auto;align-items:center;column-gap:12px;min-height:96px}
+html:not([data-theme=light]) body.sde-reference .ref-command .ops-kpis .ref-kpi>svg{position:static!important;grid-row:1/3;width:40px!important;height:40px!important;stroke-width:1.6}
+html:not([data-theme=light]) body.sde-reference .ref-command .ops-kpis .ref-kpi>strong{grid-column:2;font-size:2rem!important;line-height:1}
+html:not([data-theme=light]) body.sde-reference .ref-command .ops-kpis .ref-kpi>h3{grid-column:2;grid-row:2;order:2;margin:2px 0 0;font-size:.82rem;color:#c9ced5}
+html:not([data-theme=light]) body.sde-reference :is(.ops-heading h2,.ref-feature h3,.ref-kpi strong,.soldier-date strong,.soldier-ring strong,.ref-flow strong,.soldier-card-body strong){font-family:"Cinzel",Georgia,serif!important;font-weight:600!important}
+html:not([data-theme=light]) body.sde-reference .ref-kpi .ref-kpi-alert{position:absolute;top:10px;right:12px;left:auto}

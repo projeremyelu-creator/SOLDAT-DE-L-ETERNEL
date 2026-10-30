@@ -30,3 +30,84 @@ html:not([data-theme="light"]) .montants li{background:var(--m-carte);border-col
 html:not([data-theme="light"]) .hero-fond img{filter:saturate(.55) sepia(.35) brightness(.5) contrast(1.05)}
 html:not([data-theme="light"]) .hero-voile{background:linear-gradient(180deg,#0a121b99 0%,#0a121b55 40%,#0a121bf0 100%),radial-gradient(800px 400px at 50% 30%,#c9a14a1f,transparent 70%)}
 html:not([data-theme="light"]) .hero h1{font-size:clamp(2rem,4.6vw,3.6rem);line-height:1.1}
+
+/* ═══════════ Fidélité à la maquette : structure « tableau de bord » ═══════════ */
+html:not([data-theme="light"]) body{background:linear-gradient(180deg,#0c141d 0%,#0a1119 100%) fixed,var(--m-nuit)}
+/* Logo monogramme et signature, comme l'en-tête de la maquette */
+.marque .monogramme{display:none}
+html:not([data-theme="light"]) .marque .logo{display:none}
+html:not([data-theme="light"]) .marque .monogramme{display:inline-block;font:600 2.05rem/1 var(--m-titre);letter-spacing:-.06em;color:transparent;background:linear-gradient(180deg,#f3dc9a,#c9a14a 55%,#8e6d26);-webkit-background-clip:text;background-clip:text;padding-right:14px;margin-right:14px;border-right:1px solid #c9a14a88}
+html:not([data-theme="light"]) .marque b{font:600 .82rem/1.2 var(--m-titre);letter-spacing:.2em;text-transform:uppercase;color:var(--m-or-clair)}
+html:not([data-theme="light"]) .marque small{font:500 .6rem/1.4 var(--m-titre);letter-spacing:.32em;text-transform:uppercase;color:#c8bfa8}
+/* En-tête : éviter les chevauchements (« Site public », recherche) */
+html:not([data-theme="light"]) .entete .sde-shell-public-tag{display:none}
+@media(max-width:1500px){html:not([data-theme="light"]) .entete .btn-soutien,html:not([data-theme="light"]) .entete .sde-search-desktop-label{display:none}}
+/* Rail latéral (maquette : menu à gauche, citation en bas) */
+.sde-rail{display:none}
+@media(min-width:1280px){
+ html:not([data-theme="light"]) .sde-rail{display:flex;flex-direction:column;position:fixed;left:0;top:140px;bottom:0;width:200px;z-index:30;padding:22px 14px;background:linear-gradient(180deg,#0e1620,#0a1118);border-right:1px solid var(--m-olive-2)}
+ html:not([data-theme="light"]) #contenu,html:not([data-theme="light"]) .pied{margin-left:200px}
+ .sde-rail-logo{font:600 1.9rem/1 var(--m-titre);letter-spacing:-.06em;color:var(--m-or);margin:0 0 22px 10px}
+ .sde-rail nav{display:grid;gap:4px}
+ .sde-rail nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:3px;color:#cfd4da;text-decoration:none;font-size:.92rem}
+ .sde-rail nav a svg{width:18px;height:18px;color:var(--m-or)}
+ .sde-rail nav a:hover{color:#fff;background:#ffffff0a}
+ .sde-rail nav a.actif{background:linear-gradient(90deg,#c9a14a40,#c9a14a14);color:var(--m-or-clair);box-shadow:inset 3px 0 0 var(--m-or)}
+ .sde-rail-citation{margin-top:auto;font:italic 500 1.05rem/1.45 var(--m-italique);color:#d8cfb8;padding:0 10px}
+}
+/* Chaque section devient un panneau numéroté : « 01 │ TITRE ──── sous-titre » */
+html:not([data-theme="light"]) #contenu{counter-reset:panneau}
+html:not([data-theme="light"]) .section{padding:14px 0}
+html:not([data-theme="light"]) .section>.enveloppe{border:1px solid var(--m-olive-2);border-radius:4px;background:linear-gradient(180deg,#111b25,#0d151e);padding:0 22px 24px;box-shadow:0 14px 34px #0008}
+html:not([data-theme="light"]) .section .tete-section{counter-increment:panneau;display:grid;grid-template-columns:56px minmax(0,1fr) auto;grid-template-rows:54px auto;align-items:center;column-gap:18px;margin:0 -22px 22px;padding:0 22px 0 0;text-align:left;background:linear-gradient(90deg,#26301d 0%,#1a2215 60%,#151c12 100%) top/100% 54px no-repeat;border-bottom:0;max-width:none}
+html:not([data-theme="light"]) .section .tete-section::before{content:counter(panneau,decimal-leading-zero);grid-row:1;grid-column:1;align-self:stretch;display:grid;place-items:center;background:#1a2014;border-right:1px solid var(--m-olive-2);font:600 1.25rem var(--m-titre);color:var(--m-texte)}
+html:not([data-theme="light"]) .section .tete-section h2{grid-row:1;grid-column:2;display:flex;align-items:center;gap:18px;margin:0;font:600 clamp(1rem,1.7vw,1.35rem)/1 var(--m-titre);letter-spacing:.14em;text-transform:uppercase;color:var(--m-texte);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html:not([data-theme="light"]) .section .tete-section h2::after{content:"";flex:1;min-width:30px;height:1px;background:linear-gradient(90deg,#c9a14a88,#c9a14a11)}
+html:not([data-theme="light"]) .section .tete-section h2 em{font-style:normal;color:var(--m-or-clair)}
+html:not([data-theme="light"]) .section .tete-section .titre-degrade{background:none;-webkit-text-fill-color:currentColor}
+html:not([data-theme="light"]) .section .tete-section .surtitre{grid-row:1;grid-column:3;margin:0;padding:0;border:0;background:none;font:500 .66rem/1 var(--m-titre);letter-spacing:.22em;color:#d7cfb9;white-space:nowrap}
+html:not([data-theme="light"]) .section .tete-section .surtitre::before,html:not([data-theme="light"]) .section .tete-section .surtitre::after{display:none}
+html:not([data-theme="light"]) .section .tete-section .chapo{grid-row:2;grid-column:1/-1;margin:16px 0 0 22px;max-width:70ch;font-size:1.08rem;text-align:left}
+@media(max-width:700px){html:not([data-theme="light"]) .section .tete-section{grid-template-columns:44px minmax(0,1fr);grid-template-rows:auto auto auto;background-size:100% 100%}html:not([data-theme="light"]) .section .tete-section::before{grid-row:1/3}html:not([data-theme="light"]) .section .tete-section h2{white-space:normal;padding:14px 0 4px}html:not([data-theme="light"]) .section .tete-section .surtitre{grid-column:2;grid-row:2;padding-bottom:12px;white-space:normal}html:not([data-theme="light"]) .section .tete-section .chapo{grid-row:3;margin-left:14px}}
+/* Indicateurs façon maquette : icône or, grand chiffre, mention verte */
+html:not([data-theme="light"]) .kpi{background:linear-gradient(180deg,#131e29,#0e1720);border:1px solid var(--m-olive-2);border-radius:4px;box-shadow:inset 0 1px 0 #c9a14a1a}
+html:not([data-theme="light"]) .kpi .kpi-icone{color:var(--m-or)}
+html:not([data-theme="light"]) .kpi .kpi-chiffre{font-family:var(--m-titre);font-weight:600;color:var(--m-texte);background:none;-webkit-text-fill-color:currentColor}
+html:not([data-theme="light"]) .kpi .kpi-label{color:#d8dde3}
+html:not([data-theme="light"]) .kpi .kpi-sous{color:#8fbf6a}
+/* Agenda : pavés de date encadrés, comme « Mon agenda » */
+html:not([data-theme="light"]) .rdv .jour{border:1px solid var(--m-olive-2);border-radius:3px;background:#0a121b;color:var(--m-texte)}
+html:not([data-theme="light"]) .rdv .jour b{font-family:var(--m-titre);color:var(--m-texte)}
+html:not([data-theme="light"]) .rdv .jour small{text-transform:uppercase;color:#c8bfa8}
+/* Accueil : carte « événement phare » (photo dorée, texte à gauche) */
+html:not([data-theme="light"]) .hero{max-width:1180px;margin:22px auto 8px;min-height:0;border:1px solid var(--m-olive-2);border-radius:4px;overflow:hidden;text-align:left}
+@media(min-width:1280px){html:not([data-theme="light"]) .hero{margin:22px max(22px,calc((100vw - 200px - 1180px)/2)) 8px}html:not([data-theme="light"]) .sde-shell-toolbar{display:none}}
+html:not([data-theme="light"]) .hero-fond img{filter:grayscale(1) sepia(.9) saturate(1.7) brightness(.62) contrast(1.1);object-position:center 30%}
+html:not([data-theme="light"]) .hero-voile{background:linear-gradient(90deg,#0a121b 0%,#0a121bf0 34%,#0a121b99 62%,#0a121b33 100%),radial-gradient(520px 300px at 78% 30%,#e4c47740,transparent 70%)}
+html:not([data-theme="light"]) .hero-contenu{align-items:flex-start;text-align:left;margin:0;padding:46px 46px 40px;max-width:760px}
+html:not([data-theme="light"]) .hero-actions,html:not([data-theme="light"]) .hero-decompte{justify-content:flex-start}
+html:not([data-theme="light"]) .hero h1{font-size:clamp(1.9rem,3.6vw,3rem);text-align:left}
+html:not([data-theme="light"]) .hero .hero-intro{margin:0 0 10px;text-align:left}
+html:not([data-theme="light"]) .hero-badge,html:not([data-theme="light"]) .hero-event-tag{border-radius:3px;border-color:#c9a14a;background:#0a121bcc;color:var(--m-or-clair);font-family:var(--m-titre);letter-spacing:.18em;text-transform:uppercase;font-size:.66rem}
+html:not([data-theme="light"]) .hero-date-lieu{text-align:left;color:#e7dcc3}
+html:not([data-theme="light"]) .hero-decompte>*{border:1px solid var(--m-olive-2)!important;border-radius:4px!important;background:#0d151ee6!important}
+html:not([data-theme="light"]) .hero-decompte b,html:not([data-theme="light"]) .hero-decompte strong{font-family:var(--m-titre)!important}
+html:not([data-theme="light"]) .hero-verset{text-align:left;border-left:3px solid var(--m-rouge);padding-left:14px}
+html:not([data-theme="light"]) .scroll-ind{display:none}
+
+.sde-rail-logo{display:none!important}
+html:not([data-theme="light"]) .programme{border-radius:4px!important}
+html:not([data-theme="light"]) .programme .prog-img{border-radius:3px;filter:saturate(.55) sepia(.35) brightness(.85)}
+html:not([data-theme="light"]) .pole{border-radius:4px!important}
+html:not([data-theme="light"]) .pole .pole-img img{filter:saturate(.55) sepia(.35) brightness(.85)}
+html:not([data-theme="light"]) .rdv,html:not([data-theme="light"]) .programme.rdv{border-radius:4px!important}
+html:not([data-theme="light"]) .agenda-filtres button{border-radius:3px;border:1px solid var(--m-olive-2);background:#0d151e;color:#d8dde3}
+html:not([data-theme="light"]) .agenda-filtres button.actif{background:linear-gradient(180deg,var(--m-or-clair),var(--m-or));color:#1a1408;border-color:#f0d58f66}
+html:not([data-theme="light"]) .eglises .surtitre{display:inline-flex}
+@media(max-width:700px){
+ html:not([data-theme="light"]) .section .tete-section{background:linear-gradient(90deg,#26301d,#151c12)}
+ html:not([data-theme="light"]) .section .tete-section h2{display:block;font-size:1rem;letter-spacing:.1em}
+ html:not([data-theme="light"]) .section .tete-section h2::after{display:none}
+ html:not([data-theme="light"]) .section .tete-section .chapo{margin:0;padding:14px 14px 0;background:#0f1821}
+}
+@media(max-width:600px){html:not([data-theme="light"]) .marque>span:not(.logo):not(.monogramme){display:none}html:not([data-theme="light"]) .marque .monogramme{border-right:0;margin-right:0}}
