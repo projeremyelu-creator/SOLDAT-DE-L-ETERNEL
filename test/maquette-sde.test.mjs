@@ -100,3 +100,9 @@ test("les deux nouvelles maquettes sont des thèmes privés facultatifs et persi
  assert.ok(css.includes('.soldier-qr'),"QR existant valorisé");
  assert.ok(css.includes('.ref-tabbar'),"navigation smartphone");
 });
+test("accueil réellement servi (portail.html) refait selon la maquette",()=>{
+ const h=read("public/vitrine/portail.html");
+ for(const t of ['class="m-band"','Une génération enracinée en Jésus-Christ, prête à servir','Nos cinq engagements','Nos programmes','Nos cinq pôles','Espaces sécurisés','Nous rejoindre','pour la moisson.','accueil-maquette.css','id="event-title"','id="event-details"','id="event-action"','class="private-access-card private-member"','class="private-access-card private-admin"'])assert.ok(h.includes(t),t);
+ assert.equal((h.match(/class="site-access-top"/g)||[]).length,1);
+ const js=read("public/vitrine/portail-unifie.js");assert.ok(js.includes("sde-rail")&&js.includes("--sde-rail-top"),"rail sur toutes les pages publiques");
+});

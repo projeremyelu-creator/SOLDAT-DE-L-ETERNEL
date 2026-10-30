@@ -111,3 +111,31 @@ html:not([data-theme="light"]) .eglises .surtitre{display:inline-flex}
  html:not([data-theme="light"]) .section .tete-section .chapo{margin:0;padding:14px 14px 0;background:#0f1821}
 }
 @media(max-width:600px){html:not([data-theme="light"]) .marque>span:not(.logo):not(.monogramme){display:none}html:not([data-theme="light"]) .marque .monogramme{border-right:0;margin-right:0}}
+
+/* ═══════════ En-tête unifié et rail du site (toutes les pages publiques) ═══════════ */
+html:not([data-theme="light"]) .site-header{background:linear-gradient(180deg,#0b131c,#0a1118);border-bottom:1px solid #c9a14a40}
+html:not([data-theme="light"]) .site-brand{display:flex;align-items:center;gap:0;text-decoration:none}
+html:not([data-theme="light"]) .site-brand img{display:none}
+.m-mono{display:inline-block;font:600 2rem/1 var(--m-titre);letter-spacing:-.06em;color:transparent;background:linear-gradient(180deg,#f3dc9a,#c9a14a 55%,#8e6d26);-webkit-background-clip:text;background-clip:text}
+html:not([data-theme="light"]) .site-brand .m-mono{padding-right:14px;margin-right:14px;border-right:1px solid #c9a14a88}
+html:not([data-theme="light"]) .site-brand b{display:block;font:600 .8rem/1.2 var(--m-titre);letter-spacing:.2em;text-transform:uppercase;color:var(--m-or-clair)}
+html:not([data-theme="light"]) .site-brand small{display:block;font:500 .58rem/1.5 var(--m-titre);letter-spacing:.3em;text-transform:uppercase;color:#c8bfa8}
+html:not([data-theme="light"]) .site-menu>a,html:not([data-theme="light"]) .site-menu summary{color:#d8dde3;font-weight:600}
+html:not([data-theme="light"]) .site-menu>a:hover{color:var(--m-or-clair)}
+html:not([data-theme="light"]) .site-portal-cta{background:linear-gradient(180deg,var(--m-or-clair),var(--m-or) 55%,var(--m-or-fonce))!important;color:#1a1408!important;border-radius:4px!important}
+.site-support{display:none}
+@media(min-width:1100px){html:not([data-theme="light"]) .site-support{display:inline-flex;align-items:center;padding:8px 14px;border:1px solid var(--m-or);border-radius:4px;color:var(--m-or-clair);text-decoration:none;font-weight:600;white-space:nowrap}}
+@media(max-width:600px){html:not([data-theme="light"]) .site-brand>span:not(.m-mono){display:none}html:not([data-theme="light"]) .site-brand .m-mono{border-right:0;margin-right:0}}
+@media(min-width:1280px){
+ html:not([data-theme="light"]) body:has(.sde-rail) :is(main,#contenu,.site-footer,.pied){margin-left:200px}
+ html:not([data-theme="light"]) body:has(.sde-rail) .sde-rail{display:flex;flex-direction:column;position:fixed;left:0;top:var(--sde-rail-top,74px);bottom:0;width:200px;z-index:30;padding:22px 14px;background:linear-gradient(180deg,#0e1620,#0a1118);border-right:1px solid var(--m-olive-2)}
+ .sde-rail nav{display:grid;gap:4px}
+ .sde-rail nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:3px;color:#cfd4da;text-decoration:none;font-size:.92rem}
+ .sde-rail nav a svg{width:18px;height:18px;color:var(--m-or);flex:none}
+ .sde-rail nav a:hover{color:#fff;background:#ffffff0a}
+ .sde-rail nav a.actif,.sde-rail nav a[aria-current=page]{background:linear-gradient(90deg,#c9a14a40,#c9a14a14);color:var(--m-or-clair);box-shadow:inset 3px 0 0 var(--m-or)}
+ .sde-rail-citation{margin-top:auto;font:italic 500 1.05rem/1.45 var(--m-italique);color:#d8cfb8;padding:0 10px}
+}
+html:not([data-theme="light"]) .site-brand small{white-space:nowrap}
+html:not([data-theme="light"]) .site-brand b{white-space:nowrap}
+@media(max-width:1500px){html:not([data-theme="light"]) .site-support{display:none}}
