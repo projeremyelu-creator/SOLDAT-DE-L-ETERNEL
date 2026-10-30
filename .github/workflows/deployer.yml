@@ -29,6 +29,7 @@ jobs:
           node-version: '22.23.4'
       - run: npm ci --ignore-scripts
       - run: npm run build:experience
+      - run: node scripts/version-chemins.mjs
       - run: node scripts/deploy-cloudflare.mjs
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
