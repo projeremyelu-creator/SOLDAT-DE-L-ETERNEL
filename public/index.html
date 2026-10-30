@@ -31,6 +31,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace")}ca
 <link rel="stylesheet" href="/sde-private-ui.css?v=20261025e">
 <link rel="stylesheet" href="/vitrine/portail-direct.css?v=20261027c">
 <link rel="stylesheet" href="/vitrine/portail-plus.css?v=20261027c">
+<link rel="stylesheet" href="/vitrine/sde-marque.css?v=20261029a">
 <script defer src="/sde-bridge.js?v=20261025e"></script>
 <script>/* Thème : applique le choix utilisateur avant le premier paint */
 (function(){try{var t=localStorage.getItem("sde-theme");if(t){document.documentElement.setAttribute("data-theme",t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==="light"?"#eef0f5":"#0f1e3d";}}catch(e){}}());
@@ -261,7 +262,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace")}ca
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@600;700&family=Saira+Stencil+One&family=Great+Vibes&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira+Condensed:wght@600;700&family=Saira+Stencil+One&family=Great+Vibes&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap">
 <header class="hdr">
   <div class="hdr-in">
     <button class="brand" id="brand" type="button" aria-label="Retour à l’accueil">
@@ -8715,6 +8716,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
 <script defer src="/vitrine/portail-espace.js?v=20261026"></script>
 <script defer src="/vitrine/portail-plus.js?v=20261028operations"></script>
 <script defer src="/vitrine/portail-direct.js?v=20261028operations"></script>
+<script defer src="/vitrine/sde-marque.js?v=20261029a"></script>
 <script defer src="/vitrine/sde-experience.js?v=20261028reference"></script>
 <script type="module" src="/vitrine/operations-assets/portail-operations.js?v=20261029modules"></script>
 </body>

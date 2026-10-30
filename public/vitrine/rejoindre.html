@@ -11,11 +11,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="manifest" href="/vitrine/manifest.webmanifest">
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;500;600;700&family=Saira+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;500;600;700&family=Saira+Condensed:wght@500;600;700;800&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/vitrine/portail-unifie.css?v=20261028premium">
 <link rel="stylesheet" href="/vitrine/portail-subpage.css?v=20261027a">
 <link rel="stylesheet" href="/vitrine/sde-experience.css?v=20261028maquette">
 <script defer src="/vitrine/sde-experience.js?v=20261028maquette"></script>
+<link rel="stylesheet" href="/vitrine/sde-maquette.css?v=20261030a">
 </head><body class="sde-unifie sde-subpage" data-sde-page="rejoindre">
 <a class="skip" href="#contenu">Accéder au contenu</a>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
@@ -51,8 +52,8 @@
     <div class="enveloppe">
       <div class="tete-section revele">
         <p class="surtitre">Rejoindre SDE</p>
-        <h2 id="titre-rejoindre">Envie de marcher avec nous ?</h2>
-        <p class="chapo">Choisissez votre chemin selon votre besoin. Chaque étape vous indique la marche à suivre.</p>
+        <h2 id="titre-rejoindre">Votre parcours peut commencer ici</h2>
+        <p class="chapo">Vous souhaitez découvrir le mouvement, participer à ses programmes ou servir au sein d’un pôle ? Remplissez le formulaire. L’équipe SDE pourra vous contacter pour échanger avec vous.</p>
       </div>
       <div class="parcours-rejoindre">
         <a class="etape-carte revele" href="#f-rejoindre" style="--d:0s"><div class="ec-num">1</div><h3>Découvrir</h3><p>Je veux en savoir plus sur le mouvement et ses activités.</p></a>
@@ -74,19 +75,25 @@
           <p class="legende">Les champs marqués <span class="oblig">obligatoire</span> sont nécessaires pour vous recontacter.</p>
           <div class="champs">
             <div class="champ"><label for="f-nom">Nom et prénoms <span class="oblig">obligatoire</span></label><input id="f-nom" name="nom" autocomplete="name" autocapitalize="words" maxlength="120" required aria-required="true"></div>
-            <div class="champ"><label for="f-tel">Téléphone ou WhatsApp <span class="oblig">obligatoire</span></label><input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="07 00 00 00 00" maxlength="25" required aria-required="true" aria-describedby="f-tel-aide"><small class="aide" id="f-tel-aide">Avec l'indicatif si vous êtes hors de Côte d'Ivoire, par exemple +216 pour la Tunisie ou +1 pour le Canada.</small></div>
-            <div class="champ"><label for="f-mail">E-mail <span class="facult">facultatif</span></label><input id="f-mail" name="mail" type="email" autocomplete="email"></div>
-            <div class="champ"><label for="f-ville">Ville et pays <span class="oblig">obligatoire</span></label><input id="f-ville" name="ville" autocomplete="address-level2" placeholder="Abidjan, Côte d'Ivoire" maxlength="80" required aria-required="true"></div>
+            <div class="champ"><label for="f-tel">Téléphone / WhatsApp <span class="oblig">obligatoire</span></label><input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="07 00 00 00 00" maxlength="25" required aria-required="true" aria-describedby="f-tel-aide"><small class="aide" id="f-tel-aide">Avec l'indicatif si vous êtes hors de Côte d'Ivoire, par exemple +216 pour la Tunisie ou +1 pour le Canada.</small></div>
+            <div class="champ"><label for="f-mail">Adresse e-mail <span class="facult">facultatif</span></label><input id="f-mail" name="mail" type="email" autocomplete="email"></div>
+            <div class="champ"><label for="f-ville">Commune ou ville <span class="oblig">obligatoire</span></label><input id="f-ville" name="ville" autocomplete="address-level2" placeholder="Abidjan, Côte d'Ivoire" maxlength="80" required aria-required="true"></div>
           </div>
           <div class="champ"><label for="f-objet">Votre demande</label><select id="f-objet" name="objet"><option>Découvrir le mouvement</option><option>Devenir membre</option><option>Traversée Prophétique Mensuelle</option><option>IN FIRE</option><option>Soldiers Academy</option><option>Holy Talk &amp; Holy Day</option><option>Missions et actions solidaires</option><option>ALEPH 12</option><option>Missions humanitaires (Daloa, Cocody)</option><option>Holy Brunch</option><option>Servir dans un pôle</option><option>Rejoindre une formation</option><option>Demande de prière</option><option>Tenues SDE</option><option>Autre</option></select></div>
+          <div id="f-adhesion" hidden>
+            <p class="legende">Demande d’adhésion · ces informations permettent de vous orienter vers le bon pôle.</p>
+            <div class="champ"><label for="f-pole">Pôle d’intérêt prioritaire <span class="oblig">obligatoire</span></label><select id="f-pole" name="pole"><option value="">Choisir un pôle</option><option>Réveil, évangélisation & missions</option><option>Impact social & humanitaire</option><option>Logistique & organisation</option><option>Communication, médias & digital</option><option>Formation & développement intégral</option></select></div>
+            <div class="champ"><label for="f-programme">Programme souhaité <span class="oblig">obligatoire</span></label><select id="f-programme" name="programme"><option value="">Choisir un programme</option><option>Traversée Prophétique Mensuelle</option><option>IN FIRE</option><option>Soldiers Academy</option><option>Holy Talk & Holy Day</option><option>Missions & actions solidaires</option><option>Holy Brunch</option><option>ALEPH 12</option></select></div>
+            <div class="champ"><label for="f-motivation">Votre motivation <span class="oblig">obligatoire</span></label><textarea id="f-motivation" name="motivation" maxlength="2000" placeholder="Pourquoi souhaitez-vous rejoindre SDE ?"></textarea></div>
+          </div>
           <div class="champ"><label for="f-msg">Quelques mots sur vous <span class="facult">facultatif</span></label><textarea id="f-msg" name="msg" placeholder="Votre parcours, votre église, ce qui vous amène…"></textarea></div>
           <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label for="f-piege">Ne pas remplir</label><input id="f-piege" name="site_web" type="text" tabindex="-1" autocomplete="off"></div>
           <label class="accord" for="f-accord"><input id="f-accord" name="accord" type="checkbox" required><span>J'accepte que ces informations soient enregistrées par le secrétariat du mouvement SDE (infosoldat@gmail.com) pour me recontacter. Le mouvement ne vend ni ne cède ces informations à d'autres organisations. <span class="oblig">obligatoire</span></span></label>
           <p class="erreur" id="f-erreur" role="alert" hidden></p>
-          <button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-fleche"/></svg>Envoyer au secrétariat</button>
+          <button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-fleche"/></svg>Envoyer ma demande</button>
           <div class="envoi" id="envoi" hidden>
-            <b id="envoi-titre">Votre demande a bien été reçue.</b>
-            <p id="envoi-msg" style="color:var(--gris);font-size:.95rem">Le secrétariat du mouvement a reçu votre message et vous recontactera sous peu. Un e-mail de confirmation peut être envoyé en complément.</p>
+            <b id="envoi-titre">Merci pour votre démarche.</b>
+            <p id="envoi-msg" style="color:var(--gris);font-size:.95rem">Votre demande a bien été transmise à l’équipe du Mouvement SDE.</p>
             <pre id="envoi-texte"></pre>
             <div class="actions">
               <a class="bouton b-contour" id="envoi-mail" href="#"><svg aria-hidden="true"><use href="#i-msg"/></svg>Doubler par e-mail</a>

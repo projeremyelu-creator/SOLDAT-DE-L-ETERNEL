@@ -4,7 +4,7 @@ import {memberQrApi} from "./member-qr.js";
 import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {prayerWallApi} from "./prayer-wall.js";
-import {apiSdeOs31} from "./os-v31.js";
+import {apiSdeOs31,SDE_OS_31} from "./os-v31.js";
 import {notifySde,flushNotices,mailStatus,pushConfigured,notificationConfigured} from "./notifications.js";
 import {SDE_MAIL_RECIPIENT} from "./notification-events.js";
 import {generateVapidKeys} from "./web-push.js";
@@ -294,15 +294,19 @@ async function apiInscription(req, env, ctx) {
 }
 async function apiConnexionMdp(req, env) {
   const b = await req.json();
-  const email = normEmail(b.email), ip = ipDe(req);
-  if (await bloque(env, "e:" + email, 8) || await bloque(env, "ip:" + ip, 40)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure avant de réessayer.", 429);
-  const c = EMAIL_OK.test(email) ? await env.DB.prepare("SELECT email, mdp, activation FROM comptes WHERE email = ?").bind(email).first() : null;
+  /* Identifiant : adresse e-mail ou matricule du membre. */
+  const saisie = normEmail(b.email), ip = ipDe(req);
+  if (await bloque(env, "e:" + saisie, 8) || await bloque(env, "ip:" + ip, 40)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure avant de réessayer.", 429);
+  let c = null;
+  if (EMAIL_OK.test(saisie)) c = await env.DB.prepare("SELECT email, mdp, activation FROM comptes WHERE email = ?").bind(saisie).first();
+  else if (/^[a-z0-9][a-z0-9 ._-]{2,39}$/i.test(saisie)) c = await env.DB.prepare("SELECT email, mdp, activation FROM comptes WHERE upper(matricule) = upper(?)").bind(saisie).first();
+  const email = c ? c.email : saisie;
   if (!c || !c.mdp || !(await verifierMdp(b.motDePasse, c.mdp))) {
-    await compter(env, "e:" + email); await compter(env, "ip:" + ip);
+    await compter(env, "e:" + saisie); await compter(env, "ip:" + ip);
     if (c && !c.mdp && c.activation) return erreur("activation", "Ce compte n’est pas encore activé : choisissez « J’ai un code d’activation ».", 401);
-    return erreur("refuse", "Adresse e-mail ou mot de passe incorrect.", 401);
+    return erreur("refuse", "Les informations saisies ne permettent pas de vous connecter. Vérifiez votre matricule et votre mot de passe.", 401);
   }
-  await effacer(env, "e:" + email);
+  await effacer(env, "e:" + saisie);
   return json({ ok: true }, 200, { "set-cookie": await ouvrirSession(env, email) });
 }
 async function apiActivation(req, env) {
@@ -508,6 +512,24 @@ async function apiMonProfil(req, env, u) {
 }
 
 /* ───────── cotisations du membre ───────── */
+/* Progression personnelle dans la Soldiers Academy : modules suivis / modules des formations où le membre est inscrit. */
+async function apiMonParcoursAcademy(req, env, u) {
+  if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 404);
+  if (req.method !== "GET") return erreur("methode", "GET uniquement.", 405);
+  const formations = await lireRequete(env, { path: "formations" });
+  let faits = 0, total = 0, inscrit = 0, certifie = 0;
+  for (const { data: d = {} } of formations) {
+    const p = d.participants && d.participants[u.membreId];
+    if (!p || typeof p !== "object" || ["Abandon", "Retiré"].includes(p.statut)) continue;
+    const modules = Array.isArray(d.modules) ? d.modules.filter((m) => m && m.id) : [];
+    inscrit++;
+    if (p.statut === "Certifié") certifie++;
+    total += modules.length;
+    faits += modules.filter((m) => p.suivis && p.suivis[m.id]).length;
+  }
+  return json({ ok: true, formations: inscrit, certifie, modulesFaits: faits, modulesTotal: total, pourcentage: total ? Math.round((100 * faits) / total) : null });
+}
+
 async function apiMesCotisations(req, env, u) {
   if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 404);
   if(req.method!=="GET")return erreur("methode","GET uniquement.",405);
@@ -668,9 +690,22 @@ async function apiTableauDeBord(req,env,u) {
   const presence=dashboardAttendance(evenements,membres,garnisons);
   const enPriere=prieres.filter(p=>(p.data.statut||"En prière")==="En prière");
   const urgences=enPriere.filter(p=>p.data.urgent===true).map(p=>({id:p.id,date:String(p.data.date||"").slice(0,10)})).sort((a,b)=>b.date.localeCompare(a.date));
+  // Uniquement des agrégats de pilotage : aucune coordonnée ni aucun message
+  // de candidature ne quitte la table protégée via cette route.
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS engagements (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, cree INTEGER NOT NULL, objet TEXT,
+    pole TEXT, source TEXT, nom TEXT NOT NULL, tel TEXT, email TEXT, ville TEXT,
+    message TEXT, traite INTEGER NOT NULL DEFAULT 0, note TEXT
+  )`).run();
+  const [demandesAdhesion,site]=await Promise.all([
+    env.DB.prepare("SELECT COUNT(*) AS n FROM engagements WHERE traite = 0").first(),
+    donneesSite(env)
+  ]);
+  // Sans surcharge du CMS, la page Programmes conserve ses huit cartes publiques natives.
+  const programmesPublies=(site.programmes||[]).filter(p=>p.titre).length||8;
   // Métadonnées de mises à jour uniquement, jamais le contenu des dossiers.
   const recents=await env.DB.prepare("SELECT parent,maj FROM docs WHERE parent IN ('membres','evenements','projets','formations','annonces') ORDER BY maj DESC LIMIT 8").all();
-  return json({total,...metrics,indicateurs:{membresActifs:membres.filter(m=>m.data.actif!==false).length,presence,intercessions:enPriere.length},urgences:urgences.slice(0,5),urgencesTotal:urgences.length,activites:(recents.results||[]).map(r=>({rubrique:r.parent,cree:r.maj})),actualiseLe:Date.now()});
+  return json({total,...metrics,indicateurs:{membresActifs:membres.filter(m=>m.data.actif!==false).length,presence,intercessions:enPriere.length,demandesAdhesion:Number(demandesAdhesion?.n)||0,poles:SDE_OS_31.poles.length,programmesPublies},urgences:urgences.slice(0,5),urgencesTotal:urgences.length,activites:(recents.results||[]).map(r=>({rubrique:r.parent,cree:r.maj})),actualiseLe:Date.now()});
 }
 
 /* ───────── site vitrine : rendez-vous publics ───────── */
@@ -704,11 +739,46 @@ export function assainirSite(docs) {
     banniere: b.actif === false ? { texte: "", lien: "" } : { texte: txt(b.texte, 200), lien: lienSite(b.lien) }
   };
 }
-async function apiSite(env) {
+async function donneesSite(env) {
   const r = await env.DB.prepare("SELECT path, data FROM docs WHERE parent = 'site'").all();
   const docs = {};
   for (const x of r.results || []) { try { docs[String(x.path).split("/").pop()] = JSON.parse(x.data); } catch { /* document illisible : ignoré */ } }
-  return json(assainirSite(docs), 200, { "cache-control": "public, max-age=300" });
+  return assainirSite(docs);
+}
+async function apiSite(env) {
+  return json(await donneesSite(env), 200, { "cache-control": "public, max-age=300" });
+}
+
+/* Affichage côté serveur : le contenu publié est inséré dans la page avant l'envoi, sans clignotement.
+   Même rendu que subpage.js (hydratation, qui reste en place comme filet de sécurité). */
+const ech = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+export function htmlProgrammes(liste) {
+  return liste.map((p) => {
+    const lien = p.lien || "/contact#rejoindre", sujet = p.lien ? "" : ` data-sujet="${ech(p.titre)}"`;
+    return `<article class="programme revele vu${p.feu ? " feu" : ""}">${p.image ? `<img class="prog-img" src="${ech(p.image)}" alt="" width="600" height="260" loading="lazy">` : ""}${p.rythme ? `<span class="rythme">${ech(p.rythme)}</span>` : ""}<h3>${ech(p.titre)}</h3>${p.texte ? `<p>${ech(p.texte)}</p>` : ""}<a href="${ech(lien)}"${sujet}>${ech(p.libelle || "Participer")} <svg aria-hidden="true"><use href="#i-fleche"/></svg></a></article>`;
+  }).join("");
+}
+export function htmlBanniere(b) {
+  if (!b?.texte) return "";
+  const style = "display:block;text-align:center;padding:.6rem 1rem;background:#D4AF37;color:#0b1530;font-weight:600;text-decoration:none";
+  return b.lien ? `<a class="site-banniere" href="${ech(b.lien)}" style="${style}">${ech(b.texte)}</a>` : `<p class="site-banniere" style="${style};margin:0">${ech(b.texte)}</p>`;
+}
+async function injecterSite(reponse, env, page) {
+  try {
+    if (typeof HTMLRewriter === "undefined" || !(reponse.headers.get("content-type") || "").includes("text/html")) return reponse;
+    const site = await donneesSite(env);
+    const aRien = !site.contact.email && !site.contact.telephone && !site.programmes.length && !site.banniere.texte;
+    if (aRien) return reponse;
+    let r = new HTMLRewriter();
+    const banniere = htmlBanniere(site.banniere);
+    if (banniere) r = r.on("body", { element(e) { e.prepend(banniere, { html: true }); } });
+    if (site.contact.email) r = r.on("#c-mail", { element(e) { e.setInnerContent(site.contact.email); } });
+    if (site.contact.telephone) r = r.on("#c-tel", { element(e) { e.setInnerContent(site.contact.telephone); } });
+    if (page === "programmes" && site.programmes.length) r = r.on(".programmes", { element(e) { e.setInnerContent(htmlProgrammes(site.programmes), { html: true }); } });
+    const n = r.transform(reponse);
+    n.headers.set("cache-control", "public, max-age=60");
+    return n;
+  } catch (e) { console.warn("Affichage serveur du site ignoré", e?.name || "Erreur"); return reponse; }
 }
 
 async function apiRessourcesPubliques(env){
@@ -766,6 +836,8 @@ async function apiEngager(req, env, ctx) {
   const ville = champ("ville", 120);
   const objet = champ("objet", 160) || "Prise de contact";
   const pole = champ("pole", 160);
+  const programme = champ("programme", 160);
+  const motivation = champ("motivation", 2000);
   const message = champ("message", 2000);
   const source = champ("source", 160);
 
@@ -775,6 +847,11 @@ async function apiEngager(req, env, ctx) {
   if (!tel && !email) return erreur("champ_manquant", "Indiquez au moins un téléphone ou un e-mail pour que l'équipe vous recontacte.");
   if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return erreur("email_invalide", "Adresse e-mail invalide.");
   if (tel && tel.replace(/\D/g, "").length < 7) return erreur("tel_invalide", "Numéro de téléphone trop court.");
+  if (objet === "Devenir membre") {
+    if (!tel || !email || !ville || !pole || !programme || !motivation) return erreur("champ_manquant", "Pour adhérer, renseignez téléphone, e-mail, ville, pôle, programme et motivation.");
+    if (!["Réveil, évangélisation & missions", "Impact social & humanitaire", "Logistique & organisation", "Communication, médias & digital", "Formation & développement intégral"].includes(pole)) return erreur("pole_invalide", "Choisissez un pôle proposé.");
+    if (!["Traversée Prophétique Mensuelle", "IN FIRE", "Soldiers Academy", "Holy Talk & Holy Day", "Missions & actions solidaires", "Holy Brunch", "ALEPH 12"].includes(programme)) return erreur("programme_invalide", "Choisissez un programme proposé.");
+  }
   const ipPublic = "engagement:" + ipDe(req);
   if (await bloque(env, ipPublic, 30)) return erreur("rate_limited", "Trop de demandes récentes. Réessayez plus tard.", 429);
   await compter(env, ipPublic);
@@ -792,7 +869,7 @@ async function apiEngager(req, env, ctx) {
   await env.DB.prepare(`CREATE INDEX IF NOT EXISTS engagements_cree ON engagements(traite, cree)`).run();
 
   await env.DB.prepare(`INSERT INTO engagements (cree, objet, pole, source, nom, tel, email, ville, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    .bind(Date.now(), objet, pole, source, nom, tel, email, ville, message)
+    .bind(Date.now(), objet, pole, source, nom, tel, email, ville, objet === "Devenir membre" ? `Programme : ${programme}\nMotivation : ${motivation}${message ? `\nMessage : ${message}` : ""}` : message)
     .run();
 
   notifySde(env,ctx,"engagement",{nom,email,tel});
@@ -1404,7 +1481,8 @@ async function traiter(req, env, ctx) {
     const url = new URL(req.url);
     const p = url.pathname;
     if (url.hostname === "www.mouvement-sde.org") return Response.redirect("https://mouvement-sde.org" + p + url.search, 301);
-    if (url.hostname === "mouvement-sde.org") {
+    const appHost = url.hostname === "app.mouvement-sde.org";
+    if (url.hostname === "mouvement-sde.org" || appHost) {
       // Routage unifié : pages réelles, un guichet de connexion, deux espaces protégés.
       const pagesPubliques = {
         "/boutique": "/vitrine/boutique.html",
@@ -1445,9 +1523,21 @@ async function traiter(req, env, ctx) {
         throw new Error("Boucle de redirections asset");
       };
       if (req.method === "GET" || req.method === "HEAD") {
-        if (p === "/" || p === "/index.html") return assetPortail("/vitrine/portail.html");
+        if (p === "/" || p === "/index.html") {
+          if (appHost) {
+            const compte = await utilisateur(req, env);
+            const destination = compte.connecte
+              ? (compte.niveau >= 1 ? "/administration" : "/mon-espace")
+              : "/connexion?retour=%2Fportail";
+            return new Response(null, {status:302, headers:{location:url.origin + destination, "cache-control":"private, no-store", "x-robots-tag":"noindex, nofollow"}});
+          }
+          return assetPortail("/vitrine/portail.html");
+        }
         if (p === "/vitrine/" || p === "/vitrine/index.html") return Response.redirect(url.origin + "/", 301);
-        if (pagesPubliques[p]) return assetPortail(pagesPubliques[p]);
+        if (pagesPubliques[p]) {
+          const page = await assetPortail(pagesPubliques[p]);
+          return p === "/programmes" || p === "/contact" ? injecterSite(page, env, p === "/programmes" ? "programmes" : "contact") : page;
+        }
         if (p === "/portail") {
           const u=await utilisateur(req,env);
           const destination=u.connecte?(u.niveau>=1?"/administration":"/mon-espace"):"/connexion?retour=%2Fportail";
@@ -1466,8 +1556,13 @@ async function traiter(req, env, ctx) {
           n.headers.set("x-robots-tag", "noindex, nofollow");
           return n;
         }
-        if (p === "/os-v31" || p === "/os-v31/")
-          return Response.redirect(url.origin + "/mon-espace/os-v31" + url.search + url.hash, 302);
+        if (p === "/os-v31" || p === "/os-v31/") {
+          return new Response(null, {status:302, headers:{
+            location:url.origin + "/mon-espace/os-v31" + url.search + url.hash,
+            "cache-control":"private, no-store",
+            "x-robots-tag":"noindex, nofollow"
+          }});
+        }
         // Ressources JS/CSS privées, sous le même domaine ; aucune donnée métier statique.
         if (p === "/os-v31/sde-os.js" || p === "/os-v31/sde-os.css") {
           const r = await assetPortail(p);
@@ -1597,6 +1692,7 @@ async function traiter(req, env, ctx) {
       if (p === "/api/mon-profil" && req.method === "PATCH") return apiMonProfil(req, env, u);
       if (p === "/api/ma-photo" && req.method === "POST") return apiMaPhoto(req, env, u);
       if (p === "/api/mes-cotisations") return apiMesCotisations(req, env, u);
+      if (p === "/api/mon-parcours-academy") return apiMonParcoursAcademy(req, env, u);
       if (p === "/api/actualites") return apiActualites(env, u);
       if (p === "/api/priere" && req.method === "POST") return apiPriere(req, env, u, ctx);
       if (p === "/api/absence" && req.method === "POST") return apiAbsence(req, env, u, ctx);

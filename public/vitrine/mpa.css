@@ -93,3 +93,15 @@ body.sde-portal .burger { display: none !important; }
   body.sde-portal { padding-bottom:calc(86px + env(safe-area-inset-bottom, 0px)); }
   .sde-subpage .sde-page-footer { padding-bottom:calc(110px + env(safe-area-inset-bottom, 0px)); }
 }
+/* Refonte étape 1 : accueil selon le document de référence */
+.hero-intro{max-width:60ch;margin:0 auto 10px;font:400 1.02rem/1.6 'Atkinson Hyperlegible',system-ui,sans-serif;color:#e8ecf5}
+.hero-actions{flex-wrap:wrap}.btn-soutien{white-space:nowrap}
+@media(max-width:900px){.btn-soutien{display:none}}
+#vision-engagements .vmi{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+#vision-engagements h3{font-family:'Saira Condensed',sans-serif;letter-spacing:.04em}
+#a-propos .fondements{margin:10px 0 0;padding-left:1.2rem;display:grid;gap:6px;max-width:62ch}
+.programme a+a{margin-left:12px;color:var(--or,#e2c26a)}
+.sde-lead-actions{margin-top:10px}.sde-lead-actions a{color:var(--or,#e2c26a)}
+.leadership-noms{font-size:1.05rem;line-height:1.8}
+.pied-liens{margin-top:12px;font-size:.88rem;line-height:1.9}.pied-liens a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.montants{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:14px 0}.montants li{padding:6px 14px;border:1px solid #d4af3766;border-radius:99px;color:var(--or,#e2c26a);font-weight:600}
