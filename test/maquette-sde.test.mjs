@@ -34,3 +34,14 @@ test("maquette : barre d'onglets mobile et mouvement réduit",()=>{
  assert.ok(css.includes(".ref-tabbar{display:none}")&&/@media\(max-width:760px\)\{\.ref-tabbar\{position:fixed/.test(css));
  assert.ok(css.includes("prefers-reduced-motion:reduce){.ref-bar i{transition:none}"));
 });
+test("refonte : rubrique Adhésions branchée de bout en bout pour l'administration",()=>{
+ assert.ok(shell.includes("['adhesions','Adhésions','members']"),"menu latéral");
+ assert.ok(ops.includes("adhesions:'Demandes d’adhésion'")&&ops.includes("active==='adhesions'&&direction"),"module réservé à la direction");
+ assert.ok(direct.includes('adhesions:"Demandes d’adhésion"')&&direct.includes('nom==="adhesions"&&(mode!=="direction"||!(compte?.niveau>=1))'),"catalogue et droits");
+ assert.ok(ops.includes("Approuver")&&ops.includes("Refuser")&&ops.includes("Contacter"));
+});
+test("refonte : accueil, textes du document de référence",()=>{
+ const home=read("public/vitrine/index.html");
+ for(const t of ["Une génération enracinée","Nos cinq engagements","Nos fondements","Nos programmes","Nos cinq pôles","Découvrir le programme","M’inscrire","Prière, intercession, annonce de l’Évangile et missions."])assert.ok(home.includes(t),t);
+ assert.ok(home.includes('id="form-rejoindre"')&&home.includes('id="hero-decompte"'),"formulaire et compte à rebours conservés");
+});
