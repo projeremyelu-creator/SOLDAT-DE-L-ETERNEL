@@ -250,3 +250,13 @@ body.sde-reference-admin .site-ed .site-ed-check{display:flex;flex-direction:row
 .ref-request-list strong{display:block;font-weight:700}.ref-request-list small{color:#aeb7c7}
 .ref-request-initials{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:1px solid #d4af3766;color:#e2c26a;font:600 .8rem 'Saira Condensed',sans-serif;letter-spacing:.06em}
 .ref-request-list .ref-small-action:disabled{opacity:.5;cursor:wait}
+/* Synthèse financière et avancement (maquette 03) */
+.ref-command-glance{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:13px}.ref-command-glance .ops-card{margin:0;position:relative}
+.ref-link-more{position:absolute;right:16px;top:16px;background:none;border:0;color:#e2c26a;text-decoration:underline;font:inherit;font-size:.82rem;cursor:pointer}
+.ref-flow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.ref-flow>div{padding:10px 12px;border-radius:10px;border:1px solid #ffffff1a;background:#0a122866}
+.ref-flow small{display:block;color:#aeb7c7}.ref-flow strong{font:600 1.3rem 'Saira Condensed',sans-serif}.ref-flow-in strong{color:#7ed8a8}.ref-flow-out strong{color:#f0868c}
+.ref-flow-net{margin:12px 0 4px}.ref-flow-net strong{color:#e2c26a}
+.ref-bars{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:9px}.ref-bars li{display:grid;grid-template-columns:minmax(0,1fr) 38% auto;gap:10px;align-items:center}
+.ref-bar{height:8px;border-radius:99px;background:#ffffff1c;overflow:hidden}.ref-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#b08d2a,#e2c26a);transition:width .95s cubic-bezier(.25,1,.5,1)}
+@media(prefers-reduced-motion:reduce){.ref-bar i{transition:none}}body[data-motion=paused] .ref-bar i{transition:none}
+@media(max-width:760px){.ref-command-glance{grid-template-columns:1fr}}
