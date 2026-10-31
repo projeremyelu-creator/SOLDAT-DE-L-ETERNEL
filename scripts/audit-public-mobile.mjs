@@ -32,6 +32,22 @@ try{
  for(const c of cases){
   const ctx=await browser.newContext({viewport:{width:c.width,height:c.height},deviceScaleFactor:1,isMobile:c.width<700,hasTouch:c.width<700,colorScheme:'light',locale:'fr-CI'});
   const page=await ctx.newPage();
+  await page.addInitScript(() => {
+   window.__sdeLabMetrics={lcp:0,cls:0};
+   try {
+    new PerformanceObserver(list=>{
+     const entries=list.getEntries();
+     if(entries.length)window.__sdeLabMetrics.lcp=Math.round(entries.at(-1).startTime);
+    }).observe({type:'largest-contentful-paint',buffered:true});
+   } catch (_) {}
+   try {
+    new PerformanceObserver(list=>{
+     for(const entry of list.getEntries())
+      if(!entry.hadRecentInput)window.__sdeLabMetrics.cls+=entry.value;
+    }).observe({type:'layout-shift',buffered:true});
+   } catch (_) {}
+  });
+
   const pageErrors=[];
   page.on('pageerror',error=>pageErrors.push(String(error.message||error).slice(0,250)));
   try{
@@ -93,7 +109,15 @@ try{
      tpaPosters:posters.length,
      tpaPosterLoaded:posters.every(i=>i.complete&&i.naturalWidth>0),
      heading:document.querySelector('h1')?.textContent?.trim().slice(0,95)||'',
-     loadMs:Math.round(performance.getEntriesByType('navigation')[0]?.duration||0)
+     loadMs:Math.round(performance.getEntriesByType('navigation')[0]?.duration||0),
+     // Mesures de laboratoire Chromium : indicatives, non assimilables aux données utilisateurs.
+     labMetrics:{
+       lcpMs:window.__sdeLabMetrics?.lcp||null,
+       cls:Math.round((window.__sdeLabMetrics?.cls||0)*1000)/1000,
+       fcpMs:Math.round(performance.getEntriesByType('paint').find(x=>x.name==='first-contentful-paint')?.startTime||0)||null,
+       resources:performance.getEntriesByType('resource').length,
+       transferKB:Math.round(performance.getEntriesByType('resource').reduce((n,x)=>n+(x.transferSize||0),0)/1024)
+     }
     };
    });
    const row={...c,status:response?.status()||0,url:page.url(),...view,pageErrors};
