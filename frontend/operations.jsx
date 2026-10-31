@@ -150,18 +150,51 @@ function PoleTracking({portal}){
 /* Rendez-vous officiel publié sur la vitrine. Ne crée pas de faux dossier
    D1 ni d'inscription : les indicateurs admin restent ceux de la base. */
 function OfficialTpaCard(){
+ const [details,setDetails]=useState(false),openButton=useRef(null),closeButton=useRef(null);
+ useEffect(()=>{
+  if(!details)return;
+  const before=document.body.style.overflow;
+  document.body.style.overflow='hidden';
+  closeButton.current?.focus();
+  const onKey=e=>{if(e.key==='Escape'){e.preventDefault();setDetails(false);openButton.current?.focus();}};
+  document.addEventListener('keydown',onKey);
+  return()=>{document.body.style.overflow=before;document.removeEventListener('keydown',onKey);};
+ },[details]);
  if(Date.now()>=Date.parse('2026-12-19T00:00:00Z'))return null;
- return <section className="sde-official-tpa" aria-label="Traversée Prophétique Annuelle TPA 2026">
-  <a href="/programmes#tpa-2026" className="sde-official-tpa-poster" aria-label="Consulter l’affiche TPA 2026">
-   <img src="/vitrine/illus/tpa-2026.webp" alt="Affiche officielle de la Traversée Prophétique Annuelle" width="160" height="160" loading="lazy"/>
-  </a>
-  <div className="sde-official-tpa-info">
-   <span className="sde-official-tpa-tag">Programme officiel · Mouvement SDE</span>
-   <h3>Traversée Prophétique Annuelle — TPA 2026</h3>
-   <p><time dateTime="2026-12-18T20:00:00+00:00">Vendredi 18 décembre 2026 à 20h00</time> · Google Meet</p>
-   <a href="/programmes#tpa-2026">Voir le programme et l’affiche →</a>
-  </div>
- </section>;
+ const close=()=>{setDetails(false);openButton.current?.focus()};
+ return <>
+  <section className="sde-official-tpa" aria-label="Traversée Prophétique Annuelle TPA 2026">
+   <button type="button" ref={openButton} className="sde-official-tpa-poster" onClick={()=>setDetails(true)} aria-label="Afficher tous les détails du programme TPA 2026">
+    <img src="/vitrine/illus/tpa-2026.webp" alt="Affiche officielle de la Traversée Prophétique Annuelle 2026" width="160" height="160" loading="lazy"/>
+   </button>
+   <div className="sde-official-tpa-info">
+    <span className="sde-official-tpa-tag">À venir · Programme officiel SDE</span>
+    <h3>Traversée Prophétique Annuelle — TPA 2026</h3>
+    <p><time dateTime="2026-12-18T20:00:00+00:00">Vendredi 18 décembre 2026 · 20h00</time> · Google Meet</p>
+    <button type="button" className="sde-tpa-more" onClick={()=>setDetails(true)} aria-haspopup="dialog" aria-expanded={details}>Voir les détails du programme →</button>
+   </div>
+  </section>
+  {details&&createPortal(<div className="sde-tpa-backdrop" onClick={e=>{if(e.target===e.currentTarget)close()}}>
+    <section className="sde-tpa-dialog" role="dialog" aria-modal="true" aria-labelledby="sde-tpa-dialog-title" aria-describedby="sde-tpa-dialog-desc">
+     <header className="sde-tpa-dialog-head"><span>ÉVÉNEMENT OFFICIEL · MOUVEMENT SDE</span><button type="button" ref={closeButton} onClick={close} aria-label="Fermer les détails de la TPA">✕ Fermer</button></header>
+     <div className="sde-tpa-dialog-content">
+      <img src="/vitrine/illus/tpa-2026.webp" alt="Affiche TPA 2026 : Traversée Prophétique Annuelle, vendredi 18 décembre à 20h sur Google Meet" width="600" height="600"/>
+      <div className="sde-tpa-dialog-details">
+       <h2 id="sde-tpa-dialog-title">Traversée Prophétique Annuelle — TPA 2026</h2>
+       <p id="sde-tpa-dialog-desc">Un temps annuel de prière, d’enseignement prophétique et de consécration pour achever l’année en Christ et se préparer à la nouvelle saison.</p>
+       <dl>
+        <div><dt>Date</dt><dd>Vendredi 18 décembre 2026</dd></div>
+        <div><dt>Heure</dt><dd>20h00 · Heure d’Abidjan (GMT)</dd></div>
+        <div><dt>Lieu</dt><dd>En ligne, sur Google Meet</dd></div>
+        <div><dt>Organisateur</dt><dd>Mouvement Prophético-Apostolique Soldat de l’Éternel (SDE)</dd></div>
+       </dl>
+       <p className="sde-tpa-join-note">Le lien direct de la réunion Google Meet n’est pas encore renseigné dans cette annonce.</p>
+       <a href="/programmes#tpa-2026">Consulter la page officielle du programme →</a>
+      </div>
+     </div>
+    </section>
+   </div>,document.body)}
+ </>;
 }
 function FeatureEvent({portal}){
  const news=useData('/api/actualites');
@@ -202,7 +235,7 @@ function Command({portal}){
  const ago=t=>{const n=Math.max(0,Math.floor((Date.now()-Number(t))/60000));return n<1?'À l’instant':n<60?n+' min':n<1440?Math.floor(n/60)+' h':Math.floor(n/1440)+' j'};
  return <Loading state={state}>{d=>{const recent=[...(activity.data?.activites||[]).map(a=>({id:'qr-'+a.id,titre:'Pointage : '+a.nom+' · Arrivé',cree:a.cree,icon:'check'})),...(d.activites||[]).map((a,i)=>({id:'maj-'+i,titre:({membres:'Fiche membre actualisée',evenements:'Pointage / rencontre actualisé',formations:'Formation actualisée',projets:'Mission actualisée',annonces:'Communication publiée'})[a.rubrique]||'Dossier actualisé',cree:a.cree,icon:a.rubrique==='membres'?'members':'mission'}))].sort((a,b)=>b.cree-a.cree).slice(0,4);
  const rate=d.indicateurs?.presence?.taux;
- return <div className="ref-command"><header className="sv-hello sv-hello-admin"><div><h1>Poste de commandement</h1><p>Suivi, coordination et développement du mouvement.</p></div>{portal.compte.niveau>=2&&<button type="button" className="ref-small-action" onClick={()=>portal.selectionner('site-public')}>Créer un programme →</button>}</header><OfficialTpaCard/><p className="ref-live" role="status"><span className="ref-live-dot" aria-hidden="true"/>Données en direct · mises à jour {when(stamp)}</p><div className="ops-kpis">{[['Membres actifs',d.indicateurs?.membresActifs,'members','','annuaire','Ouvrir l’annuaire'],['Demandes en attente',d.indicateurs?.demandesAdhesion,'urgent','','adhesions','Ouvrir les demandes'],['Pôles de mission',d.indicateurs?.poles,'mission','','garnisons','Ouvrir les pôles'],['Programmes publiés',d.indicateurs?.programmesPublies,'academy','','programmes','Voir les programmes publiés']].map(([t,v,icon,suffix,target,label],i)=><Card key={t} title={t} className="ref-kpi" style={{'--i':i}}><RefIcon name={icon}/><strong><Num value={v} suffix={suffix}/></strong>{t==='Demandes en attente'&&Number(v)>0&&<span className="ref-kpi-alert">À suivre</span>}<button type="button" className="ref-kpi-go" aria-label={label+' — '+t} onClick={()=>target==='programmes'?window.location.assign('/programmes'):portal.selectionner(target)}/></Card>)}</div>
+ return <div className="ref-command"><header className="sv-hello sv-hello-admin"><div><h1>Poste de commandement</h1><p>Suivi, coordination et développement du mouvement.</p></div>{portal.compte.niveau>=2&&<button type="button" className="ref-small-action" onClick={()=>portal.selectionner('site-public')}>Créer un programme →</button>}</header><p className="ref-live" role="status"><span className="ref-live-dot" aria-hidden="true"/>Données en direct · mises à jour {when(stamp)}</p><div className="ops-kpis">{[['Membres actifs',d.indicateurs?.membresActifs,'members','','annuaire','Ouvrir l’annuaire'],['Demandes en attente',d.indicateurs?.demandesAdhesion,'urgent','','adhesions','Ouvrir les demandes'],['Pôles de mission',d.indicateurs?.poles,'mission','','garnisons','Ouvrir les pôles'],['Programmes publiés',d.indicateurs?.programmesPublies,'academy','','programmes','Voir les programmes publiés']].map(([t,v,icon,suffix,target,label],i)=><Card key={t} title={t} className="ref-kpi" style={{'--i':i}}><RefIcon name={icon}/><strong><Num value={v} suffix={suffix}/></strong>{t==='Demandes en attente'&&Number(v)>0&&<span className="ref-kpi-alert">À suivre</span>}<button type="button" className="ref-kpi-go" aria-label={label+' — '+t} onClick={()=>target==='programmes'?window.location.assign('/programmes'):portal.selectionner(target)}/></Card>)}</div><OfficialTpaCard/>
  <VisitsGlance/><div className="ref-command-overview"><PendingRequests/><CommandPoles portal={portal}/></div><CommandPrograms portal={portal}/>
  <FeatureEvent portal={portal}/><div className="ref-command-middle"><Card title="Évolution des présences & retards" className="ref-command-chart"><span className="ref-chart-period">7 rencontres</span><DataPlot title="Présences et retards par rencontre" rows={(d.frequentation||[]).map(p=>({label:p.date.slice(5),presences:p.presents+p.retards,retards:p.retards}))} series={[{key:'presences',label:'Présences'},{key:'retards',label:'Dont retards'}]}/><div className="ref-presence-summary"><span className="ref-presence-ring" role="img" aria-label={rate==null?'Taux de présence indisponible':`Taux de présence ${rate} %`} style={{'--rate':`${rate??0}%`}}/><strong>Taux de présence <b>{rate==null?'—':rate+' %'}</b></strong><button type="button" onClick={()=>portal.selectionner('scanner')}>Voir les pointages</button></div></Card>
  <Card title="Dernières activités" className="ref-activity-card"><ul className="ref-activities">{recent.map((a,i)=><li key={a.id} style={{'--i':i}}><span className="ref-activity-icon"><RefIcon name={a.icon}/></span><div><strong>{a.titre}</strong><small>{ago(a.cree)}</small></div></li>)}</ul>{!recent.length&&<div className="ref-empty-state"><RefIcon name="mission"/><strong>Les premières activités apparaîtront ici</strong><p>Retrouvez les mises à jour du mouvement au même endroit.</p></div>}<button className="ref-small-action ref-qr-action" onClick={()=>portal.selectionner('scanner')}>Pointages & QR</button></Card></div>
