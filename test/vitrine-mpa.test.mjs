@@ -60,6 +60,14 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
         // Les coordonnées sont désormais regroupées dans le pied de page Contact.
         assert.ok(normalize(a.textContent).startsWith(normalize(b.textContent)));
         assert.ok(target.querySelector('a[href="mailto:infosoldat@gmail.com"]'));
+      }else if(name==="programmes"&&id==="agenda"){
+        // La TPA comporte un accès direct à l'affiche et sa date détaillée ;
+        // la prose originale reste rigoureusement identique.
+        const preserved=b.cloneNode(true);
+        const extras=[...preserved.querySelectorAll('[data-sde-tpa-extra]')];
+        assert.equal(extras.length,2,"Date et lien de l'affiche TPA attendus");
+        extras.forEach(element=>element.remove());
+        assert.equal(normalize(preserved.textContent),normalize(a.textContent),name+"/"+id);
       }else if(name==="projets"&&id==="projets"){
         // Les textes d'origine sont inchangés ; seuls deux CTA de navigation
         // explicites ont été ajoutés aux cartes IN FIRE et Médiathèque.
