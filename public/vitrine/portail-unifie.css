@@ -214,3 +214,50 @@ body.sde-multipage-unifie .site-footer{margin-top:0}
   body.sde-unifie .site-burger{width:39px;height:39px}
   body.sde-unifie .home-hero h1{font-size:clamp(1.98rem,8.7vw,2.3rem)}
 }
+
+/* SDE portail stable 2026-10-31 : éviter le flottement de l'accès. */
+/* L'en-tête public suit la page naturellement. Le bouton d'accès n'est ni
+   flottant ni animé. Les tableaux de bord privés ont leurs propres styles. */
+html body.sde-unifie .site-header {
+  position:relative!important;
+  top:auto!important;
+  bottom:auto!important;
+  transform:none!important;
+  animation:none!important;
+  transition:none!important;
+  scroll-margin-top:0;
+}
+html body.sde-unifie .site-header .site-access-top {
+  position:static!important;
+  inset:auto!important;
+  transform:none!important;
+  animation:none!important;
+  transition:none!important;
+  will-change:auto!important;
+}
+html body.sde-unifie .site-header .site-access-top .site-portal-cta,
+html body.sde-unifie .site-header .site-access-top .site-portal-cta:is(:hover,:active,:focus-visible) {
+  position:static!important;
+  transform:none!important;
+  animation:none!important;
+  will-change:auto!important;
+  transition:background-color .18s ease,color .18s ease,border-color .18s ease!important;
+}
+html body.sde-unifie .site-header .site-header-inner {
+  transform:none!important;
+  animation:none!important;
+  min-width:0;
+}
+@media(max-width:760px){
+  html body.sde-unifie .site-header {
+    overflow:visible!important;
+  }
+  html body.sde-unifie .site-header .site-access-top {
+    flex-shrink:0;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html body.sde-unifie .site-header .site-access-top .site-portal-cta {
+    transition:none!important;
+  }
+}
