@@ -118,3 +118,35 @@ test("Aucun écran ne contient de données personnelles codées en dur",()=>{
  assert.ok(!js.includes("localStorage"));
  assert.ok(!js.includes("sessionStorage"));
 });
+test("Navigation immédiate : raccourcis et historique sans rechargement",async()=>{
+ const {dom,w,d}=ui("membre",0);
+ await settle();
+ const link=d.querySelector('.sde-dash-side a[data-view="prieres"]');
+ link.dispatchEvent(new w.MouseEvent("click",{bubbles:true,cancelable:true,button:0}));
+ assert.equal(d.querySelector('[data-section="prieres"]').hidden,false);
+ assert.equal(d.querySelector('[data-section="profil"]').hidden,true);
+ assert.equal(d.querySelector('.sde-dash-side a[data-view="prieres"]').getAttribute("aria-current"),"page");
+ assert.equal(w.location.hash,"#prieres");
+ w.location.hash="#formations";
+ w.dispatchEvent(new w.Event("hashchange"));
+ assert.equal(d.querySelector('[data-section="formations"]').hidden,false);
+ assert.equal(d.activeElement?.id,"espace-principal");
+ dom.window.close();
+});
+test("Administration : aucun onglet réservé n’est accessible par ancre non autorisée",async()=>{
+ const {dom,w,d}=ui("administration",1);
+ await settle();
+ assert.equal(d.querySelector('a[data-view="publications"]').hidden,true);
+ w.location.hash="#publications";
+ w.dispatchEvent(new w.Event("hashchange"));
+ assert.equal(d.querySelector('[data-section="publications"]').hidden,true);
+ assert.equal(d.querySelector('[data-section="accueil"]').hidden,false);
+ dom.window.close();
+ const admin=ui("administration",2);
+ await settle();
+ const publication=admin.d.querySelector('a[data-view="publications"]');
+ assert.equal(publication.hidden,false);
+ publication.dispatchEvent(new admin.w.MouseEvent("click",{bubbles:true,cancelable:true,button:0}));
+ assert.equal(admin.d.querySelector('[data-section="publications"]').hidden,false);
+ admin.dom.window.close();
+});
