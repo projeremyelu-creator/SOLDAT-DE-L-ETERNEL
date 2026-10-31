@@ -22,17 +22,32 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
-      - uses: actions/setup-node@v4
+      - name: Vérifier que l'audit vise bien la dernière version
+        id: revision
+        shell: bash
+        run: |
+          ACTUEL="$(git ls-remote origin refs/heads/main | cut -f1)"
+          TESTE="${{ github.event.workflow_run.head_sha || github.sha }}"
+          if [ -n "$ACTUEL" ] && [ "$ACTUEL" = "$TESTE" ]; then
+            echo "verifier=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "verifier=false" >> "$GITHUB_OUTPUT"
+            echo "Ancienne version : audit mobile non applicable."
+          fi
+      - if: steps.revision.outputs.verifier == 'true'
+        uses: actions/setup-node@v4
         with:
           node-version: '22.23.4'
       - name: Installer Chromium pour les contrôles visuels
+        if: steps.revision.outputs.verifier == 'true'
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.0
           npx playwright install --with-deps chromium
       - name: Vérifier les pages publiques et la protection anonyme
+        if: steps.revision.outputs.verifier == 'true'
         run: node scripts/audit-public-mobile.mjs
       - name: Conserver captures mobiles et rapport technique
-        if: always()
+        if: steps.revision.outputs.verifier == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: audit-mobile-public-sde
