@@ -588,3 +588,48 @@ html body[data-motion="paused"] .sde-reference-admin .ref-feature { animation:no
   }
   body.sde-reference .ref-mobile-public{padding:4px 10px}
 }
+
+/* TPA 2026 — carte officielle dans les espaces privés. */
+body.sde-reference .sde-official-tpa{
+ display:grid;grid-template-columns:minmax(96px,142px) minmax(0,1fr);
+ gap:16px;align-items:center;min-width:0;
+ margin:15px 0 20px;padding:15px;border:1px solid #bb9a4d;
+ border-radius:12px;background:linear-gradient(120deg,#13293d,#233c35);
+ box-shadow:0 7px 24px #070d1755;color:#f5eedc;
+}
+body.sde-reference .sde-official-tpa-poster{
+ display:block;width:100%;min-width:0;
+ border-radius:9px;overflow:hidden;
+ border:1px solid #d5af63;
+}
+body.sde-reference .sde-official-tpa-poster img{
+ display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:contain;
+}
+body.sde-reference .sde-official-tpa-info{display:grid;gap:7px;min-width:0}
+body.sde-reference .sde-official-tpa-tag{
+ color:#e4c785;font-size:.75rem;font-weight:800;letter-spacing:.035em;
+}
+body.sde-reference .sde-official-tpa-info h3{
+ color:#ffebbd!important;font:750 clamp(1.06rem,2vw,1.35rem)/1.35 system-ui,sans-serif!important;
+ margin:0!important;overflow-wrap:break-word;
+}
+body.sde-reference .sde-official-tpa-info p{
+ color:#f2f0eb!important;font-size:.9rem!important;line-height:1.5!important;margin:0!important;
+}
+body.sde-reference .sde-official-tpa-info a{
+ color:#ffe3a7!important;text-decoration:underline;
+ text-underline-offset:4px;font-weight:800;
+ display:inline-flex;align-items:center;min-height:44px;
+}
+body.sde-reference .sde-official-tpa :is(a):focus-visible{
+ outline:3px solid #ffe7af;outline-offset:3px;
+}
+@media(max-width:480px){
+ body.sde-reference .sde-official-tpa{grid-template-columns:95px minmax(0,1fr);padding:11px;gap:12px}
+ body.sde-reference .sde-official-tpa-info h3{font-size:.99rem!important}
+ body.sde-reference .sde-official-tpa-info p{font-size:.83rem!important}
+}
+@media(max-width:350px){
+ body.sde-reference .sde-official-tpa{grid-template-columns:1fr}
+ body.sde-reference .sde-official-tpa-poster{max-width:150px}
+}
