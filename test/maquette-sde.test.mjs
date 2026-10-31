@@ -238,6 +238,7 @@ test("fréquentation du site dans le poste de commandement",()=>{
  assert.ok(fn.includes('searchParams.get("historique") === "1"')&&fn.includes("length: 14"),"historique 14 jours");
 });
 test("ressources servies sous un chemin versionné à chaque déploiement",()=>{
- assert.ok(worker.includes("/^\\/_v\\/[a-f0-9]{6,40}(\\/.+\\.(?:js|css))$/i"),"route /_v/");
+ assert.ok(worker.includes("([a-f0-9]{6,40})"),"Révision extraite du chemin /_v/");
+ assert.ok(worker.includes("m[1].toLowerCase() !== ASSET_REVISION"),"Les ressources n'utilisent jamais une autre version du Worker");
  assert.ok(read(".github/workflows/deployer.yml").includes("node scripts/version-chemins.mjs"));
 });
