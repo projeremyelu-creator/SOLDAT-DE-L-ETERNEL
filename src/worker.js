@@ -1681,7 +1681,7 @@ async function traiter(req, env, ctx) {
       // aucun contenu, document ou fichier privé n'est rendu statique.
       const routeInterne = p.startsWith("/api/") || p.startsWith("/_blob/") || p.startsWith("/m/");
       if (!routeInterne) {
-        if (!/^\/(vitrine\/|app\.css$|sde-(unified\.css|bridge\.js|private-ui\.css)$|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$|sw-public\.js$|manifest\.webmanifest$|sw\.js$)/.test(p)) {
+        if (!/^\/(vitrine\/|app\.css$|sde-(unified\.css|bridge\.js|private-ui\.css)$|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$|flux\.xml$|sw-public\.js$|manifest\.webmanifest$|sw\.js$)/.test(p)) {
           const r404 = await assetPortail("/vitrine/404.html");
           return new Response(r404.body, { status: 404, headers: r404.headers });
         }

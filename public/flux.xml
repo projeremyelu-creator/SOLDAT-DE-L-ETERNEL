@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mouvement Soldats de l’Éternel</title>
+    <link>https://mouvement-sde.org/</link>
+    <description>Actualités, enseignements et prochains rendez-vous du Mouvement Prophético-Apostolique Soldats de l’Éternel.</description>
+    <language>fr-FR</language>
+    <copyright>© 2026 Mouvement Prophético-Apostolique Soldats de l’Éternel</copyright>
+    <managingEditor>infosoldat@gmail.com (Secrétariat SDE)</managingEditor>
+    <webMaster>infosoldat@gmail.com (Secrétariat SDE)</webMaster>
+    <lastBuildDate>Sat, 31 Oct 2026 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://mouvement-sde.org/vitrine/logo-96.png</url>
+      <title>Mouvement Soldats de l’Éternel</title>
+      <link>https://mouvement-sde.org/</link>
+    </image>
+    <atom:link href="https://mouvement-sde.org/flux.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>TPA 2026 — Traversée Prophétique Annuelle</title>
+      <link>https://mouvement-sde.org/programmes#agenda</link>
+      <guid isPermaLink="false">tpa-2026-18-dec</guid>
+      <pubDate>Fri, 30 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Vendredi 18 décembre 2026, 20h00, en direct sur Google Meet. Grand rassemblement annuel de prière et d’enseignement prophétique du Mouvement SDE pour clôturer l’année en Christ.</description>
+    </item>
+
+    <item>
+      <title>Mur de prière — Déposer et porter des intentions</title>
+      <link>https://mouvement-sde.org/communaute</link>
+      <guid isPermaLink="true">https://mouvement-sde.org/communaute</guid>
+      <pubDate>Sat, 31 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Un nouveau mur de prière public : chacun dépose son sujet, les autres portent l’intention. Rejoignez la grande armée d’intercesseurs du mouvement.</description>
+    </item>
+
+    <item>
+      <title>Carte des six pays d’implantation du Mouvement SDE</title>
+      <link>https://mouvement-sde.org/reseau</link>
+      <guid isPermaLink="true">https://mouvement-sde.org/reseau</guid>
+      <pubDate>Sat, 31 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Découvrez les six nations où le Mouvement SDE est implanté : Côte d’Ivoire, Tunisie, Burkina Faso, Italie, Canada, États-Unis.</description>
+    </item>
+
+    <item>
+      <title>Soutenir le Mouvement SDE</title>
+      <link>https://mouvement-sde.org/soutenir</link>
+      <guid isPermaLink="true">https://mouvement-sde.org/soutenir</guid>
+      <pubDate>Sat, 31 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Une page de dons unifiée avec Mobile Money, virement bancaire et carte, pour soutenir le réveil, les missions, la formation et les projets du Mouvement.</description>
+    </item>
+
+    <item>
+      <title>Transparence — Rapport trimestriel sur l’utilisation des dons</title>
+      <link>https://mouvement-sde.org/transparence</link>
+      <guid isPermaLink="true">https://mouvement-sde.org/transparence</guid>
+      <pubDate>Sat, 31 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Nous publions chaque trimestre un rapport clair de l’utilisation des fonds confiés au Mouvement : fonctionnement, missions, formation, communication, préparation des événements, réserves.</description>
+    </item>
+
+    <item>
+      <title>Soldier’s Award — Cérémonie annuelle d’honneur</title>
+      <link>https://mouvement-sde.org/soldiers-award</link>
+      <guid isPermaLink="true">https://mouvement-sde.org/soldiers-award</guid>
+      <pubDate>Thu, 30 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Cérémonie annuelle d’honneur et de reconnaissance spirituelle qui célèbre les membres incarnant les valeurs fondamentales du Royaume : fidélité, feu, amour, service, consécration.</description>
+    </item>
+
+    <item>
+      <title>Les cinq pôles du Mouvement SDE</title>
+      <link>https://mouvement-sde.org/mouvement#poles</link>
+      <guid isPermaLink="false">poles-sde-2026</guid>
+      <pubDate>Thu, 30 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Cinq pôles portent la vision du mouvement : Réveil et évangélisation (REV), Impact social et humanitaire (ISH), Logistique et organisation (LO), Communication et médias (CMR), Formation et développement intégral (FDE).</description>
+    </item>
+  </channel>
+</rss>
