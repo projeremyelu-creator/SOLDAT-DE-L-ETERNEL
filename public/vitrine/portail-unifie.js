@@ -52,27 +52,21 @@
     const railTop=()=>{const h=document.querySelector(".site-header");if(h)document.documentElement.style.setProperty("--sde-rail-top",Math.max(0,Math.round(h.getBoundingClientRect().bottom))+"px")};
     railTop();addEventListener("scroll",railTop,{passive:true});addEventListener("resize",railTop);setTimeout(railTop,600);
     const menu = document.getElementById("site-menu");
-    // Nouvelles rubriques accessibles sur l'ensemble des pages publiques.
-    if(menu && !menu.querySelector('[data-sde-services-menu]')){
-      const panel=document.createElement('details');panel.className='site-mega';panel.dataset.sdeServicesMenu='true';
-      const summary=document.createElement('summary');summary.textContent='Services SDE';panel.append(summary);
-      const body=document.createElement('div');body.className='site-mega-panel';
-      for(const [href,title,desc] of [
-        ['/soutenir','Soutenir le mouvement','Projets et dons'],
-        ['/calendrier','Calendrier','Tous les rendez-vous publics'],
-        ['/communaute','Communauté','Intercession et prière'],
-        ['/reseau','Réseau international','Les six pays'],
-        ['/transparence','Transparence','Suivi des contributions'],
-        ['/gouvernance','Gouvernance','Éthique et sécurité'],
-        ['/newsletter','Newsletter','Recevoir les nouvelles'],
-        ['/rechercher','Rechercher','Enseignements et programmes']
+    // Ajouter des raccourcis SDE dans la structure existante, sans créer
+    // de cinquième méga-menu ni perturber les anciennes navigations.
+    if(menu && !menu.querySelector('[data-sde-service-link]')){
+      const panel=menu.querySelector('details.site-mega:last-of-type .site-mega-panel')
+        || menu.querySelector('details.site-mega .site-mega-panel') || menu;
+      for(const [href,title] of [
+        ['/soutenir','Soutenir SDE'],['/calendrier','Calendrier'],
+        ['/communaute','Communauté'],['/reseau','Réseau international'],
+        ['/transparence','Transparence'],['/gouvernance','Gouvernance'],
+        ['/newsletter','Newsletter'],['/rechercher','Recherche']
       ]){
         const a=document.createElement('a');a.href=href;
-        const strong=document.createElement('strong');strong.textContent=title;
-        const small=document.createElement('small');small.textContent=desc;
-        a.append(strong,small);body.append(a);
+        a.dataset.sdeServiceLink='true';a.textContent=title;
+        panel.append(a);
       }
-      panel.append(body);menu.append(panel);
     }
     const btn = document.querySelector(".site-header .site-burger");
     if (!menu || !btn) return;
