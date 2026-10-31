@@ -633,3 +633,58 @@ body.sde-reference .sde-official-tpa :is(a):focus-visible{
  body.sde-reference .sde-official-tpa{grid-template-columns:1fr}
  body.sde-reference .sde-official-tpa-poster{max-width:150px}
 }
+
+/* Restauration du poste de commandement antérieur : barre et panneau latéral (31/10/2026). */
+.ref-legacy-close,.ref-admin-scrim{display:none}
+@media(max-width:760px){
+  body.sde-reference-admin .ref-tabbar{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    background:linear-gradient(180deg,#0d1b32ee,#0a1228)!important;
+    border-top:1px solid #d4af3744!important;
+    backdrop-filter:blur(10px);
+    padding:6px 6px calc(6px + env(safe-area-inset-bottom))!important;
+    min-height:64px!important;
+    z-index:60!important;
+  }
+  body.sde-reference-admin .ref-tabbar button{
+    display:grid!important;justify-items:center!important;align-content:center!important;
+    gap:2px!important;min-height:48px!important;
+    background:none!important;border:0!important;border-radius:0!important;
+    color:#aeb7c7!important;
+    font:500 .7rem 'Atkinson Hyperlegible',system-ui,sans-serif!important;
+  }
+  body.sde-reference-admin .ref-tabbar button[aria-current="page"]{
+    color:#e2c26a!important;
+  }
+  body.sde-reference-admin .ref-tabbar button svg{
+    width:22px!important;height:22px!important;
+  }
+  body.sde-reference-admin .ref-admin-scrim{
+    display:block;position:fixed;inset:0;
+    z-index:68;border:0;border-radius:0;background:#030916ab;
+    width:100%;height:100%;
+    padding:0;margin:0;cursor:pointer;
+  }
+  body.sde-reference-admin #sde-reference-sidebar{position:relative;z-index:70}
+  body.sde-reference-admin .ref-sidebar.is-open{
+    display:block!important;
+    position:fixed;top:46px;bottom:0;left:0;
+    width:min(220px,85vw);height:auto;
+    padding-top:10px;overflow-y:auto;
+    z-index:72!important;
+    border:1px solid #ae965f;
+    box-shadow:20px 0 50px #0008;
+  }
+  body.sde-reference-admin .ref-legacy-close{
+    display:block;width:calc(100% - 22px);
+    min-height:44px;margin:0 11px 13px;padding:8px 12px;
+    background:#273650;color:#ffe3ad;border:1px solid #c6a65b;
+    border-radius:7px;font:700 .85rem system-ui,sans-serif;
+    text-align:left;
+  }
+  body.sde-reference-admin .ref-sidebar button:focus-visible,
+  body.sde-reference-admin .ref-tabbar button:focus-visible{
+    outline:3px solid #f4d384;outline-offset:2px;
+  }
+}
