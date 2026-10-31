@@ -28,13 +28,13 @@ function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=fals
   return {fetcher,appels};
 }
 
-test('Recette production : les deux domaines couvrent 29 parcours GET sans authentification',async()=>{
+test('Recette production : les deux domaines couvrent tous les parcours GET sans authentification',async()=>{
  const f=simulateur(),rapports=[];
  const bilan=await recetteProduction({fetcher:f.fetcher,essais:1,rapport:r=>rapports.push(r)});
- assert.equal(bilan.total,58);
- assert.equal(bilan.reussis,58);
+ assert.equal(bilan.total,DOMAINES.length*CONTROLES.length);
+ assert.equal(bilan.reussis,DOMAINES.length*CONTROLES.length);
  assert.equal(bilan.ok,true);
- assert.equal(rapports.length,58);
+ assert.equal(rapports.length,DOMAINES.length*CONTROLES.length);
  assert.ok(f.appels.every(a=>a.opts.method==='GET'&&a.opts.redirect==='manual'&&!a.opts.headers.cookie));
  assert.ok(f.appels.some(a=>a.url==='https://mouvement-sde.org/'));
  assert.ok(f.appels.some(a=>a.url==='https://app.mouvement-sde.org/administration'));
@@ -61,8 +61,8 @@ test('Recette production : CSS obsolète et session anonyme connectée échouent
 test('Recette production : une panne d’un domaine est signalée sans masquer l’autre',async()=>{
  const f=simulateur({erreurDomaine:true});
  const bilan=await recetteProduction({fetcher:f.fetcher,essais:1});
- assert.equal(bilan.total,58);
- assert.equal(bilan.reussis,29);
+ assert.equal(bilan.total,DOMAINES.length*CONTROLES.length);
+ assert.equal(bilan.reussis,CONTROLES.length);
  assert.equal(bilan.ok,false);
  assert.ok(bilan.resultats.some(r=>r.domaine===DOMAINES[1]&&!r.ok&&r.erreur.includes('DNS')));
 });
