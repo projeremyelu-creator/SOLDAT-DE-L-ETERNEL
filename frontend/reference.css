@@ -486,3 +486,105 @@ html[data-sde-palette=ivoire] body.sde-reference .ref-visits-kpis>div:first-chil
   .sde-reference-admin .ref-feature { animation:none; }
 }
 html body[data-motion="paused"] .sde-reference-admin .ref-feature { animation:none; }
+
+/* Navigation SDE — correction unique des barres Plus et Rubriques (31/10/2026). */
+@media(max-width:760px){
+  /* L'ancienne barre de navigation est conservée pour les anciens scripts,
+     mais une seule barre, pilotée par React, est affichée dans le portail. */
+  body.sde-reference .sde-bottom-nav,
+  body.sde-reference #sde-mobile-nav {display:none!important}
+  body.sde-reference .ref-tabbar{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    width:100%!important;max-width:none!important;
+    z-index:500!important;left:0!important;right:0!important;
+    bottom:0!important;
+    min-height:calc(65px + env(safe-area-inset-bottom));
+    padding:7px 5px calc(9px + env(safe-area-inset-bottom))!important;
+    background:#101b30!important;
+    border-top:1px solid #c9a55288!important;
+  }
+  body.sde-reference .ref-tabbar button{
+    min-width:0;min-height:47px;
+    padding:5px 2px;
+    display:flex;flex-direction:column;
+    justify-content:center;align-items:center;
+    gap:4px;color:#dee1e9;
+    font-size:clamp(.65rem,2.8vw,.78rem);
+    font-weight:650;
+    text-align:center;
+  }
+  body.sde-reference .ref-tabbar button svg{
+    width:22px;height:22px;flex:none;
+  }
+  body.sde-reference .ref-tabbar button[aria-current="page"]{
+    color:#f5d281!important;
+  }
+  body.sde-reference .ref-tabbar button:focus-visible{
+    outline:3px solid #e6c779;outline-offset:-3px;
+  }
+  body.sde-reference{padding-bottom:calc(76px + env(safe-area-inset-bottom))!important}
+  body.sde-reference .ref-mobile-shade{
+    position:fixed;inset:0;z-index:100000;
+    display:flex;justify-content:flex-end;align-items:stretch;
+    background:rgba(3,9,22,.78);
+    padding:0;box-sizing:border-box;
+  }
+  body.sde-reference .ref-mobile-drawer{
+    width:min(92vw,420px);max-height:100dvh;
+    background:#111e33;color:#f4f1e9;
+    border-left:2px solid #d0ab60;
+    box-shadow:-12px 0 40px #0008;
+    display:flex;flex-direction:column;
+    box-sizing:border-box;
+    padding:calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom));
+    overflow-y:auto;overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  body.sde-reference .ref-mobile-drawer header{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:5px 4px 15px;position:sticky;top:0;z-index:1;
+    background:#111e33;border-bottom:1px solid #bba06566;
+  }
+  body.sde-reference .ref-mobile-drawer h2{
+    color:#f3d28d!important;font:750 1.13rem/1.3 system-ui,sans-serif!important;
+    margin:0!important;
+  }
+  body.sde-reference .ref-mobile-drawer header button{
+    border:1px solid #c7ac74;
+    border-radius:9px;background:#26354d;color:#fff2d3;
+    padding:8px 11px;min-height:44px;font-weight:700;
+  }
+  body.sde-reference .ref-mobile-drawer nav{display:grid;gap:6px;padding:12px 0}
+  body.sde-reference .ref-mobile-drawer nav button{
+    display:flex;align-items:center;gap:12px;
+    width:100%;min-height:50px;padding:11px 14px;
+    border:1px solid #52607b;border-radius:10px;
+    text-align:left;background:#1d2e47;color:#f5f5f2;
+    font:650 .95rem/1.4 system-ui,sans-serif;
+  }
+  body.sde-reference .ref-mobile-drawer nav button span:nth-child(2){flex:1}
+  body.sde-reference .ref-mobile-drawer nav button svg{
+    width:21px;height:21px;flex:none;color:#e7c779;
+  }
+  body.sde-reference .ref-mobile-drawer nav button[aria-current="page"]{
+    background:#645127;border-color:#edcf82;color:white;
+  }
+  body.sde-reference .ref-mobile-drawer :is(a,button):focus-visible{
+    outline:3px solid #ffe2a0;outline-offset:2px;
+  }
+  body.sde-reference .ref-mobile-event{
+    display:grid;gap:7px;margin:12px 0;
+    background:#20352e;padding:15px;border:1px solid #bb9e59;
+    border-radius:12px;
+  }
+  body.sde-reference .ref-mobile-event strong{font-size:1rem;color:#ffe0a5}
+  body.sde-reference .ref-mobile-event span{font-size:.88rem;line-height:1.5;color:#f2efe2}
+  body.sde-reference .ref-mobile-event a,
+  body.sde-reference .ref-mobile-public{
+    color:#ffe0a5!important;font-weight:750;min-height:44px;
+    display:flex;align-items:center;text-decoration:underline;
+    text-underline-offset:3px;
+  }
+  body.sde-reference .ref-mobile-public{padding:4px 10px}
+}
