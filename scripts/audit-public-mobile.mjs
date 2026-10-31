@@ -34,7 +34,7 @@ try{
   const ctx=await browser.newContext({viewport:{width:c.width,height:c.height},deviceScaleFactor:1,isMobile:c.width<700,hasTouch:c.width<700,colorScheme:'light',locale:'fr-CI'});
   const page=await ctx.newPage();
   await page.addInitScript(() => {
-   window.__sdeLabMetrics={lcp:0,cls:0};
+   window.__sdeLabMetrics={lcp:0,cls:0,shifts:[]};
    try {
     new PerformanceObserver(list=>{
      const entries=list.getEntries();
@@ -43,8 +43,18 @@ try{
    } catch (_) {}
    try {
     new PerformanceObserver(list=>{
-     for(const entry of list.getEntries())
-      if(!entry.hadRecentInput)window.__sdeLabMetrics.cls+=entry.value;
+     for(const entry of list.getEntries()){
+      if(entry.hadRecentInput)continue;
+      window.__sdeLabMetrics.cls+=entry.value;
+      if(window.__sdeLabMetrics.shifts.length<12){
+       const moved=(entry.sources||[]).slice(0,4).map(s=>{
+        const el=s.node;
+        return {element:el?(el.tagName.toLowerCase()+(el.id?'#'+el.id:'')+(typeof el.className==='string'&&el.className?'.'+el.className.trim().replace(/\s+/g,'.').slice(0,90):'')):'unknown',
+         previousTop:Math.round(s.previousRect?.top||0),currentTop:Math.round(s.currentRect?.top||0)};
+       });
+       window.__sdeLabMetrics.shifts.push({value:Math.round(entry.value*10000)/10000,moved});
+      }
+     }
     }).observe({type:'layout-shift',buffered:true});
    } catch (_) {}
   });
@@ -115,6 +125,7 @@ try{
      labMetrics:{
        lcpMs:window.__sdeLabMetrics?.lcp||null,
        cls:Math.round((window.__sdeLabMetrics?.cls||0)*1000)/1000,
+       shiftSources:window.__sdeLabMetrics?.shifts||[],
        fcpMs:Math.round(performance.getEntriesByType('paint').find(x=>x.name==='first-contentful-paint')?.startTime||0)||null,
        resources:performance.getEntriesByType('resource').length,
        transferKB:Math.round(performance.getEntriesByType('resource').reduce((n,x)=>n+(x.transferSize||0),0)/1024)
@@ -197,6 +208,8 @@ try{
    }
    if(row.status!==200)issue(c.name,'HTTP '+row.status,true);
    if(row.overflowX>16)issue(c.name,'débordement horizontal de '+row.overflowX+' px',true);
+   if(row.labMetrics?.cls>0.10)
+    issue(c.name,'décalage de mise en page CLS de laboratoire '+row.labMetrics.cls+' (cible 0,10)');
    if(c.width<700&&row.brandPortalOverlap)issue(c.name,'le nom chevauche le bouton du portail',true);
    if(c.width<700&&row.brandBurgerOverlap)issue(c.name,'le nom chevauche le menu',true);
    if(c.path==='/'&&row.quoteContrast!==null&&row.quoteContrast<4.5)issue(c.name,'contraste du verset '+row.quoteContrast+':1',true);
