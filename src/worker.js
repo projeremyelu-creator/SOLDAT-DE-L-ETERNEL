@@ -5,6 +5,7 @@ import {memberQrApi} from "./member-qr.js";
 import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {prayerWallApi} from "./prayer-wall.js";
+import {sdeExpansionApi} from "./sde-expansion.js";
 import {apiSdeOs31,SDE_OS_31} from "./os-v31.js";
 import {notifySde,flushNotices,mailStatus,pushConfigured,notificationConfigured} from "./notifications.js";
 import {SDE_MAIL_RECIPIENT} from "./notification-events.js";
@@ -1561,6 +1562,14 @@ async function traiter(req, env, ctx) {
         "/pole-medias": "/vitrine/pole-medias.html",
         "/pole-formation": "/vitrine/pole-formation.html",
         "/missions-humanitaires": "/vitrine/missions-humanitaires.html",
+        "/soutenir": "/vitrine/soutenir.html",
+        "/transparence": "/vitrine/transparence.html",
+        "/reseau": "/vitrine/reseau.html",
+        "/communaute": "/vitrine/communaute.html",
+        "/gouvernance": "/vitrine/gouvernance.html",
+        "/calendrier": "/vitrine/calendrier.html",
+        "/rechercher": "/vitrine/rechercher.html",
+        "/newsletter": "/vitrine/newsletter.html",
         "/rubriques": "/vitrine/plus.html"
       };
       const assetPortail = async (nom) => {
@@ -1733,6 +1742,7 @@ async function traiter(req, env, ctx) {
       // Un cookie invalide ou expiré ne permet pas d'échapper au plafond anonyme.
       if (avecSession && !u.connecte && await rateLimitGlobal(env, ipGlobal))
         return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
+      const extension=await sdeExpansionApi(req,env,u);if(extension)return extension;
       const rsvp=await eventRsvpApi(req,env,u);if(rsvp)return rsvp;
       const operations=await operationsApi(req,env,u,{list:path=>lireRequete(env,{path}),audit:(rubrique,op)=>portalAudit(env,u,rubrique,op)});if(operations)return operations;
       const qr=await memberQrApi(req,env,u);if(qr)return qr;
