@@ -109,14 +109,29 @@ function verifierReponse(origine,controle,reponse,corps) {
   }
 }
 
-export async function recetteProduction({fetcher=fetch,domaines=DOMAINES,controles=CONTROLES,essais=3,timeoutMs=12000,attente=ms=>new Promise(r=>setTimeout(r,ms)),rapport=()=>{}}={}) {
+export async function recetteProduction({fetcher=fetch,domaines=DOMAINES,controles=CONTROLES,essais=3,timeoutMs=12000,attente=ms=>new Promise(r=>setTimeout(r,ms)),rapport=()=>{},revisionServeur=false}={}) {
+  // En production, plusieurs workflows peuvent se terminer dans un ordre différent
+  // de leurs commits. Contrôler la révision présente dans l'HTML réellement servi.
+  let revisionCourante='';
+  if(revisionServeur&&domaines.includes('https://mouvement-sde.org')){
+    try{
+      const response=await fetcher('https://mouvement-sde.org/',{method:'GET',redirect:'manual',cache:'no-store',signal:AbortSignal.timeout(timeoutMs),headers:{accept:'text/html'}});
+      if(response.status===200){
+        const html=await response.text();
+        revisionCourante=html.match(/\/_v\/([a-f0-9]{12})\/vitrine\/(?:portail-unifie|sde-experience)\.(?:js|css)/i)?.[1]||'';
+      }
+    }catch(error){console.warn('Révision publique indéterminée : vérification du commit prévu.',String(error?.name||'Erreur'));}
+    const expected=String(process.env.SDE_EXPECTED_REV||'').replace(/[^a-f0-9]/gi,'').slice(0,12);
+    if(revisionCourante&&expected&&revisionCourante!==expected)
+      console.log('Révision en production : '+revisionCourante+' ; recette lancée depuis '+expected+'.');
+  }
   const resultats=[];
   for(const origine of domaines){
     for(const controle of controles){
       // Le site charge les bundles via /_v/<sha>/ : vérifier le même actif
       // que celui réellement chargé par les navigateurs, pas une ancienne
       // réponse du cache Cloudflare sur l'URL non versionnée.
-      const rev=String(process.env.SDE_EXPECTED_REV||'').replace(/[^a-f0-9]/gi,'').slice(0,12);
+      const rev=revisionCourante||String(process.env.SDE_EXPECTED_REV||'').replace(/[^a-f0-9]/gi,'').slice(0,12);
       const controleVersionne=rev&&['marque-application','style-pilotage'].includes(controle.type);
       const chemin=controleVersionne?'/_v/'+rev+controle.path:controle.path;
       const url=origine+chemin;
@@ -145,7 +160,7 @@ export async function recetteProduction({fetcher=fetch,domaines=DOMAINES,control
 }
 
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
-  const bilan=await recetteProduction({rapport:r=>console.log((r.ok?'OK  ':'ÉCHEC ')+r.domaine+r.path+(r.ok?'':' : '+r.erreur))});
+  const bilan=await recetteProduction({revisionServeur:true,rapport:r=>console.log((r.ok?'OK  ':'ÉCHEC ')+r.domaine+r.path+(r.ok?'':' : '+r.erreur))});
   console.log('Bilan recette production SDE : '+bilan.reussis+'/'+bilan.total+' contrôles réussis');
   if(!bilan.ok)process.exitCode=1;
 }
