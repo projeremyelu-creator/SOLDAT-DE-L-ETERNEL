@@ -157,8 +157,8 @@
     } catch (_) {}
     /* Bouton bascule dans l'en-tête */
     const header = document.querySelector(".site-header-inner");
-    if (!header || header.querySelector(".site-theme-toggle")) return;
-    const btn = document.createElement("button");
+    if (!header) return;
+    const btn = header.querySelector(".site-theme-toggle") || document.createElement("button");
     btn.className = "site-theme-toggle";
     btn.type = "button";
     const isDark = () => document.documentElement.getAttribute("data-theme") !== "light";
@@ -178,9 +178,11 @@
     });
     /* Insérer avant le burger */
     const burger = header.querySelector(".site-burger");
-    if (burger) burger.insertAdjacentElement("beforebegin", btn);
-    else header.append(btn);
+    if (!btn.isConnected) {
+      if (burger) burger.insertAdjacentElement("beforebegin", btn);
+      else header.append(btn);
+    }
   }
-  const start=()=>{theme();navigation();agenda()};
+  const start=()=>{navigation();theme();agenda()};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
