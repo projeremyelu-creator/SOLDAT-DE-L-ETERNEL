@@ -83,6 +83,20 @@
      const list=qs('select[name=projet]');if(list)list.value=link.dataset.projet;
    }));
  }
+ if(location.pathname==='/transparence'){
+   fetch('/api/sde-bilans').then(r=>r.json()).then(d=>{
+     const records=d.rapports||[];if(!records.length)return;
+     const section=document.createElement('section');section.className='hub-section';
+     const title=document.createElement('h2');title.textContent='Bilans trimestriels publiés';section.append(title);
+     const wrap=document.createElement('div');wrap.className='hub-results';
+     for(const record of records){
+       const article=document.createElement('article'),h3=document.createElement('h3'),p=document.createElement('p');
+       h3.textContent=record.periode;p.textContent=record.texte;
+       article.append(h3,p);wrap.append(article);
+     }
+     section.append(wrap);document.querySelector('.hub-main')?.append(section);
+   }).catch(()=>{});
+ }
  const translation={
   en:{'Découvrir et servir ensemble':'Discover and serve together','Soutenir le mouvement':'Support the movement','Réseau SDE':'SDE Network','Gouvernance et confiance':'Governance and trust','Recevoir les nouvelles':'Get updates'},
   it:{'Découvrir et servir ensemble':'Scoprire e servire insieme','Soutenir le mouvement':'Sostieni il movimento','Réseau SDE':'Rete SDE','Gouvernance et confiance':'Governance e fiducia','Recevoir les nouvelles':'Ricevi notizie'}
