@@ -37,6 +37,14 @@ export const CONTROLES = Object.freeze([
   {path:'/pole-formation',type:'page-publique'},
   {path:'/missions-humanitaires',type:'page-publique'},
   {path:'/rubriques',type:'page-publique'},
+  {path:'/soutenir',type:'page-publique'},
+  {path:'/transparence',type:'page-publique'},
+  {path:'/reseau',type:'page-publique'},
+  {path:'/communaute',type:'page-publique'},
+  {path:'/gouvernance',type:'page-publique'},
+  {path:'/calendrier',type:'page-publique'},
+  {path:'/rechercher',type:'page-publique'},
+  {path:'/newsletter',type:'page-publique'},
 ]);
 
 function verifierReponse(origine,controle,reponse,corps) {
