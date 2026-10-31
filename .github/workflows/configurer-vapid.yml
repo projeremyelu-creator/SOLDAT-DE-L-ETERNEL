@@ -1,0 +1,32 @@
+name: Activer VAPID SDE — configuration sûre
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/configurer-vapid.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: configuration-vapid-sde
+  cancel-in-progress: false
+
+jobs:
+  configurer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.4'
+      - name: Vérifier le service avant de créer des secrets
+        run: node scripts/configurer-vapid-une-fois.mjs
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
