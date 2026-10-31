@@ -688,3 +688,118 @@ body.sde-reference .sde-official-tpa :is(a):focus-visible{
     outline:3px solid #f4d384;outline-offset:2px;
   }
 }
+
+/* TPA : affiche cliquable + détails accessibles sans quitter l'ancien commandement. */
+body.sde-reference .sde-official-tpa-poster{
+  appearance:none;display:block;cursor:zoom-in;
+  background:#091729;padding:0;
+  border:1px solid #d5af63;border-radius:9px;overflow:hidden;
+  width:100%;height:auto;max-width:100%;
+}
+body.sde-reference .sde-official-tpa-poster:hover,
+body.sde-reference .sde-official-tpa-poster:focus-visible{
+  box-shadow:0 0 0 3px #f6d480;
+}
+body.sde-reference .sde-tpa-more{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:max-content;max-width:100%;min-height:44px;
+  padding:10px 16px;margin:4px 0 0;
+  border:1px solid #e0bb67;border-radius:8px;
+  background:#cfab58!important;color:#151a27!important;
+  font:800 .9rem/1.3 system-ui,sans-serif;
+  cursor:pointer;text-align:center;white-space:normal;
+}
+body.sde-reference .sde-tpa-more:hover{background:#f1d58f!important}
+body.sde-reference .sde-tpa-more:focus-visible{
+  outline:3px solid #ffe7a9;outline-offset:3px;
+}
+body.sde-reference-admin .ref-command>.sde-official-tpa{
+  margin:14px 0 18px;
+  grid-template-columns:minmax(120px,148px) minmax(0,1fr);
+}
+body.sde-reference .sde-tpa-backdrop{
+  position:fixed;inset:0;z-index:200000;
+  background:rgba(4,9,22,.86);
+  display:flex;align-items:center;justify-content:center;
+  padding:clamp(10px,3vw,25px);
+  box-sizing:border-box;
+  overflow-y:auto;
+}
+body.sde-reference .sde-tpa-dialog{
+  width:min(100%,900px);max-height:calc(100dvh - 28px);
+  display:flex;flex-direction:column;
+  overflow:hidden;color:#f6f1e6;
+  border:1px solid #c9a75e;border-radius:14px;
+  background:#0f1c30;box-shadow:0 25px 75px #000b;
+}
+body.sde-reference .sde-tpa-dialog-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:13px 17px;
+  border-bottom:1px solid #a78c5366;background:#18273e;
+}
+body.sde-reference .sde-tpa-dialog-head span{
+  color:#e8c985;font:800 .78rem/1.4 system-ui,sans-serif;
+  letter-spacing:.04em;
+}
+body.sde-reference .sde-tpa-dialog-head button{
+  min-height:44px;padding:10px 14px;flex:none;
+  border:1px solid #c7a45c;border-radius:8px;
+  color:#fef4df;background:#243751;
+  font:700 .85rem/1.2 system-ui,sans-serif;cursor:pointer;
+}
+body.sde-reference .sde-tpa-dialog-content{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:20px;padding:18px;overflow-y:auto;
+  overscroll-behavior:contain;
+}
+body.sde-reference .sde-tpa-dialog-content>img{
+  width:100%;height:auto;align-self:start;object-fit:contain;
+  border:1px solid #bc9650;border-radius:10px;
+}
+body.sde-reference .sde-tpa-dialog-details{
+  display:grid;align-content:start;gap:12px;min-width:0;
+  font:400 .95rem/1.6 system-ui,sans-serif;
+}
+body.sde-reference .sde-tpa-dialog-details h2{
+  font:750 clamp(1.18rem,3vw,1.6rem)/1.3 system-ui,sans-serif!important;
+  margin:0!important;color:#f8dfa9!important;
+}
+body.sde-reference .sde-tpa-dialog-details p{
+  color:#f4ecde!important;margin:0!important;font-size:.94rem;
+}
+body.sde-reference .sde-tpa-dialog-details dl{margin:4px 0;display:grid;gap:8px}
+body.sde-reference .sde-tpa-dialog-details dl>div{
+  display:grid;gap:3px;border-bottom:1px solid #c4ae7550;padding-bottom:7px;
+}
+body.sde-reference .sde-tpa-dialog-details dt{
+  font-weight:800;color:#edcb85;
+}
+body.sde-reference .sde-tpa-dialog-details dd{margin:0;color:#fff7e8}
+body.sde-reference .sde-tpa-dialog-details .sde-tpa-join-note{
+  color:#e7e0d7!important;font-size:.85rem!important;
+}
+body.sde-reference .sde-tpa-dialog-details a{
+  display:flex;align-items:center;min-height:44px;
+  color:#f8d080!important;text-decoration:underline;
+  text-underline-offset:4px;font-weight:800;
+}
+body.sde-reference .sde-tpa-dialog :is(button,a):focus-visible{
+  outline:3px solid #f7d48a;outline-offset:2px;
+}
+@media(max-width:600px){
+ body.sde-reference .sde-tpa-dialog{max-height:calc(100dvh - 16px)}
+ body.sde-reference .sde-tpa-dialog-content{grid-template-columns:1fr;gap:15px;padding:13px}
+ body.sde-reference .sde-tpa-dialog-content>img{max-width:440px;margin:0 auto}
+ body.sde-reference-admin .ref-command>.sde-official-tpa{
+   grid-template-columns:116px minmax(0,1fr);
+   padding:12px;gap:12px;
+ }
+ body.sde-reference-admin .ref-command>.sde-official-tpa h3{
+   font-size:1rem!important;
+ }
+ body.sde-reference .sde-tpa-more{font-size:.8rem;padding:9px 12px}
+}
+@media(max-width:350px){
+ body.sde-reference-admin .ref-command>.sde-official-tpa{grid-template-columns:1fr}
+ body.sde-reference-admin .ref-command>.sde-official-tpa-poster{max-width:220px}
+}
