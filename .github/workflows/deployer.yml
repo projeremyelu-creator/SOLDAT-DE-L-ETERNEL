@@ -19,6 +19,9 @@ jobs:
   deployer:
     needs: verifier
     runs-on: ubuntu-latest
+    concurrency:
+      group: sde-cloudflare-deploiement-production
+      cancel-in-progress: false
     permissions:
       contents: read
       deployments: write
@@ -30,13 +33,31 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run build:experience
       - run: node scripts/version-chemins.mjs
-      - run: node scripts/deploy-cloudflare.mjs
+      - name: Éviter de republier une ancienne révision
+        id: dernier
+        shell: bash
+        run: |
+          HEAD_SHA="$(git ls-remote origin refs/heads/main | cut -f1)"
+          if [ -z "$HEAD_SHA" ]; then
+            echo "Impossible de vérifier le dernier commit" >&2
+            exit 1
+          fi
+          if [ "$HEAD_SHA" = "$GITHUB_SHA" ]; then
+            echo "deployer=true" >> "$GITHUB_OUTPUT"
+            echo "Révision à jour : publication autorisée."
+          else
+            echo "deployer=false" >> "$GITHUB_OUTPUT"
+            echo "Une révision plus récente existe : publication de celle-ci ignorée."
+          fi
+      - if: steps.dernier.outputs.deployer == 'true'
+        run: node scripts/deploy-cloudflare.mjs
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
       - name: Vider le cache Cloudflare
+        if: steps.dernier.outputs.deployer == 'true'
         run: node scripts/purge-cloudflare.mjs
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
