@@ -169,6 +169,13 @@ try{
   try{
    const response=await fetch(domain+path,{redirect:'manual',signal:AbortSignal.timeout(12000)});
    report.notes.push({path,status:response.status,cacheControl:response.headers.get('cache-control')||null});
+   if(path==='/api/vapid-public-key'){
+    const config=await response.json();
+    const active=response.status===200&&typeof config?.key==='string'&&/^[A-Za-z0-9_-]{80,100}$/.test(config.key);
+    report.notes.push({test:'VAPID_ACTIF',active});
+    console.log('VAPID_ACTIF '+(active?'oui':'non'));
+    if(!active)issue(path,'clés VAPID manquantes après publication',true);
+   }
    if(path==='/api/notifications-status'&&response.status!==403)
     issue(path,'statut de configuration sensible non protégé : HTTP '+response.status,true);
   }catch(e){issue(path,'vérification indisponible : '+String(e.message||e).slice(0,130));}
