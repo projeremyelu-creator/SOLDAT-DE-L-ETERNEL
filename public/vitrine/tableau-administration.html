@@ -19,6 +19,7 @@
 <a href="#programmes" data-view="programmes">Agenda et pointages</a>
 <a href="#projets" data-view="projets">Pôles et projets</a>
 <a href="#communication" data-view="communication">Communication</a>
+<a href="#publications" data-view="publications" data-access="admin" hidden>Contenus du site</a>
 <a href="#finances" data-view="finances" data-access="admin" hidden>Finances</a>
 <a href="#pastoral" data-view="pastoral" data-access="proprietaire" hidden>Suivi pastoral confidentiel</a>
 <a href="#outils" data-view="outils">Gestion complète</a>
@@ -33,12 +34,26 @@
 <article><span>Projets enregistrés</span><strong id="a-projets">—</strong><small>Dans le suivi</small></article>
 <article><span>Annonces enregistrées</span><strong id="a-annonces">—</strong><small>Communication interne</small></article>
 </div>
-<div class="sde-dash-two"><section class="sde-panel"><p class="sde-panel-eyebrow">À organiser</p><h2>Prochains programmes publics</h2><ul class="sde-dash-items" id="liste-agenda"><li>Chargement…</li></ul><div class="sde-panel-actions"><a href="/administration/outils?module=agenda">Gérer l'agenda →</a></div></section><section class="sde-panel"><p class="sde-panel-eyebrow">Accès rapides</p><h2>Gérer le mouvement</h2><div class="sde-dash-quick"><a href="/administration/outils?module=membres">Ouvrir le registre des membres →</a><a href="/administration/outils?module=agenda">Agenda et pointages →</a><a href="/administration/outils?module=projets">Pôles et projets →</a><a href="/administration/outils">Tous les outils de direction →</a></div></section></div>
+<div class="sde-dash-two"><section class="sde-panel"><p class="sde-panel-eyebrow">À organiser</p><h2>Prochains programmes publics</h2><ul class="sde-dash-items" id="liste-agenda"><li>Chargement…</li></ul><div class="sde-panel-actions"><a href="/administration/outils?module=agenda">Gérer l'agenda →</a></div></section><section class="sde-panel"><p class="sde-panel-eyebrow">Accès rapides</p><h2>Gérer le mouvement</h2><div class="sde-dash-quick"><a href="/administration/outils?module=membres">Ouvrir le registre des membres →</a><a href="/administration/outils?module=agenda">Agenda et pointages →</a><a href="/administration/outils?module=projets">Pôles et projets →</a><a href="/administration/outils">Tous les outils de direction →</a><a href="/administration/outils?module=site-public" data-access="admin" hidden>Administrer le site public →</a></div></section></div>
 </section>
 <section data-section="membres" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Registre central</p><h2>Membres et organisations</h2><p>Gérez les profils, les garnisons, les fonctions, le directoire et les autorisations depuis les outils administratifs du même site.</p><div class="sde-panel-actions"><a href="/administration/outils?module=membres">Ouvrir le registre →</a></div></div></section>
 <section data-section="programmes" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Rassemblements</p><h2>Agenda et pointages</h2><p>Planifiez les rencontres, gérez les présences et retrouvez les historiques.</p><div class="sde-panel-actions"><a href="/administration/outils?module=agenda">Gérer les rassemblements →</a><a href="/programmes">Voir le programme public ↗</a></div></div></section>
 <section data-section="projets" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Missions et départements</p><h2>Projets du mouvement</h2><p>Retrouvez les pôles, départements, initiatives, projets et rapports.</p><div class="sde-panel-actions"><a href="/administration/outils?module=projets">Ouvrir la gestion des projets →</a></div></div></section>
 <section data-section="communication" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Mobiliser et informer</p><h2>Communication interne</h2><p>Préparez les annonces, les messages, les diffusions et les notifications du mouvement.</p><div class="sde-panel-actions"><a href="/administration/outils?module=portevoix">Accéder à la communication →</a></div></div></section>
+<section data-section="publications" data-access="admin" hidden>
+<div class="sde-panel">
+  <p class="sde-panel-eyebrow">Édition institutionnelle · Accès direction habilitée</p>
+  <h2>Centre de publication du Mouvement</h2>
+  <p>Accédez directement aux modules existants pour mettre à jour la vitrine, les annonces, les événements et les ressources. Les droits sont contrôlés par le serveur.</p>
+  <div class="sde-dash-quick sde-publication-actions">
+    <a href="/administration/outils?module=site-public">Contenu du site et accueil →</a>
+    <a href="/administration/outils?module=agenda">Programmes et événements →</a>
+    <a href="/administration/outils?module=portevoix">Annonces et communications →</a>
+    <a href="/administration/outils?module=arsenal">Bibliothèque et enseignements →</a>
+  </div>
+  <p class="sde-dash-note">Les données existantes sont conservées. Ce centre utilise les outils d'édition déjà présents dans SDE OS.</p>
+</div>
+</section>
 <section data-section="finances" data-access="admin" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Accès autorisé</p><h2>Finances et rapports</h2><p>Gestion des recettes, dépenses, cotisations et validations selon les permissions du compte. Aucune donnée financière n'est transmise aux autres rôles.</p><div class="sde-panel-actions"><a href="/administration/outils?module=finances">Accéder à la gestion financière →</a></div></div></section>
 <section data-section="pastoral" data-access="proprietaire" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Accès propriétaire uniquement</p><h2>Accompagnement confidentiel</h2><p>Accès réservé au responsable propriétaire. Le suivi pastoral demeure protégé par les contrôles du serveur.</p><div class="sde-panel-actions"><a href="/administration/outils">Ouvrir les fonctions de direction →</a></div><p class="sde-dash-note">Les dossiers pastoraux confidentiels nécessitent les permissions du propriétaire.</p></div></section>
 <section data-section="outils" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Administration complète</p><h2>Outils de direction</h2><p>Registre, finances selon les droits, gouvernance, projets, rapports, école de formation et messagerie : retrouvez les modules complets existants dans le même domaine.</p><div class="sde-panel-actions"><a href="/administration/outils">Ouvrir l'interface de gestion complète →</a><a href="/administration/os-v31#gouvernance">SDE OS · Directoire et 4 Yeux →</a></div><p class="sde-dash-note">Même serveur Cloudflare, mêmes données D1, mêmes permissions et mêmes comptes.</p></div></section>
