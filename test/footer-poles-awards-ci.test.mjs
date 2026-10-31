@@ -26,7 +26,9 @@ test('Le fond du pied de page n’hérite plus du sélecteur ID transparent',()=
 test('Les pages publiques chargent toutes les nouvelles versions du CSS',()=>{
   const pages=['portail','mouvement','programmes','projets','rejoindre','ressources','plus',
     'academy','boutique','prieres','missions-humanitaires','soldiers-voice',
-    'temoignages','404','formulaire','soldiers-award'];
+    'temoignages','404','formulaire','soldiers-award',
+    'soutenir','transparence','gouvernance','reseau','communaute',
+    'calendrier','newsletter','rechercher'];
   for(const page of pages){
     const html=read('public/vitrine/'+page+'.html');
     assert.ok(/sde-sitewide-2026\.css\?v=[^"'\s<>]+/.test(html),page);

@@ -6,7 +6,9 @@ import {JSDOM} from 'jsdom';
 const css=readFileSync('public/vitrine/sde-sitewide-2026.css','utf8');
 const pages=['portail','programmes','mouvement','projets','rejoindre',
   'ressources','plus','academy','boutique','prieres','missions-humanitaires',
-  'soldiers-voice','soldiers-award','temoignages','404','formulaire'];
+  'soldiers-voice','soldiers-award','temoignages','404','formulaire',
+  'soutenir','transparence','gouvernance','reseau','communaute',
+  'calendrier','newsletter','rechercher'];
 const html=page=>readFileSync('public/vitrine/'+page+'.html','utf8');
 
 test('Identité SDE : les 16 pages publiques utilisent toutes le même thème final',()=>{
@@ -28,7 +30,10 @@ test('Identité SDE : routes publiques réelles couvertes et espaces privés non
     '/academy':'academy','/enseignements':'ressources',
     '/missions':'projets','/priere':'prieres','/contact':'rejoindre',
     '/temoignages':'temoignages','/soldiers-voice':'soldiers-voice','/soldiers-award':'soldiers-award',
-    '/missions-humanitaires':'missions-humanitaires','/rubriques':'plus'
+    '/missions-humanitaires':'missions-humanitaires','/rubriques':'plus',
+    '/soutenir':'soutenir','/transparence':'transparence','/gouvernance':'gouvernance',
+    '/reseau':'reseau','/communaute':'communaute','/calendrier':'calendrier',
+    '/newsletter':'newsletter','/rechercher':'rechercher'
   };
   for(const [route,page] of Object.entries(mapping)){
     assert.ok(worker.includes('"'+route+'": "/vitrine/'+page+'.html"'),route);

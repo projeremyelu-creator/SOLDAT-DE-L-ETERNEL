@@ -42,9 +42,21 @@
   <p class="error-code">404</p>
   <h1>Page introuvable</h1>
   <p>La page que vous cherchez n'existe pas ou a été déplacée. Vérifiez l'adresse ou revenez à l'accueil du mouvement.</p>
-  <div class="error-actions">
+  <p style="margin:28px auto 20px;max-width:520px;color:#f3e7b8;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.5">« L’Éternel marche lui-même devant toi, il sera lui-même avec toi, il ne te délaissera point. Ne crains point et ne t’effraie point. » <br><span style="font-style:normal;font-size:.85rem;letter-spacing:.1em;color:#e2c26a">— Deutéronome 31:8</span></p>
+
+<form role="search" action="/rechercher" style="max-width:420px;margin:0 auto 24px;display:flex;gap:8px;flex-wrap:wrap">
+  <label for="q404" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Rechercher sur le site</label>
+  <input id="q404" name="q" type="search" placeholder="Rechercher sur le site…" style="flex:1;min-width:200px;padding:12px 16px;border-radius:12px;border:1.5px solid rgba(226,194,106,.4);background:rgba(10,20,30,.5);color:#f7f4ed;font-size:1rem">
+  <button type="submit" style="padding:12px 20px;border-radius:12px;border:0;background:linear-gradient(140deg,#e2c26a,#c89f3f);color:#1a1810;font-weight:700;cursor:pointer">Chercher</button>
+</form>
+
+<div class="error-actions">
     <a class="action gold" href="/">Revenir à l'accueil</a>
-    <a class="action ghost" href="/contact">Nous contacter</a>
+    <a class="action ghost" href="/mouvement">Le Mouvement</a>
+    <a class="action ghost" href="/programmes">Programmes</a>
+    <a class="action ghost" href="/soutenir">Soutenir</a>
+    <a class="action ghost" href="/communaute">Mur de prière</a>
+    <a class="action ghost" href="/contact">Contact</a>
   </div>
 </div>
 </main>

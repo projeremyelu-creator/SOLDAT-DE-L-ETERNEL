@@ -1,12 +1,14 @@
 /* SDE portail public : service worker limité à /vitrine/.
    Exclut tous les formulaires administratifs, APIs et données privées. */
-const CACHE = "sde-public-pages-20261025";
+const CACHE = "sde-public-pages-20261031";
 const DOCS = new Set([
   "/vitrine/","/vitrine/mouvement","/vitrine/programmes",
   "/vitrine/ressources","/vitrine/rejoindre","/vitrine/projets",
   "/vitrine/plus","/vitrine/academy","/vitrine/prieres",
   "/vitrine/temoignages","/vitrine/soldiers-voice","/vitrine/soldiers-award",
-  "/vitrine/missions-humanitaires"
+  "/vitrine/missions-humanitaires","/vitrine/soutenir","/vitrine/transparence",
+  "/vitrine/gouvernance","/vitrine/reseau","/vitrine/communaute",
+  "/vitrine/calendrier","/vitrine/newsletter","/vitrine/rechercher"
 ]);
 const STATIC = new Set([
   "/vitrine/mpa-base.css","/vitrine/mpa.css",
@@ -14,7 +16,8 @@ const STATIC = new Set([
   "/vitrine/mpa-nav.js","/vitrine/portal.js",
   "/vitrine/initiatives.css","/vitrine/initiatives.js",
   "/vitrine/discovery.js","/vitrine/manifest.webmanifest",
-  "/vitrine/offline-public.html"
+  "/vitrine/offline-public.html",
+  "/vitrine/sde-fondations.css","/vitrine/sde-fondations.js"
 ]);
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(async cache=>{

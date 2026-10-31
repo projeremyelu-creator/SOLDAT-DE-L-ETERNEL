@@ -432,6 +432,124 @@ async function apiPriere(req, env, u, ctx) {
   return json({ ok: true });
 }
 
+/* ───────── Fondations publiques (vague 1) ───────── */
+async function parserJson(req){ try{return await req.json()}catch{throw erreur("invalid_argument","Données invalides.")} }
+const champ = (v, max = 200) => String(v || "").trim().replace(/\s+/g, " ").slice(0, max);
+async function limiterDepot(req, env, cle, max = 5){
+  const k = cle + ":" + await sha(ipDe(req));
+  if (await bloque(env, k, max)) return erreur("rate_limited", "Trop de demandes envoyées. Réessayez plus tard.", 429);
+  await compter(env, k);
+  return null;
+}
+
+async function apiDeclarerDon(req, env, ctx){
+  let b; try { b = await req.json(); } catch { return erreur("invalid_argument", "Données invalides."); }
+  if (champ(b.website)) return json({ ok: true });
+  const nom = champ(b.nom, 80), email = champ(b.email, 160).toLowerCase(), montant = champ(b.montant, 40);
+  const moyen = champ(b.moyen, 60), pays = champ(b.pays, 80), affectation = champ(b.affectation, 80);
+  const message = champ(b.message, 500);
+  if (!nom || !email || !montant || !moyen) return erreur("invalid_argument", "Nom, e-mail, montant et moyen sont requis.");
+  if (!/.+@.+\..+/.test(email)) return erreur("invalid_argument", "E-mail invalide.");
+  if (b.accord !== true) return erreur("invalid_argument", "Confirmez votre accord pour émettre le reçu.");
+  const limite = await limiterDepot(req, env, "don", 6); if (limite) return limite;
+  const t = Date.now();
+  await ecrireDoc(env, "set", "dons/" + idDoc(), {
+    nom, email, montant, moyen, pays, affectation: affectation || "Fonds général",
+    message, statut: "Déclaré", source: "public-site", creeLe: t, modifieLe: t
+  });
+  notifySde(env, ctx, "don", { action: `Don déclaré : ${montant} par ${moyen}`, par: nom + " · " + email });
+  return json({ ok: true, message: "Merci. Votre déclaration est enregistrée. Nous vous écrivons sous 48 h avec le reçu officiel." });
+}
+
+async function apiSignalement(req, env, ctx){
+  let b; try { b = await req.json(); } catch { return erreur("invalid_argument", "Données invalides."); }
+  if (champ(b.website)) return json({ ok: true });
+  const nature = champ(b.nature, 120), description = champ(b.description, 4000), contact = champ(b.contact, 160);
+  if (!nature || !description) return erreur("invalid_argument", "Nature et description sont requises.");
+  if (b.accord !== true) return erreur("invalid_argument", "Confirmez votre bonne foi.");
+  const limite = await limiterDepot(req, env, "signal", 3); if (limite) return limite;
+  const t = Date.now();
+  await ecrireDoc(env, "set", "signalements/" + idDoc(), {
+    nature, description, contact, statut: "Reçu", source: "public-site", creeLe: t, modifieLe: t
+  });
+  notifySde(env, ctx, "signalement", { action: "Signalement reçu : " + nature });
+  return json({ ok: true, message: "Signalement reçu. Il est lu par le Leader Fondateur et la Co-Leader." });
+}
+
+async function apiOuvrirPoint(req, env, ctx){
+  let b; try { b = await req.json(); } catch { return erreur("invalid_argument", "Données invalides."); }
+  if (champ(b.website)) return json({ ok: true });
+  const nom = champ(b.nom, 80), email = champ(b.email, 160).toLowerCase(), telephone = champ(b.telephone, 40);
+  const pays = champ(b.pays, 120), experience = champ(b.experience, 2000), motivation = champ(b.motivation, 2000);
+  if (!nom || !email || !pays || !experience || !motivation) return erreur("invalid_argument", "Tous les champs essentiels sont requis.");
+  if (!/.+@.+\..+/.test(email)) return erreur("invalid_argument", "E-mail invalide.");
+  if (b.accord !== true) return erreur("invalid_argument", "Confirmez votre accord pour un entretien.");
+  const limite = await limiterDepot(req, env, "ouvrir-point", 3); if (limite) return limite;
+  const t = Date.now();
+  await ecrireDoc(env, "set", "demandes_point/" + idDoc(), {
+    nom, email, telephone, pays, experience, motivation, statut: "À étudier", creeLe: t, modifieLe: t
+  });
+  notifySde(env, ctx, "point", { action: "Demande d’ouverture : " + pays, par: nom + " · " + email });
+  return json({ ok: true, message: "Merci. Votre demande est transmise au Leader Fondateur. Nous vous recontactons sous 7 jours." });
+}
+
+async function apiNewsletter(req, env, ctx){
+  let b; try { b = await req.json(); } catch { return erreur("invalid_argument", "Données invalides."); }
+  if (champ(b.website)) return json({ ok: true });
+  const prenom = champ(b.prenom, 40), email = champ(b.email, 160).toLowerCase(), pays = champ(b.pays, 80);
+  if (!prenom || !email) return erreur("invalid_argument", "Prénom et e-mail sont requis.");
+  if (!/.+@.+\..+/.test(email)) return erreur("invalid_argument", "E-mail invalide.");
+  if (b.accord !== true) return erreur("invalid_argument", "Confirmez votre inscription.");
+  const limite = await limiterDepot(req, env, "news", 4); if (limite) return limite;
+  const t = Date.now();
+  const id = "u_" + (await sha(email)).slice(0, 22);
+  await ecrireDoc(env, "set", "newsletter/" + id, { prenom, email, pays, statut: "Actif", creeLe: t, modifieLe: t });
+  notifySde(env, ctx, "newsletter", { action: "Nouvelle inscription newsletter", par: prenom + " · " + email });
+  return json({ ok: true, message: "Vous êtes inscrit(e). Rendez-vous en début de mois prochain." });
+}
+
+async function apiMurPriere(req, env){
+  const liste = await lireRequete(env, { path: "mur_priere", order: "desc", limit: 30 });
+  const intentions = liste.filter(x => x.data && x.data.statut !== "Modéré")
+    .map(x => ({
+      id: x.id,
+      sujet: x.data.sujet || "",
+      categorie: x.data.categorie || "Prière générale",
+      prenom: x.data.prenom || "Anonyme",
+      cree: x.data.creeLe || 0,
+      priants: x.data.priants || 0
+    }));
+  return json({ intentions });
+}
+
+async function apiMurPriereDeposer(req, env, ctx){
+  let b; try { b = await req.json(); } catch { return erreur("invalid_argument", "Données invalides."); }
+  if (champ(b.website)) return json({ ok: true });
+  const sujet = champ(b.sujet, 500);
+  const categorie = champ(b.categorie, 80) || "Prière générale";
+  const prenom = champ(b.prenom, 40) || "Anonyme";
+  if (!sujet) return erreur("invalid_argument", "Écrivez votre intention.");
+  if (b.accord !== true) return erreur("invalid_argument", "Confirmez l’affichage public de votre intention.");
+  const limite = await limiterDepot(req, env, "mur", 5); if (limite) return limite;
+  const t = Date.now();
+  await ecrireDoc(env, "set", "mur_priere/" + idDoc(), {
+    sujet, categorie, prenom, statut: "Publié", priants: 0, source: "public-site", creeLe: t, modifieLe: t
+  });
+  notifySde(env, ctx, "mur-priere", { action: "Nouvelle intention : " + categorie, par: prenom });
+  return json({ ok: true, message: "Votre intention est bien reçue, les intercesseurs la portent déjà." });
+}
+
+async function apiMurPrierePrier(req, env){
+  let b; try { b = await req.json(); } catch { return erreur("invalid_argument", "Données invalides."); }
+  const id = String(b.id || "").trim().slice(0, 40);
+  if (!/^[A-Za-z0-9_-]+$/.test(id)) return erreur("invalid_argument", "Identifiant d’intention invalide.");
+  const existe = await lireDoc(env, "mur_priere/" + id);
+  if (!existe) return erreur("invalid_argument", "Intention introuvable.", 404);
+  const priants = (existe.data.priants || 0) + 1;
+  await ecrireDoc(env, "merge", "mur_priere/" + id, { priants, modifieLe: Date.now() });
+  return json({ ok: true, priants });
+}
+
 async function apiPriereAnonyme(req,env,ctx){
   if(req.method!=="POST")return erreur("methode","POST uniquement.",405);
   let b;try{b=await req.json()}catch{return erreur("invalid_argument","Données invalides.")}
@@ -1680,7 +1798,7 @@ async function traiter(req, env, ctx) {
       // aucun contenu, document ou fichier privé n'est rendu statique.
       const routeInterne = p.startsWith("/api/") || p.startsWith("/_blob/") || p.startsWith("/m/");
       if (!routeInterne) {
-        if (!/^\/(vitrine\/|app\.css$|sde-(unified\.css|bridge\.js|private-ui\.css)$|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$|sw-public\.js$|manifest\.webmanifest$|sw\.js$)/.test(p)) {
+        if (!/^\/(vitrine\/|app\.css$|sde-(unified\.css|bridge\.js|private-ui\.css)$|og-sde\.(png|jpg)$|og-app\.png$|icone-(192|512)\.png$|robots\.txt$|sitemap\.xml$|flux\.xml$|sw-public\.js$|manifest\.webmanifest$|sw\.js$)/.test(p)) {
           const r404 = await assetPortail("/vitrine/404.html");
           return new Response(r404.body, { status: 404, headers: r404.headers });
         }
@@ -1732,6 +1850,13 @@ async function traiter(req, env, ctx) {
     if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
     if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
     if (p === "/api/priere-anonyme" && req.method === "POST") return apiPriereAnonyme(req,env,ctx);
+    if (p === "/api/declarer-don" && req.method === "POST") return apiDeclarerDon(req, env, ctx);
+    if (p === "/api/signalement" && req.method === "POST") return apiSignalement(req, env, ctx);
+    if (p === "/api/ouvrir-point" && req.method === "POST") return apiOuvrirPoint(req, env, ctx);
+    if (p === "/api/newsletter" && req.method === "POST") return apiNewsletter(req, env, ctx);
+    if (p === "/api/mur-priere" && req.method === "GET") return apiMurPriere(req, env);
+    if (p === "/api/mur-priere" && req.method === "POST") return apiMurPriereDeposer(req, env, ctx);
+    if (p === "/api/mur-priere/prier" && req.method === "POST") return apiMurPrierePrier(req, env);
     if (p === "/api/site" && req.method === "GET") return apiSite(env);
     if (p === "/api/visites") return apiVisites(req, env);
     if (p === "/api/ressources-publiques" && req.method === "GET") return apiRessourcesPubliques(env);

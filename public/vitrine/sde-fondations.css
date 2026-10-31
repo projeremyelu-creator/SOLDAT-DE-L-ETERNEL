@@ -1,0 +1,111 @@
+/* SDE — Fondations publiques (dons, mur de prière, carte, calendrier, newsletter, recherche). */
+
+/* Boutons génériques et call to action */
+.sde-cta{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;border:1.5px solid #e2c26a;color:#f7f4ed;background:transparent;font-weight:600;text-decoration:none;letter-spacing:.02em;transition:all .22s ease;cursor:pointer}
+.sde-cta:hover,.sde-cta:focus-visible{background:rgba(226,194,106,.14);transform:translateY(-1px);outline:none}
+.sde-cta-primary{background:linear-gradient(140deg,#e2c26a 0%,#c89f3f 100%);color:#1a1810;border-color:transparent;box-shadow:0 6px 22px rgba(226,194,106,.3)}
+.sde-cta-primary:hover,.sde-cta-primary:focus-visible{background:linear-gradient(140deg,#f3d380 0%,#d4ac4a 100%);color:#121010}
+.sde-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ─── Dons / Soutenir ─── */
+.sde-don .sde-don-moyen{display:flex;flex-direction:column;gap:14px}
+.sde-don-badge{display:inline-grid;place-items:center;width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(226,194,106,.4),rgba(226,194,106,.1));color:#e2c26a;font-size:1.6rem;border:1px solid rgba(226,194,106,.4);margin:0 0 4px}
+.sde-don-mm{display:grid;gap:8px;margin:6px 0 2px}
+.sde-don-mm-row{display:grid;grid-template-columns:minmax(130px,auto) 1fr auto;gap:12px;align-items:center;padding:9px 12px;background:rgba(10,20,30,.4);border:1px solid rgba(226,194,106,.25);border-radius:12px}
+.sde-don-mm-op{font-weight:700;letter-spacing:.03em;color:#e2c26a;font-size:.86rem;text-transform:uppercase}
+.sde-don-mm-orange{color:#f58a1f}.sde-don-mm-mtn{color:#f4c623}.sde-don-mm-moov{color:#2a7fe3}.sde-don-mm-wave{color:#2fcbdd}
+.sde-don-num{font-family:"Saira Condensed",ui-monospace,monospace;font-weight:600;color:#f7f4ed;font-size:.98rem;letter-spacing:.02em;overflow-wrap:anywhere}
+.sde-don-copy{padding:5px 12px;border-radius:8px;border:1px solid rgba(226,194,106,.4);background:transparent;color:#e2c26a;font-size:.8rem;cursor:pointer;transition:all .18s ease}
+.sde-don-copy:hover{background:rgba(226,194,106,.14)}
+.sde-don-copy.copied{background:#2d8f4a;color:#fff;border-color:#2d8f4a}
+.sde-don-note{color:#bac6d5;font-size:.9rem;line-height:1.55;margin:6px 0 0}
+.sde-don-form{display:grid;gap:12px;margin:4px 0 0;position:relative}
+.sde-don-ligne{display:grid;gap:5px}
+.sde-don-ligne label{font-size:.86rem;color:#e2c26a;font-weight:600;letter-spacing:.02em}
+.sde-don-ligne input,.sde-don-ligne select,.sde-don-ligne textarea{padding:10px 12px;background:rgba(10,20,30,.5);border:1px solid rgba(226,194,106,.3);border-radius:10px;color:#f7f4ed;font-family:inherit;font-size:.96rem;transition:border-color .18s}
+.sde-don-ligne input:focus,.sde-don-ligne select:focus,.sde-don-ligne textarea:focus{outline:none;border-color:#e2c26a;box-shadow:0 0 0 3px rgba(226,194,106,.15)}
+.sde-don-ligne textarea{resize:vertical;min-height:72px}
+.sde-don-check{display:flex;align-items:flex-start;gap:10px;color:#bac6d5;font-size:.9rem;line-height:1.5;cursor:pointer}
+.sde-don-check input{margin-top:3px;accent-color:#e2c26a}
+.sde-don-feedback{margin:0;color:#bac6d5;font-size:.9rem;min-height:1.4em}
+.sde-don-feedback.ok{color:#8dd16d}
+.sde-don-feedback.err{color:#f4a07c}
+
+/* Cagnottes projets */
+.sde-cagnotte{display:flex;flex-direction:column;gap:10px}
+.sde-jauge{height:14px;border-radius:999px;background:rgba(10,20,30,.6);overflow:hidden;border:1px solid rgba(226,194,106,.25);margin:4px 0}
+.sde-jauge-fill{height:100%;background:linear-gradient(90deg,#e2c26a 0%,#c89f3f 100%);transition:width .6s cubic-bezier(.4,0,.2,1);box-shadow:0 0 12px rgba(226,194,106,.5)}
+.sde-cagnotte-chiffres{color:#bac6d5;font-size:.92rem;margin:0}
+.sde-cagnotte-chiffres strong{color:#e2c26a}
+.sde-cagnotte-note{color:#bac6d5;font-size:.88rem;margin:16px 0 0;font-style:italic}
+
+/* ─── Transparence : table ─── */
+.sde-trans-table{overflow-x:auto;margin:8px 0 0}
+.sde-table{width:100%;border-collapse:collapse;min-width:520px}
+.sde-table th,.sde-table td{padding:11px 14px;text-align:left;border-bottom:1px solid rgba(226,194,106,.18);font-size:.94rem;color:#bac6d5}
+.sde-table th{color:#e2c26a;font-weight:700;letter-spacing:.02em;background:rgba(10,20,30,.4);text-transform:uppercase;font-size:.78rem}
+.sde-table-total td{font-weight:700;color:#f7f4ed;background:rgba(226,194,106,.08)}
+.sde-trans-note{color:#bac6d5;font-size:.9rem;margin:14px 0 0;padding:12px 16px;background:rgba(10,20,30,.4);border-left:3px solid #e2c26a;border-radius:0 10px 10px 0}
+
+/* ─── Gouvernance : portraits ─── */
+.sde-g-personne{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.sde-g-portrait{width:68px;height:68px;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(226,194,106,.4),rgba(10,20,30,.5));border:2px solid rgba(226,194,106,.4);font-size:1.8rem;color:#e2c26a}
+
+/* ─── Carte réseau 6 pays ─── */
+.sde-carte-reseau{position:relative;width:100%;aspect-ratio:16/9;max-height:480px;border-radius:18px;border:1px solid rgba(226,194,106,.3);background:linear-gradient(140deg,#0d1826 0%,#1a2d3f 100%);overflow:hidden}
+.sde-carte-loading{position:absolute;inset:0;display:grid;place-items:center;color:#bac6d5;font-style:italic}
+.sde-carte-note{color:#bac6d5;font-size:.88rem;margin:12px 0 0;text-align:center}
+.sde-point-pays .sde-point-flag{font-size:2rem;line-height:1}
+
+/* ─── Mur de prière ─── */
+.sde-mur-liste{display:grid;gap:12px;margin:4px 0 0}
+.sde-mur-loading{color:#bac6d5;font-style:italic;text-align:center;padding:30px}
+.sde-mur-vide{color:#bac6d5;text-align:center;padding:30px}
+.sde-mur-intention{padding:16px 18px;border-radius:14px;background:rgba(10,20,30,.4);border:1px solid rgba(226,194,106,.22);display:grid;gap:8px}
+.sde-mur-intention-tete{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:.84rem}
+.sde-mur-intention-cat{background:rgba(226,194,106,.15);color:#e2c26a;padding:2px 10px;border-radius:999px;font-weight:600;letter-spacing:.02em}
+.sde-mur-intention-date{color:#8a97aa;font-style:italic}
+.sde-mur-intention-de{color:#bac6d5}
+.sde-mur-intention-txt{color:#f7f4ed;line-height:1.55;margin:0;white-space:pre-wrap}
+.sde-mur-intention-pied{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:4px}
+.sde-mur-pour{background:transparent;border:1.5px solid #e2c26a;color:#e2c26a;padding:6px 14px;border-radius:999px;cursor:pointer;font-size:.86rem;font-weight:600;transition:all .18s ease}
+.sde-mur-pour:hover{background:rgba(226,194,106,.14)}
+.sde-mur-pour.priee{background:#2d8f4a;color:#fff;border-color:#2d8f4a}
+.sde-mur-compteur{color:#bac6d5;font-size:.85rem}
+.sde-mur-note{color:#8a97aa;font-size:.82rem;margin:14px 0 0;font-style:italic;text-align:center}
+
+/* ─── Calendrier mensuel ─── */
+.sde-cal-mois{background:rgba(10,20,30,.4);border:1px solid rgba(226,194,106,.3);border-radius:16px;padding:20px}
+.sde-cal-nav{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px}
+.sde-cal-nav button{background:transparent;border:1.5px solid rgba(226,194,106,.4);color:#e2c26a;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.4rem;line-height:1;transition:all .18s}
+.sde-cal-nav button:hover{background:rgba(226,194,106,.14);transform:scale(1.05)}
+.sde-cal-titre{color:#e2c26a;font-family:"Cinzel",serif;font-weight:600;font-size:1.1rem;text-transform:uppercase;letter-spacing:.05em}
+.sde-cal-grille{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.sde-cal-jh{text-align:center;color:#8a97aa;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:4px 0}
+.sde-cal-cel{aspect-ratio:1;background:rgba(10,20,30,.3);border:1px solid rgba(226,194,106,.1);border-radius:8px;padding:6px;position:relative;color:#8a97aa;font-size:.86rem;display:flex;flex-direction:column}
+.sde-cal-cel.hors{opacity:.3}
+.sde-cal-cel.auj{border-color:#e2c26a;background:rgba(226,194,106,.08);color:#e2c26a;font-weight:700}
+.sde-cal-cel.evt{background:rgba(226,194,106,.15);border-color:#e2c26a;color:#f7f4ed;cursor:pointer}
+.sde-cal-cel.evt::after{content:"";position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#e2c26a}
+.sde-cal-cel .sde-cal-tt{position:absolute;top:100%;left:50%;transform:translateX(-50%);background:#1a1810;color:#e2c26a;padding:4px 10px;border-radius:6px;font-size:.76rem;white-space:nowrap;opacity:0;pointer-events:none;z-index:10;margin-top:4px}
+.sde-cal-cel.evt:hover .sde-cal-tt,.sde-cal-cel.evt:focus-within .sde-cal-tt{opacity:1}
+.sde-cal-rdv-date{color:#e2c26a;font-size:.84rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;margin:0 0 4px}
+.sde-cal-highlight{border:2px solid #e2c26a;background:rgba(226,194,106,.08)}
+@media(max-width:600px){.sde-cal-cel{font-size:.74rem;padding:4px 2px}.sde-cal-jh{font-size:.68rem}}
+
+/* ─── Newsletter ─── */
+.sde-news-list{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.sde-news-list li{padding:10px 0 10px 32px;position:relative;color:#bac6d5;line-height:1.55}
+.sde-news-list li::before{content:"✦";position:absolute;left:0;top:10px;color:#e2c26a;font-size:1.1rem}
+
+/* ─── Recherche globale ─── */
+.sde-recherche-form{display:flex;gap:10px;margin:0 0 10px;flex-wrap:wrap}
+.sde-recherche-form input{flex:1;min-width:220px;padding:14px 18px;background:rgba(10,20,30,.5);border:1.5px solid rgba(226,194,106,.3);border-radius:14px;color:#f7f4ed;font-size:1.05rem;font-family:inherit}
+.sde-recherche-form input:focus{outline:none;border-color:#e2c26a;box-shadow:0 0 0 3px rgba(226,194,106,.15)}
+.sde-rc-liste{display:grid;gap:10px;margin:14px 0 0}
+.sde-rc-item{padding:14px 16px;background:rgba(10,20,30,.4);border:1px solid rgba(226,194,106,.2);border-radius:12px;display:block;color:inherit;text-decoration:none;transition:all .2s}
+.sde-rc-item:hover{border-color:#e2c26a;background:rgba(226,194,106,.07);transform:translateX(3px)}
+.sde-rc-item h3{margin:0 0 4px;color:#e2c26a;font-size:1rem}
+.sde-rc-item p{margin:0;color:#bac6d5;font-size:.92rem;line-height:1.5}
+.sde-rc-item mark{background:rgba(226,194,106,.3);color:#f7f4ed;padding:1px 3px;border-radius:3px}
+.sde-rc-vide{color:#bac6d5;text-align:center;padding:20px;font-style:italic}
