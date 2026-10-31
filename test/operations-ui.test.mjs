@@ -120,26 +120,25 @@ test('Animations du pilotage : courtes, accessibles et désactivables',()=>{
  assert.match(region,/animation:none!important/);
 });
 
-test('Plus et Afficher les rubriques ouvrent le même panneau, puis naviguent',async()=>{
+test('Le poste de commandement retrouve son menu latéral antérieur, ouvrable par Plus et Rubriques',async()=>{
  const c=await page('/administration','admin');
  try{
   const plus=c.d.querySelector('.ref-tabbar button:last-child');
-  assert.ok(plus,'Bouton Plus de la barre inférieure');
+  assert.ok(plus,'Bouton Plus toujours présent');
   plus.click();
-  await waitFor(()=>c.d.querySelector('#ref-mobile-menu'));
-  assert.equal(c.d.querySelector('#ref-mobile-menu').getAttribute('role'),'dialog');
-  assert.match(c.d.querySelector('#ref-mobile-menu').textContent,/Toutes les rubriques/);
-  assert.ok(c.d.querySelector('#ref-mobile-menu a[href="/programmes#tpa-2026"]'));
-  const close=c.d.querySelector('#ref-mobile-menu [aria-label="Fermer les rubriques"]');
-  close.click();await waitFor(()=>!c.d.querySelector('#ref-mobile-menu'));
+  await waitFor(()=>c.d.querySelector('.ref-sidebar.is-open'));
+  assert.equal(c.d.querySelector('#ref-mobile-menu'),null,'Pas de nouveau tiroir plein écran admin');
+  assert.ok(c.d.querySelector('.ref-admin-scrim'));
+  c.d.querySelector('.ref-legacy-close').click();
+  await waitFor(()=>!c.d.querySelector('.ref-sidebar.is-open'));
   assert.equal(c.d.getElementById('sde-direct-menu-toggle').getAttribute('aria-expanded'),'false');
-
   const rubriques=c.d.getElementById('sde-direct-menu-toggle');
-  rubriques.click();await waitFor(()=>c.d.querySelector('#ref-mobile-menu'));
-  const poles=[...c.d.querySelectorAll('#ref-mobile-menu nav button')].find(x=>x.textContent.includes('Pôles'));
-  assert.ok(poles,'Pôle visible dans le menu unifié');
+  rubriques.click();
+  await waitFor(()=>c.d.querySelector('.ref-sidebar.is-open'));
+  const poles=[...c.d.querySelectorAll('.ref-sidebar nav button')].find(x=>x.textContent.includes('Pôles'));
+  assert.ok(poles,'Pôles accessible dans le menu précédent');
   poles.click();await tick();
-  assert.equal(c.d.querySelector('#ref-mobile-menu'),null);
+  assert.equal(c.d.querySelector('.ref-sidebar.is-open'),null);
   assert.equal(new URLSearchParams(c.w.location.search).get('module'),'suivi-poles');
   assert.deepEqual(c.errors,[]);
  }finally{c.close()}
@@ -159,17 +158,31 @@ test('Plus reste accessible au membre sans afficher les finances ni les menus de
   assert.deepEqual(c.errors,[]);
  }finally{c.close()}
 });
-test('La TPA est visible dans le poste de commandement, sans modifier les statistiques D1',async()=>{
+test('Le tableau de bord conserve ses KPIs et ouvre une fiche de détails sur clic TPA',async()=>{
  const c=await page('/administration?module=pilotage','admin');
  try{
   await waitFor(()=>c.d.querySelector('.ref-command .sde-official-tpa'));
-  const tpa=c.d.querySelector('.ref-command .sde-official-tpa');
+  const dashboard=c.d.querySelector('.ref-command');
+  const tpa=dashboard.querySelector('.sde-official-tpa');
   assert.match(tpa.textContent,/Traversée Prophétique Annuelle/);
   assert.match(tpa.textContent,/18 décembre 2026/);
   assert.match(tpa.textContent,/Google Meet/);
   assert.ok(tpa.querySelector('img[src="/vitrine/illus/tpa-2026.webp"]'));
-  assert.ok(tpa.querySelector('a[href="/programmes#tpa-2026"]'));
-  assert.ok(c.d.querySelector('.ref-command .ops-kpis'));
+  const kpis=dashboard.querySelector('.ops-kpis');
+  assert.ok(kpis,'Les chiffres clés du précédent poste sont conservés');
+  assert.ok(kpis.compareDocumentPosition(tpa)&c.w.Node.DOCUMENT_POSITION_FOLLOWING,'Les KPI restent au-dessus de la TPA');
+  const poster=tpa.querySelector('.sde-official-tpa-poster');
+  assert.equal(poster.tagName,'BUTTON');
+  poster.click();
+  await waitFor(()=>c.d.querySelector('.sde-tpa-dialog'));
+  const modal=c.d.querySelector('.sde-tpa-dialog');
+  assert.equal(modal.getAttribute('aria-modal'),'true');
+  assert.match(modal.textContent,/Vendredi 18 décembre 2026/);
+  assert.match(modal.textContent,/Google Meet/);
+  assert.ok(modal.querySelector('a[href="/programmes#tpa-2026"]'));
+  assert.ok(modal.querySelector('img[src="/vitrine/illus/tpa-2026.webp"]'));
+  modal.querySelector('[aria-label="Fermer les détails de la TPA"]').click();
+  await waitFor(()=>!c.d.querySelector('.sde-tpa-dialog'));
   assert.deepEqual(c.errors,[]);
  }finally{c.close()}
 });
