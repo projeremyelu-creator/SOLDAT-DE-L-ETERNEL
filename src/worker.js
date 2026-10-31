@@ -1,3 +1,4 @@
+import {ASSET_REVISION} from "./build-revision.js";
 import {eventRsvpApi,publishedEventTime} from "./event-rsvp.js";
 import {operationsApi} from "./operations.js";
 import {memberQrApi} from "./member-qr.js";
@@ -1508,11 +1509,17 @@ export default {
   async fetch(req, env, ctx) {
     /* Ressources publiées sous /_v/<révision>/… : même fichier, adresse unique par déploiement (cache toujours à jour). */
     {
-      const u = new URL(req.url), m = u.pathname.match(/^\/_v\/[a-f0-9]{6,40}(\/.+\.(?:js|css))$/i);
+      const u = new URL(req.url), m = u.pathname.match(/^\/_v\/([a-f0-9]{6,40})(\/.+\.(?:js|css))$/i);
       if (m && (req.method === "GET" || req.method === "HEAD")) {
-        const r = await env.ASSETS.fetch(new Request(new URL(m[1], u.origin), req));
+        // Bloquer une URL de la NOUVELLE révision tant que l'ANCIEN Worker
+        // est encore actif, au lieu de stocker un ancien bundle en immutable
+        // sous une URL neuve. Évite le mélange des menus/feuilles CSS en prod.
+        if (m[1].toLowerCase() !== ASSET_REVISION)
+          return new Response("Révision non publiée.", {status:404,headers:{"cache-control":"no-store","x-content-type-options":"nosniff"}});
+        const r = await env.ASSETS.fetch(new Request(new URL(m[2], u.origin), req));
         const n = new Response(r.body, r);
         if (r.ok) n.headers.set("cache-control", "public, max-age=31536000, immutable");
+        else n.headers.set("cache-control", "no-store");
         n.headers.set("x-content-type-options", "nosniff");
         return n;
       }
