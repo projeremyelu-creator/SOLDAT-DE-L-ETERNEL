@@ -1094,3 +1094,75 @@ body[data-motion="paused"].sde-unifie.sde-accueil-maquette .sde-pole-officiel-li
     font-size:clamp(.8rem,.82vw,.9rem)!important;
   }
 }
+
+/* SDE OS 4.0 — emplacements d'en-tête et bandeau réservés pour réduire le CLS. */
+/* Les commandes restent en place lorsque leurs scripts terminent de charger. */
+html body.sde-unifie .site-header .sde-motion-slot{
+  display:grid!important;
+  place-items:center!important;
+  width:42px!important;
+  height:44px!important;
+  min-width:42px!important;
+  flex:0 0 42px!important;
+  order:4!important;
+  padding:0!important;
+  margin:0!important;
+  position:relative!important;
+}
+html body.sde-unifie .site-header .sde-motion-slot>.sde-motion-button{
+  width:42px!important;
+  min-width:42px!important;
+  height:44px!important;
+  margin:0!important;
+  padding:8px!important;
+  position:static!important;
+  transform:none!important;
+}
+html body.sde-unifie .site-header .site-theme-toggle{
+  flex-shrink:0!important;
+  min-width:42px;
+  min-height:44px;
+}
+/* Le bandeau React remplace l'annonce statique sans pousser l'en-tête. */
+html body.sde-unifie #sde-event-root{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:76px;
+  box-sizing:border-box;
+  contain:layout;
+}
+html body.sde-unifie #sde-event-root .event-bar-inner{
+  width:100%;
+  max-width:1320px;
+}
+@media(min-width:761px) and (max-width:900px){
+  html body.sde-unifie .site-header .sde-motion-slot{order:2!important}
+}
+@media(max-width:900px){
+  html body.sde-unifie #sde-event-root{min-height:122px}
+}
+@media(max-width:760px){
+  html body.sde-unifie .site-header .site-header-inner>.sde-motion-slot{
+    grid-column:4!important;
+    grid-row:1!important;
+    width:42px!important;
+    min-width:42px!important;
+    height:44px!important;
+    order:initial!important;
+  }
+  html body.sde-unifie .site-header .site-header-inner>.sde-motion-slot>.sde-motion-button{
+    width:42px!important;
+    min-width:42px!important;
+    height:44px!important;
+    padding:8px!important;
+  }
+}
+@media(max-width:355px){
+  html body.sde-unifie .site-header .site-header-inner>.sde-motion-slot,
+  html body.sde-unifie .site-header .site-header-inner>.sde-motion-slot>.sde-motion-button{
+    width:40px!important;
+    min-width:40px!important;
+    height:44px!important;
+  }
+}
