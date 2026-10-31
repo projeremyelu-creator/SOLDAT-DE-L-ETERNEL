@@ -165,8 +165,13 @@ function OfficialTpaCard(){
 }
 function FeatureEvent({portal}){
  const news=useData('/api/actualites');
- const list=news.data?.evenements||[];
- const e=list.find(x=>/in\s*fire/i.test(x.titre))||list[0];
+ const list=(news.data?.evenements||[]).filter(x=>{
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(x.date||''))return false;
+  return Date.parse(x.date+'T23:59:59Z')>=Date.now();
+ }).sort((a,b)=>a.date.localeCompare(b.date));
+ const e=list[0];
+ // Ne plus mettre en avant IN FIRE après sa date. La TPA possède sa propre
+ // carte officielle indépendante des données d'inscription D1.
  if(!e)return null;
  const date=new Date(e.date+'T12:00:00'),label=Number.isNaN(date.getTime())?e.date:date.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
  return <section className="ref-feature" aria-label="Événement phare"><img src="/vitrine/photos/imposition.jpg" alt="" loading="lazy"/><div><span className="ref-feature-tag">Événement phare</span><h3>{e.titre}</h3>{/in\s*fire/i.test(e.titre)&&<p className="ref-feature-sub">Une génération en flamme pour sa mission</p>}<p>{[label,e.heure,e.lieu].filter(Boolean).join(' · ')}</p><button type="button" className="ref-small-action" onClick={()=>portal.selectionner('rendezvous')}>Voir le programme →</button></div></section>
