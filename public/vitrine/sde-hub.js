@@ -64,6 +64,25 @@
     results.innerHTML=data.map(x=>'<article><h3><a href="'+x[1]+'">'+escape(x[0])+'</a></h3><small>'+escape(x[2])+'</small></article>').join('')||'<p>Aucun résultat public. Les données des membres ne sont pas indexées.</p>';
   };search.addEventListener('input',render);render();
  }
+ // Afficher seulement les chiffres publiés par le propriétaire.
+ if(location.pathname==='/soutenir'){
+   fetch('/api/sde-financements').then(r=>r.json()).then(d=>{
+     for(const item of d.projets||[]){
+       if(!item.donneesVerifiees||!item.objectif)continue;
+       const card=document.querySelector('[data-projet="'+item.id+'"]')?.closest('.hub-card');
+       if(!card)continue;
+       const ratio=Math.min(100,Math.round(item.encaisse/item.objectif*100));
+       const number=n=>new Intl.NumberFormat('fr-CI').format(n)+' FCFA';
+       const label=card.querySelector('.hub-status');
+       if(label)label.textContent='Confirmé : '+number(item.encaisse)+' / '+number(item.objectif);
+       const bar=card.querySelector('.hub-progress>span');
+       if(bar)bar.style.width=ratio+'%';
+     }
+   }).catch(()=>{});
+   document.querySelectorAll('[data-projet]').forEach(link=>link.addEventListener('click',()=>{
+     const list=qs('select[name=projet]');if(list)list.value=link.dataset.projet;
+   }));
+ }
  const translation={
   en:{'Découvrir et servir ensemble':'Discover and serve together','Soutenir le mouvement':'Support the movement','Réseau SDE':'SDE Network','Gouvernance et confiance':'Governance and trust','Recevoir les nouvelles':'Get updates'},
   it:{'Découvrir et servir ensemble':'Scoprire e servire insieme','Soutenir le mouvement':'Sostieni il movimento','Réseau SDE':'Rete SDE','Gouvernance et confiance':'Governance e fiducia','Recevoir les nouvelles':'Ricevi notizie'}
