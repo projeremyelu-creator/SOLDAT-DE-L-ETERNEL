@@ -100,7 +100,7 @@ function verifierReponse(origine,controle,reponse,corps) {
   }
   if(controle.type==='page-publique'){
     if(!type.includes('text/html'))erreur('Page publique non HTML');
-    if(!corps.includes('/vitrine/sde-sitewide-2026.css'))erreur('Thème public global absent sur la page');
+    if(!/\/vitrine\/(?:sde-sitewide-2026|sde-hub)\.css/.test(corps))erreur('Thème SDE absent sur la page');
   }
   if(controle.type==='styles-site'){
     if(!type.includes('text/css'))erreur('Thème SDE global non servi');
