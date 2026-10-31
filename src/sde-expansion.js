@@ -58,7 +58,7 @@ export async function sdeExpansionApi(req,env,u){
  if(Number(req.headers.get('content-length')||0)>8000)return fail('Demande trop volumineuse.',413);
  const type=req.headers.get('content-type')||'';
  if(!type.includes('application/json'))return fail('Format JSON attendu.',415);
- let body;try{body=await req.json()}catch{return fail('Données invalides.')}
+ let body;try{const raw=await req.text();if(raw.length>8000)return fail('Demande trop volumineuse.',413);body=JSON.parse(raw)}catch{return fail('Données invalides.')}
  const v=normalize(body);if(v.error)return fail(v.error);
  await ensure(env);
  const id=crypto.randomUUID();
