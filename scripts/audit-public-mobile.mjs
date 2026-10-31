@@ -49,7 +49,8 @@ try{
       if(window.__sdeLabMetrics.shifts.length<12){
        const moved=(entry.sources||[]).slice(0,4).map(s=>{
         const el=s.node;
-        return {element:el?(el.tagName.toLowerCase()+(el.id?'#'+el.id:'')+(typeof el.className==='string'&&el.className?'.'+el.className.trim().replace(/\s+/g,'.').slice(0,90):'')):'unknown',
+        const tag=typeof el?.tagName==='string'?el.tagName.toLowerCase():'unknown';
+        return {element:tag+(el?.id?'#'+el.id:'')+(typeof el?.className==='string'&&el.className?'.'+el.className.trim().replace(/\s+/g,'.').slice(0,90):''),
          previousTop:Math.round(s.previousRect?.top||0),currentTop:Math.round(s.currentRect?.top||0)};
        });
        window.__sdeLabMetrics.shifts.push({value:Math.round(entry.value*10000)/10000,moved});
