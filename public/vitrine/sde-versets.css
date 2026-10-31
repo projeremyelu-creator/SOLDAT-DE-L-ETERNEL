@@ -23,3 +23,10 @@ body[data-motion=paused] .sde-versets-piste{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.sde-compteur-point{animation:none}}
 html:not([data-theme="light"]) body:not(.sde-ivoire) .sde-compteur{color:#d6dbe1;border-color:#ffffff1a}
 html:not([data-theme="light"]) body:not(.sde-ivoire) .sde-compteur b{color:#e4c477}
+
+/* Le carrousel animé est large par conception ; empêcher son contenu de
+   créer une largeur de document horizontale sur les grands écrans. */
+html{overflow-x:clip}
+body.sde-unifie .sde-versets{max-width:100%;overflow:clip!important;contain:paint}
+body.sde-unifie .sde-versets-fenetre{min-width:0;max-width:100%;overflow:clip!important}
+@media(prefers-reduced-motion:reduce){body.sde-unifie .sde-versets-fenetre{overflow-x:auto!important}}
