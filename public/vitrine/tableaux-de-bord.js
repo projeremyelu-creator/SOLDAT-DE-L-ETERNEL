@@ -62,7 +62,14 @@
         else link.removeAttribute("aria-current");
       }
     }
-    if(resetFocus)el("espace-principal")?.focus({preventScroll:true});
+    if(resetFocus){
+      const main=el("espace-principal");
+      main?.focus({preventScroll:true});
+      if(typeof main?.scrollIntoView==="function"){
+        const reduced=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+        main.scrollIntoView({block:"start",behavior:reduced?"instant":"auto"});
+      }
+    }
   }
   function allowed(access){
     if(!access)return true;
@@ -177,7 +184,20 @@
       if(mode==="administration"&&compte.niveau<1){location.replace("/mon-espace");return}
       configureRoles();
       wireForms();
-      window.addEventListener("hashchange",()=>navigate(location.hash.slice(1)));
+      // Les liens de rubrique ouvrent directement la vue, sans rechargement.
+      // Historique du navigateur et accessibilité clavier restent disponibles.
+      document.addEventListener("click",event=>{
+        const link=event.target?.closest?.("a[data-view]");
+        if(!link||!root.contains(link)||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+        const name=link.dataset.view;
+        const section=[...document.querySelectorAll("[data-section]")].find(x=>x.dataset.section===name);
+        if(!section)return;
+        event.preventDefault();
+        if(!allowed(section.dataset.access))return;
+        if(location.hash!=="#"+name)location.hash=name;
+        navigate(name,true);
+      });
+      window.addEventListener("hashchange",()=>navigate(location.hash.slice(1),true));
       navigate(location.hash.slice(1)||"accueil");
       if(mode==="membre")await chargerMembre();
       else await chargerAdmin();
