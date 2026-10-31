@@ -116,7 +116,7 @@ function MediaDock(){
 function App(){
  const [portal,setPortal]=useState(()=>window.SDEPortal||null);
  useEffect(()=>{const ready=e=>setPortal(e.detail);document.addEventListener('sde:ready',ready);return()=>document.removeEventListener('sde:ready',ready)},[]);
- const header=document.querySelector('.site-header-inner');
+ const header=document.querySelector('[data-sde-motion-slot]') || document.querySelector('.site-header-inner');
  const event=document.getElementById('sde-event-root');
  const publicReader=location.pathname==='/academy'||location.pathname==='/enseignements'||document.body.dataset.sdePage==='academy';
  return <>{header&&createPortal(<MotionControl/>,header)}{portal?<PrivateExperience portal={portal}/>:publicReader&&<FocusControl/>}{document.querySelector('.home-hero')&&<MediaDock/>}</>;
