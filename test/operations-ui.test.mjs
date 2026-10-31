@@ -119,3 +119,66 @@ test('Animations du pilotage : courtes, accessibles et désactivables',()=>{
  assert.match(region,/body\[data-motion=paused\]/);
  assert.match(region,/animation:none!important/);
 });
+
+test('Plus et Afficher les rubriques ouvrent le même panneau, puis naviguent',async()=>{
+ const c=await page('/administration','admin');
+ try{
+  const plus=c.d.querySelector('.ref-tabbar button:last-child');
+  assert.ok(plus,'Bouton Plus de la barre inférieure');
+  plus.click();
+  await waitFor(()=>c.d.querySelector('#ref-mobile-menu'));
+  assert.equal(c.d.querySelector('#ref-mobile-menu').getAttribute('role'),'dialog');
+  assert.match(c.d.querySelector('#ref-mobile-menu').textContent,/Toutes les rubriques/);
+  assert.ok(c.d.querySelector('#ref-mobile-menu a[href="/programmes#tpa-2026"]'));
+  const close=c.d.querySelector('#ref-mobile-menu [aria-label="Fermer les rubriques"]');
+  close.click();await waitFor(()=>!c.d.querySelector('#ref-mobile-menu'));
+  assert.equal(c.d.getElementById('sde-direct-menu-toggle').getAttribute('aria-expanded'),'false');
+
+  const rubriques=c.d.getElementById('sde-direct-menu-toggle');
+  rubriques.click();await waitFor(()=>c.d.querySelector('#ref-mobile-menu'));
+  const poles=[...c.d.querySelectorAll('#ref-mobile-menu nav button')].find(x=>x.textContent.includes('Pôles'));
+  assert.ok(poles,'Pôle visible dans le menu unifié');
+  poles.click();await tick();
+  assert.equal(c.d.querySelector('#ref-mobile-menu'),null);
+  assert.equal(new URLSearchParams(c.w.location.search).get('module'),'suivi-poles');
+  assert.deepEqual(c.errors,[]);
+ }finally{c.close()}
+});
+test('Plus reste accessible au membre sans afficher les finances ni les menus de direction',async()=>{
+ const c=await page('/mon-espace','soldat');
+ try{
+  c.d.querySelector('.ref-tabbar button:last-child').click();
+  await waitFor(()=>c.d.querySelector('#ref-mobile-menu'));
+  const overlay=c.d.querySelector('#ref-mobile-menu');
+  assert.match(overlay.textContent,/Mon agenda/);
+  assert.ok(!overlay.textContent.includes('Suivi des pôles'));
+  assert.ok(!overlay.textContent.includes('Finances & missions'));
+  assert.ok(overlay.querySelector('a[href="/programmes#tpa-2026"]'));
+  c.d.dispatchEvent(new c.w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+  await waitFor(()=>!c.d.querySelector('#ref-mobile-menu'));
+  assert.deepEqual(c.errors,[]);
+ }finally{c.close()}
+});
+test('La TPA est visible dans le poste de commandement, sans modifier les statistiques D1',async()=>{
+ const c=await page('/administration?module=pilotage','admin');
+ try{
+  await waitFor(()=>c.d.querySelector('.ref-command .sde-official-tpa'));
+  const tpa=c.d.querySelector('.ref-command .sde-official-tpa');
+  assert.match(tpa.textContent,/Traversée Prophétique Annuelle/);
+  assert.match(tpa.textContent,/18 décembre 2026/);
+  assert.match(tpa.textContent,/Google Meet/);
+  assert.ok(tpa.querySelector('img[src="/vitrine/illus/tpa-2026.webp"]'));
+  assert.ok(tpa.querySelector('a[href="/programmes#tpa-2026"]'));
+  assert.ok(c.d.querySelector('.ref-command .ops-kpis'));
+  assert.deepEqual(c.errors,[]);
+ }finally{c.close()}
+});
+test('La page publique contient un lien TPA vers son affiche officielle',()=>{
+ const html=readFileSync('public/vitrine/programmes.html','utf8');
+ assert.match(html,/id="tpa-2026"/);
+ assert.match(html,/id="tpa-affiche"/);
+ assert.match(html,/datetime="2026-12-18T20:00:00\+00:00"/);
+ const css=readFileSync('frontend/reference.css','utf8');
+ assert.match(css,/body\.sde-reference \.sde-bottom-nav,\s*body\.sde-reference #sde-mobile-nav\s*\{display:none!important\}/);
+ assert.match(css,/body\.sde-reference \.ref-tabbar\s*\{\s*display:grid!important/);
+});
