@@ -19,10 +19,26 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - name: Vérifier que le contrôle concerne la dernière version
+        id: revision
+        shell: bash
+        run: |
+          ACTUEL="$(git ls-remote origin refs/heads/main | cut -f1)"
+          TESTE="${{ github.event.workflow_run.head_sha || github.sha }}"
+          if [ -n "$ACTUEL" ] && [ "$ACTUEL" = "$TESTE" ]; then
+            echo "verifier=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "verifier=false" >> "$GITHUB_OUTPUT"
+            echo "Ancienne version : contrôle de production non applicable."
+          fi
+      - if: steps.revision.outputs.verifier == 'true'
+        uses: actions/setup-node@v4
         with:
           node-version: '22.23.4'
       - name: Vérifier les pages et les accès anonymes réels des deux domaines
+        if: steps.revision.outputs.verifier == 'true'
         run: node scripts/recette-production.mjs
         env:
           SDE_EXPECTED_REV: ${{ github.event.workflow_run.head_sha || github.sha }}
