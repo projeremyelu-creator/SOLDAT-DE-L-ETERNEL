@@ -13,6 +13,7 @@ const cases=[
  {path:'/',name:'accueil-390',width:390,height:844},
  {path:'/programmes',name:'programmes-390',width:390,height:844},
  {path:'/mouvement',name:'mouvement-390',width:390,height:844},
+ {path:'/connexion',name:'connexion-390',width:390,height:844},
  {path:'/',name:'accueil-tablette',width:768,height:1024},
  {path:'/',name:'accueil-1024',width:1024,height:768},
  {path:'/',name:'accueil-desktop',width:1280,height:900},
@@ -150,6 +151,49 @@ try{
       report.notes.push({test:'theme-mobile',before:themeBefore,after:themeAfter});
      }
     }catch(e){issue(c.name,'interaction mobile en échec : '+String(e.message||e).slice(0,240),true);}
+   }
+   // Le portail doit rester dans le flux de la page, sans bouger ni
+   // rebondir indépendamment de l'en-tête pendant le défilement.
+   if(['accueil-390','connexion-390','accueil-desktop'].includes(c.name)){
+    try{
+     const motion=await page.evaluate(async()=>{
+      const header=document.querySelector('.site-header');
+      const wrapper=document.querySelector('.site-access-top');
+      const cta=document.querySelector('.site-portal-cta');
+      if(!header||!wrapper||!cta)return {missing:true};
+      const headerStyle=getComputedStyle(header),wrapStyle=getComputedStyle(wrapper),ctaStyle=getComputedStyle(cta);
+      const initialHeader=header.getBoundingClientRect().top;
+      const initialCTA=cta.getBoundingClientRect().top;
+      document.documentElement.style.scrollBehavior='auto';
+      const amount=Math.min(360,Math.max(0,document.documentElement.scrollHeight-innerHeight-12));
+      window.scrollTo(0,amount);
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+      return {
+       position:headerStyle.position,
+       accessPosition:wrapStyle.position,
+       ctaPosition:ctaStyle.position,
+       animation:ctaStyle.animationName,
+       transform:ctaStyle.transform,
+       scrollY:Math.round(window.scrollY),
+       headerMoved:Math.round(header.getBoundingClientRect().top-initialHeader),
+       ctaMoved:Math.round(cta.getBoundingClientRect().top-initialCTA)
+      };
+     });
+     report.notes.push({test:'portail-stable',screen:c.name,...motion});
+     if(motion.missing)issue(c.name,'bouton Mon Portail S.D.E absent',true);
+     else{
+      if(['sticky','fixed'].includes(motion.position))issue(c.name,'en-tête encore flottant : '+motion.position,true);
+      if(motion.accessPosition!=='static'||motion.ctaPosition!=='static')issue(c.name,'bouton non ancré dans le flux normal',true);
+      if(motion.animation!=='none'||motion.transform!=='none')issue(c.name,'bouton encore animé ou transformé',true);
+      if(motion.scrollY>=90&&Math.abs(motion.headerMoved+motion.scrollY)>8)
+       issue(c.name,'l’en-tête se déplace indépendamment du document',true);
+      if(motion.scrollY>=90&&Math.abs(motion.headerMoved-motion.ctaMoved)>8)
+       issue(c.name,'le bouton ballotte par rapport à son en-tête',true);
+     }
+     await page.evaluate(()=>scrollTo(0,0));
+    }catch(error){
+     issue(c.name,'vérification de stabilité indisponible : '+String(error.message||error).slice(0,240),true);
+    }
    }
    if(row.status!==200)issue(c.name,'HTTP '+row.status,true);
    if(row.overflowX>16)issue(c.name,'débordement horizontal de '+row.overflowX+' px',true);
