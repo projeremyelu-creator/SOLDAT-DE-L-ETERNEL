@@ -84,7 +84,7 @@ const peutLire = (u, path) => u.niveau >= regle(path, "read");
 const peutEcrire = (u, path) => u.niveau >= Math.max(1, regle(path, "write"));
 
 /* ───────── identité : e-mail et mot de passe ───────── */
-const ITERATIONS = 60000;
+const ITERATIONS = 100000; // plafond PBKDF2 de Cloudflare Workers ; les anciens hachages (60 000) sont recalculés à la connexion
 const EMAIL_OK = /^[^@\s]{1,64}@[^@\s]{1,190}\.[^@\s]{2,24}$/;
 const normEmail = (e) => String(e || "").trim().toLowerCase();
 async function deriverMdp(mdp, sel, iter) {
@@ -308,6 +308,9 @@ async function apiConnexionMdp(req, env) {
     await compter(env, "e:" + saisie); await compter(env, "ip:" + ip);
     if (c && !c.mdp && c.activation) return erreur("activation", "Ce compte n’est pas encore activé : choisissez « J’ai un code d’activation ».", 401);
     return erreur("refuse", "Les informations saisies ne permettent pas de vous connecter. Vérifiez votre matricule et votre mot de passe.", 401);
+  }
+  if (Number(String(c.mdp).split("$")[1]) < ITERATIONS) {
+    try { await env.DB.prepare("UPDATE comptes SET mdp = ? WHERE email = ?").bind(await empreinteMdp(b.motDePasse), c.email).run(); } catch (e) { /* le hachage actuel reste valable */ }
   }
   await effacer(env, "e:" + saisie);
   return json({ ok: true }, 200, { "set-cookie": await ouvrirSession(env, email) });
@@ -1465,6 +1468,8 @@ function securiser(r) {
   n.headers.set("strict-transport-security", "max-age=63072000; includeSubDomains; preload");
   n.headers.set("permissions-policy", "geolocation=(self), camera=(self), microphone=(), payment=(), usb=()");
   n.headers.set("x-xss-protection", "1; mode=block");
+  // Socle CSP sans script-src : n'empêche aucun script existant, mais interdit objets, <base> détourné, cadres et envois de formulaires hors site.
+  if (!n.headers.has("content-security-policy")) n.headers.set("content-security-policy", "object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
   return n;
 }
 
