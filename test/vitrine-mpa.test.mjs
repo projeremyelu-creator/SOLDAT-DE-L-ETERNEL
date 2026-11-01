@@ -77,6 +77,14 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
         officiel.remove();
         copie.querySelector("#res-compteur").textContent="6 ressources";
         assert.equal(normalize(copie.textContent),normalize(a.textContent),name+"/"+id);
+      }else if(name==="rejoindre"&&id==="rejoindre"){
+        // L'unique ajout au formulaire est l'option de participation TPA 2026.
+        const preserved=b.cloneNode(true);
+        const option=[...preserved.querySelectorAll("#f-objet option")]
+          .find(x=>x.textContent==="Traversée Prophétique Annuelle — TPA 2026");
+        assert.ok(option,"L'objet TPA est proposé au secrétariat");
+        option.remove();
+        assert.equal(normalize(preserved.textContent),normalize(a.textContent),name+"/"+id);
       }else if(name==="programmes"&&id==="programmes"){
         // La prose d'origine est préservée ; seul le CTA TPA est ajouté.
         const preserved=b.cloneNode(true);
