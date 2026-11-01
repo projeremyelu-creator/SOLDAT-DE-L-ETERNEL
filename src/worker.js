@@ -1637,7 +1637,7 @@ async function traiter(req, env, ctx) {
           if (u.connecte) {
             const retour = url.searchParams.get("retour");
             const dest = retour === "/mon-espace" ? "/mon-espace" : u.niveau >= 1 ? "/administration" : "/mon-espace";
-            return Response.redirect(url.origin + dest, 302);
+            return new Response(null,{status:302,headers:{location:url.origin + dest,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
           }
           const r = await assetPortail("/vitrine/connexion-unifiee.html");
           const n = new Response(r.body, r);
@@ -1668,7 +1668,7 @@ async function traiter(req, env, ctx) {
             const cible=p.startsWith("/administration")?"/administration":"/mon-espace";
             const mode=url.searchParams.get("mode");
             const modeValide=["inscription","activation","recuperation"].includes(mode)?"&mode="+encodeURIComponent(mode):"";
-            return Response.redirect(url.origin + "/connexion?retour=" + encodeURIComponent(cible) + modeValide, 302);
+            return new Response(null,{status:302,headers:{location:url.origin + "/connexion?retour=" + encodeURIComponent(cible) + modeValide,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
           }
           if (p.startsWith("/administration") && u.niveau < 1)
             return erreur("refuse", "Accès réservé aux responsables autorisés.", 403);
