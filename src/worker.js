@@ -1568,6 +1568,7 @@ async function traiter(req, env, ctx) {
         "/missions-humanitaires": "/vitrine/missions-humanitaires.html",
         "/soutenir": "/vitrine/soutenir.html",
         "/transparence": "/vitrine/transparence.html",
+        "/confidentialite": "/vitrine/confidentialite.html",
         "/reseau": "/vitrine/reseau.html",
         "/communaute": "/vitrine/communaute.html",
         "/gouvernance": "/vitrine/gouvernance.html",
