@@ -21,7 +21,7 @@ test('TPA : date officielle, affiche, programme et partage WhatsApp',()=>{
  assert.ok(html.includes('2026-12-18T20:00:00+00:00'));
  assert.ok(html.includes('tpa-2026.webp'));
  assert.ok(html.includes('Partager sur WhatsApp'));
- assert.ok(html.includes('href="/programmes#agenda"'));
+ assert.ok(html.includes('href="/programmes#tpa-2026"'));
  assert.ok(agenda.includes('Traversée Prophétique Annuelle — TPA 2026'));
  assert.ok(agenda.includes('Google Meet'));
 });
