@@ -14,6 +14,7 @@ const cases=[
  {path:'/programmes',name:'programmes-390',width:390,height:844},
  {path:'/mouvement',name:'mouvement-390',width:390,height:844},
  {path:'/connexion',name:'connexion-390',width:390,height:844},
+ {path:'/priere',name:'priere-anonyme-390',width:390,height:844},
  {path:'/',name:'accueil-tablette',width:768,height:1024},
  {path:'/',name:'accueil-1024',width:1024,height:768},
  {path:'/',name:'accueil-desktop',width:1280,height:900},
@@ -188,6 +189,45 @@ try{
       report.notes.push({test:'theme-mobile',before:themeBefore,after:themeAfter});
      }
     }catch(e){issue(c.name,'interaction mobile en échec : '+String(e.message||e).slice(0,240),true);}
+   }
+   // Prière anonyme : simuler deux réponses sans aucune écriture vers la vraie API.
+   // page.route intercepte la requête AVANT qu'elle quitte Chromium.
+   if(c.name==='priere-anonyme-390'){
+    try{
+     const form=page.locator('form[data-sde-anonymous-prayer]');
+     if(await form.count()!==1)issue(c.name,'formulaire anonyme absent',true);
+     else{
+      const requests=[];
+      await page.route('**/api/priere-anonyme',async route=>{
+       const payload=route.request().postDataJSON();
+       requests.push(payload);
+       const first=requests.length===1;
+       await route.fulfill({
+        status:first?429:200,contentType:'application/json',
+        body:JSON.stringify(first?{erreur:'rate_limited',message:'Réessayez plus tard.'}:{ok:true,message:'Votre sujet fictif a été reçu anonymement.'})
+       });
+      });
+      const fields=await form.locator('input[name="nom"],input[name="email"],input[name="contact"]').count();
+      if(fields>0)issue(c.name,'le formulaire anonyme demande une identité',true);
+      await form.locator('textarea[name="sujet"]').fill('Vérification fictive sans donnée personnelle');
+      await form.locator('input[name="accord"]').check();
+      const submit=form.locator('button[type="submit"]');
+      const feedback=form.locator('.sde-form-feedback');
+      await submit.click({timeout:6000});
+      await page.waitForFunction(()=>document.querySelector('[data-sde-anonymous-prayer] .sde-form-feedback')?.dataset.state==='error',{timeout:6000});
+      const errorText=await feedback.innerText();
+      if(!errorText.includes('Réessayez plus tard'))issue(c.name,'erreur API invisible après refus simulé',true);
+      if(await submit.isDisabled())issue(c.name,'bouton bloqué après erreur simulée',true);
+      await submit.click({timeout:6000});
+      await page.waitForFunction(()=>document.querySelector('[data-sde-anonymous-prayer] .sde-form-feedback')?.dataset.state==='ok',{timeout:6000});
+      if(requests.length!==2||requests.some(x=>x.accord!==true||!x.sujet||x.nom||x.email||x.telephone))
+       issue(c.name,'envoi simulé incorrect ou des informations personnelles figurent dans le corps',true);
+      if((await form.locator('textarea[name="sujet"]').inputValue())!=='')
+       issue(c.name,'le formulaire ne se réinitialise pas après confirmation simulée',true);
+      report.notes.push({test:'priere-anonyme-simulee-sans-ecriture',requests:requests.length,errorText,finalState:await feedback.getAttribute('data-state')});
+      await page.unroute('**/api/priere-anonyme');
+     }
+    }catch(e){issue(c.name,'parcours anonyme simulé échoué : '+String(e.message||e).slice(0,240),true);}
    }
    // Parcours d'authentification en lecture seule : sélection du bon espace,
    // sans identifier d'utilisateur ni soumettre aucun formulaire.
