@@ -101,3 +101,61 @@
 :root .sheet.sheet:is(:has(#f-eval),:has(#f-membre)) .sheet-b{background:transparent!important}
 #f-eval .ident{margin-top:4px}
 :root .sheet.sheet.sheet:has(#f-eval) #f-eval .fs.eval .inp{border-color:#b8923a!important;background:#0c1529!important}
+
+
+/* Audit ergonomie 2026-11-01 — Espaces membre et administration.
+   Le même composant natif est conservé ; seules les cibles, les contrastes et
+   l'adaptation aux petits écrans sont renforcés. */
+:root[data-sde-palette="ivoire"] .btn-primary{
+  background:linear-gradient(180deg,#8b651f,#725013)!important;
+  color:#fff!important;
+}
+:root[data-sde-palette="ivoire"] :is(.hdr-btn,.nav-btn,.btn,.icon-btn,.tab,.nav-plus){
+  min-height:44px;
+}
+:root[data-sde-palette="ivoire"] :is(.nav-btn,.hdr-btn,.btn,.icon-btn,.inp,input,select,textarea):focus-visible{
+  outline:3px solid #d4ad48!important;
+  outline-offset:3px;
+}
+:root[data-sde-palette="ivoire"] :is(.row-t,.sec-title,.stat strong){
+  overflow-wrap:anywhere;
+}
+:root[data-sde-palette="ivoire"] .nav-btn.on{
+  font-weight:800;
+}
+:root[data-sde-palette="ivoire"] .card{
+  border-radius:14px;
+  box-shadow:0 4px 24px rgba(55,49,32,.055);
+}
+@media(max-width:999px){
+  :root[data-sde-palette="ivoire"] .nav{
+    background:linear-gradient(180deg,#2f3b25,#25301e)!important;
+    border-top:2px solid #b8923a!important;
+    padding-bottom:max(4px,env(safe-area-inset-bottom));
+    box-shadow:0 -8px 24px rgba(0,0,0,.15)!important;
+  }
+  :root[data-sde-palette="ivoire"] .nav-btn{
+    min-height:58px;
+    min-width:0;
+    border-radius:9px;
+    line-height:1.15;
+    font-size:clamp(.62rem,2.2vw,.78rem);
+    color:#f1ead6!important;
+  }
+  :root[data-sde-palette="ivoire"] .nav-btn.on{
+    background:rgba(226,194,106,.18)!important;
+    color:#fff9e8!important;
+  }
+}
+@media(min-width:1000px){
+  :root[data-sde-palette="ivoire"] .nav-btn{
+    border-radius:10px;
+    min-height:48px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  :root[data-sde-palette="ivoire"] :is(.nav-btn,.btn,.card,.row,.tile){
+    animation:none!important;
+    transition:none!important;
+  }
+}
