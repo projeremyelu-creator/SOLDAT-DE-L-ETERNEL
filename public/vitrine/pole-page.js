@@ -36,7 +36,7 @@
             method: "POST", headers: { "content-type": "application/json" },
             body: JSON.stringify({
               nom, email: isEmail ? contact : "", tel: isPhone ? contact : "",
-              objet: "Servir dans un pôle", pole: form.dataset.pole, message,
+              objet: "Servir dans un pôle", pole: form.dataset.poleReference || form.dataset.pole, message,
               source: "mouvement-sde.org/" + (form.dataset.slug || "pole")
             })
           });
