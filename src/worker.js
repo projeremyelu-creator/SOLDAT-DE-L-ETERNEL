@@ -439,10 +439,17 @@ async function apiPriere(req, env, u, ctx) {
 async function apiPriereAnonyme(req,env,ctx){
   if(req.method!=="POST")return erreur("methode","POST uniquement.",405);
   let b;try{b=await req.json()}catch{return erreur("invalid_argument","Données invalides.")}
+  if(!b||typeof b!=="object"||Array.isArray(b))return erreur("invalid_argument","Données invalides.");
+  // Le piège anti-robot reste silencieux, sans aucune inscription dans les données SDE.
   if(String(b.website||"").trim())return json({ok:true});
-  const sujet=String(b.sujet||"").trim().replace(/\s+/g," ").slice(0,600);
-  const categorie=String(b.categorie||"Prière générale").trim().slice(0,80);
+  // Refuser les objets et les textes excessifs au lieu de créer un faux sujet
+  // « [object Object] » ou de couper silencieusement une intention à 600 caractères.
+  if(typeof b.sujet!=="string")return erreur("invalid_argument","Écrivez votre sujet de prière.");
+  const sujet=b.sujet.trim().replace(/\s+/g," ");
   if(!sujet)return erreur("invalid_argument","Écrivez votre sujet de prière.");
+  if(sujet.length>600)return erreur("invalid_argument","Limitez votre sujet à 600 caractères.");
+  if(b.categorie!==undefined&&typeof b.categorie!=="string")return erreur("invalid_argument","Catégorie invalide.");
+  const categorie=String(b.categorie||"Prière générale").trim().slice(0,80)||"Prière générale";
   if(b.accord!==true)return erreur("invalid_argument","Confirmez l’envoi anonyme de votre sujet.");
   const cle="priere-anonyme:"+await sha(ipDe(req));
   if(await bloque(env,cle,5))return erreur("rate_limited","Trop de sujets ont été envoyés. Réessayez plus tard.",429);
