@@ -77,6 +77,13 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
         officiel.remove();
         copie.querySelector("#res-compteur").textContent="6 ressources";
         assert.equal(normalize(copie.textContent),normalize(a.textContent),name+"/"+id);
+      }else if(name==="rejoindre"&&id==="confidentialite"){
+        // Lien utile vers la politique détaillée, sans modifier le texte légal originel.
+        const preserved=b.cloneNode(true);
+        const link=preserved.querySelector('a[href="/confidentialite"]');
+        assert.ok(link,"Lien vers la politique détaillée requis");
+        link.closest("p")?.remove();
+        assert.equal(normalize(preserved.textContent),normalize(a.textContent),name+"/"+id);
       }else if(name==="rejoindre"&&id==="rejoindre"){
         // L'unique ajout au formulaire est l'option de participation TPA 2026.
         const preserved=b.cloneNode(true);
