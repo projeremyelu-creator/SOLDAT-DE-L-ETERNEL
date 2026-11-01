@@ -1547,6 +1547,9 @@ async function traiter(req, env, ctx) {
       // Compatibilité des anciens liens vers le bilan annuel, sans doubler les pages indexables.
       if (["/formulaire/", "/bilan-2026", "/bilan-2026-projets-2027", "/sondage-2027"].includes(p) && (req.method === "GET" || req.method === "HEAD"))
         return new Response(null, {status:301, headers:{location:url.origin+"/formulaire", "cache-control":"public, max-age=300"}});
+      // Alias lisible pour l'onglet « Plus » : une adresse canonique unique.
+      if (p === "/plus" && (req.method === "GET" || req.method === "HEAD"))
+        return new Response(null, {status:301, headers:{location:url.origin+"/rubriques"+url.search, "cache-control":"public, max-age=300"}});
       const pagesPubliques = {
         "/formulaire": "/vitrine/formulaire.html",
         "/boutique": "/vitrine/boutique.html",
