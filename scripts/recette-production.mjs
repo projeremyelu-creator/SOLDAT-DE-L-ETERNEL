@@ -20,6 +20,8 @@ export const CONTROLES = Object.freeze([
   {path:'/vitrine/sde-experience.css',type:'style-pilotage'},
   {path:'/vitrine/sde-sitewide-2026.css',type:'styles-site'},
   {path:'/formulaire',type:'page-publique'},
+  {path:'/confidentialite',type:'page-publique'},
+  {path:'/vitrine/infire-2026/chronogramme-officiel.pdf',type:'document-pdf'},
   {path:'/boutique',type:'page-publique'},
   {path:'/mouvement',type:'page-publique'},
   {path:'/programmes',type:'page-publique'},
@@ -97,6 +99,10 @@ function verifierReponse(origine,controle,reponse,corps) {
     if(!type.includes('text/css'))erreur('Styles du pilotage inaccessibles');
     if(!corps.includes('sde-feature-sheen')||!corps.includes('ref-feature'))
       erreur('Styles de contraste et animations du pilotage absents');
+  }
+  if(controle.type==='document-pdf'){
+    if(!type.includes('application/pdf'))erreur('Document officiel non servi comme PDF');
+    if(!corps.startsWith('%PDF-'))erreur('Signature PDF officielle absente');
   }
   if(controle.type==='page-publique'){
     if(!type.includes('text/html'))erreur('Page publique non HTML');
