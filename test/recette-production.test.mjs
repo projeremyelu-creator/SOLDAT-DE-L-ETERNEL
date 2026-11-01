@@ -20,6 +20,7 @@ function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=fals
       :new Response(null,{status:302,headers:{location:(lienExterne?'https://autre-site.example':u.origin)+'/connexion?retour='+encodeURIComponent(p)}});
     if(p==='/api/moi')return Response.json({connecte:sessionExposee});
     if(p==='/api/notifications-status')return Response.json({erreur:'refuse'},{status:403});
+    if(p==='/vitrine/infire-2026/chronogramme-officiel.pdf')return new Response('%PDF-1.7\n% Simulateur de document officiel',{headers:{'content-type':'application/pdf'}});
     if(p.endsWith('.js'))return new Response(p.includes('operations-assets')?(marqueObsolete?'const brand="SDE DIGITAL";':'const brand="SDE - MOUVEMENT";'):'const id="sde-direct-tabs";',{headers:{'content-type':'text/javascript'}});
     if(p==='/vitrine/sde-sitewide-2026.css')return new Response(siteObsolete?'.ancien{}':'--sde-forest:#172b25;.sde-further{}@keyframes sde-site-countdown-reveal{}',{headers:{'content-type':'text/css'}});
     if(p.endsWith('.css'))return new Response(p.includes('sde-experience')?(stylePilotageObsolete?'.obsolete{}':'.ref-feature{}@keyframes sde-feature-sheen{}'):(styleObsolete?'.obsolete{}':'#sde-direct-menu-toggle{}'),{headers:{'content-type':'text/css'}});

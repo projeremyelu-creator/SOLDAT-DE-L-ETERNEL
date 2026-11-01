@@ -11,7 +11,10 @@
     try{
       const response=await fetch("/api/ressources-publiques",{credentials:"omit",cache:"no-store"});
       const result=await response.json();if(!response.ok||!Array.isArray(result.ressources)||!result.ressources.length)return;
-      grid.replaceChildren();
+      // Préserver le document institutionnel statique disponible même quand
+      // la bibliothèque administrative publie des ressources dynamiques.
+      const documentsOfficiels=[...grid.querySelectorAll("[data-sde-officiel]")];
+      grid.replaceChildren(...documentsOfficiels);
       for(const resource of result.ressources){
         const card=node("article",undefined,"ressource-carte revele");card.dataset.type=filterType(resource.type);
         const type=node("div",undefined,"res-type"),ico=node("span",icon[resource.type]||"📚","res-icone");ico.setAttribute("aria-hidden","true");type.append(ico,document.createTextNode(typeLabel[resource.type]||"Ressource"));
@@ -25,7 +28,8 @@
         if(actions.childElementCount)card.append(actions);
         grid.append(card);
       }
-      count.textContent=result.ressources.length+" ressource"+(result.ressources.length>1?"s":"")+" disponible"+(result.ressources.length>1?"s":"");
+      const total=result.ressources.length+documentsOfficiels.length;
+      count.textContent=total+" ressource"+(total>1?"s":"")+" disponible"+(total>1?"s":"");
     }catch(_){/* Le catalogue statique reste visible si le réseau est indisponible. */}
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();

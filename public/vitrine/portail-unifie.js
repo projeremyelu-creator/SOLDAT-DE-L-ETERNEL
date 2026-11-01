@@ -131,6 +131,8 @@
       const key=a.getAttribute("href").slice(2);
       if(anchors[key])a.href=anchors[key];
     }
+    // Page détaillée accessible depuis tous les formulaires et pieds de page publics.
+    for(const a of document.querySelectorAll('a[href="/contact#confidentialite"]'))a.href="/confidentialite";
     // Aucun lien public ne quitte le domaine pour rejoindre les espaces sécurisés.
     for(const a of document.querySelectorAll('a[href*="app.mouvement-sde.org"]')){
       let old;try{old=new URL(a.href)}catch(_){continue}
@@ -278,6 +280,11 @@
       }
     }
   }
+    // L'événement de décembre est archivé automatiquement à l'issue de sa date.
+  function masquerAncienneTPA(){
+    if(Date.now()>=Date.parse("2026-12-19T00:00:00Z"))
+      document.querySelector(".iv-band.sde-tpa-hero")?.setAttribute("hidden","");
+  }
   function navigationAccessible(){
     const menu=document.getElementById("site-menu");
     const bouton=document.querySelector(".site-header .site-burger");
@@ -309,7 +316,7 @@
     });
     synchroniser();
   }
-  const commencer=()=>{actualiserEvenements();navigationAccessible();};
+  const commencer=()=>{actualiserEvenements();masquerAncienneTPA();navigationAccessible();};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",commencer,{once:true});
   else commencer();
 })();
