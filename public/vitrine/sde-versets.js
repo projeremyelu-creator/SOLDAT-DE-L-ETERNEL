@@ -64,7 +64,10 @@
     if (calme()) bande.classList.add("en-pause");
     majPause();
     bande.append(tag, fenetre, pause);
-    ancre.insertAdjacentElement("afterend", bande);
+    // La page d’accueil réserve cet espace dans le HTML pour ne pas déplacer le contenu après chargement.
+    const reserve = document.querySelector(".sde-versets-slot");
+    if (reserve) reserve.replaceWith(bande);
+    else ancre.insertAdjacentElement("afterend", bande);
     const vitesse = () => { const w = groupe.scrollWidth; piste.style.setProperty("--duree", Math.max(40, Math.round(w / 45)) + "s"); };
     vitesse(); addEventListener("resize", vitesse);
   }
