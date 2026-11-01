@@ -122,5 +122,5 @@ function App(){
  const publicReader=location.pathname==='/academy'||location.pathname==='/enseignements'||document.body.dataset.sdePage==='academy';
  return <>{header&&createPortal(<MotionControl/>,header)}{portal?<PrivateExperience portal={portal}/>:publicReader&&<FocusControl/>}{document.querySelector('.home-hero')&&<MediaDock/>}</>;
 }
-function start(){const hero=document.querySelector('.home-hero-content');if(hero)createRoot(hero).render(<EventHero/>);const event=document.getElementById('sde-event-root');if(event)createRoot(event).render(<EventBanner/>);const host=document.createElement('div');host.id='sde-experience-root';document.body.append(host);createRoot(host).render(<App/>)}
+function start(){const hero=document.querySelector('.home-hero-content');if(hero)createRoot(hero).render(<EventHero/>);const event=document.getElementById('sde-event-root');if(event&&!document.body.classList.contains('sde-reference-login'))createRoot(event).render(<EventBanner/>);const host=document.createElement('div');host.id='sde-experience-root';document.body.append(host);createRoot(host).render(<App/>)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
