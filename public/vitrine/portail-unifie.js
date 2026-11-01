@@ -61,7 +61,8 @@
         ['/soutenir','Soutenir SDE'],['/calendrier','Calendrier'],
         ['/communaute','Communauté'],['/reseau','Réseau international'],
         ['/transparence','Transparence'],['/gouvernance','Gouvernance'],
-        ['/newsletter','Newsletter'],['/rechercher','Recherche']
+        ['/newsletter','Newsletter'],['/rechercher','Recherche'],
+        ['/rubriques','Toutes les rubriques']
       ]){
         const a=document.createElement('a');a.href=href;
         a.dataset.sdeServiceLink='true';a.textContent=title;
@@ -92,7 +93,7 @@
       btn.setAttribute("aria-label","Ouvrir la navigation");
     });
     addEventListener("resize",()=>{
-      if(innerWidth>900&&menu.dataset.open==="true"){
+      if(innerWidth>1800&&menu.dataset.open==="true"){
         menu.dataset.open="false";
         btn.setAttribute("aria-expanded","false");
         btn.setAttribute("aria-label","Ouvrir la navigation");
