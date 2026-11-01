@@ -977,11 +977,11 @@ body[data-motion="paused"].sde-unifie.sde-accueil-maquette .sde-pole-officiel-li
   }
 }
 
-/* Audit Chromium : menu compact pour écrans intermédiaires (901–1450 px). */
+/* Audit Chromium : menu compact pour écrans intermédiaires (901–1800 px). */
 /* Les huit liens desktop débordaient de la fenêtre à 1280 px.
    Conserver le menu complet sur écrans larges et passer à un menu
    déroulant accessible sur les ordinateurs compacts. */
-@media(min-width:901px) and (max-width:1550px){
+@media(min-width:901px) and (max-width:1800px){
   html body.sde-unifie .site-header .site-header-inner{
     display:flex!important;
     flex-wrap:nowrap!important;
@@ -1075,8 +1075,8 @@ body[data-motion="paused"].sde-unifie.sde-accueil-maquette .sde-pole-officiel-li
   }
 }
 
-/* Écrans larges : la navigation complète a besoin de plus de 1320 px. */
-@media(min-width:1551px){
+/* Écrans très larges : navigation complète activée seulement lorsque les liens peuvent tenir sans débordement. */
+@media(min-width:1801px){
   html body.sde-unifie .site-header .site-header-inner{
     width:min(1640px,calc(100% - 40px))!important;
     max-width:1640px!important;
