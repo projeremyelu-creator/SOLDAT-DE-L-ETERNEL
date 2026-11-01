@@ -1,0 +1,54 @@
+import {test} from "node:test";
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {JSDOM} from "jsdom";
+const loginHtml=readFileSync("public/vitrine/connexion-unifiee.html","utf8");
+const loginJs=readFileSync("public/vitrine/portail-connexion.js","utf8");
+function prepare(url){
+ const d=new JSDOM(loginHtml,{url,runScripts:"outside-only",pretendToBeVisual:true});
+ d.window.eval(loginJs);
+ d.window.document.dispatchEvent(new d.window.Event("DOMContentLoaded"));
+ const m=d.window.document.querySelector('[data-access-target="/mon-espace"]');
+ const a=d.window.document.querySelector('[data-access-target="/administration"]');
+ assert.ok(m&&a,"Les deux espaces doivent être directement disponibles");
+ return {d,m,a};
+}
+test("La connexion standard et le retour portail mettent le membre en évidence",()=>{
+ for(const url of ["https://mouvement-sde.org/connexion","https://mouvement-sde.org/connexion?retour=%2Fportail"]){
+  const {d,m,a}=prepare(url);
+  assert.equal(m.getAttribute("aria-pressed"),"true");
+  assert.equal(a.getAttribute("aria-pressed"),"false");
+  d.window.close();
+ }
+});
+test("La demande explicite d'administration reste sélectionnée",()=>{
+ const {d,m,a}=prepare("https://mouvement-sde.org/connexion?retour=%2Fadministration");
+ assert.equal(a.getAttribute("aria-pressed"),"true");
+ assert.equal(m.getAttribute("aria-pressed"),"false");
+ a.click();
+ assert.equal(new URL(d.window.location.href).searchParams.get("retour"),"/administration");
+ m.click();
+ assert.equal(new URL(d.window.location.href).searchParams.get("retour"),"/mon-espace");
+ assert.equal(m.getAttribute("aria-pressed"),"true");
+ assert.equal(a.getAttribute("aria-pressed"),"false");
+ d.window.close();
+});
+test("La connexion annonce la TPA sans réafficher IN FIRE comme prochain programme",()=>{
+ const d=new JSDOM(loginHtml);
+ const root=d.window.document.querySelector("#sde-event-root");
+ assert.match(root.getAttribute("aria-label"),/TPA 2026/);
+ assert.ok(root.querySelector('a[href="/programmes#tpa-2026"]'));
+ assert.match(root.textContent,/Vendredi 18 décembre · 20h00 · Google Meet/);
+ assert.doesNotMatch(root.textContent,/IN FIRE 2026/);
+ assert.match(loginHtml,/data-access-target="\/mon-espace" aria-pressed="true"/);
+ assert.match(loginHtml,/portail-connexion\.js\?v=20261101member/);
+ d.window.close();
+});
+test("Le Worker impose authentification et habilitation pour les deux espaces",()=>{
+ const s=readFileSync("src/worker.js","utf8");
+ assert.match(s,/if \(p === "\/portail"\) \{/);
+ assert.match(s,/if \(!u\.connecte\) \{/);
+ assert.match(s,/if \(p\.startsWith\("\/administration"\) && u\.niveau < 1\)/);
+ assert.match(s,/return erreur\("refuse", "Accès réservé aux responsables autorisés\.", 403\)/);
+ assert.match(s,/n\.headers\.set\("cache-control","private, no-store"\)/);
+});
