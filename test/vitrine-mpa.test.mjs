@@ -68,6 +68,15 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
         assert.equal(extras.length,2,"Date et lien de l'affiche TPA attendus");
         extras.forEach(element=>element.remove());
         assert.equal(normalize(preserved.textContent),normalize(a.textContent),name+"/"+id);
+      }else if(name==="ressources"&&id==="ressources"){
+        // Les six publications héritées sont conservées à l'identique ;
+        // seul le PDF officiel ajouté et le compteur sont nouveaux.
+        const copie=b.cloneNode(true);
+        const officiel=copie.querySelector('[data-sde-officiel="chronogramme-infire"]');
+        assert.ok(officiel,"document téléchargeable officiel");
+        officiel.remove();
+        copie.querySelector("#res-compteur").textContent="6 ressources";
+        assert.equal(normalize(copie.textContent),normalize(a.textContent),name+"/"+id);
       }else if(name==="projets"&&id==="projets"){
         // Les textes d'origine sont inchangés ; seuls deux CTA de navigation
         // explicites ont été ajoutés aux cartes IN FIRE et Médiathèque.
@@ -110,8 +119,8 @@ test("Enseignements : les ressources publiées sont téléchargeables directemen
   const d=new JSDOM(read("public/vitrine/ressources.html"),{url:"https://mouvement-sde.org/enseignements",runScripts:"outside-only",pretendToBeVisual:true});
   d.window.fetch=async()=>({ok:true,json:async()=>({ressources:[{id:"livre",titre:"Livre SDE",type:"livre",auteur:"Jérémy l’Élu",description:"Enseignement",telechargement:"/api/ressources-publiques/livre/telecharger",lien:""}]})});
   d.window.eval(read("public/vitrine/ressources-public.js"));d.window.document.dispatchEvent(new d.window.Event("DOMContentLoaded"));await new Promise(done=>setTimeout(done,5));
-  const card=d.window.document.querySelector("#ressources-grille .ressource-carte");assert.equal(card.querySelector("h3").textContent,"Livre SDE");
-  assert.equal(card.querySelector(".res-download").getAttribute("href"),"/api/ressources-publiques/livre/telecharger");assert.match(d.window.document.getElementById("res-compteur").textContent,/1 ressource/);d.window.close();
+  const card=d.window.document.querySelector("#ressources-grille .ressource-carte:not([data-sde-officiel])");assert.equal(card.querySelector("h3").textContent,"Livre SDE");
+  assert.equal(card.querySelector(".res-download").getAttribute("href"),"/api/ressources-publiques/livre/telecharger");assert.match(d.window.document.getElementById("res-compteur").textContent,/2 ressources/);d.window.close();
 });
 test("MPA: programmation — calendrier et confirmation existants présents",()=>{
   const d=dom("programmes"),document=d.window.document;
