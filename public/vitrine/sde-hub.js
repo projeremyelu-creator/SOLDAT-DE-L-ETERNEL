@@ -99,7 +99,7 @@
  if(location.pathname==='/transparence'){
    fetch('/api/sde-bilans').then(r=>r.json()).then(d=>{
      const records=Array.isArray(d.rapports)?d.rapports:[];if(!records.length)return;
-     const annonceAttente=qs("[data-sde-bilan-attente]");if(annonceAttente)annonceAttente.hidden=true;
+     const annonceAttente=qs("[data-sde-bilan-attente]");if(annonceAttente)annonceAttente.remove();
      const section=document.createElement('section');section.className='hub-section';
      const title=document.createElement('h2');title.textContent='Bilans trimestriels publiés';section.append(title);
      const wrap=document.createElement('div');wrap.className='hub-results';
