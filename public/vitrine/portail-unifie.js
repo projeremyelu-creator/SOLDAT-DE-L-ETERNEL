@@ -215,3 +215,101 @@
   const start=()=>{navigation();theme();agenda()};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
+
+/* Correctifs transversaux : actualité des programmes et accessibilité mobile.
+   Ne touche ni aux formulaires ni aux espaces réservés. */
+(()=>{
+  const finInFire=Date.parse("2026-10-31T18:00:00Z");
+  const finTpa=Date.parse("2026-12-19T00:00:00Z");
+  function actualiserEvenements(){
+    const now=Date.now();
+    if(now<finInFire)return;
+    const tpaAVenir=now<finTpa;
+    document.querySelectorAll(".infire-takeover").forEach(bandeau=>{
+      bandeau.setAttribute("aria-label",tpaAVenir?"Prochain événement : Traversée Prophétique Annuelle":"Programmes du mouvement SDE");
+      const lien=bandeau.querySelector("a");
+      if(!lien)return;
+      lien.href=tpaAVenir?"/programmes#tpa-2026":"/programmes#agenda";
+      lien.replaceChildren();
+      const fort=document.createElement("strong");
+      fort.textContent=tpaAVenir?"TPA 2026":"Programmes SDE";
+      const detail=document.createTextNode(tpaAVenir?" · Vendredi 18 décembre · 20h · Google Meet ":" · Découvrez nos rendez-vous ");
+      const appel=document.createElement("span");
+      appel.textContent=tpaAVenir?"Découvrir la traversée →":"Consulter l’agenda →";
+      lien.append(fort,detail,appel);
+    });
+
+    // La conférence achevée reste accessible dans les archives, sans figurer
+    // parmi les événements à venir et sans proposer un fichier calendrier passé.
+    const agenda=document.getElementById("agenda");
+    const liste=document.getElementById("agenda-liste");
+    const ancienne=liste?.querySelector(".programme.rdv");
+    if(agenda&&liste&&ancienne&&/IN FIRE 2026/i.test(ancienne.querySelector("h3")?.textContent||"")){
+      const archives=document.createElement("details");
+      archives.className="sde-archives";
+      const titre=document.createElement("summary");
+      titre.textContent="Événements passés · IN FIRE 2026";
+      archives.append(titre);
+      ancienne.querySelectorAll("[data-ics]").forEach(b=>b.remove());
+      ancienne.classList.remove("revele");
+      ancienne.dataset.archive="true";
+      archives.append(ancienne);
+      agenda.querySelector(".enveloppe")?.append(archives);
+    }
+    // Le visuel de l'accueil doit promouvoir le prochain programme plutôt
+    // que laisser une affiche de la conférence achevée en première position.
+    const image=document.querySelector(".iv-band .iv-frame img");
+    if(image&&/infire-banniere/.test(image.getAttribute("src")||"")){
+      if(tpaAVenir){
+        image.src="/vitrine/illus/tpa-2026.webp";
+        image.alt="Traversée Prophétique Annuelle SDE — vendredi 18 décembre 2026 à 20h sur Google Meet";
+        image.width=600;image.height=600;
+        image.closest(".iv-band")?.classList.add("sde-tpa-hero");
+        const conteneur=image.closest(".iv-frame");
+        if(conteneur&&!conteneur.querySelector(".sde-hero-cta")){
+          const bouton=document.createElement("a");
+          bouton.className="sde-hero-cta";
+          bouton.href="/programmes#tpa-2026";
+          bouton.textContent="Découvrir la TPA 2026 →";
+          conteneur.append(bouton);
+        }
+      }else{
+        image.closest(".iv-band")?.setAttribute("hidden","");
+      }
+    }
+  }
+  function navigationAccessible(){
+    const menu=document.getElementById("site-menu");
+    const bouton=document.querySelector(".site-header .site-burger");
+    if(!menu||!bouton||typeof MutationObserver==="undefined")return;
+    // Les éléments de menu restent navigables au clavier et le défilement
+    // du fond est bloqué seulement pendant l'ouverture sur petit écran.
+    let ouvert=false;
+    const synchroniser=()=>{
+      const actif=menu.dataset.open==="true" && window.innerWidth<=900;
+      document.body.classList.toggle("sde-menu-mobile-ouvert",actif);
+      if(actif&&!ouvert){
+        (menu.querySelector("summary,a,button")||menu).focus?.({preventScroll:true});
+      }else if(!actif&&ouvert&&document.activeElement&&menu.contains(document.activeElement)){
+        bouton.focus({preventScroll:true});
+      }
+      ouvert=actif;
+    };
+    const observateur=new MutationObserver(synchroniser);
+    observateur.observe(menu,{attributes:true,attributeFilter:["data-open"]});
+    window.addEventListener("resize",synchroniser,{passive:true});
+    menu.addEventListener("keydown",event=>{
+      if(event.key!=="Tab"||!ouvert)return;
+      const actifs=[...menu.querySelectorAll('a[href],button:not([disabled]),summary,[tabindex]:not([tabindex="-1"])')]
+        .filter(el=>el.getClientRects().length>0);
+      if(!actifs.length)return;
+      const premier=actifs[0],dernier=actifs[actifs.length-1];
+      if(event.shiftKey&&document.activeElement===premier){event.preventDefault();dernier.focus();}
+      if(!event.shiftKey&&document.activeElement===dernier){event.preventDefault();premier.focus();}
+    });
+    synchroniser();
+  }
+  const commencer=()=>{actualiserEvenements();navigationAccessible();};
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",commencer,{once:true});
+  else commencer();
+})();
