@@ -1,0 +1,27 @@
+name: Vérifier la galerie IN FIRE
+on:
+  pull_request:
+    paths:
+      - 'public/vitrine/album-infire.html'
+      - 'public/vitrine/albums/infire/**'
+      - 'public/vitrine/programmes.html'
+      - 'public/vitrine/ressources.html'
+      - 'scripts/verifier-galerie-infire.mjs'
+  push:
+    branches: [main]
+    paths:
+      - 'public/vitrine/album-infire.html'
+      - 'public/vitrine/albums/infire/**'
+      - 'public/vitrine/programmes.html'
+      - 'public/vitrine/ressources.html'
+      - 'scripts/verifier-galerie-infire.mjs'
+jobs:
+  verifier-album:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.4'
+      - name: Vérifier les vingt médias et les liens
+        run: node scripts/verifier-galerie-infire.mjs

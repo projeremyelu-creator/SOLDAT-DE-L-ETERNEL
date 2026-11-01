@@ -1,0 +1,102 @@
+{
+  "titre": "IN FIRE — Albums photographiques",
+  "editions": [
+    2024,
+    2025,
+    2026
+  ],
+  "annees_a_confirmer": true,
+  "note": "Classement des dix fichiers provisoire : noms datés de 2025. L'année de chaque événement doit être confirmée avant publication.",
+  "photos": [
+    {
+      "annee": 2025,
+      "numero": 1,
+      "titre": "Photo de famille — IN FIRE",
+      "alt": "Photo de groupe réunie devant un décor bleu et or",
+      "image": "/vitrine/albums/infire/2025/infire-2025-01.webp",
+      "miniature": "/vitrine/albums/infire/2025/infire-2025-01-mini.webp",
+      "source_originale": "IMG-20250522-WA0170.jpg"
+    },
+    {
+      "annee": 2025,
+      "numero": 2,
+      "titre": "Temps de prière",
+      "alt": "Intervenant en tenue violette en prière",
+      "image": "/vitrine/albums/infire/2025/infire-2025-02.webp",
+      "miniature": "/vitrine/albums/infire/2025/infire-2025-02-mini.webp",
+      "source_originale": "IMG-20250522-WA0125.jpg"
+    },
+    {
+      "annee": 2025,
+      "numero": 3,
+      "titre": "Intercession et adoration",
+      "alt": "Participante en vêtement bleu brodé pendant un moment de prière",
+      "image": "/vitrine/albums/infire/2025/infire-2025-03.webp",
+      "miniature": "/vitrine/albums/infire/2025/infire-2025-03-mini.webp",
+      "source_originale": "IMG-20250522-WA0137.jpg"
+    },
+    {
+      "annee": 2025,
+      "numero": 4,
+      "titre": "Temps de ministère",
+      "alt": "Orateur en blanc intervenant au microphone",
+      "image": "/vitrine/albums/infire/2025/infire-2025-04.webp",
+      "miniature": "/vitrine/albums/infire/2025/infire-2025-04-mini.webp",
+      "source_originale": "IMG-20250522-WA0161.jpg"
+    },
+    {
+      "annee": 2025,
+      "numero": 5,
+      "titre": "Accompagnement dans la prière",
+      "alt": "Plusieurs participants réunis autour d'un temps de prière",
+      "image": "/vitrine/albums/infire/2025/infire-2025-05.webp",
+      "miniature": "/vitrine/albums/infire/2025/infire-2025-05-mini.webp",
+      "source_originale": "IMG-20250522-WA0158.jpg"
+    },
+    {
+      "annee": 2025,
+      "numero": 6,
+      "titre": "Prière et enseignement",
+      "alt": "Participants pendant une rencontre IN FIRE",
+      "image": "/vitrine/albums/infire/2025/infire-2025-06.webp",
+      "miniature": "/vitrine/albums/infire/2025/infire-2025-06-mini.webp",
+      "source_originale": "IMG-20251011-WA0052.jpg"
+    },
+    {
+      "annee": 2025,
+      "numero": 7,
+      "titre": "Moment de prière",
+      "alt": "Participants en blanc et orange pendant un temps de prière",
+      "image": "/vitrine/albums/infire/2025/infire-2025-07.webp",
+      "miniature": "/vitrine/albums/infire/2025/infire-2025-07-mini.webp",
+      "source_originale": "20251011_080019.heic"
+    },
+    {
+      "annee": 2025,
+      "numero": 8,
+      "titre": "Rencontre fraternelle",
+      "alt": "Deux participants en tenue blanche lors d'une rencontre",
+      "image": "/vitrine/albums/infire/2025/infire-2025-08.webp",
+      "miniature": "/vitrine/albums/infire/2025/infire-2025-08-mini.webp",
+      "source_originale": "20251011_080357.heic"
+    },
+    {
+      "annee": 2025,
+      "numero": 9,
+      "titre": "Recueillement",
+      "alt": "Participante en tenue blanche et orange recueillie",
+      "image": "/vitrine/albums/infire/2025/infire-2025-09.webp",
+      "miniature": "/vitrine/albums/infire/2025/infire-2025-09-mini.webp",
+      "source_originale": "20251011_080415.heic"
+    },
+    {
+      "annee": 2025,
+      "numero": 10,
+      "titre": "Temps de méditation",
+      "alt": "Participant assis devant un fond violet",
+      "image": "/vitrine/albums/infire/2025/infire-2025-10.webp",
+      "miniature": "/vitrine/albums/infire/2025/infire-2025-10-mini.webp",
+      "source_originale": "20251011_080500.heic"
+    }
+  ]
+}
