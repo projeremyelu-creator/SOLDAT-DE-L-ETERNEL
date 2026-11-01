@@ -20,12 +20,13 @@ function EventBanner(){
  useEffect(()=>{const id=setInterval(()=>setState({infire:infireState(),tpa:tpaState()}),1000);return()=>clearInterval(id)},[]);
  const infire=state.infire;
  const tpa=state.tpa;
+ if(infire.phase==='finished'&&tpa.phase==='hidden')return <div className="event-bar-inner finished"><a href="/programmes#agenda"><strong>SDE <span>PROGRAMMES</span></strong><span className="event-bar-date">Retrouvez nos prochains rendez-vous et formations</span></a><a className="event-bar-action" href="/programmes#agenda">Consulter l’agenda <span aria-hidden="true">↗</span></a></div>;
  if(infire.phase==='finished'&&tpa.phase!=='hidden'){
   const upcoming=tpa.phase==='upcoming';
   return <div className={'event-bar-inner '+(upcoming?'upcoming':'ongoing')}>
-   <a href="/programmes#agenda"><span className="event-live-dot" aria-hidden="true"/><strong>TPA <span>2026</span></strong><span className="event-bar-date">Traversée Prophétique Annuelle · Vendredi 18 décembre · 20h00 · Google Meet</span></a>
+   <a href="/programmes#tpa-2026"><span className="event-live-dot" aria-hidden="true"/><strong>TPA <span>2026</span></strong><span className="event-bar-date">Traversée Prophétique Annuelle · Vendredi 18 décembre · 20h00 · Google Meet</span></a>
    {upcoming&&<div className="event-clock" aria-label="Temps restant avant la Traversée Prophétique Annuelle" aria-live="off">{[['days','j'],['hours','h'],['minutes','min'],['seconds','s']].map(([key,label])=><span key={key}><b>{String(tpa[key]).padStart(2,'0')}</b><small>{label}</small></span>)}</div>}
-   <a className="event-bar-action" href="/programmes#agenda">Découvrir la TPA <span aria-hidden="true">↗</span></a>
+   <a className="event-bar-action" href="/programmes#tpa-2026">Découvrir la TPA <span aria-hidden="true">↗</span></a>
   </div>;
  }
  const upcoming=infire.phase==='upcoming';

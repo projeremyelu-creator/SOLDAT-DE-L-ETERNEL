@@ -228,6 +228,9 @@
     if(now<finInFire)return;
     const tpaAVenir=now<finTpa;
     document.querySelectorAll(".infire-takeover").forEach(bandeau=>{
+      // Le bandeau événement est maintenant présent dès le HTML initial :
+      // ne pas le vider avant que React mette à jour le vrai décompte.
+      if(bandeau.querySelector(".event-bar-inner"))return;
       bandeau.setAttribute("aria-label",tpaAVenir?"Prochain événement : Traversée Prophétique Annuelle":"Programmes du mouvement SDE");
       const lien=bandeau.querySelector("a");
       if(!lien)return;
