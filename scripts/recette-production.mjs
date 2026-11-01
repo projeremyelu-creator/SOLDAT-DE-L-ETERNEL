@@ -12,6 +12,7 @@ export const CONTROLES = Object.freeze([
   {path:'/connexion',type:'html-prive'},
   {path:'/mon-espace',type:'redirection-membre'},
   {path:'/administration',type:'redirection-admin'},
+  {path:'/api/sante',type:'revision-worker'},
   {path:'/api/moi',type:'session-anonyme'},
   {path:'/api/notifications-status',type:'statut-admin-protege'},
   {path:'/vitrine/portail-direct.js',type:'script'},
@@ -76,6 +77,15 @@ function verifierReponse(origine,controle,reponse,corps) {
   }
   if(controle.type==='statut-admin-protege') {
     if(status!==403)erreur('Le statut des notifications doit être réservé au propriétaire');
+    return;
+  }
+  if(controle.type==='revision-worker'){
+    if(status!==200||!type.includes('application/json'))erreur('Diagnostic de révision Worker indisponible');
+    let data;try{data=JSON.parse(corps)}catch{erreur('Diagnostic Worker non JSON')}
+    const rev=String(data?.assetRevision||'');
+    if(!/^[a-f0-9]{12}$/i.test(rev))erreur('Révision active du Worker non publiée');
+    const expected=String(process.env.SDE_EXPECTED_REV||'').replace(/[^a-f0-9]/gi,'').slice(0,12);
+    if(expected&&rev!==expected)erreur('Worker en production sur une autre révision ('+rev+' au lieu de '+expected+')');
     return;
   }
   if(controle.type==='session-anonyme') {
