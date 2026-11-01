@@ -77,6 +77,14 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
         officiel.remove();
         copie.querySelector("#res-compteur").textContent="6 ressources";
         assert.equal(normalize(copie.textContent),normalize(a.textContent),name+"/"+id);
+      }else if(name==="programmes"&&id==="programmes"){
+        // La prose d'origine est préservée ; seul le CTA TPA est ajouté.
+        const preserved=b.cloneNode(true);
+        const signup=preserved.querySelector(".sde-tpa-inscription");
+        assert.ok(signup,"Le CTA TPA doit figurer sur la fiche du programme");
+        assert.match(signup.getAttribute("href"),/^\/contact\?objet=/);
+        signup.remove();
+        assert.equal(normalize(preserved.textContent),normalize(a.textContent),name+"/"+id);
       }else if(name==="projets"&&id==="projets"){
         // Les textes d'origine sont inchangés ; seuls deux CTA de navigation
         // explicites ont été ajoutés aux cartes IN FIRE et Médiathèque.
