@@ -48,3 +48,26 @@ body.sde-unifie .sde-versets-piste{
 @media(prefers-reduced-motion:reduce){
   body.sde-unifie .sde-versets-fenetre{overflow-x:auto!important}
 }
+
+/* Accueil : réserver exactement la hauteur du bandeau avant l'exécution du script,
+   sans figer le contenu ni désactiver la fonction pause/reprise. */
+body.sde-accueil-maquette .sde-versets-slot,
+body.sde-accueil-maquette .sde-versets {
+  height:48px;
+  min-height:48px;
+  max-height:48px;
+  box-sizing:border-box;
+}
+body.sde-accueil-maquette .sde-versets-slot {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  padding:0 16px;
+  color:#f4ecd8;
+  background:linear-gradient(90deg,#2f3b25,#25301e);
+  border-bottom:2px solid #b8923a;
+  font:600 .9rem/1.5 "Atkinson Hyperlegible",system-ui,sans-serif;
+}
