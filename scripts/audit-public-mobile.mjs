@@ -237,7 +237,12 @@ try{
    if(c.name==='connexion-390'){
     try{
      const tpa=page.locator('#sde-event-root a[href="/programmes#tpa-2026"]');
-     if(await tpa.count()<1)issue(c.name,'bannière TPA 2026 absente sur la connexion',true);
+     if(await tpa.count()<1){
+      const detail=await page.evaluate(()=>({bodyClass:document.body.className,
+       banner:document.getElementById('sde-event-root')?.outerHTML.slice(0,850)||'élément absent',
+       scriptReact:!!document.querySelector('script[src*="sde-experience.js"]')}));
+      issue(c.name,'bannière TPA 2026 absente sur la connexion : '+JSON.stringify(detail).slice(0,950),true);
+     }
      const member=page.locator('[data-access-target="/mon-espace"]');
      const admin=page.locator('[data-access-target="/administration"]');
      if(await member.getAttribute('aria-pressed')!=='true'||await admin.getAttribute('aria-pressed')!=='false')
