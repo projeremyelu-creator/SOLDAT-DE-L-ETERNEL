@@ -297,7 +297,7 @@ try{
    if(c.name==='transparence-390'){
     if(await page.locator('a[href="/confidentialite"]').count()<1)
      issue(c.name,'lien direct vers la confidentialité absent',true);
-    if(await page.getByRole('heading',{name:'Bilans trimestriels'}).count()!==1)
+    if(await page.getByRole('heading',{name:'Bilans trimestriels',exact:true}).count()!==1)
      issue(c.name,'rubrique des bilans trimestriels absente',true);
     report.notes.push({test:'transparence-sans-faux-montants',heading:true});
    }
