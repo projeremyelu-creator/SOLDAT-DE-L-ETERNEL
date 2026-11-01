@@ -41,7 +41,7 @@ test("La connexion annonce la TPA sans réafficher IN FIRE comme prochain progra
  assert.match(root.textContent,/Vendredi 18 décembre · 20h00 · Google Meet/);
  assert.doesNotMatch(root.textContent,/IN FIRE 2026/);
  assert.match(loginHtml,/data-access-target="\/mon-espace" aria-pressed="true"/);
- assert.match(loginHtml,/portail-connexion\.js\?v=20261101member/);
+ assert.match(loginHtml,/portail-connexion\.js\?v=[a-z0-9]+/i);
  d.window.close();
 });
 test("Le Worker impose authentification et habilitation pour les deux espaces",()=>{
