@@ -1530,10 +1530,18 @@ export default {
         // sous une URL neuve. Évite le mélange des menus/feuilles CSS en prod.
         if (m[1].toLowerCase() !== ASSET_REVISION)
           return new Response("Révision non publiée.", {status:404,headers:{"cache-control":"no-store","x-content-type-options":"nosniff"}});
-        const r = await env.ASSETS.fetch(new Request(new URL(m[2], u.origin), req));
+        // Servir le fichier réellement déployé sous /_v/<revision>/ ; ne pas
+        // demander à ASSETS de résoudre un chemin différent, dont l'alias
+        // virtuel n'est pas fiable sur les domaines Cloudflare personnalisés.
+        const r = await env.ASSETS.fetch(req);
+        const type=(r.headers.get("content-type")||"").toLowerCase();
+        const attendu=m[2].endsWith(".js")?/javascript/:/text\/css/;
+        if(!r.ok||!attendu.test(type)){
+          await r.body?.cancel();
+          return new Response("Ressource versionnée indisponible.",{status:404,headers:{"cache-control":"no-store","x-content-type-options":"nosniff"}});
+        }
         const n = new Response(r.body, r);
-        if (r.ok) n.headers.set("cache-control", "public, max-age=31536000, immutable");
-        else n.headers.set("cache-control", "no-store");
+        n.headers.set("cache-control", "public, max-age=31536000, immutable");
         n.headers.set("x-content-type-options", "nosniff");
         return n;
       }
