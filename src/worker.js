@@ -1536,11 +1536,22 @@ export default {
         const r = await env.ASSETS.fetch(req);
         const type=(r.headers.get("content-type")||"").toLowerCase();
         const attendu=m[2].endsWith(".js")?/javascript/:/text\/css/;
+        let actif=r;
         if(!r.ok||!attendu.test(type)){
           await r.body?.cancel();
-          return new Response("Ressource versionnée indisponible.",{status:404,headers:{"cache-control":"no-store","x-content-type-options":"nosniff"}});
+          // Certaines publications Cloudflare propagent le Worker avant le
+          // manifeste de ses copies /_v/. Le chemin canonique, compilé dans
+          // le MÊME déploiement, est le repli exact pour cette révision active.
+          // Le contrôle de la révision en amont interdit de servir l'ancien
+          // JavaScript sous une nouvelle URL immutable.
+          try{actif=await env.ASSETS.fetch(new Request(new URL(m[2],u.origin),req));}
+          catch{actif=null;}
         }
-        const n = new Response(r.body, r);
+        if(!actif?.ok||!attendu.test((actif.headers.get("content-type")||"").toLowerCase())){
+          await actif?.body?.cancel();
+          return new Response("Ressource versionnée indisponible.",{status:404,headers:{"cache-control":"no-store","x-content-type-options":"nosniff","x-sde-asset-revision":ASSET_REVISION}});
+        }
+        const n = new Response(actif.body, actif);
         n.headers.set("cache-control", "public, max-age=31536000, immutable");
         n.headers.set("x-content-type-options", "nosniff");
         return n;
@@ -1743,7 +1754,7 @@ async function traiter(req, env, ctx) {
       return r;
     }
     if (!p.startsWith("/api/")) return env.ASSETS.fetch(req);
-    if (p === "/api/sante") return json({ ok: true, version: "2.0.0", ts: Date.now() });
+    if (p === "/api/sante") return json({ ok: true, version: "2.0.0", assetRevision:ASSET_REVISION, ts: Date.now() });
     if (req.method !== "GET") {
       const origine = req.headers.get("origin");
       if (origine && origine !== url.origin) return erreur("refuse", "Origine refusée.", 403);
