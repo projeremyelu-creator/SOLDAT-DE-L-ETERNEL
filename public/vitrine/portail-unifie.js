@@ -131,6 +131,8 @@
       const key=a.getAttribute("href").slice(2);
       if(anchors[key])a.href=anchors[key];
     }
+    // Page détaillée accessible depuis tous les formulaires et pieds de page publics.
+    for(const a of document.querySelectorAll('a[href="/contact#confidentialite"]'))a.href="/confidentialite";
     // Aucun lien public ne quitte le domaine pour rejoindre les espaces sécurisés.
     for(const a of document.querySelectorAll('a[href*="app.mouvement-sde.org"]')){
       let old;try{old=new URL(a.href)}catch(_){continue}
