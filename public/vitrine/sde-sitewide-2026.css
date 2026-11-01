@@ -1236,3 +1236,35 @@ body.sde-unifie .sde-hero-cta:hover{background:#f3da9a;color:#0b1530}
   body.sde-unifie .sde-hero-cta,body.sde-unifie .sde-archives,
   body.sde-unifie #site-menu{animation:none!important;transition:none!important}
 }
+
+/* Accueil SDE : grille verticale stable sur grand écran.
+   Les titres et CTA ne déplacent plus les panneaux suivants lors du chargement
+   des typographies Google. Mobile et zoom conservent une hauteur automatique. */
+@media (min-width:1101px) {
+  html body.sde-accueil-maquette.sde-ivoire .iv-intro {
+    box-sizing:border-box;
+    height:260px;
+    min-height:260px;
+    grid-template-rows:40px 42px 52px 30px;
+    align-content:center;
+    row-gap:6px;
+    padding:48px 16px 28px;
+  }
+  html body.sde-accueil-maquette.sde-ivoire .iv-intro h2 {
+    line-height:40px;
+    margin:0;
+  }
+  html body.sde-accueil-maquette.sde-ivoire .iv-intro p {
+    line-height:42px;
+    margin:0;
+  }
+  html body.sde-accueil-maquette.sde-ivoire .iv-intro .iv-cta {
+    min-height:52px;
+    padding:0 24px;
+  }
+  html body.sde-accueil-maquette.sde-ivoire .iv-intro .iv-sub {
+    min-height:30px;
+    display:inline-flex;
+    align-items:center;
+  }
+}
