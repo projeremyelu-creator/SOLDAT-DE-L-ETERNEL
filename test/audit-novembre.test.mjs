@@ -31,3 +31,10 @@ test("Pages publiques : canonical et Open Graph", () => {
   }
   assert.match(lire("public/sitemap.xml"), /mouvement-sde\.org\/plus</);
 });
+
+test("Générateur de QR servi par le site, plus par un CDN", () => {
+  assert.ok(existsSync(new URL("../public/vitrine/vendor/qrcode-generator-1.4.4.js", import.meta.url)));
+  const i = lire("public/index.html");
+  assert.doesNotMatch(i, /jsdelivr/);
+  assert.match(i, /\/vitrine\/vendor\/qrcode-generator-1\.4\.4\.js/);
+});
