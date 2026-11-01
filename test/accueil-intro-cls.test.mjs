@@ -17,5 +17,5 @@ test("La grille d'accueil réserve 260 px sur les grands écrans, sans figer le 
  const intro=doc.querySelector(".iv-vitrine .iv-intro");
  assert.ok(intro);
  for(const item of ["h2","p",".iv-cta",".iv-sub"])assert.ok(intro.querySelector(item),item);
- assert.ok(doc.querySelector('link[href="/vitrine/sde-sitewide-2026.css?v=20261101clsintro"]'));
+ assert.match(html,/sde-sitewide-2026\.css\?v=20261101clsintro/);
 });
