@@ -169,15 +169,25 @@
         const target=$("#if-prog-l");
         if(target&&items.length){target.innerHTML=items.map(x=>"<li>"+escape(x.replace(/^[-•·]\s*/,""))+"</li>").join("");$("#if-prog").hidden=false;}
       }
-      const upcoming=all.filter(e=>e.id!=="infire-2026").slice(0,8);
+      // Ne jamais réinjecter des événements déjà passés dans les « prochains rendez-vous ».
+      // Conserver la carte éditoriale de la TPA, avec son affiche et ses détails.
+      const jourAbidjan=new Date().toISOString().slice(0,10);
+      const tpaOfficielle=document.getElementById("tpa-2026");
+      const upcoming=all.filter(e=>e&&e.id!=="infire-2026"
+        && !/Traversée Prophétique Annuelle|\bTPA\s*2026\b/i.test(String(e.titre||""))
+        && /^\d{4}-\d{2}-\d{2}$/.test(String(e.date||""))
+        && e.date>=jourAbidjan)
+        .sort((a,b)=>(a.date+String(a.heure||"")).localeCompare(b.date+String(b.heure||"")))
+        .slice(0,8);
       if(!upcoming.length || !list)return;
       const frMonths=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
       list.innerHTML=upcoming.map(event=>{
         const d=new Date(event.date+"T12:00:00Z");
         if(Number.isNaN(d.getTime()))return "";
         events.set(String(event.id),event);
-        return '<article class="programme rdv" data-type="'+escape(event.type||"")+'"><div class="quand"><span class="jour"><b>'+d.getUTCDate()+'</b><small>'+frMonths[d.getUTCMonth()]+'</small></span><span><span class="rythme">'+escape(event.type||"Rencontre")+'</span><br>'+escape(event.heure||"")+'</span></div><h3>'+escape(event.titre||"Rassemblement")+'</h3><p class="lieu">'+escape(event.lieu||"")+'</p><div class="rdv-actions"><a href="/vitrine/rejoindre#rejoindre">Je viens</a><button type="button" data-ics="'+escape(event.id)+'">Ajouter à mon agenda</button></div></article>';
+        return '<article class="programme rdv" data-type="'+escape(event.type||"")+'"><div class="quand"><span class="jour"><b>'+d.getUTCDate()+'</b><small>'+frMonths[d.getUTCMonth()]+'</small></span><span><span class="rythme">'+escape(event.type||"Rencontre")+'</span><br>'+escape(event.heure||"")+'</span></div><h3>'+escape(event.titre||"Rassemblement")+'</h3><p class="lieu">'+escape(event.lieu||"")+'</p><div class="rdv-actions"><a href="/contact#rejoindre">Je viens</a><button type="button" data-ics="'+escape(event.id)+'">Ajouter à mon agenda</button></div></article>';
       }).join("");
+      if(tpaOfficielle&&jourAbidjan<="2026-12-18")list.prepend(tpaOfficielle);
       filter();
     }).catch(()=>{});
     const form=$("#f-venue");
