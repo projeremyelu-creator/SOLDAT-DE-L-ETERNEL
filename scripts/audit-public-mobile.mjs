@@ -15,6 +15,9 @@ const cases=[
  {path:'/mouvement',name:'mouvement-390',width:390,height:844},
  {path:'/connexion',name:'connexion-390',width:390,height:844},
  {path:'/priere',name:'priere-anonyme-390',width:390,height:844},
+ {path:'/soutenir',name:'soutenir-390',width:390,height:844},
+ {path:'/transparence',name:'transparence-390',width:390,height:844},
+ {path:'/calendrier',name:'calendrier-390',width:390,height:844},
  {path:'/',name:'accueil-tablette',width:768,height:1024},
  {path:'/',name:'accueil-1024',width:1024,height:768},
  {path:'/',name:'accueil-desktop',width:1280,height:900},
@@ -277,6 +280,39 @@ try{
     const ref=poleReferences[c.name];
     if(!f||f.reference!==ref||!f.hasPrivacy||!f.hasName||!f.hasContact||!f.hasConsent||!f.hasFeedback||!f.imageAvailable)
      issue(c.name,'formulaire public pôle incomplet, référence erronée ou emblème indisponible : '+JSON.stringify(f),true);
+   }
+   // Vérifications des pages de contribution, sans aucun paiement ni POST réel.
+   if(c.name==='soutenir-390'){
+    const note=await page.locator('.hub-note').first().innerText();
+    const form=page.locator('form[data-sde-form]');
+    if(!note.includes('Paiement en ligne en préparation')||await form.count()!==1)
+     issue(c.name,'les modalités de contribution ou la demande de contact sont absentes',true);
+    if(await form.locator('[name="consentement"][required]').count()!==1
+       ||await form.locator('a[href="/confidentialite"]').count()!==1)
+     issue(c.name,'consentement ou confidentialité absent du formulaire de soutien',true);
+    if(await page.locator('[data-projet]').count()!==3)
+     issue(c.name,'trois collectes distinctes non accessibles',true);
+    report.notes.push({test:'soutien-sans-paiement',note:note.slice(0,110)});
+   }
+   if(c.name==='transparence-390'){
+    if(await page.locator('a[href="/confidentialite"]').count()<1)
+     issue(c.name,'lien direct vers la confidentialité absent',true);
+    if(await page.getByRole('heading',{name:'Bilans trimestriels',exact:true}).count()!==1)
+     issue(c.name,'rubrique des bilans trimestriels absente',true);
+    report.notes.push({test:'transparence-sans-faux-montants',heading:true});
+   }
+   if(c.name==='calendrier-390'){
+    try{
+     const name=page.locator('#hub-calendar-title');
+     const before=await name.innerText();
+     await page.locator('#hub-calendar-next').click({timeout:5000});
+     const after=await name.innerText();
+     if(before===after||await page.locator('#hub-calendar .day').count()<28)
+      issue(c.name,'navigation du calendrier inactive',true);
+     if(await page.locator('a[href="/programmes#tpa-2026"]').count()<1)
+      issue(c.name,'lien officiel de la TPA absent',true);
+     report.notes.push({test:'calendrier-navigation',before,after});
+    }catch(e){issue(c.name,'calendrier indisponible : '+String(e.message||e).slice(0,190),true);}
    }
    // Le portail doit rester dans le flux de la page, sans bouger ni
    // rebondir indépendamment de l'en-tête pendant le défilement.

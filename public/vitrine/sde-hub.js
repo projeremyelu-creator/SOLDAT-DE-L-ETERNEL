@@ -32,6 +32,18 @@
   map.querySelectorAll('[data-country]').forEach(el=>{el.addEventListener('click',()=>choose(el.dataset.country));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose(el.dataset.country)}})});
   document.querySelectorAll('[data-country-choice]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-country-choice]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));choose(b.dataset.countryChoice)}));
  }
+ // Les intitulés du CMS sont échappés et les liens de calendrier sont validés
+ // avant toute insertion dans un attribut HTML (pas de javascript:, data: ni HTML injecté).
+ const lienCalendrier=valeur=>{
+  const brut=typeof valeur==='string'?valeur.trim():'';
+  if(!brut||/[\u0000-\u001f\u007f"'<>]/.test(brut))return '/programmes';
+  try{
+   const url=new URL(brut,location.origin);
+   if(!['https:','http:'].includes(url.protocol)||url.username||url.password)return '/programmes';
+   if(url.origin===location.origin)return url.pathname+url.search+url.hash;
+   return url.protocol==='https:'?url.href:'/programmes';
+  }catch{return '/programmes'}
+ };
  const calendar=qs('#hub-calendar');
  if(calendar){
   const date=new Date(),month=new Date(Date.UTC(date.getUTCFullYear(),date.getUTCMonth(),1)),title=qs('#hub-calendar-title');
@@ -49,7 +61,7 @@
    for(let d=1;d<=days;d++){
     const key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
     const items=events.filter(e=>e.date===key);
-    html+='<div class="day"><strong>'+d+'</strong>'+items.map(e=>'<span class="event"><a href="'+(e.lien||'/programmes')+'">'+escape(e.titre||'Rencontre')+'</a></span>').join('')+'</div>';
+    html+='<div class="day"><strong>'+d+'</strong>'+items.map(e=>'<span class="event"><a href="'+escape(lienCalendrier(e.lien))+'" rel="noopener noreferrer">'+escape(e.titre||'Rencontre')+'</a></span>').join('')+'</div>';
    }calendar.innerHTML=html;
   };
   qs('#hub-calendar-prev')?.addEventListener('click',()=>{month.setUTCMonth(month.getUTCMonth()-1);draw()});
@@ -86,7 +98,8 @@
  }
  if(location.pathname==='/transparence'){
    fetch('/api/sde-bilans').then(r=>r.json()).then(d=>{
-     const records=d.rapports||[];if(!records.length)return;
+     const records=Array.isArray(d.rapports)?d.rapports:[];if(!records.length)return;
+     const annonceAttente=qs("[data-sde-bilan-attente]");if(annonceAttente)annonceAttente.remove();
      const section=document.createElement('section');section.className='hub-section';
      const title=document.createElement('h2');title.textContent='Bilans trimestriels publiés';section.append(title);
      const wrap=document.createElement('div');wrap.className='hub-results';
