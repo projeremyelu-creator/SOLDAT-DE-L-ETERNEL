@@ -3,6 +3,7 @@
  const qs=(s)=>document.querySelector(s);
  const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const status=(el,txt,err=false)=>{if(!el)return;el.textContent=txt;el.dataset.error=String(err);};
+ for(const a of document.querySelectorAll('a[href="/contact#confidentialite"]'))a.href="/confidentialite";
  const form=qs('[data-sde-form]');
  if(form)form.addEventListener('submit',async e=>{
   e.preventDefault();const out=form.querySelector('.hub-message'),button=form.querySelector('button[type=submit]');
