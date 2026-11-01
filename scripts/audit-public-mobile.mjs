@@ -144,6 +144,7 @@ try{
        hasFeedback:!!f.querySelector('.sde-form-feedback'),
        imageAvailable:!![...document.querySelectorAll('img.sde-pole-img')].find(img=>img.complete&&img.naturalWidth>0)
       }:null;})(),
+     heroIntroHeight:document.querySelector(".iv-intro")?Math.round(document.querySelector(".iv-intro").getBoundingClientRect().height):null,
      heading:document.querySelector('h1')?.textContent?.trim().slice(0,95)||'',
      loadMs:Math.round(performance.getEntriesByType('navigation')[0]?.duration||0),
      // Mesures de laboratoire Chromium : indicatives, non assimilables aux données utilisateurs.
@@ -261,6 +262,8 @@ try{
      issue(c.name,'vérification de stabilité indisponible : '+String(error.message||error).slice(0,240),true);
     }
    }
+   if(c.path==='/'&&c.width>=1101&&row.heroIntroHeight!==260)
+    issue(c.name,'hauteur du bloc accueil instable : '+row.heroIntroHeight+' px au lieu de 260 px',true);
    if(row.status!==200)issue(c.name,'HTTP '+row.status,true);
    if(row.overflowX>16)issue(c.name,'débordement horizontal de '+row.overflowX+' px',true);
    if(row.labMetrics?.cls>0.10)
