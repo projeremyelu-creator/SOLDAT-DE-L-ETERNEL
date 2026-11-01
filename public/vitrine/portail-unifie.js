@@ -280,6 +280,11 @@
       }
     }
   }
+    // L'événement de décembre est archivé automatiquement à l'issue de sa date.
+  function masquerAncienneTPA(){
+    if(Date.now()>=Date.parse("2026-12-19T00:00:00Z"))
+      document.querySelector(".iv-band.sde-tpa-hero")?.setAttribute("hidden","");
+  }
   function navigationAccessible(){
     const menu=document.getElementById("site-menu");
     const bouton=document.querySelector(".site-header .site-burger");
@@ -311,7 +316,7 @@
     });
     synchroniser();
   }
-  const commencer=()=>{actualiserEvenements();navigationAccessible();};
+  const commencer=()=>{actualiserEvenements();masquerAncienneTPA();navigationAccessible();};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",commencer,{once:true});
   else commencer();
 })();
