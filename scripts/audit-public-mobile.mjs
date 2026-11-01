@@ -20,8 +20,23 @@ const cases=[
  {path:'/programmes',name:'programmes-desktop',width:1280,height:900},
  {path:'/mouvement',name:'mouvement-desktop',width:1280,height:900},
  {path:'/',name:'accueil-1550',width:1550,height:900},
- {path:'/',name:'accueil-1600',width:1600,height:900}
+ {path:'/',name:'accueil-1600',width:1600,height:900},
+ {path:'/rubriques',name:'rubriques-390',width:390,height:844},
+ {path:'/plus',name:'plus-390',width:390,height:844},
+ {path:'/contact',name:'contact-390',width:390,height:844},
+ {path:'/pole-reveil',name:'pole-reveil-390',width:390,height:844},
+ {path:'/pole-social',name:'pole-social-390',width:390,height:844},
+ {path:'/pole-logistique',name:'pole-logistique-390',width:390,height:844},
+ {path:'/pole-medias',name:'pole-medias-390',width:390,height:844},
+ {path:'/pole-formation',name:'pole-formation-390',width:390,height:844}
 ];
+const poleReferences={
+ 'pole-reveil-390':'Réveil, évangélisation & missions',
+ 'pole-social-390':'Impact social & humanitaire',
+ 'pole-logistique-390':'Logistique & organisation',
+ 'pole-medias-390':'Communication, médias & digital',
+ 'pole-formation-390':'Formation & développement intégral'
+};
 const report={date:new Date().toISOString(),domain,checks:[],issues:[],notes:[]};
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
 
@@ -120,6 +135,15 @@ try{
      brokenPoleImages:poleLinks.filter(a=>{let i=a.querySelector('img');return !i||!i.complete||i.naturalWidth===0}).length,
      tpaPosters:posters.length,
      tpaPosterLoaded:posters.every(i=>i.complete&&i.naturalWidth>0),
+     publicPoleForm:(()=>{const f=document.querySelector('form[data-pole-engager]');return f?{
+       reference:f.dataset.poleReference||'',
+       hasPrivacy:!!f.querySelector('a[href="/confidentialite"]'),
+       hasName:!!f.querySelector('input[name="nom"]'),
+       hasContact:!!f.querySelector('input[name="contact"]'),
+       hasConsent:!!f.querySelector('input[name="accord"][required]'),
+       hasFeedback:!!f.querySelector('.sde-form-feedback'),
+       imageAvailable:!![...document.querySelectorAll('img.sde-pole-img')].find(img=>img.complete&&img.naturalWidth>0)
+      }:null;})(),
      heading:document.querySelector('h1')?.textContent?.trim().slice(0,95)||'',
      loadMs:Math.round(performance.getEntriesByType('navigation')[0]?.duration||0),
      // Mesures de laboratoire Chromium : indicatives, non assimilables aux données utilisateurs.
@@ -163,6 +187,36 @@ try{
       report.notes.push({test:'theme-mobile',before:themeBefore,after:themeAfter});
      }
     }catch(e){issue(c.name,'interaction mobile en échec : '+String(e.message||e).slice(0,240),true);}
+   }
+   // Vérification réelle du menu compact sur écran intermédiaire et de l'accès aux rubriques.
+   if(c.name==='accueil-1024'){
+    try{
+     const burger=page.locator('.site-header .site-burger');
+     await burger.click({timeout:4000});
+     const beforeResize=await burger.getAttribute('aria-expanded');
+     await page.setViewportSize({width:1280,height:900});
+     await page.waitForTimeout(150);
+     const afterResize=await burger.getAttribute('aria-expanded');
+     const rubriques=page.locator('.site-header .site-menu a[href="/rubriques"]');
+     if(beforeResize!=='true'||afterResize!=='true')
+      issue(c.name,'le menu compact se referme entre 1024 et 1280 px',true);
+     if(await rubriques.count()!==1)issue(c.name,'entrée Toutes les rubriques absente',true);
+     else{
+      await rubriques.click({timeout:4000});
+      await page.waitForURL(url=>url.pathname==='/rubriques',{timeout:10000});
+      report.notes.push({test:'rubriques-menu-compact',beforeResize,afterResize,finalUrl:page.url()});
+     }
+    }catch(error){
+     issue(c.name,'navigation Rubriques sur ordinateur compact indisponible : '+String(error.message||error).slice(0,300),true);
+    }
+   }
+   if(c.name==='plus-390'&&new URL(page.url()).pathname!=='/rubriques')
+    issue(c.name,'/plus doit rediriger vers /rubriques',true);
+   if(Object.hasOwn(poleReferences,c.name)){
+    const f=row.publicPoleForm;
+    const ref=poleReferences[c.name];
+    if(!f||f.reference!==ref||!f.hasPrivacy||!f.hasName||!f.hasContact||!f.hasConsent||!f.hasFeedback||!f.imageAvailable)
+     issue(c.name,'formulaire public pôle incomplet, référence erronée ou emblème indisponible : '+JSON.stringify(f),true);
    }
    // Le portail doit rester dans le flux de la page, sans bouger ni
    // rebondir indépendamment de l'en-tête pendant le défilement.
