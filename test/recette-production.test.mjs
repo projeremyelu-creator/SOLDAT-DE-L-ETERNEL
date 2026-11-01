@@ -14,7 +14,7 @@ function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=fals
       return html('<main>Le Mouvement SDE</main>');
     }
     if(CONTROLES.some(c=>c.path===p&&c.type==='page-publique'))return html(siteObsolete?'<main>Page SDE ancienne</main>':'<main>Page SDE</main><link rel="stylesheet" href="/vitrine/sde-sitewide-2026.css?v=20261030global">');
-    if(p==='/connexion')return html('<form>Connexion mot de passe</form>',{'cache-control':'no-store','x-robots-tag':'noindex, nofollow'});
+    if(p==='/connexion')return html('<form>Connexion mot de passe</form><aside id="sde-event-root"><a href="/programmes#tpa-2026">TPA 2026</a></aside>',{'cache-control':'no-store','x-robots-tag':'noindex, nofollow'});
     if(['/mon-espace','/administration'].includes(p))return pagePriveExposee
       ?html('Contenu confidentiel')
       :new Response(null,{status:302,headers:{location:(lienExterne?'https://autre-site.example':u.origin)+'/connexion?retour='+encodeURIComponent(p)}});
