@@ -1544,6 +1544,9 @@ async function traiter(req, env, ctx) {
     const appHost = url.hostname === "app.mouvement-sde.org";
     if (url.hostname === "mouvement-sde.org" || appHost) {
       // Routage unifié : pages réelles, un guichet de connexion, deux espaces protégés.
+      // Compatibilité des anciens liens vers le bilan annuel, sans doubler les pages indexables.
+      if (["/formulaire/", "/bilan-2026", "/bilan-2026-projets-2027", "/sondage-2027"].includes(p) && (req.method === "GET" || req.method === "HEAD"))
+        return new Response(null, {status:301, headers:{location:url.origin+"/formulaire", "cache-control":"public, max-age=300"}});
       const pagesPubliques = {
         "/formulaire": "/vitrine/formulaire.html",
         "/boutique": "/vitrine/boutique.html",
