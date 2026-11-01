@@ -98,6 +98,7 @@ function verifierReponse(origine,controle,reponse,corps) {
   if(controle.type==='html-prive'){
     if(!type.includes('text/html'))erreur('Page connexion non HTML');
     if(!/connexion|mot de passe/i.test(corps))erreur('Formulaire de connexion introuvable');
+    if(!corps.includes('id="sde-event-root"')||!corps.includes('href="/programmes#tpa-2026"'))erreur('Annonce TPA 2026 absente de la page de connexion');
     if(!/no-store/.test(reponse.headers.get('cache-control')||''))erreur('Formulaire de connexion mis en cache');
     if(!/noindex/i.test(reponse.headers.get('x-robots-tag')||''))erreur('Formulaire de connexion indexable');
   }
