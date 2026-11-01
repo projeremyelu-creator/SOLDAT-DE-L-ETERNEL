@@ -189,6 +189,25 @@ try{
      }
     }catch(e){issue(c.name,'interaction mobile en échec : '+String(e.message||e).slice(0,240),true);}
    }
+   // Parcours d'authentification en lecture seule : sélection du bon espace,
+   // sans identifier d'utilisateur ni soumettre aucun formulaire.
+   if(c.name==='connexion-390'){
+    try{
+     const tpa=page.locator('#sde-event-root a[href="/programmes#tpa-2026"]');
+     if(await tpa.count()<1)issue(c.name,'bannière TPA 2026 absente sur la connexion',true);
+     const member=page.locator('[data-access-target="/mon-espace"]');
+     const admin=page.locator('[data-access-target="/administration"]');
+     if(await member.getAttribute('aria-pressed')!=='true'||await admin.getAttribute('aria-pressed')!=='false')
+      issue(c.name,'entrée membre non présélectionnée',true);
+     await admin.click({timeout:5000});
+     if(new URL(page.url()).searchParams.get('retour')!=='/administration'||await admin.getAttribute('aria-pressed')!=='true')
+      issue(c.name,'lien d’accès administrateur ne sélectionne pas le bon retour',true);
+     await member.click({timeout:5000});
+     if(new URL(page.url()).searchParams.get('retour')!=='/mon-espace'||await member.getAttribute('aria-pressed')!=='true')
+      issue(c.name,'lien d’accès membre ne sélectionne pas le bon retour',true);
+     report.notes.push({test:'connexion-choix-membre-admin',url:page.url(),tpa:await tpa.count()});
+    }catch(e){issue(c.name,'sélection des deux espaces indisponible : '+String(e.message||e).slice(0,200),true);}
+   }
    // Vérification réelle du menu compact sur écran intermédiaire et de l'accès aux rubriques.
    if(c.name==='accueil-1024'){
     try{
@@ -278,6 +297,20 @@ try{
   } catch(error){
    issue(c.name,String(error.message||error).slice(0,500),true);
   } finally{await ctx.close();}
+ }
+ // Navigation privée anonyme : uniquement des requêtes GET sans cookie.
+ // Chaque entrée doit rediriger vers le formulaire sécurisé, jamais livrer
+ // une application privée ou une donnée personnelle à un visiteur anonyme.
+ for(const [path,retour] of [['/portail','/portail'],['/mon-espace','/mon-espace'],['/administration','/administration']]){
+  try{
+   const res=await fetch(domain+path,{redirect:'manual',signal:AbortSignal.timeout(12000)});
+   const loc=res.headers.get('location')||'';
+   const parsed=new URL(loc,domain);
+   const valid=res.status===302&&parsed.origin===domain&&parsed.pathname==='/connexion'&&parsed.searchParams.get('retour')===retour;
+   report.notes.push({test:'acces-prive-anonyme',path,status:res.status,location:loc,redirectValid:valid});
+   if(!valid)issue(path,'redirection anonyme non conforme : HTTP '+res.status+' vers '+loc.slice(0,160),true);
+   if(!/no-store/.test(res.headers.get('cache-control')||''))issue(path,'redirection privée mise en cache',true);
+  }catch(e){issue(path,'protection de l’accès privé indisponible : '+String(e.message||e).slice(0,180),true)}
  }
  // Requêtes de vérification en lecture seule : jamais de connexion ou d'écriture.
  for(const path of ['/api/moi','/api/notifications-status','/api/vapid-public-key']){
