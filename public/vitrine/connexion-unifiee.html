@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="/vitrine/portail-unifie.css?v=20261028premium">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;600;700&family=Saira+Condensed:wght@600;700;800&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
-<script defer src="/vitrine/portail-unifie.js?v=20261030p"></script><script defer src="/vitrine/portail-connexion.js?v=20261028reference"></script><script defer src="/vitrine/pwa-public.js?v=20261027b"></script>
+<script defer src="/vitrine/portail-unifie.js?v=20261030p"></script><script defer src="/vitrine/portail-connexion.js?v=20261101member"></script><script defer src="/vitrine/pwa-public.js?v=20261027b"></script>
 <style>
 .access-main{background:linear-gradient(115deg,#11182a,#261c34);min-height:calc(100vh - 76px);padding:65px 20px 90px;color:#fff}
 .access-shell{width:min(530px,100%);margin:auto}
@@ -47,7 +47,11 @@
 <script defer src="/vitrine/sde-splash.js?v=20261030a"></script>
 
 <a class="skip" href="#connexion-principale">Aller aux formulaires</a>
-<aside class="infire-takeover" id="sde-event-root" aria-label="IN FIRE 2026"><a href="/programmes#infire"><strong>IN FIRE 2026</strong> · 31 octobre · 08:30 · Abidjan <span>Découvrir la conférence →</span></a></aside>
+<aside class="infire-takeover" id="sde-event-root" aria-label="Prochain programme : TPA 2026"><div class="event-bar-inner upcoming">
+<a href="/programmes#tpa-2026"><span class="event-live-dot" aria-hidden="true"></span><strong>TPA <span>2026</span></strong><span class="event-bar-date">Traversée Prophétique Annuelle · Vendredi 18 décembre · 20h00 · Google Meet</span></a>
+<div class="event-clock" aria-label="Décompte chargé avec la page" aria-live="off"><span><b>--</b><small>j</small></span><span><b>--</b><small>h</small></span><span><b>--</b><small>min</small></span><span><b>--</b><small>s</small></span></div>
+<a class="event-bar-action" href="/programmes#tpa-2026">Découvrir la TPA <span aria-hidden="true">↗</span></a>
+</div></aside>
 <header class="site-header"><div class="site-header-inner">
 <a class="site-brand" href="/" aria-label="Accueil SDE"><img class="site-logo" src="/vitrine/logo-96.webp" alt="" width="46" height="46"><span><b>SDE - Mouvement</b><small>Soldats de l’Éternel</small></span></a>
 <div class="site-access-top" aria-label="Accès sécurisé"><a class="site-portal-cta" href="/portail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 10h12v11H6zM8 10V7a4 4 0 0 1 8 0v3"/></svg> Mon Portail S.D.E <span aria-hidden="true">→</span></a></div><button class="site-burger" aria-label="Ouvrir la navigation" aria-controls="site-menu" aria-expanded="false" type="button"><span></span><span></span><span></span></button>
@@ -56,7 +60,7 @@
 <main class="access-main" id="connexion-principale"><div class="ref-login-art" aria-hidden="true"><div class="ref-crowd"><img src="/vitrine/maquettes/reference-portail.jpg" alt=""></div><div class="ref-soldiers"><img src="/vitrine/maquettes/reference-portail.jpg" alt=""></div></div>
 <div class="access-shell"><aside class="access-identity"><span class="ref-gold-brand" role="img" aria-label="S.D.E Administration"></span><p class="access-mission">Un même appel.<br><em>Une même famille.</em></p><p>Réveiller · Restaurer · Former<br>Équiper · Envoyer</p><span class="access-seal">Le Réveil Spirituel des Nations</span></aside><section class="access-content"><p class="eyebrow">Les accès privés du mouvement</p><h1>Un compte. Deux espaces.</h1>
 <p>Connectez-vous à votre espace personnel. Les responsables habilités peuvent également accéder à l'administration avec leur compte existant.</p>
-<div class="access-card"><div class="ref-access-targets" role="group" aria-label="Choisir mon espace"><button type="button" data-access-target="/administration" aria-pressed="true">Connexion Administration</button><button type="button" data-access-target="/mon-espace" aria-pressed="false">Accès Membre</button></div><div class="access-tabs" role="tablist" aria-label="Accès au compte">
+<div class="access-card"><div class="ref-access-targets" role="group" aria-label="Choisir mon espace"><button type="button" data-access-target="/administration" aria-pressed="false">Connexion Administration</button><button type="button" data-access-target="/mon-espace" aria-pressed="true">Accès Membre</button></div><div class="access-tabs" role="tablist" aria-label="Accès au compte">
 <button id="tab-connexion" role="tab" type="button" data-mode="connexion" aria-controls="panel-connexion" aria-selected="true">Connexion</button>
 <button id="tab-inscription" role="tab" type="button" data-mode="inscription" aria-controls="panel-inscription" aria-selected="false">Créer un compte</button>
 <button id="tab-activation" role="tab" type="button" data-mode="activation" aria-controls="panel-activation" aria-selected="false">J'ai un code</button>
