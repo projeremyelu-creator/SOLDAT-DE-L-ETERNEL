@@ -18,6 +18,7 @@ function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=fals
     if(['/mon-espace','/administration'].includes(p))return pagePriveExposee
       ?html('Contenu confidentiel')
       :new Response(null,{status:302,headers:{location:(lienExterne?'https://autre-site.example':u.origin)+'/connexion?retour='+encodeURIComponent(p)}});
+    if(p==='/api/sante')return Response.json({ok:true,assetRevision:(process.env.SDE_EXPECTED_REV||'abcdef123456').slice(0,12)});
     if(p==='/api/moi')return Response.json({connecte:sessionExposee});
     if(p==='/api/notifications-status')return Response.json({erreur:'refuse'},{status:403});
     if(p==='/vitrine/infire-2026/chronogramme-officiel.pdf')return new Response('%PDF-1.7\n% Simulateur de document officiel',{headers:{'content-type':'application/pdf'}});
