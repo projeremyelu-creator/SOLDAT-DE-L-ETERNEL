@@ -238,3 +238,45 @@ html body.sde-unifie:not(.sde-tableau) .site-menu>.sde-menu-plus:hover{
  }
 }
 @media print{.sde-public-bottom-nav{display:none!important}}
+
+
+/* Galerie IN FIRE : même identité Impériale que l'ensemble du site. */
+body.sde-infire-album{background:#0b162c;color:#fff6e7}
+.sde-infire-album header{background:#0c172d;border-bottom-color:#d4b46a88}
+.sde-infire-album .brand{color:#edcf91}
+.sde-infire-album .hero{
+ background:radial-gradient(ellipse at 85% 10%,rgba(190,121,75,.2),transparent 50%),
+ linear-gradient(130deg,#0e1a32 0%,#203350 62%,#17233b 100%);
+ border-bottom:2px solid #caa65f;
+}
+.sde-infire-album .hero h1{
+ font-family:"Saira Condensed","Arial Narrow",system-ui,sans-serif;
+ letter-spacing:-.02em;
+}
+.sde-infire-album .item{
+ background:#192945;border-color:#c9aa6b50;
+ box-shadow:0 13px 32px rgba(0,0,0,.19);
+ transition:border-color .2s ease,transform .2s ease;
+}
+.sde-infire-album .tab:focus-visible,
+.sde-infire-album .item button:focus-visible,
+.sde-infire-album .close:focus-visible{
+ outline:3px solid #edcb80;outline-offset:3px;
+}
+.sde-infire-album .archive-note{
+ color:#e5d3b1;font-size:.88rem;line-height:1.5;
+ margin:0 0 20px;
+}
+@media(hover:hover) and (pointer:fine){
+ .sde-infire-album .item:hover{transform:translateY(-3px);border-color:#e3bb6d}
+}
+@media(max-width:560px){
+ .sde-infire-album .nav{padding:14px 16px;gap:10px}
+ .sde-infire-album .nav nav{flex-wrap:wrap;gap:10px;font-size:.84rem}
+ .sde-infire-album main{padding-inline:16px}
+ .sde-infire-album .tab{min-height:44px;padding:10px 14px}
+ .sde-infire-album .item img{height:auto;aspect-ratio:4/3;object-fit:cover}
+}
+@media(prefers-reduced-motion:reduce){
+ .sde-infire-album .item{transition:none!important;transform:none!important}
+}
