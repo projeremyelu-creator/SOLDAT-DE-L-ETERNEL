@@ -370,6 +370,7 @@
       nav.append(a);
     }
     document.body.append(nav);
+    document.body.classList.add("sde-has-bottom-nav");
   }
 
   const commencer=()=>{actualiserEvenements();masquerAncienneTPA();navigationAccessible();installerRaccourcisPublics();};
