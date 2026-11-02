@@ -40,6 +40,7 @@
     if(mode==="membre"&&!personnel.has(nom))return false;
     if(nom==="priere")return mode==="membre";
     if(nom==="centre-command")return mode==="direction"&&compte?.niveau>=1;
+    if(nom==="centre-membre")return mode==="membre";
     if(nom==="gestion")return mode==="direction"&&compte?.niveau>=1;
     if(["scanner","pilotage","annuaire","academy-direction"].includes(nom)&&compte?.niveau<1)return false;
     if(nom==="finance-direction"&&compte?.niveau<2)return false;
