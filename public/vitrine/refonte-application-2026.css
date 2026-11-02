@@ -1,0 +1,19 @@
+/* Refonte SDE OS — couche d'harmonisation de l'application privée native.
+   Aucune donnée, permission, route ni interaction n'est changée par ces règles. */
+:root[data-sde-palette="ivoire"]{--sde-premium-night:#11213a;--sde-premium-gold:#d9b869;--sde-premium-forest:#253c2e;--sde-premium-burgundy:#712b43}
+:root[data-sde-palette="ivoire"] body{font-synthesis:none}
+:root[data-sde-palette="ivoire"] .hdr{background:linear-gradient(110deg,#14223d,#203750)!important;border-bottom:2px solid #d9b869!important;color:#f9f4e6!important;box-shadow:0 5px 22px rgba(8,22,41,.18)!important}
+:root[data-sde-palette="ivoire"] .hdr :is(.brand-mark,.brand-sub,.sync-t){color:#f9f3df!important}
+:root[data-sde-palette="ivoire"] .hdr .brand-mark{color:#f7d78e!important}
+:root[data-sde-palette="ivoire"] .hdr .hdr-btn{background:rgba(255,255,255,.09)!important;color:#fff7e5!important;border:1px solid rgba(222,192,119,.44)!important;min-height:44px}
+:root[data-sde-palette="ivoire"] .hdr .hdr-btn:hover{background:rgba(255,255,255,.16)!important}
+:root[data-sde-palette="ivoire"] .nav{background:linear-gradient(165deg,#253e30,#17271f)!important;border-color:#ab9355!important}
+:root[data-sde-palette="ivoire"] .nav-btn.on{background:linear-gradient(110deg,rgba(215,181,103,.31),rgba(215,181,103,.08))!important;color:#fff6de!important}
+:root[data-sde-palette="ivoire"] :is(.card,.tile,.panel){border-radius:18px;box-shadow:0 10px 28px rgba(45,46,30,.055)}
+:root[data-sde-palette="ivoire"] :is(.btn,.btn-primary,.nav-btn,.hdr-btn,.tab){touch-action:manipulation}
+:root[data-sde-palette="ivoire"] :is(.btn,.btn-primary,.nav-btn,.hdr-btn,.tab,input,textarea,select):focus-visible{outline:3px solid #d9b869!important;outline-offset:3px}
+:root[data-sde-palette="ivoire"] .main{min-width:0}
+:root[data-sde-palette="ivoire"] :is(.card,.row,.tile){overflow-wrap:anywhere}
+@media(max-width:999px){:root[data-sde-palette="ivoire"] .nav{padding-bottom:max(6px,env(safe-area-inset-bottom))!important;box-shadow:0 -9px 27px rgba(11,26,18,.23)!important}:root[data-sde-palette="ivoire"] .nav-btn{min-height:56px;min-width:0}}
+@media(max-width:600px){:root[data-sde-palette="ivoire"] :is(input,textarea,select){font-size:16px}:root[data-sde-palette="ivoire"] .main{padding-bottom:max(78px,env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){:root[data-sde-palette="ivoire"] :is(.card,.nav-btn,.btn,.tile){animation:none!important;transition:none!important}}
