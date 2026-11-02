@@ -93,7 +93,7 @@
       btn.setAttribute("aria-label","Ouvrir la navigation");
     });
     addEventListener("resize",()=>{
-      if(innerWidth>1800&&menu.dataset.open==="true"){
+      if(innerWidth>900&&menu.dataset.open==="true"){
         menu.dataset.open="false";
         btn.setAttribute("aria-expanded","false");
         btn.setAttribute("aria-label","Ouvrir la navigation");
@@ -320,7 +320,59 @@
     });
     synchroniser();
   }
-  const commencer=()=>{actualiserEvenements();masquerAncienneTPA();navigationAccessible();};
+
+  // Parcours public : cinq raccourcis fixes sur téléphone, sans accès aux
+  // finances internes. « Finances » mène uniquement au soutien public.
+  function installerRaccourcisPublics(){
+    if(document.body.classList.contains("sde-tableau") ||
+       document.querySelector(".sde-public-bottom-nav"))return;
+    const menu=document.getElementById("site-menu");
+    if(menu&&!menu.querySelector(':scope > a[href="/rubriques"]')){
+      const plus=document.createElement("a");
+      plus.href="/rubriques";
+      plus.className="sde-menu-plus";
+      plus.textContent="Plus";
+      menu.append(plus);
+    }
+    if(document.querySelector(".sde-global-nav,.nav-mobile,.sde-bottom-nav"))return;
+    const links=[
+      {href:"/",label:"Accueil",slug:"accueil",path:"M3 10 12 3l9 7v11h-6v-7H9v7H3z"},
+      {href:"/contact#rejoindre",label:"Membres",slug:"membres",path:"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"},
+      {href:"/programmes#agenda",label:"Agenda",slug:"agenda",path:"M3 5h18v16H3zM7 3v4M17 3v4M3 10h18"},
+      {href:"/missions#soutenir",label:"Finances",slug:"finances",path:"M3 6h18v15H3zM3 10h18M7 16h4"},
+      {href:"/rubriques",label:"Plus",slug:"plus",path:"M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"}
+    ];
+    const active={"/":"accueil","/contact":"membres","/programmes":"agenda",
+      "/missions":"finances","/rubriques":"plus","/plus":"plus"}[location.pathname];
+    const nav=document.createElement("nav");
+    nav.className="sde-public-bottom-nav";
+    nav.setAttribute("aria-label","Navigation rapide SDE sur mobile");
+    for(const link of links){
+      const a=document.createElement("a");
+      a.href=link.href;
+      a.dataset.sdeMobileLink=link.slug;
+      if(link.slug===active)a.setAttribute("aria-current","page");
+      if(link.slug==="finances")a.title="Soutenir le mouvement — aucun compte financier privé";
+      const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+      svg.setAttribute("viewBox","0 0 24 24");
+      svg.setAttribute("fill","none");
+      svg.setAttribute("stroke","currentColor");
+      svg.setAttribute("stroke-width","1.8");
+      svg.setAttribute("stroke-linecap","round");
+      svg.setAttribute("stroke-linejoin","round");
+      svg.setAttribute("aria-hidden","true");
+      const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+      path.setAttribute("d",link.path);
+      svg.append(path);
+      const caption=document.createElement("span");
+      caption.textContent=link.label;
+      a.append(svg,caption);
+      nav.append(a);
+    }
+    document.body.append(nav);
+  }
+
+  const commencer=()=>{actualiserEvenements();masquerAncienneTPA();navigationAccessible();installerRaccourcisPublics();};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",commencer,{once:true});
   else commencer();
 })();
