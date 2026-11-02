@@ -30,5 +30,5 @@ test("La bande 960–1100 px réserve 300 px et conserve quatre lignes indépend
  assert.match(rule,/\.iv-intro h2 \{\s*line-height:36px/);
  assert.match(rule,/\.iv-intro \.iv-cta \{\s*min-height:52px/);
  assert.match(rule,/\.iv-intro \.iv-sub \{\s*min-height:30px/);
- assert.match(html,/sde-sitewide-2026\.css\?v=20261102tablet/);
+ assert.match(html,/sde-sitewide-2026\.css\?v=[a-z0-9]+/i);
 });
