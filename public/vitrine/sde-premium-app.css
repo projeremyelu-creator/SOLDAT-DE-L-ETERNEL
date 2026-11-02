@@ -94,3 +94,71 @@ body :is(input,textarea,select){max-width:100%;font-size:16px}
 @media(prefers-reduced-motion:reduce){
  body :is(.card,.tile,.row,.btn,.nav-btn){animation:none!important;transition:none!important}
 }
+
+
+/* FUSION 03 + 04 · continuité dans l'application métier SDE OS.
+   Sélecteurs opt-in : aucun effet sur les rôles, formulaires et données. */
+:root[data-sde-palette=ivoire]{
+ --sp-gold:#e4bc70;--gold:#ae8137;--gold-on-night:#f7db99;
+ --night:#27153f;--night-2:#37205a;--night-3:#51346a;
+ --bg:#f6f1f6;--surface:#fffdfa;--surface-2:#f2ebf6;
+ --line:#ded1df;--ink:#302642;--muted:#5f526b;
+}
+:root[data-sde-palette=ivoire] body{
+ background:radial-gradient(ellipse at 20% 0,rgba(103,58,151,.1),transparent 45%),#f6f1f6!important;
+}
+:root[data-sde-palette=ivoire] .hdr{
+ background:linear-gradient(110deg,#1c0d36,#3b1b5f 66%,#193d32)!important;
+ border-bottom:2px solid #e0ba70!important;
+}
+:root[data-sde-palette=ivoire] .nav{
+ background:linear-gradient(180deg,#30164c,#24113d 75%,#173e33)!important;
+ border-color:#d2ab66!important;
+}
+:root[data-sde-palette=ivoire] .nav .nav-btn.on{
+ background:rgba(227,187,112,.2)!important;
+ box-shadow:inset 3px 0 #f3d48e!important;
+}
+:root[data-sde-palette=ivoire] .card{
+ background:#fffdfb!important;border-color:#e1d3df!important;
+ box-shadow:0 12px 34px rgba(66,28,93,.085);
+}
+:root[data-sde-palette=ivoire] :is(.sec-title,.row-t,.stat strong){
+ color:#341d51!important;
+}
+:root[data-sde-palette=militaire] .hdr{
+ background:linear-gradient(110deg,#102d24,#205240 70%,#2b1843)!important;
+ border-bottom:2px solid #e1bd77!important;
+}
+:root[data-sde-palette=militaire] .nav{
+ background:linear-gradient(180deg,#0c2b22,#1b4637 80%,#29163a)!important;
+ border-color:#bfa16e!important;
+}
+:root[data-sde-palette=militaire] .nav .nav-btn.on{
+ background:rgba(228,188,112,.16)!important;
+ box-shadow:inset 3px 0 #e4bc70!important;
+}
+:root[data-sde-palette=militaire] .btn-primary,
+:root[data-sde-palette=ivoire] .btn-primary{
+ background:linear-gradient(135deg,#f3d88c,#c49b51)!important;
+ color:#241b1d!important;border-color:#e2be75!important;
+}
+:root[data-sde-palette] :is(.card,.tile,.stat){
+ border-radius:17px;
+}
+:root[data-sde-palette] :is(.btn,.btn-primary,.nav-btn,.hdr-btn):focus-visible{
+ outline:3px solid #ffdb87!important;outline-offset:2px!important;
+}
+@media(max-width:999px){
+ :root[data-sde-palette=ivoire] .nav,
+ :root[data-sde-palette=militaire] .nav{
+  border-top:2px solid #e0b66a!important;
+ }
+ :root[data-sde-palette=ivoire] .nav .nav-btn.on,
+ :root[data-sde-palette=militaire] .nav .nav-btn.on{
+  box-shadow:inset 0 3px #f3d48e!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ :root[data-sde-palette] :is(.card,.tile,.btn,.nav-btn){transition:none!important}
+}
