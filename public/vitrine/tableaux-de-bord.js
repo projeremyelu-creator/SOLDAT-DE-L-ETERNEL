@@ -57,7 +57,7 @@
     const selected=target?target.dataset.section:"accueil";
     for(const view of views)view.hidden=view.dataset.section!==selected;
     for(const link of document.querySelectorAll("a[data-view]")){
-      if(link.closest(".sde-dash-side")){
+      if(link.closest(".sde-dash-side")||link.closest(".sde-private-bottom-nav")){
         if(link.dataset.view===selected)link.setAttribute("aria-current","page");
         else link.removeAttribute("aria-current");
       }
@@ -76,6 +76,42 @@
     if(access==="admin")return compte?.niveau>=2;
     if(access==="proprietaire")return compte?.niveau>=3;
     return false;
+  }
+
+  /* Accès directs tactiles : mêmes vues protégées que la barre latérale.
+   * Aucun nouveau point d'entrée, aucune permission supplémentaire. */
+  function installerNavigationMobile(){
+    if(document.querySelector(".sde-private-bottom-nav"))return;
+    const paths={
+      home:"M3 10 12 3l9 7v11h-6v-7H9v7H3z",
+      user:"M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 21v-2a8 8 0 0 1 16 0v2",
+      school:"M3 9l9-5 9 5-9 5zM7 12v5c3 3 7 3 10 0v-5M21 9v7",
+      prayer:"M12 21V3M6 9l6 6 6-6M4 21h16",
+      calendar:"M4 5h16v16H4zM4 10h16M8 3v4M16 3v4",
+      mission:"M12 3l9 4-9 4-9-4zM5 10v7l7 4 7-4v-7",
+      more:"M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"
+    };
+    const items=mode==="membre"?
+      [["accueil","Accueil","home"],["profil","Profil","user"],["formations","Academy","school"],["prieres","Prière","prayer"],["outils","Plus","more"]]:
+      [["accueil","Accueil","home"],["membres","Membres","user"],["programmes","Agenda","calendar"],["projets","Missions","mission"],["outils","Plus","more"]];
+    const nav=document.createElement("nav");
+    nav.className="sde-private-bottom-nav";
+    nav.setAttribute("aria-label",mode==="membre"?"Accès rapides de mon espace":"Accès rapides du poste de commandement");
+    for(const [view,label,icon] of items){
+      const a=document.createElement("a");
+      a.href="#"+view;a.dataset.view=view;
+      if(view==="accueil")a.setAttribute("aria-current","page");
+      const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+      svg.setAttribute("viewBox","0 0 24 24");
+      svg.setAttribute("fill","none");svg.setAttribute("stroke","currentColor");
+      svg.setAttribute("stroke-linecap","round");svg.setAttribute("stroke-linejoin","round");
+      svg.setAttribute("aria-hidden","true");
+      const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+      path.setAttribute("d",paths[icon]);svg.append(path);
+      const span=document.createElement("span");span.textContent=label;
+      a.append(svg,span);nav.append(a);
+    }
+    document.body.append(nav);
   }
   function configureRoles(){
     for(const element of document.querySelectorAll("[data-access]")) {
@@ -183,6 +219,7 @@
       if(!compte.connecte){location.replace("/connexion?retour="+encodeURIComponent(location.pathname));return}
       if(mode==="administration"&&compte.niveau<1){location.replace("/mon-espace");return}
       configureRoles();
+      installerNavigationMobile();
       wireForms();
       // Les liens de rubrique ouvrent directement la vue, sans rechargement.
       // Historique du navigateur et accessibilité clavier restent disponibles.
