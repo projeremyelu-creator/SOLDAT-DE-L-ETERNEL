@@ -1,0 +1,25 @@
+name: Valider la refonte hybride SDE
+on:
+  pull_request:
+    paths:
+      - 'public/vitrine/*.html'
+      - 'public/vitrine/sde-premium-*.css'
+      - 'public/index.html'
+      - 'test/refonte-sde-hybride.test.mjs'
+  push:
+    branches: [main]
+    paths:
+      - 'public/vitrine/*.html'
+      - 'public/vitrine/sde-premium-*.css'
+      - 'public/index.html'
+      - 'test/refonte-sde-hybride.test.mjs'
+jobs:
+  couverture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.4'
+      - name: Valider la couverture des pages et les styles
+        run: node --test test/refonte-sde-hybride.test.mjs

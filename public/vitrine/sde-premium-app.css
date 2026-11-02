@@ -1,0 +1,96 @@
+/*
+ * SDE OS — finition hybride de l'application de gestion.
+ * Aucun changement de rôles, requêtes API, formulaire ou logique métier.
+ */
+:root{--sp-radius:16px;--sp-gold:#c8a45c}
+:root[data-sde-palette=ivoire]{
+ --night:#14273b;--night-2:#1c3552;--night-3:#314b69;
+ --gold:#986f29;--gold-on-night:#ead18c;--on-night:#f8f5ea;
+ --bg:#f8f4eb;--surface:#fffdf9;--surface-2:#f3eddf;
+ --line:#e4dac8;--line-strong:#cdbc9c;
+ --ink:#252e40;--muted:#536176;--btn:#ad8135;
+ --shadow:0 12px 34px rgba(21,34,52,.08);
+}
+:root[data-sde-palette=ivoire] body{
+ background:#f8f4eb!important;color:#273044;
+}
+:root[data-sde-palette=ivoire] .hdr{
+ background:linear-gradient(110deg,#0d1c35,#1c3352)!important;
+ color:#f9efd8!important;border-bottom:2px solid #c7a15b!important;
+}
+:root[data-sde-palette=ivoire] .hdr :is(.brand-mark,.brand-sub,.sync-t){
+ color:#f7eac7!important;
+}
+:root[data-sde-palette=ivoire] .hdr .hdr-btn{
+ background:#223b58!important;color:#f7eaca!important;
+ border:1px solid #9d8353!important;
+}
+:root[data-sde-palette=ivoire] .nav{
+ background:linear-gradient(180deg,#172b41,#102236)!important;
+ border-right:1px solid #a8874d!important;
+}
+:root[data-sde-palette=ivoire] .nav :is(a,button){color:#e8ecf0!important}
+:root[data-sde-palette=ivoire] .nav :is(a,button)[aria-current],
+:root[data-sde-palette=ivoire] .nav .nav-btn.on{
+ background:rgba(233,202,130,.17)!important;
+ color:#ffe3a5!important;
+ box-shadow:inset 3px 0 #dab469!important;
+}
+:root[data-sde-palette=ivoire] :is(.card,.tile,.stat,.row){
+ border-radius:var(--sp-radius);
+}
+:root[data-sde-palette=ivoire] .card{
+ background:var(--surface)!important;border:1px solid #e5ddce;
+ box-shadow:0 8px 24px rgba(35,41,56,.06);
+}
+:root[data-sde-palette=ivoire] :is(.sec-title,.row-t,.stat strong){color:#25324a}
+:root[data-sde-palette=ivoire] .btn-primary{
+ background:linear-gradient(135deg,#b2853a,#8e6524)!important;
+ color:#fff!important;
+ box-shadow:0 5px 16px rgba(161,118,48,.2);
+}
+:root[data-sde-palette=ivoire] :is(input,textarea,select){
+ border-color:#d4c6ac;
+}
+:root[data-sde-palette=militaire]{
+ --sp-gold:#e1bf79;
+}
+:root[data-sde-palette=militaire] .hdr{
+ background:linear-gradient(110deg,#0c1d18,#1e392d)!important;
+ border-bottom:2px solid #bda061!important;
+}
+:root[data-sde-palette=militaire] .nav{
+ background:linear-gradient(180deg,#122920,#0e1f19)!important;
+}
+:root[data-sde-palette=militaire] .nav .nav-btn.on{
+ box-shadow:inset 3px 0 #e1bf79!important;
+}
+/* Comportement tactile et lisibilité */
+body :is(.hdr-btn,.nav-btn,.btn,.btn-primary,.icon-btn){
+ min-height:44px;
+}
+body .main{min-width:0}
+body :is(.main,.view,.card,.row,.tile){overflow-wrap:anywhere}
+body :is(button,a,input,textarea,select):focus-visible{
+ outline:3px solid #d7b15c!important;outline-offset:3px!important;
+}
+body :is(input,textarea,select){max-width:100%;font-size:16px}
+@media(max-width:999px){
+ :root[data-sde-palette=ivoire] .nav{
+  background:linear-gradient(100deg,#132940,#203854)!important;
+  border-right:0;border-top:2px solid #bfa065!important;
+  padding-bottom:max(8px,env(safe-area-inset-bottom));
+ }
+ :root[data-sde-palette=ivoire] .nav .nav-btn.on{
+  box-shadow:inset 0 3px #dab469!important;
+ }
+ body .main{padding-bottom:max(72px,env(safe-area-inset-bottom) + 64px)}
+}
+@media(max-width:520px){
+ body :is(.card,.tile){border-radius:13px}
+ body .hdr .hdr-btn{min-height:44px}
+ body .nav .nav-btn{min-height:56px}
+}
+@media(prefers-reduced-motion:reduce){
+ body :is(.card,.tile,.row,.btn,.nav-btn){animation:none!important;transition:none!important}
+}

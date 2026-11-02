@@ -1,0 +1,183 @@
+/*
+ * SDE LUMIÈRE + COMMAND — deux tableaux de bord, un moteur de données.
+ * Uniquement présentation : les vérifications d'accès restent côté serveur.
+ */
+body.sde-tableau{
+ --sp-ink:#252d3d;--sp-muted:#59677a;--sp-line:#e2dcd0;
+ --sp-gold:#ad8135;--sp-cream:#f7f3e9;--sp-paper:#fffefb;
+ --sp-radius:17px;--sp-shadow:0 12px 35px rgba(21,30,48,.08);
+ font-family:"Atkinson Hyperlegible",system-ui,sans-serif;
+}
+body.sde-tableau .sde-dash-header{
+ background:linear-gradient(110deg,#0d1b33,#192c4a)!important;
+ border-bottom-color:#cba760!important;
+ box-shadow:0 6px 24px rgba(10,24,45,.15);
+}
+body.sde-tableau .sde-dash-header nav a{
+ border-radius:10px;
+}
+body.sde-tableau .sde-dash-header nav a[aria-current=page]{
+ background:#cda95d;color:#17243a;
+}
+body.sde-tableau .sde-dash-logo strong{color:#f5d996}
+body.sde-tableau .sde-dash-signout{border-radius:10px;min-height:44px}
+body.sde-tableau .sde-dash-shell{max-width:1760px}
+body.sde-tableau .sde-dash-main{max-width:1410px}
+body.sde-tableau .sde-dash-heading h1{
+ letter-spacing:-.018em;line-height:1.08;
+}
+body.sde-tableau :is(.sde-panel,.sde-dash-metrics article){
+ border-radius:var(--sp-radius);
+ transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+body.sde-tableau .sde-panel-actions a{
+ min-height:46px;display:inline-flex;align-items:center;
+ border-radius:11px;text-align:center;line-height:1.35;
+}
+body.sde-tableau .sde-panel-actions a:first-child{
+ background:#dbb873;color:#182843;border-color:#dbb873;
+}
+body.sde-tableau .sde-panel-actions a:hover{
+ background:#efd69c;border-color:#efd69c;
+}
+body.sde-tableau :is(a,button,input,textarea,select):focus-visible{
+ outline:3px solid #dba847!important;outline-offset:3px!important;
+}
+body.sde-tableau .sde-dash-form :is(input,textarea,select){
+ min-height:48px;font-size:16px;border-radius:10px;
+}
+body.sde-tableau .sde-dash-role{font-weight:800;letter-spacing:.025em}
+body.sde-tableau .sde-panel :is(h2,h3,p,li,dt,dd),
+body.sde-tableau .sde-dash-metrics :is(strong,span,small){
+ overflow-wrap:anywhere;
+}
+@media(hover:hover) and (pointer:fine){
+ body.sde-tableau :is(.sde-panel,.sde-dash-metrics article):hover{
+  border-color:#c8ad73;box-shadow:0 18px 42px rgba(12,24,45,.12);
+ }
+}
+/* Membre — espace calme, fond ivoire, accents bordeaux et or */
+body.sde-tableau[data-dashboard=membre]{
+ background:#f8f4eb;color:#292c35;
+}
+body.sde-tableau[data-dashboard=membre] .sde-dash-side{
+ background:linear-gradient(180deg,#243b36,#172e2c)!important;
+ border-right:1px solid #b59764;
+}
+body.sde-tableau[data-dashboard=membre] .sde-dash-side-caption{color:#f0d497}
+body.sde-tableau[data-dashboard=membre] .sde-dash-side nav a{
+ color:#e8eade;
+}
+body.sde-tableau[data-dashboard=membre] .sde-dash-side nav a[aria-current=page]{
+ color:#fff5d8;background:rgba(236,205,135,.16);border-left-color:#e3bd6b;
+}
+body.sde-tableau[data-dashboard=membre] .sde-dash-overline{color:#7f4150}
+body.sde-tableau[data-dashboard=membre] .sde-dash-heading h1{color:#242b3b}
+body.sde-tableau[data-dashboard=membre] .sde-dash-heading p{color:#4e596a}
+body.sde-tableau[data-dashboard=membre] .sde-dash-metrics article{
+ border:1px solid #e3d9c6;background:#fffefb;
+ box-shadow:0 8px 23px rgba(75,53,27,.06);
+}
+body.sde-tableau[data-dashboard=membre] .sde-dash-metrics article strong{color:#78344b}
+body.sde-tableau[data-dashboard=membre] .sde-panel{
+ background:#fffefb;border-color:#e6dcca;
+}
+body.sde-tableau[data-dashboard=membre] .sde-panel h2{color:#273047}
+body.sde-tableau[data-dashboard=membre] .sde-panel-eyebrow{color:#875168}
+body.sde-tableau[data-dashboard=membre] .sde-panel-actions a:not(:first-child){
+ border-color:#b88d58;color:#5b3b45;background:#fffaf1;
+}
+/* Command — une interface de pilotage sobre et lisible.
+ * Les données affichées proviennent toujours des API existantes. */
+body.sde-tableau[data-dashboard=administration]{
+ background:#101d1b;color:#f8f5eb;
+ --sp-line:#394c43;--sp-shadow:0 14px 33px rgba(0,0,0,.18);
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-header{
+ background:linear-gradient(110deg,#0d1e19,#182f28)!important;
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-side{
+ background:linear-gradient(180deg,#162a23,#101e1a)!important;
+ border-right:1px solid #495a3f;
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-side-caption{
+ color:#ebc77d;
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-side nav a{
+ color:#d5e2d8;
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-side nav a:hover{
+ background:#284337;color:#fff;
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-side nav a[aria-current=page]{
+ background:#2b4537;color:#ffe2a3;border-left-color:#e2b95f;
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-heading h1{color:#fff4dc}
+body.sde-tableau[data-dashboard=administration] .sde-dash-heading p{color:#c4d1c5}
+body.sde-tableau[data-dashboard=administration] .sde-dash-overline{color:#e9c17c}
+body.sde-tableau[data-dashboard=administration] .sde-dash-role{
+ color:#ffe1a0;background:#2a392d;border-color:#8f7946;
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-metrics article{
+ background:linear-gradient(150deg,#1a3028,#21372d);
+ border:1px solid #425b47;
+ box-shadow:0 9px 32px rgba(0,0,0,.13);
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-metrics article span{
+ color:#d3ddce;
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-metrics article strong{
+ color:#f8d88f;
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-metrics article small{
+ color:#c1cbbb;
+}
+body.sde-tableau[data-dashboard=administration] .sde-panel{
+ background:#faf8f0;color:#24332b;
+ border:1px solid #d9d1bf;
+ box-shadow:0 18px 34px rgba(0,0,0,.12);
+}
+body.sde-tableau[data-dashboard=administration] .sde-panel h2{color:#1f322c}
+body.sde-tableau[data-dashboard=administration] .sde-panel p:not(.sde-panel-eyebrow):not(.sde-form-feedback){
+ color:#45564b;
+}
+body.sde-tableau[data-dashboard=administration] .sde-panel-eyebrow{color:#835b29}
+body.sde-tableau[data-dashboard=administration] .sde-dash-quick a{color:#294039}
+body.sde-tableau[data-dashboard=administration] .sde-dash-items li{
+ background:#fff;border-color:#dfddd3;color:#29392f;
+}
+body.sde-tableau[data-dashboard=administration] .sde-profile dt{color:#56665e}
+body.sde-tableau[data-dashboard=administration] .sde-panel-actions a:not(:first-child){color:#274034}
+body.sde-tableau[data-dashboard=administration] .sde-dash-alert{
+ color:#21372b;background:#edf3e8;border-color:#b9c7b3;
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-alert[data-state=error]{
+ color:#853e34;background:#fff0ed;border-color:#ead0c9;
+}
+body.sde-tableau[data-dashboard=administration] .sde-dash-note{
+ color:#596d5c!important;
+}
+@media(max-width:880px){
+ body.sde-tableau[data-dashboard=administration] .sde-dash-side{
+  border-right:none;border-bottom:1px solid #b89b5d;
+ }
+ body.sde-tableau[data-dashboard=membre] .sde-dash-side{
+  border-right:none;border-bottom:1px solid #c9a85d;
+ }
+ body.sde-tableau .sde-dash-side nav a[aria-current=page]{
+  border-left:0;border-bottom-color:#e2b95f;
+ }
+}
+@media(max-width:600px){
+ body.sde-tableau .sde-dash-header nav a{min-height:44px}
+ body.sde-tableau .sde-dash-main{padding-bottom:calc(82px + env(safe-area-inset-bottom))}
+ body.sde-tableau .sde-dash-metrics article{min-height:108px}
+ body.sde-tableau .sde-panel-actions a{width:100%;justify-content:center}
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-tableau :is(.sde-panel,.sde-dash-metrics article){transition:none!important}
+}
+@media print{
+ body.sde-tableau{background:#fff!important;color:#111!important}
+ body.sde-tableau .sde-dash-side,body.sde-tableau .sde-dash-header{position:static}
+}
