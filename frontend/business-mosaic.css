@@ -109,6 +109,7 @@ body.sde-reference .ops-panel :is(.ops-table-scroll,.ops-grid){max-width:100%;mi
 body.sde-reference .ops-panel .ops-table-scroll{overflow-x:auto}
 /* Mosaïque : tableau de bord métier réellement connecté */
 .sde-mosaic{--mx-accent:#eac77b;--mx-back:#25113c;display:grid;gap:22px;min-width:0}
+.sde-mosaic-member{--mx-back:#25113c}
 .sde-mosaic-command{--mx-back:#123c2e}
 .sde-mosaic-intro{
  position:relative;overflow:hidden;isolation:isolate;
