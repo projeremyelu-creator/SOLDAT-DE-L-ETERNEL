@@ -159,3 +159,44 @@
     transition:none!important;
   }
 }
+
+
+/* ── Soldier House Premium · Lot A · application native ──────────────
+   Lisibilité, interaction tactile et cohérence avec les nouveaux tableaux.
+   Aucun changement des rôles, du registre ou des opérations. */
+:root[data-sde-palette="ivoire"]{
+ --sh-premium-ivory:#f7f3eb;
+ --sh-premium-surface:#fffefa;
+ --sh-premium-burgundy:#792f49;
+ --sh-premium-gold:#c09b52;
+}
+:root[data-sde-palette="ivoire"] .main{
+  max-width:100%;
+  min-width:0;
+}
+:root[data-sde-palette="ivoire"] :is(.card,.tile,.row){
+  border-radius:16px;
+}
+:root[data-sde-palette="ivoire"] :is(.btn,.btn-primary,.nav-btn,.hdr-btn){
+  touch-action:manipulation;
+  min-height:44px;
+}
+:root[data-sde-palette="ivoire"] :is(input,textarea,select){
+  max-width:100%;
+}
+:root[data-sde-palette="ivoire"] :is(a,button,input,textarea,select):focus-visible{
+  outline:3px solid #c49a48!important;outline-offset:3px;
+}
+@media(max-width:600px){
+  :root[data-sde-palette="ivoire"] .main{
+    overflow-wrap:anywhere;
+  }
+  :root[data-sde-palette="ivoire"] :is(input,textarea,select){
+    font-size:16px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  :root[data-sde-palette="ivoire"] :is(.card,.tile,.row,.btn,.nav-btn){
+    transition:none!important;animation:none!important;
+  }
+}
