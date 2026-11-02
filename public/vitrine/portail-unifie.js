@@ -93,7 +93,7 @@
       btn.setAttribute("aria-label","Ouvrir la navigation");
     });
     addEventListener("resize",()=>{
-      if(innerWidth>900&&menu.dataset.open==="true"){
+      if(innerWidth>1800&&menu.dataset.open==="true"){
         menu.dataset.open="false";
         btn.setAttribute("aria-expanded","false");
         btn.setAttribute("aria-label","Ouvrir la navigation");
