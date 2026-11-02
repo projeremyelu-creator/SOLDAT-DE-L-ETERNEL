@@ -4,6 +4,7 @@ on:
     paths:
       - 'public/vitrine/*.html'
       - 'public/vitrine/sde-premium-*.css'
+      - 'public/vitrine/portail-unifie.js'
       - 'public/index.html'
       - 'test/refonte-sde-hybride.test.mjs'
   push:
@@ -11,6 +12,7 @@ on:
     paths:
       - 'public/vitrine/*.html'
       - 'public/vitrine/sde-premium-*.css'
+      - 'public/vitrine/portail-unifie.js'
       - 'public/index.html'
       - 'test/refonte-sde-hybride.test.mjs'
 jobs:
