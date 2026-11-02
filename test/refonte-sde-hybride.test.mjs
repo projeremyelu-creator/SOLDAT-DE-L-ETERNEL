@@ -46,3 +46,42 @@ test("Liens métiers et confidentialité conservés",()=>{
  ];
  for(const [name,tokens] of documents){const html=read(join(root,name));for(const t of tokens)assert.ok(html.includes(t),name+" : "+t);}
 });
+
+
+test("Phase 2 : cinq accès publics mobiles, sans fuite des finances internes",()=>{
+ const js=read("public/vitrine/portail-unifie.js");
+ const css=read("public/vitrine/sde-premium-public.css");
+ for(const [name,href] of [
+  ["Accueil","/"],["Membres","/contact#rejoindre"],
+  ["Agenda","/programmes#agenda"],["Finances","/missions#soutenir"],
+  ["Plus","/rubriques"]
+ ]){
+  assert.ok(js.includes('href:"'+href+'",label:"'+name+'"'),name+" : destination publique attendue");
+ }
+ assert.ok(js.includes('aria-label","Navigation rapide SDE sur mobile"'));
+ assert.ok(js.includes('a.setAttribute("aria-current","page")'));
+ assert.ok(js.includes('document.body.classList.add("sde-has-bottom-nav")'));
+ assert.ok(js.includes('if(innerWidth>1800&&menu.dataset.open==="true")'));
+ assert.match(css,/\.sde-public-bottom-nav\s*\{/);
+ assert.match(css,/@media\(max-width:900px\)/);
+ assert.match(css,/safe-area-inset-bottom/);
+ assert.match(css,/\.sde-has-bottom-nav/);
+ assert.match(css,/body\.sde-menu-mobile-ouvert \.sde-public-bottom-nav/);
+});
+test("Phase 2 : galerie IN FIRE premium, focus retenu et fermeture clavier",()=>{
+ const html=read("public/vitrine/album-infire.html");
+ const css=read("public/vitrine/sde-premium-public.css");
+ assert.ok(html.includes('class="sde-infire-album"'));
+ assert.ok(html.includes('class="archive-note"'));
+ assert.ok(html.includes("document.body.style.overflow='hidden'"));
+ assert.ok(html.includes("document.body.style.overflow=oldOverflow"));
+ assert.ok(html.includes("e.key==='Tab'"));
+ assert.ok(html.includes("e.key==='Escape'"));
+ assert.ok(html.includes("close.focus()"));
+ assert.ok(html.includes("last?.focus()"));
+ assert.ok(css.includes(".sde-infire-album .item"));
+ assert.ok(css.includes("@media(prefers-reduced-motion:reduce)"));
+ for(const y of ["2024","2025","2026"]){
+  assert.ok(html.includes('data-year="'+y+'"'));
+ }
+});
