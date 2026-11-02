@@ -1287,9 +1287,13 @@ html body.sde-unifie.sde-subpage.sde-ivoire .site-header{
   border-bottom:1px solid rgba(223,190,119,.55)!important;
   box-shadow:0 8px 28px rgba(9,17,33,.2);
 }
-html body.sde-unifie.sde-subpage.sde-ivoire .site-brand :is(b,small),
-html body.sde-unifie.sde-subpage.sde-ivoire .site-menu>details>summary{
+html body.sde-unifie.sde-subpage.sde-ivoire .site-brand :is(b,small){
   color:#f8edda!important;
+}
+@media(min-width:1025px){
+  html body.sde-unifie.sde-subpage.sde-ivoire .site-menu>details>summary{
+    color:#f8edda!important;
+  }
 }
 html body.sde-unifie.sde-subpage.sde-ivoire .site-portal-cta{
   border:1px solid rgba(230,195,115,.8)!important;
