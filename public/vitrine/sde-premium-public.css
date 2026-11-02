@@ -280,3 +280,137 @@ body.sde-infire-album{background:#0b162c;color:#fff6e7}
 @media(prefers-reduced-motion:reduce){
  .sde-infire-album .item{transition:none!important;transform:none!important}
 }
+
+
+/* ═══ SDE FUSION 03 + 04 · 2 novembre 2026 ═══
+   Site public : prophétique violet/or + cohérence Command.
+   Aucune donnée, aucun lien, aucun formulaire ne change. */
+:root{
+ --sde-fusion-violet:#210e3e;--sde-fusion-violet-clair:#4d2076;
+ --sde-fusion-or:#e5bf6c;--sde-fusion-militaire:#143e34;
+ --sde-fusion-ivoire:#fff9ed;
+}
+html body.sde-unifie:not(.sde-tableau) .site-header{
+ background:linear-gradient(108deg,#130826 0%,#2c124d 56%,#10372e 100%)!important;
+ border-bottom:1px solid rgba(234,191,105,.63)!important;
+ box-shadow:0 10px 32px rgba(10,6,24,.34)!important;
+}
+html body.sde-unifie:not(.sde-tableau) .site-header .site-brand b{color:#f6d892!important}
+html body.sde-unifie:not(.sde-tableau) .site-footer{
+ background:linear-gradient(130deg,#130a25,#21103e 62%,#153b31)!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire .sde-intro,
+html body.sde-unifie.sde-subpage.sde-ivoire :is(.sde-hero,.m-band){
+ background-color:#24113e!important;
+ background-image:radial-gradient(ellipse at 86% 22%,rgba(226,172,88,.19),transparent 50%),
+ linear-gradient(118deg,#16082e 0%,#421a65 62%,#183a34 100%)!important;
+ border-color:rgba(226,187,105,.55)!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section,
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section:nth-of-type(even){
+ background:radial-gradient(ellipse at 95% 0,rgba(213,155,237,.14),transparent 53%),
+ linear-gradient(130deg,#180d30,#261341 60%,#142d33)!important;
+ border-color:rgba(226,187,105,.28)!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire :is(.sde-card,.iv-card,.programme,.ressource-carte,.pole-carte){
+ border:1px solid rgba(203,162,92,.38)!important;
+ box-shadow:0 14px 30px rgba(11,6,31,.2)!important;
+}
+html body.sde-accueil-maquette.sde-ivoire{
+ --m-nuit:#130925;--m-carte:#281342;--m-carte-2:#16102f;
+ --m-olive:#253c36;--m-olive-2:#62477a;--m-treillis:#3a6252;
+ --m-or:#dfb861;--m-or-clair:#f1d991;--m-or-fonce:#ad7f32;
+ --m-texte:#fff7e6;--m-texte-2:#e0d4e6;
+ background:radial-gradient(ellipse at 15% 4%,#3e1b65 0%,transparent 42%),
+ radial-gradient(ellipse at 93% 23%,rgba(38,99,77,.4),transparent 38%),
+ #100b22!important;color:#f9f1e3!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-panel{
+ background:linear-gradient(145deg,rgba(41,22,69,.98),rgba(21,16,42,.98))!important;
+ border:1px solid rgba(226,185,101,.33)!important;
+ border-radius:24px!important;
+ box-shadow:0 18px 55px rgba(9,4,29,.36)!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-band{
+ background:linear-gradient(100deg,#2f1457 0%,#34175b 58%,#153d34 100%)!important;
+ border-bottom:1px solid rgba(228,191,109,.52)!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-band .m-num{
+ background:#170a2e;color:#f0d38e;border-color:rgba(229,191,111,.35);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome{
+ display:grid;align-items:center;min-height:clamp(330px,35vw,510px);
+ padding:clamp(24px,5vw,62px);
+ border-radius:20px;
+ background:
+ linear-gradient(90deg,rgba(19,8,39,.99) 0%,rgba(31,12,58,.95) 40%,rgba(32,13,54,.68) 70%,rgba(20,28,36,.45) 100%),
+ url('/vitrine/illus/lion-sde.webp') right center / auto 100% no-repeat,
+ #160c30;
+ border:1px solid rgba(230,185,104,.3);
+ box-shadow:inset 0 1px 0 rgba(255,240,192,.12),0 22px 52px rgba(12,5,28,.28);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome>div{max-width:750px;position:relative;z-index:1}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome h1{
+ color:#f7d48d!important;font-size:clamp(2rem,4.1vw,4rem);
+ line-height:1.09;max-width:21ch;text-shadow:0 5px 30px rgba(0,0,0,.4);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome :is(p,.m-italic){color:#f6ecdf!important}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-verset{border-left-color:#e1b766}
+html body.sde-accueil-maquette.sde-ivoire .m-actions .m-btn{
+ min-height:46px;border-radius:12px;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-actions .m-btn:not(.m-gold){
+ background:rgba(41,22,66,.84);color:#fff3df;border-color:#b58bcc;
+}
+html body.sde-accueil-maquette.sde-ivoire :is(.m-card,.m-prog,.m-pole,.m-kpi){
+ background:linear-gradient(150deg,#301950,#1a1633 82%)!important;
+ border:1px solid rgba(218,178,108,.34)!important;
+ border-radius:17px!important;
+ color:#f6ecdf!important;
+}
+html body.sde-accueil-maquette.sde-ivoire :is(.m-card,.m-prog,.m-pole,.m-kpi) :is(p,span,li,small){
+ color:#e8deee;
+}
+html body.sde-accueil-maquette.sde-ivoire :is(.m-card,.m-prog,.m-pole) h3,
+html body.sde-accueil-maquette.sde-ivoire .m-kpi strong{color:#f6d58e!important}
+html body.sde-accueil-maquette.sde-ivoire .m-kpi{
+ transition:transform .2s ease,border-color .2s ease;min-width:0;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-kpi:hover{
+ border-color:#e5bf6c!important;transform:translateY(-3px);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-feature-img{
+ filter:saturate(1.07) brightness(.77);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-feature::before{
+ background:linear-gradient(90deg,#1d1038 4%,rgba(36,14,61,.91) 42%,rgba(16,12,31,.12) 100%);
+}
+html body.sde-accueil-maquette.sde-ivoire .private-admin{
+ background:linear-gradient(125deg,#132e28,#225441)!important;
+ border-color:#c7aa70!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .private-member{
+ border-color:#e7be6b!important;
+}
+html body.sde-unifie:not(.sde-tableau) :is(.m-btn,.sde-hero-cta,.site-portal-cta):focus-visible{
+ outline:3px solid #ffdd84!important;outline-offset:4px!important;
+}
+@media(max-width:900px){
+ .sde-public-bottom-nav{
+  background:linear-gradient(110deg,#1a0d32,#331657 65%,#15372d)!important;
+  border-top-color:#e1bd73!important;
+ }
+}
+@media(max-width:700px){
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome{
+  padding:27px 19px;min-height:375px;
+  background:linear-gradient(0deg,rgba(23,9,42,.98) 0%,rgba(30,11,54,.92) 63%,rgba(28,15,53,.67)),
+  url('/vitrine/illus/lion-sde.webp') center right / auto 100% no-repeat,#170a30;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome h1{font-size:clamp(1.7rem,8vw,2.8rem)!important}
+ html body.sde-accueil-maquette.sde-ivoire .m-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+ html body.sde-accueil-maquette.sde-ivoire .m-actions .m-btn{justify-content:center}
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-accueil-maquette.sde-ivoire :is(.m-kpi,.m-btn){transition:none!important;transform:none!important}
+}
