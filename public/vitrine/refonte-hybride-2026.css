@@ -23,3 +23,33 @@ body.sde-unifie.sde-tableau .sde-dash-main{min-width:0}
 @media(max-width:900px){body.sde-unifie.sde-tableau .sde-dash-shell{min-width:0}body.sde-unifie.sde-tableau .sde-panel{border-radius:16px}body.sde-unifie .site-menu{overscroll-behavior:contain}}
 @media(max-width:600px){body.sde-unifie.sde-tableau .sde-dash-main{padding-inline:14px}body.sde-unifie.sde-tableau .sde-panel-actions a{min-height:48px}body.sde-unifie.sde-subpage main#contenu :is(.enveloppe,.container){min-width:0}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}body.sde-unifie *,body.sde-unifie *::before,body.sde-unifie *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* Espace membre — expérience ivoire calme, cartes de progression lisibles. */
+body.sde-unifie.sde-tableau[data-dashboard="membre"]{background:linear-gradient(145deg,#faf8f1 0%,#f0ebe2 100%)}
+body.sde-unifie.sde-tableau[data-dashboard="membre"] .sde-dash-heading h1{color:#1a3151}
+body.sde-unifie.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article{border:1px solid #e3d7be;background:#fffdf8}
+body.sde-unifie.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article strong{color:#7b5630}
+body.sde-unifie.sde-tableau[data-dashboard="membre"] .sde-panel-eyebrow{color:#77445b}
+body.sde-unifie.sde-tableau[data-dashboard="membre"] .sde-panel-actions a:first-child{background:#d7b567;border-color:#b89249;color:#132743}
+/* Poste de commandement — caractère treillis sombre, sans masquer les modules protégés. */
+body.sde-unifie.sde-tableau[data-dashboard="administration"]{background:#10221b;color:#f6f2e8}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-main{color:#f4f0e4;background:radial-gradient(ellipse at 85% 0%,#2c4538 0%,#10221b 70%);max-width:none;padding-inline:clamp(18px,4vw,64px)}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-heading h1{color:#fff5d9}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] :is(.sde-dash-heading p,.sde-dash-overline){color:#d0dfce}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-role{background:#263d2f;border-color:#c7ae6d;color:#f8e3a2}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-metrics article{background:#1e352b;border-color:#5e795d}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-metrics article span{color:#d9e6d7}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-metrics article strong{color:#f3d186}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-metrics article small{color:#c1d2bd}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-panel{background:#f9f8f3;color:#203126;border-color:#dec78f}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-panel h2{color:#213b2e}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-panel-eyebrow{color:#78612c}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-side{background:linear-gradient(155deg,#12241c,#213b2b)}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-side nav a[aria-current="page"]{background:#354d37;color:#fff1c4}
+body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-alert{border-color:#8d9f76}
+@media(min-width:881px){
+  body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-shell{max-width:1600px}
+  body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-side{width:260px}
+  body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-shell{grid-template-columns:260px minmax(0,1fr)}
+}
+@media(max-width:600px){body.sde-unifie.sde-tableau[data-dashboard="administration"] .sde-dash-main{padding:24px 14px 92px}}
