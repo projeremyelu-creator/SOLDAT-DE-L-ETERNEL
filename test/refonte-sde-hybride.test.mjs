@@ -85,3 +85,35 @@ test("Phase 2 : galerie IN FIRE premium, focus retenu et fermeture clavier",()=>
   assert.ok(html.includes('data-year="'+y+'"'));
  }
 });
+
+
+test("Fusion 03 + 04 : habillage cohérent public, membre, admin et OS",()=>{
+ const pub=read("public/vitrine/sde-premium-public.css");
+ const dash=read("public/vitrine/sde-premium-dashboards.css");
+ const app=read("public/vitrine/sde-premium-app.css");
+ assert.match(pub,/SDE FUSION 03 \+ 04/);
+ assert.match(pub,/--sde-fusion-violet/);
+ assert.match(pub,/--sde-fusion-militaire/);
+ assert.match(dash,/FUSION 03 \+ 04/);
+ assert.match(dash,/sde-private-bottom-nav/);
+ assert.match(app,/FUSION 03 \+ 04/);
+ assert.match(pub,/prefers-reduced-motion/);
+ assert.match(dash,/prefers-reduced-motion/);
+ assert.match(app,/prefers-reduced-motion/);
+});
+test("Navigation mobile privée : cinq raccourcis et respect de l'authentification",()=>{
+ const js=read("public/vitrine/tableaux-de-bord.js");
+ assert.match(js,/function installerNavigationMobile\(/);
+ assert.match(js,/installerNavigationMobile\(\)/);
+ assert.match(js,/sde-private-bottom-nav/);
+ for(const view of ["accueil","profil","formations","prieres","outils","membres","programmes","projets"]){
+  assert.ok(js.includes('"'+view+'"'),"Raccourci non trouvé : "+view);
+ }
+ assert.ok(js.indexOf("compte=await api(")<js.lastIndexOf("installerNavigationMobile();"),
+   "L'authentification doit précéder la navigation privée");
+ for(const filename of ["tableau-membre.html","tableau-administration.html"]){
+  const html=read("public/vitrine/"+filename);
+  assert.match(html,/tableaux-de-bord\.js\?v=20261102fusion03-04/);
+  assert.match(html,/sde-premium-dashboards\.css\?v=20261102fusion03-04/);
+ }
+});
