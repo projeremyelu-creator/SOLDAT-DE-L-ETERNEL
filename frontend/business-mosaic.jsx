@@ -74,7 +74,7 @@ export function BusinessMosaic({portal,direction}){
  const upcoming=!direction&&Array.isArray(data.evenements)?data.evenements.slice(0,3):[];
  const enrolled=!direction&&Array.isArray(data.formations)?data.formations.slice(0,3):[];
  const activityTitles={membres:'Registre des membres',evenements:'Agenda et présences',projets:'Projets et missions',formations:'Soldiers Academy',annonces:'Communications'};
- const displayDate=v=>/^\\d{4}-\\d{2}-\\d{2}$/.test(String(v||''))?String(v).slice(8,10)+'/'+String(v).slice(5,7):'Date non précisée';
+ const displayDate=v=>/^\d{4}-\d{2}-\d{2}$/.test(String(v||''))?String(v).slice(8,10)+'/'+String(v).slice(5,7):'Date non précisée';
  const go=module=>portal.selectionner(module);
  return <div className={'sde-mosaic '+(direction?'sde-mosaic-command':'sde-mosaic-member')}>
   <section className="sde-mosaic-intro" aria-label="Centre opérationnel du Mouvement SDE">
@@ -112,7 +112,7 @@ export function BusinessMosaic({portal,direction}){
    </React.Fragment>:<React.Fragment>
     <section className="sde-mosaic-insight" aria-label="Mes prochains rendez-vous">
      <div className="sde-mosaic-insight-heading"><div><span className="sde-mosaic-eyebrow">MES RENDEZ-VOUS</span><h4>À venir</h4></div><button type="button" onClick={()=>go('rendezvous')}>Agenda ↗</button></div>
-     {upcoming.length?<ul className="sde-mosaic-list">{upcoming.map((e,i)=><li key={String(e.id||i)}><span className="sde-mosaic-date" aria-hidden="true">{/^\\d{4}-\\d{2}-\\d{2}$/.test(String(e.date||''))?String(e.date).slice(-2):'—'}</span><span><strong>{e.titre||'Rassemblement SDE'}</strong><small>{displayDate(e.date)}{e.heure?' · '+e.heure:''}{e.lieu?' · '+e.lieu:''}</small></span></li>)}</ul>:<p className="sde-mosaic-no-data">Aucun rendez-vous à venir dans votre agenda.</p>}
+     {upcoming.length?<ul className="sde-mosaic-list">{upcoming.map((e,i)=><li key={String(e.id||i)}><span className="sde-mosaic-date" aria-hidden="true">{/^\d{4}-\d{2}-\d{2}$/.test(String(e.date||''))?String(e.date).slice(-2):'—'}</span><span><strong>{e.titre||'Rassemblement SDE'}</strong><small>{displayDate(e.date)}{e.heure?' · '+e.heure:''}{e.lieu?' · '+e.lieu:''}</small></span></li>)}</ul>:<p className="sde-mosaic-no-data">Aucun rendez-vous à venir dans votre agenda.</p>}
     </section>
     <section className="sde-mosaic-insight" aria-label="Ma progression Soldiers Academy">
      <div className="sde-mosaic-insight-heading"><div><span className="sde-mosaic-eyebrow">SOLDIERS ACADEMY</span><h4>Mes formations</h4></div><button type="button" onClick={()=>go('academie')}>Mes cours ↗</button></div>
