@@ -18,8 +18,12 @@ const cases=[
  {path:'/soutenir',name:'soutenir-390',width:390,height:844},
  {path:'/transparence',name:'transparence-390',width:390,height:844},
  {path:'/calendrier',name:'calendrier-390',width:390,height:844},
+ {path:'/academy',name:'academy-390',width:390,height:844},
+ {path:'/vitrine/album-infire.html',name:'galerie-infire-390',width:390,height:844},
  {path:'/',name:'accueil-tablette',width:768,height:1024},
+ {path:'/',name:'accueil-960',width:960,height:800},
  {path:'/',name:'accueil-1024',width:1024,height:768},
+ {path:'/',name:'accueil-1100',width:1100,height:820},
  {path:'/',name:'accueil-desktop',width:1280,height:900},
  {path:'/programmes',name:'programmes-desktop',width:1280,height:900},
  {path:'/mouvement',name:'mouvement-desktop',width:1280,height:900},
@@ -166,6 +170,30 @@ try{
    report.checks.push(row);
    const screenshot=join(out,c.name+'.png');
    await page.screenshot({path:screenshot,fullPage:false,animations:'disabled'});
+   // Galerie IN FIRE : images, onglets et fermeture au clavier sur téléphone.
+   // Les années 2024 et 2026 restent vides tant que le classement n'a pas été confirmé.
+   if(c.name==='galerie-infire-390'){
+    try{
+     const gallery=page.locator('#gallery .item');
+     const tabs=page.locator('[role="tab"][data-year]');
+     if(await tabs.count()!==3)issue(c.name,'onglets 2024, 2025 et 2026 manquants',true);
+     if(await gallery.count()!==10)issue(c.name,'la galerie par défaut ne contient pas 10 photos',true);
+     const first=gallery.first().locator('button');
+     if(await first.count()===1){
+      await first.click({timeout:5000});
+      if(!await page.locator('#modal').evaluate(el=>el.classList.contains('open')))issue(c.name,'agrandissement des photos inopérant',true);
+      await page.keyboard.press('Escape');
+      if(await page.locator('#modal').evaluate(el=>el.classList.contains('open')))issue(c.name,'fermeture clavier de la photo inopérante',true);
+     }
+     await page.locator('[data-year="2024"]').click();
+     if(await gallery.count()!==0 || await page.locator('#empty').isHidden())issue(c.name,'l’année 2024 ne présente pas son état vide',true);
+     await page.locator('[data-year="2026"]').click();
+     if(await gallery.count()!==0 || await page.locator('#empty').isHidden())issue(c.name,'l’année 2026 ne présente pas son état vide',true);
+     await page.locator('[data-year="2025"]').click();
+     if(await gallery.count()!==10)issue(c.name,'retour à 2025 sans photographies',true);
+     report.notes.push({test:'galerie-infire-mobile',photos:await gallery.count(),annees:await tabs.count()});
+    }catch(e){issue(c.name,'parcours galerie mobile indisponible : '+String(e.message||e).slice(0,220),true)}
+   }
    // INTERACTIONS_NAVI : le menu et le changement de thème doivent fonctionner sur un vrai téléphone.
    if(c.name==='accueil-390'){
     try{
@@ -362,6 +390,8 @@ try{
      issue(c.name,'vérification de stabilité indisponible : '+String(error.message||error).slice(0,240),true);
     }
    }
+   if(c.path==='/'&&c.width>=960&&c.width<=1100&&row.heroIntroHeight!==300)
+    issue(c.name,'hauteur de la réserve tablette : '+row.heroIntroHeight+' px au lieu de 300 px',true);
    if(c.path==='/'&&c.width>=1101&&row.heroIntroHeight!==260)
     issue(c.name,'hauteur du bloc accueil instable : '+row.heroIntroHeight+' px au lieu de 260 px',true);
    if(row.status!==200)issue(c.name,'HTTP '+row.status,true);
