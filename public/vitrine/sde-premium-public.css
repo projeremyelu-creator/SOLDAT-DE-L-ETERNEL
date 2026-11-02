@@ -203,7 +203,7 @@ html body.sde-unifie:not(.sde-tableau) .site-menu>.sde-menu-plus:hover{
 }
 .sde-public-bottom-nav{display:none}
 @media(max-width:900px){
- html body.sde-unifie:not(.sde-tableau):has(.sde-public-bottom-nav){
+ html body.sde-unifie.sde-has-bottom-nav:not(.sde-tableau){
   padding-bottom:calc(72px + env(safe-area-inset-bottom))!important;
  }
  .sde-public-bottom-nav{
