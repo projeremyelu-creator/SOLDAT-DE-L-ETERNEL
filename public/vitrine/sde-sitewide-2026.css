@@ -1339,3 +1339,43 @@ html body.sde-unifie.sde-subpage.sde-ivoire :is(a,button,input,select,textarea,s
     animation:none!important;transition:none!important;transform:none!important;
   }
 }
+
+
+/* Accueil public réel : / utilise portail.html (sde-accueil-maquette),
+   et NON l'ancien fichier vitrine/index.html. */
+html body.sde-unifie.sde-accueil-maquette.sde-ivoire .site-header{
+ background:#101a2f!important;
+ border-bottom:1px solid rgba(223,190,119,.56)!important;
+ color:#fff8e8!important;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-ivoire .site-brand :is(b,small){
+ color:#fff5df!important;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-ivoire .iv-intro{
+ background-color:#15233a!important;
+ background-image:radial-gradient(ellipse at 88% 15%,rgba(232,194,109,.2),transparent 55%),linear-gradient(125deg,#111b2f,#24334e)!important;
+ border-top:1px solid #c6a45e;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-ivoire .iv-intro :is(h2,p,.iv-sub){
+ color:#fff3da!important;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-ivoire .iv-intro .iv-cta,
+html body.sde-unifie.sde-accueil-maquette.sde-ivoire .sde-hero-cta{
+ background:#e5c57f!important;color:#14203a!important;
+ border-color:#c9a962!important;border-radius:12px!important;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-ivoire .m-panel .m-band{
+ background:linear-gradient(120deg,#17263e,#253956)!important;
+ border-bottom:2px solid #d4b66e!important;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-ivoire .m-panel .m-band :is(h2,.m-num,.m-sub){
+ color:#f9eed6!important;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-ivoire :is(a,button,input,select,textarea):focus-visible{
+ outline:3px solid #e5c57f!important;outline-offset:3px;
+}
+@media(max-width:600px){
+ html body.sde-unifie.sde-accueil-maquette.sde-ivoire .iv-intro{
+  padding-inline:max(16px,env(safe-area-inset-left))!important;
+ }
+}
