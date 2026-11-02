@@ -1,0 +1,14 @@
+/* Pages de services SDE : complément au thème clair/sombre déjà piloté par sde-hub.js. */
+:root{--hub-premium-night:#102038;--hub-premium-gold:#d8b66f;--hub-premium-forest:#263b30;--hub-premium-wine:#702f46}
+.sde-hub-head{background:linear-gradient(110deg,#101e35,#243b41);border-bottom-color:var(--hub-premium-gold);box-shadow:0 6px 28px rgba(9,16,28,.16)}
+.sde-hub-head .sde-mark{color:#fcf6e9}.sde-hub-head .sde-hub-nav a{color:#f4ebd7;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+.sde-hub-head .sde-hub-nav a[aria-current="page"]{color:#f7ce7c}
+.sde-hub-head .sde-hub-nav .connect{background:var(--hub-premium-gold);color:#15263b;border-radius:10px}
+.hub-hero{border-radius:24px;border-color:rgba(216,182,111,.52);background:radial-gradient(ellipse at 90% 0,rgba(216,182,111,.14),transparent 56%),linear-gradient(140deg,var(--surface),var(--card));box-shadow:0 12px 35px rgba(7,18,28,.07)}
+.hub-card{border-radius:18px;transition:transform .2s ease,border-color .2s ease;overflow-wrap:anywhere}
+.hub-card:hover{border-color:var(--hub-premium-gold);transform:translateY(-2px)}
+.hub-btn{border-radius:12px;min-height:48px}
+.hub-form :is(input,textarea,select){max-width:100%;min-width:0}
+.hub-main :is(img,video,iframe){max-width:100%}
+@media(max-width:780px){.sde-hub-head .inner{flex-wrap:wrap}.sde-hub-head .sde-hub-nav{width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}.sde-hub-head .sde-hub-nav a{flex:none;white-space:nowrap}.hub-main{padding-top:22px}.hub-card{border-radius:15px}}
+@media(prefers-reduced-motion:reduce){.hub-card{transition:none}.hub-card:hover{transform:none}}
