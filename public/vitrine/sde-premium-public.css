@@ -557,3 +557,197 @@ html body.sde-unifie:not(.sde-tableau) :is(.site-portal-cta,.iv-cta,.sde-hero-ct
   transition:none!important;animation:none!important;transform:none!important;
  }
 }
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Maquette 03+04 · édition fidèle de l'accueil et du programme phare.
+   Composition de référence : vision à gauche, affiche réelle à droite,
+   puis quatre éléments de repère et le reste des pages de la vitrine.
+   ───────────────────────────────────────────────────────────────────────── */
+html body.sde-accueil-maquette.sde-ivoire .m-main{
+ width:min(100%,1510px);max-width:1510px;
+ padding-inline:clamp(12px,2.25vw,34px)!important;
+ gap:clamp(15px,2vw,25px);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome{
+ display:grid!important;grid-template-columns:minmax(0,1.52fr) minmax(290px,.77fr);
+ gap:clamp(22px,3.5vw,56px);
+ align-items:center;
+ min-height:clamp(520px,47vw,720px);
+ background:
+  linear-gradient(92deg,rgba(21,7,41,.985) 0%,rgba(28,11,52,.92) 48%,rgba(15,37,32,.67) 100%),
+  url('/vitrine/photos/hero-sde-1280.webp') center 40%/cover no-repeat!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome > div:first-child{
+ max-width:760px;min-width:0;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome h1{
+ font-family:"Cinzel",Georgia,serif;
+ font-size:clamp(2.05rem,3.45vw,3.55rem)!important;
+ line-height:1.11;max-width:22ch;
+ color:#ffeba7!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome > div:first-child > p{
+ max-width:60ch;line-height:1.5;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions{
+ gap:9px;align-items:stretch;max-width:740px;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions a{
+ min-width:0;flex:1 1 150px;padding-inline:14px;font-size:.88rem;
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster{
+ display:flex;flex-direction:column;align-items:stretch;
+ min-width:0;max-width:465px;width:100%;
+ justify-self:end;padding:clamp(12px,1.8vw,23px);
+ border-radius:21px;
+ background:linear-gradient(165deg,rgba(64,25,90,.95),rgba(20,15,40,.96) 63%,rgba(13,56,42,.94));
+ border:1px solid rgba(250,210,128,.73);
+ box-shadow:0 18px 48px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,239,190,.1);
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-eyebrow{
+ display:flex;align-items:center;gap:8px;
+ color:#ffe2a1;letter-spacing:.12em;font-size:.71rem;
+ font-weight:800;text-transform:uppercase;margin:0 0 12px;
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-eyebrow span{
+ color:#e8b35d;font-size:1.2rem;
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-media{
+ display:block;border-radius:12px;overflow:hidden;
+ border:1px solid rgba(248,206,116,.5);
+ box-shadow:0 9px 20px rgba(0,0,0,.22);
+ aspect-ratio:1/1;
+ background:#140d29;
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-media img{
+ display:block;width:100%;height:100%;object-fit:cover;
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-media:hover img{
+ transform:scale(1.025);transition:transform .22s ease;
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-details{
+ display:grid;gap:5px;padding-top:14px;text-align:left;
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-details h2{
+ font:800 clamp(1.15rem,1.55vw,1.5rem)/1.13 "Saira Condensed",system-ui,sans-serif;
+ color:#fff4d4!important;letter-spacing:.015em;margin:0 0 4px;
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-details h2 span{color:#f8d17c}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-details p{
+ color:#ede6ee!important;margin:0;font-size:.79rem;line-height:1.45;
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-action{
+ display:flex;justify-content:space-between;align-items:center;gap:10px;
+ min-height:45px;margin-top:11px;padding:10px 14px;border-radius:10px;
+ background:linear-gradient(120deg,#ffe0a0,#d2a153);color:#241534!important;
+ text-decoration:none;font-weight:900;font-size:.88rem;
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-action:focus-visible,
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-media:focus-visible{
+ outline:3px solid #fff2b9;outline-offset:3px;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-kpis{
+ grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-kpi{
+ min-width:0;min-height:115px;border-radius:15px!important;
+ border-top:3px solid #e0b76e!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-kpi:nth-child(2){border-top-color:#a982d8!important}
+html body.sde-accueil-maquette.sde-ivoire .m-kpi:nth-child(3){border-top-color:#63b39b!important}
+html body.sde-accueil-maquette.sde-ivoire .m-kpi:nth-child(4){border-top-color:#e4c77c!important}
+html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine{
+ display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+ background:linear-gradient(120deg,#241440,#132a31);
+ border-radius:20px;overflow:hidden;
+ border:1px solid rgba(231,188,109,.43);
+ box-shadow:0 15px 35px rgba(12,4,28,.2);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-band{
+ min-width:0;display:flex;align-items:center;
+ padding:18px;border-bottom:0;border-right:1px solid rgba(228,190,111,.28);
+ background:linear-gradient(140deg,#32154f,#173c34);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-frame{
+ width:100%;max-width:460px;margin:0 auto;
+ border:1px solid #dfba79;border-radius:13px;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-frame img{
+ aspect-ratio:1.75/1;object-fit:cover;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-intro{
+ align-content:center;justify-items:start;gap:9px;
+ min-height:0!important;height:auto!important;
+ padding:clamp(22px,3.2vw,44px);
+ text-align:left;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-intro h2{
+ color:#fff0bf!important;font:700 clamp(1.3rem,2.2vw,2rem)/1.22 "Cinzel",Georgia,serif;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-intro p,
+html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-sub{
+ color:#f0e4e9!important;
+}
+@media(max-width:1130px){
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome{
+  grid-template-columns:minmax(0,1.25fr) minmax(245px,.72fr);
+  padding:clamp(20px,3vw,35px);
+  gap:20px;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome h1{
+  font-size:clamp(1.9rem,3.4vw,2.7rem)!important;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster{
+  padding:14px;
+ }
+}
+@media(max-width:760px){
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome{
+  grid-template-columns:minmax(0,1fr);min-height:0;
+  background:linear-gradient(0deg,rgba(22,9,43,.96),rgba(36,14,65,.87)),
+  url('/vitrine/photos/hero-sde-640.webp') center/cover no-repeat!important;
+  padding:clamp(21px,4vw,32px);
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome h1{
+  font-size:clamp(1.85rem,6vw,2.9rem)!important;max-width:24ch;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster{
+  justify-self:stretch;max-width:none;
+  display:grid;grid-template-columns:minmax(95px,.8fr) minmax(0,1.2fr);
+  gap:12px;align-items:center;padding:13px;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-eyebrow{
+  grid-column:1/-1;margin:0;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-details{padding:0;min-width:0}
+ html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-action{
+  font-size:.76rem;padding:8px;line-height:1.25;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-kpis{
+  grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine{
+  grid-template-columns:minmax(0,1fr);
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-band{
+  border-right:0;border-bottom:1px solid rgba(228,190,111,.28);
+  padding:12px 16px;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-intro{
+  padding:22px 19px;justify-items:center;text-align:center;
+ }
+}
+@media(max-width:360px){
+ html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster{
+  grid-template-columns:minmax(0,1fr);
+ }
+ html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-media{
+  max-width:240px;width:100%;margin:auto;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-media img{
+  transition:none!important;transform:none!important;
+ }
+}

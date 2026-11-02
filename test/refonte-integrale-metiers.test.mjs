@@ -51,3 +51,38 @@ test('Les entrées de consultation des dossiers privés restent des routes authe
  assert.ok(worker.includes('if (p.startsWith("/administration") && u.niveau < 1)'));
  assert.ok(worker.includes('return erreur("refuse", "Accès réservé aux responsables autorisés.", 403)'));
 });
+
+
+test('Accueil fidèle : la vision précède la bannière secondaire, TPA à droite et trois accès directs',()=>{
+ const html=file('public/vitrine/portail.html');
+ const css=file('public/vitrine/sde-premium-public.css');
+ const firstHero=html.indexOf('class="m-welcome"');
+ const secondary=html.indexOf('class="iv-vitrine"');
+ assert.ok(firstHero>0&&secondary>firstHero,'La vision doit être visible avant la bannière secondaire');
+ assert.equal((html.match(/class="sde-hero-poster"/g)||[]).length,1);
+ assert.ok(html.includes('href="/programmes#tpa-2026"'));
+ assert.ok(html.includes('datetime="2026-12-18T20:00:00+00:00"'));
+ assert.ok(html.includes('class="m-actions"'));
+ for(const link of ['/mouvement','/contact#rejoindre','/programmes']){
+  const hero=html.slice(firstHero,html.indexOf('class="m-kpis"',firstHero));
+  assert.ok(hero.includes('href="'+link+'"'),'Accès direct manquant '+link);
+ }
+ assert.match(css,/grid-template-columns:minmax\(0,1\.52fr\)/);
+ assert.match(css,/\.sde-hero-poster/);
+ assert.match(css,/@media\(max-width:760px\)/);
+ assert.match(css,/prefers-reduced-motion/);
+});
+test('Tableaux SDE : données réelles pour les barres, formations, rendez-vous, sans contenu simulé',()=>{
+ const jsx=file('frontend/business-mosaic.jsx'),css=file('frontend/business-mosaic.css');
+ assert.ok(jsx.includes("data.frequentation"));
+ assert.ok(jsx.includes("data.activites"));
+ assert.ok(jsx.includes("data.evenements"));
+ assert.ok(jsx.includes("data.formations"));
+ assert.ok(jsx.includes("source.error"));
+ assert.ok(jsx.includes("source.loading"));
+ assert.ok(jsx.includes("role=\"progressbar\""));
+ assert.ok(jsx.includes("portal.selectionner(module)"));
+ assert.ok(css.includes(".sde-mosaic-insights"));
+ assert.ok(css.includes(".sde-mosaic-bar-track"));
+ assert.ok(css.includes(".sde-mosaic-course-list"));
+});
