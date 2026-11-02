@@ -1,0 +1,190 @@
+/*
+ * SDE IMPÉRIAL — charte publique v1, novembre 2026
+ * Refonte progressive : ne remplace ni contenus, ni composants métier.
+ * L'interface publique conserve des contrastes élevés et une navigation native.
+ */
+:root{
+ --sp-nuit:#0b162c;--sp-nuit-clair:#172746;--sp-or:#d7ad58;
+ --sp-or-vif:#f0d18f;--sp-ivoire:#f7f3e9;--sp-papier:#fffdfa;
+ --sp-bordeaux:#722e45;--sp-encre:#202b41;--sp-texte:#536176;
+ --sp-ligne:#e2d9cb;--sp-radius:18px;
+ --sp-ombre:0 18px 48px rgba(11,22,44,.09);
+}
+html{scroll-padding-top:100px}
+body.sde-unifie:not(.sde-tableau),body[data-cosmique]{
+ --sde-gold:var(--sp-or);--sde-gold-light:var(--sp-or-vif);
+ --sde-ivory:var(--sp-ivoire);
+}
+body.sde-unifie:not(.sde-tableau){font-kerning:normal;text-rendering:optimizeLegibility}
+body.sde-unifie:not(.sde-tableau) :is(h1,h2,h3),body[data-cosmique] :is(h1,h2,h3){text-wrap:balance}
+body.sde-unifie:not(.sde-tableau) :is(p,li,dd),body[data-cosmique] :is(p,li){overflow-wrap:break-word}
+body.sde-unifie:not(.sde-tableau) :is(a,button,input,select,textarea,summary):focus-visible,
+body[data-cosmique] :is(a,button,input,select,textarea,summary):focus-visible{
+ outline:3px solid #e9b849!important;outline-offset:3px!important;
+}
+body.sde-unifie:not(.sde-tableau) :is(a,button,summary){-webkit-tap-highlight-color:transparent}
+body.sde-unifie:not(.sde-tableau) :is(button,a[role=button],summary){
+ min-height:40px;
+}
+/* La barre de navigation, stable et premium, reste en position selon les règles existantes. */
+html body.sde-unifie:not(.sde-tableau) .site-header{
+ background:linear-gradient(110deg,#0a1428 0%,#10213f 65%,#162a44 100%)!important;
+ border-bottom:1px solid rgba(240,209,143,.42)!important;
+ box-shadow:0 8px 25px rgba(10,19,36,.2)!important;
+ color:#fbf2dd!important;
+}
+html body.sde-unifie:not(.sde-tableau) .site-header :is(.site-brand,.site-brand b){
+ color:#f6d993!important;text-shadow:none!important;
+}
+html body.sde-unifie:not(.sde-tableau) .site-header .site-brand small{
+ color:#dbe0e9!important;
+}
+html body.sde-unifie:not(.sde-tableau) .site-menu{
+ border-color:rgba(240,209,143,.16);
+}
+html body.sde-unifie:not(.sde-tableau) .site-menu :is(a,summary){
+ border-radius:9px;
+}
+html body.sde-unifie:not(.sde-tableau) .site-menu a:hover,
+html body.sde-unifie:not(.sde-tableau) .site-menu a:focus-visible{
+ color:#f4d58a!important;
+}
+html body.sde-unifie:not(.sde-tableau) .site-portal-cta{
+ background:linear-gradient(135deg,#ddbb72,#f1d794)!important;
+ color:#17233a!important;border:1px solid #f9e5af!important;
+ border-radius:12px!important;font-weight:800!important;
+ box-shadow:0 4px 18px rgba(214,173,88,.18);
+}
+html body.sde-unifie:not(.sde-tableau) .site-portal-cta:hover{
+ background:#f5e0a7!important;transform:translateY(-1px);
+}
+/* Signalétique de toutes les pages éditoriales */
+html body.sde-unifie.sde-subpage.sde-ivoire .sde-intro,
+html body.sde-unifie.sde-subpage.sde-ivoire :is(.sde-hero,.m-band){
+ background-color:#10213b!important;
+ background-image:radial-gradient(ellipse at 85% 10%,rgba(215,173,88,.19),transparent 53%),
+ linear-gradient(135deg,#0b162c,#192b4a)!important;
+ border-color:rgba(232,194,106,.6)!important;
+ color:#fbf6ed!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire .sde-intro :is(h1,h2,p,.sde-crumbs),
+html body.sde-unifie.sde-subpage.sde-ivoire .sde-intro h1{
+ color:#fdf7e7!important;-webkit-text-fill-color:currentColor!important;
+ text-shadow:none!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire .sde-intro :is(.sde-kicker,a){color:#f2d693!important}
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section,
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section:nth-of-type(even){
+ background:radial-gradient(ellipse at 92% 0,rgba(221,180,100,.16),transparent 55%),
+ linear-gradient(130deg,#0c1a32,#192b4a 58%,#11213a)!important;
+ border-block:1px solid rgba(219,183,106,.32)!important;
+ color:#f9f2e8!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section :is(h2,h3),
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section .section-titre{
+ color:#fff7e6!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section>.enveloppe>p{
+ color:#eee4d4!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section a:not(.bouton):not(.btn){
+ text-underline-offset:3px;
+}
+/* Pages d'information, programmes, missions, pôles, Academy, prières. */
+html body.sde-unifie.sde-ivoire{
+ --iv-or:#a87b34;--iv-or-clair:#e0ba75;--iv-treillis:#172b30;--iv-treillis-2:#10223a;
+ --iv-ivoire:#f7f3eb;--iv-papier:#fffefa;--iv-encre:#202a3b;--iv-texte:#46536a;
+ --iv-ligne:#e2daca;
+}
+html body.sde-unifie.sde-ivoire .sde-kicker{
+ letter-spacing:.14em!important;font-weight:800!important;
+}
+html body.sde-unifie:not(.sde-tableau) :is(.sde-card,.ressource-carte,.programme,.m-card,.pole-carte,.iv-card,.hero-acad){
+ border-radius:var(--sp-radius)!important;
+ box-shadow:var(--sp-ombre);
+}
+html body.sde-unifie:not(.sde-tableau) :is(.sde-card,.ressource-carte,.programme,.m-card,.pole-carte,.iv-card){
+ transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+@media(hover:hover) and (pointer:fine){
+ html body.sde-unifie:not(.sde-tableau) :is(.sde-card,.ressource-carte,.programme,.m-card,.pole-carte,.iv-card):hover{
+  transform:translateY(-3px);
+  box-shadow:0 22px 48px rgba(12,28,52,.17);
+ }
+}
+html body.sde-unifie:not(.sde-tableau) :is(.btn-primary,.bouton.b-or,.sde-hero-cta,.iv-cta){
+ border-radius:12px!important;font-weight:800!important;
+ box-shadow:0 7px 20px rgba(158,119,44,.16);
+}
+html body.sde-unifie:not(.sde-tableau) :is(.sde-panel,.m-panel){
+ border-radius:20px;
+}
+html body.sde-unifie:not(.sde-tableau) :is(input:not([type=checkbox]):not([type=radio]),select,textarea){
+ max-width:100%;border-radius:11px;
+}
+/* Accueil public historique : conserver le portrait réel et les trois actions. */
+body[data-cosmique] .hero{isolation:isolate;overflow:hidden}
+body[data-cosmique] .hero-voile{
+ background:linear-gradient(90deg,rgba(8,17,35,.92) 0%,rgba(8,17,35,.71) 50%,rgba(8,17,35,.29) 100%)!important;
+}
+body[data-cosmique] .hero-contenu{
+ max-width:min(100%,1220px);
+}
+body[data-cosmique] .hero :is(h1,h2){text-shadow:0 4px 24px rgba(0,0,0,.3)}
+body[data-cosmique] .hero :is(.btn,.bouton,.cta){border-radius:12px}
+/* L'accueil nouvelle vitrine conserve son découpage en panneaux. */
+html body.sde-accueil-maquette.sde-ivoire{
+ background:var(--sp-ivoire)!important;color:var(--sp-encre)!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-band{
+ background:linear-gradient(125deg,#0e203a,#1c3153)!important;
+ color:#fff8ea!important;border-color:#cba35b!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-band :is(h1,h2,p,span){
+ color:#fff8ea!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-panel{
+ border:1px solid var(--sp-ligne)!important;
+ border-radius:22px!important;
+ overflow:clip;
+ box-shadow:var(--sp-ombre)!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome{
+ border-radius:18px;overflow:hidden;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome h1{
+ text-wrap:balance;line-height:1.08;
+}
+/* Lisibilité des bas de page et des liens */
+html body.sde-unifie:not(.sde-tableau) :is(.site-footer,footer.site-footer){
+ background:linear-gradient(135deg,#0a1529,#152641)!important;
+ border-top:2px solid #c39d55!important;
+ color:#f4ead9!important;
+}
+html body.sde-unifie:not(.sde-tableau) .site-footer a{color:#efd09a!important}
+html body.sde-unifie:not(.sde-tableau) .site-footer :is(p,small){color:#dce1e9!important}
+@media(max-width:900px){
+ html body.sde-unifie:not(.sde-tableau) .site-header .site-menu{
+  overscroll-behavior:contain;
+ }
+ html body.sde-unifie:not(.sde-tableau) .site-portal-cta{min-height:44px!important}
+ body[data-cosmique] .hero-voile{
+  background:linear-gradient(0deg,rgba(8,17,35,.93),rgba(8,17,35,.48))!important;
+ }
+}
+@media(max-width:600px){
+ html body.sde-unifie:not(.sde-tableau) .sde-intro{padding-inline:16px}
+ html body.sde-unifie:not(.sde-tableau) .sde-intro h1{font-size:clamp(1.9rem,8vw,2.85rem)!important;line-height:1.12!important}
+ html body.sde-accueil-maquette.sde-ivoire .m-panel{border-radius:16px!important}
+ html body.sde-unifie:not(.sde-tableau) :is(.sde-card,.ressource-carte,.programme,.m-card,.pole-carte,.iv-card){border-radius:14px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-unifie:not(.sde-tableau) *,body[data-cosmique] *{
+  animation-duration:.01ms!important;animation-iteration-count:1!important;
+  transition-duration:.01ms!important;scroll-behavior:auto!important;
+ }
+}
+@media print{
+ html body.sde-unifie:not(.sde-tableau) .site-header{position:static!important}
+ html body.sde-unifie:not(.sde-tableau) :is(.site-header,.site-footer){box-shadow:none!important}
+}
