@@ -20,6 +20,9 @@ test("Soldier House: univers public impérial chargé depuis l'accueil",()=>{
   assert.match(publicCss,/#dfbe77/i);
   assert.match(publicCss,/\.site-header/);
   assert.match(publicCss,/\.sde-intro/);
+  assert.match(publicHome,/sde-accueil-maquette/);
+  assert.match(publicCss,/\.sde-accueil-maquette/);
+  assert.match(publicHome,/class="iv-intro"/);
 });
 test("Soldier House: espace membre lumière et poste admin Command séparés",()=>{
   assert.match(memberDash,/data-dashboard="membre"/);
