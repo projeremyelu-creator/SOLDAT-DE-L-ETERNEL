@@ -1,0 +1,47 @@
+name: Auditer les tableaux de bord privés sans données réelles
+on:
+  pull_request:
+    paths:
+      - 'scripts/audit-prive-isole.mjs'
+      - '.github/workflows/audit-espaces-prives-isoles.yml'
+      - 'public/vitrine/tableau-membre.html'
+      - 'public/vitrine/tableau-administration.html'
+      - 'public/vitrine/tableaux-de-bord.css'
+      - 'public/vitrine/tableaux-de-bord.js'
+      - 'public/vitrine/sde-premium-dashboards.css'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/audit-prive-isole.mjs'
+      - '.github/workflows/audit-espaces-prives-isoles.yml'
+      - 'public/vitrine/tableau-membre.html'
+      - 'public/vitrine/tableau-administration.html'
+      - 'public/vitrine/tableaux-de-bord.css'
+      - 'public/vitrine/tableaux-de-bord.js'
+      - 'public/vitrine/sde-premium-dashboards.css'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  navigateur-isole:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.4'
+      - name: Installer Chromium localement
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.0
+          npx playwright install --with-deps chromium
+      - name: Auditer le membre et les trois niveaux de direction sans réseau de production
+        run: node scripts/audit-prive-isole.mjs
+      - name: Archiver les captures et le rapport isolés
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-tableaux-prives-sde
+          path: audit-mobile-sde/prives/
+          if-no-files-found: warn
+          retention-days: 7
