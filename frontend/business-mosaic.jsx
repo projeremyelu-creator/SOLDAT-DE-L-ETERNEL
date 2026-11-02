@@ -68,6 +68,13 @@ export function BusinessMosaic({portal,direction}){
   ['Mes engagements',data.taches?.length],
   ['Rappels',data.rappels?.length]
  ];
+ const presenceSeries=direction&&Array.isArray(data.frequentation)?data.frequentation.slice(-7):[];
+ const presenceMax=Math.max(1,...presenceSeries.map(x=>Math.max(0,Number(x.presents)||0)+Math.max(0,Number(x.retards)||0)));
+ const recentActivities=direction&&Array.isArray(data.activites)?data.activites.slice(0,4):[];
+ const upcoming=!direction&&Array.isArray(data.evenements)?data.evenements.slice(0,3):[];
+ const enrolled=!direction&&Array.isArray(data.formations)?data.formations.slice(0,3):[];
+ const activityTitles={membres:'Registre des membres',evenements:'Agenda et présences',projets:'Projets et missions',formations:'Soldiers Academy',annonces:'Communications'};
+ const displayDate=v=>/^\\d{4}-\\d{2}-\\d{2}$/.test(String(v||''))?String(v).slice(8,10)+'/'+String(v).slice(5,7):'Date non précisée';
  const go=module=>portal.selectionner(module);
  return <div className={'sde-mosaic '+(direction?'sde-mosaic-command':'sde-mosaic-member')}>
   <section className="sde-mosaic-intro" aria-label="Centre opérationnel du Mouvement SDE">
@@ -86,6 +93,33 @@ export function BusinessMosaic({portal,direction}){
    {numbers.map(([label,value])=><div className="sde-mosaic-stat" key={label}><span>{label}</span><strong>{source.loading?'…':value==null?'—':value}</strong></div>)}
   </div>
   {source.error&&<p role="alert" className="sde-mosaic-error">Les indicateurs sont indisponibles : {source.error}. Les modules restent accessibles. <button type="button" onClick={source.reload}>Réessayer</button></p>}
+  <div className="sde-mosaic-insights" aria-label={direction?'Suivi d’activité du mouvement':'Mon agenda et mes formations'}>
+   {direction?<React.Fragment>
+    <section className="sde-mosaic-insight sde-mosaic-attendance" aria-label="Évolution récente des présences">
+     <div className="sde-mosaic-insight-heading"><div><span className="sde-mosaic-eyebrow">SUIVI DES PRÉSENCES</span><h4>Évolution des rassemblements</h4></div><button type="button" onClick={()=>go('pilotage')}>Rapport complet ↗</button></div>
+     {presenceSeries.length?<div className="sde-mosaic-bars" role="img" aria-label={'Présences enregistrées : '+presenceSeries.map(x=>String(x.date||'')+' : '+String((Number(x.presents)||0)+(Number(x.retards)||0))+' personnes').join(', ')}>
+      {presenceSeries.map((x,i)=><div className="sde-mosaic-bar-col" key={String(x.date||i)}>
+       <span>{Math.max(0,Number(x.presents)||0)+Math.max(0,Number(x.retards)||0)}</span>
+       <div className="sde-mosaic-bar-track"><div className="sde-mosaic-bar" style={{height:(100*(Math.max(0,Number(x.presents)||0)+Math.max(0,Number(x.retards)||0))/presenceMax)+'%'}}/></div>
+       <small>{displayDate(x.date)}</small>
+      </div>)}
+     </div>:<p className="sde-mosaic-no-data">Aucun pointage récent disponible pour le graphique.</p>}
+    </section>
+    <section className="sde-mosaic-insight sde-mosaic-activity" aria-label="Activités administratives récentes">
+     <div className="sde-mosaic-insight-heading"><div><span className="sde-mosaic-eyebrow">ACTIVITÉS RÉCENTES</span><h4>Vie du mouvement</h4></div><button type="button" onClick={()=>go('pilotage')}>Détails ↗</button></div>
+     {recentActivities.length?<ul className="sde-mosaic-list">{recentActivities.map((a,i)=><li key={String(a.rubrique||'')+String(a.cree||i)}><span className="sde-mosaic-list-icon" aria-hidden="true">✦</span><span><strong>{activityTitles[a.rubrique]||'Activité du mouvement'}</strong><small>{Number.isFinite(Number(a.cree))?new Date(Number(a.cree)).toLocaleDateString('fr-CI'):'Date non précisée'}</small></span></li>)}</ul>:<p className="sde-mosaic-no-data">Aucune activité récente à afficher.</p>}
+    </section>
+   </React.Fragment>:<React.Fragment>
+    <section className="sde-mosaic-insight" aria-label="Mes prochains rendez-vous">
+     <div className="sde-mosaic-insight-heading"><div><span className="sde-mosaic-eyebrow">MES RENDEZ-VOUS</span><h4>À venir</h4></div><button type="button" onClick={()=>go('rendezvous')}>Agenda ↗</button></div>
+     {upcoming.length?<ul className="sde-mosaic-list">{upcoming.map((e,i)=><li key={String(e.id||i)}><span className="sde-mosaic-date" aria-hidden="true">{/^\\d{4}-\\d{2}-\\d{2}$/.test(String(e.date||''))?String(e.date).slice(-2):'—'}</span><span><strong>{e.titre||'Rassemblement SDE'}</strong><small>{displayDate(e.date)}{e.heure?' · '+e.heure:''}{e.lieu?' · '+e.lieu:''}</small></span></li>)}</ul>:<p className="sde-mosaic-no-data">Aucun rendez-vous à venir dans votre agenda.</p>}
+    </section>
+    <section className="sde-mosaic-insight" aria-label="Ma progression Soldiers Academy">
+     <div className="sde-mosaic-insight-heading"><div><span className="sde-mosaic-eyebrow">SOLDIERS ACADEMY</span><h4>Mes formations</h4></div><button type="button" onClick={()=>go('academie')}>Mes cours ↗</button></div>
+     {enrolled.length?<ul className="sde-mosaic-course-list">{enrolled.map((c,i)=>{const total=Math.max(0,Number(c.total)||0),faits=Math.min(total,Math.max(0,Number(c.faits)||0)),percent=total?Math.round(faits/total*100):0;return <li key={String(c.id||i)}><div><strong>{c.titre||'Formation SDE'}</strong><small>{total?faits+' / '+total+' modules':'Suivi en attente'} · {c.statut||'Inscription enregistrée'}</small></div><div className="sde-mosaic-progress-track" role="progressbar" aria-label={'Progression de '+(c.titre||'formation')} aria-valuenow={percent} aria-valuemin="0" aria-valuemax="100"><span style={{width:percent+'%'}}/></div></li>})}</ul>:<p className="sde-mosaic-no-data">Aucune formation active enregistrée sur votre compte.</p>}
+    </section>
+   </React.Fragment>}
+  </div>
   <div className="sde-mosaic-explore">
    <div><p className="sde-mosaic-eyebrow">MODULES MÉTIER CONNECTÉS</p><h3>{direction?'Centre de gestion du mouvement':'Mes services et mon parcours'}</h3></div>
    <label>Rechercher une rubrique<input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Membres, finances, programmes…" aria-label="Rechercher une rubrique SDE"/></label>
