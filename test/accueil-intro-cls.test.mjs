@@ -20,3 +20,15 @@ test("La grille d'accueil réserve 260 px sur les grands écrans, sans figer le 
  // Le build de production remplace les versions de fichiers par une empreinte.
  assert.match(html,/sde-sitewide-2026\.css\?v=[a-z0-9]+/i);
 });
+
+test("La bande 960–1100 px réserve 300 px et conserve quatre lignes indépendantes des polices",()=>{
+ const rule=css.slice(css.indexOf("/* Tablettes 960–1100 px"));
+ assert.ok(rule.startsWith("/* Tablettes 960–1100"),"Stabilisation tablette manquante");
+ assert.match(rule,/@media \(min-width:960px\) and \(max-width:1100px\)/);
+ assert.match(rule,/\.iv-intro \{\s*box-sizing:border-box;\s*height:300px;\s*min-height:300px;/);
+ assert.match(rule,/grid-template-rows:72px 42px 52px 30px/);
+ assert.match(rule,/\.iv-intro h2 \{\s*line-height:36px/);
+ assert.match(rule,/\.iv-intro \.iv-cta \{\s*min-height:52px/);
+ assert.match(rule,/\.iv-intro \.iv-sub \{\s*min-height:30px/);
+ assert.match(html,/sde-sitewide-2026\.css\?v=20261102tablet/);
+});
