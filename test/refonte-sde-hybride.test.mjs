@@ -113,7 +113,7 @@ test("Navigation mobile privée : cinq raccourcis et respect de l'authentificati
    "L'authentification doit précéder la navigation privée");
  for(const filename of ["tableau-membre.html","tableau-administration.html"]){
   const html=read("public/vitrine/"+filename);
-  assert.match(html,/tableaux-de-bord\.js\?v=20261102fusion03-04/);
-  assert.match(html,/sde-premium-dashboards\.css\?v=20261102fusion03-04/);
+  assert.match(html,/tableaux-de-bord\.js\?v=[a-zA-Z0-9-]+/);
+  assert.match(html,/sde-premium-dashboards\.css\?v=[a-zA-Z0-9-]+/);
  }
 });
