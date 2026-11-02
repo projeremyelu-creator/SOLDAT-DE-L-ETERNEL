@@ -188,3 +188,53 @@ html body.sde-unifie:not(.sde-tableau) .site-footer :is(p,small){color:#dce1e9!i
  html body.sde-unifie:not(.sde-tableau) .site-header{position:static!important}
  html body.sde-unifie:not(.sde-tableau) :is(.site-header,.site-footer){box-shadow:none!important}
 }
+
+
+/* Phase 2 : navigation publique à cinq accès, 320–900 px.
+   Aucun accès financier interne : l'onglet Finances ouvre le soutien public. */
+html body.sde-unifie:not(.sde-tableau) .site-menu>.sde-menu-plus{
+ display:inline-flex;align-items:center;justify-content:center;
+ padding:10px 13px;min-height:44px;text-decoration:none;font-weight:800;
+ border:1px solid rgba(228,194,113,.45);color:#f9e5b8!important;
+ border-radius:10px;
+}
+html body.sde-unifie:not(.sde-tableau) .site-menu>.sde-menu-plus:hover{
+ background:rgba(225,195,130,.15);color:#fff9e8!important;
+}
+.sde-public-bottom-nav{display:none}
+@media(max-width:900px){
+ html body.sde-unifie:not(.sde-tableau):has(.sde-public-bottom-nav){
+  padding-bottom:calc(72px + env(safe-area-inset-bottom))!important;
+ }
+ .sde-public-bottom-nav{
+  position:fixed;inset:auto 0 0;z-index:850;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  min-height:65px;padding:6px max(6px,env(safe-area-inset-right))
+    calc(7px + env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left));
+  gap:3px;
+  background:#0b172b;
+  box-shadow:0 -8px 28px rgba(7,13,26,.28);
+  border-top:2px solid #d9b772;
+  color:#f8eed7;
+ }
+ .sde-public-bottom-nav a{
+  min-width:0;min-height:52px;padding:5px 1px 3px;
+  border-radius:11px;text-decoration:none;
+  color:#e9e2d5;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;
+  font:700 clamp(10px,2.5vw,12px)/1.1 "Atkinson Hyperlegible",system-ui,sans-serif;
+  text-align:center;
+ }
+ .sde-public-bottom-nav svg{display:block;width:21px;height:21px;flex:none}
+ .sde-public-bottom-nav a[aria-current="page"]{
+  color:#f9dc9b;background:rgba(224,189,111,.16);
+  box-shadow:inset 0 0 0 1px rgba(224,189,111,.3);
+ }
+ .sde-public-bottom-nav a:focus-visible{
+  outline:3px solid #f1cb7b!important;outline-offset:-2px!important;
+ }
+ body.sde-menu-mobile-ouvert .sde-public-bottom-nav{
+  visibility:hidden;pointer-events:none;
+ }
+}
+@media print{.sde-public-bottom-nav{display:none!important}}
