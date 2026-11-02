@@ -194,6 +194,39 @@ try{
      report.notes.push({test:'galerie-infire-mobile',photos:await gallery.count(),annees:await tabs.count()});
     }catch(e){issue(c.name,'parcours galerie mobile indisponible : '+String(e.message||e).slice(0,220),true)}
    }
+   // Préinscription Academy : vérifier le cycle erreur / succès sans aucun envoi réel.
+   // Interception de toutes les requêtes POST de cette action, avec identités fictives.
+   if(c.name==='academy-390'){
+    try{
+     const form=page.locator('#formulaire');
+     if(await form.count()!==1)issue(c.name,'formulaire de préinscription introuvable',true);
+     else{
+      const requests=[];
+      await page.route('**/api/preinscription-academy',async route=>{
+       const payload=route.request().postData()||'';
+       requests.push({method:route.request().method(),synthetic:payload.includes('academy-test@example.invalid')});
+       const first=requests.length===1;
+       await route.fulfill({status:first?422:200,contentType:'application/json',
+        body:JSON.stringify(first?{erreur:'validation',message:'Essai contrôlé : corriger le formulaire.'}:{ok:true,message:'Préinscription fictive validée.'})});
+      });
+      await form.locator('input[name="nom"]').fill('AcademyTest');
+      await form.locator('input[name="prenom"]').fill('Fictif');
+      await form.locator('input[name="email"]').fill('academy-test@example.invalid');
+      await form.locator('input[name="telephone"]').fill('0000000000');
+      await form.locator('textarea[name="motivation"]').fill('Test de navigation fictif sans données personnelles.');
+      await form.locator('input[name="accord"]').check();
+      const send=form.locator('#btnEnvoyer');
+      await send.click({timeout:6000});
+      await page.waitForFunction(()=>document.getElementById('toast')?.textContent.includes('Essai contrôlé'),null,{timeout:6000});
+      if(await send.isDisabled())issue(c.name,'bouton bloqué après retour d’erreur simulé',true);
+      await send.click({timeout:6000});
+      await page.waitForFunction(()=>document.getElementById('zoneSucces')?.style.display==='block',null,{timeout:6000});
+      if(requests.length!==2||requests.some(x=>x.method!=='POST'||!x.synthetic))issue(c.name,'soumissions fictives non interceptées ou mal formées',true);
+      report.notes.push({test:'academy-preinscription-simulee-sans-ecriture',requests:requests.length,success:await page.locator('#zoneSucces').isVisible()});
+      await page.unroute('**/api/preinscription-academy');
+     }
+    }catch(e){issue(c.name,'parcours préinscription inopérant : '+String(e.message||e).slice(0,240),true)}
+   }
    // INTERACTIONS_NAVI : le menu et le changement de thème doivent fonctionner sur un vrai téléphone.
    if(c.name==='accueil-390'){
     try{
@@ -403,7 +436,7 @@ try{
    if(c.path==='/'&&row.quoteContrast!==null&&row.quoteContrast<4.5)issue(c.name,'contraste du verset '+row.quoteContrast+':1',true);
    if(c.path==='/'&&(row.poleLinks!==5||row.brokenPoleImages>0))issue(c.name,'cartes/emblèmes pôles manquants ou images indisponibles',true);
    if(c.path==='/'&&(!row.tpaPosters||!row.tpaPosterLoaded))issue(c.name,'affiche TPA absente ou non chargée',true);
-   if(row.pageErrors.length)issue(c.name,row.pageErrors.slice(0,3).join(' | '));
+   if(row.pageErrors.length)issue(c.name,row.pageErrors.slice(0,3).join(' | '),c.name==='academy-390');
    console.log('AUDIT '+c.name+' '+JSON.stringify(row));
   } catch(error){
    issue(c.name,String(error.message||error).slice(0,500),true);
