@@ -179,3 +179,129 @@ body.sde-tableau{min-height:100vh;background:#f4f5f7;color:#1e2637;font-family:"
     scroll-behavior:auto!important;
   }
 }
+
+
+/* ── Soldier House Premium · Lot A · tableaux de bord ──────────────
+   Deux univers distincts selon data-dashboard. Les données et permissions
+   sont inchangées : cette feuille ne masque aucune fonctionnalité. */
+.sde-tableau[data-dashboard="membre"]{
+  --sh-accent:#8a3550;--sh-gold:#b28b47;
+  background:#f7f3eb;color:#282c33;
+}
+.sde-tableau[data-dashboard="membre"] .sde-dash-header{
+  background:#19233b;border-bottom-color:#ddb975;
+}
+.sde-tableau[data-dashboard="membre"] .sde-dash-side{
+  background:linear-gradient(180deg,#1e2b43,#172238);
+}
+.sde-tableau[data-dashboard="membre"] .sde-dash-side nav a[aria-current="page"]{
+  background:rgba(223,190,119,.18);color:#ffebba;border-left-color:#e2c47f;
+}
+.sde-tableau[data-dashboard="membre"] .sde-dash-heading h1,
+.sde-tableau[data-dashboard="membre"] .sde-panel h2{color:#22283b}
+.sde-tableau[data-dashboard="membre"] :is(.sde-panel,.sde-dash-metrics article){
+  background:#fffefa;border-color:#e8dfd0;
+  box-shadow:0 12px 28px rgba(63,42,48,.055);
+}
+.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article{
+  border-top:3px solid #b28b47;
+}
+.sde-tableau[data-dashboard="membre"] .sde-panel-actions a:first-child{
+  background:#782f4b;border-color:#782f4b;color:#fff;
+}
+.sde-tableau[data-dashboard="membre"] .sde-panel-actions a:not(:first-child){
+  background:#fff8eb;border-color:#be9b5f;color:#533149;
+}
+.sde-tableau[data-dashboard="membre"] :is(.sde-dash-overline,.sde-panel-eyebrow){
+  color:#823950;
+}
+.sde-tableau[data-dashboard="administration"]{
+  --sh-admin-bg:#101e19;--sh-admin-surface:#1d3027;
+  --sh-admin-gold:#e3c77e;--sh-admin-text:#f6f0df;
+  background:#101d18;color:#f6f0df;
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-header{
+  background:#101b18;border-bottom-color:#d6b96a;
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-side{
+  background:linear-gradient(165deg,#182a20,#0d1b16);
+  border-right:1px solid #c8af6440;
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-side nav a{
+  color:#e2e6da;
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-side nav a[aria-current="page"]{
+  background:rgba(228,199,128,.17);color:#ffe4a6;border-left-color:#e3c77e;
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-heading h1,
+.sde-tableau[data-dashboard="administration"] .sde-panel h2{
+  color:#fff3d7;
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-heading p,
+.sde-tableau[data-dashboard="administration"] .sde-panel p:not(.sde-panel-eyebrow):not(.sde-form-feedback){
+  color:#cdd9d0;
+}
+.sde-tableau[data-dashboard="administration"] :is(.sde-panel,.sde-dash-metrics article){
+  background:#1d3027;border:1px solid #c7b47c42;
+  box-shadow:0 15px 38px rgba(3,12,8,.2);
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-metrics article{
+  border-top:3px solid #dfc278;
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-metrics article :is(span,small){
+  color:#c3d3c6;
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-metrics article strong{
+  color:#f0d495;
+}
+.sde-tableau[data-dashboard="administration"] :is(.sde-dash-overline,.sde-panel-eyebrow){
+  color:#f0d495;
+}
+.sde-tableau[data-dashboard="administration"] .sde-panel-actions a{
+  color:#f4dfa6;border-color:#bb9d55;background:#263b2f;
+}
+.sde-tableau[data-dashboard="administration"] .sde-panel-actions a:first-child{
+  background:#e4c780;color:#1a2a21;
+}
+.sde-tableau[data-dashboard="administration"] .sde-panel-actions a:hover{
+  background:#f1dca6;color:#1a2a21;
+}
+.sde-tableau[data-dashboard="administration"] :is(.sde-dash-items li,.sde-dash-alert){
+  background:#263d31;border-color:#b6ab794d;color:#f8f4e7;
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-quick a,
+.sde-tableau[data-dashboard="administration"] .sde-profile dd{
+  color:#f6edda;
+}
+.sde-tableau[data-dashboard="administration"] :is(.sde-dash-quick a,.sde-profile div){
+  border-bottom-color:#d7d2b329;
+}
+.sde-tableau[data-dashboard="administration"] .sde-profile dt,
+.sde-tableau[data-dashboard="administration"] .sde-dash-items li span{
+  color:#c4d0c5;
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-form label{
+  color:#f5ebd7;
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-form :is(input,textarea){
+  color:#18261e;background:#fffdf7;border:1px solid #9fae9e;
+}
+.sde-tableau[data-dashboard="administration"] .sde-dash-role{
+  background:#e7d9af;color:#322919;border-color:#dbc17a;
+}
+.sde-tableau :is(a,button,input,textarea):focus-visible{
+  outline:3px solid #e3c77e;outline-offset:3px;
+}
+@media(max-width:880px){
+  .sde-tableau[data-dashboard="administration"] .sde-dash-side{
+    border-right:0;border-bottom:1px solid #e4c78055;
+  }
+  .sde-tableau[data-dashboard="membre"] .sde-dash-side{
+    border-bottom:1px solid #dfc07855;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .sde-tableau[data-dashboard] :is(.sde-panel,.sde-dash-metrics article){
+    transition:none!important;animation:none!important;
+  }
+}
