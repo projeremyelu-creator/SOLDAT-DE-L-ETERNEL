@@ -61,7 +61,7 @@ test("Phase 2 : cinq accès publics mobiles, sans fuite des finances internes",(
  assert.ok(js.includes('aria-label","Navigation rapide SDE sur mobile"'));
  assert.ok(js.includes('a.setAttribute("aria-current","page")'));
  assert.ok(js.includes('document.body.classList.add("sde-has-bottom-nav")'));
- assert.ok(js.includes('if(innerWidth>900&&menu.dataset.open==="true")'));
+ assert.ok(js.includes('if(innerWidth>1800&&menu.dataset.open==="true")'));
  assert.match(css,/\.sde-public-bottom-nav\s*\{/);
  assert.match(css,/@media\(max-width:900px\)/);
  assert.match(css,/safe-area-inset-bottom/);
