@@ -414,3 +414,146 @@ html body.sde-unifie:not(.sde-tableau) :is(.m-btn,.sde-hero-cta,.site-portal-cta
 @media(prefers-reduced-motion:reduce){
  html body.sde-accueil-maquette.sde-ivoire :is(.m-kpi,.m-btn){transition:none!important;transform:none!important}
 }
+
+
+/* SDE Fusion 03 + 04 — reproduction visuelle des pages publiques.
+   Dernière couche de composition : portrait officiel, photographies existantes,
+   fonds prophétiques violets et surfaces Command. */
+:root{
+ --sde-fusion-violet-fonce:#1a0a32;
+ --sde-fusion-violet:#41206b;
+ --sde-fusion-vert:#174636;
+ --sde-fusion-or-clair:#f7da95;
+}
+html body.sde-unifie:not(.sde-tableau) .site-header{
+ background:linear-gradient(104deg,#190b34,#321451 61%,#164636)!important;
+ border-bottom:1px solid #deba73!important;
+}
+html body.sde-unifie:not(.sde-tableau) .site-menu,
+html body.sde-unifie:not(.sde-tableau) .site-mega-panel{
+ --sde-header-text:#fff8e8;
+}
+html body.sde-unifie:not(.sde-tableau) .site-menu a:focus-visible,
+html body.sde-unifie:not(.sde-tableau) .site-menu summary:focus-visible{
+ outline:3px solid #f8d890!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-main{gap:23px;max-width:1440px}
+html body.sde-accueil-maquette.sde-ivoire .m-panel{
+ background:linear-gradient(148deg,#24133f,#18132f 72%,#112f2a)!important;
+ box-shadow:0 20px 53px rgba(10,3,28,.35)!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome{
+ min-height:clamp(360px,42vw,565px);
+ padding:clamp(24px,5vw,70px);
+ background:
+  linear-gradient(90deg,rgba(21,7,41,.98) 0%,rgba(31,10,54,.93) 38%,rgba(24,13,43,.45) 77%,rgba(14,38,32,.28)),
+  url('/vitrine/photos/hero-sde-1280.webp') center 40%/cover no-repeat!important;
+ border:1px solid rgba(237,200,120,.52);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome>div{
+ max-width:770px;padding:8px 0;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-kicker{
+ background:rgba(40,18,66,.55);color:#f8da95;
+ border-radius:999px;padding:10px 16px;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome h1{
+ max-width:19ch;line-height:1.05;color:#fff2c6!important;
+ font-size:clamp(2.15rem,4.5vw,4.4rem)!important;
+ text-shadow:0 6px 35px rgba(0,0,0,.4);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-verset{
+ background:rgba(24,10,42,.46);border-radius:0 12px 12px 0;
+ padding:10px 14px;max-width:63ch;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions{
+ align-items:stretch;gap:11px;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions a{
+ min-height:47px;border-radius:11px;justify-content:center;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions .m-gold{
+ background:linear-gradient(130deg,#ffe6a7,#d0a451)!important;color:#251b2c!important;
+ border-color:#ffe1a6!important;box-shadow:0 12px 24px rgba(12,3,25,.25);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-body{padding:clamp(17px,2.6vw,33px)}
+html body.sde-accueil-maquette.sde-ivoire .m-kpis{gap:13px}
+html body.sde-accueil-maquette.sde-ivoire .m-kpi{
+ background:linear-gradient(140deg,#361a57,#1d203a)!important;
+ border-radius:17px!important;border-color:rgba(235,195,116,.35)!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-feature{
+ background:#21143d;border-radius:19px!important;
+ border-color:rgba(244,202,112,.47);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-feature-img{
+ filter:saturate(1.04) contrast(1.07) brightness(.83);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-feature::before{
+ background:linear-gradient(90deg,rgba(30,11,54,.98),rgba(32,13,52,.77) 58%,transparent 100%);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-prog{
+ border-top:3px solid #d9b362!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-poles{
+ grid-template-columns:repeat(5,minmax(0,1fr));
+}
+html body.sde-accueil-maquette.sde-ivoire .m-pole:nth-child(2){
+ border-top:3px solid #3d9f7a!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-pole:nth-child(3){
+ border-top:3px solid #e6be71!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-pole:nth-child(4){
+ border-top:3px solid #b780d8!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire .sde-intro{
+ border-radius:0 0 22px 22px!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section .enveloppe{
+ max-width:1280px;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire :is(.sde-card,.iv-card,.ressource-carte,.pole-carte,.programme){
+ border-radius:18px!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire :is(.sde-card,.iv-card,.ressource-carte,.pole-carte,.programme):focus-within{
+ outline:2px solid #f3d387;outline-offset:2px;
+}
+html body.sde-unifie:not(.sde-tableau) :is(.site-portal-cta,.iv-cta,.sde-hero-cta){
+ background:linear-gradient(140deg,#f8daa1,#d3a955)!important;
+ border-radius:12px!important;color:#21172c!important;
+ border:1px solid #ffe7b0!important;
+ box-shadow:0 9px 22px rgba(7,3,18,.18);
+}
+@media(max-width:1100px){
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome{
+  background-position:58% center!important;
+ }
+}
+@media(max-width:700px){
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome{
+  min-height:0;padding:29px 19px;
+  background:linear-gradient(0deg,rgba(23,8,41,.97),rgba(41,13,69,.87) 67%,rgba(23,14,44,.64)),
+  url('/vitrine/photos/hero-sde-640.webp') right center/cover no-repeat!important;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome h1{
+  font-size:clamp(1.88rem,7.9vw,3rem)!important;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions a{
+  flex:1 1 100%;width:100%;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-poles{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-band{
+  gap:9px!important;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-band h2{
+  white-space:normal;line-height:1.25;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-unifie:not(.sde-tableau) :is(.m-kpi,.m-prog,.site-portal-cta){
+  transition:none!important;animation:none!important;transform:none!important;
+ }
+}

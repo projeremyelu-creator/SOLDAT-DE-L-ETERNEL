@@ -10,6 +10,7 @@
   if(!mode)return;
 
   const catalogue={
+    "centre-membre":"Tous mes services","centre-command":"Centre opérationnel",
     rendezvous:"Événements & notifications",carteqr:"Ma carte",scanner:"Pointages & QR",pilotage:"Dashboard",annuaire:"Annuaire",bibliotheque:"Ressources","finance-direction":"Finances & missions","site-public":"Contenu du site",adhesions:"Demandes d’adhésion",anniversaires:"Anniversaires des membres","suivi-poles":"Suivi des pôles","espace-soldat":"Mon espace Soldat","academy-direction":"Gestion Academy",mur:"Mur de prière",accueil:"Tableau de bord",espace:"Mon profil",priere:"Prières",membres:"Membres et fiches",
     agenda:"Mon agenda",garnisons:"Garnisons et pôles",academie:"Formations",
     portevoix:"Communication et annonces",chambre:"Prière et intercession",
@@ -17,7 +18,7 @@
     arsenal:"Bibliothèque et enseignements",mediatheque:"Médiathèque",assistant:"Assistant Éliézer",
     engagements:"Mes engagements",contributions:"Cotisations",synthese:"Mon accueil",parcours:"Lecture et prière",preferences:"Notifications",gestion:"Centre de contrôle"
   };
-  const personnel=new Set(["espace-soldat","rendezvous","carteqr","bibliotheque","mur","priere","espace","agenda","academie","portevoix","arsenal","mediatheque","synthese","engagements","contributions","parcours","preferences"]);
+  const personnel=new Set(["centre-membre","espace-soldat","rendezvous","carteqr","bibliotheque","mur","priere","espace","agenda","academie","portevoix","arsenal","mediatheque","synthese","engagements","contributions","parcours","preferences"]);
   const url=new URL(location.href);
   const demandé=url.searchParams.get("module")||"";
   const souhait=Object.prototype.hasOwnProperty.call(catalogue,demandé)?demandé:
@@ -38,6 +39,8 @@
     if(!Object.prototype.hasOwnProperty.call(catalogue,nom))return false;
     if(mode==="membre"&&!personnel.has(nom))return false;
     if(nom==="priere")return mode==="membre";
+    if(nom==="centre-command")return mode==="direction"&&compte?.niveau>=1;
+    if(nom==="centre-membre")return mode==="membre";
     if(nom==="gestion")return mode==="direction"&&compte?.niveau>=1;
     if(["scanner","pilotage","annuaire","academy-direction"].includes(nom)&&compte?.niveau<1)return false;
     if(nom==="finance-direction"&&compte?.niveau<2)return false;
