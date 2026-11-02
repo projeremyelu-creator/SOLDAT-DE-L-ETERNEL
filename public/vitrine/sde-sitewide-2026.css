@@ -1268,3 +1268,74 @@ body.sde-unifie .sde-hero-cta:hover{background:#f3da9a;color:#0b1530}
     align-items:center;
   }
 }
+
+
+/* ── Soldier House Premium · Lot A · 2026-11 ───────────────────────────
+   Univers public IMPÉRIAL : rafraîchissement visuel limité à la vitrine.
+   Ne touche ni à la logique des formulaires, ni aux données, ni au privé. */
+html body.sde-unifie.sde-subpage {
+  --sde-premium-night:#101a2f;
+  --sde-premium-night2:#1b2c46;
+  --sde-premium-gold:#dfbe77;
+  --sde-premium-ivory:#fff8e8;
+  --sde-premium-burgundy:#742f48;
+  --sde-premium-radius:18px;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire .site-header{
+  background:#111b30!important;
+  color:#fff8e8!important;
+  border-bottom:1px solid rgba(223,190,119,.55)!important;
+  box-shadow:0 8px 28px rgba(9,17,33,.2);
+}
+html body.sde-unifie.sde-subpage.sde-ivoire .site-brand :is(b,small),
+html body.sde-unifie.sde-subpage.sde-ivoire .site-menu>details>summary{
+  color:#f8edda!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire .site-portal-cta{
+  border:1px solid rgba(230,195,115,.8)!important;
+  background:#e0bd71!important;
+  color:#152139!important;
+  border-radius:12px!important;
+  font-weight:800;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire .sde-intro{
+  background-color:#101a2f!important;
+  background-image:
+    radial-gradient(ellipse at 90% 15%,rgba(219,177,91,.22),transparent 55%),
+    linear-gradient(115deg,#101a2f,#223653)!important;
+  border-bottom:3px solid #dbb971!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section{
+  background:
+    radial-gradient(ellipse at 90% 0,rgba(225,192,120,.13),transparent 65%),
+    linear-gradient(145deg,#17263e 0%,#111b30 62%,#20304c 100%)!important;
+  color:#fff9ec!important;
+  border-block:1px solid rgba(219,185,109,.35)!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section:nth-of-type(even){
+  background:linear-gradient(145deg,#1d2b44,#111a2c 65%,#192e47)!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire :is(.tete-section,.enveloppe) :is(h2,h3){
+  text-wrap:balance;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire :is(.site-menu a,.site-access-top a,.bouton,.sde-hero-cta){
+  min-height:44px;
+  touch-action:manipulation;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire :is(a,button,input,select,textarea,summary):focus-visible{
+  outline:3px solid #eac982!important;
+  outline-offset:3px!important;
+}
+@media(max-width:600px){
+  html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section{
+    padding-block:clamp(32px,7vw,52px)!important;
+  }
+  html body.sde-unifie.sde-subpage.sde-ivoire :is(.site-header-inner,.enveloppe){
+    min-width:0;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html body.sde-unifie.sde-subpage.sde-ivoire :is(.site-portal-cta,.bouton,.sde-hero-cta){
+    animation:none!important;transition:none!important;transform:none!important;
+  }
+}
