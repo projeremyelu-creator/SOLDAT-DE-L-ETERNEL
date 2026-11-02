@@ -195,3 +195,38 @@ test('La page publique contient un lien TPA vers son affiche officielle',()=>{
  assert.match(css,/body\.sde-reference \.sde-bottom-nav,\s*body\.sde-reference #sde-mobile-nav\s*\{display:none!important\}/);
  assert.match(css,/body\.sde-reference \.ref-tabbar\s*\{\s*display:grid!important/);
 });
+
+
+test('Centre métier Command : modules opérationnels, nombres issus de l’API et permissions',async()=>{
+ const c=await page('/administration','admin');
+ try{
+  c.w.SDEPortal.selectionner('centre-command');
+  await waitFor(()=>c.d.querySelectorAll('.sde-mosaic-command .sde-mosaic-module').length>10);
+  const center=c.d.querySelector('.sde-mosaic-command');
+  assert.ok(center);
+  assert.match(center.textContent,/Poste de commandement/);
+  assert.match(center.textContent,/Pointages et QR/);
+  assert.match(center.textContent,/Rapports financiers/);
+  assert.ok(center.querySelector('input[type="search"]'));
+  assert.equal(center.querySelectorAll('.sde-mosaic-stat').length,4);
+  assert.equal(c.errors.length,0);
+  const open=[...center.querySelectorAll('button')].find(b=>b.getAttribute('aria-label')==='Ouvrir Registre et fiches des membres');
+  assert.ok(open);
+  open.click();
+  await waitFor(()=>c.d.querySelector('.ops-panel')?.textContent.includes('Annuaire des membres'));
+ }finally{c.close()}
+});
+test('Centre métier Membre : modules personnels, sans finances de direction',async()=>{
+ const c=await page('/mon-espace','soldat');
+ try{
+  c.w.SDEPortal.selectionner('centre-membre');
+  await waitFor(()=>c.d.querySelectorAll('.sde-mosaic-member .sde-mosaic-module').length>=10);
+  const center=c.d.querySelector('.sde-mosaic-member');
+  assert.ok(center);
+  assert.match(center.textContent,/Mes cotisations/);
+  assert.match(center.textContent,/Mon profil et mes informations/);
+  assert.ok(!center.textContent.includes('Rapports financiers'));
+  assert.ok(!center.textContent.includes('Registre et fiches des membres'));
+  assert.equal(c.errors.length,0);
+ }finally{c.close()}
+});
