@@ -38,3 +38,15 @@ test("Générateur de QR servi par le site, plus par un CDN", () => {
   assert.doesNotMatch(i, /jsdelivr/);
   assert.match(i, /\/vitrine\/vendor\/qrcode-generator-1\.4\.4\.js/);
 });
+
+test("Refonte Fusion 03+04 : charte violet/or chargée partout, palette fusion par défaut", () => {
+  const css = lire("public/vitrine/sde-fusion.css");
+  for (const k of ["--fu-gold", "data-sde-palette=fusion", "body.sde-unifie", ".fu-strip"]) assert.ok(css.includes(k), k);
+  const app = lire("public/index.html");
+  assert.match(app, /sde-fusion\.css/);
+  assert.match(app, /"fusion-04"/);
+  assert.match(lire("frontend/reference-shell.jsx"), /\['fusion','Fusion · Violet · Vert · Or'\]/);
+  for (const f of ["portail", "mouvement", "programmes", "missions-humanitaires", "ressources", "rejoindre", "prieres", "tableau-administration", "tableau-membre"])
+    assert.match(lire(`public/vitrine/${f}.html`), /sde-fusion\.css/, f);
+  assert.match(lire("public/vitrine/portail.html"), /class="fu-strip"/);
+});

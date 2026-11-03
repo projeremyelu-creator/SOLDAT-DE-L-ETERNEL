@@ -1,10 +1,10 @@
 /* Accueil mouvement-sde.org — reproduction de la maquette « SDE Digital — Militaire Premium ». */
-body.sde-accueil-maquette{--m-nuit:#0a121b;--m-carte:#131e29;--m-carte-2:#0e1720;--m-olive:#26301d;--m-olive-2:#3c4a2b;--m-treillis:#6f7f3f;--m-or:#c9a14a;--m-or-clair:#e4c477;--m-or-fonce:#97762c;--m-texte:#ece6d8;--m-texte-2:#aab1b9;--m-rouge:#8f1d22;--m-titre:"Cinzel",Georgia,serif;--m-italique:"Cormorant Garamond",Georgia,serif;background:linear-gradient(180deg,#0c141d,#0a1119) fixed;color:var(--m-texte);font-family:"Atkinson Hyperlegible",system-ui,sans-serif}
+body.sde-accueil-maquette{--m-nuit:#0a121b;--m-carte:#131e29;--m-carte-2:#0e1720;--m-olive:#21113c;--m-olive-2:#321a5b;--m-treillis:#6f7f3f;--m-or:#c9a14a;--m-or-clair:#e4c477;--m-or-fonce:#97762c;--m-texte:#ece6d8;--m-texte-2:#aab1b9;--m-rouge:#8f1d22;--m-titre:"Cinzel",Georgia,serif;--m-italique:"Cormorant Garamond",Georgia,serif;background:linear-gradient(180deg,#0c141d,#0a1119) fixed;color:var(--m-texte);font-family:"Atkinson Hyperlegible",system-ui,sans-serif}
 .sde-accueil-maquette .m-main{max-width:1240px;padding:22px 22px 60px;display:grid;gap:22px}
 @media(min-width:1280px){.sde-accueil-maquette .m-main{margin-left:200px!important;margin-right:auto;padding-left:28px;padding-right:28px}}
 .m-panel{border:1px solid var(--m-olive-2);border-radius:4px;background:linear-gradient(180deg,#111b25,#0d151e);box-shadow:0 16px 36px #0009;overflow:hidden}
-.m-band{display:flex;align-items:center;gap:18px;min-height:54px;background:linear-gradient(90deg,#28331f 0%,#1b2316 55%,#141b11 100%);border-bottom:1px solid var(--m-olive-2);padding-right:20px}
-.m-num{align-self:stretch;display:grid;place-items:center;min-width:58px;background:#181f13;border-right:1px solid var(--m-olive-2);font:600 1.3rem var(--m-titre);color:var(--m-texte)}
+.m-band{display:flex;align-items:center;gap:18px;min-height:54px;background:linear-gradient(90deg,#231240 0%,#180d2c 55%,#130a22 100%);border-bottom:1px solid var(--m-olive-2);padding-right:20px}
+.m-num{align-self:stretch;display:grid;place-items:center;min-width:58px;background:#150b27;border-right:1px solid var(--m-olive-2);font:600 1.3rem var(--m-titre);color:var(--m-texte)}
 .m-band h2{margin:0;font:600 clamp(1rem,1.8vw,1.4rem)/1 var(--m-titre);letter-spacing:.14em;text-transform:uppercase;color:var(--m-texte);white-space:nowrap}
 .m-line{flex:1;height:1px;background:linear-gradient(90deg,#c9a14a99,#c9a14a11);min-width:20px}
 .m-sub{margin:0;font:500 .66rem/1 var(--m-titre);letter-spacing:.22em;text-transform:uppercase;color:#d7cfb9;white-space:nowrap}

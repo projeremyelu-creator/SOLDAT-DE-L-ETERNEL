@@ -1,5 +1,5 @@
 /* SDE - Mouvement · 02 — Ivoire • Treillis • Or : reproduction de la maquette « Vitrine d'entrée ». */
-body.sde-ivoire{--iv-ivoire:#f6f2e8;--iv-papier:#fffdf8;--iv-ligne:#e6dcc6;--iv-treillis:#2f3b25;--iv-treillis-2:#25301e;--iv-or:#b8923a;--iv-or-clair:#d8b766;--iv-encre:#232619;--iv-gris:#5f6355;--iv-serif:"Libre Caslon Text","Cormorant Garamond",Georgia,serif;--iv-cond:"Saira Condensed","Arial Narrow",sans-serif;background:var(--iv-ivoire)!important;color:var(--iv-encre)!important}
+body.sde-ivoire{--iv-ivoire:#f6f2e8;--iv-papier:#fffdf8;--iv-ligne:#e6dcc6;--iv-treillis:#29164a;--iv-treillis-2:#21123c;--iv-or:#b8923a;--iv-or-clair:#d8b766;--iv-encre:#232619;--iv-gris:#5f6355;--iv-serif:"Libre Caslon Text","Cormorant Garamond",Georgia,serif;--iv-cond:"Saira Condensed","Arial Narrow",sans-serif;background:var(--iv-ivoire)!important;color:var(--iv-encre)!important}
 /* En-tête blanc : menu à gauche, logo et « SDE - MOUVEMENT », navigation à droite */
 body.sde-ivoire .site-header{background:var(--iv-papier)!important;border-bottom:1px solid var(--iv-ligne)!important;box-shadow:0 2px 14px #3b2f1010}
 body.sde-ivoire .site-brand b{font:400 1.55rem/1 var(--iv-serif)!important;letter-spacing:.01em!important;text-transform:uppercase;color:var(--iv-encre)!important}
@@ -27,7 +27,7 @@ body.sde-ivoire :is(main,#contenu,.site-footer){margin-left:auto!important}
 body.sde-ivoire .m-main{max-width:1180px;margin:0 auto!important;padding:10px 16px 60px!important}
 body.sde-ivoire .m-panel{background:var(--iv-papier);border:1px solid var(--iv-ligne);box-shadow:0 10px 26px #4a3b1414}
 body.sde-ivoire .m-band{background:linear-gradient(90deg,var(--iv-treillis),var(--iv-treillis-2));border-bottom:2px solid var(--iv-or)}
-body.sde-ivoire .m-num{background:#1f2819;border-right:1px solid #4b5a37;color:var(--iv-or-clair)}
+body.sde-ivoire .m-num{background:#1c0f32;border-right:1px solid #3e2170;color:var(--iv-or-clair)}
 body.sde-ivoire .m-band h2{font-family:var(--iv-serif);font-weight:400;color:#f4ecd8}
 body.sde-ivoire .m-sub{color:#d9cfae}
 body.sde-ivoire :is(.m-card,.m-kpi,.m-prog,.m-pole,.private-admin){background:#fffaf0;border:1px solid var(--iv-ligne);box-shadow:0 4px 14px #4a3b140d}
@@ -40,7 +40,7 @@ body.sde-ivoire .m-verset cite,body.sde-ivoire .m-engagements strong,body.sde-iv
 body.sde-ivoire .m-kicker,body.sde-ivoire .m-tag{border-color:var(--iv-or);color:var(--iv-or)}
 body.sde-ivoire .m-btn{border-color:var(--iv-or);color:#7d6020;background:#fffaf0}
 body.sde-ivoire .m-btn.m-gold{background:linear-gradient(180deg,#c9a24a,#a8822f);color:#fff;border-color:#a8822f}
-body.sde-ivoire .m-kpi svg{color:var(--iv-or)}body.sde-ivoire .m-kpi strong{font-family:var(--iv-serif);font-weight:400;color:var(--iv-encre)}body.sde-ivoire .m-kpi span{color:#3c4033}body.sde-ivoire .m-kpi small{color:#4d7a3a}
+body.sde-ivoire .m-kpi svg{color:var(--iv-or)}body.sde-ivoire .m-kpi strong{font-family:var(--iv-serif);font-weight:400;color:var(--iv-encre)}body.sde-ivoire .m-kpi span{color:#3c4033}body.sde-ivoire .m-kpi small{color:#4d288c}
 body.sde-ivoire .m-rythme{background:#eef0e2;border-color:#cfd3b6;color:#4d5a32}
 body.sde-ivoire :is(.m-prog-actions a,.m-link,.home-faq-list a){color:#8a6a22}
 body.sde-ivoire .m-engagements li,body.sde-ivoire .home-faq-list details{border-color:#eadfc8}
@@ -48,7 +48,7 @@ body.sde-ivoire .home-faq h3{color:var(--iv-treillis)}body.sde-ivoire .home-faq-
 body.sde-ivoire .m-leaders dd{color:var(--iv-encre)}
 body.sde-ivoire .private-admin strong{color:var(--iv-treillis)}body.sde-ivoire .private-admin small{color:#8a6a22}
 /* Carte de membre : vert treillis, lauriers et « SDE » en filigrane */
-body.sde-ivoire .private-member{background:radial-gradient(400px 220px at 80% 20%,#3f5130,transparent 70%),linear-gradient(135deg,#34452b,#24301d)!important;border:2px solid var(--iv-or-clair)!important}
+body.sde-ivoire .private-member{background:radial-gradient(400px 220px at 80% 20%,#371d64,transparent 70%),linear-gradient(135deg,#301957,#21113c)!important;border:2px solid var(--iv-or-clair)!important}
 body.sde-ivoire .private-member::after{background:none!important;content:"SDE";inset:auto 22px 14px auto;font:700 5rem/1 var(--iv-serif);color:#ffffff14;-webkit-mask-image:none;mask-image:none}
 body.sde-ivoire .m-card-gold{color:#f4ecd8;max-width:none}
 body.sde-ivoire .m-card-gold small{color:var(--iv-or-clair)}

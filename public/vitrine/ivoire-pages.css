@@ -1,5 +1,5 @@
 /* Pages intérieures du site — Ivoire • Treillis • Or (même langage que la vitrine d'entrée). */
-html body.sde-ivoire{--iv-ivoire:#f6f2e8;--iv-papier:#fffdf8;--iv-ligne:#e6dcc6;--iv-treillis:#2f3b25;--iv-treillis-2:#25301e;--iv-or:#b8923a;--iv-or-clair:#d8b766;--iv-encre:#232619;--iv-texte:#3c4033;--iv-serif:"Libre Caslon Text","Cormorant Garamond",Georgia,serif;--iv-cond:"Saira Condensed","Arial Narrow",sans-serif;background:var(--iv-ivoire)!important;color:var(--iv-encre)!important}
+html body.sde-ivoire{--iv-ivoire:#f6f2e8;--iv-papier:#fffdf8;--iv-ligne:#e6dcc6;--iv-treillis:#29164a;--iv-treillis-2:#21123c;--iv-or:#b8923a;--iv-or-clair:#d8b766;--iv-encre:#232619;--iv-texte:#3c4033;--iv-serif:"Libre Caslon Text","Cormorant Garamond",Georgia,serif;--iv-cond:"Saira Condensed","Arial Narrow",sans-serif;background:var(--iv-ivoire)!important;color:var(--iv-encre)!important}
 html body.sde-ivoire :is(main,#contenu){margin-left:auto!important;background:transparent!important}
 html body.sde-ivoire .sde-rail{display:none!important}
 /* En-tête de page : bandeau vert treillis capitonné */
@@ -14,7 +14,7 @@ html body.sde-ivoire :is(.sde-page-actions a.sde-secondary,.bouton.b-contour){ba
 /* Sections en panneaux ivoire à bandeau vert treillis numéroté */
 html body.sde-ivoire .section>.enveloppe{background:var(--iv-papier)!important;border:1px solid var(--iv-ligne)!important;box-shadow:0 10px 26px #4a3b1414!important}
 html body.sde-ivoire .section .tete-section{background:linear-gradient(90deg,var(--iv-treillis),var(--iv-treillis-2)) top/100% 54px no-repeat!important;border-bottom:0!important}
-html body.sde-ivoire .section .tete-section::before{background:#1f2819!important;border-right-color:#4b5a37!important;color:var(--iv-or-clair)!important;font-family:var(--iv-serif)!important}
+html body.sde-ivoire .section .tete-section::before{background:#1c0f32!important;border-right-color:#3e2170!important;color:var(--iv-or-clair)!important;font-family:var(--iv-serif)!important}
 html body.sde-ivoire .section .tete-section h2{font-family:var(--iv-serif)!important;font-weight:400!important;color:#f4ecd8!important}
 html body.sde-ivoire .section .tete-section h2 em{color:var(--iv-or-clair)!important}
 html body.sde-ivoire .section .tete-section .surtitre{border:0!important;color:#d9cfae!important}
@@ -28,14 +28,14 @@ html body.sde-ivoire :is(.vmi-carte,.programme,.pole,.soutenir-carte,.etape-cart
 html body.sde-ivoire :is(.vmi-carte,.programme,.soutenir-carte,.pole) h3,html body.sde-ivoire .pole-titre{color:var(--iv-treillis)!important;font-family:var(--iv-serif)!important}
 html body.sde-ivoire .programme .rythme{background:#eef0e2!important;border-color:#cfd3b6!important;color:#4d5a32!important}
 html body.sde-ivoire :is(.programme a,.sde-lead-actions a,.section a:not(.bouton)){color:#8a6a22!important}
-html body.sde-ivoire .kpi .kpi-chiffre{color:var(--iv-encre)!important;font-family:var(--iv-serif)!important}html body.sde-ivoire .kpi .kpi-sous{color:#4d7a3a!important}html body.sde-ivoire .kpi .kpi-icone{color:var(--iv-or)!important}
+html body.sde-ivoire .kpi .kpi-chiffre{color:var(--iv-encre)!important;font-family:var(--iv-serif)!important}html body.sde-ivoire .kpi .kpi-sous{color:#4d288c!important}html body.sde-ivoire .kpi .kpi-icone{color:var(--iv-or)!important}
 html body.sde-ivoire .rdv .jour{background:#fffdf8!important;border-color:var(--iv-ligne)!important;color:var(--iv-encre)!important}
 /* Formulaires */
 html body.sde-ivoire :is(input,select,textarea){background:#fffdf8!important;color:var(--iv-encre)!important;border:1px solid #d9ccad!important}
 html body.sde-ivoire :is(input,select,textarea):focus{outline:2px solid var(--iv-or)!important;outline-offset:1px}
 html body.sde-ivoire .formulaire button[type=submit]{background:linear-gradient(180deg,#c9a24a,#a8822f)!important;color:#fff!important;border:0!important}
 /* Pied de page */
-html body.sde-ivoire :is(.site-footer,.pied){background:#172b25!important;border-top:2px solid #d7b567!important;color:#fff8e7!important}
+html body.sde-ivoire :is(.site-footer,.pied){background:#1c0f33!important;border-top:2px solid #d7b567!important;color:#fff8e7!important}
 html body.sde-ivoire :is(.site-footer,.pied) a{color:#f0d18c!important}
 html body.sde-ivoire .sde-further{background:var(--iv-papier)!important;color:var(--iv-encre)!important}
 /* Fonds sombres hérités → ivoire */
@@ -50,7 +50,7 @@ html body.sde-ivoire .ticket.urgent{border-color:#b02a2a!important}
 html body.sde-ivoire .galerie-legende{background:linear-gradient(0deg,#25301ee6,transparent)!important;color:#f4ecd8!important}
 html body.sde-ivoire .section .enveloppe button:not(.bouton):not([type=submit]){background:#fffaf0!important;color:var(--iv-encre)!important;border:1px solid var(--iv-ligne)!important}
 html body.sde-ivoire :is(.agenda-filtres button.actif,.section button.actif,.section button[aria-pressed=true]){background:linear-gradient(180deg,#c9a24a,#a8822f)!important;color:#fff!important}
-html body.sde-ivoire .globe-sde{background:radial-gradient(circle at 50% 40%,#3a4a2d,#1f2819)!important;border-radius:12px}
+html body.sde-ivoire .globe-sde{background:radial-gradient(circle at 50% 40%,#331b5c,#1c0f32)!important;border-radius:12px}
 html body.sde-ivoire .globe-aide{background:transparent!important;color:var(--iv-texte)!important}
 /* En-tête des pages intérieures : menus déroulants lisibles */
 html body.sde-ivoire .site-menu :is(a,summary){color:var(--iv-encre)!important}
@@ -74,7 +74,7 @@ html body.sde-ivoire[data-sde-page="programmes"] #agenda{
   position:relative;isolation:isolate;overflow:hidden;
   scroll-margin-top:clamp(88px,12vw,116px);
   padding-block:clamp(46px,7vw,86px)!important;
-  background:linear-gradient(135deg,#172b25 0%,#2d4434 52%,#172820 100%)!important;
+  background:linear-gradient(135deg,#1c0f33 0%,#301958 52%,#1b0e31 100%)!important;
   border-top:1px solid #b8a16e;
   border-bottom:1px solid #b8a16e;
 }
@@ -116,7 +116,7 @@ html body.sde-ivoire[data-sde-page="programmes"] #agenda .agenda-filtres button{
   min-height:44px;padding:10px 17px;border-radius:999px;
   font:700 .9rem/1.25 "Atkinson Hyperlegible",system-ui,sans-serif;
   border:1px solid #d8c6a0!important;
-  background:#fffdf8;color:#34402d;
+  background:#fffdf8;color:#2f1954;
 }
 html body.sde-ivoire[data-sde-page="programmes"] #agenda .agenda-filtres button.actif{
   border-color:#a8822f!important;background:#a8822f!important;color:#fff!important;
@@ -143,19 +143,19 @@ html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv .jour{
   display:flex;flex-direction:column;justify-content:center;align-items:center;
   flex:0 0 76px;min-width:76px;min-height:72px;
   border:1px solid #e5d7b9!important;border-radius:15px!important;
-  background:#f6f0e5!important;color:#26351e!important;
+  background:#f6f0e5!important;color:#231340!important;
 }
 html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv .jour b{
   font-size:1.65rem;line-height:1.1;
 }
 html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv .rythme{
   display:inline-flex;align-items:center;padding:3px 9px;
-  background:#e5eadc!important;color:#364e30!important;
+  background:#e5eadc!important;color:#361c62!important;
   border-radius:6px;border:1px solid #cad5c0!important;
   font-size:.77rem;letter-spacing:.04em;
 }
 html body.sde-ivoire[data-sde-page="programmes"] #agenda .programme.rdv h3{
-  margin:0 0 10px;color:#29372a!important;
+  margin:0 0 10px;color:#29164a!important;
   font:600 clamp(1.2rem,2.3vw,1.55rem)/1.28 "Cormorant Garamond",Georgia,serif!important;
   letter-spacing:.015em;overflow-wrap:anywhere;
 }
@@ -177,7 +177,7 @@ html body.sde-ivoire[data-sde-page="programmes"] #agenda .rdv-actions :is(a,butt
   text-decoration:none!important;white-space:normal;text-align:center;cursor:pointer;
 }
 html body.sde-ivoire[data-sde-page="programmes"] #agenda .rdv-actions a{
-  color:#fff!important;background:#44623d!important;border-color:#44623d!important;
+  color:#fff!important;background:#44247b!important;border-color:#44247b!important;
 }
 html body.sde-ivoire[data-sde-page="programmes"] #agenda .rdv-actions button{
   color:#5d451f!important;background:#fff8e9!important;
