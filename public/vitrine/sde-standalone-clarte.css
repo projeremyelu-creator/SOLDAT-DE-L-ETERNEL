@@ -87,3 +87,44 @@ body:has(> .hub-main) .sde-hub-nav a:focus-visible{
  }
 }
 @media print{.sde-standalone-bottom{display:none!important}}
+
+
+/* Premium V2 : pages autonomes Galerie (violet) et Soutenir (vert), même signature. */
+body.sde-infire-album{
+ --sde-standalone-accent:#d7aafa;
+}
+body:has(> .hub-main){
+ --sde-standalone-accent:#a4dfb7;
+}
+body.sde-infire-album .hero,
+body:has(> .hub-main) .hub-hero{
+ border-bottom:2px solid var(--sde-standalone-accent)!important;
+}
+body.sde-infire-album .nav .brand,
+body:has(> .hub-main) .sde-mark{
+ color:#ffe2a0!important;
+}
+body.sde-infire-album .item,
+body:has(> .hub-main) .hub-card{
+ border-top:3px solid var(--sde-standalone-accent)!important;
+}
+body.sde-infire-album .item figcaption strong,
+body:has(> .hub-main) .hub-card h3{
+ color:#fff1dc!important;
+}
+body:has(> .hub-main) .hub-card p{
+ line-height:1.58;
+}
+body.sde-infire-album :is(.tab,.close):focus-visible,
+body:has(> .hub-main) :is(.hub-btn,.sde-hub-nav a):focus-visible{
+ outline:3px solid var(--sde-standalone-accent)!important;outline-offset:3px!important;
+}
+@media(max-width:650px){
+ body.sde-infire-album .nav nav,
+ body:has(> .hub-main) .sde-hub-nav{
+  max-width:100%;overflow-x:auto;scrollbar-width:thin;
+ }
+ body:has(> .hub-main) .hub-form{
+  padding:clamp(14px,4vw,24px);
+ }
+}
