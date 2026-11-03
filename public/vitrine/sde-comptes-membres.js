@@ -47,7 +47,7 @@
     const j=await post({simuler:false});
     for(const c of j.crees){
      crees.push(c);const tr=document.createElement("tr");
-     tr.append(cellule(c.nom),cellule(c.matricule),cellule(c.email),cellule(c.motDePasse));$("cm-lignes").append(tr);
+     tr.append(cellule(c.nom),cellule(c.matricule),cellule(c.email||"Connexion par matricule"),cellule(c.motDePasse));$("cm-lignes").append(tr);
     }
     $("cm-resultat").hidden=false;$("cm-compte").textContent=crees.length+" compte(s) créé(s). Ces mots de passe ne seront plus affichés : téléchargez la liste maintenant.";
     if(tour===0)ignores(j.ignores);
