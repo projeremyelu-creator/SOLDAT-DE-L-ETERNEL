@@ -248,7 +248,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     comptes: async () => { const r = await fetch("/api/comptes", { credentials: "same-origin" }); const j = await r.json(); if (!r.ok) throw echec(j.erreur, j.message); return j; },
     majCompte: (o) => appel("/api/comptes", o),
     accesMembres: async () => { const r = await fetch("/api/acces-membres", { credentials: "same-origin", cache: "no-store" }); const j = await r.json().catch(() => ({})); if (!r.ok) throw echec(j.erreur || "unavailable", j.message); return j; },
-    preparerAccesMembre: (id) => appel("/api/acces-membres", { membreId: id }),
+    preparerAccesMembre: (id, renouveler = false) => appel("/api/acces-membres", { membreId: id, renouveler }),
     importer: (docs) => appel("/api/import", { docs }),
     monHistorique: async () => { const r = await fetch("/api/mon-historique", { credentials: "same-origin", cache: "no-store" }); const j = await r.json().catch(() => ({})); if (!r.ok) throw echec(j.erreur || "unavailable", j.message); return j; },
     monProfil: (o) => appel("/api/mon-profil", o, "PATCH"),
@@ -8421,9 +8421,11 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   }
 
   /* — Comptes et accès (administrateurs) — */
-  const CPT = { liste: null, err: "", code: null, sauv: null };
+  const CPT = { liste: null, err: "", code: null, sauv: null, acces: null, accesErr: "", livres: [], enCours: false };
   async function chargerComptes() {
     try { const r = await SDEH.comptes(); CPT.liste = r.comptes || []; CPT.err = ""; SYNC_C.comptes = null; } catch (e) { CPT.err = (e && e.message) || "Lecture impossible."; }
+    try { const r = await SDEH.accesMembres(); CPT.acces = r.membres || []; CPT.accesErr = ""; }
+    catch (e) { CPT.acces = null; CPT.accesErr = (e && e.message) || "Lecture des fiches impossible."; }
     try { const r = await fetch("/api/sauvegardes", { credentials: "same-origin", cache: "no-store" }); CPT.sauv = r.ok ? (await r.json()).sauvegardes || [] : null; } catch (e) { CPT.sauv = null; }
     dernier.sheet = null; render();
   }
@@ -8451,7 +8453,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
         return `<div class="row nolead sp-row cpt-row"><span class="row-main"><span class="row-t">${esc(c.nom || c.email)}</span><span class="row-m">${esc(c.email)} · ${esc(etat(c))}${c.matricule ? " · matricule " + esc(c.matricule) : ""}${c.membreId && nomFiche(c.membreId) ? " · fiche " + esc(nomFiche(c.membreId)) : ""}</span>${lien}</span><span class="row-r">${proprio ? `<span class="chip ok">Propriétaire</span>${c.email === m.email ? btn("cpt-reinit", "Nouveau code", { sm: true, data: `data-email="${esc(c.email)}"` }) : ""}` : `<label class="sr" for="cr-${esc(c.id)}">Rôle de ${esc(c.email)}</label><select class="inp inp-sm" id="cr-${esc(c.id)}" data-compte="${esc(c.email)}">${opts(c.role)}</select>${btn("cpt-reinit", "Nouveau code", { sm: true, data: `data-email="${esc(c.email)}"`, attrs: `aria-label="${esc("Nouveau code d’activation pour " + c.email)}"` })}<button class="icon-btn" type="button" data-act="compte-suppr" data-email="${esc(c.email)}" aria-label="${esc("Retirer l’accès de " + c.email)}">${I("i-trash")}</button>`}</span></div>`;
       }).join("")}</div>`;
   }
-  const ouvrirComptes = () => { CPT.liste = null; ouvrir({ titre: "Comptes et accès", refresh: surveiller(() => ficheComptes()), wide: true }); chargerComptes(); };
+  const ouvrirComptes = () => { CPT.liste = null; CPT.livres = []; CPT.acces = null; ouvrir({ titre: "Comptes et accès", refresh: surveiller(() => ficheComptes()), wide: true }); chargerComptes(); };
   async function majCompteH(o, msg) {
     try {
       const r = await SDEH.majCompte(o);
