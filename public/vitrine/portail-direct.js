@@ -58,21 +58,22 @@
     const logo=document.createElement("img");
     logo.src="/vitrine/logo-96.png";logo.alt="";logo.width=36;logo.height=36;
     brand.prepend(logo);head.append(brand);
-    const publique=link("https://mouvement-sde.org/","Site public");head.append(publique);
-    const membre=link("/mon-espace","Mon espace");head.append(membre);
+    const liens=element("nav","sde-direct-head-links");liens.setAttribute("aria-label","Navigation entre les espaces SDE");
+    const publique=link("https://mouvement-sde.org/","Site public","sde-direct-site-link");liens.append(publique);
+    const membre=link("/mon-espace","Mon espace","sde-direct-member-link");liens.append(membre);
     if(mode==="membre")membre.setAttribute("aria-current","page");
-    const direction=link("/administration","Administration");
+    const direction=link("/administration","Administration","sde-direct-admin-link");
     direction.hidden=true;
     if(mode==="direction")direction.setAttribute("aria-current","page");
-    head.append(direction);
-    const reglages=element("button","sde-direct-settings","Réglages");
+    liens.append(direction);head.append(liens);
+    const reglages=element("button","sde-direct-settings sde-direct-gear","Réglages");
     reglages.type="button";
     reglages.addEventListener("click",()=>{
       const natif=document.getElementById("btn-reglages");
       if(natif) natif.click();
     });
     head.append(reglages);
-    const account=element("button","sde-direct-settings","Mon compte");account.type="button";
+    const account=element("button","sde-direct-settings sde-direct-account","Mon compte");account.type="button";
     account.addEventListener("click",()=>{(document.getElementById("btn-compte")||document.getElementById("btn-reglages"))?.click()});
     head.append(account);
     const role=element("span","sde-direct-access",mode==="membre"?"Espace membre":"Espace administrateur");
@@ -89,10 +90,12 @@
       mobileMenu.setAttribute("aria-expanded",String(ouvert));
       mobileMenu.textContent=ouvert?"Masquer les rubriques":"Afficher les rubriques";
     };
-    mobileMenu.addEventListener("click",()=>{
+    mobileMenu.addEventListener("click",event=>{
       const ouvert=mobileMenu.getAttribute("aria-expanded")!=="true";
       afficherMenu(ouvert);
-      if(ouvert)tabs.querySelector("button")?.focus();
+      // Depuis le clavier, aller vers le premier module ; sur écran tactile,
+      // préserver le point de lecture au lieu de déplacer le défilement.
+      if(ouvert&&event.detail===0)tabs.querySelector("button")?.focus();
     });
     tabs.addEventListener("keydown",event=>{
       if(event.key==="Escape"&&tabs.classList.contains("sde-direct-tabs-open")){
@@ -119,7 +122,7 @@
     for(const [nom,label] of rapides){
       const b=element("button","sde-spirit-quick",label);
       b.type="button";b.dataset.quick=nom;
-      b.addEventListener("click",()=>selectionner(nom));
+      b.addEventListener("click",()=>selectionner(nom,{userInitiated:true}));
       actions.append(b);
     }
     intro.append(actions,etat);
@@ -193,7 +196,7 @@
         historiqueCharge=true;
       }catch(err){histoire.replaceChildren();histoire.append(element("li","",err.message));}
     }
-    function selectionner(nom){
+    function selectionner(nom,options={}){
       if(mode==="direction"&&nom==="synthese"&&window.SDEOpsReady)nom="pilotage";
       if(!compte||!allowed(nom))return;
       const ouverture=new CustomEvent("sde:open",{cancelable:true,detail:{module:nom}});
@@ -225,7 +228,18 @@
       }
       navCourant=nom;
       // Après un choix sur smartphone, afficher directement le module choisi.
-      if(window.matchMedia?.("(max-width: 760px)")?.matches)afficherMenu(false);
+      if(window.matchMedia?.("(max-width: 760px)")?.matches){
+        afficherMenu(false);
+        // La navigation est réellement directe : un clic utilisateur place
+        // le contenu choisi dans le champ de vision, pas derrière les rubriques.
+        if(options.userInitiated){
+          const destination=priereOuverte?panneau:(!main.hidden?main:null);
+          if(destination){
+            destination.focus?.({preventScroll:true});
+            destination.scrollIntoView?.({block:"start",behavior:"instant"});
+          }
+        }
+      }
       document.dispatchEvent(new CustomEvent("sde:navigate",{detail:{module:nom,titre:catalogue[nom]}}));
       if(nom==="priere")panneau?.querySelector("h2")?.focus?.();
     }
