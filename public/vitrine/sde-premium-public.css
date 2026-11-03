@@ -940,7 +940,8 @@ html body.sde-accueil-maquette.sde-ivoire .m-panel .m-card{
 
 /* SDE PREMIUM V2 · Trois univers, accueil sans nouvelle donnée inventée.
    Violet : spiritualité. Bleu nuit : commandement. Vert : missions. */
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillars{
+html body.sde-premium-home .sde-premium-pillars{
+ width:min(1180px,calc(100% - 40px));max-width:1180px;margin-inline:auto;
  margin:clamp(18px,3vw,35px) 0 clamp(12px,2vw,22px);
  padding:clamp(17px,3vw,29px);
  border:1px solid rgba(227,188,111,.43);border-radius:21px;
@@ -948,103 +949,103 @@ html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillars{
  box-shadow:0 15px 38px rgba(8,5,25,.23);
  color:#f8f0e7!important;
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillars-title{
+html body.sde-premium-home .sde-premium-pillars-title{
  display:grid;gap:7px;max-width:780px;margin-bottom:clamp(16px,2.4vw,28px);
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-eyebrow{
+html body.sde-premium-home .sde-premium-eyebrow{
  color:#efd08b!important;letter-spacing:.16em;text-transform:uppercase;font-weight:850;font-size:.73rem;
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillars-title h2{
+html body.sde-premium-home .sde-premium-pillars-title h2{
  font:700 clamp(1.58rem,3.1vw,2.75rem)/1.12 "Cinzel",Georgia,serif;
  color:#fff0cd!important;letter-spacing:-.018em;margin:0;
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillars-title p{
+html body.sde-premium-home .sde-premium-pillars-title p{
  color:#e7dfe9!important;margin:0;line-height:1.55;font-size:.94rem;
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillars-grid{
+html body.sde-premium-home .sde-premium-pillars-grid{
  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar{
+html body.sde-premium-home .sde-premium-pillar{
  --sde-pillar-accent:#edc886;
  display:flex;flex-direction:column;gap:12px;min-width:0;
  border:1px solid rgba(247,221,163,.28);border-top:4px solid var(--sde-pillar-accent);
  border-radius:15px;padding:clamp(17px,2vw,24px);
  box-shadow:inset 0 1px rgba(255,255,255,.05);
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-spiritualite{
+html body.sde-premium-home .sde-premium-spiritualite{
  --sde-pillar-accent:#e4b1ff;
  background:linear-gradient(153deg,#51276d,#281b45 79%);
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-commandement{
+html body.sde-premium-home .sde-premium-commandement{
  --sde-pillar-accent:#f3ca80;
  background:linear-gradient(153deg,#1d3455,#111c37 82%);
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-missions{
+html body.sde-premium-home .sde-premium-missions{
  --sde-pillar-accent:#a0e4b7;
  background:linear-gradient(153deg,#255646,#15352d 82%);
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar-top{
+html body.sde-premium-home .sde-premium-pillar-top{
  display:flex;align-items:center;justify-content:space-between;gap:10px;
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar-top>span{
+html body.sde-premium-home .sde-premium-pillar-top>span{
  display:grid;place-items:center;width:45px;height:45px;border-radius:13px;
  border:1px solid color-mix(in srgb,var(--sde-pillar-accent),transparent 45%);
  background:rgba(0,0,0,.18);
  color:var(--sde-pillar-accent)!important;font-size:1.4rem;
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar-top small{
+html body.sde-premium-home .sde-premium-pillar-top small{
  color:#ede5df!important;font-size:.63rem;font-weight:800;
  letter-spacing:.08em;text-align:right;
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar h3{
+html body.sde-premium-home .sde-premium-pillar h3{
  margin:0;font:800 clamp(1.48rem,2vw,2rem)/1.1 "Saira Condensed",system-ui,sans-serif;
  color:#fff3db!important;
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar p{
+html body.sde-premium-home .sde-premium-pillar p{
  margin:0 0 8px;flex:1;font-size:.88rem;line-height:1.57;
  color:#f1e9e9!important;
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar-actions{
+html body.sde-premium-home .sde-premium-pillar-actions{
  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar-actions a{
+html body.sde-premium-home .sde-premium-pillar-actions a{
  display:inline-flex;align-items:center;justify-content:center;
  min-height:42px;padding:8px 11px;border-radius:9px;
  color:#fff0d5!important;font-size:.8rem;font-weight:800;text-decoration:none;
  border:1px solid rgba(240,213,155,.45);
  background:rgba(11,13,32,.34);
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar-actions a:first-child{
+html body.sde-premium-home .sde-premium-pillar-actions a:first-child{
  background:linear-gradient(120deg,#f3d898,#dcb470);
  border-color:#ffdfa1;color:#261934!important;
 }
-html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar-actions a:is(:focus-visible,:hover){
+html body.sde-premium-home .sde-premium-pillar-actions a:is(:focus-visible,:hover){
  outline:2px solid #fff0c0;outline-offset:2px;
 }
 @media(max-width:940px){
- html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillars-grid{
+ html body.sde-premium-home .sde-premium-pillars-grid{
   grid-template-columns:repeat(2,minmax(0,1fr));
  }
- html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar:last-child{
+ html body.sde-premium-home .sde-premium-pillar:last-child{
   grid-column:1/-1;
  }
 }
 @media(max-width:620px){
- html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillars{
+ html body.sde-premium-home .sde-premium-pillars{
   padding:16px;margin-block:15px;border-radius:17px;
  }
- html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillars-grid{
+ html body.sde-premium-home .sde-premium-pillars-grid{
   grid-template-columns:minmax(0,1fr);gap:10px;
  }
- html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar:last-child{
+ html body.sde-premium-home .sde-premium-pillar:last-child{
   grid-column:auto;
  }
- html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar{
+ html body.sde-premium-home .sde-premium-pillar{
   padding:17px;
  }
 }
 @media(prefers-reduced-motion:reduce){
- html body.sde-accueil-maquette.sde-ivoire .sde-premium-pillar-actions a{
+ html body.sde-premium-home .sde-premium-pillar-actions a{
   transition:none!important;animation:none!important;
  }
 }
