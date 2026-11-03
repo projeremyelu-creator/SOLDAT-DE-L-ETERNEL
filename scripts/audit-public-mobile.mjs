@@ -89,7 +89,7 @@ try{
    const response=await page.goto(domain+c.path,{waitUntil:'domcontentloaded',timeout:60000});
    await page.waitForTimeout(1700);
    if(c.path==='/'){
-    const images=await page.locator('.sde-pole-officiel-lien img, img.sde-event-poster').all();
+    const images=await page.locator('.sde-pole-officiel-lien img, img.sde-event-poster, .ap-poster-media img').all();
     for(const img of images){
      await img.evaluate(el=>{el.loading='eager';});
     }
@@ -107,8 +107,8 @@ try{
     const portal=toRect(document.querySelector('.site-access-top'));
     const burger=toRect(document.querySelector('.site-burger'));
     const logo=toRect(document.querySelector('.site-logo'));
-    const quote=document.querySelector('.m-verset p');
-    const quoteBg=document.querySelector('.m-verset');
+    const quote=document.querySelector('.ap-verset p, .m-verset p');
+    const quoteBg=document.querySelector('.ap-verset, .m-verset');
     const cssColor=quote?getComputedStyle(quote).color:null;
     const cssBg=quoteBg?getComputedStyle(quoteBg).backgroundColor:null;
     function ratio(fg,bg){
@@ -127,7 +127,7 @@ try{
       return {tag:el.tagName.toLowerCase(),id:el.id||'',classes:String(el.className||'').slice(0,95),left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),position:style.position};
     }).filter(x=>x.right>innerWidth+12&&x.width>24&&x.left<innerWidth).sort((a,b)=>b.right-a.right).slice(0,15);
     const poleLinks=[...document.querySelectorAll('a.sde-pole-officiel-lien')];
-    const posters=[...document.querySelectorAll('img.sde-event-poster')];
+    const posters=[...document.querySelectorAll('img.sde-event-poster, .ap-poster-media img')];
     return {
      title:document.title,
      viewport:innerWidth,
@@ -153,6 +153,8 @@ try{
        imageAvailable:!![...document.querySelectorAll('img.sde-pole-img')].find(img=>img.complete&&img.naturalWidth>0)
       }:null;})(),
      heroIntroHeight:document.querySelector(".iv-intro")?Math.round(document.querySelector(".iv-intro").getBoundingClientRect().height):null,
+     premiumHome:!!document.querySelector('.ap-hero'),
+     premiumHeroHeight:document.querySelector('.ap-hero-inner')?Math.round(document.querySelector('.ap-hero-inner').getBoundingClientRect().height):null,
      heading:document.querySelector('h1')?.textContent?.trim().slice(0,95)||'',
      loadMs:Math.round(performance.getEntriesByType('navigation')[0]?.duration||0),
      // Mesures de laboratoire Chromium : indicatives, non assimilables aux données utilisateurs.
@@ -451,10 +453,12 @@ try{
      issue(c.name,'vérification de stabilité indisponible : '+String(error.message||error).slice(0,240),true);
     }
    }
-   if(c.path==='/'&&c.width>=960&&c.width<=1100&&row.heroIntroHeight!==300)
+   if(c.path==='/'&&!row.premiumHome&&c.width>=960&&c.width<=1100&&row.heroIntroHeight!==300)
     issue(c.name,'hauteur de la réserve tablette : '+row.heroIntroHeight+' px au lieu de 300 px',true);
-   if(c.path==='/'&&c.width>=1101&&row.heroIntroHeight!==260)
+   if(c.path==='/'&&!row.premiumHome&&c.width>=1101&&row.heroIntroHeight!==260)
     issue(c.name,'hauteur du bloc accueil instable : '+row.heroIntroHeight+' px au lieu de 260 px',true);
+   if(c.path==='/'&&row.premiumHome&&(!(row.premiumHeroHeight>=280)))
+    issue(c.name,'hauteur du nouvel accueil premium insuffisante : '+row.premiumHeroHeight+' px',true);
    if(row.status!==200)issue(c.name,'HTTP '+row.status,true);
    if(row.overflowX>16)issue(c.name,'débordement horizontal de '+row.overflowX+' px',true);
    if(row.labMetrics?.cls>0.10)
