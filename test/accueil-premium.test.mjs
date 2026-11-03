@@ -123,3 +123,14 @@ test('Stabilité du titre premium à 1100 et 1280 px avant chargement de la poli
  assert.ok(html.includes('class="ap-hero-copy"'));
  assert.ok(html.includes('id="titre-accueil"'));
 });
+
+
+test('Stabilité de la vitrine à 1024 px : colonnes ancrées pendant le chargement des polices',()=>{
+ const css=lire('public/vitrine/sde-accueil-premium.css');
+ const anchor=css.slice(css.indexOf('Tablette paysage 1000–1099px'));
+ assert.ok(anchor.startsWith('Tablette paysage 1000–1099px'));
+ assert.match(anchor,/@media \(min-width:1000px\) and \(max-width:1099px\)/);
+ assert.match(anchor,/\.ap-hero \.ap-hero-inner\{\s*align-items:start;/);
+ assert.match(anchor,/\.ap-hero \.ap-hero-copy,\s*\.ap-hero \.ap-poster\{\s*align-self:start;/);
+ assert.match(anchor,/\.ap-hero \.ap-hero-copy \.ap-lead\{\s*min-height:calc\(1\.65em \* 4\)/);
+});
