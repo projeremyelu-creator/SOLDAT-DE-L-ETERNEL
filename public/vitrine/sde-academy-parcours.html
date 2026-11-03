@@ -4,7 +4,7 @@
 <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0d1b32">
 <title>Soldiers Academy · Programme 2027 · Mouvement SDE</title>
 <link rel="icon" href="/vitrine/logo-96.png"><link rel="stylesheet" href="/vitrine/sde-premium-public.css">
-<link rel="stylesheet" href="/vitrine/sde-academy-onglets.css"><script defer src="/vitrine/vendor/qrcode-generator-1.4.4.js"></script><script defer src="/vitrine/sde-academy-ui.js?v=20271103-studio"></script><script defer src="/vitrine/sde-academy-parcours.js?v=20271103-love-school"></script>
+<link rel="stylesheet" href="/vitrine/sde-academy-onglets.css"><script defer src="/vitrine/vendor/qrcode-generator-1.4.4.js"></script><script defer src="/vitrine/sde-academy-ui.js?v=20271103-studio"></script><script defer src="/vitrine/sde-academy-parcours.js?v=20271103-love-school-10"></script>
 </head><body>
 <a class="skip" href="#main">Passer au contenu principal</a>
 <header><div class="inner"><a class="identity" href="/"><img alt="" src="/vitrine/logo-96.png"><span><strong>S.D.E. · SOLDIERS ACADEMY</strong><small>École de discipulat et de leadership</small></span></a><nav aria-label="Navigation"><a href="/academy-programme-24">Programme</a><a href="/mon-espace/academy#love-school">Love School · Bonus</a><a href="/mon-espace">Mon espace</a><a href="/mon-espace/enseignants" id="studioShortcut" hidden>Studio enseignants</a><a href="/administration" id="adminShortcut" hidden>Commandement</a></nav></div></header>
@@ -15,7 +15,7 @@
 <div id="avis" class="avis" hidden aria-live="polite"></div><div id="certificates" class="actions"></div>
 <div class="tabs" role="tablist" aria-label="Espace apprenant" id="mainTabs">
 <button type="button" role="tab" id="tab-parcours" aria-controls="pane-parcours" aria-selected="true">Mes cours</button>
-<button type="button" role="tab" id="tab-love" aria-controls="pane-love" aria-selected="false" tabindex="-1">Love School <span class="chip love-bonus">Bonus</span></button>
+<button type="button" role="tab" id="tab-love" aria-controls="pane-love" aria-selected="false" tabindex="-1"><span aria-hidden="true">♥</span> Love School <span class="chip love-bonus">Bonus</span></button>
 <button type="button" role="tab" id="tab-biblio" aria-controls="pane-biblio" aria-selected="false" tabindex="-1">Bibliothèque <span class="badge" id="badgeBiblio" hidden></span></button>
 <button type="button" role="tab" id="tab-cohortes" aria-controls="pane-cohortes" aria-selected="false" tabindex="-1">Cohortes</button>
 <button type="button" role="tab" id="tab-ecoles" aria-controls="pane-ecoles" aria-selected="false" tabindex="-1">Spécialisations</button>
@@ -24,17 +24,41 @@
 <div role="tabpanel" class="pane" id="pane-parcours" aria-labelledby="tab-parcours"><section id="catalogue" aria-label="Mes cours"></section>
 <section id="courseDetail" class="panel" hidden aria-live="polite"></section></div>
 <div role="tabpanel" id="pane-love" aria-labelledby="tab-love" hidden>
-  <section class="love-hero" aria-labelledby="loveSchoolTitre">
-    <div class="eyebrow">Soldiers Academy · Parcours complémentaire</div>
-    <h2 id="loveSchoolTitre">Love <em>School</em></h2>
-    <p>Une école de croissance affective et relationnelle, fondée sur des valeurs christocentriques : amour, discernement, communication, respect, engagement et maturité.</p>
-    <div class="actions"><span class="chip love-bonus">6 cours bonus</span><span class="chip">Ouvert aux apprenants connectés</span><span class="chip">Sans examen obligatoire</span></div>
-    <p class="muted">Ces enseignements sont facultatifs et ne modifient pas les 24 cours, les 192 heures ni les attestations du cursus officiel. Aucun échange intime n'est exigé.</p>
+  <section class="love-hero" id="love-school" aria-labelledby="loveSchoolTitre">
+    <div class="love-ornaments" aria-hidden="true">
+      <span class="love-heart love-heart-one">♥</span><span class="love-heart love-heart-two">♡</span><span class="love-heart love-heart-three">♥</span><span class="love-heart love-heart-four">♡</span>
+      <span class="love-halo love-halo-one"></span><span class="love-halo love-halo-two"></span>
+    </div>
+    <div class="love-hero-content">
+      <div class="love-eyebrow">SOLDIERS ACADEMY <span aria-hidden="true">✦</span> L’AMOUR S’APPREND AUSSI</div>
+      <h2 id="loveSchoolTitre">LOVE <em>SCHOOL</em> <span class="love-title-heart" aria-hidden="true">♥</span></h2>
+      <p class="love-tagline">Aimer avec sagesse. Communiquer avec douceur. Construire avec vérité.</p>
+      <p class="love-intro">Une école bonus christocentrique pour apprendre à aimer, comprendre les émotions, entretenir des relations saines et aborder l’intimité adulte avec respect et responsabilité.</p>
+      <div class="love-hero-stats" aria-label="Présentation de Love School">
+        <span><strong>10</strong> cours bonus</span><span><strong>3</strong> univers</span><span><strong>2</strong> cours 18+</span>
+      </div>
+      <div class="love-hero-actions">
+        <a class="btn primary love-start" href="#loveSchoolCourses">Explorer les cours <span aria-hidden="true">♡</span></a>
+        <button type="button" class="button love-pause" id="loveMotionToggle" aria-pressed="false">Mettre les animations en pause</button>
+      </div>
+    </div>
   </section>
+  <div class="love-intro-grid" aria-label="Les engagements Love School">
+    <div class="love-promise"><span aria-hidden="true">♡</span><strong>Amour et dignité</strong><small>Aimer sans posséder ni contraindre.</small></div>
+    <div class="love-promise"><span aria-hidden="true">✧</span><strong>Communication sincère</strong><small>Écouter, comprendre et avancer ensemble.</small></div>
+    <div class="love-promise"><span aria-hidden="true">✦</span><strong>Intimité responsable</strong><small>Consentement, santé et liberté personnelle.</small></div>
+  </div>
+  <section class="love-guide" aria-label="Informations pédagogiques">
+    <p><strong>Votre parcours, votre rythme.</strong> Les dix cours Love School sont facultatifs et ne modifient pas les 24 cours, les 192 heures, les évaluations ou les attestations de Soldiers Academy.</p>
+    <p><strong>Confidentialité.</strong> Les exercices se réalisent à titre personnel. Aucun récit intime, photographie, donnée médicale ni expérience sexuelle n’est exigé. Les modules LS-09 et LS-10 requièrent une déclaration de majorité, non vérifiée automatiquement.</p>
+  </section>
+  <div class="love-toolbar">
+    <div><div class="eyebrow">Les parcours de l’amour</div><h3>Choisissez votre chemin</h3></div>
+    <button class="button" id="refreshLoveSchool" type="button">Actualiser les cours et supports</button>
+  </div>
   <p id="loveStatus" class="status" role="status" aria-live="polite"></p>
-  <div class="actions"><button class="button" id="refreshLoveSchool" type="button">Actualiser les supports Love School</button></div>
-  <div id="loveSchoolCourses" class="grid" aria-label="Catalogue bonus Love School"></div>
-  <section id="loveSchoolDetail" class="panel" hidden aria-live="polite"></section>
+  <div id="loveSchoolCourses" class="love-collections" aria-label="Dix cours bonus Love School"></div>
+  <section id="loveSchoolDetail" class="panel love-detail" hidden aria-live="polite" aria-label="Contenu du cours Love School"></section>
 </div>
 <div role="tabpanel" id="pane-biblio" aria-labelledby="tab-biblio" hidden><section class="panel" aria-labelledby="biblioTitre"><div class="eyebrow">Ressources de l'équipe pédagogique</div><h2 id="biblioTitre">Bibliothèque</h2><div class="actions"><button type="button" class="button" id="refreshAcademyResources">Actualiser les ressources</button><span id="academySyncStatus" role="status" aria-live="polite" class="muted"></span></div><p class="muted">Vidéos, documents et leçons ajoutés par vos enseignants et coachs. Les ressources propres à chaque cours se trouvent aussi dans l'onglet « Ressources » du cours.</p><div id="biblioNouveautes"></div><h3>Bibliothèque générale</h3><div id="biblioGenerale" class="stack"></div></section></div>
 <div role="tabpanel" id="pane-cohortes" aria-labelledby="tab-cohortes" hidden>
