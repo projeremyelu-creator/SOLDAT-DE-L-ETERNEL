@@ -55,6 +55,7 @@
     const confirmation=await fetch("/api/moi",{credentials:"same-origin",cache:"no-store"});
     const me=await confirmation.json();
     if(!confirmation.ok||me.connecte!==true){status.dataset.state="";status.textContent="Votre session n'a pas pu être confirmée. Réessayez de vous connecter.";return}
+    if(me.premiereConnexion){location.assign("/premiere-connexion");return}
     const destination=retour();
     if(destination==="/administration"&&me.niveau<1){
      status.replaceChildren(document.createTextNode("Votre compte est connecté, mais l'administration est réservée aux responsables habilités. "));
