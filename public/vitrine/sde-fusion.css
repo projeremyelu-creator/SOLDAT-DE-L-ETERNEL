@@ -250,3 +250,36 @@ html body.sde-unifie .site-brand{color:var(--fu-gold-2)!important}
 .nav-btn[data-fam].on::before{opacity:1}
 .nav-btn[data-fam].on .badge{color:var(--fam)}
 @media (max-width:900px){.nav-btn[data-fam]::before{left:22%;right:22%;top:0;bottom:auto;width:auto;height:3px;border-radius:0 0 3px 3px}}
+
+
+/* Correctif du 03/11/2026 — Pôles 1 à 5, cartes sur fond ivoire.
+ * Les règles génériques Fusion (texte clair sur fond sombre) avaient une
+ * spécificité supérieure au thème des cartes et rendaient le texte invisible.
+ * Unifier color ET -webkit-text-fill-color pour les navigateurs Android. */
+html body.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card {
+  background:#fffaf0!important;
+  color:#281549!important;
+  border-color:#d7c398!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card :is(h3,h4,strong,b) {
+  color:#281549!important;
+  -webkit-text-fill-color:#281549!important;
+  text-shadow:none!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card :is(p,li,small,dd,dt,span:not(:first-child)) {
+  color:#332449!important;
+  -webkit-text-fill-color:#332449!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card a {
+  color:#68400e!important;
+  -webkit-text-fill-color:#68400e!important;
+  opacity:1!important;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+html body.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card a:is(:hover,:focus-visible) {
+  color:#281549!important;
+  -webkit-text-fill-color:#281549!important;
+}

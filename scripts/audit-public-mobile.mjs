@@ -139,6 +139,18 @@ try{
      brandPortalOverlap:intersects(brand,portal),
      brandBurgerOverlap:intersects(brand,burger),
      quoteContrast:ratio(cssColor,cssBg),quoteTextColor:cssColor,quoteBgColor:cssBg,
+     poleCardsContrast:(()=>{
+      if(!document.body.classList.contains('sde-pole'))return null;
+      const texts=[...document.querySelectorAll('#contenu .sde-initiative-card :is(h3,h4,p,li,small,strong)')];
+      return texts.map(el=>{
+       const card=el.closest('.sde-initiative-card');
+       const style=getComputedStyle(el);
+       const fill=style.webkitTextFillColor;
+       const color=fill&&fill.toLowerCase()!=='currentcolor'?fill:style.color;
+       const background=getComputedStyle(card).backgroundColor;
+       return {text:(el.textContent||'').trim().slice(0,55),contrast:ratio(color,background),color,bg:background};
+      });
+     })(),
      poleLinks:poleLinks.length,
      brokenPoleImages:poleLinks.filter(a=>{let i=a.querySelector('img');return !i||!i.complete||i.naturalWidth===0}).length,
      tpaPosters:posters.length,
@@ -372,6 +384,15 @@ try{
    if(c.name==='plus-390'&&new URL(page.url()).pathname!=='/rubriques')
     issue(c.name,'/plus doit rediriger vers /rubriques',true);
    if(Object.hasOwn(poleReferences,c.name)){
+    const contrast=row.poleCardsContrast;
+    if(!contrast||contrast.length<5)issue(c.name,'le contrôle de contraste des cartes n’a pas pu être effectué',true);
+    else{
+     const illisibles=contrast.filter(x=>x.contrast===null||x.contrast<4.5);
+     const minimum=Math.min(...contrast.map(x=>x.contrast||0));
+     report.notes.push({test:'contraste-cartes-poles',page:c.name,items:contrast.length,minRatio:minimum,examples:contrast.slice(0,2)});
+     console.log('CONTRASTE_POLE '+c.name+' '+JSON.stringify({items:contrast.length,minRatio:minimum,illusibles:illisibles.slice(0,3)}));
+     if(illisibles.length)issue(c.name,'texte trop pâle sur les cartes ivoire : '+JSON.stringify(illisibles.slice(0,3)),true);
+    }
     const f=row.publicPoleForm;
     const ref=poleReferences[c.name];
     if(!f||f.reference!==ref||!f.hasPrivacy||!f.hasName||!f.hasContact||!f.hasConsent||!f.hasFeedback||!f.imageAvailable)
