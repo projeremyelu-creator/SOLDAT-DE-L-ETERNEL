@@ -115,3 +115,55 @@ test('Terminal tactique : agrégats API, aucun GPS ni biométrie artificielle',(
  assert.ok(ops.includes("useData('/api/mon-parcours-academy'"));
  assert.ok(backend.includes('dashboardMetrics'));
 });
+
+
+test('Priorité 01 : accueil sans double affiche TPA, vision et trois actions maintenues',()=>{
+ const home=file('public/vitrine/portail.html');
+ const sitecss=file('public/vitrine/sde-sitewide-2026.css');
+ assert.match(home,/class="m-welcome"/);
+ assert.match(home,/class="sde-hero-poster"/);
+ assert.match(home,/class="iv-band sde-community-band"/);
+ assert.match(home,/communion-vignette\.webp/);
+ assert.equal((home.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1);
+ for(const href of ['/mouvement','/contact#rejoindre','/programmes']){
+  const hero=home.slice(home.indexOf('class="m-welcome"'),home.indexOf('class="m-kpis"'));
+  assert.ok(hero.includes('href="'+href+'"'),href);
+ }
+ assert.ok(sitecss.includes('Refonte structurée 03/11/2026'));
+ assert.ok(sitecss.includes('.sde-rail{'));
+ assert.ok(sitecss.includes('display:none!important'));
+ assert.ok(sitecss.includes('site-mega-panel'));
+});
+test('Priorité 02 : onglets privés cohérents et registres accessibles sur mobile',()=>{
+ const nav=file('frontend/reference-shell.jsx');
+ const css=file('frontend/reference.css');
+ assert.ok(nav.includes("['rendezvous','Agenda & inscriptions','mission']"));
+ assert.ok(nav.includes("['carteqr','Ma carte QR','qr']"));
+ assert.ok(nav.includes("['academie','Academy','academy']"));
+ assert.ok(nav.includes("['rendezvous','Mon agenda','mission']"));
+ assert.ok(css.includes('Étape 2, tableaux de bord privés'));
+ assert.ok(css.includes('data-sde-module=annuaire'));
+ assert.ok(css.includes('overflow-x:auto!important'));
+ assert.ok(css.includes('repeat(5,minmax(0,1fr))'));
+ assert.ok(css.includes('prefers-reduced-motion'));
+});
+test('Priorité 03 : galerie, soutien et pages publiques partagent les principes de navigation',()=>{
+ const album=file('public/vitrine/album-infire.html');
+ const don=file('public/vitrine/soutenir.html');
+ const extras=file('public/vitrine/sde-standalone-clarte.css');
+ const global=file('public/vitrine/sde-sitewide-2026.css');
+ for(const page of [album,don]){
+  assert.match(page,/sde-standalone-clarte\.css\?v=/);
+  assert.match(page,/class="sde-standalone-bottom"/);
+  for(const href of ['/','/contact#rejoindre','/programmes#agenda','/soutenir','/rubriques'])
+   assert.ok(page.includes('href="'+href+'"'),href);
+ }
+ assert.match(album,/class="tab" type="button" role="tab" data-year="2024"/);
+ assert.match(album,/class="tab" type="button" role="tab" data-year="2025"/);
+ assert.match(album,/class="tab" type="button" role="tab" data-year="2026"/);
+ assert.match(don,/Paiement en ligne en préparation/);
+ assert.match(don,/data-sde-form/);
+ assert.match(extras,/\.sde-standalone-bottom/);
+ assert.match(extras,/@media\(max-width:900px\)/);
+ for(const term of ['ressources-grille','hub-grid','sde-initiative-section','sde-public-bottom-nav'])assert.ok(global.includes(term));
+});
