@@ -3599,6 +3599,12 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     out += `<section class="card hero sujet"><div class="card-h"><h2 class="card-t">Sujet de la semaine</h2>${ecr ? btn("editer-sujet", "Modifier", { ico: "i-edit", sm: true }) : ""}</div>${ch.sujetSemaine ? `<p class="sujet-t">${esc(ch.sujetSemaine)}</p>${ch.versetSemaine ? `<p class="hint">« ${esc(ch.versetSemaine)} »</p>` : ""}` : `<p class="hint">Aucun sujet défini. Fixez le sujet de prière de la semaine : il s’affichera sur l’accueil et dans les appels à la prière.</p>`}</section>`;
     const enP = S.prieres.filter((p) => (p.statut || "En prière") === "En prière");
     const exa = S.prieres.filter((p) => p.statut === "Exaucée");
+    out += `<div class="stats s4 pv-stats" role="list" aria-label="Chiffres de la Chambre Haute">
+      <div class="stat" role="listitem"><span class="stat-l">${I("i-flame")}En prière</span><span class="stat-v">${nb(enP.length)}</span><span class="stat-m">Requêtes ouvertes</span></div>
+      <div class="stat out" role="listitem"><span class="stat-l">${I("i-pin")}Urgentes</span><span class="stat-v">${nb(enP.filter((p) => p.urgent).length)}</span><span class="stat-m">À porter en priorité</span></div>
+      <div class="stat in" role="listitem"><span class="stat-l">${I("i-check")}Exaucées</span><span class="stat-v">${nb(exa.length)}</span><span class="stat-m">Témoignages enregistrés</span></div>
+      <div class="stat" role="listitem"><span class="stat-l">${I("i-users")}Intercesseurs</span><span class="stat-v">${nb(intercesseursSemaine().length)}</span><span class="stat-m">Engagés dans la chaîne</span></div>
+    </div>`;
     const ong = [["requetes", "En prière", enP.length], ["exaucees", "Témoignages", exa.length], ["chaine", "Chaîne de prière", null]];
     if (accesDirection()) ong.push(["confidentielles", "Confidentielles", S.pret.prieresConf ? S.prieresConf.filter((p) => (p.statut || "En prière") === "En prière").length : null]);
     ong.push(["closes", "Closes", S.prieres.filter((p) => p.statut === "Close").length]);
