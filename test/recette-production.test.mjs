@@ -159,3 +159,28 @@ test('Recette Academy : studio et publication des supports, version effective du
  const ref=await recetteProduction({fetcher:ancien.fetcher,domaines:[DOMAINES[0]],controles:CONTROLES.filter(c=>c.type==='academy-script'),essais:1});
  assert.equal(ref.ok,false,'Un ancien script Academy en production ne doit pas être validé.');
 });
+
+test("RECETTE EXTERNE PONCTUELLE : Love School 2.0 effectivement servie par Cloudflare", {timeout:240000},async()=>{
+ const {recetteAcademyProduction}=await import("../scripts/recette-academy-production.mjs");
+ const b=await recetteAcademyProduction({essais:2,timeoutMs:10000,rapport:r=>{
+   console.log("LOVE SCHOOL 2.0",r.ok?"OK":"ÉCHEC",r.domaine+r.path,r.erreur||"");
+ }});
+ console.log("LOVE SCHOOL 2.0 BILAN",b.reussis+"/"+b.total);
+ assert.equal(b.ok,true,JSON.stringify(b.resultats.filter(x=>!x.ok)));
+ for(const domain of ["https://mouvement-sde.org","https://app.mouvement-sde.org"]){
+   const [js,css]=await Promise.all([
+     fetch(domain+"/vitrine/sde-academy-parcours.js",{redirect:"manual",signal:AbortSignal.timeout(15000),headers:{"cache-control":"no-cache"}}),
+     fetch(domain+"/vitrine/sde-academy-onglets.css",{redirect:"manual",signal:AbortSignal.timeout(15000),headers:{"cache-control":"no-cache"}})
+   ]);
+   assert.equal(js.status,200,domain+" JS");
+   assert.equal(css.status,200,domain+" CSS");
+   const [script,style]=await Promise.all([js.text(),css.text()]);
+   for(const marque of ["LOVE_GROUPS","ouvrirLoveAdulte","verifierLoveQuiz","loveMotionToggle","loveSchoolCourses"]){
+     assert.ok(script.includes(marque),domain+" ancien script : "+marque);
+   }
+   for(const marque of ["@keyframes loveFloat","@keyframes loveBeat","@keyframes loveSheen","love-motion-paused","prefers-reduced-motion"]){
+     assert.ok(style.includes(marque),domain+" anciens styles : "+marque);
+   }
+   console.log("LOVE SCHOOL 2.0 DESIGN OK",domain,"mouvement romantique, quiz et accès adulte");
+ }
+});
