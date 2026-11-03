@@ -12,6 +12,8 @@ const json=(corps,status=200)=>Response.json(corps,{status,headers:{'cache-contr
 const fail=(message,status=400)=>json({ok:false,message},status);
 export const MDP_TEMP_JOURS=14;
 export const LOT=25;
+const ID_DOC=/^[A-Za-z0-9_.~:@+-]{1,200}$/;
+const MATRICULE=/^[a-z0-9][a-z0-9 ._-]{2,39}$/i;
 export const DOMAINE_INTERNE='membre.sde.invalid';
 export const estInterne=email=>String(email||'').toLowerCase().endsWith('@'+DOMAINE_INTERNE);
 const identifiantInterne=matricule=>String(matricule).toLowerCase().replace(/[^a-z0-9._-]+/g,'-').replace(/^[-.]+|[-.]+$/g,'')+'@'+DOMAINE_INTERNE;
@@ -57,6 +59,8 @@ export async function comptesMembresApi(req,env,u,s){
   const nom=[d.prenoms,d.nom].filter(Boolean).join(' ').trim()||'(sans nom)';
   const email=s.normEmail(d.email);
   if(d.actif===false){ignores.push({nom,raison:'fiche inactive'});continue}
+  if(!ID_DOC.test(String(f.id||''))){ignores.push({nom,raison:'identifiant de fiche invalide'});continue}
+  if(d.compteId){ignores.push({nom,raison:'compte déjà renseigné dans la fiche : vérifier son rattachement'});continue}
   if(relies.has(f.id)){ignores.push({nom,raison:'compte déjà relié à cette fiche'});continue}
   const interne=!s.EMAIL_OK.test(email);
   if(interne&&!sansEmail){ignores.push({nom,raison:'adresse e-mail absente ou invalide'});continue}
@@ -75,17 +79,23 @@ export async function comptesMembresApi(req,env,u,s){
  for(const x of lot){
   try{
    let matricule=String(x.d.matricule||'').trim();
-   if(!matricule||matricules.has(matricule.toUpperCase()))matricule=await s.nouveauMatricule(env);
+   if(!MATRICULE.test(matricule)||matricules.has(matricule.toUpperCase()))matricule=await s.nouveauMatricule(env);
    matricules.add(matricule.toUpperCase());
    const cle=x.interne?identifiantInterne(matricule):x.email;
    if(x.interne&&emails.has(cle))throw new Error('identifiant interne déjà pris');
    emails.add(cle);
    const mdp=motDePasseTemporaire(),id=await s.idDeEmail(cle);
+   const update=x.interne
+    ? env.DB.prepare("UPDATE docs SET data=json_set(data,'$.matricule',?,'$.compteId',?,'$.modifieLe',?,'$.modifiePar',?),version=version+1,maj=? WHERE path=?").bind(matricule,id,t,u.id,t,'membres/'+x.id)
+    : env.DB.prepare("UPDATE docs SET data=json_set(data,'$.matricule',?,'$.compteId',?,'$.email',?,'$.modifieLe',?,'$.modifiePar',?),version=version+1,maj=? WHERE path=?").bind(matricule,id,x.email,t,u.id,t,'membres/'+x.id);
+   // Liaison de la fiche, compte et statut provisoire dans UNE transaction.
+   // Ne pas divulguer le secret en cas d'échec : aucune écriture partielle.
    await env.DB.batch([
     env.DB.prepare("INSERT INTO comptes (email,id,nom,role,cree,mdp,membreId,matricule) VALUES (?,?,?,'soldat',?,?,?,?)").bind(cle,id,x.nom,t,await s.empreinteMdp(mdp),x.id,matricule),
-    env.DB.prepare('INSERT INTO comptes_mdp_temp(email,expire,cree) VALUES(?,?,?)').bind(cle,expire,t)
+    env.DB.prepare('INSERT INTO comptes_mdp_temp(email,expire,cree) VALUES(?,?,?)').bind(cle,expire,t),
+    update,
+    env.DB.prepare('INSERT INTO revs (parent,rev) VALUES (?,1) ON CONFLICT(parent) DO UPDATE SET rev=rev+1').bind('membres')
    ]);
-   await s.ecrireDoc(env,'update','membres/'+x.id,{matricule,compteId:id,...(x.interne?{}:{email:x.email}),modifieLe:t,modifiePar:u.id});
    crees.push({nom:x.nom,email:x.interne?'':x.email,matricule,motDePasse:mdp});
   }catch(e){echecs.push({nom:x.nom,raison:'création impossible (doublon ou erreur)'})}
  }
