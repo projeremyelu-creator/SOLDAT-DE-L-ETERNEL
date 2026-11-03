@@ -19,7 +19,7 @@ function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=fals
     if(p==='/connexion')return html('<form>Connexion mot de passe</form><aside id="sde-event-root"><a href="/programmes#tpa-2026">TPA 2026</a></aside>',{'cache-control':'no-store','x-robots-tag':'noindex, nofollow'});
     if(['/mon-espace','/administration','/mon-espace/academy','/administration/academy','/mon-espace/enseignants'].includes(p))return pagePriveExposee
       ?html('Contenu confidentiel')
-      :new Response(null,{status:302,headers:{'cache-control':'private, no-store','x-robots-tag':'noindex, nofollow',location:(lienExterne?'https://autre-site.example':u.origin)+'/connexion?retour='+encodeURIComponent(academyRetourPerdu&&p.endsWith('/academy')?p.replace('/academy',''):p)}});
+      :new Response(null,{status:302,headers:{'cache-control':'private, no-store','x-robots-tag':'noindex, nofollow',location:(lienExterne?'https://autre-site.example':u.origin)+'/connexion?retour='+encodeURIComponent(academyRetourPerdu&&/\/(academy|enseignants)$/.test(p)?p.replace(/\/(academy|enseignants)$/,''):p)}});
     if(p==='/api/sante')return Response.json({ok:true,assetRevision:(process.env.SDE_EXPECTED_REV||'abcdef123456').slice(0,12)});
     if(p==='/api/soldiers-academy'||p==='/api/soldiers-academy/cours/SA-01'||p==='/api/soldiers-academy/ressources/etat')
       return Response.json(academyExposee?{ok:true,courses:['private']}: {ok:false,message:'Connexion requise.'},{status:academyExposee?200:401,headers:{'cache-control':'private, no-store'}});
