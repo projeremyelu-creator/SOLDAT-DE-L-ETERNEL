@@ -98,7 +98,7 @@ function SoldierSpace({portal}){
    </div>
    <section className="ops-card sv-academy"><img src="/vitrine/illus/livre-academy.webp" alt="" width="197" height="134"/><div><h3>Soldiers Academy</h3><p>Poursuivez votre formation et retrouvez les modules disponibles.</p>{pct!=null&&<p className="sv-meta">{acad.data.modulesFaits} / {acad.data.modulesTotal} modules complétés</p>}<NativeButton portal={portal} module="academie">Reprendre ma formation →</NativeButton></div></section>
   </div>
-  <TacticalMemberPanel academy={acad.data} nom={nom} matricule={c?.matricule} qrSrc={qr} open={module=>portal.selectionner(module)}/><MemberDeck portal={portal}/>
+  <TacticalMemberPanel academy={acad.data} academyLoading={!acad.data&&!acad.error} academyError={acad.error} nom={nom} matricule={c?.matricule} qrSrc={qr} open={module=>portal.selectionner(module)}/><MemberDeck portal={portal}/>
   <FeatureEvent portal={portal}/><OfficialTpaCard/>
   <div className="sv-bottom">
    <section className="ops-card sv-res"><h3>Mes ressources</h3><p>Accédez aux livres, enseignements, documents et supports de formation.</p><div className="sv-links"><button type="button" onClick={()=>portal.selectionner('bibliotheque')}><RefIcon name="academy"/><span>Enseignements<small>Voir les contenus</small></span></button><button type="button" onClick={()=>portal.selectionner('bibliotheque')}><RefIcon name="mission"/><span>Livres à télécharger<small>Accéder à la bibliothèque</small></span></button></div><NativeButton portal={portal} module="bibliotheque">Ouvrir les ressources →</NativeButton></section>

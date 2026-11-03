@@ -35,7 +35,10 @@ test("maquette : « Mon espace Soldat » est branché pour les membres seulement
 test("maquette : progression Academy calculée côté serveur pour le membre connecté",()=>{
  assert.ok(worker.includes('p === "/api/mon-parcours-academy"'));
  const fn=worker.slice(worker.indexOf("async function apiMonParcoursAcademy"),worker.indexOf("async function apiMesCotisations"));
- assert.ok(fn.includes("u.membreId")&&fn.includes("Abandon")&&fn.includes("modulesTotal"));
+ const helper=read("src/member-academy-summary.js");
+ assert.ok(fn.includes("memberAcademySummary(formations, u.membreId)"),"Le Worker calcule uniquement le parcours de la session");
+ assert.ok(helper.includes("['Abandon','Retiré']")&&helper.includes("modulesTotal"),"L'agrégation filtrée reste disponible");
+ assert.ok(helper.includes("hasOwnProperty.call(d.participants,memberId)"),"Les données des autres membres sont exclues");
  assert.ok(/!u\.connecte \|\| !u\.membreId/.test(fn),"accès refusé sans fiche reliée");
 });
 test("maquette : barre d'onglets mobile et mouvement réduit",()=>{

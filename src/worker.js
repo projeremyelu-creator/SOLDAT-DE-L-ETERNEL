@@ -4,6 +4,7 @@ import {operationsApi} from "./operations.js";
 import {memberQrApi} from "./member-qr.js";
 import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
+import {memberAcademySummary} from "./member-academy-summary.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {sdeExpansionApi} from "./sde-expansion.js";
 import {financesPubliques} from "./sde-financements.js";
@@ -530,17 +531,9 @@ async function apiMonParcoursAcademy(req, env, u) {
   if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 404);
   if (req.method !== "GET") return erreur("methode", "GET uniquement.", 405);
   const formations = await lireRequete(env, { path: "formations" });
-  let faits = 0, total = 0, inscrit = 0, certifie = 0;
-  for (const { data: d = {} } of formations) {
-    const p = d.participants && d.participants[u.membreId];
-    if (!p || typeof p !== "object" || ["Abandon", "Retiré"].includes(p.statut)) continue;
-    const modules = Array.isArray(d.modules) ? d.modules.filter((m) => m && m.id) : [];
-    inscrit++;
-    if (p.statut === "Certifié") certifie++;
-    total += modules.length;
-    faits += modules.filter((m) => p.suivis && p.suivis[m.id]).length;
-  }
-  return json({ ok: true, formations: inscrit, certifie, modulesFaits: faits, modulesTotal: total, pourcentage: total ? Math.round((100 * faits) / total) : null });
+  // Les titres et étapes appartiennent exclusivement au membre de cette session.
+  // Conserver la forme des agrégats pour l'ancienne application.
+  return json({ ok: true, ...memberAcademySummary(formations, u.membreId) });
 }
 
 async function apiMesCotisations(req, env, u) {
