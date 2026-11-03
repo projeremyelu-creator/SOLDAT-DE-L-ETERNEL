@@ -803,3 +803,198 @@ body.sde-reference .sde-tpa-dialog :is(button,a):focus-visible{
  body.sde-reference-admin .ref-command>.sde-official-tpa{grid-template-columns:1fr}
  body.sde-reference-admin .ref-command>.sde-official-tpa-poster{max-width:220px}
 }
+
+
+/* Fidélité 03+04 · portail d'entrée / membre / administration.
+   Le décor issu de la maquette est conservé. Les quatre formulaires doivent
+   demeurer visibles, utilisables au clavier et sur les petits téléphones. */
+body.sde-reference-login{
+ color:#fff4df;
+ background:linear-gradient(145deg,#130826 0%,#24103e 58%,#112d2c)!important;
+}
+body.sde-reference-login .access-main{
+ position:relative;overflow-x:clip;overflow-y:visible;
+ min-height:100svh;height:auto;padding:0!important;
+ background:
+  radial-gradient(ellipse at 14% 10%,rgba(132,72,170,.27),transparent 45%),
+  radial-gradient(ellipse at 85% 85%,rgba(53,106,85,.19),transparent 44%),
+  linear-gradient(160deg,#100c26,#1b0e34 62%,#132b2c)!important;
+}
+body.sde-reference-login .ref-login-art{
+ opacity:.49;filter:saturate(.85);z-index:0;
+ mask-image:linear-gradient(0deg,#000 35%,transparent 94%);
+}
+body.sde-reference-login .access-shell{
+ display:flex!important;flex-direction:column;align-items:center;
+ justify-content:center;gap:clamp(18px,3vh,30px);
+ box-sizing:border-box;position:relative;z-index:1;
+ width:min(100%,1070px)!important;max-width:100%;
+ min-height:100svh!important;height:auto!important;
+ margin:0 auto;padding:clamp(28px,5svh,58px) 18px clamp(40px,7svh,80px);
+}
+body.sde-reference-login .access-identity{
+ position:relative!important;inset:auto!important;
+ top:auto!important;left:auto!important;
+ transform:none!important;margin:0 auto!important;
+ display:flex!important;justify-content:center;align-items:center;
+ width:min(100%,350px);min-height:0!important;
+}
+body.sde-reference-login .access-identity .ref-gold-brand{
+ --brand-scale:1.13;filter:drop-shadow(0 4px 23px rgba(237,193,112,.21));
+}
+body.sde-reference-login .access-content{
+ position:relative!important;inset:auto!important;
+ top:auto!important;left:auto!important;transform:none!important;
+ box-sizing:border-box;
+ width:min(100%,490px)!important;max-width:100%!important;
+ margin:0 auto;padding:0;z-index:2;
+}
+body.sde-reference-login .access-card{
+ box-sizing:border-box;width:100%;
+ padding:clamp(20px,3vw,28px)!important;
+ border-radius:20px!important;
+ border:1px solid rgba(234,194,120,.65)!important;
+ background:linear-gradient(150deg,rgba(47,23,72,.95),rgba(25,23,47,.96) 68%,rgba(24,57,44,.93))!important;
+ box-shadow:0 20px 55px rgba(7,3,22,.42),inset 0 1px 0 rgba(255,238,190,.13)!important;
+ backdrop-filter:blur(13px);
+ color:#fff5e5;
+}
+body.sde-reference-login .ref-access-targets{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:8px!important;margin:0 0 17px!important;
+ white-space:normal;align-items:stretch;
+}
+body.sde-reference-login .ref-access-targets button{
+ display:flex;align-items:center;justify-content:center;
+ box-sizing:border-box;min-width:0;min-height:46px!important;
+ padding:10px 8px!important;
+ border:1px solid rgba(236,194,112,.32)!important;
+ border-radius:12px!important;
+ color:#e5d9ed!important;background:rgba(13,10,30,.54)!important;
+ font-size:clamp(.73rem,2.6vw,.83rem)!important;
+ line-height:1.25;text-align:center;font-weight:750!important;
+ white-space:normal;
+}
+body.sde-reference-login .ref-access-targets button[aria-pressed=true]{
+ background:linear-gradient(130deg,#efd393,#cda460)!important;
+ color:#251735!important;border-color:#f6dfa7!important;
+ box-shadow:0 5px 14px rgba(0,0,0,.14);
+}
+body.sde-reference-login .access-tabs{
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:7px;margin:0 0 20px!important;
+}
+body.sde-reference-login .access-tabs button{
+ box-sizing:border-box;min-width:0;min-height:42px!important;
+ padding:9px 6px!important;border-radius:10px!important;
+ border:1px solid rgba(224,188,128,.29)!important;
+ background:rgba(17,13,38,.4)!important;color:#e9dded!important;
+ font-size:clamp(.71rem,2.6vw,.79rem)!important;
+ line-height:1.3;font-weight:700!important;
+ white-space:normal;overflow-wrap:break-word;
+}
+body.sde-reference-login .access-tabs button[aria-selected=true]{
+ background:rgba(232,194,118,.2)!important;
+ color:#ffe2a0!important;border-color:#e5c178!important;
+ box-shadow:inset 0 -2px #edc573;
+}
+body.sde-reference-login #panel-connexion>h2{
+ display:block!important;margin:0 0 12px;
+ font:800 clamp(1.35rem,4vw,1.7rem)/1.12 "Saira Condensed",system-ui,sans-serif!important;
+ color:#fce6b2;
+}
+body.sde-reference-login #panel-connexion>p{
+ display:none!important;
+}
+body.sde-reference-login .access-panel h2{
+ color:#ffe3a5;font-weight:800!important;margin-bottom:9px;
+}
+body.sde-reference-login .access-panel p{
+ color:#e8deed!important;font-size:.84rem!important;line-height:1.55!important;
+}
+body.sde-reference-login .access-panel form{gap:12px}
+body.sde-reference-login .access-panel label{
+ font-size:.84rem!important;line-height:1.3!important;
+ color:#f3ebf5;font-weight:700!important;gap:7px;
+}
+body.sde-reference-login .access-panel input{
+ box-sizing:border-box;height:auto!important;min-height:48px!important;
+ border:1px solid rgba(205,179,222,.62)!important;
+ border-radius:11px!important;background:rgba(9,13,31,.82)!important;
+ color:#fff8eb!important;padding:11px 13px!important;
+ font:500 16px/1.4 "Atkinson Hyperlegible",system-ui,sans-serif!important;
+}
+body.sde-reference-login .access-panel input:focus-visible{
+ outline:3px solid #f9d485!important;outline-offset:2px;
+ border-color:#fff0c3!important;
+}
+body.sde-reference-login #form-connexion .access-password-toggle,
+body.sde-reference-login .access-password-toggle{
+ display:inline-flex!important;align-items:center;justify-content:flex-start;
+ position:static!important;inset:auto!important;right:auto!important;top:auto!important;
+ width:auto!important;height:auto!important;min-height:34px!important;
+ margin:-6px 0 2px!important;padding:4px 2px!important;
+ font-size:.8rem!important;line-height:1.35!important;
+ color:#f2d597!important;overflow:visible!important;
+ background:none!important;border:0!important;
+}
+body.sde-reference-login .access-password-toggle::before{display:none!important}
+body.sde-reference-login .access-submit{
+ min-height:48px!important;height:auto!important;
+ margin-top:2px;padding:12px 17px!important;
+ background:linear-gradient(120deg,#f6dea3,#d4ad64)!important;
+ border:1px solid #ffe4ac!important;border-radius:12px!important;
+ color:#21142f!important;font-weight:900!important;
+ font-size:.93rem!important;
+}
+body.sde-reference-login .access-submit:hover{filter:brightness(1.06)}
+body.sde-reference-login .access-message{
+ min-height:0;color:#fff0d4;font-size:.88rem!important;
+ line-height:1.5!important;margin-top:12px;
+}
+body.sde-reference-login .access-message[data-state=success]{color:#b8eccb}
+body.sde-reference-login .access-message a{color:#ffe09b}
+body.sde-reference-login .access-forgot{
+ min-height:44px!important;display:flex;justify-content:center;align-items:center;
+ margin:5px auto 0;padding:8px 12px;
+ color:#f4d99f!important;font-size:.83rem!important;
+}
+body.sde-reference-login .ref-account-links{display:none!important}
+body.sde-reference-login .access-content>.access-back{
+ display:inline-flex!important;align-items:center;min-height:42px;
+ margin-top:18px;color:#f6d89c!important;font-size:.86rem;
+}
+body.sde-reference-login .access-content>p:last-child{
+ position:relative!important;width:auto!important;height:auto!important;
+ clip:auto!important;white-space:normal!important;overflow:visible!important;
+ color:#e7dfe9!important;font-size:.8rem;line-height:1.5;margin:5px 0 0;
+}
+body.sde-reference-login .access-content>p:last-child a{color:#ffe0a0!important}
+body.sde-reference-login :is(.access-tabs button,.ref-access-targets button,.access-back,.access-forgot):focus-visible{
+ outline:3px solid #fce09d!important;outline-offset:3px!important;
+}
+@media(min-width:700px){
+ body.sde-reference-login .access-tabs{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+@media(max-width:600px){
+ body.sde-reference-login .access-shell{
+  padding:23px 12px calc(25px + env(safe-area-inset-bottom))!important;
+  gap:14px!important;justify-content:flex-start;
+ }
+ body.sde-reference-login .access-identity .ref-gold-brand{--brand-scale:.9}
+ body.sde-reference-login .access-content{width:min(100%,470px)!important}
+ body.sde-reference-login .access-card{padding:17px 14px!important;border-radius:16px!important}
+ body.sde-reference-login .access-panel h2{font-size:1.35rem}
+ body.sde-reference-login .ref-login-art{width:100%;transform:none;left:0;right:0;opacity:.24}
+}
+@media(max-width:360px){
+ body.sde-reference-login .access-shell{padding-inline:8px!important}
+ body.sde-reference-login .ref-access-targets button{font-size:.69rem!important}
+ body.sde-reference-login .access-tabs button{font-size:.68rem!important}
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-reference-login :is(.access-card,.access-submit,.access-tabs button){
+  transition:none!important;animation:none!important;
+ }
+}
