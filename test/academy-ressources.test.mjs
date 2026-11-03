@@ -239,3 +239,16 @@ test("Synchronisation bibliothèque : une publication devient visible sans expos
   assert.match(script,/setInterval\(\(\)=>synchroniserRessources\(\),90000\)/);
   assert.match(script,/document\.hidden/);
 });
+
+test("Actualisation des supports du cours ouvert : action visible et non destructive pour les évaluations",()=>{
+  const page=readFileSync("public/vitrine/sde-academy-parcours.html","utf8");
+  const script=readFileSync("public/vitrine/sde-academy-parcours.js","utf8");
+  assert.match(script,/data-refresh-course-resources/);
+  assert.match(script,/courseResourcesList/);
+  assert.match(script,/async function actualiserRessourcesCours/);
+  const fn=script.slice(script.indexOf("async function actualiserRessourcesCours"),script.indexOf("async function submitCopy"));
+  assert.match(fn,/request\\("\/cours\/"\+encodeURIComponent\\(id\\)\\)/);
+  assert.match(fn,/UI\\.ressourceHtml/);
+  assert.doesNotMatch(fn,/await reload\\(/,"ne pas effacer les réponses ou reprendre les vidéos sans demande");
+  assert.match(page,/sde-academy-parcours\\.js\\?v=20271103-ressources-cours/,"les clients doivent recevoir le script mis à jour");
+});
