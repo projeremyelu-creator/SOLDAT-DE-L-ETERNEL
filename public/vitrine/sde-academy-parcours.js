@@ -73,6 +73,25 @@ function renderBiblio(){
  $("biblioNouveautes").innerHTML=nouv.length?'<h3>Nouveautés des 14 derniers jours</h3><ul class="numbered">'+nouv.map(x=>'<li><span class="chip type-'+esc(x.type)+'">'+esc(UI.TYPES[x.type]||"Ressource")+'</span> '+(snapshot.courses.some(c=>c.id===x.portee)?'<button type="button" class="button" data-course="'+esc(x.portee)+'" data-onglet-cours="ressources">'+esc(x.titre)+' ('+esc(x.portee)+')</button>':esc(x.titre))+' <span class="muted">· '+esc(UI.dateFr(x.cree))+'</span></li>').join("")+'</ul>':'';
  $("biblioGenerale").innerHTML=(r.generales||[]).length?r.generales.map((x,i)=>UI.ressourceHtml(x,i)).join(""):'<div class="vide">La bibliothèque générale est vide pour le moment. Les enseignants et coachs y publient des ressources ouvertes à tous les apprenants.</div>';
 }
+/* Synchronisation légère des supports publiés, sans recharger les exercices ou les vidéos en cours. */
+let syncRessourcesEnCours=false;
+async function synchroniserRessources({manuel=false}={}){
+  if(syncRessourcesEnCours||!snapshot||(!manuel&&document.hidden))return;
+  syncRessourcesEnCours=true;
+  const bouton=$("refreshAcademyResources");
+  if(bouton&&manuel)bouton.disabled=true;
+  try{
+    const r=await request("/ressources/etat");
+    const next=r.ressources||{generales:[],nouveautes:[],parCours:{}};
+    const diff=JSON.stringify(next)!==JSON.stringify(snapshot.ressources||{});
+    if(diff){
+      snapshot.ressources=next;
+      renderBiblio();renderCatalogue();
+      text("academySyncStatus","Nouvelles ressources chargées. Pour un cours déjà ouvert, rouvrez son onglet Ressources.");
+    }else if(manuel){text("academySyncStatus","Bibliothèque à jour.");}
+  }catch(e){if(manuel)text("academySyncStatus",e.message||"Actualisation indisponible.");}
+  finally{syncRessourcesEnCours=false;if(bouton)bouton.disabled=false;}
+}
 function renderAvis(){
  const n=$("avis"),list=snapshot.avis||[];
  if(!list.length){n.hidden=true;n.innerHTML="";return;}
@@ -252,12 +271,15 @@ document.addEventListener("submit",async ev=>{
 });
 (async()=>{
  try{
-  mainTabs=window.SDEAcademyUI.tabs($("mainTabs"),id=>{if(id==="biblio"){try{localStorage.setItem("sde-academy-biblio-vu",String(Date.now()))}catch{}$("badgeBiblio").hidden=true;}});
+  mainTabs=window.SDEAcademyUI.tabs($("mainTabs"),id=>{if(id==="biblio"){synchroniserRessources({manuel:true});try{localStorage.setItem("sde-academy-biblio-vu",String(Date.now()))}catch{}$("badgeBiblio").hidden=true;}});
   await reload();alertMessage("Bienvenue dans votre parcours Soldiers Academy 2027.");
   if(snapshot.admin)await loadGestion();
  }catch(e){
    alertMessage(e.message+" — connectez-vous à votre espace personnel.");
    $("studentPage").hidden=true;$("adminPage").hidden=true;
  }
+$("refreshAcademyResources")?.addEventListener("click",()=>synchroniserRessources({manuel:true}));
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)synchroniserRessources();});
+setInterval(()=>synchroniserRessources(),90000);
 })();
 })();
