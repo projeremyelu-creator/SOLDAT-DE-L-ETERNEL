@@ -1300,3 +1300,144 @@ body.sde-unifie .sde-hero-cta:hover{background:#f3da9a;color:#0b1530}
     align-items:center;
   }
 }
+
+
+/* SDE · Refonte structurée 03/11/2026 — étapes 1 et 3.
+   Un menu public prioritaire, des cartes lisibles et des pages
+   complémentaires cohérentes. Aucun lien ni formulaire supprimé. */
+html body.sde-unifie:not(.sde-tableau) .sde-rail{
+ display:none!important;
+}
+html body.sde-unifie:not(.sde-tableau) .site-header{
+ z-index:1000;
+}
+html body.sde-unifie:not(.sde-tableau) .site-header .site-header-inner{
+ width:min(1380px,calc(100% - 30px));
+}
+html body.sde-unifie:not(.sde-tableau) .site-header .site-menu{
+ gap:clamp(8px,1.1vw,18px);
+}
+html body.sde-unifie:not(.sde-tableau) .site-header .site-menu :is(a,summary){
+ min-height:44px;line-height:1.4;
+}
+html body.sde-unifie:not(.sde-tableau) .site-header .site-menu .site-mega-panel{
+ max-width:min(90vw,560px);
+ padding:12px!important;
+ border-radius:14px;
+ border:1px solid rgba(223,184,112,.45)!important;
+ background:linear-gradient(150deg,#211436,#172d35)!important;
+ box-shadow:0 16px 36px rgba(4,5,15,.28);
+}
+html body.sde-unifie:not(.sde-tableau) .site-header .site-menu .site-mega-panel a{
+ border-radius:8px;padding:10px 12px;white-space:normal;
+ color:#f8efde!important;
+}
+html body.sde-unifie:not(.sde-tableau) .site-header .site-menu .site-mega-panel a small{
+ color:#d9d4e2!important;line-height:1.3;
+}
+html body.sde-unifie:not(.sde-tableau) .site-header .site-menu .site-mega-panel a:hover,
+html body.sde-unifie:not(.sde-tableau) .site-header .site-menu .site-mega-panel a:focus-visible{
+ background:rgba(239,201,127,.14)!important;
+ color:#ffe0a2!important;
+}
+html body.sde-unifie:not(.sde-tableau) .site-header .site-menu .site-mega-panel a[data-sde-service-link]{
+ font-size:.86rem;
+ border-top:1px solid rgba(233,198,129,.16);
+}
+html body.sde-unifie:not(.sde-tableau) .site-header :is(a,summary,button):focus-visible,
+html body.sde-unifie:not(.sde-tableau) .sde-public-bottom-nav a:focus-visible{
+ outline:3px solid #ffe3a6!important;outline-offset:3px!important;
+}
+/* Une grille de pages harmonisée, sans imposer de nouveau moteur métier. */
+html body.sde-unifie:not(.sde-tableau) :is(.sde-initiative-section,.sde-initiative-lead,.section[id],.hub-section){
+ scroll-margin-top:calc(84px + env(safe-area-inset-top));
+}
+html body.sde-unifie:not(.sde-tableau) :is(.sde-initiative-section,.sde-initiative-lead) .enveloppe,
+html body.sde-unifie:not(.sde-tableau) .section>.enveloppe,
+html body.sde-unifie:not(.sde-tableau) .section>.wrap{
+ width:min(1250px,calc(100% - 34px));
+ max-width:1250px;margin-inline:auto;
+}
+html body.sde-unifie:not(.sde-tableau) :is(.sde-initiative-card,.ressource-carte,.programme,.ticket,.hub-card,.hub-form){
+ border-radius:16px!important;
+ overflow-wrap:anywhere;
+ transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+html body.sde-unifie:not(.sde-tableau) :is(.sde-initiative-card,.ressource-carte,.programme,.ticket,.hub-card,.hub-form):focus-within{
+ outline:2px solid #eac67d!important;outline-offset:3px;
+ box-shadow:0 12px 32px rgba(20,12,39,.16);
+}
+html body.sde-unifie:not(.sde-tableau) :is(.sde-initiative-card,.ressource-carte,.programme,.ticket,.hub-card) :is(h2,h3,h4,strong){
+ overflow-wrap:anywhere;
+}
+html body.sde-unifie:not(.sde-tableau) :is(.sde-initiative-section,.section[id],.hub-section) :is(button,a):focus-visible{
+ outline:3px solid #efd089!important;outline-offset:3px!important;
+}
+html body.sde-unifie:not(.sde-tableau) :is(.sde-initiative-section,.section[id],.hub-section) :is(input,textarea,select){
+ max-width:100%;min-width:0;
+}
+html body.sde-unifie:not(.sde-tableau) :is(.sde-initiative-section,.section[id],.hub-section) :is(input,textarea,select):focus-visible{
+ outline:3px solid #efd089!important;outline-offset:2px!important;
+}
+html body.sde-unifie:not(.sde-tableau) .ressources-grille,
+html body.sde-unifie:not(.sde-tableau) .programmes,
+html body.sde-unifie:not(.sde-tableau) .hub-grid{
+ min-width:0;
+}
+html body.sde-unifie:not(.sde-tableau) .ressources-grille>*,
+html body.sde-unifie:not(.sde-tableau) .programmes>*,
+html body.sde-unifie:not(.sde-tableau) .hub-grid>*{
+ min-width:0;
+}
+/* Bande de navigation rapide : 5 cibles et libellés lisibles sur téléphone. */
+@media(max-width:900px){
+ html body.sde-unifie:not(.sde-tableau) .sde-public-bottom-nav{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:2px!important;
+  padding:6px max(5px,env(safe-area-inset-right))
+    calc(7px + env(safe-area-inset-bottom)) max(5px,env(safe-area-inset-left));
+  border-top:2px solid #dfbd78!important;
+  background:linear-gradient(110deg,#211237,#301849 60%,#193c35)!important;
+ }
+ html body.sde-unifie:not(.sde-tableau) .sde-public-bottom-nav a{
+  min-width:0;min-height:52px;line-height:1.2;
+  padding:5px 1px;border-radius:10px;
+  font-size:clamp(.61rem,2.35vw,.76rem)!important;
+  color:#f2e8e9!important;
+ }
+ html body.sde-unifie:not(.sde-tableau) .sde-public-bottom-nav a[aria-current=page]{
+  color:#ffdf9c!important;
+  background:rgba(234,193,120,.19)!important;
+  box-shadow:inset 0 0 0 1px rgba(237,198,125,.27);
+ }
+ html body.sde-unifie:not(.sde-tableau) :is(.sde-initiative-section,.sde-initiative-lead) .enveloppe,
+ html body.sde-unifie:not(.sde-tableau) .section>.enveloppe,
+ html body.sde-unifie:not(.sde-tableau) .section>.wrap{
+  width:min(100% - 24px,1250px);
+ }
+ html body.sde-unifie:not(.sde-tableau) .site-header .site-menu[data-open=true]{
+  max-height:min(76svh,720px);overflow-y:auto;
+  overscroll-behavior:contain;
+ }
+ html body.sde-unifie:not(.sde-tableau) .site-header .site-menu .site-mega-panel{
+  max-width:100%;
+ }
+}
+@media(max-width:540px){
+ html body.sde-unifie:not(.sde-tableau) .section .tete-section h2,
+ html body.sde-unifie:not(.sde-tableau) .sde-initiative-section h2{
+  line-height:1.18;overflow-wrap:anywhere;
+ }
+ html body.sde-unifie:not(.sde-tableau) :is(.ressources-grille,.programmes,.hub-grid){
+  grid-template-columns:minmax(0,1fr);
+ }
+ html body.sde-unifie:not(.sde-tableau) .sde-public-bottom-nav a svg{
+  width:21px;height:21px;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-unifie:not(.sde-tableau) :is(.sde-initiative-card,.ressource-carte,.programme,.ticket,.hub-card,.hub-form){
+  transition:none!important;transform:none!important;
+ }
+}
