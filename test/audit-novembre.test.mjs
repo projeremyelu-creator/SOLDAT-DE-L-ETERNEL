@@ -50,3 +50,17 @@ test("Refonte Fusion 03+04 : charte violet/or chargée partout, palette fusion p
     assert.match(lire(`public/vitrine/${f}.html`), /sde-fusion\.css/, f);
   assert.match(lire("public/vitrine/portail.html"), /class="fu-strip"/);
 });
+
+test("Refonte Fusion : espace membre et poste de commandement reconstruits sur des données réelles", () => {
+  const ops = lire("frontend/operations.jsx");
+  for (const k of ["function MemberDeck", "function PoleDonut", "function QuickActions", "function Spark", "function Ring"]) assert.ok(ops.includes(k), k);
+  // Données réelles uniquement : mêmes API que le reste du portail, aucun chiffre figé.
+  for (const api of ["/api/mon-parcours-academy", "/api/mes-evenements", "/api/annuaire-portail"]) assert.ok(ops.includes(api), api);
+  assert.ok(ops.includes("<MemberDeck portal={portal}/>") && ops.includes("<QuickActions portal={portal}/>") && ops.includes("<PoleDonut portal={portal}/>"));
+  assert.ok(ops.includes("(d.mensuel||[]).map(m=>m.entrees)"), "courbe des finances branchée sur la série mensuelle réelle");
+  assert.doesNotMatch(ops, /Points cumulés/, "pas d’indicateur sans donnée réelle");
+  // Les repères historiques du poste de commandement restent en place.
+  assert.ok(ops.includes('<div className="ref-command-overview"><PendingRequests/><CommandPoles portal={portal}/></div>'));
+  const css = lire("frontend/reference.css");
+  for (const k of [".fu-tile", ".fu-ring", ".fu-donut", ".fu-quick", ".fu-spark", "prefers-reduced-motion:reduce){.fu-tile"]) assert.ok(css.includes(k), k);
+});
