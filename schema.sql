@@ -17,3 +17,42 @@ CREATE TABLE IF NOT EXISTS meta (cle TEXT PRIMARY KEY, val TEXT);
 CREATE INDEX IF NOT EXISTS docs_id ON docs(id);
 CREATE INDEX IF NOT EXISTS sessions_expire ON sessions(expire);
 CREATE INDEX IF NOT EXISTS ia_conso_cle ON ia_conso(cle);
+
+
+-- Soldiers Academy 2027 : équipe pédagogique, cours enrichis et lecture des supports.
+-- Attribution des enseignants/coachs uniquement par la direction (niveau >= 2).
+CREATE TABLE IF NOT EXISTS academy_2027_staff (
+  compte TEXT PRIMARY KEY,
+  role TEXT NOT NULL CHECK(role IN ('enseignant','coach')),
+  cours TEXT NOT NULL,
+  actif INTEGER NOT NULL DEFAULT 1 CHECK(actif IN (0,1)),
+  attribue_par TEXT NOT NULL,
+  attribue_le INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS academy_2027_contenus (
+  id TEXT PRIMARY KEY,
+  cours TEXT NOT NULL,
+  lecon INTEGER NOT NULL DEFAULT 0,
+  type TEXT NOT NULL,
+  titre TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  texte TEXT NOT NULL DEFAULT '',
+  url TEXT NOT NULL DEFAULT '',
+  fichier_cle TEXT,
+  fichier_type TEXT,
+  fichier_nom TEXT,
+  fichier_taille INTEGER,
+  auteur TEXT NOT NULL,
+  publie INTEGER NOT NULL DEFAULT 0,
+  archive INTEGER NOT NULL DEFAULT 0,
+  cree INTEGER NOT NULL,
+  maj INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_academy_2027_contenus_pub ON academy_2027_contenus(archive,publie,maj);
+CREATE INDEX IF NOT EXISTS idx_academy_2027_contenus_cours ON academy_2027_contenus(cours,lecon,maj);
+CREATE TABLE IF NOT EXISTS academy_2027_contenus_vus (
+  compte TEXT NOT NULL,
+  ressource TEXT NOT NULL,
+  vu_le INTEGER NOT NULL,
+  PRIMARY KEY(compte,ressource)
+);
