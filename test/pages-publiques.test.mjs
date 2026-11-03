@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {existsSync,readFileSync,statSync} from 'node:fs';
+import {existsSync,readFileSync,statSync,readdirSync} from 'node:fs';
 const lire=f=>readFileSync(f,'utf8');
 const page=n=>lire(`public/vitrine/${n}.html`);
 const PAGES={mouvement:'spi',programmes:'mis',soutenir:'cmd',temoignages:'spi',rejoindre:'cmd'};
@@ -156,4 +156,19 @@ test('Film de présentation : bouton sur l’accueil (hors des trois actions) et
  assert.ok(contact.includes('id="film-contact"')&&contact.includes('href="/mouvement#film"'));
  assert.ok(contact.indexOf('id="film-contact"')<contact.indexOf('id="rejoindre" aria-labelledby'),'avant le formulaire, hors des sections de texte légal');
  assert.ok(lire('public/vitrine/sde-accueil-premium.css').includes('.ap-film'));
+});
+
+test('Réseaux sociaux : TikTok et Facebook officiels dans tous les pieds de page, la page Contact et les données structurées',()=>{
+ const TT='https://www.tiktok.com/@mouvement.sde',FB='https://www.facebook.com/share/1GkJmWSyqj/';
+ const pages=readdirSync('public/vitrine').filter(f=>f.endsWith('.html')).filter(f=>lire('public/vitrine/'+f).includes('class="site-footer'));
+ assert.ok(pages.length>=20,'pieds de page détectés');
+ for(const f of pages){
+  const h=lire('public/vitrine/'+f),pied=h.slice(h.indexOf('<footer'),h.indexOf('</footer>'));
+  assert.ok(pied.includes(`href="${TT}" target="_blank" rel="noopener noreferrer"`),f+' : TikTok');
+  assert.ok(pied.includes(`href="${FB}" target="_blank" rel="noopener noreferrer"`),f+' : Facebook');
+ }
+ const c=page('rejoindre');
+ assert.ok(c.includes('class="pg-reseaux"')&&c.includes('TikTok @mouvement.sde'));
+ assert.ok(lire('public/vitrine/index.html').includes(`"sameAs":["${TT}","${FB}"]`));
+ assert.doesNotMatch(TT,/[?&](_r|_t)=/,'sans paramètres de suivi');
 });
