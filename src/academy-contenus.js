@@ -7,7 +7,7 @@
 import {SOLDIERS_ACADEMY_2027 as ACADEMY} from "./soldiers-academy-2027.js";
 
 const COURS=ACADEMY.courses;
-const kinds=new Set(["lecon","video","audio","document","exercice","lien"]);
+const kinds=new Set(["lecon","cours","video","audio","document","exercice","lien"]);
 const ROLES=new Set(["enseignant","coach"]);
 const MAX_FILE=8*1024*1024;
 const idPattern=/^[a-f0-9-]{36}$/i;
@@ -25,7 +25,7 @@ const validUrl=(raw,kind)=>{
     const allowed=["youtube.com","www.youtube.com","m.youtube.com","youtu.be","youtube-nocookie.com","www.youtube-nocookie.com","vimeo.com","www.vimeo.com","player.vimeo.com","drive.google.com"];
     if(!allowed.includes(url.hostname.toLowerCase()))return null;
   }
-  if(!["video","audio","document","lien"].includes(kind))return null;
+  if(!["video","audio","document","lien","cours"].includes(kind))return null;
   return url.toString().slice(0,1500);
 };
 const extForMime={
@@ -34,7 +34,7 @@ const extForMime={
  "application/vnd.openxmlformats-officedocument.wordprocessingml.document":".docx",
  "application/vnd.openxmlformats-officedocument.presentationml.presentation":".pptx"
 };
-const mimeForKind={video:["video/mp4"],audio:["audio/mpeg","audio/mp4"],document:["application/pdf","image/png","image/jpeg","application/vnd.openxmlformats-officedocument.wordprocessingml.document","application/vnd.openxmlformats-officedocument.presentationml.presentation"]};
+const mimeForKind={cours:["application/pdf","application/vnd.openxmlformats-officedocument.wordprocessingml.document","application/vnd.openxmlformats-officedocument.presentationml.presentation"],video:["video/mp4"],audio:["audio/mpeg","audio/mp4"],document:["application/pdf","image/png","image/jpeg","application/vnd.openxmlformats-officedocument.wordprocessingml.document","application/vnd.openxmlformats-officedocument.presentationml.presentation"]};
 function magicOk(bytes,mime){
  const a=new Uint8Array(bytes),ascii=(s,i)=>[...s].every((ch,n)=>a[i+n]===ch.charCodeAt(0));
  if(mime==="application/pdf")return ascii("%PDF-",0);
@@ -184,7 +184,7 @@ export async function academyContenusApi(req,env,u,path){
   const bytes=await req.arrayBuffer();
   if(bytes.byteLength===0||bytes.byteLength>MAX_FILE)return fail("Fichier vide ou trop volumineux (8 Mo maximum).",413);
   if(!magicOk(bytes,mime))return fail("Format du fichier invalide : vérifiez le document, l'audio ou la vidéo.",415);
-  const rawName=decodeURIComponent(req.headers.get("x-sde-filename")||"support").slice(0,150);
+  let rawName;try{rawName=decodeURIComponent(req.headers.get("x-sde-filename")||"support").slice(0,150)}catch{return fail("Nom de fichier invalide.")}
   const filename=safe(rawName.replace(/[^\p{L}\p{N}_. -]/gu,"_"),110)||"support";
   const base=filename.replace(/\.[^.]+$/,"").slice(0,78);
   const finalName=base+(extForMime[mime]||"");
