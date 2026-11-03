@@ -83,7 +83,7 @@ function verifierReponse(origine,controle,reponse,corps) {
     if(status!==200||!type.includes('application/json'))erreur('Diagnostic de révision Worker indisponible');
     let data;try{data=JSON.parse(corps)}catch{erreur('Diagnostic Worker non JSON')}
     const rev=String(data?.assetRevision||'');
-    if(!/^[a-f0-9]{12}$/i.test(rev))erreur('Révision active du Worker non publiée');
+    if(!/^[a-f0-9]{12}$/i.test(rev))erreur('Révision active du Worker non publiée (valeur : '+(rev||'absente').slice(0,64)+')');
     const expected=String(process.env.SDE_EXPECTED_REV||'').replace(/[^a-f0-9]/gi,'').slice(0,12);
     if(expected&&rev!==expected)erreur('Worker en production sur une autre révision ('+rev+' au lieu de '+expected+')');
     return;
