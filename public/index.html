@@ -41,6 +41,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
 <link rel="stylesheet" href="/vitrine/sde-mobile-correctifs-20261103.css?v=20261103a">
 <link rel="stylesheet" href="/vitrine/sde-poste-commandement-v2.css?v=20261103b">
 <link rel="stylesheet" href="/vitrine/sde-command-v4.css?v=20261103a">
+<link rel="stylesheet" href="/vitrine/sde-acces-membres.css?v=20261103">
 <script>/* Palette des espaces privés appliquée avant le premier affichage (Fusion violet · vert · or par défaut). */try{var d=document.documentElement,v=localStorage.getItem("sde-private-palette-version")==="fusion-04"?localStorage.getItem("sde-private-palette"):"fusion";d.setAttribute("data-sde-palette",/^(fusion|ivoire|terracotta|militaire|violet|tactique)$/.test(v||"")?v:"fusion")}catch(e){document.documentElement.setAttribute("data-sde-palette","fusion")}</script>
 <script defer src="/sde-bridge.js?v=20261025e"></script>
 <script>/* Thème : applique le choix utilisateur avant le premier paint */
@@ -8245,7 +8246,9 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   function ficheConnexion() {
     const m = CNX.mode;
     const onglets = [["connexion", "Se connecter"], ["inscription", "Créer mon compte"], ["activation", "J’ai un code"]].map(([k, l]) => `<button class="cnx-o${k === m ? " on" : ""}" type="button" data-act="cnx-mode" data-m="${k}" aria-pressed="${k === m}">${l}</button>`).join("");
-    const email = champ("cx-email", "Adresse e-mail", inp("cx-email", "email", CNX.email, 'type="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" required' + (m !== "inscription" ? " autofocus" : "")), { req: true });
+    const email = champ("cx-email", m === "connexion" ? "Matricule SDE ou adresse e-mail" : "Adresse e-mail",
+      inp("cx-email", "email", CNX.email, (m === "connexion" ? 'type="text" autocomplete="username" inputmode="text"' : 'type="email" autocomplete="email" inputmode="email"') +
+        ' autocapitalize="off" spellcheck="false" required' + (m !== "inscription" ? " autofocus" : "")), { req: true });
     let corps;
     if (m === "connexion") corps = `${email}${champMdp("cx-mdp", "Mot de passe", "current-password")}${voirMdp}
       <p class="hint">Mot de passe oublié ? Un responsable vous donne un code pour en choisir un nouveau, à saisir dans « J’ai un code ».${telContact() ? ` <a class="link" href="${esc(lienWa(telContact(), "Shalom ! J’ai oublié mon mot de passe MPA SDE. Mon adresse e-mail : "))}" target="_blank" rel="noopener">Le demander par WhatsApp</a>` : ""}</p>${pied("Se connecter")}`;
@@ -8267,7 +8270,11 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     const g = (k) => String(fd.get(k) || "").trim();
     const mode = form.dataset.mode, email = g("email").toLowerCase();
     CNX.email = email;
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { erreurForm("Indiquez une adresse e-mail valide."); return; }
+    const emailValide = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+    const matriculeValide = /^[a-z0-9][a-z0-9 ._-]{2,39}$/i.test(email);
+    if (!(emailValide || (mode === "connexion" && matriculeValide))) {
+      erreurForm(mode === "connexion" ? "Saisissez votre matricule SDE ou votre adresse e-mail." : "Indiquez une adresse e-mail valide."); return;
+    }
     const mdp = String(fd.get("mdp") || "");
     if (mode !== "connexion" && mdp.length < 8) { erreurForm("Le mot de passe doit compter au moins 8 caractères."); return; }
     if (mode !== "connexion" && mdp !== String(fd.get("mdp2") || "")) { erreurForm("Les deux mots de passe ne sont pas identiques."); return; }
