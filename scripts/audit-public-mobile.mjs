@@ -139,6 +139,19 @@ try{
      brandPortalOverlap:intersects(brand,portal),
      brandBurgerOverlap:intersects(brand,burger),
      quoteContrast:ratio(cssColor,cssBg),quoteTextColor:cssColor,quoteBgColor:cssBg,
+     homepageTextContrast:(()=>{
+      const nodes=[...document.querySelectorAll('#ap-next-title,#ap-upcoming-title,.ap-mission strong,.ap-mission span,.ap-panel h3')];
+      return nodes.map(el=>{
+       const parent=el.closest('.ap-next,.ap-upcoming,.ap-mission,.ap-panel');
+       const style=getComputedStyle(el);
+       const fill=style.webkitTextFillColor;
+       const fg=fill&&fill.toLowerCase()!=='currentcolor'?fill:style.color;
+       const bg=parent?getComputedStyle(parent).backgroundColor:'';
+       return {label:el.textContent.trim().slice(0,65),ratio:ratio(fg,bg),fg,bg};
+      });
+     })(),
+     heroBgMobile:document.querySelector('.ap-hero-bg')?getComputedStyle(document.querySelector('.ap-hero-bg')).backgroundImage:null,
+     posterImageSource:document.querySelector('.ap-poster-media img')?.currentSrc||null,
      poleCardsContrast:(()=>{
       if(!document.body.classList.contains('sde-pole'))return null;
       const texts=[...document.querySelectorAll('#contenu .sde-initiative-card :is(h3,h4,p,li,small,strong)')];
@@ -492,6 +505,17 @@ try{
    if(c.width<700&&row.brandPortalOverlap)issue(c.name,'le nom chevauche le bouton du portail',true);
    if(c.width<700&&row.brandBurgerOverlap)issue(c.name,'le nom chevauche le menu',true);
    if(c.path==='/'&&row.quoteContrast!==null&&row.quoteContrast<4.5)issue(c.name,'contraste du verset '+row.quoteContrast+':1',true);
+   if(c.path==='/'){
+    const ratios=row.homepageTextContrast||[];
+    const insuffisants=ratios.filter(x=>x.ratio===null||x.ratio<4.5);
+    if(ratios.length<5||insuffisants.length)
+     issue(c.name,'contraste des cartes de l’accueil inférieur à 4,5:1 : '+JSON.stringify(insuffisants.slice(0,4)),true);
+    if(c.width<=860&&row.heroBgMobile!=='none')
+     issue(c.name,'photo de fond décorative encore téléchargée sur mobile : '+row.heroBgMobile,true);
+    if(c.width<=860&&!String(row.posterImageSource).includes('tpa-2026-mobile.webp'))
+     issue(c.name,'version optimisée de l’affiche TPA non sélectionnée sur mobile : '+row.posterImageSource,true);
+    report.notes.push({test:'pagespeed-cards',page:c.name,count:ratios.length,minRatio:Math.min(...ratios.map(x=>x.ratio||0)),poster:row.posterImageSource,heroBackground:row.heroBgMobile});
+   }
    if(c.path==='/'&&(row.poleLinks!==5||row.brokenPoleImages>0))issue(c.name,'cartes/emblèmes pôles manquants ou images indisponibles',true);
    if(c.path==='/'&&(!row.tpaPosters||!row.tpaPosterLoaded))issue(c.name,'affiche TPA absente ou non chargée',true);
    if(row.pageErrors.length)issue(c.name,row.pageErrors.slice(0,3).join(' | '),c.name==='academy-390');
