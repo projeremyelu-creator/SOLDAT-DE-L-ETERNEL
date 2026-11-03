@@ -8,10 +8,12 @@ export function memberAcademySummary(formations,memberId){
  if(typeof memberId!=='string'||!memberId)return {formations:0,certifie:0,modulesFaits:0,modulesTotal:0,pourcentage:null,parcours};
  for(const {id,data:d={}} of Array.isArray(formations)?formations:[]){
   if(!d||typeof d!=='object'||!d.participants||typeof d.participants!=='object')continue;
+  if(!Object.prototype.hasOwnProperty.call(d.participants,memberId))continue;
   const p=d.participants[memberId];
   if(!p||typeof p!=='object'||['Abandon','Retiré'].includes(p.statut))continue;
   const modules=Array.isArray(d.modules)?d.modules.filter(m=>m&&typeof m==='object'&&m.id):[];
-  const faits=modules.filter(m=>p.suivis&&p.suivis[m.id]).length;
+  const suivi=m=>!!(p.suivis&&Object.prototype.hasOwnProperty.call(p.suivis,m.id)&&p.suivis[m.id]);
+  const faits=modules.filter(suivi).length;
   inscriptions++;if(p.statut==='Certifié')certifie++;
   modulesTotal+=modules.length;modulesFaits+=faits;
   parcours.push({
@@ -23,7 +25,7 @@ export function memberAcademySummary(formations,memberId){
    pourcentage:modules.length?Math.round(100*faits/modules.length):null,
    modules:modules.slice(0,24).map(m=>({
     titre:titre(m.titre||m.nom)||'Module de formation',
-    suivi:!!p.suivis?.[m.id]
+    suivi:suivi(m)
    }))
   });
  }
