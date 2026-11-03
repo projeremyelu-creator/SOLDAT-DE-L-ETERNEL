@@ -9,13 +9,15 @@ const cssPath = "public/vitrine/sde-mobile-correctifs-20261103.css";
 const css = read(cssPath);
 const app = read("public/index.html");
 const accueil = read("public/vitrine/portail.html");
-const link = '<link rel="stylesheet" href="/vitrine/sde-mobile-correctifs-20261103.css?v=20261103a">';
+// Le build remplace les versions ?v=... par le SHA GitHub : tester le chemin stable.
+const linkPath = "/vitrine/sde-mobile-correctifs-20261103.css";
+const linkPattern = /<link rel="stylesheet" href="\/vitrine\/sde-mobile-correctifs-20261103\.css(?:\?v=[^"]+)?">/g;
 
 test("le même correctif mobile est chargé sur les deux interfaces réellement servies", () => {
-  assert.equal(app.split(link).length - 1, 1);
-  assert.equal(accueil.split(link).length - 1, 1);
-  assert.ok(app.indexOf(link) > app.indexOf("/vitrine/sde-tactique.css"));
-  assert.ok(accueil.indexOf(link) > accueil.indexOf("/vitrine/sde-fusion.css"));
+  assert.equal([...app.matchAll(linkPattern)].length, 1);
+  assert.equal([...accueil.matchAll(linkPattern)].length, 1);
+  assert.ok(app.indexOf(linkPath) > app.indexOf("/vitrine/sde-tactique.css"));
+  assert.ok(accueil.indexOf(linkPath) > accueil.indexOf("/vitrine/sde-fusion.css"));
 });
 
 test("le style respecte les deux en-têtes et les interactions privées", () => {
