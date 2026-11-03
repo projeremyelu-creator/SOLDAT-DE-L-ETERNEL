@@ -182,7 +182,7 @@ test("logo officiel et verset fondateur Ézéchiel 37",()=>{
 });
 test("maquette 02 Ivoire · Treillis · Or : vitrine, chargement, espaces privés",()=>{
  const h=read("public/vitrine/portail.html");
- for(const t of ["sde-ivoire","tpa-2026.webp","Bâtissons ensemble pour un plus grand impact","Bienvenue dans l’espace des Soldats de l’Éternel","Entrer dans l’espace","Accéder à l’accueil","SDE - Mouvement"])assert.ok(h.includes(t),t);
+ for(const t of ["sde-ivoire","tpa-2026.webp","Bâtissons ensemble pour un plus grand impact","Découvrez la vision, la communauté et les actions de solidarité","Entrer dans l’espace","Rejoindre le mouvement","SDE - Mouvement"])assert.ok(h.includes(t),t);
  const app=read("public/index.html");assert.ok(app.includes('id="sde-splash"')&&app.includes("La vision en marche")&&app.includes("Chargement de votre espace"),"écran de chargement");
  assert.ok(read("public/vitrine/sde-splash.css").includes("prefers-reduced-motion"),"mouvement réduit respecté");
  assert.ok(shell.includes("['ivoire','Ivoire · Treillis · Or']"),"palette Ivoire disponible");
