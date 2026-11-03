@@ -424,7 +424,7 @@ async function apiAccesMembres(req, env, u) {
   if (req.method === "GET") {
     const [repertoire, comptes] = await Promise.all([
       env.DB.prepare("SELECT id, data FROM docs WHERE parent = 'membres' ORDER BY id").all(),
-      env.DB.prepare("SELECT email, membreId, matricule FROM comptes").all(),
+      env.DB.prepare("SELECT email, membreId, matricule, role, (SELECT val FROM meta WHERE cle = 'mdp_provisoire:' || id) AS provisoire FROM comptes").all(),
     ]);
     const comptesParFiche = new Map((comptes.results || []).filter(c => c.membreId).map(c => [c.membreId, c]));
     const emails = new Set((comptes.results || []).map(c => normEmail(c.email)));
@@ -444,7 +444,7 @@ async function apiAccesMembres(req, env, u) {
       const email = normEmail(fiche.email);
       const numero = String(fiche.matricule || "");
       const lie = comptesParFiche.get(id);
-      const etat = lie ? "actif"
+      const etat = lie ? (lie.provisoire === "1" ? "provisoire" : "actif")
         : fiche.actif === false ? "inactif"
         : !cheminValide("membres/" + id, true) ? "invalide"
         : fiche.compteId ? "verifier"
@@ -462,6 +462,18 @@ async function apiAccesMembres(req, env, u) {
   const fiche = await lireDoc(env, "membres/" + mid);
   if (!fiche) return erreur("introuvable","Fiche membre introuvable.",404);
   if (fiche.data.actif === false) return erreur("refuse","La fiche est inactive : vérifiez-la avant de créer son accès.",409);
+  const existant=await env.DB.prepare("SELECT email,id,nom,matricule,role,(SELECT val FROM meta WHERE cle = 'mdp_provisoire:' || id) AS provisoire FROM comptes WHERE membreId = ?").bind(mid).first();
+  if (existant && b.renouveler === true) {
+    if (existant.provisoire !== "1" || existant.role !== "soldat")
+      return erreur("refuse","Seul un accès provisoire de soldat peut être renouvelé ici.",403);
+    const nouveau="SDE-" + jetonAleatoire(18);
+    await env.DB.batch([
+      env.DB.prepare("UPDATE comptes SET mdp = ? WHERE email = ?").bind(await empreinteMdp(nouveau),existant.email),
+      env.DB.prepare("DELETE FROM sessions WHERE email = ?").bind(existant.email),
+    ]);
+    return json({ok:true,membreId:mid,nom:existant.nom,matricule:existant.matricule,motDePasseProvisoire:nouveau,premiereConnexion:true});
+  }
+  if (existant) return erreur("existe","Cette fiche est déjà liée à un compte.",409);
   if (fiche.data.compteId) return erreur("existe","Cette fiche mentionne déjà un compte : vérifiez son rattachement.",409);
   if (await env.DB.prepare("SELECT email FROM comptes WHERE membreId = ?").bind(mid).first())
     return erreur("existe","Cette fiche est déjà liée à un compte.",409);
