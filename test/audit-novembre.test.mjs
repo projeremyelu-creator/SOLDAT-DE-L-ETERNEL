@@ -72,3 +72,11 @@ test("Refonte Fusion : annuaire, pointages et finances reçoivent des tuiles de 
   assert.equal((ops.match(/<Stats /g) || []).length, 2);
   assert.ok(lire("frontend/reference.css").includes(".fu-stats"));
 });
+
+test("Refonte Fusion : Porte-Voix avec tuiles réelles et style Fusion", () => {
+  const app = lire("public/index.html");
+  const bloc = app.slice(app.indexOf("VUES.portevoix = function"), app.indexOf("Chambre Haute ═"));
+  for (const k of ["pv-stats", "Annonces actives", "Messages ciblés", "Rappels du jour", "rappelsEnAttente()", "S.diffusions.length", "annoncesActives()"]) assert.ok(bloc.includes(k), k);
+  const css = lire("public/vitrine/sde-fusion.css");
+  for (const k of [".annonce", ".msgbox", ".stat{", ".chip.gold"]) assert.ok(css.includes(k), k);
+});
