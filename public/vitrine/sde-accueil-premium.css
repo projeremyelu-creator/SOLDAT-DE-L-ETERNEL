@@ -122,3 +122,13 @@ body.sde-premium-home{--ap-navy0:#07122b;--ap-navy1:#0d1f4a;--ap-navy2:#142c63;-
 .ap-private .m-card-label{font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;color:#f6d27a;font-weight:700}
 .ap-private .private-access-note{margin:14px 0 0;font-size:.88rem;color:#c8d6ff}
 @media(max-width:620px){.ap-private .private-access-grid{grid-template-columns:1fr}}
+
+
+/* Stabilité de la vitrine premium : le chargement de Cinzel après le rendu
+   pouvait ajouter une ligne au grand titre (CLS relevé sur 1100/1280 px).
+   Réserver trois lignes uniquement en disposition à deux colonnes. */
+@media(min-width:1000px){
+ .ap-hero .ap-hero-copy h1{
+  min-height:3.15em;
+ }
+}
