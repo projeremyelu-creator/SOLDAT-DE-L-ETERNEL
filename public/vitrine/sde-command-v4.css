@@ -1,0 +1,154 @@
+/* SDE DIGITAL 4.0 — modernisation du commandement, sans toucher aux données.
+   Couleurs : commandement bleu nuit, spiritualité violet, missions treillis. */
+body.sde-direct-admin{
+ --sde-v4-night:#101d34;--sde-v4-gold:#e9c982;
+ --sde-v4-spirit:#8d6bc0;--sde-v4-mission:#6c967b;
+}
+body.sde-direct-admin #sde-direct-top .sde-spirit-actions{display:none!important}
+body.sde-direct-admin #sde-direct-top .sde-direct-intro{
+ padding-bottom:19px!important;
+}
+body.sde-direct-admin .sde-command-v4{
+ color:#f6f3e9;
+ margin:14px 0 0;
+ padding:16px;
+ border:1px solid rgba(233,201,130,.4);
+ background:linear-gradient(135deg,rgba(18,34,60,.94),rgba(36,28,67,.96));
+ border-radius:17px;
+ box-shadow:0 12px 30px rgba(0,0,0,.13);
+}
+body.sde-direct-admin .sde-command-v4-heading{
+ display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;
+ gap:10px 24px;margin:0 0 13px;
+}
+body.sde-direct-admin .sde-command-v4-kicker{
+ margin:0 0 3px;color:#e9c982;letter-spacing:.12em;
+ font-size:.64rem;line-height:1.35;font-weight:800;
+}
+body.sde-direct-admin .sde-command-v4-title{
+ margin:0;color:#fcf8ed;
+ font:800 clamp(1.22rem,2vw,1.55rem)/1.2 "Saira Condensed",system-ui,sans-serif;
+}
+body.sde-direct-admin .sde-command-v4-summary{
+ margin:0;padding:5px 10px;border-radius:999px;
+ font:.72rem/1.35 system-ui,sans-serif;
+ color:#ecdebb;background:rgba(233,201,130,.11);
+ border:1px solid rgba(233,201,130,.29);
+}
+body.sde-direct-admin .sde-command-v4-grid{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:9px;min-width:0;
+}
+body.sde-direct-admin .sde-command-v4-item{
+ display:grid;grid-template-columns:27px minmax(0,1fr);column-gap:9px;
+ align-items:start;gap:5px 9px;min-height:77px;
+ padding:11px;text-align:left;
+ border-radius:12px;
+ border:1px solid rgba(234,226,202,.2);
+ border-left:3px solid #e9c982;
+ background:linear-gradient(135deg,#283a57,#24304b);
+ color:#fff9ed;cursor:pointer;
+ font:inherit;min-width:0;
+ transition:background .15s ease,border-color .15s ease,transform .15s ease;
+}
+body.sde-direct-admin .sde-command-v4-item[data-category=spi]{
+ border-left-color:#bba1ed;background:linear-gradient(135deg,#372b57,#292446);
+}
+body.sde-direct-admin .sde-command-v4-item[data-category=mis]{
+ border-left-color:#9dc7ab;background:linear-gradient(135deg,#263e3c,#213737);
+}
+body.sde-direct-admin .sde-command-v4-number{
+ display:grid;place-items:center;
+ grid-column:1;grid-row:1 / 3;
+ width:27px;height:27px;border-radius:8px;
+ color:#ffdf98;background:rgba(255,255,255,.09);
+ font-size:.72rem;font-weight:900;
+}
+body.sde-direct-admin .sde-command-v4-label{
+ display:block;grid-column:2;min-width:0;
+ color:#fff9ef;font-size:.86rem;line-height:1.23;font-weight:800;
+ overflow-wrap:normal;
+}
+body.sde-direct-admin .sde-command-v4-category{
+ display:block;grid-column:2;
+ color:#d2d9e8;font-size:.67rem;line-height:1.22;
+}
+body.sde-direct-admin .sde-command-v4-item:is(:hover,:focus-visible){
+ border-color:#f0d393;background:#344766;
+ transform:translateY(-1px);
+}
+body.sde-direct-admin .sde-command-v4-item[aria-current=page]{
+ border-color:#f2d491;box-shadow:inset 0 0 0 1px rgba(242,212,145,.7);
+ background:#394968;
+}
+body.sde-direct-admin .sde-command-v4-item:focus-visible{
+ outline:3px solid #f6d899;outline-offset:2px;
+}
+body.sde-direct-admin .sde-command-v4-bottom{display:none}
+@media(max-width:1020px) and (min-width:761px){
+ body.sde-direct-admin .sde-command-v4-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ body.sde-direct-admin #sde-direct-top .sde-direct-intro{
+  padding-bottom:9px!important;
+ }
+ body.sde-direct-admin .sde-command-v4{
+  margin:9px -3px 0;padding:11px;border-radius:12px;
+ }
+ body.sde-direct-admin .sde-command-v4-heading{gap:3px;margin-bottom:9px}
+ body.sde-direct-admin .sde-command-v4-title{font-size:1.22rem}
+ body.sde-direct-admin .sde-command-v4-kicker{font-size:.59rem}
+ body.sde-direct-admin .sde-command-v4-summary{font-size:.63rem;padding:2px 7px}
+ body.sde-direct-admin .sde-command-v4-grid{
+  grid-auto-flow:column;grid-template-rows:repeat(2,minmax(0,1fr));
+  grid-auto-columns:minmax(148px,44vw);grid-template-columns:none;
+  gap:7px;overflow-x:auto;overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity;scrollbar-width:thin;
+  padding:2px 2px 7px;
+ }
+ body.sde-direct-admin .sde-command-v4-item{
+  min-height:58px;padding:8px;
+  grid-template-columns:21px minmax(0,1fr);gap:3px 6px;
+  scroll-snap-align:start;border-radius:10px;
+ }
+ body.sde-direct-admin .sde-command-v4-number{
+  width:21px;height:21px;font-size:.63rem;
+ }
+ body.sde-direct-admin .sde-command-v4-label{font-size:.76rem}
+ body.sde-direct-admin .sde-command-v4-category{font-size:.59rem}
+ body.sde-direct-admin .sde-command-v4-bottom{
+  position:fixed;bottom:0;left:0;right:0;z-index:85;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  padding:5px 7px calc(5px + env(safe-area-inset-bottom));
+  background:linear-gradient(115deg,#0f1c32,#1b2842);
+  box-shadow:0 -8px 24px rgba(10,17,31,.23);
+  border-top:1px solid rgba(238,199,128,.67);
+  gap:2px;max-width:100%;
+ }
+ body.sde-direct-admin .sde-command-v4-bottom-item{
+  width:100%;min-width:0;min-height:47px;
+  padding:7px 2px;border:1px solid transparent;
+  border-radius:9px;background:transparent;
+  color:#e1e7f3;font:.7rem/1.18 system-ui,sans-serif;
+  text-align:center;cursor:pointer;
+  overflow-wrap:normal;
+ }
+ body.sde-direct-admin .sde-command-v4-bottom-item[aria-current=page]{
+  background:rgba(238,199,128,.14);color:#f7d991;
+  border-color:rgba(238,199,128,.5);font-weight:800;
+ }
+ body.sde-direct-admin .sde-command-v4-bottom-item:focus-visible{
+  outline:2px solid #f7d991;outline-offset:-2px;
+ }
+ body.sde-direct-admin .main{
+  padding-bottom:calc(110px + env(safe-area-inset-bottom))!important;
+ }
+ body.sde-direct-admin #sde-priere-panel{
+  margin-bottom:calc(100px + env(safe-area-inset-bottom));
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-direct-admin .sde-command-v4-item{
+  transition:none;transform:none!important;
+ }
+}
