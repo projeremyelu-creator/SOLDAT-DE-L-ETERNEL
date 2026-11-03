@@ -159,3 +159,12 @@ test('Recette Academy : studio et publication des supports, version effective du
  const ref=await recetteProduction({fetcher:ancien.fetcher,domaines:[DOMAINES[0]],controles:CONTROLES.filter(c=>c.type==='academy-script'),essais:1});
  assert.equal(ref.ok,false,'Un ancien script Academy en production ne doit pas être validé.');
 });
+
+test('RECETTE RÉELLE TEMPORAIRE — Love School disponible sur les deux domaines SDE', {timeout:300000},async()=>{
+ const {recetteAcademyProduction}=await import('../scripts/recette-academy-production.mjs');
+ const bilan=await recetteAcademyProduction({essais:3,timeoutMs:11000,rapport:r=>{
+  console.log('LOVE SCHOOL PRODUCTION',r.ok?'OK':'ÉCHEC',r.domaine+r.path,r.erreur||'');
+ }});
+ console.log('LOVE SCHOOL PRODUCTION BILAN',bilan.reussis+'/'+bilan.total);
+ assert.equal(bilan.ok,true,JSON.stringify(bilan.resultats.filter(x=>!x.ok),null,2));
+});
