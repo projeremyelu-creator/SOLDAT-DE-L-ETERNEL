@@ -247,6 +247,8 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     async deconnexion() { try { await appel("/api/deconnexion", {}); } catch (e) { /* déjà déconnecté */ } location.reload(); },
     comptes: async () => { const r = await fetch("/api/comptes", { credentials: "same-origin" }); const j = await r.json(); if (!r.ok) throw echec(j.erreur, j.message); return j; },
     majCompte: (o) => appel("/api/comptes", o),
+    accesMembres: async () => { const r = await fetch("/api/acces-membres", { credentials: "same-origin", cache: "no-store" }); const j = await r.json().catch(() => ({})); if (!r.ok) throw echec(j.erreur || "unavailable", j.message); return j; },
+    preparerAccesMembre: (id) => appel("/api/acces-membres", { membreId: id }),
     importer: (docs) => appel("/api/import", { docs }),
     monHistorique: async () => { const r = await fetch("/api/mon-historique", { credentials: "same-origin", cache: "no-store" }); const j = await r.json().catch(() => ({})); if (!r.ok) throw echec(j.erreur || "unavailable", j.message); return j; },
     monProfil: (o) => appel("/api/mon-profil", o, "PATCH"),
@@ -8274,7 +8276,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     const b = form.querySelector("[type=submit]");
     if (b) { b.disabled = true; b.textContent = "Un instant…"; }
     try {
-      if (mode === "connexion") await SDEH.connexion(email, mdp);
+      if (mode === "connexion") { const r = await SDEH.connexion(email, mdp); if (r?.premiereConnexion) { location.assign("/premiere-connexion"); return; } }
       else if (mode === "inscription") {
         const r = await SDEH.inscription({ email, motDePasse: mdp, prenoms: g("prenoms"), nom: g("nom"), telephone: g("telephone") });
         /* Mémorise le matricule pour un accueil nominatif après rechargement */
