@@ -65,6 +65,19 @@ body.sde-direct #sde-direct-tabs button[aria-current=page]{
 body.sde-direct #sde-direct-tabs button:hover:not([aria-current=page]){
   border-color:#d5b16c;background:#35415c;
 }
+/* Le panneau historique avait width:100% + padding hors border-box :
+   cela provoquait un débordement tablette/desktop de 30 à 56px. */
+body.sde-direct .shell {
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+body.sde-direct .main {
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
 body.sde-direct .view :is(.stat,.tile,.card) {
   border-radius:16px;
   min-width:0;
