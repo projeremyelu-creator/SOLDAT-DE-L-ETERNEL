@@ -20,10 +20,14 @@ async function request(path,method="GET",payload){
 }
 function scoreText(value){return value===null||value===undefined?"À évaluer":value+"/100";}
 function statusFor(c){
- if(c.passed)return '<span class="chip ok">Validé</span>';
- if(c.locked)return '<span class="chip">Niveau verrouillé</span>';
+ if(c.passed)return '<span class="chip ok">Cours validé</span>';
+ if(!c.acces?.prerequisNiveau)return '<span class="chip">Niveau précédent requis</span>';
+ if(c.acces?.statut==="en_attente")return '<span class="chip pending">Autorisation en attente</span>';
+ if(c.acces?.statut==="refuse")return '<span class="chip">Demande refusée</span>';
+ if(c.acces?.statut==="revoque")return '<span class="chip">Accès retiré</span>';
+ if(!c.acces?.autorise)return '<span class="chip">🔒 Validation préalable</span>';
  if(c.pending?.length)return '<span class="chip pending">Correction en attente</span>';
- return '<span class="chip">En formation</span>';
+ return '<span class="chip ok">Accès autorisé</span>';
 }
 function nbRessources(id){
  const n=Number(snapshot.ressources?.parCours?.[id]||0);
@@ -35,7 +39,7 @@ function renderCatalogue(){
  n.innerHTML=headings.map((title,i)=>{
    const c=snapshot.courses.filter(x=>x.level===i+1);
    return '<div class="level"><h2>Niveau '+(i+1)+' — '+esc(title)+'</h2><span class="chip">'+c.filter(x=>x.passed).length+' / 8 cours validés</span></div><div class="grid">'+
-   c.map((x,i)=>'<article class="card '+(x.passed?"passed ":"")+(x.locked?"locked":"")+'" style="--i:'+i+'"><span class="code">'+esc(x.id)+' · 8 h</span><h3>'+esc(x.title)+'</h3>'+statusFor(x)+nbRessources(x.id)+'<small>Quiz : '+esc(scoreText(x.quiz))+' · Travaux : '+esc(scoreText(x.exercises))+'<br>Examen : '+esc(scoreText(x.exam))+' · Présence : '+esc(x.attendance)+' %</small><button type="button" class="button '+(x.passed?"":"primary")+'" data-course="'+esc(x.id)+'" '+(x.locked?"disabled":"")+'>'+(x.locked?"Niveau précédent requis":"Ouvrir le cours →")+'</button></article>').join("")+'</div>';
+   c.map((x,i)=>'<article class="card '+(x.passed?"passed ":"")+(x.locked?"locked":"")+'" style="--i:'+i+'"><span class="code">'+esc(x.id)+' · 8 h</span><h3>'+esc(x.title)+'</h3>'+statusFor(x)+nbRessources(x.id)+'<small>Quiz : '+esc(scoreText(x.quiz))+' · Travaux : '+esc(scoreText(x.exercises))+'<br>Examen : '+esc(scoreText(x.exam))+' · Présence : '+esc(x.attendance)+' %</small><button type="button" class="button '+(x.acces?.autorise?"primary":"")+'" data-course="'+esc(x.id)+'">'+(x.acces?.autorise?"Ouvrir le cours →":"Voir les conditions d’accès")+'</button></article>').join("")+'</div>';
  }).join("");
 }
 function renderCertificates(){
@@ -322,7 +326,45 @@ function renderExerciseForm(course,kind,items,existing){
  const inProgress=existing.pending?.some(x=>x.type===kind);
  return '<form class="exam-form" data-submit="'+esc(kind)+'" data-course-id="'+esc(course.id)+'"><h3>'+names[kind]+'</h3><p class="muted">Répondez à toutes les questions. Le résultat est attribué après correction par un responsable habilité.</p>'+items.map((p,i)=>questionLabel(p,i,kind)).join("")+'<button class="button primary" type="submit" '+(inProgress?"disabled":"")+'>'+(inProgress?"Copie en attente de correction":"Remettre cette épreuve")+'</button></form>';
 }
+function avantCoursAcademy(c){
+ activeCourse=null;
+ const panel=$("courseDetail");panel.hidden=false;
+ mainTabs.activer("parcours");
+ const conditions=(c.conditions||[]).map(x=>'<li>'+esc(x)+'</li>').join("");
+ const restrictions=(c.restrictions||[]).map(x=>'<li>'+esc(x)+'</li>').join("");
+ const statut=c.acces?.statut||"verrouille";
+ const niveauOk=!!c.acces?.prerequisNiveau;
+ const etat=statut==="en_attente"?"Votre demande est en attente de validation.":statut==="refuse"?"Votre demande a été refusée.":statut==="revoque"?"L'accès à ce cours a été retiré.":"Ce cours est verrouillé jusqu'à la décision d'un formateur habilité.";
+ const button=!niveauOk?'<p class="notice">Validez les huit cours du niveau précédent pour demander l’ouverture de ce module.</p>':
+   statut==="en_attente"?'<p class="notice">Votre responsable pédagogique examine la demande. Aucune leçon, vidéo ou épreuve n’est disponible pour le moment.</p>':
+   '<button type="button" class="button primary" data-sa-demander="'+esc(c.id)+'">'+(statut==="refuse"||statut==="revoque"?"Renouveler la demande":"Demander la validation du cours")+'</button>';
+ panel.innerHTML='<div class="eyebrow">Soldiers Academy · '+esc(c.id)+' · Niveau '+esc(c.level)+' · 🔒 Autorisation requise</div>'+
+  '<h2>'+esc(c.title)+'</h2><p>'+esc(c.description||"")+'</p>'+
+  '<h3>Objectifs du cours</h3><ul>'+((c.objectifs||[]).map(x=>'<li>'+esc(x)+'</li>').join(""))+'</ul>'+
+  '<h3>Conditions d’admission</h3><ul>'+conditions+'</ul>'+
+  '<h3>Restrictions et règles de protection</h3><ul>'+restrictions+'</ul>'+
+  '<p><strong>État :</strong> '+esc(etat)+'</p>'+
+  (c.acces?.commentaire?'<p class="muted"><strong>Note pédagogique :</strong> '+esc(c.acces.commentaire)+'</p>':"")+
+  button+'<p id="saAccessStatus" role="status" aria-live="polite"></p>'+
+  '<div class="actions"><button type="button" class="button" data-sa-retour>Retour aux 24 cours</button></div>';
+ panel.scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function demanderCoursAcademy(id,bouton){
+ if(bouton)bouton.disabled=true;
+ text("saAccessStatus","Transmission de la demande…");
+ try{
+  const r=await request("/acces/demander","POST",{cours:id});
+  alertMessage(r.message);
+  await reload();
+  const c=snapshot.courses.find(x=>x.id===id);if(c)avantCoursAcademy(c);
+ }catch(e){text("saAccessStatus",e.message||"Demande non transmise.");}
+ finally{if(bouton&&bouton.isConnected)bouton.disabled=false;}
+}
+
 async function openCourse(id,onglet){
+ const entree=snapshot?.courses?.find(x=>x.id===id);
+ if(!entree)return;
+ if(!entree.acces?.autorise){avantCoursAcademy(entree);return;}
  try{
   alertMessage("Ouverture du cours "+id+"…");
   const d=await request("/cours/"+encodeURIComponent(id));const c=d.course;
@@ -398,6 +440,8 @@ async function reload(){
  snapshot=await request("");progress();
 }
 document.addEventListener("click",async ev=>{
+ const saDemande=ev.target.closest("[data-sa-demander]");if(saDemande){await demanderCoursAcademy(saDemande.dataset.saDemander,saDemande);return;}
+ const saRetour=ev.target.closest("[data-sa-retour]");if(saRetour){$("courseDetail").hidden=true;$("catalogue").scrollIntoView({behavior:"smooth"});return;}
  const refresh=ev.target.closest("[data-refresh-course-resources]");
  if(refresh){await actualiserRessourcesCours(refresh);return;}
  const publicChoix=ev.target.closest("[data-love-public]");if(publicChoix){
