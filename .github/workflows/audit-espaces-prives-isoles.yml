@@ -9,6 +9,11 @@ on:
       - 'public/vitrine/tableaux-de-bord.css'
       - 'public/vitrine/tableaux-de-bord.js'
       - 'public/vitrine/sde-premium-dashboards.css'
+      - 'public/vitrine/portail-direct.js'
+      - 'public/vitrine/portail-direct.css'
+      - 'public/vitrine/sde-poste-commandement-v2.css'
+      - 'scripts/audit-portail-direct-isole.mjs'
+      - 'public/index.html'
       - 'public/vitrine/sde-fusion.css'
       - 'test/contraste-poles-2026.test.mjs'
   push:
@@ -21,6 +26,11 @@ on:
       - 'public/vitrine/tableaux-de-bord.css'
       - 'public/vitrine/tableaux-de-bord.js'
       - 'public/vitrine/sde-premium-dashboards.css'
+      - 'public/vitrine/portail-direct.js'
+      - 'public/vitrine/portail-direct.css'
+      - 'public/vitrine/sde-poste-commandement-v2.css'
+      - 'scripts/audit-portail-direct-isole.mjs'
+      - 'public/index.html'
       - 'public/vitrine/sde-fusion.css'
       - 'test/contraste-poles-2026.test.mjs'
   workflow_dispatch:
@@ -41,11 +51,15 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Auditer le membre et les trois niveaux de direction sans réseau de production
         run: node scripts/audit-prive-isole.mjs
+      - name: Auditer la véritable coque /mon-espace et /administration, sessions fictives
+        run: node scripts/audit-portail-direct-isole.mjs
       - name: Archiver les captures et le rapport isolés
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: audit-tableaux-prives-sde
-          path: audit-mobile-sde/prives/
+          path: |
+            audit-mobile-sde/prives/
+            audit-mobile-sde/portail-direct/
           if-no-files-found: warn
           retention-days: 7
