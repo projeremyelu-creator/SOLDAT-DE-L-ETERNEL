@@ -5,6 +5,7 @@ import {memberQrApi} from "./member-qr.js";
 import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {memberAcademySummary} from "./member-academy-summary.js";
+import {soldiersAcademyApi} from "./sde-academy-api.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {squadChatApi} from "./squad-chat.js";
 import {courrielApi,lancerCourriels} from "./courriel.js";
@@ -1802,7 +1803,8 @@ async function traiter(req, env, ctx) {
           return n;
         }
         if (["/mon-espace","/administration","/mon-espace/outils","/administration/outils",
-             "/mon-espace/os-v31","/administration/os-v31"].includes(p)) {
+             "/mon-espace/os-v31","/administration/os-v31",
+             "/mon-espace/academy","/administration/academy"].includes(p)) {
           const u = await utilisateur(req, env);
           if (!u.connecte) {
             const cible=p.startsWith("/administration")?"/administration":"/mon-espace";
@@ -1815,7 +1817,7 @@ async function traiter(req, env, ctx) {
           // Un seul espace interactif : les deux entrées principales ouvrent
           // directement l'application native, jamais une page de liens intermédiaire.
           // Les routes /outils restent disponibles pour les anciens favoris.
-          const fichier = p.endsWith("/os-v31")?"/os-v31/index.html":"/index.html";
+          const fichier = p.endsWith("/academy")?"/vitrine/sde-academy-parcours.html":(p.endsWith("/os-v31")?"/os-v31/index.html":"/index.html");
           const r = await assetPortail(fichier);
           const n = new Response(r.body,r);
           n.headers.set("cache-control","private, no-store");
@@ -1941,6 +1943,7 @@ async function traiter(req, env, ctx) {
       if (p === "/api/ma-photo" && req.method === "POST") return apiMaPhoto(req, env, u);
       if (p === "/api/mes-cotisations") return apiMesCotisations(req, env, u);
       if (p === "/api/mon-parcours-academy") return apiMonParcoursAcademy(req, env, u);
+      if (p.startsWith("/api/soldiers-academy")) return soldiersAcademyApi(req, env, u, p);
       if (p === "/api/actualites") return apiActualites(env, u);
       if (p === "/api/priere" && req.method === "POST") return apiPriere(req, env, u, ctx);
       if (p === "/api/absence" && req.method === "POST") return apiAbsence(req, env, u, ctx);
