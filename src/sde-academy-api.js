@@ -101,6 +101,14 @@ export async function soldiersAcademyApi(req,env,u,path){
   const admin=Number(u.niveau)>=2;
   const account=String(u.id);
   await init(env);
+  if(path==="/api/soldiers-academy/ressources/etat"&&req.method==="GET"){
+    const d=await state(env,account);
+    const biblio=await ressourcesPour(env,d);
+    return response({ok:true,ressources:{
+      generales:biblio.generales,nouveautes:biblio.nouveautes,
+      parCours:Object.fromEntries(Object.entries(biblio.parCours).map(([k,v])=>[k,v.length]))
+    }});
+  }
   if(path==="/api/soldiers-academy"&&req.method==="GET"){
     const d=await state(env,account);
     const pj=await projetEtat(env,account);
