@@ -256,7 +256,7 @@ test("Actualisation des supports du cours ouvert : action visible et non destruc
 });
 
 
-test("Love School : six cours bonus distincts du tronc commun et enseignements complets",async()=>{
+test("Love School : dix cours bonus distincts du tronc commun et enseignements complets",async()=>{
  const {env,sql}=monde();comptes(sql);
  const anon={connecte:false,id:null,niveau:0};
  assert.equal((await api(env,anon,"GET","/api/soldiers-academy/love-school")).statut,401);
@@ -265,9 +265,14 @@ test("Love School : six cours bonus distincts du tronc commun et enseignements c
  assert.equal(result.json.ecole.title,"Love School");
  assert.equal(result.json.ecole.nature,"bonus");
  assert.equal(result.json.ecole.certification,false);
- assert.deepEqual(result.json.ecole.courses.map(c=>c.id),["LS-01","LS-02","LS-03","LS-04","LS-05","LS-06"]);
+ assert.deepEqual(result.json.ecole.courses.map(c=>c.id),["LS-01","LS-02","LS-03","LS-04","LS-05","LS-06","LS-07","LS-08","LS-09","LS-10"]);
  for(const c of result.json.ecole.courses){
-  assert.ok(c.title.length>12&&c.objectives.length>=2&&c.scriptures.length>=2&&c.lessons.length>=2&&c.practice.length>30);
+  assert.ok(c.title.length>12);
+  if(c.adultOnly){
+   assert.ok(!c.lessons&&!c.quiz&&!c.objectives&&!c.practice,"Les cours adultes ne sont pas divulgués sans déclaration.");
+  }else{
+   assert.ok(c.objectives.length>=2&&c.scriptures.length>=2&&c.lessons.length>=2&&c.practice.length>30);
+  }
   assert.deepEqual(c.ressources,[]);
  }
  assert.equal(PROG.courses.length,24);
@@ -317,4 +322,86 @@ test("Love School : onglet interactif, affichage accessible et studio des enseig
  assert.match(studio,/Love School · bonus/);
  assert.match(css,/\.love-hero/);
  assert.match(css,/prefers-reduced-motion:reduce/);
+});
+
+
+test("Love School LS-07 à LS-10 : leçons complètes, exercices, quiz et sources médicales",async()=>{
+ const {LOVE_SCHOOL,LOVE_SCHOOL_ADULT_IDS}=await import("../src/love-school.js");
+ assert.equal(LOVE_SCHOOL.courses.length,10);
+ assert.deepEqual(LOVE_SCHOOL_ADULT_IDS,["LS-09","LS-10"]);
+ for(const id of ["LS-07","LS-08","LS-09","LS-10"]){
+  const cours=LOVE_SCHOOL.courses.find(c=>c.id===id);
+  assert.ok(cours.scriptures.length>=3);
+  assert.ok(cours.objectives.length>=4);
+  assert.ok(cours.lessons.length>=4);
+  assert.ok(cours.lessons.every(l=>l.body.length>=170&&l.reflection.length>=30));
+  assert.ok(cours.practice.length>100);
+  assert.ok(cours.quiz.length>=3&&cours.quiz.every(q=>q.options.length===3&&Number.isInteger(q.answer)&&q.answer>=0&&q.answer<3&&q.explanation.length>25));
+ }
+ const sante=LOVE_SCHOOL.courses.find(x=>x.id==="LS-10");
+ assert.ok(sante.references.some(x=>x.url.startsWith("https://www.who.int/")));
+ assert.ok(sante.references.some(x=>x.url.startsWith("https://www.cdc.gov/")));
+});
+
+test("Love School : modules 18+ non divulgués en GET, déclaration explicite uniquement, ressources cloisonnées",async()=>{
+ const {env,sql}=monde();comptes(sql);
+ const uri="/api/soldiers-academy/love-school/adulte";
+ assert.equal((await api(env,eleve,"POST",uri,{confirmationMajeur:false})).statut,403);
+ assert.equal((await api(env,eleve,"POST",uri,{confirmationMajeur:"oui"})).statut,403);
+ assert.equal((await api(env,{connecte:false,id:null,niveau:0},"POST",uri,{confirmationMajeur:true})).statut,401);
+ const avant=await api(env,eleve,"GET","/api/soldiers-academy/love-school");
+ assert.equal(avant.statut,200);
+ assert.equal(avant.json.ecole.courses.length,10);
+ assert.ok(!JSON.stringify(avant).includes("Grandes familles de positions et confort"));
+ assert.ok(!JSON.stringify(avant).includes("IST, contraception et décisions éclairées"));
+ const adulte=await api(env,eleve,"POST",uri,{confirmationMajeur:true});
+ assert.equal(adulte.statut,200);
+ assert.equal(adulte.json.verificationAge,"declarative_non_verifiee");
+ assert.deepEqual(adulte.json.courses.map(x=>x.id),["LS-09","LS-10"]);
+ assert.ok(adulte.json.courses.every(x=>x.lessons.length>=4&&x.quiz.length>=3));
+ const apres=await api(env,eleve,"GET","/api/soldiers-academy/love-school");
+ assert.ok(!apres.json.ecole.courses.find(x=>x.id==="LS-09").lessons,"La déclaration ne doit pas être persistée.");
+});
+
+test("Love School : supports adultes exclus des autres réponses API sans déclaration",async()=>{
+ const {env,sql}=monde();comptes(sql);
+ const formation=await api(env,direction,"POST","/api/soldiers-academy/formateurs",{compte:"prof@exemple.test",fonction:"enseignant",portees:["LS-09","LS-10"]});
+ assert.equal(formation.statut,201);
+ const r1=await api(env,prof,"POST",R,{portee:"LS-09",type:"note",titre:"Ressource confidentielle d'intimité",texte:"Contenu réservé aux cours adultes et aux apprenants ayant confirmé leur majorité."});
+ assert.equal(r1.statut,201);
+ const r2=await api(env,prof,"POST",R,{portee:"LS-10",type:"note",titre:"Santé sexuelle approfondie",texte:"Présentation des principes de prévention des risques et du consentement."});
+ assert.equal(r2.statut,201);
+ const accueil=(await api(env,eleve,"GET","/api/soldiers-academy")).json;
+ const etat=(await api(env,eleve,"GET",R+"/etat")).json;
+ const normal=(await api(env,eleve,"GET","/api/soldiers-academy/love-school")).json;
+ for(const data of [accueil,etat,normal]){
+   assert.ok(!JSON.stringify(data).includes("Ressource confidentielle d'intimité"));
+   assert.ok(!JSON.stringify(data).includes("Santé sexuelle approfondie"));
+ }
+ assert.equal(accueil.ressources.parCours["LS-09"],undefined);
+ assert.equal(etat.ressources.parCours["LS-10"],undefined);
+ const adulte=(await api(env,eleve,"POST","/api/soldiers-academy/love-school/adulte",{confirmationMajeur:true})).json;
+ assert.equal(adulte.courses.find(c=>c.id==="LS-09").ressources[0].titre,"Ressource confidentielle d'intimité");
+ assert.equal(adulte.courses.find(c=>c.id==="LS-10").ressources[0].titre,"Santé sexuelle approfondie");
+ const after=(await api(env,eleve,"GET","/api/soldiers-academy")).json;
+ assert.equal(after.progress.passed,0);
+ assert.equal(after.programme.durationHours,192);
+ assert.equal(after.courses.length,24);
+});
+
+test("Love School : nouveau design animé contrôlable et textes exacts accessibles",()=>{
+ const html=readFileSync("public/vitrine/sde-academy-parcours.html","utf8");
+ const script=readFileSync("public/vitrine/sde-academy-parcours.js","utf8");
+ const css=readFileSync("public/vitrine/sde-academy-onglets.css","utf8");
+ for(const text of ["Aimer avec sagesse. Communiquer avec douceur. Construire avec vérité.","Explorer les cours","Dix cours bonus Love School","Mettre les animations en pause","Je déclare avoir au moins 18 ans"]){
+  assert.ok((html+script).includes(text),text);
+ }
+ for(const phrase of ["Les fondements du cœur","L’art d’aimer et de communiquer","Engagement et intimité responsable","Vérifier ma réponse","ouvrirLoveAdulte","love-motion-paused"]){
+  assert.ok((script+css).includes(phrase),phrase);
+ }
+ assert.match(html,/id="loveMotionToggle" aria-pressed="false"/);
+ assert.match(css,/@keyframes loveFloat/);
+ assert.match(css,/@keyframes loveBeat/);
+ assert.match(css,/@keyframes loveSheen/);
+ assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
 });
