@@ -106,7 +106,7 @@ export async function ressourcesApi(req,env,u,path){
   const sous=path.slice(racine.length);
   if(sous==="ressources/gestion"&&req.method==="GET"){
     if(!fonction)return error("Espace réservé aux enseignants et coachs désignés.",403);
-    const rows=(await env.DB.prepare("SELECT * FROM academy_2027_ressources ORDER BY cree DESC LIMIT 1500").all()).results||[];
+    const rows=(await env.DB.prepare("SELECT * FROM academy_2027_ressources"+(admin?"":" WHERE auteur=?")+" ORDER BY cree DESC LIMIT 1500").bind(...(admin?[]:[String(u.id)])).all()).results||[];
     const autorisees=await porteesAutorisees(env,u);
     const out={ok:true,fonction,moi:String(u.id),autorisees,ressources:rows.map(r=>vuePublique(r,{gerer:true})),cours:PROGRAMME.courses.map(c=>({id:c.id,title:c.title,level:c.level})),types:TYPES};
     if(admin){

@@ -199,3 +199,18 @@ test("Interface : pages, scripts externes (CSP), onglets accessibles et animatio
   assert.match(ui,/youtube-nocookie\\\.com\\\/embed/,"seuls les lecteurs YouTube/Vimeo sont intégrés");
   assert.match(js,/data-onglet-cours/);
 });
+
+test("Confidentialité : chaque enseignant consulte ses propres brouillons, la direction supervise tous",async()=>{
+ const {env,sql}=monde();comptes(sql);
+ await api(env,direction,"POST","/api/soldiers-academy/formateurs",{compte:"prof@exemple.test",fonction:"enseignant",portees:["SA-01"]});
+ await api(env,direction,"POST","/api/soldiers-academy/formateurs",{compte:"coach@exemple.test",fonction:"coach",portees:["SA-01"]});
+ const a=await api(env,prof,"POST",R,{portee:"SA-01",type:"note",titre:"Brouillon de l'enseignante",texte:"Contenu de travail réservé à l'enseignante.",publie:false});
+ const b=await api(env,autreProf,"POST",R,{portee:"SA-01",type:"note",titre:"Brouillon du coach",texte:"Contenu de travail réservé au coach.",publie:false});
+ assert.equal(a.statut,201);assert.equal(b.statut,201);
+ const profList=(await api(env,prof,"GET",R+"/gestion")).json.ressources;
+ const coachList=(await api(env,autreProf,"GET",R+"/gestion")).json.ressources;
+ const adminList=(await api(env,direction,"GET",R+"/gestion")).json.ressources;
+ assert.deepEqual(profList.map(x=>x.id),[a.json.id],"l'enseignante ne lit pas le brouillon du coach");
+ assert.deepEqual(coachList.map(x=>x.id),[b.json.id],"le coach ne lit pas le brouillon de l'enseignante");
+ assert.equal(adminList.length,2,"la direction conserve une vue complète");
+});
