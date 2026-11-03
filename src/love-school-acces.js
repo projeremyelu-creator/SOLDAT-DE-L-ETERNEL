@@ -133,11 +133,12 @@ export async function mediaLoveAutorise(env,u,mediaId){
  if(!u?.connecte||!u.id)return {restreint:true,autorise:false};
  if(adminDe(u))return {restreint:true,autorise:true};
  const portees=await porteesAutorisees(env,u);
- if(cours.some(c=>portees.includes(c)))return {restreint:true,autorise:true};
+ if(cours.every(c=>portees.includes(c)))return {restreint:true,autorise:true};
  const markers=cours.map(()=>"?").join(",");
- let appro;
+ let approves;
  try{
-  appro=(await env.DB.prepare("SELECT cours FROM academy_love_acces WHERE compte=? AND statut='approuve' AND cours IN ("+markers+") LIMIT 1").bind(String(u.id),...cours).first());
+  approves=(await env.DB.prepare("SELECT cours FROM academy_love_acces WHERE compte=? AND statut='approuve' AND cours IN ("+markers+")").bind(String(u.id),...cours).all()).results||[];
  }catch(e){if(/no such table/i.test(String(e?.message||e)))return {restreint:true,autorise:false};throw e;}
- return {restreint:true,autorise:!!appro};
+ const valides=new Set(approves.map(r=>r.cours));
+ return {restreint:true,autorise:cours.every(c=>portees.includes(c)||valides.has(c))};
 }
