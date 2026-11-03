@@ -20,6 +20,7 @@ const ADMIN=[
  {group:'Communication',module:'squads',href:'/squads',title:'Squads',desc:'Créer les Squads, en gérer les membres et modérer.',icon:'members'},
  {group:'Communication',module:'comptes-membres',href:'/comptes-membres',title:'Comptes des membres',desc:'Créer les comptes de la liste des membres avec un mot de passe temporaire.',icon:'members',min:2},
  {group:'Communication',module:'courriels',href:'/courriels',title:'Courriels automatiques',desc:'Lettre hebdomadaire, nouveaux rassemblements et alertes d’agenda.',icon:'communication',min:2},
+ {group:'Communication',module:'formulaires',href:'/formulaires',title:'Formulaires',desc:'Créez des formulaires (bénévolat, inscriptions, avis) et consultez les réponses.',icon:'communication',min:2},
  {group:'Communication',module:'mediatheque',title:'Médiathèque',desc:'Photos IN FIRE, vidéos et ressources multimédia.',icon:'academy'},
  {group:'Communication',module:'site-public',title:'Publications du site',desc:'Actualiser le site et mettre la TPA en valeur.',icon:'mission',min:2},
  {group:'Finances',module:'finance-direction',title:'Rapports financiers',desc:'Entrées, dépenses et budgets des missions.',icon:'money',min:2},
