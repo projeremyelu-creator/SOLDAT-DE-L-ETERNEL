@@ -230,3 +230,49 @@ test('Centre métier Membre : modules personnels, sans finances de direction',as
   assert.equal(c.errors.length,0);
  }finally{c.close()}
 });
+
+
+test('Annuaire mobile : toutes les données du membre restent lisibles et la fiche native reste accessible',async()=>{
+ const c=await page('/administration','admin');
+ try{
+  c.w.SDEPortal.selectionner('annuaire');
+  await waitFor(()=>!!c.d.querySelector('.ops-annuaire-table tbody tr'));
+  const table=c.d.querySelector('table.ops-annuaire-table');
+  assert.ok(table);
+  assert.equal(table.closest('.ops-directory-scroll')?.classList.contains('ops-table-scroll'),true);
+  assert.deepEqual([...table.querySelectorAll('thead th')].map(x=>x.textContent.trim()),
+   ['Soldat','Matricule','Fonction / statut','Academy','Présence','Fiche']);
+  const record=table.querySelector('tbody tr');
+  assert.equal(record.querySelector('th[scope="row"]')?.textContent.includes('Alice'),true);
+  assert.deepEqual([...record.querySelectorAll('td')].map(x=>x.dataset.label),
+   ['Matricule','Fonction / statut','Academy','Présence','Fiche']);
+  assert.match(record.textContent,/SDE-A/);
+  assert.ok(record.querySelector('button'));
+  record.querySelector('button').click();
+  await tick();
+  assert.equal(c.actions.at(-1).act,'voir-membre');
+  assert.equal(c.actions.at(-1).id,'alice');
+  assert.deepEqual(c.errors,[]);
+ }finally{c.close()}
+});
+test('Palettes et tableaux privés : contraste vérifié pour fond sombre, cartes mobiles et actions',()=>{
+ const css=readFileSync('frontend/business-mosaic.css','utf8');
+ const index=css.indexOf('Accessibilité SDE : tableaux métiers et annuaire mobile');
+ assert.ok(index>0,'Correctif manquant en dernière couche de styles');
+ const end=css.slice(index);
+ assert.match(end,/html\[data-sde-palette\] body\.sde-reference \.ops-panel \.ops-table-scroll/);
+ assert.match(end,/\.ops-annuaire-table tbody tr/);
+ assert.match(end,/content:attr\(data-label\)/);
+ assert.match(end,/@media\(max-width:720px\)/);
+ assert.match(end,/\.sde-ambiance-ctl\[aria-pressed="true"\]::before/);
+ assert.ok(css.lastIndexOf('Accessibilité SDE : tableaux métiers')>css.indexOf('.sde-mosaic-module'));
+ const lum=hex=>{
+  const v=hex.match(/[0-9a-f]{2}/gi).map(s=>parseInt(s,16)/255);
+  const p=v.map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);
+  return .2126*p[0]+.7152*p[1]+.0722*p[2];
+ };
+ const ratio=(a,b)=>{const x=lum(a),y=lum(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+ assert.ok(ratio('f7f2eb','15243b')>=7,'Texte de cellule doit respecter WCAG AAA normal');
+ assert.ok(ratio('f9d590','1d2d46')>=7,'En-têtes de tableau doivent respecter WCAG AAA normal');
+ assert.ok(ratio('f6d48e','192b43')>=7,'Libellés mobiles doivent respecter WCAG AAA normal');
+});
