@@ -1184,3 +1184,14 @@ body.sde-reference .ops-panel :is(input,select,textarea):focus-visible{
   transition:none!important;
  }
 }
+
+
+/* Familles de modules : Commandement (bleu nuit) · Spiritualité (violet profond) · Missions (vert militaire) */
+body.sde-reference{--fam-cmd:#1b2f6b;--fam-spi:#5b21b6;--fam-mis:#3f6b34}
+body.sde-reference button[data-fam]{position:relative}
+body.sde-reference button[data-fam="cmd"]{--fam:var(--fam-cmd)}
+body.sde-reference button[data-fam="spi"]{--fam:var(--fam-spi)}
+body.sde-reference button[data-fam="mis"]{--fam:var(--fam-mis)}
+body.sde-reference button[data-fam]::before{content:"";position:absolute;left:0;top:20%;bottom:20%;width:3px;border-radius:0 3px 3px 0;background:var(--fam);opacity:.6;pointer-events:none}
+body.sde-reference button[data-fam][aria-current="page"]::before{opacity:1}
+body.sde-reference button[data-fam][aria-current="page"] svg{color:var(--fam)}

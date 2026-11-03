@@ -14,9 +14,11 @@ test("La grille d'accueil réserve 260 px sur les grands écrans, sans figer le 
  assert.match(rule,/grid-template-rows:40px 42px 52px 30px/);
  assert.match(rule,/\.iv-intro \.iv-cta \{/);
  const doc=new JSDOM(html).window.document;
- const intro=doc.querySelector(".iv-vitrine .iv-intro");
- assert.ok(intro);
- for(const item of ["h2","p",".iv-cta",".iv-sub"])assert.ok(intro.querySelector(item),item);
+ // L'ancien bandeau d'introduction est remplacé par le hero premium : plus de bloc à hauteur fixe sur l'accueil.
+ assert.equal(doc.querySelector(".iv-vitrine .iv-intro"),null);
+ const hero=doc.querySelector("section.ap-hero");
+ assert.ok(hero);
+ for(const item of ["h1",".ap-actions",".ap-poster img[width][height]"])assert.ok(hero.querySelector(item),item);
  // Le build de production remplace les versions de fichiers par une empreinte.
  assert.match(html,/sde-sitewide-2026\.css\?v=[a-z0-9]+/i);
 });
@@ -37,7 +39,7 @@ test("La bande 960–1100 px réserve 300 px et conserve quatre lignes indépend
 test("La nouvelle composition TPA garde la réserve visuelle 300/260 px de la recette Chromium",()=>{
  const premium=readFileSync("public/vitrine/sde-premium-public.css","utf8");
  const source=readFileSync("public/vitrine/portail.html","utf8");
- assert.ok(source.indexOf('class="m-welcome"')<source.indexOf('class="iv-vitrine"'));
+ assert.ok(source.indexOf('class="ap-hero"')>0&&source.indexOf('class="ap-hero"')<source.indexOf('id="programmes-accueil"'));
  const fix=premium.slice(premium.lastIndexOf("Recette réelle Chromium 03/11"));
  assert.ok(fix.startsWith("Recette réelle Chromium 03/11"));
  assert.match(fix,/@media \(min-width:960px\) and \(max-width:1100px\)/);

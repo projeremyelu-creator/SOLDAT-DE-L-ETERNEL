@@ -233,3 +233,20 @@ html body.sde-unifie .site-brand{color:var(--fu-gold-2)!important}
 .rd-zone{fill:var(--gold-mark,#b8901f);fill-opacity:.28;stroke:var(--gold-mark,#b8901f);stroke-width:2;stroke-linejoin:round}
 .rd-list{list-style:none;margin:0;padding:0;display:grid;gap:5px;flex:1 1 200px;font-size:.9rem}
 .rd-list li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line,#dde1ea);padding-bottom:4px}
+
+/* Trois familles de modules — Commandement (bleu nuit) · Spiritualité (violet profond) · Missions (vert militaire) */
+:root{--fam-cmd:#1b2f6b;--fam-spi:#5b21b6;--fam-mis:#3f6b34}
+:root[data-theme="dark"],:root[data-sde-palette="tactique"]{--fam-cmd:#8fb2ff;--fam-spi:#c4a8ff;--fam-mis:#9ccf8a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--fam-cmd:#8fb2ff;--fam-spi:#c4a8ff;--fam-mis:#9ccf8a}}
+[data-fam="cmd"]{--fam:var(--fam-cmd)}[data-fam="spi"]{--fam:var(--fam-spi)}[data-fam="mis"]{--fam:var(--fam-mis)}
+.fam{margin:0 0 22px}
+.fam-h{display:flex;align-items:baseline;gap:10px;margin:0 0 10px;font-size:1.05rem;color:var(--fam)}
+.fam-h small{font-size:.8rem;font-weight:500;opacity:.8;color:inherit}
+.fam-dot{width:12px;height:12px;border-radius:50%;background:var(--fam);align-self:center;flex:none}
+.tile[data-fam]{border-top:4px solid var(--fam)}
+.tile[data-fam] .tile-ico{color:var(--fam)}
+.nav-btn[data-fam]{position:relative}.nav-btn[data-fam] .badge{position:relative}
+.nav-btn[data-fam]::before{content:"";position:absolute;left:0;top:22%;bottom:22%;width:3px;border-radius:0 3px 3px 0;background:var(--fam);opacity:.55}
+.nav-btn[data-fam].on::before{opacity:1}
+.nav-btn[data-fam].on .badge{color:var(--fam)}
+@media (max-width:900px){.nav-btn[data-fam]::before{left:22%;right:22%;top:0;bottom:auto;width:auto;height:3px;border-radius:0 0 3px 3px}}

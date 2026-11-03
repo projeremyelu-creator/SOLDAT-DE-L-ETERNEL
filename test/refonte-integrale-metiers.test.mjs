@@ -53,23 +53,18 @@ test('Les entrées de consultation des dossiers privés restent des routes authe
 });
 
 
-test('Accueil fidèle : la vision précède la bannière secondaire, TPA à droite et trois accès directs',()=>{
+test('Accueil premium : hero immersif, affiche unique et trois accès directs',()=>{
  const html=file('public/vitrine/portail.html');
- const css=file('public/vitrine/sde-premium-public.css');
- const firstHero=html.indexOf('class="m-welcome"');
- const secondary=html.indexOf('class="iv-vitrine"');
- assert.ok(firstHero>0&&secondary>firstHero,'La vision doit être visible avant la bannière secondaire');
- assert.equal((html.match(/class="sde-hero-poster"/g)||[]).length,1);
+ const css=file('public/vitrine/sde-accueil-premium.css');
+ const hero=html.slice(html.indexOf('class="ap-hero"'),html.indexOf('id="programmes-accueil"'));
+ assert.ok(hero.length>500,'Le hero précède l’agenda');
+ assert.equal((html.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1,'une seule affiche du programme phare');
  assert.ok(html.includes('href="/programmes#tpa-2026"'));
  assert.ok(html.includes('datetime="2026-12-18T20:00:00+00:00"'));
- assert.ok(html.includes('class="m-actions"'));
- for(const link of ['/mouvement','/contact#rejoindre','/programmes']){
-  const hero=html.slice(firstHero,html.indexOf('class="m-kpis"',firstHero));
-  assert.ok(hero.includes('href="'+link+'"'),'Accès direct manquant '+link);
- }
- assert.match(css,/grid-template-columns:minmax\(0,1\.52fr\)/);
- assert.match(css,/\.sde-hero-poster/);
- assert.match(css,/@media\(max-width:760px\)/);
+ assert.ok(hero.includes('class="ap-actions"'));
+ for(const link of ['/mouvement','/contact#rejoindre','/programmes#tpa-2026'])assert.ok(hero.includes('href="'+link+'"'),'Accès direct manquant '+link);
+ assert.match(css,/\.ap-hero-inner\{[^}]*grid-template-columns:minmax\(0,1\.25fr\) minmax\(280px,\.75fr\)/);
+ assert.match(css,/@media\(max-width:860px\)/);
  assert.match(css,/prefers-reduced-motion/);
 });
 test('Tableaux SDE : données réelles pour les barres, formations, rendez-vous, sans contenu simulé',()=>{
@@ -120,15 +115,15 @@ test('Terminal tactique : agrégats API, aucun GPS ni biométrie artificielle',(
 test('Priorité 01 : accueil sans double affiche TPA, vision et trois actions maintenues',()=>{
  const home=file('public/vitrine/portail.html');
  const sitecss=file('public/vitrine/sde-sitewide-2026.css');
- assert.match(home,/class="m-welcome"/);
- assert.match(home,/class="sde-hero-poster"/);
- assert.match(home,/class="iv-band sde-community-band"/);
- assert.match(home,/communion-vignette\.webp/);
- const hero=home.slice(home.indexOf('class="sde-hero-poster"'),home.indexOf('class="sde-hero-poster-details"'));
+ assert.match(home,/class="ap-hero"/);
+ assert.match(home,/class="ap-poster"/);
+ assert.ok(!home.includes('sde-community-band'),'plus de second bandeau');
+ const hero=home.slice(home.indexOf('class="ap-poster"'),home.indexOf('id="programmes-accueil"'));
+ assert.equal((home.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1);
  assert.equal((hero.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1);
- for(const href of ['/mouvement','/contact#rejoindre','/programmes']){
-  const hero=home.slice(home.indexOf('class="m-welcome"'),home.indexOf('class="m-kpis"'));
-  assert.ok(hero.includes('href="'+href+'"'),href);
+ for(const href of ['/mouvement','/contact#rejoindre','/programmes#tpa-2026']){
+  const bloc=home.slice(home.indexOf('class="ap-hero"'),home.indexOf('id="programmes-accueil"'));
+  assert.ok(bloc.includes('href="'+href+'"'),href);
  }
  assert.ok(sitecss.includes('Refonte structurée 03/11/2026'));
  assert.ok(sitecss.includes('.sde-rail{'));

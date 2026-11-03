@@ -11,7 +11,7 @@ const interaction=readFileSync('public/vitrine/organigramme-interactif.js','utf8
 const dom=s=>new JSDOM(s,{url:'https://mouvement-sde.org/mouvement',runScripts:'outside-only'});
 
 test('Lisibilité : Accueil, slogan et verset conservent des couleurs contrastées',()=>{
- assert.match(home,/class="m-welcome"/);
+ assert.match(home,/class="ap-hero"/);
  const rules=css.slice(css.indexOf('Correctif de lisibilité — accueil'));
  assert.ok(rules.length>4000);
  assert.match(rules,/\.m-welcome :is\(h1,\.m-italic,p:not\(\.m-kicker\)/);
