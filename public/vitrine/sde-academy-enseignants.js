@@ -57,10 +57,41 @@ function equipe(){
   const f=G.formateurs||[];
   $("listeEquipe").innerHTML=f.length?f.map(x=>'<article class="review"><div class="eyebrow">'+esc(x.fonction)+'</div><h3>'+esc(x.nom)+'</h3><p class="muted">'+esc(x.email)+' · '+esc(x.portees.length)+' cours/portées confiés</p><details><summary>Voir les cours confiés</summary><p>'+x.portees.map(p=>esc(libellePortee(p))).join("<br>")+'</p></details><button type="button" class="button" data-retirer="'+esc(x.compte)+'">Retirer la désignation</button></article>').join(""):'<div class="vide">Aucun enseignant ni coach désigné pour l’instant.</div>';
 }
+
+let loveDemandesG=null;
+async function chargerValidations(){
+ const data=await appel("/love-school/acces/gestion");
+ loveDemandesG=data;
+ const demandes=data.demandes||[],enAttente=demandes.filter(d=>d.statut==="en_attente");
+ const badge=$("loveValidationBadge");badge.hidden=!enAttente.length;badge.textContent=String(enAttente.length);
+ const titres=Object.fromEntries((data.cours||[]).map(c=>[c.id,c.title]));
+ $("loveDemandes").innerHTML=demandes.length?demandes.map(d=>{
+  const etat=d.statut==="en_attente"?"À valider":d.statut==="approuve"?"Accès autorisé":d.statut==="refuse"?"Demande refusée":"Autorisation révoquée";
+  const actions=d.statut==="en_attente"?
+    '<div class="actions"><button type="button" class="button primary" data-love-decision="approuve" data-compte="'+esc(d.compte)+'" data-cours="'+esc(d.cours)+'">Valider et déverrouiller</button>'+
+    '<button type="button" class="button" data-love-decision="refuse" data-compte="'+esc(d.compte)+'" data-cours="'+esc(d.cours)+'">Refuser</button></div>':
+    d.statut==="approuve"?'<div class="actions"><button type="button" class="button" data-love-decision="revoque" data-compte="'+esc(d.compte)+'" data-cours="'+esc(d.cours)+'">Révoquer l’autorisation</button></div>':'';
+  return '<article class="review love-decision-card"><div class="eyebrow">'+esc(d.cours)+' · '+esc(etat)+'</div>'+
+   '<h3>'+esc(titres[d.cours]||d.cours)+'</h3>'+
+   '<p><strong>Apprenant :</strong> '+esc(d.nom)+' <span class="muted">'+esc(d.email)+'</span></p>'+
+   '<p class="muted">Demande : '+esc(UI.dateFr(d.demandeLe))+(d.decisionLe?' · Décision : '+esc(UI.dateFr(d.decisionLe)):'')+'</p>'+
+   (d.commentaire?'<p class="muted">Note pédagogique : '+esc(d.commentaire)+'</p>':'')+
+   (actions?'<label class="field">Commentaire pédagogique facultatif (ne demandez aucun détail intime)<textarea maxlength="400" rows="2" data-love-note placeholder="Rappel des conditions ou motif bref, sans données sensibles"></textarea></label>'+actions:'')+
+   '</article>';
+ }).join(""):'<div class="vide">Aucune demande pour les cours Love School dont vous avez la responsabilité.</div>';
+ $("loveValidationStatus").textContent=enAttente.length+" demande(s) à examiner · "+demandes.length+" dossier(s) sur vos modules.";
+}
+function rendreValidationVisible(){
+ const autorise=G?.fonction==="administrateur"||(G?.autorisees||[]).some(p=>/^LS-(?:0[1-9]|10)$/.test(p));
+ $("tab-validations").hidden=!autorise;
+ if(!autorise)return;
+ chargerValidations().catch(e=>dire(e.message||"Impossible de charger les demandes.","loveValidationStatus"));
+}
+
 async function charger(){
   G=await appel("/ressources/gestion");
   $("champPortee").innerHTML=optionsPortees();
-  typeUI();metriques();liste();equipe();
+  typeUI();metriques();liste();equipe();rendreValidationVisible();
   $("studio").hidden=false;
 }
 /* ── Téléversement par morceaux dans la médiathèque (visibilité : comptes connectés) ── */
@@ -124,6 +155,20 @@ $("formRessource").addEventListener("submit",async e=>{
   }catch(err){dire(err.message)}finally{btn.disabled=false}
 });
 document.addEventListener("click",async e=>{
+  const decision=e.target.closest("[data-love-decision]");
+  if(decision){
+    decision.disabled=true;
+    const note=decision.closest(".love-decision-card")?.querySelector("[data-love-note]")?.value||"";
+    try{
+      const d=await appel("/love-school/acces/decision","PATCH",{
+        compte:decision.dataset.compte,cours:decision.dataset.cours,decision:decision.dataset.loveDecision,commentaire:note
+      });
+      dire(d.message||"Décision enregistrée.","loveValidationStatus");
+      await chargerValidations();
+    }catch(err){dire(err.message||"Décision refusée.","loveValidationStatus")}
+    finally{if(decision.isConnected)decision.disabled=false}
+    return;
+  }
   const b=e.target.closest("[data-modifier],[data-publier],[data-supprimer],[data-retirer]");if(!b)return;
   try{
     if(b.dataset.modifier){
@@ -149,6 +194,7 @@ document.addEventListener("click",async e=>{
     }
   }catch(err){dire(err.message)}
 });
+$("loveValiderActualiser").addEventListener("click",()=>chargerValidations().catch(e=>dire(e.message,"loveValidationStatus")));
 $("toutesPortees").addEventListener("change",e=>{for(const c of document.querySelectorAll('#choixPortees input'))c.checked=e.target.checked});
 $("formFormateur").addEventListener("submit",async e=>{
   e.preventDefault();const f=e.currentTarget;
