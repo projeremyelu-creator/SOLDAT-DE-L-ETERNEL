@@ -152,3 +152,15 @@ body.sde-direct-admin .sde-command-v4-bottom{display:none}
   transition:none;transform:none!important;
  }
 }
+
+/* Raccourci de gestion des comptes, visible seulement par les admins niveau 2+. */
+body.sde-direct-admin .sde-command-v4-accounts{
+ display:inline-flex;align-items:center;justify-content:center;min-height:42px;
+ padding:9px 13px;border-radius:10px;
+ border:1px solid #eed393;background:#eed393;color:#17203a!important;
+ font-weight:800;font-size:.78rem;text-decoration:none;
+}
+body.sde-direct-admin .sde-command-v4-accounts:hover,
+body.sde-direct-admin .sde-command-v4-accounts:focus-visible{
+ background:#fff0c0;outline:2px solid #fff0c0;outline-offset:2px;
+}

@@ -56,11 +56,11 @@
     const me=await confirmation.json();
     if(!confirmation.ok||me.connecte!==true){status.dataset.state="";status.textContent="Votre session n'a pas pu être confirmée. Réessayez de vous connecter.";return}
     const destination=retour();
+    if(me.mdpTemporaire===true||result.changerMotDePasse===true){location.assign("/mot-de-passe?retour="+encodeURIComponent(me.niveau>=1?destination:"/mon-espace"));return}
     if(destination==="/administration"&&me.niveau<1){
      status.replaceChildren(document.createTextNode("Votre compte est connecté, mais l'administration est réservée aux responsables habilités. "));
      const lien=document.createElement("a");lien.href="/mon-espace";lien.textContent="Ouvrir mon espace membre";status.append(lien);return;
     }
-    if(me.mdpTemporaire===true||result.changerMotDePasse===true){location.assign("/mot-de-passe?retour="+encodeURIComponent(destination));return}
     location.assign(destination);
    } catch(_){status.textContent="Connexion impossible. Vérifiez votre réseau et réessayez."}
    finally{button.disabled=false}
