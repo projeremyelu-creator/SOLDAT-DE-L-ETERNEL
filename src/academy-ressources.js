@@ -4,7 +4,7 @@
    - Dès la publication, tous les apprenants qui ont accès au cours (ou à la bibliothèque générale) la voient dans leur espace.
    - Aucune ressource ne contient de corrigé : les corrigés restent dans academy-correctifs.js (serveur seulement). */
 import {SOLDIERS_ACADEMY_2027 as PROGRAMME} from "./soldiers-academy-2027.js";
-import {LOVE_SCHOOL,LOVE_SCHOOL_IDS} from "./love-school.js";
+import {LOVE_SCHOOL,LOVE_SCHOOL_IDS,LOVE_SCHOOL_ADULT_IDS} from "./love-school.js";
 
 const reply=(data,status=200)=>Response.json(data,{status,headers:{"cache-control":"private, no-store","x-content-type-options":"nosniff"}});
 const error=(message,status=400)=>reply({ok:false,message},status);
@@ -79,14 +79,14 @@ function vuePublique(r,{gerer=false}={}){
   return {id:r.id,portee:r.portee,type:r.type,titre:r.titre,description:r.description,url:r.url,genre:r.genre,texte:r.texte,auteur:r.auteur_nom,cree:r.cree,...(gerer?{publie:!!r.publie,media:r.media,maj:r.maj,auteurId:r.auteur}:{})};
 }
 /* Ressources visibles par un apprenant : publiées, dans un niveau ouvert (ou bibliothèque générale). */
-export async function ressourcesApprenant(env,{peutNiveau}){
+export async function ressourcesApprenant(env,{peutNiveau,peutBonusAdulte=false}){
   const rows=(await env.DB.prepare("SELECT * FROM academy_2027_ressources WHERE publie=1 ORDER BY cree DESC LIMIT 1500").all()).results||[];
   const niveauDe=p=>{
     if(p==="GENERAL")return 1;
     if(/^N[123]$/.test(p))return Number(p[1]);
     return PROGRAMME.courses.find(c=>c.id===p)?.level||0;
   };
-  const visibles=rows.filter(r=>(r.portee==="GENERAL"||LOVE_SCHOOL_IDS.includes(r.portee)||peutNiveau(niveauDe(r.portee))));
+  const visibles=rows.filter(r=>(peutBonusAdulte||!LOVE_SCHOOL_ADULT_IDS.includes(r.portee))&&(r.portee==="GENERAL"||LOVE_SCHOOL_IDS.includes(r.portee)||peutNiveau(niveauDe(r.portee))));
   const parCours={},generales=[];
   for(const r of visibles){
     const v=vuePublique(r);
