@@ -28,7 +28,7 @@ function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=fals
     if(p==='/vitrine/infire-2026/chronogramme-officiel.pdf')return new Response('%PDF-1.7\n% Simulateur de document officiel',{headers:{'content-type':'application/pdf'}});
     if(p==='/vitrine/sde-academy-parcours.js')return new Response(academyScriptObsolete
       ? 'const obsoleteAcademy = true;'
-      : 'function actualiserRessourcesCours(){}; function chargerLoveSchool(){}; const controle = "data-refresh-course-resources";',
+      : 'function actualiserRessourcesCours(){}; function chargerLoveSchool(){}; const lovePublicActif="tous"; const filtre="data-love-public"; const controle = "data-refresh-course-resources";',
       {headers:{'content-type':'text/javascript'}});
     if(p.endsWith('.js'))return new Response(p.includes('operations-assets')?(marqueObsolete?'const brand="SDE DIGITAL";':'const brand="SDE - MOUVEMENT";'):'const id="sde-direct-tabs";',{headers:{'content-type':'text/javascript'}});
     if(p==='/vitrine/sde-sitewide-2026.css')return new Response(siteObsolete?'.ancien{}':'--sde-forest:#172b25;.sde-further{}@keyframes sde-site-countdown-reveal{}',{headers:{'content-type':'text/css'}});
