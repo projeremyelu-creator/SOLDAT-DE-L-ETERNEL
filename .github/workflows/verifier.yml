@@ -10,5 +10,13 @@ jobs:
         with:
           node-version: '22.23.4'
       - run: npm ci --ignore-scripts
+      - name: Installer l'encodeur WebP pour l'affiche mobile
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq imagemagick
+          convert -version | head -1
       - run: npm run build:experience
+      - name: Garantir une affiche mobile réellement plus légère
+        run: |
+          node -e "const fs=require('node:fs'); const a=fs.statSync('public/vitrine/illus/tpa-2026.webp').size,b=fs.statSync('public/vitrine/illus/tpa-2026-mobile.webp').size;console.log('WebP mobile',b,'sur',a,'octets'); if(b>=a)process.exit(1);"
       - run: npm test
