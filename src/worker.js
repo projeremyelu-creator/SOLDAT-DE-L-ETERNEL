@@ -6,6 +6,7 @@ import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {memberAcademySummary} from "./member-academy-summary.js";
 import {soldiersAcademyApi,verifierAttestation} from "./sde-academy-api.js";
+import {academyContenusApi} from "./academy-contenus.js";
 import {rappelsCohortes} from "./academy-extras.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {squadChatApi} from "./squad-chat.js";
@@ -1818,7 +1819,8 @@ async function traiter(req, env, ctx) {
           const u = await utilisateur(req, env);
           if (u.connecte) {
             const retour = url.searchParams.get("retour");
-            const dest = retour === "/mon-espace" ? "/mon-espace" : u.niveau >= 1 ? "/administration" : "/mon-espace";
+            const retours=["/mon-espace","/administration","/mon-espace/academy","/administration/academy","/mon-espace/academy/studio","/administration/academy/studio"];
+            const dest = retours.includes(retour)&&(!retour.startsWith("/administration")||u.niveau>=1)?retour:(u.niveau >= 1 ? "/administration" : "/mon-espace");
             return new Response(null,{status:302,headers:{location:url.origin + dest,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
           }
           const r = await assetPortail("/vitrine/connexion-unifiee.html");
@@ -1845,10 +1847,11 @@ async function traiter(req, env, ctx) {
         }
         if (["/mon-espace","/administration","/mon-espace/outils","/administration/outils",
              "/mon-espace/os-v31","/administration/os-v31",
-             "/mon-espace/academy","/administration/academy"].includes(p)) {
+             "/mon-espace/academy","/administration/academy",
+             "/mon-espace/academy/studio","/administration/academy/studio"].includes(p)) {
           const u = await utilisateur(req, env);
           if (!u.connecte) {
-            const cible=p.endsWith("/academy")?p:(p.startsWith("/administration")?"/administration":"/mon-espace");
+            const cible=p.includes("/academy")?p:(p.startsWith("/administration")?"/administration":"/mon-espace");
             const mode=url.searchParams.get("mode");
             const modeValide=["inscription","activation","recuperation"].includes(mode)?"&mode="+encodeURIComponent(mode):"";
             return new Response(null,{status:302,headers:{location:url.origin + "/connexion?retour=" + encodeURIComponent(cible) + modeValide,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
@@ -1859,7 +1862,7 @@ async function traiter(req, env, ctx) {
           // directement l'application native, jamais une page de liens intermédiaire.
           // Les routes /outils restent disponibles pour les anciens favoris.
           const fichier = p.endsWith("/os-v31")?"/os-v31/index.html":"/index.html";
-          const fichierAcademy = p.endsWith("/academy")?"/vitrine/sde-academy-parcours.html":fichier;
+          const fichierAcademy = p.endsWith("/academy/studio")?"/vitrine/sde-academy-studio.html":(p.endsWith("/academy")?"/vitrine/sde-academy-parcours.html":fichier);
           const r = await assetPortail(fichierAcademy);
           const n = new Response(r.body,r);
           n.headers.set("cache-control","private, no-store");
@@ -2000,6 +2003,7 @@ async function traiter(req, env, ctx) {
       if (p === "/api/ma-photo" && req.method === "POST") return apiMaPhoto(req, env, u);
       if (p === "/api/mes-cotisations") return apiMesCotisations(req, env, u);
       if (p === "/api/mon-parcours-academy") return apiMonParcoursAcademy(req, env, u);
+      if (p.startsWith("/api/soldiers-academy/contenus")) return academyContenusApi(req, env, u, p);
       if (p.startsWith("/api/soldiers-academy")) return soldiersAcademyApi(req, env, u, p);
       if (p === "/api/actualites") return apiActualites(env, u);
       if (p === "/api/priere" && req.method === "POST") return apiPriere(req, env, u, ctx);
