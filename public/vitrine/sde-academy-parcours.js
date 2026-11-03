@@ -76,15 +76,16 @@ const LOVE_GROUPS=[
  {id:"intimite",title:"03 · Engagement et intimité responsable",desc:"Foyer, santé et intimité adulte abordés avec dignité.",symbol:"♥",ids:["LS-06","LS-09","LS-10"]}
 ];
 const loveList=()=>loveSchool?.courses||[];
+const LOVE_STATUTS={verrouille:"Verrouillé · validation requise",en_attente:"Demande en attente",approuve:"Accès validé",refuse:"Demande refusée",revoque:"Accès retiré"};
 function loveCourseCard(c,i){
- const adulte=!!c.adultOnly;
- const lecons=Array.isArray(c.lessons)?c.lessons.length:0;
- const ressources=Array.isArray(c.ressources)?c.ressources.length:0;
- return '<article class="card love-card '+(adulte?'love-card-adult':'')+'" style="--i:'+i+'">'+
+ const etat=c.acces?.statut||"verrouille",adulte=!!c.adultOnly;
+ const bouton=etat==="approuve"?"Ouvrir le cours":etat==="en_attente"?"Voir ma demande":"Conditions et demande d'accès";
+ return '<article class="card love-card '+(adulte?'love-card-adult ':'')+(etat==="approuve"?'love-unlocked':'love-locked')+'" style="--i:'+i+'">'+
  '<span class="code">'+esc(c.id)+' · '+(adulte?'18+':'BONUS')+'</span>'+
  '<h3>'+esc(c.title)+'</h3><p class="muted">'+esc(c.theme)+'</p>'+
- (adulte?'<p class="love-lock">♡ Contenu pédagogique adulte · déclaration de majorité nécessaire</p>':'<small>'+lecons+' leçons · '+ressources+' support(s) publiés</small>')+
- '<button type="button" class="button" data-love-course="'+esc(c.id)+'">'+(adulte?'Consulter le module 18+':'Découvrir le cours')+'</button></article>';
+ '<span class="love-acces-badge '+(etat==="approuve"?'love-acces-ok':'love-acces-locked')+'">'+(etat==="approuve"?'♡':'🔒')+' '+esc(LOVE_STATUTS[etat]||LOVE_STATUTS.verrouille)+'</span>'+
+ '<small>Conditions, objectifs et restrictions consultables avant l’ouverture.</small>'+
+ '<button type="button" class="button" data-love-course="'+esc(c.id)+'">'+bouton+'</button></article>';
 }
 function afficherLoveCatalogue(){
  const cours=loveList(),zone=$("loveSchoolCourses");
@@ -113,53 +114,99 @@ function afficherLoveCatalogue(){
  }
 }
 function afficherLoveCours(id){
- const c=loveList().find(x=>x.id===id);
- if(!c)return;
+ const c=loveList().find(x=>x.id===id);if(!c)return;
  loveSelected=id;
  const zone=$("loveSchoolDetail"),UI=window.SDEAcademyUI;
- if(c.adultOnly&&!Array.isArray(c.lessons)){
-   zone.innerHTML='<div class="eyebrow">Love School · '+esc(c.id)+' · Accès adulte</div>'+
+ const etat=c.acces?.statut||"verrouille";
+ const meta='<div class="eyebrow">Love School · '+esc(c.id)+' · '+(c.adultOnly?'18+ · ':'')+'Accès individuel</div>'+
    '<h2>'+esc(c.title)+'</h2><p class="muted">'+esc(c.theme)+'</p>'+
-   '<div class="love-adult-note"><strong>Module destiné aux personnes majeures.</strong>'+
-   '<p>Ce cours traite de l’intimité et de la santé sexuelle sous un angle éducatif, non graphique et respectueux. Vous pouvez quitter ce module sans conséquence sur votre parcours. Aucune information intime ne sera demandée.</p>'+
-   '<p>L’accès repose sur votre déclaration de majorité ; il ne s’agit pas d’une vérification officielle de l’âge.</p></div>'+
-   '<label class="love-adult-confirm"><input type="checkbox" id="loveAdultCheck"> Je déclare avoir au moins 18 ans et souhaite consulter cet enseignement pédagogique.</label>'+
-   '<div class="actions"><button type="button" class="button primary" data-love-adulte="'+esc(c.id)+'">Accéder au module adulte</button><button type="button" class="button" data-love-retour>Retour aux cours</button></div>'+
-   '<p class="status" role="status" id="loveAdultStatus" aria-live="polite"></p>';
+   '<span class="love-acces-badge '+(etat==="approuve"?'love-acces-ok':'love-acces-locked')+'">'+esc(LOVE_STATUTS[etat]||LOVE_STATUTS.verrouille)+'</span>'+
+   '<h3>Objectifs pédagogiques</h3><ul>'+((c.objectifs||c.objectives)||[]).map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul>'+
+   '<h3>Conditions d’accès</h3><ul>'+(c.conditions||[]).map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul>'+
+   '<h3>Restrictions et règles de confidentialité</h3><ul>'+(c.restrictions||[]).map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul>';
+ // Aucun contenu pédagogique n'est dans les réponses du catalogue non autorisées.
+ if(etat!=="approuve"){
+   const enAttente=etat==="en_attente";
+   const decision=c.acces?.commentaire?'<p class="muted"><strong>Note du responsable :</strong> '+esc(c.acces.commentaire)+'</p>':"";
+   const adulte=c.adultOnly&&!enAttente?'<label class="love-adult-confirm"><input type="checkbox" id="loveAdultCheck"> Je déclare avoir au moins 18 ans et demande l’accès à ce module adulte. Cette déclaration n’est pas une vérification d’âge.</label>':"";
+   zone.innerHTML=meta+'<div class="love-adult-note"><strong>🔒 Module verrouillé tant que le professeur, le coach habilité ou l’administration n’a pas validé la demande.</strong>'+
+   '<p>La demande concerne uniquement ce module. Elle ne donne aucun accès automatique aux autres cours.</p></div>'+
+   decision+adulte+
+   (enAttente?'<p class="notice"><strong>Demande transmise.</strong> Votre responsable pédagogique doit décider avant que les leçons et supports puissent s’ouvrir.</p>':
+    '<button type="button" class="button primary" data-love-demander="'+esc(c.id)+'">'+(etat==="refuse"||etat==="revoque"?"Envoyer une nouvelle demande":"Demander l’accès à ce cours")+'</button>')+
+   '<p class="status" role="status" id="loveRequestStatus" aria-live="polite"></p>'+
+   '<div class="actions"><button type="button" class="button" data-love-retour>Retour aux cours</button></div>';
    zone.hidden=false;zone.scrollIntoView({behavior:"smooth",block:"start"});return;
  }
- const lecons=Array.isArray(c.lessons)?c.lessons:[];
+ if(!Array.isArray(c.lessons)){
+   if(c.adultOnly){
+     zone.innerHTML=meta+'<div class="love-adult-note"><strong>Autorisation pédagogique accordée.</strong><p>Confirmez de nouveau votre majorité avant de consulter ce cours d’intimité adulte. La déclaration ne constitue pas une vérification officielle de l’âge.</p></div>'+
+     '<label class="love-adult-confirm"><input type="checkbox" id="loveAdultCheck"> Je déclare avoir au moins 18 ans et souhaite consulter ce cours.</label>'+
+     '<div class="actions"><button type="button" class="button primary" data-love-adulte="'+esc(c.id)+'">Ouvrir le module adulte</button><button type="button" class="button" data-love-retour>Retour aux cours</button></div>'+
+     '<p class="status" role="status" id="loveAdultStatus" aria-live="polite"></p>';
+   }else{
+     zone.innerHTML=meta+'<p>Votre accès a été validé. Vous pouvez consulter cet enseignement et ses supports.</p>'+
+     '<button type="button" class="button primary" data-love-charger="'+esc(c.id)+'">Charger le cours validé</button>'+
+     '<div class="actions"><button type="button" class="button" data-love-retour>Retour aux cours</button></div><p class="status" role="status" id="loveAdultStatus" aria-live="polite"></p>';
+   }
+   zone.hidden=false;zone.scrollIntoView({behavior:"smooth",block:"start"});return;
+ }
+ const lecons=c.lessons;
  const chapitres=lecons.map((l,i)=>'<details class="love-lesson"'+(i===0?' open':'')+'><summary>Leçon '+(i+1)+' — '+esc(l.title)+'</summary><p>'+esc(l.body)+'</p><p class="muted"><strong>À méditer :</strong> '+esc(l.reflection)+'</p></details>').join("");
- const documents=c.ressources?.length?c.ressources.map((r,i)=>UI.ressourceHtml(r,i)).join(""):'<p class="muted">Aucun support vidéo ou document complémentaire n’a encore été publié pour ce cours.</p>';
+ const documents=c.ressources?.length?c.ressources.map((r,i)=>UI.ressourceHtml(r,i)).join(""):'<p class="muted">Aucun support complémentaire n’a encore été publié pour ce cours.</p>';
  const quiz=(c.quiz||[]).map((q,i)=>'<fieldset class="love-quiz" data-love-question="'+i+'"><legend>Question '+(i+1)+' — '+esc(q.question)+'</legend>'+
  q.options.map((o,j)=>'<label><input type="radio" name="love-'+esc(c.id)+'-'+i+'" value="'+j+'"> <span>'+esc(o)+'</span></label>').join("")+
  '<button type="button" class="button" data-love-quiz="'+esc(c.id)+'" data-question="'+i+'">Vérifier ma réponse</button><p class="love-feedback" role="status" aria-live="polite"></p></fieldset>').join("");
  const references=(c.references||[]).filter(x=>UI.urlSure(x.url)).map(x=>'<li class="love-reference"><a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">'+esc(x.label)+'</a></li>').join("");
- zone.innerHTML='<div class="eyebrow">Love School · '+esc(c.id)+' · '+(c.adultOnly?'Module adulte 18+':'Cours bonus')+'</div>'+
- '<h2>'+esc(c.title)+'</h2><p class="muted">'+esc(c.theme)+'</p>'+
- (c.adultOnly?'<div class="love-adult-note">Contenu réservé aux adultes sur déclaration de majorité, non vérifiée. Information pédagogique générale, sans caractère de conseil médical individualisé.</div>':'')+
- '<h3>Paroles bibliques pour méditer</h3><p>'+c.scriptures.map(esc).join(' · ')+'</p>'+
- '<h3>Objectifs du cours</h3><ul>'+c.objectives.map(o=>'<li>'+esc(o)+'</li>').join("")+'</ul>'+
- '<h3>Les enseignements</h3>'+chapitres+
- '<h3>Mise en pratique personnelle</h3><p>'+esc(c.practice)+'</p>'+
- '<p class="muted">Cet exercice reste personnel : aucune réponse intime ni donnée de santé n’est recueillie.</p>'+
+ zone.innerHTML=meta+(c.adultOnly?'<div class="love-adult-note">Module 18+ : information pédagogique non graphique, sans caractère de conseil médical individuel.</div>':'')+
+ '<h3>Passages bibliques</h3><p>'+c.scriptures.map(esc).join(' · ')+'</p>'+
+ '<h3>Enseignements autorisés</h3>'+chapitres+
+ '<h3>Exercice personnel</h3><p>'+esc(c.practice)+'</p>'+
+ '<p class="muted">Aucune réponse intime ni donnée de santé n’est recueillie.</p>'+
  (c.advice?'<div class="love-guide"><p><strong>Conseil pédagogique :</strong> '+esc(c.advice)+'</p></div>':'')+
- (quiz?'<h3>Quiz de compréhension (non noté)</h3><p class="muted">Ces questions d’entraînement n’influencent pas votre progression ou vos attestations.</p>'+quiz:'')+
- (references?'<h3>Pour aller plus loin : sources institutionnelles</h3><ul>'+references+'</ul>':'')+
- '<h3>Vidéos, audios et supports des enseignants</h3><div class="stack">'+documents+'</div>'+
- '<div class="actions"><button type="button" class="button" data-love-retour>Revenir aux dix cours</button></div>';
+ (quiz?'<h3>Quiz de compréhension (non noté)</h3><p class="muted">Sans impact sur le cursus officiel.</p>'+quiz:'')+
+ (references?'<h3>Sources institutionnelles</h3><ul>'+references+'</ul>':'')+
+ '<h3>Supports des enseignants et coachs</h3><div class="stack">'+documents+'</div>'+
+ '<div class="actions"><button type="button" class="button" data-love-retour>Retour aux cours</button></div>';
  zone.hidden=false;zone.scrollIntoView({behavior:"smooth",block:"start"});
 }
-async function ouvrirLoveAdulte(id,bouton){
- if(!$("loveAdultCheck")?.checked){text("loveAdultStatus","Cochez la déclaration de majorité pour accéder à ce module.");return;}
- if(bouton)bouton.disabled=true;
- text("loveAdultStatus","Ouverture du module…");
+async function ouvrirLoveCours(id){
+ const c=loveList().find(x=>x.id===id);if(!c)return;
+ if(c.acces?.statut!=="approuve"||c.adultOnly){afficherLoveCours(id);return;}
+ await chargerLoveDetail(id);
+}
+async function chargerLoveDetail(id){
+ text("loveStatus","Vérification de l’autorisation de ce cours…");
  try{
-  const r=await request("/love-school/adulte","POST",{confirmationMajeur:true});
+   const r=await request("/love-school/cours/"+encodeURIComponent(id));
+   loveSchool.courses=loveList().map(c=>c.id===id?{...c,...r.cours}:c);
+   afficherLoveCours(id);afficherLoveCatalogue();
+ }catch(e){
+   text("loveStatus",e.message||"Cours indisponible.");await chargerLoveSchool({force:true});
+ }
+}
+async function demanderLoveCours(id,bouton){
+ const c=loveList().find(x=>x.id===id);if(!c)return;
+ const majeur=!!$("loveAdultCheck")?.checked;
+ if(c.adultOnly&&!majeur){text("loveRequestStatus","Déclarez votre majorité pour demander ce module 18+.");return;}
+ bouton.disabled=true;text("loveRequestStatus","Transmission de votre demande…");
+ try{
+  const r=await request("/love-school/acces/demander","POST",{cours:id,confirmationMajeur:majeur});
+  text("loveStatus",r.message);
+  await chargerLoveSchool({force:true});
+ }catch(e){text("loveRequestStatus",e.message||"Demande indisponible.");}
+ finally{if(bouton.isConnected)bouton.disabled=false;}
+}
+async function ouvrirLoveAdulte(id,bouton){
+ if(!$("loveAdultCheck")?.checked){text("loveAdultStatus","Déclarez votre majorité pour consulter ce module.");return;}
+ if(bouton)bouton.disabled=true;
+ text("loveAdultStatus","Vérification des droits individuels…");
+ try{
+  const r=await request("/love-school/cours/"+encodeURIComponent(id),"POST",{confirmationMajeur:true});
   if(r.verificationAge!=="declarative_non_verifiee")throw Error("Confirmation de majorité indisponible.");
-  loveSchool.courses=loveList().map(c=>r.courses.find(x=>x.id===c.id)||c);
+  loveSchool.courses=loveList().map(c=>c.id===id?{...c,...r.cours}:c);
   afficherLoveCatalogue();afficherLoveCours(id);
- }catch(e){text("loveAdultStatus",e.message||"Accès indisponible.");}
+ }catch(e){text("loveAdultStatus",e.message||"Accès refusé.");}
  finally{if(bouton&&bouton.isConnected)bouton.disabled=false;}
 }
 function verifierLoveQuiz(bouton){
@@ -362,7 +409,9 @@ document.addEventListener("click",async ev=>{
    }
    return;
  }
- const love=ev.target.closest("[data-love-course]");if(love){mainTabs.activer("love");afficherLoveCours(love.dataset.loveCourse);return;}
+ const love=ev.target.closest("[data-love-course]");if(love){mainTabs.activer("love");ouvrirLoveCours(love.dataset.loveCourse);return;}
+ const demander=ev.target.closest("[data-love-demander]");if(demander){await demanderLoveCours(demander.dataset.loveDemander,demander);return;}
+ const charger=ev.target.closest("[data-love-charger]");if(charger){await chargerLoveDetail(charger.dataset.loveCharger);return;}
  const adult=ev.target.closest("[data-love-adulte]");if(adult){ouvrirLoveAdulte(adult.dataset.loveAdulte,adult);return;}
  const test=ev.target.closest("[data-love-quiz]");if(test){verifierLoveQuiz(test);return;}
  const retour=ev.target.closest("[data-love-retour]");if(retour){loveSelected=null;$("loveSchoolDetail").hidden=true;$("loveSchoolCourses").scrollIntoView({behavior:"smooth"});return;}
