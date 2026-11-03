@@ -7,7 +7,7 @@ import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {memberAcademySummary} from "./member-academy-summary.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {squadChatApi} from "./squad-chat.js";
-import {comptesMembresApi,mdpTemporaire,oublierMdpTemporaire} from "./comptes-membres.js";
+import {comptesMembresApi,mdpTemporaire,oublierMdpTemporaire,estInterne} from "./comptes-membres.js";
 import {passkeysApi} from "./passkeys.js";
 import {sdeExpansionApi} from "./sde-expansion.js";
 import {financesPubliques} from "./sde-financements.js";
@@ -1921,7 +1921,7 @@ async function traiter(req, env, ctx) {
       }
       if (p === "/api/os-v31") return await apiSdeOs31(req, env, u);
       if (p === "/api/tableau-de-bord") return apiTableauDeBord(req, env, u);
-      if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", mdpTemporaire: u.connecte ? !!(await mdpTemporaire(env, u.email)) : false, ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
+      if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: estInterne(u.email) ? "" : u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", mdpTemporaire: u.connecte ? !!(await mdpTemporaire(env, u.email)) : false, ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
       if (p === "/api/inscription" && req.method === "POST") return apiInscription(req, env, ctx);
       if (p === "/api/connexion" && req.method === "POST") return apiConnexionMdp(req, env);
       if (p === "/api/activation" && req.method === "POST") return apiActivation(req, env);

@@ -5,6 +5,7 @@
  const $=id=>document.getElementById(id);
  const etat=$("cm-etat"),bloc=$("cm-bloc"),refus=$("cm-refus");
  let crees=[];
+ const sansEmail=()=>$("cm-sans-email").checked;
  const dire=(t,erreur)=>{etat.textContent=t;etat.dataset.etat=erreur?"erreur":""};
  const cellule=t=>{const td=document.createElement("td");td.textContent=t;return td};
  const post=async corps=>{
@@ -31,9 +32,9 @@
  $("cm-apercu").addEventListener("click",async()=>{
   dire("Analyse de la liste des membres…");
   try{
-   const j=await post({simuler:true});
+   const j=await post({simuler:true,sansEmail:sansEmail()});
    const r=$("cm-resume");r.hidden=false;
-   r.textContent=j.acreer+" compte(s) seraient créés sur "+j.total+" fiche(s) de la liste.";
+   r.textContent=j.acreer+" compte(s) seraient créés sur "+j.total+" fiche(s) de la liste"+(j.sansEmail?", dont "+j.sansEmail+" sans e-mail (connexion par matricule seulement)":"")+".";
    $("cm-creer").hidden=j.acreer===0;ignores(j.ignores);
    dire(j.acreer?"Aperçu prêt : rien n’a encore été créé.":"Aucun compte à créer pour le moment.");
   }catch(e){dire(e.message,true)}
@@ -44,10 +45,10 @@
   try{
    for(let tour=0;tour<80;tour++){
     dire("Création des comptes… "+crees.length+" déjà créés");
-    const j=await post({simuler:false});
+    const j=await post({simuler:false,sansEmail:sansEmail()});
     for(const c of j.crees){
      crees.push(c);const tr=document.createElement("tr");
-     tr.append(cellule(c.nom),cellule(c.matricule),cellule(c.email),cellule(c.motDePasse));$("cm-lignes").append(tr);
+     tr.append(cellule(c.nom),cellule(c.matricule),cellule(c.email||"— (matricule seulement)"),cellule(c.motDePasse));$("cm-lignes").append(tr);
     }
     $("cm-resultat").hidden=false;$("cm-compte").textContent=crees.length+" compte(s) créé(s). Ces mots de passe ne seront plus affichés : téléchargez la liste maintenant.";
     if(tour===0)ignores(j.ignores);
@@ -59,7 +60,7 @@
   finally{bouton.disabled=false;$("cm-apercu").disabled=false}
  });
  $("cm-csv").addEventListener("click",()=>{
-  const lignes=[["Nom","Matricule","E-mail","Mot de passe temporaire (14 jours)"],...crees.map(c=>[c.nom,c.matricule,c.email,c.motDePasse])];
+  const lignes=[["Nom","Matricule","E-mail","Mot de passe temporaire (14 jours)"],...crees.map(c=>[c.nom,c.matricule,c.email||"(matricule seulement)",c.motDePasse])];
   const blob=new Blob(["﻿"+lignes.map(l=>l.map(csvCase).join(";")).join("\r\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="comptes-membres-sde.csv";document.body.append(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href),4000);
