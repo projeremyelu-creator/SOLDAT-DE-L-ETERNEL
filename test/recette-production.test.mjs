@@ -159,3 +159,39 @@ test('Recette Academy : studio et publication des supports, version effective du
  const ref=await recetteProduction({fetcher:ancien.fetcher,domaines:[DOMAINES[0]],controles:CONTROLES.filter(c=>c.type==='academy-script'),essais:1});
  assert.equal(ref.ok,false,'Un ancien script Academy en production ne doit pas être validé.');
 });
+
+
+test("RECETTE EXTERNE TEMPORAIRE : verrouillage réel Soldiers Academy 24 et Love School 10 sur les deux domaines", {timeout:240000},async()=>{
+ const {recetteAcademyProduction}=await import("../scripts/recette-academy-production.mjs");
+ const b=await recetteAcademyProduction({essais:3,timeoutMs:10000,rapport:r=>{
+   console.log("ACADEMY 34 PROD",r.ok?"OK":"ÉCHEC",r.domaine+r.path,r.erreur||"");
+ }});
+ console.log("ACADEMY 34 PROD BILAN",b.reussis+"/"+b.total);
+ assert.equal(b.ok,true,JSON.stringify(b.resultats.filter(x=>!x.ok),null,2));
+ const markersParcours=["demanderCoursAcademy","avantCoursAcademy","ouvrirLoveCours","demanderLoveCours","data-sa-demander","data-love-demander"];
+ const markersStudio=["chargerValidations","/acces/gestion","/love-school/acces/gestion","data-love-decision","Valider et ouvrir le cours"];
+ const domainNames=["https://mouvement-sde.org","https://app.mouvement-sde.org"];
+ for(const domain of domainNames){
+   let seen=false;
+   for(let essai=1;essai<=8&&!seen;essai++){
+     const chemin=domain+"/vitrine/";
+     const [js,studio]=await Promise.all([
+       fetch(chemin+"sde-academy-parcours.js?qa=34-"+essai,{redirect:"manual",signal:AbortSignal.timeout(15000),headers:{"cache-control":"no-cache"}}),
+       fetch(chemin+"sde-academy-enseignants.js?qa=34-"+essai,{redirect:"manual",signal:AbortSignal.timeout(15000),headers:{"cache-control":"no-cache"}})
+     ]);
+     if(js.status===200&&studio.status===200){
+       const [apprenant,coach]=await Promise.all([js.text(),studio.text()]);
+       seen=markersParcours.every(m=>apprenant.includes(m))&&markersStudio.every(m=>coach.includes(m));
+       if(!seen)console.log("ACADEMY 34 PROD ancien script",domain,"essai",essai);
+     }
+     if(!seen)await new Promise(resolve=>setTimeout(resolve,4000));
+   }
+   assert.ok(seen,domain+" : scripts d'accès 34 cours absents de la production");
+   console.log("ACADEMY 34 PROD SCRIPTS OK",domain);
+   for(const endpoint of ["/api/soldiers-academy/acces/gestion","/api/soldiers-academy/love-school/acces/gestion"]){
+     const r=await fetch(domain+endpoint,{redirect:"manual",signal:AbortSignal.timeout(15000)});
+     assert.equal(r.status,401,domain+endpoint+" doit rester protégé sans session");
+     console.log("ACADEMY 34 PROD SÉCURITÉ OK",domain+endpoint);
+   }
+ }
+});
