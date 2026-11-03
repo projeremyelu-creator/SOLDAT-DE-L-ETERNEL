@@ -79,7 +79,10 @@ test('Accueil premium : indicateurs issus de /api/impact, agrégats seulement, a
 
 test('Accueil premium : charte Fusion chargée en dernier, scripts sans inline, tri des trois couleurs',()=>{
  const feuilles=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
- assert.ok(feuilles.at(-1).includes('sde-fusion.css'));
+ const fusionIndex=feuilles.findIndex(f=>f.includes('sde-fusion.css'));
+ assert.ok(fusionIndex>=0,'charte Fusion toujours présente');
+ assert.ok(feuilles.at(-1).includes('sde-mobile-correctifs-20261103.css'),'correctifs mobiles chargés après Fusion');
+ assert.ok(fusionIndex<feuilles.length-1,'la charte Fusion reste la base de la couche responsive');
  assert.ok(feuilles.some(f=>f.includes('sde-accueil-premium.css')));
  assert.ok(html.includes('sde-accueil-premium.js'));
  const inline=[...html.matchAll(/<script(?![^>]*\bsrc=)(?![^>]*type="application\/ld\+json")[^>]*>/g)];
