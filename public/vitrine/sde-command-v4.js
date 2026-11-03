@@ -42,6 +42,12 @@
   const summary=el('p','sde-command-v4-summary');
   summary.setAttribute('role','status');
   titleRow.append(titles,summary);
+  if(level>=2){
+   const comptes=el('a','sde-command-v4-accounts','Créer les accès membres');
+   comptes.href='/comptes-membres';
+   comptes.setAttribute('aria-label','Ouvrir la gestion des fiches et mots de passe provisoires des membres');
+   titleRow.append(comptes);
+  }
   const shortcuts=el('div','sde-command-v4-grid');
   shortcuts.setAttribute('role','group');shortcuts.setAttribute('aria-label','Ouvrir un module administratif');
   panel.append(titleRow,shortcuts);
