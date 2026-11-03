@@ -276,3 +276,37 @@ test('Palettes et tableaux privés : contraste vérifié pour fond sombre, carte
  assert.ok(ratio('f9d590','1d2d46')>=7,'En-têtes de tableau doivent respecter WCAG AAA normal');
  assert.ok(ratio('f6d48e','192b43')>=7,'Libellés mobiles doivent respecter WCAG AAA normal');
 });
+
+test('Fidélité mobile SDE : les budgets de missions gardent tous les champs et la validation native',async()=>{
+ const src=readFileSync('frontend/operations.jsx','utf8');
+ const css=readFileSync('frontend/business-mosaic.css','utf8');
+ const c=await page('/administration','admin');
+ try{
+  c.w.SDEPortal.selectionner('finance-direction');
+  await waitFor(()=>!!c.d.querySelector('.ops-finance-table'));
+  const t=c.d.querySelector('table.ops-finance-table');
+  assert.ok(t.closest('.ops-finance-scroll'));
+  assert.deepEqual([...t.querySelectorAll('thead th')].map(el=>el.textContent.trim()),
+   ['Mission','Budget prévu','Dépensé sur 12 mois','Équipe engagée','Avancement','Validation']);
+  for(const label of ['Budget prévu','Dépensé sur 12 mois','Équipe engagée','Avancement','Validation'])
+   assert.ok(src.includes('data-label="'+label+'"'),'Donnée budgétaire absente : '+label);
+  assert.match(css,/\.ops-finance-table tbody td::before\{/);
+  assert.match(css,/content:attr\(data-label\)/);
+  assert.match(css,/@media\(max-width:720px\)/);
+  assert.equal(c.errors.length,0);
+ }finally{c.close()}
+});
+test('Fidélité mobile SDE : Academy et Agenda affichent leurs cartes sans contourner les vraies actions',async()=>{
+ const c=await page('/administration','admin');
+ try{
+  c.w.SDEPortal.selectionner('academy-direction');
+  await waitFor(()=>!!c.d.querySelector('.ops-academy-grid'));
+  assert.ok(c.d.querySelector('.ops-academy-grid .ops-academy-course'));
+  assert.ok(c.d.querySelector('.ops-academy-grid [data-act="voir-formation"]'));
+  c.w.SDEPortal.selectionner('rendezvous');
+  await waitFor(()=>!!c.d.querySelector('.ops-agenda-grid'));
+  assert.ok(c.d.querySelector('.ops-agenda-grid .ops-card'));
+  assert.ok([...c.d.querySelectorAll('.ops-agenda-grid button')].some(b=>b.textContent.includes('Confirmer ma participation')));
+  assert.equal(c.errors.length,0);
+ }finally{c.close()}
+});
