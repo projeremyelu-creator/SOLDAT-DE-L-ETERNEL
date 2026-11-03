@@ -109,6 +109,8 @@ function verifierReponse(origine,controle,reponse,corps) {
       erreur('Script du parcours Soldiers Academy indisponible');
     if(!corps.includes('data-refresh-course-resources')||!corps.includes('actualiserRessourcesCours')||!corps.includes('chargerLoveSchool'))
       erreur('Ancienne interface Academy détectée : actualisation du cours absente');
+    if(!corps.includes('lovePublicActif')||!corps.includes('data-love-public'))
+      erreur('Filtres Love School Singles, Fiancés et Mariés absents du script publié');
     return;
   }
   if(controle.type==='academy-public'){
