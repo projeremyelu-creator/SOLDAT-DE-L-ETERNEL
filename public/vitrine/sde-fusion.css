@@ -176,3 +176,18 @@ html body.sde-unifie .sde-page-actions a.sde-secondary{background:rgba(255,255,2
 html body.sde-unifie .site-brand span b{color:var(--fu-gold-2)!important}
 html body.sde-unifie .site-brand span small{color:var(--fu-muted)!important}
 html body.sde-unifie .site-brand{color:var(--fu-gold-2)!important}
+
+/* Porte-Voix et tuiles de l'application — charte Fusion */
+:root[data-sde-palette=fusion] .stat{background:#fff!important;border:1px solid #e4daf6!important;border-radius:16px;box-shadow:0 6px 18px rgba(42,18,96,.06);transition:transform .18s ease,border-color .18s ease}
+:root[data-sde-palette=fusion] .stat:hover{transform:translateY(-2px);border-color:#e8b84b!important}
+:root[data-sde-palette=fusion] .stat-l{color:#5d4f80!important}
+:root[data-sde-palette=fusion] .stat-l .ico{color:#5b21b6;background:#e9e0fa;border-radius:8px;padding:3px;width:22px;height:22px}
+:root[data-sde-palette=fusion] .stat-v{color:#2a1260!important}
+:root[data-sde-palette=fusion] .pv-stats{margin-top:6px}
+:root[data-sde-palette=fusion] .annonce{background:#fff!important;border:1px solid #e4daf6!important;border-left:5px solid #5b21b6!important;border-radius:16px;box-shadow:0 6px 18px rgba(42,18,96,.06)}
+:root[data-sde-palette=fusion] .annonce.epingle{border-left-color:#e8b84b!important;background:linear-gradient(90deg,#fff8e6,#fff 40%)!important}
+:root[data-sde-palette=fusion] .annonce-h h3{color:#2a1260}
+:root[data-sde-palette=fusion] .annonce-t{color:#241446}
+:root[data-sde-palette=fusion] .msgbox{background:#f8f5fd!important;border:1px solid #ded4f2!important;color:#241446!important;border-radius:14px}
+:root[data-sde-palette=fusion] .chip.gold{background:#fdf0cc!important;color:#5a3c00!important;border-color:#e8b84b!important}
+@media (prefers-reduced-motion:reduce){:root[data-sde-palette=fusion] .stat{transition:none}}

@@ -3541,6 +3541,12 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     }
     if (!S.pret.diffusions || !S.pret.membres) return out + chargement("Lecture des communications…");
     const actives = annoncesActives();
+    out += `<div class="stats s4 pv-stats" role="list" aria-label="Chiffres du Porte-Voix">
+      <div class="stat" role="listitem"><span class="stat-l">${I("i-pin")}Annonces actives</span><span class="stat-v">${nb(actives.length)}</span><span class="stat-m">Affichées sur l’accueil de tous</span></div>
+      <div class="stat" role="listitem"><span class="stat-l">${I("i-horn")}Messages ciblés</span><span class="stat-v">${nb(S.diffusions.length)}</span><span class="stat-m">Préparés avec suivi des envois</span></div>
+      <div class="stat" role="listitem"><span class="stat-l">${I("i-image")}Affiches</span><span class="stat-v">${nb((S.affiches || []).length)}</span><span class="stat-m">Créées dans l’application</span></div>
+      <div class="stat" role="listitem"><span class="stat-l">${I("i-msg")}Rappels du jour</span><span class="stat-v">${nb(rappelsEnAttente() || 0)}</span><span class="stat-m">À envoyer par WhatsApp</span></div>
+    </div>`;
     out += sousOnglets("portevoix", [["annonces", "Annonces", actives.length], ["messages", "Messages ciblés", S.diffusions.length], ["affiches", "Affiches", (S.affiches || []).length || null], ["rappels", "Rappels du jour", rappelsEnAttente() || null]]);
     if (S.sous.portevoix === "rappels") return out + vueRappels();
     if (S.sous.portevoix === "affiches") return out + vueAffiches();
