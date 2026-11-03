@@ -115,15 +115,15 @@ test('Terminal tactique : agrégats API, aucun GPS ni biométrie artificielle',(
 test('Priorité 01 : accueil sans double affiche TPA, vision et trois actions maintenues',()=>{
  const home=file('public/vitrine/portail.html');
  const sitecss=file('public/vitrine/sde-sitewide-2026.css');
- assert.match(home,/class="m-welcome"/);
- assert.match(home,/class="sde-hero-poster"/);
- assert.match(home,/class="iv-band sde-community-band"/);
- assert.match(home,/communion-vignette\.webp/);
- const hero=home.slice(home.indexOf('class="sde-hero-poster"'),home.indexOf('class="sde-hero-poster-details"'));
+ assert.match(home,/class="ap-hero"/);
+ assert.match(home,/class="ap-poster"/);
+ assert.ok(!home.includes('sde-community-band'),'plus de second bandeau');
+ const hero=home.slice(home.indexOf('class="ap-poster"'),home.indexOf('id="programmes-accueil"'));
+ assert.equal((home.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1);
  assert.equal((hero.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1);
- for(const href of ['/mouvement','/contact#rejoindre','/programmes']){
-  const hero=home.slice(home.indexOf('class="m-welcome"'),home.indexOf('class="m-kpis"'));
-  assert.ok(hero.includes('href="'+href+'"'),href);
+ for(const href of ['/mouvement','/contact#rejoindre','/programmes#tpa-2026']){
+  const bloc=home.slice(home.indexOf('class="ap-hero"'),home.indexOf('id="programmes-accueil"'));
+  assert.ok(bloc.includes('href="'+href+'"'),href);
  }
  assert.ok(sitecss.includes('Refonte structurée 03/11/2026'));
  assert.ok(sitecss.includes('.sde-rail{'));
