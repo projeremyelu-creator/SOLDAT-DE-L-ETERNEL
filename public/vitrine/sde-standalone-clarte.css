@@ -1,0 +1,89 @@
+/* SDE : navigation cohérente des pages autonomes Galerie IN FIRE & Soutenir.
+   Cette feuille ne change ni la classification des photos ni les paiements. */
+body.sde-infire-album,body:has(> .hub-main){--sde-extra-navy:#151b32;--sde-extra-violet:#2f1b49;--sde-extra-gold:#e7bf73;}
+body.sde-infire-album .hero{
+ background:radial-gradient(ellipse at 80% 0,rgba(125,63,131,.26),transparent 52%),linear-gradient(123deg,#211331,#111d35 75%)!important;
+ border-bottom:1px solid rgba(231,190,115,.32);
+}
+body.sde-infire-album .hero h1{font-family:Georgia,serif;letter-spacing:-.035em;line-height:1.05}
+body.sde-infire-album .nav{max-width:1250px}
+body.sde-infire-album .toolbar{padding-bottom:18px;border-bottom:1px solid rgba(219,190,133,.28)}
+body.sde-infire-album .gallery{gap:clamp(10px,2vw,20px)}
+body.sde-infire-album .item{
+ background:linear-gradient(145deg,#26334e,#1d263c)!important;
+ border:1px solid rgba(234,195,113,.3)!important;
+ box-shadow:0 12px 27px rgba(0,0,0,.17);
+}
+body.sde-infire-album .item img{aspect-ratio:4/3;max-height:310px}
+body.sde-infire-album .item figcaption{flex-wrap:wrap;align-items:start;line-height:1.35}
+body.sde-infire-album .tab{min-height:45px;line-height:1.25}
+body.sde-infire-album .archive-note{color:#e4d9de;line-height:1.55}
+body.sde-infire-album .item:focus-within{outline:2px solid #efd18c;outline-offset:3px}
+body:has(> .hub-main) .hub-main{max-width:1250px;min-width:0}
+body:has(> .hub-main) .hub-hero{
+ background:radial-gradient(ellipse at 75% 0,rgba(97,58,121,.21),transparent 50%),linear-gradient(140deg,#231537,#162c37)!important;
+ border:1px solid rgba(227,187,111,.4);border-radius:20px;
+}
+body:has(> .hub-main) .hub-card,
+body:has(> .hub-main) .hub-form{
+ min-width:0;border-radius:16px!important;
+ box-shadow:0 12px 31px rgba(8,15,33,.1);
+}
+body:has(> .hub-main) .hub-card :is(h3,p,a){overflow-wrap:anywhere}
+body:has(> .hub-main) .hub-card:focus-within{
+ outline:2px solid #edcb8c;outline-offset:3px;
+}
+body:has(> .hub-main) .hub-section{scroll-margin-top:85px}
+body:has(> .hub-main) .hub-form :is(input,select,textarea){max-width:100%;min-width:0}
+body:has(> .hub-main) .hub-form :is(input,select,textarea):focus-visible{
+ outline:3px solid #eeca82;outline-offset:2px;
+}
+body:has(> .hub-main) .hub-hub-nav a:focus-visible,
+body:has(> .hub-main) .sde-hub-nav a:focus-visible{
+ outline:3px solid #ffe3a2;outline-offset:3px;
+}
+.sde-standalone-bottom{display:none}
+@media(max-width:900px){
+ body.sde-infire-album,body:has(> .hub-main){
+  padding-bottom:calc(80px + env(safe-area-inset-bottom));
+ }
+ .sde-standalone-bottom{
+  position:fixed;inset:auto 0 0;z-index:99;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;
+  padding:6px 5px calc(7px + env(safe-area-inset-bottom));
+  background:linear-gradient(110deg,#211237,#301849 60%,#193c35);
+  border-top:2px solid #dfbd78;
+  box-shadow:0 -12px 28px rgba(0,0,0,.25);
+ }
+ .sde-standalone-bottom a{
+  display:grid;place-items:center;gap:3px;min-width:0;
+  min-height:51px;padding:4px 1px;border-radius:10px;
+  text-decoration:none;text-align:center;
+  color:#f1e9e8;font:750 clamp(.62rem,2.4vw,.76rem)/1.2 system-ui,sans-serif;
+ }
+ .sde-standalone-bottom a::before{content:"•";font-size:.95rem;line-height:1;color:#dfc184}
+ .sde-standalone-bottom a[aria-current=page]{
+  color:#ffdf9c;background:rgba(234,193,120,.19);
+  box-shadow:inset 0 0 0 1px rgba(237,198,125,.27);
+ }
+ .sde-standalone-bottom a:focus-visible{outline:3px solid #ffe2a2;outline-offset:-2px}
+ body.sde-infire-album .hero{padding:44px 18px}
+ body.sde-infire-album main{padding:25px 14px 58px}
+ body.sde-infire-album .nav{padding:13px 16px}
+ body:has(> .hub-main) .hub-hero{padding-inline:clamp(16px,4vw,24px)}
+ body:has(> .hub-main) .sde-hub-nav{gap:8px}
+}
+@media(max-width:560px){
+ body.sde-infire-album .hero h1{font-size:clamp(2.1rem,10vw,3.2rem)}
+ body.sde-infire-album .item img{height:240px!important}
+ body.sde-infire-album .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;width:100%}
+ body.sde-infire-album .tabs button{padding:10px 5px;white-space:normal;font-size:.76rem}
+ body.sde-infire-album .gallery{grid-template-columns:minmax(0,1fr)}
+ body:has(> .hub-main) .hub-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-infire-album .item,body:has(> .hub-main) .hub-card{
+  transition:none!important;transform:none!important;
+ }
+}
+@media print{.sde-standalone-bottom{display:none!important}}
