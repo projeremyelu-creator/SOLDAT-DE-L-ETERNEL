@@ -57,7 +57,7 @@ test('Agenda public : navigation accessible et animations désactivables',()=>{
 
 test('Arrière-plan agenda : vert treillis, relief discret et titres clairs',()=>{
   const section=css.slice(css.indexOf('Page Programmes — Agenda : cartes harmonisées'));
-  assert.match(section,/background:linear-gradient\(135deg,#172b25 0%,#2d4434 52%,#172820 100%\)!important/);
+  assert.match(section,/background:linear-gradient\(135deg,#1c0f33 0%,#301958 52%,#1b0e31 100%\)!important/);
   assert.match(section,/#agenda::before/);
   assert.match(section,/#agenda::after/);
   assert.match(section,/pointer-events:none/);

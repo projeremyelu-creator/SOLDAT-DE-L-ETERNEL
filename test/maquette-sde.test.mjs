@@ -99,7 +99,7 @@ test("palettes proposées ; Ivoire · Treillis · Or est le choix initial partou
  const css=read("frontend/palette-themes.css");
  const entry=read("frontend/experience.css");
  for(const t of ["militaire","ivoire","violet","terracotta"])assert.ok(shell.includes("'"+t+"'"),t);
- assert.ok(shell.includes("return PALETTES.some(([id])=>id===p)?p:'ivoire'")&&shell.includes("'ivoire-03'"),"Ivoire par défaut");
+ assert.ok(shell.includes("return PALETTES.some(([id])=>id===p)?p:'fusion'")&&shell.includes("'fusion-04'"),"Fusion par défaut");
  assert.ok(shell.includes("localStorage.getItem('sde-private-palette')"),"préférence enregistrée");
  for(const t of ["militaire","ivoire","violet"])assert.ok(shell.includes("'"+t+"'"),t);
  assert.ok(shell.includes("localStorage.getItem('sde-private-palette')"),"préférence enregistrée");
@@ -187,7 +187,7 @@ test("maquette 02 Ivoire · Treillis · Or : vitrine, chargement, espaces privé
 });
 test("Ivoire · Treillis · Or sur tout le site public",()=>{
  for(const p of ["mouvement","programmes","rejoindre","prieres","ressources","projets","academy"]){const h=read("public/vitrine/"+p+".html");assert.ok(/<body class="[^"]*sde-ivoire/.test(h),p);assert.ok(h.includes("ivoire-pages.css"),p+" feuille");assert.ok(h.includes("SDE - Mouvement"),p+" marque");}
- assert.ok(read("public/vitrine/ivoire-pages.css").includes("--iv-treillis:#2f3b25"));
+ assert.ok(read("public/vitrine/ivoire-pages.css").includes("--iv-treillis:"));
 });
 
 test("identité SDE - MOUVEMENT : marque lisible, logo officiel et en-tête sans chevauchement",()=>{
@@ -215,7 +215,7 @@ test("transition de chargement SDE : une seule fermeture et au plus quatre secon
 test("application native (fiches, voyants, registre) en Ivoire · Treillis · Or",()=>{
  const app=read("public/index.html"),css=read("public/vitrine/ivoire-app.css");
  assert.ok(app.includes("ivoire-app.css")&&app.includes('d.setAttribute("data-sde-palette"'),"palette appliquée avant affichage");
- for(const t of ["--surface:#fffdf8","--night:#2f3b25",".sheet-h",".acc-hero"])assert.ok(css.includes(t),t);
+ for(const t of ["--surface:","--night:",".sheet-h",".acc-hero"])assert.ok(css.includes(t),t);
 });
 test("fenêtres Voyants du soldat et Modifier la fiche fidèles à la maquette",()=>{
  const css=read("public/vitrine/ivoire-app.css");

@@ -2,13 +2,13 @@
    Feuille commune chargée APRÈS les anciennes palettes sur les pages publiques.
    Périmètre strict : vitrine et sous-pages ; aucun tableau de bord privé. */
 :root{
-  --sde-forest:#172b25;
-  --sde-forest-2:#2d4434;
-  --sde-forest-deep:#12221d;
+  --sde-forest:#1c0f33;
+  --sde-forest-2:#301958;
+  --sde-forest-deep:#160c28;
   --sde-gold:#d7b567;
   --sde-ivory:#fffaf0;
   --sde-paper:#fffdf8;
-  --sde-ink:#243229;
+  --sde-ink:#251343;
 }
 /* Réparer les anciennes sections « bandeau de 54 px » : le titre ET la
    description restent intégralement dans le même panneau coloré. */
@@ -21,7 +21,7 @@ html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section{
   scroll-margin-top:94px;
 }
 html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section:nth-of-type(even){
-  background:linear-gradient(150deg,#22372a 0%,#152c27 56%,#26382b 100%)!important;
+  background:linear-gradient(150deg,#261445 0%,#1c0f32 56%,#281549 100%)!important;
 }
 html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section::after{
   content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
@@ -53,7 +53,7 @@ html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section .tete-s
   padding:clamp(22px,3.4vw,38px)!important;
   border:1px solid rgba(215,181,103,.66)!important;
   border-radius:18px!important;
-  background:linear-gradient(120deg,#172820 0%,#26382b 60%,#1b3028 100%)!important;
+  background:linear-gradient(120deg,#1b0e31 0%,#281549 60%,#20113a 100%)!important;
   background-size:auto!important;background-position:center!important;
   box-shadow:0 12px 30px rgba(5,16,14,.18),inset 0 1px rgba(255,250,230,.06)!important;
   text-align:center!important;
@@ -119,15 +119,15 @@ html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section :is(inp
 }
 html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section :is(.programme,.rdv,.carte,.kpi,.vmi-carte,.sde-initiative-card,.formulaire){
   background:#fffdf8!important;border-color:#d9c7a1!important;
-  color:#243229!important;
+  color:#251343!important;
   box-shadow:0 9px 26px rgba(8,20,16,.13)!important;
 }
 html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.section :is(.programme,.rdv,.carte,.vmi-carte) :is(p,h3){
-  color:#2e3b30!important;-webkit-text-fill-color:currentColor!important;
+  color:#2d1851!important;-webkit-text-fill-color:currentColor!important;
 }
 /* Un bandeau IN FIRE continu et un compte à rebours contrasté. */
 html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section#infire{
-  background:linear-gradient(135deg,#13221e 0%,#304331 62%,#1b2c22 100%)!important;
+  background:linear-gradient(135deg,#170c29 0%,#311a59 62%,#1e1037 100%)!important;
 }
 html body.sde-unifie.sde-subpage.sde-ivoire #infire .infire-contenu{
   position:relative;z-index:1;min-width:0;
@@ -158,7 +158,7 @@ html body.sde-unifie.sde-subpage.sde-ivoire #infire .decompte-cel b{
   color:#8b691e!important;-webkit-text-fill-color:#8b691e!important;
 }
 html body.sde-unifie.sde-subpage.sde-ivoire #infire .decompte-cel small{
-  color:#374235!important;-webkit-text-fill-color:#374235!important;
+  color:#331b5c!important;-webkit-text-fill-color:#331b5c!important;
   font-weight:700;
 }
 @keyframes sde-site-countdown-reveal{
@@ -182,11 +182,11 @@ html body.sde-unifie.sde-subpage.sde-ivoire #infire .decompte--proche .decompte-
 html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.sde-initiative-lead,
 html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.sde-initiative-section{
   position:relative;isolation:isolate;
-  background:linear-gradient(140deg,#172b25,#2d4434 52%,#182a22)!important;
+  background:linear-gradient(140deg,#1c0f33,#301958 52%,#1c0f33)!important;
   color:#faf3e4!important;border-block:1px solid rgba(215,181,103,.3);
 }
 html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.sde-initiative-section.sde-initiative-soft{
-  background:linear-gradient(145deg,#1c3229,#192a24 65%,#304130)!important;
+  background:linear-gradient(145deg,#21123c,#1d0f34 65%,#301958)!important;
 }
 html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section:is(.sde-initiative-section,.sde-initiative-lead)>.enveloppe{
   position:relative;z-index:1;min-width:0;
@@ -199,16 +199,16 @@ html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section:is(.sde-initiat
   color:#e8c77f!important;-webkit-text-fill-color:#e8c77f!important;
 }
 html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.sde-initiative-section .sde-initiative-card{
-  background:#fffaf0!important;color:#263529!important;
+  background:#fffaf0!important;color:#271447!important;
   border:1px solid #d7c398!important;
 }
 html body.sde-unifie.sde-subpage.sde-ivoire .sde-initiative-card :is(h3,strong,p,small){
-  color:#25392c!important;-webkit-text-fill-color:currentColor!important;
+  color:#281549!important;-webkit-text-fill-color:currentColor!important;
 }
 /* Bandeau « Continuer votre parcours » : pas de blanc sur blanc. */
 html body.sde-unifie.sde-subpage.sde-ivoire .sde-further{
   position:relative;
-  background:linear-gradient(120deg,#172b25,#2e4333)!important;
+  background:linear-gradient(120deg,#1c0f33,#301958)!important;
   border-top:2px solid #c9a557!important;
   padding:clamp(38px,5vw,66px) 18px!important;
   color:#fff8e8!important;text-align:center;
@@ -226,7 +226,7 @@ html body.sde-unifie.sde-subpage.sde-ivoire .sde-further a{
 }
 /* Pied de page : mêmes couleurs, mêmes contrastes sur toutes les sous-pages. */
 html body.sde-unifie.sde-subpage.sde-ivoire .site-footer{
-  background:linear-gradient(145deg,#15271f,#213628)!important;
+  background:linear-gradient(145deg,#1a0e2e,#251443)!important;
   color:#eae7da!important;border-top:2px solid #c9a557!important;
 }
 html body.sde-unifie.sde-subpage.sde-ivoire .site-footer :is(p,small,strong){
@@ -244,11 +244,11 @@ html body.sde-unifie.sde-subpage.sde-ivoire .sde-further a:focus-visible{
    le comportement des boutons ou les sections de connexion. */
 html body.sde-unifie.sde-accueil-maquette.sde-ivoire .m-panel{
   border:1px solid rgba(215,181,103,.6)!important;border-radius:16px!important;
-  background:linear-gradient(145deg,#172b25,#293e30 55%,#1a2b22)!important;
+  background:linear-gradient(145deg,#1c0f33,#2c1750 55%,#1d1035)!important;
   box-shadow:0 12px 30px rgba(9,21,16,.16)!important;
 }
 html body.sde-unifie.sde-accueil-maquette.sde-ivoire .m-panel .m-band{
-  min-height:62px;background:linear-gradient(110deg,#1b3127,#2b3d2a)!important;
+  min-height:62px;background:linear-gradient(110deg,#20113b,#2c1750)!important;
   border-bottom:1px solid #c6a55f!important;
 }
 html body.sde-unifie.sde-accueil-maquette.sde-ivoire .m-panel .m-band h2{
@@ -260,7 +260,7 @@ html body.sde-unifie.sde-accueil-maquette.sde-ivoire .m-panel .m-card{
   border-radius:12px!important;
 }
 html body.sde-unifie.sde-accueil-maquette.sde-ivoire .site-footer{
-  background:#172b25!important;color:#f4ecdf!important;border-top:2px solid #c9a557;
+  background:#1c0f33!important;color:#f4ecdf!important;border-top:2px solid #c9a557;
 }
 html body.sde-unifie.sde-accueil-maquette.sde-ivoire .site-footer :is(p,strong,small){
   color:#f4ecdf!important;
@@ -273,7 +273,7 @@ html body.sde-unifie.sde-accueil-maquette.sde-ivoire .site-footer a{
 html body.sde-subpage[data-sde-page="formulaire"] .hero-form{
   padding:32px 18px!important;
   margin:18px auto 24px!important;
-  background:linear-gradient(135deg,#172b25,#2d4434)!important;
+  background:linear-gradient(135deg,#1c0f33,#301958)!important;
   border:1px solid #c8aa65;border-radius:18px;
 }
 html body.sde-subpage[data-sde-page="formulaire"] .hero-form :is(h1,.sous-titre){
@@ -336,23 +336,23 @@ html body.sde-unifie.sde-subpage.sde-ivoire[data-sde-page="plus"] main#contenu>s
 }
 /* Formulaire 2026–27 : lisibilité de l'accueil et des panneaux de collecte. */
 html body.sde-subpage[data-sde-page="formulaire"]{
-  background:#f6f2e8!important;color:#29382b!important;
+  background:#f6f2e8!important;color:#29164b!important;
 }
 html body.sde-subpage[data-sde-page="formulaire"] main .form-carte{
-  background:#fffdf8!important;color:#29382b!important;
+  background:#fffdf8!important;color:#29164b!important;
   border:1px solid #dfceb0!important;border-radius:16px!important;
   box-shadow:0 10px 24px rgba(26,45,33,.08)!important;
 }
 html body.sde-subpage[data-sde-page="formulaire"] main .form-carte :is(h2,h3,label,p){
-  color:#2d3a31!important;
+  color:#2c1750!important;
 }
 html body.sde-subpage[data-sde-page="formulaire"] main .form-carte :is(input,textarea,select){
-  background:#fff!important;color:#202c25!important;
+  background:#fff!important;color:#20113b!important;
   border:1px solid #b8ac96!important;
 }
 /* Page d'erreur du portail : cohérente, mais sans toucher à la connexion privée. */
 html body.sde-unifie.sde-ivoire:not(.sde-subpage) .site-footer{
-  background:#172b25!important;color:#faf3e2!important;
+  background:#1c0f33!important;color:#faf3e2!important;
   border-top:2px solid #c9a557!important;
 }
 html body.sde-unifie.sde-ivoire:not(.sde-subpage) .site-footer a{
@@ -380,7 +380,7 @@ html body.sde-unifie.sde-accueil-maquette .m-panel .m-welcome .m-verset{
   background:#fff8e9!important;border-left:4px solid #a44531!important;
 }
 html body.sde-unifie.sde-accueil-maquette .m-panel .m-welcome .m-verset p{
-  color:#29362d!important;-webkit-text-fill-color:#29362d!important;text-shadow:none!important;
+  color:#29154a!important;-webkit-text-fill-color:#29154a!important;text-shadow:none!important;
 }
 html body.sde-unifie.sde-accueil-maquette .m-panel .m-welcome .m-verset cite{
   color:#855f16!important;-webkit-text-fill-color:#855f16!important;text-shadow:none!important;
@@ -417,7 +417,7 @@ html body.sde-unifie.sde-subpage #axes .cinq-axes svg{
 }
 html body.sde-unifie.sde-subpage #histoire .frise-num{
   color:#f8ebcf!important;-webkit-text-fill-color:#f8ebcf!important;
-  background:#2a3f30!important;border:2px solid #d6b460!important;
+  background:#2d1851!important;border:2px solid #d6b460!important;
 }
 html body.sde-unifie.sde-subpage #poles .intro-poles,
 html body.sde-unifie.sde-subpage #leadership .leadership-noms,
@@ -435,12 +435,12 @@ html body.sde-unifie.sde-subpage #responsables .bio-invit a{
 /* Les valeurs et les projets restent sombres sur cartes ivoire. */
 html body.sde-unifie.sde-subpage #mouvement .valeurs-grille .valeur,
 html body.sde-unifie.sde-subpage #projets .projets-grille .projet-carte{
-  background:#fffaf0!important;color:#29362e!important;
-  -webkit-text-fill-color:#29362e!important;
+  background:#fffaf0!important;color:#29154a!important;
+  -webkit-text-fill-color:#29154a!important;
   border:1px solid #d9c8a8!important;
 }
 html body.sde-unifie.sde-subpage #projets .projet-carte :is(h3,p){
-  color:#2a3830!important;-webkit-text-fill-color:#2a3830!important;
+  color:#2a164c!important;-webkit-text-fill-color:#2a164c!important;
 }
 /* Contribuer : montants et légendes restés sombres sur fond vert. */
 html body.sde-unifie.sde-subpage #soutenir .tete-section ul.montants{
@@ -452,7 +452,7 @@ html body.sde-unifie.sde-subpage #soutenir .tete-section ul.montants{
 }
 html body.sde-unifie.sde-subpage #soutenir .tete-section .montants li{
   display:inline-flex;align-items:center;justify-content:center;
-  color:#253429!important;-webkit-text-fill-color:#253429!important;
+  color:#261445!important;-webkit-text-fill-color:#261445!important;
   background:#fff8e7!important;border:1px solid #d7b567!important;
   border-radius:999px;padding:9px 14px;min-height:42px;
   font:700 .86rem/1.3 "Atkinson Hyperlegible",system-ui,sans-serif;
@@ -483,7 +483,7 @@ html body.sde-unifie.sde-subpage #organigramme .orga-carte[data-org-node][aria-p
   transform:translateY(-3px);
 }
 html body.sde-unifie.sde-subpage #organigramme .orga-carte[data-org-node] :is(h4,p,.dog-tag){
-  color:#27372d!important;-webkit-text-fill-color:#27372d!important;
+  color:#281549!important;-webkit-text-fill-color:#281549!important;
 }
 html body.sde-unifie.sde-subpage #organigramme .orga-carte[data-org-node] .orga-icone{
   animation:sde-org-sparkle 3.6s ease-in-out infinite;
@@ -495,11 +495,11 @@ html body.sde-unifie.sde-subpage #organigramme .orga-carte[data-org-node] .orga-
 html body.sde-unifie.sde-subpage #organigramme .sde-org-detail{
   margin:20px auto 0;padding:14px 20px;max-width:710px;
   background:#f7f0df!important;border:1px solid #d9b968!important;
-  color:#28392d!important;-webkit-text-fill-color:#28392d!important;
+  color:#29164b!important;-webkit-text-fill-color:#29164b!important;
   border-radius:13px;text-align:center;line-height:1.55;
 }
 html body.sde-unifie.sde-subpage #organigramme .sde-org-detail strong{
-  color:#263a2d!important;-webkit-text-fill-color:#263a2d!important;
+  color:#29164a!important;-webkit-text-fill-color:#29164a!important;
 }
 @media(hover:hover) and (pointer:fine){
   html body.sde-unifie.sde-subpage #organigramme .orga-carte[data-org-node]:hover{
@@ -519,7 +519,7 @@ body[data-motion="paused"].sde-unifie.sde-subpage #organigramme .orga-carte[data
 /* Pied de page : correction même si la classe .sde-ivoire est retirée par le sélecteur jour/nuit. */
 html body.sde-unifie footer.site-footer,
 html body.sde-unifie.sde-subpage footer.site-footer{
-  background:#172b25!important;background-image:linear-gradient(140deg,#15271f,#213628)!important;
+  background:#1c0f33!important;background-image:linear-gradient(140deg,#1a0e2e,#251443)!important;
   border-top:2px solid #cfaf62!important;color:#f5f0e4!important;
   -webkit-text-fill-color:#f5f0e4!important;
 }
@@ -542,7 +542,7 @@ html body.sde-unifie footer.site-footer a:focus-visible{
 }
 /* Compteurs de présence lorsqu'ils sont insérés en tête de pied de page. */
 html body.sde-unifie footer.site-footer :is(.visites,.statistiques,.stats-visites,.sde-presence){
-  background:#21382c!important;color:#f5f0e4!important;
+  background:#261445!important;color:#f5f0e4!important;
   -webkit-text-fill-color:#f5f0e4!important;
 }
 @media(max-width:650px){
@@ -556,7 +556,7 @@ html body.sde-unifie footer.site-footer :is(.visites,.statistiques,.stats-visite
 
 /* Accès directs aux deux projets demandés, avec zones tactiles accessibles. */
 html body.sde-unifie.sde-subpage #projets .projet-carte .sde-projet-lien{
-  color:#26392d!important;-webkit-text-fill-color:#26392d!important;
+  color:#29154a!important;-webkit-text-fill-color:#29154a!important;
   text-decoration:none;font:inherit;
 }
 html body.sde-unifie.sde-subpage #projets .projet-carte .sde-projet-lien:hover{
@@ -565,14 +565,14 @@ html body.sde-unifie.sde-subpage #projets .projet-carte .sde-projet-lien:hover{
 html body.sde-unifie.sde-subpage #projets .projet-carte .sde-projet-cta{
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
   margin-top:18px;min-height:44px;padding:11px 16px;
-  background:#365d41!important;color:#fffaf0!important;
+  background:#3f2172!important;color:#fffaf0!important;
   -webkit-text-fill-color:#fffaf0!important;
-  border:1px solid #365d41!important;border-radius:10px;
+  border:1px solid #3f2172!important;border-radius:10px;
   text-decoration:none!important;font-weight:700;
   line-height:1.35;max-width:100%;
 }
 html body.sde-unifie.sde-subpage #projets .projet-carte .sde-projet-cta:hover{
-  background:#264d33!important;border-color:#d7b567!important;
+  background:#311a59!important;border-color:#d7b567!important;
 }
 html body.sde-unifie.sde-subpage #projets .projet-carte :is(.sde-projet-lien,.sde-projet-cta):focus-visible{
   outline:3px solid #b48c35!important;outline-offset:3px!important;
@@ -584,8 +584,8 @@ html body.sde-unifie.sde-subpage #projets .projet-carte :is(.sde-projet-lien,.sd
    Le footer a maintenant sa propre surface de contraste, même en mode clair. */
 html body.sde-unifie.sde-ivoire footer.site-footer,
 html body.sde-unifie.sde-subpage footer.site-footer{
-  background:#172b25!important;background-color:#172b25!important;
-  background-image:linear-gradient(135deg,#14271f,#20392c 70%,#172b25)!important;
+  background:#1c0f33!important;background-color:#1c0f33!important;
+  background-image:linear-gradient(135deg,#190d2e,#261445 70%,#1c0f33)!important;
   border-top:2px solid #d7b567!important;
   color:#f7f3e8!important;-webkit-text-fill-color:#f7f3e8!important;
   opacity:1!important;isolation:isolate;
@@ -633,8 +633,8 @@ html body.sde-unifie.sde-accueil-maquette #contenu .m-welcome blockquote.m-verse
   opacity:1!important;
 }
 html body.sde-unifie.sde-accueil-maquette #contenu .m-welcome blockquote.m-verset p {
-  color:#21342b!important;
-  -webkit-text-fill-color:#21342b!important;
+  color:#241342!important;
+  -webkit-text-fill-color:#241342!important;
   opacity:1!important;
   font:italic 500 clamp(1.08rem,2.5vw,1.3rem)/1.65 "Libre Caslon Text",Georgia,serif!important;
   letter-spacing:normal!important;
@@ -708,8 +708,8 @@ html body.sde-unifie.sde-accueil-maquette #contenu .m-welcome blockquote.m-verse
     letter-spacing:0!important;
   }
   html body.sde-unifie.sde-ivoire .site-header .site-brand b {
-    color:#20271f!important;
-    -webkit-text-fill-color:#20271f!important;
+    color:#1e1036!important;
+    -webkit-text-fill-color:#1e1036!important;
   }
   html body.sde-unifie:not(.sde-ivoire) .site-header .site-brand b {
     color:#fff7e4!important;
@@ -811,17 +811,17 @@ html body.sde-unifie.sde-accueil-maquette .m-programmes .sde-featured-program{
   position:relative;
   border:2px solid #b99444!important;
   background:#fffaf0!important;
-  color:#233127!important;
+  color:#241341!important;
   box-shadow:0 12px 32px rgba(38,56,32,.11)!important;
 }
 html body.sde-unifie.sde-accueil-maquette .sde-featured-program :is(h3,p,time,strong){
-  color:#233127!important;
-  -webkit-text-fill-color:#233127!important;
+  color:#241341!important;
+  -webkit-text-fill-color:#241341!important;
   opacity:1!important;
 }
 html body.sde-unifie.sde-accueil-maquette .sde-featured-program .m-rythme{
-  color:#33472c!important;
-  -webkit-text-fill-color:#33472c!important;
+  color:#311a59!important;
+  -webkit-text-fill-color:#311a59!important;
 }
 html body.sde-unifie.sde-accueil-maquette .sde-event-poster-link{
   display:block;min-width:0;border-radius:12px;overflow:hidden;
@@ -862,8 +862,8 @@ html body.sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien{
   min-width:0;width:100%;
   display:flex;flex-direction:column;align-items:flex-start;
   gap:9px;padding:clamp(17px,2.2vw,23px);
-  color:#26372b!important;
-  -webkit-text-fill-color:#26372b!important;
+  color:#281548!important;
+  -webkit-text-fill-color:#281548!important;
   text-decoration:none!important;
   transition:box-shadow .2s ease,transform .2s ease;
 }
@@ -883,15 +883,15 @@ html body.sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien .m-pole-num{
   letter-spacing:.055em;
 }
 html body.sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien h3{
-  color:#223a2a!important;
-  -webkit-text-fill-color:#223a2a!important;
+  color:#271547!important;
+  -webkit-text-fill-color:#271547!important;
   font-size:clamp(1.16rem,2vw,1.34rem);
   line-height:1.3;margin:0;
   overflow-wrap:anywhere;
 }
 html body.sde-unifie.sde-accueil-maquette .sde-pole-officiel-lien p{
-  color:#394539!important;
-  -webkit-text-fill-color:#394539!important;
+  color:#361c62!important;
+  -webkit-text-fill-color:#361c62!important;
   font-size:.96rem;
   line-height:1.6;
   margin:0 0 10px;
@@ -1059,12 +1059,12 @@ body[data-motion="paused"].sde-unifie.sde-accueil-maquette .sde-pole-officiel-li
   html body.sde-unifie.sde-ivoire .site-header .site-menu{
     background:#fffdf8!important;
     border:1px solid #d9c59c!important;
-    color:#243229!important;
+    color:#251343!important;
   }
   html body.sde-unifie.sde-ivoire .site-header .site-menu a,
   html body.sde-unifie.sde-ivoire .site-header .site-menu summary{
-    color:#243229!important;
-    -webkit-text-fill-color:#243229!important;
+    color:#251343!important;
+    -webkit-text-fill-color:#251343!important;
   }
   html body.sde-unifie.sde-ivoire .site-header .site-menu a:hover{
     background:#f4ecd9!important;

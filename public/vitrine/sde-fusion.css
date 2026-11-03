@@ -1,0 +1,178 @@
+/*
+ * SDE · Fusion 03 + 04 — charte violet, or et vert profond.
+ * Dernière feuille chargée sur le site public, les tableaux de bord et l'application.
+ * Aucun changement de données, de rôles, d'API ni de logique métier : uniquement l'apparence.
+ */
+:root{
+  --fu-bg0:#12062b;--fu-bg1:#1f0d45;--fu-bg2:#2f1766;
+  --fu-panel:rgba(52,26,104,.78);--fu-panel-2:rgba(30,13,68,.9);--fu-glass:rgba(255,255,255,.06);
+  --fu-line:rgba(232,184,75,.42);--fu-line-soft:rgba(200,170,255,.22);
+  --fu-gold:#e8b84b;--fu-gold-2:#f6d27a;--fu-gold-ink:#2b1450;
+  --fu-ink:#f6f1ff;--fu-muted:#d3c6ee;--fu-violet:#7c3aed;
+  --fu-green:#0f3d2e;--fu-green-2:#16503c;--fu-lav:#f3effb;--fu-card:#ffffff;--fu-card-ink:#241446;
+  --fu-radius:18px;--fu-shadow:0 18px 44px rgba(8,2,28,.45);
+}
+
+/* ───────── Site public ───────── */
+body.sde-unifie{
+  color:var(--fu-ink)!important;
+  background:
+    radial-gradient(900px 520px at 82% -6%,rgba(255,170,60,.18),transparent 60%),
+    radial-gradient(1100px 700px at 8% 12%,rgba(124,58,237,.38),transparent 62%),
+    linear-gradient(180deg,var(--fu-bg1),var(--fu-bg0) 62%)!important;
+  background-attachment:fixed;
+}
+body.sde-unifie :is(h1,h2,h3,h4){color:var(--fu-gold-2);font-family:"Cinzel","Cormorant Garamond",Georgia,serif;letter-spacing:.01em}
+body.sde-unifie :is(p,li,dd,dt,small,label,span){color:inherit}
+body.sde-unifie a{color:var(--fu-gold-2)}
+body.sde-unifie a:hover{color:#fff}
+
+body.sde-unifie .site-header{
+  background:linear-gradient(100deg,rgba(24,9,56,.96),rgba(52,22,104,.94))!important;
+  border-bottom:1px solid var(--fu-line)!important;box-shadow:0 10px 30px rgba(8,2,28,.4);
+}
+body.sde-unifie .site-brand b{color:var(--fu-gold-2);font-family:"Cinzel",Georgia,serif;letter-spacing:.08em}
+body.sde-unifie .site-brand small{color:var(--fu-muted)}
+body.sde-unifie .site-menu a{color:var(--fu-ink)!important;font-weight:600}
+body.sde-unifie .site-menu a[aria-current="page"]{color:var(--fu-gold-2)!important;box-shadow:inset 0 -3px var(--fu-gold)}
+body.sde-unifie :is(.site-portal-cta,.m-gold,.iv-cta,.sde-hero-cta,.sde-hero-poster-action,.sde-form-submit){
+  background:linear-gradient(135deg,var(--fu-gold-2),#d9a53a)!important;color:var(--fu-gold-ink)!important;
+  border:1px solid #fff3c9!important;font-weight:800;border-radius:12px;box-shadow:0 8px 22px rgba(232,184,75,.28);text-decoration:none;
+}
+body.sde-unifie :is(.m-btn:not(.m-gold),.site-support,.iv-sub){
+  background:rgba(255,255,255,.07)!important;color:var(--fu-ink)!important;border:1.5px solid var(--fu-gold)!important;border-radius:12px;
+}
+body.sde-unifie .infire-takeover{background:linear-gradient(90deg,#4a0f3a,#2f1766)!important;border-bottom:1px solid var(--fu-line);color:var(--fu-ink)}
+body.sde-unifie .sde-rail{background:rgba(18,6,43,.9)!important;border-color:var(--fu-line)!important}
+
+/* panneaux numérotés de l'accueil */
+body.sde-unifie .m-panel{
+  background:linear-gradient(180deg,rgba(60,30,120,.55),rgba(24,10,56,.72))!important;
+  border:1px solid var(--fu-line)!important;border-radius:22px!important;box-shadow:var(--fu-shadow);color:var(--fu-ink)!important;
+}
+body.sde-unifie .m-band{background:linear-gradient(90deg,rgba(15,61,46,.92),rgba(40,20,90,.7))!important;border-bottom:1px solid var(--fu-line)!important}
+body.sde-unifie .m-num{background:var(--fu-gold)!important;color:var(--fu-gold-ink)!important}
+body.sde-unifie .m-band :is(h2,.m-sub){color:var(--fu-gold-2)!important}
+body.sde-unifie :is(.m-card,.m-feature,.m-kpi,.sde-initiative-card,.sde-panel,.hub-card,.sde-initiative-linkcard,.sde-initiative-soft){
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.04))!important;
+  border:1px solid var(--fu-line-soft)!important;border-radius:var(--fu-radius)!important;color:var(--fu-ink)!important;
+}
+body.sde-unifie :is(.m-card,.m-feature,.m-kpi,.sde-initiative-card,.sde-panel,.hub-card) :is(p,li,span,dd,dt,small,div){color:var(--fu-ink)}
+body.sde-unifie :is(.m-card,.m-feature,.m-kpi,.sde-initiative-card,.sde-panel,.hub-card) :is(h2,h3,h4,strong,b){color:var(--fu-gold-2)!important}
+body.sde-unifie :is(.m-card,.m-feature,.sde-initiative-card,.hub-card) a:not(.m-btn):not(.m-gold){color:var(--fu-gold-2)!important}
+body.sde-unifie .m-kpi strong{color:var(--fu-gold-2)!important;font-size:1.7em}
+body.sde-unifie .m-kpi svg{color:var(--fu-gold)}
+body.sde-unifie .m-kicker,body.sde-unifie .sde-kicker,body.sde-unifie .surtitre{color:var(--fu-gold)!important;letter-spacing:.2em}
+body.sde-unifie .m-verset{background:rgba(255,255,255,.08)!important;border-left:4px solid var(--fu-gold)!important;color:var(--fu-ink)!important}
+body.sde-unifie .m-verset :is(p,cite){color:var(--fu-ink)!important}
+body.sde-unifie .m-welcome h1,body.sde-unifie h1{color:#fff!important;font-family:"Cinzel","Cormorant Garamond",Georgia,serif;text-shadow:0 2px 24px rgba(0,0,0,.45)}
+body.sde-unifie .m-italic{color:var(--fu-gold-2)!important}
+body.sde-unifie .m-rythme{background:rgba(232,184,75,.18)!important;color:var(--fu-gold-2)!important;border:1px solid var(--fu-line)}
+body.sde-unifie .sde-hero-poster{background:linear-gradient(180deg,#3a1a78,#1d0c47)!important;border:1px solid var(--fu-line)!important;box-shadow:var(--fu-shadow)}
+body.sde-unifie .sde-hero-poster :is(h2,span,p,time){color:var(--fu-ink)!important}
+body.sde-unifie .sde-hero-poster h2 span{color:var(--fu-gold-2)!important}
+
+/* cartes des pôles : papier clair, texte foncé */
+body.sde-unifie :is(.m-pole,.pole-card,[class*="pole-card"]){background:var(--fu-card)!important;color:var(--fu-card-ink)!important}
+body.sde-unifie :is(.m-pole,.pole-card,[class*="pole-card"]) :is(p,span,li,small,div,a,strong,h3,h4){color:var(--fu-card-ink)!important}
+
+/* espaces sécurisés */
+body.sde-unifie .private-access-intro{color:var(--fu-muted)!important}
+body.sde-unifie :is(.private-member,.private-admin){background:linear-gradient(135deg,var(--fu-green),var(--fu-green-2))!important;border:1px solid var(--fu-line)!important;color:var(--fu-ink)!important}
+body.sde-unifie :is(.private-member,.private-admin) :is(h3,strong){color:var(--fu-gold-2)!important}
+body.sde-unifie :is(.private-member,.private-admin) :is(p,span,small){color:var(--fu-ink)!important}
+
+/* formulaires */
+body.sde-unifie :is(input,select,textarea):not([type=checkbox]):not([type=radio]){
+  background:rgba(14,5,36,.7)!important;color:var(--fu-ink)!important;border:1px solid var(--fu-line)!important;border-radius:10px;
+}
+body.sde-unifie :is(input,select,textarea)::placeholder{color:#b9a9dc}
+body.sde-unifie :is(input,select,textarea,button,a):focus-visible{outline:3px solid var(--fu-gold-2);outline-offset:2px}
+
+body.sde-unifie .site-footer{background:linear-gradient(180deg,#1a0a3f,#0e0422)!important;border-top:2px solid var(--fu-gold)!important;color:var(--fu-muted)!important}
+body.sde-unifie .site-footer :is(a,strong){color:var(--fu-gold-2)!important}
+
+/* ───────── Tableaux de bord (membre, administration) ───────── */
+body.sde-tableau{background:var(--fu-lav)!important;color:var(--fu-card-ink)!important}
+body.sde-tableau :is(h1,h2,h3,h4){color:#3a1a78!important}
+body.sde-tableau :is(.site-header){background:linear-gradient(100deg,#2a0f5e,#4b1d95)!important}
+
+/* ───────── Application métier + espaces React : palette « fusion » ───────── */
+:root[data-sde-palette=fusion]{
+  --night:#16093a;--night-2:#2a1260;--night-3:#3d1d82;
+  --gold:#b07d12;--gold-on-night:#f6d27a;--on-night:#f6f1ff;
+  --bg:#f3effb;--surface:#ffffff;--surface-2:#ece6f8;
+  --line:#ded4f2;--line-strong:#c4b3e6;--ink:#241446;--muted:#5d4f80;--btn:#7c3aed;
+  --shadow:0 12px 34px rgba(36,20,70,.12);
+}
+:root[data-sde-palette=fusion] body{background:#f3effb!important;color:#241446}
+:root[data-sde-palette=fusion] .hdr{background:linear-gradient(110deg,#1b0a45,#3d1d82)!important;color:#f6d27a!important;border-bottom:2px solid var(--fu-gold)!important}
+:root[data-sde-palette=fusion] .hdr :is(.brand-mark,.brand-sub,.sync-t){color:#f6d27a!important}
+:root[data-sde-palette=fusion] .hdr .hdr-btn{background:rgba(255,255,255,.1)!important;color:#f6f1ff!important;border:1px solid var(--fu-gold)!important}
+:root[data-sde-palette=fusion] .nav{background:linear-gradient(180deg,#0f3d2e,#0a2b21)!important;border-right:1px solid var(--fu-gold)!important}
+:root[data-sde-palette=fusion] .nav :is(a,button){color:#eaf5ef!important}
+:root[data-sde-palette=fusion] .nav :is(a,button)[aria-current],:root[data-sde-palette=fusion] .nav .nav-btn.on{
+  background:var(--fu-gold)!important;color:#2b1450!important;box-shadow:none!important;border-radius:10px;font-weight:800}
+:root[data-sde-palette=fusion] .card{background:#fff!important;border:1px solid #e4daf6;border-radius:var(--fu-radius);box-shadow:0 8px 24px rgba(36,20,70,.08)}
+:root[data-sde-palette=fusion] :is(.sec-title,.row-t,.stat strong){color:#3a1a78}
+:root[data-sde-palette=fusion] .btn-primary{background:linear-gradient(135deg,#7c3aed,#5b21b6)!important;color:#fff!important;border-radius:12px;box-shadow:0 6px 18px rgba(91,33,182,.28)}
+:root[data-sde-palette=fusion] :is(input,textarea,select){border-color:#cdbdf0}
+
+/* espaces React membre/administration (reference-shell) */
+html[data-sde-palette="fusion"] body.sde-reference.sde-reference{
+  --pal-bg:#f3effb;--pal-surface:#ffffff;--pal-paper:#f8f5fd;--pal-ink:#241446;--pal-muted:#5d4f80;
+  --pal-line:#ded4f2;--pal-accent:#5b21b6;--pal-accent-light:#e8b84b;--pal-side1:#0a2b21;--pal-side2:#0f3d2e;
+  --pal-side-active:#e8b84b;--pal-nav:#0f3d2e;--pal-head:#2a1260;--pal-tint:#e9e0fa;
+  color:var(--pal-ink)!important;background:var(--pal-bg)!important;
+}
+
+@media (prefers-reduced-motion:reduce){body.sde-unifie *{scroll-behavior:auto!important}}
+
+/* lisibilité garantie sur les cartes sombres (prime sur les anciennes feuilles) */
+body.sde-unifie :is(.m-card,.m-prog,.m-feature,.m-engagements,.m-leaders,.m-body,.sde-initiative-card,.sde-panel,.hub-card,.sde-initiative-section) :is(p,li,span,dd,dt,small,time,em,div):not(.m-rythme):not(.m-tag):not(.m-num){color:var(--fu-ink)!important}
+body.sde-unifie :is(.m-card,.m-prog,.m-feature,.sde-initiative-card,.sde-panel,.hub-card) :is(h2,h3,h4,strong,b){color:var(--fu-gold-2)!important}
+body.sde-unifie .m-prog{background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.04))!important;border:1px solid var(--fu-line-soft)!important;border-radius:var(--fu-radius)!important;color:var(--fu-ink)!important}
+body.sde-unifie .m-prog.sde-featured-program{border:1.5px solid var(--fu-gold)!important;box-shadow:0 0 0 6px rgba(232,184,75,.12)}
+body.sde-unifie .m-prog :is(a){color:var(--fu-gold-2)!important}
+body.sde-unifie .m-pole{border-radius:var(--fu-radius)!important}
+body.sde-unifie .m-tag{background:var(--fu-gold)!important;color:var(--fu-gold-ink)!important}
+body.sde-unifie .m-dl dt,body.sde-unifie .m-leaders dt{color:var(--fu-gold)!important}
+body.sde-unifie :is(.m-gold,.iv-cta,.sde-hero-cta,.sde-hero-poster-action) *{color:var(--fu-gold-ink)!important}
+
+/* pages intérieures : fonds violets (les cartes ivoire restent lisibles, texte foncé) */
+html body.sde-unifie .section:nth-of-type(odd){background:linear-gradient(135deg,#1c0b44 0%,#2d1566 55%,#1a0a3c 100%)!important}
+html body.sde-unifie .section:nth-of-type(even){background:linear-gradient(150deg,#26125a 0%,#180a3a 58%,#2b1366 100%)!important}
+html body.sde-unifie .section{border-top:1px solid var(--fu-line)!important;border-bottom:1px solid rgba(232,184,75,.12)!important}
+html body.sde-unifie :is(.tete-section,.sde-intro) :is(h1,h2){color:#fff!important}
+html body.sde-unifie .tete-section :is(p,.chapo){color:var(--fu-muted)!important}
+html body.sde-unifie .sde-intro{background:linear-gradient(145deg,#1a0a40,#3a1a78 65%,#1a0a40)!important;border-bottom:1px solid var(--fu-line)!important}
+html body.sde-unifie :is(.sde-further,.sde-page-footer){background:#12062b!important;color:var(--fu-muted)!important}
+html body.sde-unifie .site-footer{background:linear-gradient(180deg,#1a0a3f,#0e0422)!important;border-top:2px solid var(--fu-gold)!important}
+html body.sde-unifie :is(.valeur,.orga-carte,.pole,.point,.vmi-carte,.bio,.programme,.ressource-carte,.etape-carte,.carte-acces){border-color:rgba(232,184,75,.45)!important}
+html body.sde-unifie :is(.sde-page-actions a,.bouton):not(.sde-secondary):not(.b-contour){background:linear-gradient(135deg,var(--fu-gold-2),#d9a53a)!important;color:var(--fu-gold-ink)!important}
+
+html body.sde-unifie .sde-page-actions a{background:linear-gradient(135deg,var(--fu-gold-2),#d9a53a)!important;color:#2b1450!important;border:1px solid #fff3c9!important}
+html body.sde-unifie .sde-page-actions a.sde-secondary{background:rgba(255,255,255,.08)!important;color:#fff!important;border:1.5px solid var(--fu-gold)!important}
+
+/* bandeau « programmes majeurs » de l'accueil (maquette Fusion) */
+.fu-strip{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin:18px 0}
+.fu-strip a{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:16px 10px;text-decoration:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.04));border:1px solid var(--fu-line);border-radius:var(--fu-radius);color:var(--fu-ink)}
+.fu-strip a:hover{border-color:var(--fu-gold-2);transform:translateY(-2px)}
+.fu-strip img{width:44px;height:44px;object-fit:contain}
+.fu-strip strong{color:var(--fu-gold-2);font-size:14px;line-height:1.2}
+.fu-strip small{color:var(--fu-muted);font-size:12px}
+@media (max-width:900px){.fu-strip{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.fu-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* application : bandeaux, héros et icônes de navigation */
+:root[data-sde-palette=fusion] .banner{background:linear-gradient(90deg,#2a1260,#3d1d82)!important;color:#f6f1ff!important;border-bottom:1px solid var(--fu-line)}
+:root[data-sde-palette=fusion] .banner :is(span,a,b,strong){color:#f6f1ff!important}
+:root[data-sde-palette=fusion] .banner a{color:#f6d27a!important}
+:root[data-sde-palette=fusion] .nav :is(a,button)[aria-current] :is(svg,span,i),:root[data-sde-palette=fusion] .nav .nav-btn.on :is(svg,span,i){color:#2b1450!important;stroke:#2b1450}
+:root[data-sde-palette=fusion] .acc-hero{background:radial-gradient(120% 90% at 50% 110%,rgba(232,184,75,.28),transparent 55%),linear-gradient(135deg,#1d0b47,#3d1d82 70%,#2a1260)!important}
+:root[data-sde-palette=fusion] .acc-hero :is(h1,h2,p,span){color:#f6f1ff}
+
+html body.sde-unifie .site-brand span b{color:var(--fu-gold-2)!important}
+html body.sde-unifie .site-brand span small{color:var(--fu-muted)!important}
+html body.sde-unifie .site-brand{color:var(--fu-gold-2)!important}

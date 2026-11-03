@@ -977,7 +977,7 @@ a.ticket:hover, a.ticket:focus-visible { color: inherit; cursor: pointer; }
 .avatars .av + .av { margin-left: -8px; }
 .av-or { background: linear-gradient(145deg, #e2c26a, #85650f); }
 .av-bleu { background: linear-gradient(145deg, #7EB4FF, #4A6FA5); color: var(--nuit); }
-.av-vert { background: linear-gradient(145deg, #7ED8A8, #4A8870); color: var(--nuit); }
+.av-vert { background: linear-gradient(145deg, #7ED8A8, #5a2fa3); color: var(--nuit); }
 .av-violet { background: linear-gradient(145deg, #B49FE8, #7A5FB8); color: var(--nuit); }
 
 /* ═══════ UTILITAIRES VISUELS ═══════ */

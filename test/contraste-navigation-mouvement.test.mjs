@@ -17,7 +17,7 @@ test('Lisibilité : Accueil, slogan et verset conservent des couleurs contrasté
  assert.match(rules,/\.m-welcome :is\(h1,\.m-italic,p:not\(\.m-kicker\)/);
  assert.match(rules,/\.m-welcome \.m-kicker\{/);
  assert.match(rules,/color:#f8f3e7!important;-webkit-text-fill-color:#f8f3e7!important/);
- assert.match(rules,/\.m-welcome \.m-verset p\{[\s\S]*?color:#29362d!important/);
+ assert.match(rules,/\.m-welcome \.m-verset p\{[\s\S]*?color:#29154a!important/);
 });
 
 test('Lisibilité : citations, valeurs, axes, histoire, pôles et biographie sur le vert',()=>{
@@ -34,7 +34,7 @@ test('Lisibilité : le pied de page reste contrasté même sans classe de palett
  const rules=css.slice(css.indexOf('Correctif de lisibilité — accueil'));
  assert.match(rules,/html body\.sde-unifie footer\.site-footer/);
  assert.match(rules,/html body\.sde-unifie footer\.site-footer a,/);
- assert.match(rules,/background:#172b25!important/);
+ assert.match(rules,/background:#1c0f33!important/);
  assert.match(rules,/color:#f5f0e4!important/);
  assert.match(rules,/color:#f3d18a!important/);
  for(const s of [home,mouvement,missions])assert.match(s,/class="site-footer/);
@@ -44,7 +44,7 @@ test('Missions : montants et message de trésorerie lisibles sur le fond vert',(
  const doc=dom(missions).window.document;
  assert.equal(doc.querySelectorAll('#soutenir .montants li').length,4);
  assert.match(css,/#soutenir \.tete-section \.montants li\{/);
- assert.match(css,/color:#253429!important;-webkit-text-fill-color:#253429!important/);
+ assert.match(css,/color:#261445!important;-webkit-text-fill-color:#261445!important/);
  assert.match(css,/#soutenir \.enveloppe>div\[style\*="text-align:center"\]>p/);
 });
 
