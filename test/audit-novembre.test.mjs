@@ -48,7 +48,7 @@ test("Refonte Fusion 03+04 : charte violet/or chargée partout, palette fusion p
   assert.match(lire("frontend/reference-shell.jsx"), /\['fusion','Fusion · Violet · Vert · Or'\]/);
   for (const f of ["portail", "mouvement", "programmes", "missions-humanitaires", "ressources", "rejoindre", "prieres", "tableau-administration", "tableau-membre"])
     assert.match(lire(`public/vitrine/${f}.html`), /sde-fusion\.css/, f);
-  assert.match(lire("public/vitrine/portail.html"), /class="fu-strip"/);
+  assert.match(lire("public/vitrine/portail.html"), /class="ap-hero"/);
 });
 
 test("Refonte Fusion : espace membre et poste de commandement reconstruits sur des données réelles", () => {

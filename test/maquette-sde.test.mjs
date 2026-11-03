@@ -117,7 +117,7 @@ test("palettes proposées ; Ivoire · Treillis · Or est le choix initial partou
 });
 test("accueil réellement servi (portail.html) refait selon la maquette",()=>{
  const h=read("public/vitrine/portail.html");
- for(const t of ['class="m-band"','Une génération enracinée en Jésus-Christ, prête à servir','Nos cinq engagements','Nos programmes','Nos cinq pôles','Espaces sécurisés','Nous rejoindre','pour la moisson.','accueil-maquette.css','id="event-title"','id="event-details"','id="event-action"','class="private-access-card private-member"','class="private-access-card private-admin"'])assert.ok(h.includes(t),t);
+ for(const t of ['class="ap-head"','Une génération enracinée en Jésus-Christ, prête à servir','Prochains programmes','Nos cinq pôles','Missions et impact','Prières et témoignages','Galerie IN FIRE','Espaces sécurisés','Nous rejoindre','accueil-maquette.css','id="ap-next-title"','id="ap-next-register"','class="private-access-card private-member"','class="private-access-card private-admin"'])assert.ok(h.includes(t),t);
  assert.equal((h.match(/class="site-access-top"/g)||[]).length,1);
  const js=read("public/vitrine/portail-unifie.js");assert.ok(js.includes("sde-rail")&&js.includes("--sde-rail-top"),"rail sur toutes les pages publiques");
 });
@@ -182,7 +182,7 @@ test("logo officiel et verset fondateur Ézéchiel 37",()=>{
 });
 test("maquette 02 Ivoire · Treillis · Or : vitrine, chargement, espaces privés",()=>{
  const h=read("public/vitrine/portail.html");
- for(const t of ["sde-ivoire","tpa-2026.webp","Bâtissons ensemble pour un plus grand impact","Découvrez la vision, la communauté et les actions de solidarité","Entrer dans l’espace","Rejoindre le mouvement","SDE - Mouvement"])assert.ok(h.includes(t),t);
+ for(const t of ["sde-ivoire","tpa-2026.webp","Bâtissons ensemble pour un plus grand impact","Connexion","SDE - Mouvement"])assert.ok(h.includes(t),t);
  const app=read("public/index.html");assert.ok(app.includes('id="sde-splash"')&&app.includes("La vision en marche")&&app.includes("Chargement de votre espace"),"écran de chargement");
  assert.ok(read("public/vitrine/sde-splash.css").includes("prefers-reduced-motion"),"mouvement réduit respecté");
  assert.ok(shell.includes("['ivoire','Ivoire · Treillis · Or']"),"palette Ivoire disponible");

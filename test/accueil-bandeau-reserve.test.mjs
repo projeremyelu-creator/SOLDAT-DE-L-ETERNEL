@@ -15,10 +15,11 @@ test("Accueil : image TPA préchargée et versets présents avant l'exécution d
  assert.ok(placeholder);
  assert.equal(placeholder.getAttribute("aria-label"),"Verset du jour");
  assert.equal(placeholder.previousElementSibling?.tagName,"HEADER");
- assert.equal(placeholder.nextElementSibling?.classList.contains("sde-rail"),true);
- assert.ok(doc.querySelector(".sde-hero-poster img[src='/vitrine/illus/tpa-2026.webp']"));
- assert.ok(doc.querySelector(".iv-band.sde-community-band img[src='/vitrine/photos/communion-vignette.webp']"));
- assert.equal(doc.querySelectorAll(".iv-vitrine img[src='/vitrine/illus/tpa-2026.webp']").length,0);
+ assert.equal(placeholder.nextElementSibling?.id,"contenu");
+ assert.equal(doc.querySelectorAll("img[src='/vitrine/illus/tpa-2026.webp']").length,1,"une seule affiche du programme phare");
+ const poster=doc.querySelector(".ap-poster img[src='/vitrine/illus/tpa-2026.webp']");
+ assert.ok(poster,"l'affiche est dans le bloc programme phare");
+ assert.ok(poster.getAttribute("width")&&poster.getAttribute("height"),"dimensions réservées : pas de décalage de mise en page");
  assert.doesNotMatch(s,/rel="preload" as="image" href="\/vitrine\/illus\/infire-banniere\.webp"/);
  dom.window.close();
 });

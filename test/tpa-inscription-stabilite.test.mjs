@@ -7,8 +7,8 @@ const read=path=>readFileSync(path,"utf8");
 const objet="Traversée Prophétique Annuelle — TPA 2026";
 const invitation="/contact?objet="+encodeURIComponent(objet)+"#rejoindre";
 
-test("Premier affichage : la structure TPA précède React sur les deux pages principales",()=>{
-  for(const page of ["portail","programmes"]){
+test("Premier affichage : la structure TPA précède React sur la page Programmes, et l’accueil porte la fiche centrale",()=>{
+  for(const page of ["programmes"]){
     const dom=new JSDOM(read("public/vitrine/"+page+".html"));
     const root=dom.window.document.getElementById("sde-event-root");
     assert.ok(root,page+" a un bandeau");
@@ -18,6 +18,10 @@ test("Premier affichage : la structure TPA précède React sur les deux pages pr
     assert.doesNotMatch(root.textContent,/IN FIRE 2026/);
     dom.window.close();
   }
+  const accueil=new JSDOM(read("public/vitrine/portail.html")).window.document;
+  assert.ok(accueil.querySelector("#programme-phare time[datetime='2026-12-18T20:00:00+00:00']"),"accueil : fiche TPA statique avant JavaScript");
+  assert.ok(accueil.querySelector('#programme-phare a[href="/programmes#tpa-2026"]'));
+  assert.doesNotMatch(accueil.querySelector("main").textContent,/IN FIRE 2026/);
   const js=read("public/vitrine/portail-unifie.js");
   assert.match(js,/if\(bandeau\.querySelector\("\.event-bar-inner"\)\)return/);
 });
