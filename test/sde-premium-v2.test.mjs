@@ -11,6 +11,7 @@ test('Accueil premium : trois univers reliés aux vraies rubriques publiques',()
   const doc=dom.window.document;
   const pillars=doc.querySelectorAll('.sde-premium-pillars-grid .sde-premium-pillar');
   assert.equal(pillars.length,3);
+  assert.ok(doc.querySelector('.sde-premium-commandement a[href="/gouvernance"]'),"Lien organisation vers la gouvernance réelle");
   for(const [selector,label,path] of [
    ['.sde-premium-spiritualite','Spiritualité','/priere'],
    ['.sde-premium-commandement','Commandement','/portail'],
