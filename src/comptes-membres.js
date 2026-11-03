@@ -10,7 +10,7 @@ const json=(corps,status=200)=>Response.json(corps,{status,headers:{'cache-contr
 const fail=(message,status=400)=>json({ok:false,message},status);
 export const MDP_TEMP_JOURS=14;
 export const LOT=25;
-const ID_DOC=/^[A-Za-z0-9_\\-.~:@+]{1,200}$/;
+const ID_DOC=/^[A-Za-z0-9_.~:@+-]{1,200}$/;
 const MATRICULE=/^[a-z0-9][a-z0-9 ._-]{2,39}$/i;
 async function emailTechnique(id){
  const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('fiche-membre-sde:'+id));
