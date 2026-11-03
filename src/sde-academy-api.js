@@ -31,12 +31,12 @@ async function state(env,account){
     env.DB.prepare("SELECT niveau,code,delivree_le FROM academy_2027_attestations WHERE compte=?").bind(id).all()
   ]);
   const overview={};
-  for(const c of COURSES)overview[c.id]={id:c.id,level:c.level,quiz:null,exercises:null,exam:null,attendance:0,participation:null,pending:[],passed:false,average:null};
+  for(const c of COURSES)overview[c.id]={id:c.id,level:c.level,quiz:null,exercises:null,exam:null,attendance:0,participation:null,pending:[],feedback:[],passed:false,average:null};
   for(const v of att.results||[]){const x=overview[v.cours];if(x){x.attendance=v.presence;x.participation=v.participation;}}
   for(const s of sub.results||[]){
     const x=overview[s.cours];if(!x||!types.includes(s.type))continue;
     if(s.statut==="en_attente")x.pending.push({id:s.id,type:s.type,submittedAt:s.date_soumission});
-    if(s.statut==="note"&&value(s.score,0,100))x[s.type]=Math.max(x[s.type]??0,s.score);
+    if(s.statut==="note"&&value(s.score,0,100)){x[s.type]=Math.max(x[s.type]??0,s.score);x.feedback.push({type:s.type,score:s.score,commentaire:s.commentaire||""});}
   }
   for(const x of Object.values(overview)){
     const valid=types.every(t=>x[t]!==null)&&x.participation!==null;
@@ -51,7 +51,7 @@ function publicProgress(data){
   return COURSES.map(c=>{
     const v=data.overview[c.id];
     const locked=c.level>1&&!data.completedLevel(c.level-1);
-    return {id:c.id,title:c.title,level:c.level,durationHours:c.durationHours,locked,quiz:v.quiz,exercises:v.exercises,exam:v.exam,participation:v.participation,attendance:v.attendance,average:v.average,passed:v.passed,pending:v.pending};
+    return {id:c.id,title:c.title,level:c.level,durationHours:c.durationHours,locked,quiz:v.quiz,exercises:v.exercises,exam:v.exam,participation:v.participation,attendance:v.attendance,average:v.average,passed:v.passed,pending:v.pending,feedback:v.feedback};
   });
 }
 async function issueCertificates(env,account){
@@ -101,7 +101,7 @@ export async function soldiersAcademyApi(req,env,u,path){
     if(!admin)return error("Accès réservé à la direction pédagogique.",403);
     const rows=(await env.DB.prepare("SELECT a.id,a.compte,a.cours,a.type,a.reponses,a.date_soumission,c.nom FROM academy_2027_submissions a LEFT JOIN comptes c ON c.id=a.compte WHERE a.statut='en_attente' ORDER BY a.date_soumission ASC LIMIT 100").all()).results||[];
     const suivi=(await env.DB.prepare("SELECT DISTINCT compte,cours FROM academy_2027_submissions ORDER BY cours LIMIT 200").all()).results||[];
-    return response({ok:true,pending:rows.map(x=>({...x,reponses:JSON.parse(x.reponses||"[]"),nom:x.nom||"Apprenant"})),students:suivi,courses:COURSES.map(c=>({id:c.id,title:c.title,level:c.level}))});
+    return response({ok:true,pending:rows.map(x=>({...x,reponses:JSON.parse(x.reponses||"[]"),nom:x.nom||"Apprenant",questions:(counts(courseFor(x.cours)||COURSES[0],x.type)||[]).map(q=>q.question||q.instruction||q.task||"Question") })),students:suivi,courses:COURSES.map(c=>({id:c.id,title:c.title,level:c.level}))});
   }
   if(path==="/api/soldiers-academy/noter"&&req.method==="PATCH"){
     if(!admin)return error("Accès réservé aux correcteurs.",403);
