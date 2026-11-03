@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0d1b32">
+<title>Studio enseignants et coachs · Soldiers Academy</title>
+<link rel="icon" href="/vitrine/logo-96.png"><link rel="stylesheet" href="/vitrine/sde-premium-public.css">
+<link rel="stylesheet" href="/vitrine/sde-academy-onglets.css">
+<script defer src="/vitrine/sde-academy-ui.js?v=20271103-studio"></script>
+<script defer src="/vitrine/sde-academy-enseignants.js?v=20271103-studio"></script>
+</head><body>
+<a class="skip" href="#main">Passer au contenu principal</a>
+<header><div class="inner"><a class="identity" href="/"><img alt="" src="/vitrine/logo-96.png"><span><strong>S.D.E. · SOLDIERS ACADEMY</strong><small>Studio enseignants et coachs</small></span></a><nav aria-label="Navigation"><a href="/mon-espace/academy">Espace apprenant</a><a href="/mon-espace">Mon espace</a></nav></div></header>
+<main id="main">
+<section class="hero"><div class="eyebrow">Équipe pédagogique</div><h1>Publier pour <em>faire grandir</em> les apprenants</h1><p class="lead">Ajoutez des leçons, vidéos, audios, documents et exercices d'entraînement. Dès la publication, tous les apprenants concernés les voient dans leur espace Soldiers Academy. Les évaluations officielles et leurs corrigés restent gérés par la direction pédagogique.</p></section>
+<p class="status" id="status" role="status" aria-live="polite">Vérification de vos droits…</p>
+<section id="studio" hidden>
+<div class="metrics" id="studioMetrics"></div>
+<div class="tabs" role="tablist" aria-label="Studio" id="studioTabs">
+<button type="button" role="tab" id="tab-publier" aria-controls="pane-publier" aria-selected="true">Publier</button>
+<button type="button" role="tab" id="tab-liste" aria-controls="pane-liste" aria-selected="false" tabindex="-1">Mes publications</button>
+<button type="button" role="tab" id="tab-equipe" aria-controls="pane-equipe" aria-selected="false" tabindex="-1" hidden>Équipe pédagogique</button>
+</div>
+<div class="pane" role="tabpanel" id="pane-publier" aria-labelledby="tab-publier">
+<form class="panel" id="formRessource" novalidate>
+<h2 id="titreForm">Nouvelle ressource</h2>
+<label class="field">Où la publier ?<select name="portee" id="champPortee" required></select></label>
+<label class="field">Type de ressource<select name="type" id="champType" required>
+<option value="video">Vidéo ou audio (YouTube, Vimeo ou fichier)</option>
+<option value="fichier">Document à télécharger (PDF, Word, PowerPoint, Excel)</option>
+<option value="lien">Lien web utile</option>
+<option value="note">Leçon ou note de cours (texte)</option>
+<option value="exercice">Exercice d'entraînement (non noté)</option></select></label>
+<label class="field">Titre<input name="titre" id="champTitre" required minlength="3" maxlength="140" placeholder="Ex. Leçon 2 — Lire la Bible en contexte"></label>
+<label class="field">Courte description (facultatif)<textarea name="description" maxlength="1000" rows="2"></textarea></label>
+<div id="blocLien" class="field-group">
+<label class="field">Adresse web (https://…)<input name="url" id="champUrl" inputmode="url" maxlength="500" placeholder="https://www.youtube.com/watch?v=…"></label>
+<p class="muted" id="aideLien">Liens YouTube et Vimeo acceptés : la vidéo se lit directement dans l'espace de l'apprenant.</p>
+</div>
+<div id="blocFichier" class="field-group">
+<label class="field"><span id="libFichier">Ou téléversez un fichier</span><input type="file" id="champFichier" accept=".mp4,.m4v,.mov,.webm,.mp3,.m4a,.aac,.wav,.ogg,.pdf,.doc,.docx,.ppt,.pptx,.pps,.ppsx,.xls,.xlsx,.csv"></label>
+<div class="bar" id="barUpload" hidden><i style="width:0%"></i></div>
+<p class="muted" id="etatUpload" role="status" aria-live="polite"></p>
+</div>
+<div id="blocTexte" class="field-group" hidden>
+<label class="field">Contenu (20 à 6 000 caractères)<textarea name="texte" id="champTexte" rows="9" maxlength="6000"></textarea></label>
+</div>
+<label class="check"><input type="checkbox" name="publie" id="champPublie" checked> Publier immédiatement (sinon : brouillon invisible des apprenants)</label>
+<div class="actions"><button class="button primary" type="submit" id="btnPublier">Publier</button><button class="button" type="button" id="btnAnnuler" hidden>Annuler la modification</button></div>
+</form>
+</div>
+<div class="pane" role="tabpanel" id="pane-liste" aria-labelledby="tab-liste" hidden>
+<div class="panel"><h2 id="titreListe">Mes publications</h2><div id="listeRessources" class="stack"></div></div>
+</div>
+<div class="pane" role="tabpanel" id="pane-equipe" aria-labelledby="tab-equipe" hidden>
+<form class="panel" id="formFormateur">
+<h2>Nommer un enseignant ou un coach</h2>
+<p class="muted">La personne doit déjà avoir un compte. Elle ne pourra publier que dans les cours que vous lui confiez ; aucun autre droit n'est modifié.</p>
+<label class="field">Adresse e-mail du compte<input type="email" name="compte" required maxlength="190"></label>
+<label class="field">Fonction<select name="fonction"><option value="enseignant">Enseignant</option><option value="coach">Coach</option></select></label>
+<fieldset class="field"><legend>Cours confiés</legend><label class="check"><input type="checkbox" id="toutesPortees"> Tous les cours et la bibliothèque générale</label><div id="choixPortees" class="chips-grid"></div></fieldset>
+<button class="button primary" type="submit">Nommer</button>
+</form>
+<div class="panel"><h2>Équipe en place</h2><div id="listeEquipe" class="stack"></div></div>
+</div>
+</section>
+</main>
+<footer>© Mouvement SDE · Soldiers Academy · Les ressources publiées engagent leur auteur. Respectez les droits d'auteur : ne déposez que des contenus que vous avez le droit de partager.</footer>
+</body></html>

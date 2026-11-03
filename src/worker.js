@@ -6,6 +6,7 @@ import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {memberAcademySummary} from "./member-academy-summary.js";
 import {soldiersAcademyApi,verifierAttestation} from "./sde-academy-api.js";
+import {fonctionFormateur} from "./academy-ressources.js";
 import {rappelsCohortes} from "./academy-extras.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {squadChatApi} from "./squad-chat.js";
@@ -1372,7 +1373,7 @@ async function apiMedias(req, env, u, url, ctx) {
   if (id && !ID_MEDIA.test(id)) return erreur("introuvable", "Média inconnu.", 404);
   if (!id && req.method === "GET") {
     const r = await env.DB.prepare(`SELECT ${CHAMPS_MEDIA} FROM medias WHERE fini = 1 ORDER BY cree DESC LIMIT 2000`).all();
-    const liste = (r.results || []).filter((m) => mediaVisible(u, m)).map((m) => ({ ...m, gerer: peutGererMedia(u, m) }));
+    const liste = (r.results || []).filter((m) => mediaVisible(u, m) && (!u.restreint || m.auteur === u.id)).map((m) => ({ ...m, gerer: peutGererMedia(u, m) }));
     const out = { medias: liste, peutAjouter: u.niveau >= 1 };
     if (u.niveau >= 1) {
       const t = await env.DB.prepare("SELECT COALESCE(SUM(taille), 0) AS total, COUNT(*) AS n FROM medias WHERE stockage = ?").bind(limitesMedia(env).stockage).first();
@@ -1395,6 +1396,7 @@ async function apiMedias(req, env, u, url, ctx) {
     if (t.total + taille > lim.total) return erreur("too_large", "L’espace de la médiathèque est plein : supprimez des fichiers ou activez un stockage plus grand.", 413);
     const miniature = typeof b.miniature === "string" && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(b.miniature) && b.miniature.length < 160000 ? b.miniature : null;
     const p = propreMedia(b);
+    if (u.restreint) p.visibilite = "membres";
     const mid = idDoc();
     await env.DB.prepare("INSERT INTO medias (id, titre, description, categorie, genre, nom, mime, taille, morceau, morceaux, stockage, visibilite, miniature, auteur, auteurNom, cree, fini) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)")
       .bind(mid, p.titre || nom.replace(/\.[^.]+$/, ""), p.description, p.categorie, type[0], nom, type[1], taille, MORCEAU, Math.ceil(taille / MORCEAU), lim.stockage, p.visibilite, miniature, u.id, u.nom || u.email, Date.now()).run();
@@ -1422,6 +1424,7 @@ async function apiMedias(req, env, u, url, ctx) {
   }
   if (req.method === "POST" && !n) {
     const p = propreMedia(await req.json(), m);
+    if (u.restreint) p.visibilite = "membres";
     await env.DB.prepare("UPDATE medias SET titre = ?, description = ?, categorie = ?, visibilite = ? WHERE id = ?").bind(p.titre || m.titre, p.description, p.categorie, p.visibilite, m.id).run();
     return json({ ok: true });
   }
@@ -1845,10 +1848,10 @@ async function traiter(req, env, ctx) {
         }
         if (["/mon-espace","/administration","/mon-espace/outils","/administration/outils",
              "/mon-espace/os-v31","/administration/os-v31",
-             "/mon-espace/academy","/administration/academy"].includes(p)) {
+             "/mon-espace/academy","/administration/academy","/mon-espace/enseignants","/administration/enseignants"].includes(p)) {
           const u = await utilisateur(req, env);
           if (!u.connecte) {
-            const cible=p.endsWith("/academy")?p:(p.startsWith("/administration")?"/administration":"/mon-espace");
+            const cible=p.endsWith("/academy")?p:(p.endsWith("/enseignants")?p:(p.startsWith("/administration")?"/administration":"/mon-espace"));
             const mode=url.searchParams.get("mode");
             const modeValide=["inscription","activation","recuperation"].includes(mode)?"&mode="+encodeURIComponent(mode):"";
             return new Response(null,{status:302,headers:{location:url.origin + "/connexion?retour=" + encodeURIComponent(cible) + modeValide,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
@@ -1859,13 +1862,13 @@ async function traiter(req, env, ctx) {
           // directement l'application native, jamais une page de liens intermédiaire.
           // Les routes /outils restent disponibles pour les anciens favoris.
           const fichier = p.endsWith("/os-v31")?"/os-v31/index.html":"/index.html";
-          const fichierAcademy = p.endsWith("/academy")?"/vitrine/sde-academy-parcours.html":fichier;
+          const fichierAcademy = p.endsWith("/academy")?"/vitrine/sde-academy-parcours.html":p.endsWith("/enseignants")?"/vitrine/academy-enseignants.html":fichier;
           const r = await assetPortail(fichierAcademy);
           const n = new Response(r.body,r);
           n.headers.set("cache-control","private, no-store");
           n.headers.set("x-robots-tag","noindex, nofollow");
-          if (p.endsWith("/academy")) n.headers.set("content-security-policy",
-            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
+          if (p.endsWith("/academy") || p.endsWith("/enseignants")) n.headers.set("content-security-policy",
+            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; media-src 'self'; frame-src https://www.youtube-nocookie.com https://player.vimeo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
           if (p.endsWith("/os-v31")) n.headers.set("content-security-policy",
             "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
           return n;
@@ -2033,7 +2036,11 @@ async function traiter(req, env, ctx) {
       }
       if (p.startsWith("/api/fichiers")) return apiFichiers(req, env, u, url);
       if (p === "/api/import" && req.method === "POST") return apiImport(req, env, u, ctx);
-      if (p === "/api/medias" || p.startsWith("/api/medias/")) return apiMedias(req, env, u, url, ctx);
+      if (p === "/api/medias" || p.startsWith("/api/medias/")) {
+        /* Enseignant ou coach désigné sans rôle de responsable : accès limité à ses propres fichiers, toujours visibles des seuls comptes connectés. */
+        if (u.connecte && u.niveau < 1 && await fonctionFormateur(env, u)) return apiMedias(req, env, { ...u, niveau: 1, restreint: true }, url, ctx);
+        return apiMedias(req, env, u, url, ctx);
+      }
       if (p === "/api/sauvegardes" || p.startsWith("/api/sauvegardes/")) return apiSauvegardes(req, env, u, url);
       if (p === "/api/formulaire-admin") return apiFormulaireAdmin(req, env, u);
       if (p === "/api/engager-admin") return apiEngagerAdmin(req, env, u);

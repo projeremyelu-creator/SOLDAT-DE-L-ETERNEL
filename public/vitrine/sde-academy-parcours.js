@@ -7,6 +7,7 @@ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 let snapshot=null;
 let activeCourse=null;
 let gestion=null;
+let mainTabs={activer(){}};
 const text=(id,v)=>{const n=$(id);if(n)n.textContent=String(v??"");};
 function alertMessage(message,id="status"){text(id,message);}
 async function request(path,method="GET",payload){
@@ -24,13 +25,17 @@ function statusFor(c){
  if(c.pending?.length)return '<span class="chip pending">Correction en attente</span>';
  return '<span class="chip">En formation</span>';
 }
+function nbRessources(id){
+ const n=Number(snapshot.ressources?.parCours?.[id]||0);
+ return n?'<span class="chip type-video">'+n+' ressource'+(n>1?"s":"")+'</span>':"";
+}
 function renderCatalogue(){
  const n=$("catalogue");
  const headings=["Fondations bibliques et identité","Équipement spirituel et ministériel","Leadership et commandement"];
  n.innerHTML=headings.map((title,i)=>{
    const c=snapshot.courses.filter(x=>x.level===i+1);
    return '<div class="level"><h2>Niveau '+(i+1)+' — '+esc(title)+'</h2><span class="chip">'+c.filter(x=>x.passed).length+' / 8 cours validés</span></div><div class="grid">'+
-   c.map(x=>'<article class="card '+(x.passed?"passed ":"")+(x.locked?"locked":"")+'"><span class="code">'+esc(x.id)+' · 8 h</span><h3>'+esc(x.title)+'</h3>'+statusFor(x)+'<small>Quiz : '+esc(scoreText(x.quiz))+' · Travaux : '+esc(scoreText(x.exercises))+'<br>Examen : '+esc(scoreText(x.exam))+' · Présence : '+esc(x.attendance)+' %</small><button type="button" class="button '+(x.passed?"":"primary")+'" data-course="'+esc(x.id)+'" '+(x.locked?"disabled":"")+'>'+(x.locked?"Niveau précédent requis":"Ouvrir le cours →")+'</button></article>').join("")+'</div>';
+   c.map((x,i)=>'<article class="card '+(x.passed?"passed ":"")+(x.locked?"locked":"")+'" style="--i:'+i+'"><span class="code">'+esc(x.id)+' · 8 h</span><h3>'+esc(x.title)+'</h3>'+statusFor(x)+nbRessources(x.id)+'<small>Quiz : '+esc(scoreText(x.quiz))+' · Travaux : '+esc(scoreText(x.exercises))+'<br>Examen : '+esc(scoreText(x.exam))+' · Présence : '+esc(x.attendance)+' %</small><button type="button" class="button '+(x.passed?"":"primary")+'" data-course="'+esc(x.id)+'" '+(x.locked?"disabled":"")+'>'+(x.locked?"Niveau précédent requis":"Ouvrir le cours →")+'</button></article>').join("")+'</div>';
  }).join("");
 }
 function renderCertificates(){
@@ -54,9 +59,19 @@ async function showCertificate(level){
 function progress(){
  const v=snapshot.progress;
  text("statPassed",v.passed+" / 24");text("statPercent",v.percentage+" %");text("statCert",snapshot.certificates.filter(x=>x.niveau<=3).length+" / 3");
- $("progressBar").value=v.passed;
- renderCatalogue();renderCertificates();renderAvis();renderProjet();renderCohortes();renderSpecialisations();$("studentPage").hidden=false;
- const admin=!!snapshot.admin;$("adminShortcut").hidden=!admin;$("adminPage").hidden=!admin;
+ const bar=$("progressBar");bar.setAttribute("aria-valuenow",String(v.passed));requestAnimationFrame(()=>{bar.firstElementChild.style.width=Math.round(v.passed/24*100)+"%";});
+ renderCatalogue();renderCertificates();renderAvis();renderProjet();renderCohortes();renderSpecialisations();renderBiblio();$("studentPage").hidden=false;
+ $("tab-projet").hidden=!snapshot.projet?.ouvert;
+ const admin=!!snapshot.admin;$("adminShortcut").hidden=!admin;$("adminPage").hidden=!admin;$("studioShortcut").hidden=!(admin||snapshot.formateur);
+}
+function vuLe(){try{return Number(localStorage.getItem("sde-academy-biblio-vu"))||0}catch{return 0}}
+function renderBiblio(){
+ const r=snapshot.ressources||{generales:[],nouveautes:[]};
+ const nouv=(r.nouveautes||[]),vu=vuLe(),fraiches=nouv.filter(x=>x.cree>vu);
+ const badge=$("badgeBiblio");badge.hidden=!fraiches.length;badge.textContent=String(fraiches.length);
+ const UI=window.SDEAcademyUI;
+ $("biblioNouveautes").innerHTML=nouv.length?'<h3>Nouveautés des 14 derniers jours</h3><ul class="numbered">'+nouv.map(x=>'<li><span class="chip type-'+esc(x.type)+'">'+esc(UI.TYPES[x.type]||"Ressource")+'</span> '+(snapshot.courses.some(c=>c.id===x.portee)?'<button type="button" class="button" data-course="'+esc(x.portee)+'" data-onglet-cours="ressources">'+esc(x.titre)+' ('+esc(x.portee)+')</button>':esc(x.titre))+' <span class="muted">· '+esc(UI.dateFr(x.cree))+'</span></li>').join("")+'</ul>':'';
+ $("biblioGenerale").innerHTML=(r.generales||[]).length?r.generales.map((x,i)=>UI.ressourceHtml(x,i)).join(""):'<div class="vide">La bibliothèque générale est vide pour le moment. Les enseignants et coachs y publient des ressources ouvertes à tous les apprenants.</div>';
 }
 function renderAvis(){
  const n=$("avis"),list=snapshot.avis||[];
@@ -117,13 +132,26 @@ function renderExerciseForm(course,kind,items,existing){
  const inProgress=existing.pending?.some(x=>x.type===kind);
  return '<form class="exam-form" data-submit="'+esc(kind)+'" data-course-id="'+esc(course.id)+'"><h3>'+names[kind]+'</h3><p class="muted">Répondez à toutes les questions. Le résultat est attribué après correction par un responsable habilité.</p>'+items.map((p,i)=>questionLabel(p,i,kind)).join("")+'<button class="button primary" type="submit" '+(inProgress?"disabled":"")+'>'+(inProgress?"Copie en attente de correction":"Remettre cette épreuve")+'</button></form>';
 }
-async function openCourse(id){
+async function openCourse(id,onglet){
  try{
   alertMessage("Ouverture du cours "+id+"…");
   const d=await request("/cours/"+encodeURIComponent(id));const c=d.course;
   activeCourse=c;const s=snapshot.courses.find(x=>x.id===id);
+  const UI=window.SDEAcademyUI,res=d.ressources||[];
+  mainTabs.activer("parcours");
   const panel=$("courseDetail");panel.hidden=false;
-  panel.innerHTML='<div class="eyebrow">'+esc(c.id)+' · Niveau '+c.level+' · 8 heures</div><h2>'+esc(c.title)+'</h2><p>'+esc(c.purpose)+'</p><p><strong>Lectures bibliques :</strong> '+esc(c.refs)+'</p><h3>Objectifs pédagogiques</h3><ol class="numbered">'+c.goals.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol><h3>Les quatre leçons</h3>'+c.units.map(x=>'<div class="lesson"><div class="eyebrow">Leçon '+x.number+' · 90 minutes</div><h3>'+esc(x.title)+'</h3><p>'+esc(x.body)+'</p><p class="muted"><strong>À lire :</strong> '+esc(x.scriptures)+'</p></div>').join("")+'<h3>Suivi des acquis</h3><p>Quiz : '+esc(scoreText(s.quiz))+' · Travaux : '+esc(scoreText(s.exercises))+' · Participation : '+esc(scoreText(s.participation))+' · Examen : '+esc(scoreText(s.exam))+' · Assiduité : '+esc(s.attendance)+' %</p><p><strong>Note finale :</strong> '+esc(scoreText(s.average))+' · '+(s.passed?"Cours validé":"Validation : 70/100 et au moins 80 % de présence")+'</p>'+(s.feedback?.length?'<h3>Retours de correction</h3><ul>'+s.feedback.map(f=>'<li><strong>'+esc(f.type)+' · '+esc(f.score)+'/100</strong> — '+esc(f.commentaire)+'</li>').join('')+'</ul>':'')+renderExerciseForm(c,"quiz",c.quiz,s)+renderExerciseForm(c,"exercises",c.exercises,s)+renderExerciseForm(c,"exam",c.exam,s)+'<button class="button" type="button" id="backCourses">← Revenir à la liste</button>';
+  const presentation='<p>'+esc(c.purpose)+'</p><p><strong>Lectures bibliques :</strong> '+esc(c.refs)+'</p><h3>Objectifs pédagogiques</h3><ol class="numbered">'+c.goals.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol>';
+  const lecons=c.units.map((x,i)=>'<details class="lecon"'+(i===0?" open":"")+'><summary><span class="chip">Leçon '+x.number+' · 90 min</span> '+esc(x.title)+'</summary><div class="corps"><p>'+esc(x.body)+'</p><p class="muted"><strong>À lire :</strong> '+esc(x.scriptures)+'</p></div></details>').join("");
+  const ressources=res.length?'<div class="stack">'+res.map((x,i)=>UI.ressourceHtml(x,i)).join("")+'</div>':'<div class="vide">Aucune ressource pour ce cours pour le moment. Vos enseignants et coachs y ajouteront des vidéos, documents et leçons : elles apparaîtront ici dès leur publication.</div>';
+  const suivi='<h3>Suivi des acquis</h3><p>Quiz : '+esc(scoreText(s.quiz))+' · Travaux : '+esc(scoreText(s.exercises))+' · Participation : '+esc(scoreText(s.participation))+' · Examen : '+esc(scoreText(s.exam))+' · Assiduité : '+esc(s.attendance)+' %</p><p><strong>Note finale :</strong> '+esc(scoreText(s.average))+' · '+(s.passed?"Cours validé":"Validation : 70/100 et au moins 80 % de présence")+'</p>'+(s.feedback?.length?'<h3>Retours de correction</h3><ul>'+s.feedback.map(f=>'<li><strong>'+esc(f.type)+' · '+esc(f.score)+'/100</strong> — '+esc(f.commentaire)+'</li>').join('')+'</ul>':'');
+  const evals=suivi+renderExerciseForm(c,"quiz",c.quiz,s)+renderExerciseForm(c,"exercises",c.exercises,s)+renderExerciseForm(c,"exam",c.exam,s);
+  const onglets=[["presentation","Présentation",presentation],["lecons","Leçons",lecons],["ressources","Ressources"+(res.length?" ("+res.length+")":""),ressources],["evaluations","Évaluations",evals]];
+  panel.innerHTML='<div class="eyebrow">'+esc(c.id)+' · Niveau '+c.level+' · 8 heures</div><h2>'+esc(c.title)+'</h2>'+(s.passed?'<span class="chip ok">Cours validé</span>':"")+
+   '<div class="tabs sub" role="tablist" aria-label="Contenu du cours" id="courseTabs">'+onglets.map(([k,l],i)=>'<button type="button" role="tab" id="tab-c-'+k+'" aria-controls="pane-c-'+k+'" aria-selected="'+(i===0)+'" '+(i===0?"":'tabindex="-1"')+'>'+esc(l)+'</button>').join("")+'</div>'+
+   onglets.map(([k,,html],i)=>'<div role="tabpanel" id="pane-c-'+k+'" aria-labelledby="tab-c-'+k+'" '+(i===0?'class="pane"':"hidden")+'>'+html+'</div>').join("")+
+   '<button class="button" type="button" id="backCourses">← Revenir à la liste</button>';
+  const sub=UI.tabs($("courseTabs"));
+  if(onglets.some(x=>x[0]===onglet))sub.activer("c-"+onglet);
   $("backCourses").addEventListener("click",()=>{panel.hidden=true;$("catalogue").scrollIntoView({behavior:"smooth"});});
   panel.scrollIntoView({behavior:"smooth",block:"start"});alertMessage("Cours "+id+" ouvert.");
  }catch(e){alertMessage(e.message);}
@@ -160,7 +188,7 @@ async function reload(){
  snapshot=await request("");progress();
 }
 document.addEventListener("click",async ev=>{
- const btn=ev.target.closest("[data-course]");if(btn&&!btn.disabled){openCourse(btn.dataset.course);return;}
+ const btn=ev.target.closest("[data-course]");if(btn&&!btn.disabled){openCourse(btn.dataset.course,btn.dataset.ongletCours);return;}
  const act=ev.target.closest("[data-avis-lus],[data-cohorte-rejoindre],[data-cohorte-quitter],[data-cohorte-clore],[data-ecole-retirer]");if(!act)return;
  try{
   if(act.hasAttribute("data-avis-lus"))await request("/avis/lus","POST",{});
@@ -224,6 +252,7 @@ document.addEventListener("submit",async ev=>{
 });
 (async()=>{
  try{
+  mainTabs=window.SDEAcademyUI.tabs($("mainTabs"),id=>{if(id==="biblio"){try{localStorage.setItem("sde-academy-biblio-vu",String(Date.now()))}catch{}$("badgeBiblio").hidden=true;}});
   await reload();alertMessage("Bienvenue dans votre parcours Soldiers Academy 2027.");
   if(snapshot.admin)await loadGestion();
  }catch(e){

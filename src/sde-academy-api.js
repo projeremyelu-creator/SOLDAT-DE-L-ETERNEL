@@ -4,6 +4,7 @@
 import {SOLDIERS_ACADEMY_2027 as PROGRAMME} from "./soldiers-academy-2027.js";
 import {CORRECTIFS,BAREME_EXERCICE,BAREME_EXAMEN} from "./academy-correctifs.js";
 import {SPECIALISATIONS} from "./academy-specialisations.js";
+import {initRessources,ressourcesApi,ressourcesApprenant,fonctionFormateur} from "./academy-ressources.js";
 import {initExtras,notifierCompte,notifierDirection,avisNonLus,marquerAvisLus,cohortesVue,cohortesGestion,cohortesApi,ecolesApi,ecolesDuCompte,ecolesGestion,verifierAttestation as verifierAttestationPublique} from "./academy-extras.js";
 export const verifierAttestation=verifierAttestationPublique;
 const COURSES=PROGRAMME.courses;
@@ -87,6 +88,10 @@ async function issueCertificates(env,account){
   }
   return nouvelles;
 }
+async function ressourcesPour(env,d){
+  try{await initRessources(env);return await ressourcesApprenant(env,{peutNiveau:n=>n===1||(n>1&&d.completedLevel(n-1))})}
+  catch{return {parCours:{},generales:[],nouveautes:[]}}
+}
 function canAccess(c,data){return c.level===1||data.completedLevel(c.level-1);}
 function counts(c,type){return type==="quiz"?c.quiz:type==="exercises"?c.exercises:c.exam;}
 export async function soldiersAcademyApi(req,env,u,path){
@@ -100,16 +105,19 @@ export async function soldiersAcademyApi(req,env,u,path){
     const d=await state(env,account);
     const pj=await projetEtat(env,account);
     const peutRejoindre=n=>n===1||d.completedLevel(n-1);
-    const [cohortes,avis,mesEcoles]=await Promise.all([cohortesVue(env,u,{peutRejoindre}),avisNonLus(env,account),ecolesDuCompte(env,account)]);
+    const [cohortes,avis,mesEcoles,biblio,fonction]=await Promise.all([cohortesVue(env,u,{peutRejoindre}),avisNonLus(env,account),ecolesDuCompte(env,account),ressourcesPour(env,d),fonctionFormateur(env,u)]);
     const projet={ouvert:d.allPassed(),criteres:PROJET_CRITERES.map(([libelle,points])=>({libelle,points})),enAttente:pj.enAttente,soumisLe:pj.soumisLe,meilleur:pj.meilleur,acquis:pj.acquis,dernier:pj.dernier};
     return response({ok:true,programme:{version:PROGRAMME.version,status:"adopte",durationHours:192,levels:PROGRAMME.levels,evaluation:PROGRAMME.evaluation},name:u.nom||"Membre SDE",admin,progress:d.progress,courses:publicProgress(d),certificates:d.certificates,projet,parcoursComplet:d.certificates.some(c=>c.niveau===4),
-      specialisations:{ecoles:SPECIALISATIONS.ecoles,masterclass:SPECIALISATIONS.masterclass,ouvertes:d.allPassed(),mesInscriptions:mesEcoles},cohortes,avis});
+      specialisations:{ecoles:SPECIALISATIONS.ecoles,masterclass:SPECIALISATIONS.masterclass,ouvertes:d.allPassed(),mesInscriptions:mesEcoles},cohortes,avis,
+      ressources:{generales:biblio.generales,nouveautes:biblio.nouveautes,parCours:Object.fromEntries(Object.entries(biblio.parCours).map(([k,v])=>[k,v.length]))},formateur:fonction||null});
   }
   if(path.startsWith("/api/soldiers-academy/cours/")&&req.method==="GET"){
     const c=courseFor(decodeURIComponent(path.slice("/api/soldiers-academy/cours/".length)));
     if(!c)return error("Cours introuvable.",404);
-    if(!canAccess(c,await state(env,account)))return error("Validez le niveau précédent pour ouvrir ce cours.",403);
-    return response({ok:true,course:c,disclaimer:"Formation interne au Mouvement SDE. Les travaux et examens sont évalués par un responsable habilité."});
+    const dc=await state(env,account);
+    if(!canAccess(c,dc))return error("Validez le niveau précédent pour ouvrir ce cours.",403);
+    const biblioCours=await ressourcesPour(env,dc);
+    return response({ok:true,course:c,ressources:biblioCours.parCours[c.id]||[],disclaimer:"Formation interne au Mouvement SDE. Les travaux et examens sont évalués par un responsable habilité."});
   }
   if(path==="/api/soldiers-academy/soumettre"&&req.method==="POST"){
     let body;try{body=await readBody(req)}catch{return error("Requête JSON invalide ou trop volumineuse.",413)}
@@ -181,6 +189,7 @@ export async function soldiersAcademyApi(req,env,u,path){
     return response({ok:true,attestation:certificate,level:level===4?{id:4,title:"Parcours intégral Soldiers Academy"}:PROGRAMME.levels[level-1],name:u.nom||"Apprenant Soldiers Academy"});
   }
   if(path==="/api/soldiers-academy/avis/lus"&&req.method==="POST"){await marquerAvisLus(env,account);return response({ok:true});}
+  if(path.startsWith("/api/soldiers-academy/ressources")||path.startsWith("/api/soldiers-academy/formateurs"))return ressourcesApi(req,env,u,path);
   if(path.startsWith("/api/soldiers-academy/ecoles")){
     const d=await state(env,account);
     return ecolesApi(req,env,u,path,{admin,ouvert:d.allPassed()});
