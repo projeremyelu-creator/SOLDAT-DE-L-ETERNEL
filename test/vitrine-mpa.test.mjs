@@ -91,6 +91,12 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
           .find(x=>x.textContent==="Traversée Prophétique Annuelle — TPA 2026");
         assert.ok(option,"L'objet TPA est proposé au secrétariat");
         option.remove();
+        // Référence de la demande et étapes de suivi : ajouts de la refonte, textes d'origine intacts.
+        for(const ajout of ["#envoi-ref-bloc",".pg-steps"]){
+          const el=preserved.querySelector(ajout);
+          assert.ok(el,"Ajout de suivi attendu : "+ajout);
+          el.remove();
+        }
         assert.equal(normalize(preserved.textContent),normalize(a.textContent),name+"/"+id);
       }else if(name==="programmes"&&id==="programmes"){
         // La prose d'origine est préservée ; seul le CTA TPA est ajouté.

@@ -1,6 +1,7 @@
 import {rsvpBackup,publishedEventTime} from "./event-rsvp.js";
 import {qrBackup} from "./member-qr.js";
 import {prayerWallBackup} from "./prayer-wall.js";
+const CATEGORIES_VITRINE=['Cheminement spirituel','Vie communautaire','Service et engagement','Guérison et restauration','Autre parcours de foi'];
 /* Compléments du portail : aucune identité de compte ne vient du corps client. */
 const reply=(data,status=200)=>Response.json(data,{status,headers:{'cache-control':'private, no-store'}});
 const fail=(message,status=400)=>reply({ok:false,message},status);
@@ -122,7 +123,7 @@ export async function portalApi(req,env,u,services){
  if(!personnel&&req.method==='PATCH'){
   if(!['publie','refuse'].includes(b.statut))return fail('Décision invalide.');
   const all=await list('temoignages_soumis'),r=all.find(x=>x.id===b.id);if(!r)return fail('Témoignage introuvable.',404);
-  if(b.statut==='publie'){if(r.data.consentement!==true)return fail('Accord de publication absent.');await write('set','annonces/temoignage-'+r.id,{type:'temoignage',titre:'Témoignage',auteur:r.data.auteur,contenu:r.data.texte,texte:r.data.texte,publie:true,creeLe:Date.now(),creePar:u.id})}
+  if(b.statut==='publie'){if(r.data.consentement!==true)return fail('Accord de publication absent.');await write('set','annonces/temoignage-'+r.id,{type:'temoignage',titre:'Témoignage',auteur:r.data.auteur,contenu:r.data.texte,texte:r.data.texte,publie:true,vitrine:b.vitrine===true,categorie:CATEGORIES_VITRINE.includes(b.categorie)?b.categorie:'',creeLe:Date.now(),creePar:u.id})}
   await write('update','temoignages_soumis/'+r.id,{statut:b.statut,moderePar:u.id,modereLe:Date.now()});await portalAudit(env,u,'temoignages',b.statut);return reply({ok:true});
  }
  return fail('Méthode refusée.',405);
