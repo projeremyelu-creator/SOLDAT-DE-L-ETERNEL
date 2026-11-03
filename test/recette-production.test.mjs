@@ -150,7 +150,7 @@ test('Recette Academy 2027 : refus de fuite, de catalogue ancien et de perte de 
 
 test('Recette Academy : studio et publication des supports, version effective du script sur les deux domaines',async()=>{
  const f=simulateur();
- const controle=CONTROLES.filter(c=>c.type==='academy-script'||c.path==='/mon-espace/enseignants'||c.path==='/api/soldiers-academy/ressources/etat');
+ const controle=CONTROLES.filter(c=>c.type==='academy-script'||c.path==='/mon-espace/enseignants'||c.path==='/api/soldiers-academy/ressources/etat'||c.path==='/api/soldiers-academy/love-school');
  assert.equal(controle.length,4);
  const bilan=await recetteProduction({fetcher:f.fetcher,controles:controle,essais:1});
  assert.equal(bilan.total,8);
