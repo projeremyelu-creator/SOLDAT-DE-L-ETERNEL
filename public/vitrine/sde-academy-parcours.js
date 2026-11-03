@@ -87,7 +87,7 @@ async function synchroniserRessources({manuel=false}={}){
     if(diff){
       snapshot.ressources=next;
       renderBiblio();renderCatalogue();
-      text("academySyncStatus","Nouvelles ressources chargées. Pour un cours déjà ouvert, rouvrez son onglet Ressources.");
+      text("academySyncStatus","Nouvelles ressources chargées. Pour un cours déjà ouvert, ouvrez l’onglet Ressources et cliquez sur « Actualiser ce cours ».");
     }else if(manuel){text("academySyncStatus","Bibliothèque à jour.");}
   }catch(e){if(manuel)text("academySyncStatus",e.message||"Actualisation indisponible.");}
   finally{syncRessourcesEnCours=false;if(bouton)bouton.disabled=false;}
@@ -161,7 +161,8 @@ async function openCourse(id,onglet){
   const panel=$("courseDetail");panel.hidden=false;
   const presentation='<p>'+esc(c.purpose)+'</p><p><strong>Lectures bibliques :</strong> '+esc(c.refs)+'</p><h3>Objectifs pédagogiques</h3><ol class="numbered">'+c.goals.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol>';
   const lecons=c.units.map((x,i)=>'<details class="lecon"'+(i===0?" open":"")+'><summary><span class="chip">Leçon '+x.number+' · 90 min</span> '+esc(x.title)+'</summary><div class="corps"><p>'+esc(x.body)+'</p><p class="muted"><strong>À lire :</strong> '+esc(x.scriptures)+'</p></div></details>').join("");
-  const ressources=res.length?'<div class="stack">'+res.map((x,i)=>UI.ressourceHtml(x,i)).join("")+'</div>':'<div class="vide">Aucune ressource pour ce cours pour le moment. Vos enseignants et coachs y ajouteront des vidéos, documents et leçons : elles apparaîtront ici dès leur publication.</div>';
+  const ressourcesListe=res.length?'<div class="stack">'+res.map((x,i)=>UI.ressourceHtml(x,i)).join("")+'</div>':'<div class="vide">Aucune ressource pour ce cours pour le moment. Vos enseignants et coachs y ajouteront des vidéos, documents et leçons : elles apparaîtront ici dès leur publication.</div>';
+  const ressources='<div class="actions"><button type="button" class="button" data-refresh-course-resources>Actualiser ce cours</button><span id="courseResourcesStatus" role="status" aria-live="polite" class="muted"></span></div><div id="courseResourcesList">'+ressourcesListe+'</div>';
   const suivi='<h3>Suivi des acquis</h3><p>Quiz : '+esc(scoreText(s.quiz))+' · Travaux : '+esc(scoreText(s.exercises))+' · Participation : '+esc(scoreText(s.participation))+' · Examen : '+esc(scoreText(s.exam))+' · Assiduité : '+esc(s.attendance)+' %</p><p><strong>Note finale :</strong> '+esc(scoreText(s.average))+' · '+(s.passed?"Cours validé":"Validation : 70/100 et au moins 80 % de présence")+'</p>'+(s.feedback?.length?'<h3>Retours de correction</h3><ul>'+s.feedback.map(f=>'<li><strong>'+esc(f.type)+' · '+esc(f.score)+'/100</strong> — '+esc(f.commentaire)+'</li>').join('')+'</ul>':'');
   const evals=suivi+renderExerciseForm(c,"quiz",c.quiz,s)+renderExerciseForm(c,"exercises",c.exercises,s)+renderExerciseForm(c,"exam",c.exam,s);
   const onglets=[["presentation","Présentation",presentation],["lecons","Leçons",lecons],["ressources","Ressources"+(res.length?" ("+res.length+")":""),ressources],["evaluations","Évaluations",evals]];
@@ -174,6 +175,25 @@ async function openCourse(id,onglet){
   $("backCourses").addEventListener("click",()=>{panel.hidden=true;$("catalogue").scrollIntoView({behavior:"smooth"});});
   panel.scrollIntoView({behavior:"smooth",block:"start"});alertMessage("Cours "+id+" ouvert.");
  }catch(e){alertMessage(e.message);}
+}
+async function actualiserRessourcesCours(button){
+  const id=activeCourse?.id;
+  if(!id)return;
+  button.disabled=true;
+  text("courseResourcesStatus","Actualisation des supports…");
+  try{
+    const d=await request("/cours/"+encodeURIComponent(id));
+    if(activeCourse?.id!==id)return;
+    const liste=$("courseResourcesList");
+    if(!liste)return;
+    const res=Array.isArray(d.ressources)?d.ressources:[];
+    const UI=window.SDEAcademyUI;
+    liste.innerHTML=res.length?'<div class="stack">'+res.map((x,i)=>UI.ressourceHtml(x,i)).join("")+'</div>':'<div class="vide">Aucune ressource publiée pour ce cours.</div>';
+    const onglet=$("tab-c-ressources");
+    if(onglet)onglet.textContent="Ressources ("+res.length+")";
+    text("courseResourcesStatus","Supports à jour : "+res.length+" ressource"+(res.length>1?"s":"")+".");
+  }catch(e){text("courseResourcesStatus",e.message||"Actualisation indisponible.");}
+  finally{button.disabled=false;}
 }
 async function submitCopy(form){
  const id=form.dataset.courseId,type=form.dataset.submit;
@@ -207,6 +227,8 @@ async function reload(){
  snapshot=await request("");progress();
 }
 document.addEventListener("click",async ev=>{
+ const refresh=ev.target.closest("[data-refresh-course-resources]");
+ if(refresh){await actualiserRessourcesCours(refresh);return;}
  const btn=ev.target.closest("[data-course]");if(btn&&!btn.disabled){openCourse(btn.dataset.course,btn.dataset.ongletCours);return;}
  const act=ev.target.closest("[data-avis-lus],[data-cohorte-rejoindre],[data-cohorte-quitter],[data-cohorte-clore],[data-ecole-retirer]");if(!act)return;
  try{
