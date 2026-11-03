@@ -159,3 +159,21 @@ test('Recette Academy : studio et publication des supports, version effective du
  const ref=await recetteProduction({fetcher:ancien.fetcher,domaines:[DOMAINES[0]],controles:CONTROLES.filter(c=>c.type==='academy-script'),essais:1});
  assert.equal(ref.ok,false,'Un ancien script Academy en production ne doit pas être validé.');
 });
+
+test("RECETTE EXTERNE TEMPORAIRE : parcours Love School Singles, Fiancés et Mariés publiés", {timeout:240000},async()=>{
+ const {recetteAcademyProduction}=await import("../scripts/recette-academy-production.mjs");
+ const bilan=await recetteAcademyProduction({essais:3,timeoutMs:10000,rapport:r=>{
+   console.log("LOVE PUBLICS PROD",r.ok?"OK":"ÉCHEC",r.domaine+r.path,r.erreur||"");
+ }});
+ console.log("LOVE PUBLICS PROD BILAN",bilan.reussis+"/"+bilan.total);
+ assert.equal(bilan.ok,true,JSON.stringify(bilan.resultats.filter(x=>!x.ok),null,2));
+ for(const domain of ["https://mouvement-sde.org","https://app.mouvement-sde.org"]){
+   const r=await fetch(domain+"/vitrine/sde-academy-parcours.js",{signal:AbortSignal.timeout(15000),redirect:"manual",headers:{"cache-control":"no-cache"}});
+   assert.equal(r.status,200,domain+" script");
+   const js=await r.text();
+   for(const token of ["lovePublicActif","data-love-public","loveAudienceSummary","parcours.ids.map"]){
+     assert.ok(js.includes(token),domain+" ancienne interface : "+token);
+   }
+   console.log("LOVE PUBLICS PROD FILTRES OK",domain);
+ }
+});
