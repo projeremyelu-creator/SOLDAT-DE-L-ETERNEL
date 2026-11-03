@@ -1698,6 +1698,7 @@ async function traiter(req, env, ctx) {
         "/mouvement": "/vitrine/mouvement.html",
         "/programmes": "/vitrine/programmes.html",
         "/academy": "/vitrine/academy.html",
+        "/academy-programme-24": "/vitrine/academy-programme-24.html",
         "/enseignements": "/vitrine/ressources.html",
         "/missions": "/vitrine/projets.html",
         "/priere": "/vitrine/prieres.html",
