@@ -8,7 +8,7 @@ const doc=new JSDOM(html).window.document;
 const css=readFileSync('public/vitrine/sde-mobile-correctifs-20261103.css','utf8');
 const audit=readFileSync('scripts/audit-public-mobile.mjs','utf8');
 
-test('PageSpeed : afficher une affiche TPA compacte sur mobile sans casser l'affiche officielle',()=>{
+test("PageSpeed : afficher une affiche TPA compacte sur mobile sans casser l'affiche officielle",()=>{
  const poster=doc.querySelector('#programme-phare picture');
  assert.ok(poster,'L’affiche dispose d’un élément responsive');
  assert.equal(poster.querySelector('source')?.getAttribute('srcset'),'/vitrine/illus/tpa-2026-mobile.webp');
