@@ -1517,3 +1517,152 @@ html body.sde-unifie.sde-subpage .site-footer{
   transition:none!important;transform:none!important;
  }
 }
+
+
+/* SDE premium · Navigation locale des pôles, prières, missions et ressources.
+   L'accès aux sections fonctionne sans JavaScript et respecte les liens actuels. */
+body.sde-unifie.sde-ivoire{
+ --sde-jump-surface:#16243c;--sde-jump-accent:#e4c083;
+}
+body.sde-unifie.sde-ivoire[data-sde-page="pole-reveil"]{--sde-pole-accent:#b58ada}
+body.sde-unifie.sde-ivoire[data-sde-page="pole-social"]{--sde-pole-accent:#89c7a7}
+body.sde-unifie.sde-ivoire[data-sde-page="pole-logistique"]{--sde-pole-accent:#a7b8de}
+body.sde-unifie.sde-ivoire[data-sde-page="pole-medias"]{--sde-pole-accent:#deb0ba}
+body.sde-unifie.sde-ivoire[data-sde-page="pole-formation"]{--sde-pole-accent:#e3c27e}
+body.sde-unifie.sde-ivoire .sde-poles-switcher,
+body.sde-unifie.sde-ivoire .sde-section-jumps{
+ box-sizing:border-box;width:min(1250px,calc(100% - 30px));
+ max-width:1250px;margin:14px auto 0;
+ padding:12px 15px;border-radius:15px;
+ background:linear-gradient(110deg,#121f37,#27193e 64%,#204538)!important;
+ border:1px solid rgba(237,194,121,.45);
+ box-shadow:0 12px 28px rgba(13,17,31,.18);
+ color:#f5eddf!important;
+}
+body.sde-unifie.sde-ivoire .sde-poles-switcher{
+ display:flex;align-items:center;gap:16px;
+ border-top:3px solid var(--sde-pole-accent,#e4c083);
+}
+body.sde-unifie.sde-ivoire .sde-switcher-label{
+ display:block;flex-shrink:0;
+ color:#efcf8f!important;font-size:.69rem;font-weight:850;
+ line-height:1.2;letter-spacing:.11em;
+}
+body.sde-unifie.sde-ivoire .sde-poles-switcher>div{
+ display:flex;align-items:center;gap:7px;
+ min-width:0;flex:1;flex-wrap:wrap;
+}
+body.sde-unifie.sde-ivoire .sde-poles-switcher a{
+ display:inline-flex;align-items:center;justify-content:center;gap:7px;
+ text-decoration:none;white-space:nowrap;
+ min-height:42px;min-width:0;
+ padding:9px 15px;border-radius:10px;
+ background:rgba(224,199,149,.07);
+ border:1px solid rgba(226,195,132,.24);
+ color:#e8e7ed!important;
+ font-size:.83rem;font-weight:700;
+}
+body.sde-unifie.sde-ivoire .sde-poles-switcher a[aria-current="page"]{
+ background:#e5c68c!important;
+ border-color:#ffe6b5!important;
+ color:#241a39!important;
+ font-weight:900;
+}
+body.sde-unifie.sde-ivoire .sde-poles-switcher .sde-switcher-index{
+ font-size:.69rem;opacity:.83;letter-spacing:.03em;
+}
+body.sde-unifie.sde-ivoire .sde-section-jumps{
+ display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+ margin-bottom:18px;
+ background:linear-gradient(115deg,#14263c,#203d39)!important;
+}
+body.sde-unifie.sde-ivoire .sde-section-jumps-spiritualite{
+ background:linear-gradient(110deg,#211536,#372151)!important;
+}
+body.sde-unifie.sde-ivoire .sde-section-jumps-missions{
+ background:linear-gradient(110deg,#16382e,#1b4541)!important;
+}
+body.sde-unifie.sde-ivoire .sde-section-jumps-ressources{
+ background:linear-gradient(110deg,#16243c,#2a1941)!important;
+}
+body.sde-unifie.sde-ivoire .sde-section-jumps a{
+ box-sizing:border-box;
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ min-height:43px;min-width:0;
+ padding:10px 13px;border:1px solid rgba(234,204,151,.27);
+ border-radius:10px;background:rgba(250,229,187,.07);
+ color:#f3ebdf!important;text-align:center;
+ text-decoration:none;font-size:.82rem;font-weight:750;
+ line-height:1.28;overflow-wrap:anywhere;
+}
+body.sde-unifie.sde-ivoire .sde-section-jumps a.sde-section-jumps-cta{
+ background:linear-gradient(115deg,#f4dbac,#d9ae67)!important;
+ color:#241932!important;border-color:#ffe7b5!important;
+ font-weight:900;
+}
+body.sde-unifie.sde-ivoire :is(.sde-section-jumps,.sde-poles-switcher) a:hover:not([aria-current="page"]){
+ background:rgba(246,216,160,.22)!important;
+ border-color:#f8dca1!important;
+ color:#fff7e2!important;
+}
+body.sde-unifie.sde-ivoire :is(.sde-section-jumps,.sde-poles-switcher) a.sde-section-jumps-cta:hover{
+ color:#22142d!important;background:#ffe6b0!important;
+}
+body.sde-unifie.sde-ivoire :is(.sde-section-jumps,.sde-poles-switcher) a:focus-visible{
+ outline:3px solid #ffe3a1!important;
+ outline-offset:3px!important;
+}
+body.sde-unifie.sde-ivoire .sde-pole-hero{
+ border-top:3px solid var(--sde-pole-accent,#efc680)!important;
+}
+body.sde-unifie.sde-ivoire.sde-pole .sde-pole-img{
+ border-radius:13px!important;
+}
+body.sde-unifie.sde-ivoire [id="vision"],
+body.sde-unifie.sde-ivoire [id="actions"],
+body.sde-unifie.sde-ivoire [id="departements"],
+body.sde-unifie.sde-ivoire [id="projets"],
+body.sde-unifie.sde-ivoire [id="engager"],
+body.sde-unifie.sde-ivoire [id="parcours"],
+body.sde-unifie.sde-ivoire [id="sujet-anonyme"],
+body.sde-unifie.sde-ivoire [id="requete"],
+body.sde-unifie.sde-ivoire [id="participer"],
+body.sde-unifie.sde-ivoire [id="ressources"],
+body.sde-unifie.sde-ivoire [id="galerie"]{
+ scroll-margin-top:100px;
+}
+@media(max-width:800px){
+ body.sde-unifie.sde-ivoire .sde-poles-switcher{
+  display:grid;gap:9px;padding:12px 10px;
+ }
+ body.sde-unifie.sde-ivoire .sde-poles-switcher>div{
+  flex-wrap:nowrap;max-width:100%;overflow-x:auto;
+  overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+  padding:3px 2px 7px;
+  scrollbar-width:thin;scrollbar-color:#d3b779 transparent;
+ }
+ body.sde-unifie.sde-ivoire .sde-poles-switcher a{
+  flex-shrink:0;min-height:44px;padding:9px 13px;
+ }
+ body.sde-unifie.sde-ivoire .sde-section-jumps{
+  flex-wrap:nowrap;
+  padding:10px;overflow-x:auto;overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+  scrollbar-width:thin;scrollbar-color:#d3b779 transparent;
+ }
+ body.sde-unifie.sde-ivoire .sde-section-jumps a{
+  flex:0 0 auto;min-height:45px;white-space:nowrap;
+ }
+}
+@media(max-width:450px){
+ body.sde-unifie.sde-ivoire .sde-poles-switcher,
+ body.sde-unifie.sde-ivoire .sde-section-jumps{
+  width:calc(100% - 20px);margin-block:12px;
+  border-radius:12px;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-unifie.sde-ivoire :is(.sde-poles-switcher,.sde-section-jumps) a{
+  animation:none!important;transition:none!important;transform:none!important;
+ }
+}

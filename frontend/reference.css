@@ -1195,3 +1195,161 @@ body.sde-reference button[data-fam="mis"]{--fam:var(--fam-mis)}
 body.sde-reference button[data-fam]::before{content:"";position:absolute;left:0;top:20%;bottom:20%;width:3px;border-radius:0 3px 3px 0;background:var(--fam);opacity:.6;pointer-events:none}
 body.sde-reference button[data-fam][aria-current="page"]::before{opacity:1}
 body.sde-reference button[data-fam][aria-current="page"] svg{color:var(--fam)}
+
+
+/* SDE · Finition premium du poste de commandement : décisions prioritaires,
+   indicateurs contrastés, six actions directes et grille responsive. */
+body.sde-reference-admin .ref-command-focus{
+ box-sizing:border-box;
+ display:grid;gap:20px;min-width:0;
+ margin:18px 0 22px;
+ padding:clamp(18px,2.4vw,31px);
+ border-radius:19px;
+ border:1px solid rgba(230,195,125,.62);
+ background:
+  radial-gradient(circle at 92% 12%,rgba(112,50,92,.35),transparent 46%),
+  linear-gradient(126deg,#15243d 0%,#251b42 57%,#1b4037 100%)!important;
+ box-shadow:0 18px 45px rgba(5,10,27,.22),inset 0 1px 0 rgba(255,239,199,.09);
+ color:#faf2e7!important;
+}
+body.sde-reference-admin .ref-command-focus-head{
+ display:flex;justify-content:space-between;align-items:center;
+ flex-wrap:wrap;gap:15px;
+}
+body.sde-reference-admin .ref-command-focus-head>div:first-child{
+ flex:1 1 360px;min-width:0;
+}
+body.sde-reference-admin .ref-command-focus-eyebrow{
+ display:block;margin:0 0 7px;
+ font-size:.72rem;font-weight:850;letter-spacing:.15em;
+ color:#edcd8d!important;
+}
+body.sde-reference-admin .ref-command-focus-head h2{
+ margin:0 0 10px;
+ font:800 clamp(1.45rem,2.5vw,2.15rem)/1.08 "Saira Condensed",system-ui,sans-serif!important;
+ color:#fff0c5!important;
+}
+body.sde-reference-admin .ref-command-focus-head p{
+ max-width:65ch;margin:0;
+ font-size:clamp(.83rem,1.1vw,.95rem);
+ line-height:1.52;color:#e5e0ea!important;
+}
+body.sde-reference-admin .ref-command-focus-status{
+ display:flex;align-items:center;gap:10px;
+ min-width:160px;max-width:100%;
+ padding:13px 17px;border-radius:13px;
+ border:1px solid rgba(236,202,140,.43);
+ background:rgba(15,21,42,.56);
+}
+body.sde-reference-admin .ref-command-focus-status strong{
+ color:#fbe0a0!important;
+ font:900 clamp(1.55rem,2.5vw,2.2rem)/1 "Saira Condensed",system-ui,sans-serif!important;
+ font-variant-numeric:tabular-nums;
+}
+body.sde-reference-admin .ref-command-focus-status span{
+ max-width:110px;color:#f3e8d3!important;
+ font-size:.79rem;line-height:1.25;font-weight:650;
+}
+body.sde-reference-admin .ref-command-focus .ref-priority{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ align-items:stretch;gap:10px;margin:0;
+}
+body.sde-reference-admin .ref-command-focus .ref-priority>button{
+ box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;
+ min-width:0;min-height:77px;gap:12px;
+ padding:15px!important;border-radius:12px!important;
+ border:1px solid rgba(231,196,126,.43)!important;
+ background:linear-gradient(145deg,#24324c,#192940)!important;
+ color:#fdf1da!important;
+ box-shadow:none!important;text-align:left;
+ font-size:.86rem!important;line-height:1.32;font-weight:750!important;
+ transition:transform .17s ease,border-color .17s ease,background .17s ease;
+}
+body.sde-reference-admin .ref-command-focus .ref-priority>button:nth-child(3n+2){
+ background:linear-gradient(145deg,#312343,#25203e)!important;
+}
+body.sde-reference-admin .ref-command-focus .ref-priority>button:nth-child(3n+3){
+ background:linear-gradient(145deg,#21433b,#172f37)!important;
+}
+body.sde-reference-admin .ref-command-focus .ref-priority>button svg{
+ width:25px!important;height:25px!important;
+ flex-shrink:0;stroke-width:1.75;color:#f4d28e!important;
+}
+body.sde-reference-admin .ref-command-focus .ref-priority>button span:nth-of-type(1){
+ flex:1;min-width:0;overflow-wrap:anywhere;
+ color:#f9efe0!important;
+}
+body.sde-reference-admin .ref-command-focus .ref-priority>button span:last-child{
+ flex:0 0 auto;color:#ffdc97!important;
+ font-size:1.07rem;font-weight:900;
+}
+body.sde-reference-admin .ref-command-focus .ref-priority>button:hover{
+ border-color:#f7db9d!important;
+ background:linear-gradient(135deg,#344467,#3e2c58)!important;
+ transform:translateY(-2px);
+}
+body.sde-reference-admin .ref-command-focus .ref-priority>button:focus-visible{
+ outline:3px solid #ffe1a0!important;outline-offset:3px!important;
+}
+body.sde-reference-admin .ref-command .ops-kpis{
+ gap:12px;min-width:0;
+}
+body.sde-reference-admin .ref-command .ops-kpis .ops-card.ref-kpi{
+ min-width:0;border-radius:15px!important;
+ border:1px solid rgba(226,194,121,.39)!important;
+ background:linear-gradient(135deg,#20324b,#1b233f)!important;
+}
+body.sde-reference-admin .ref-command .ops-kpis .ops-card.ref-kpi:nth-child(2){
+ background:linear-gradient(135deg,#38233f,#28203e)!important;
+}
+body.sde-reference-admin .ref-command .ops-kpis .ops-card.ref-kpi:nth-child(3){
+ background:linear-gradient(135deg,#183c38,#202e42)!important;
+}
+body.sde-reference-admin .ref-command .ops-kpis .ops-card.ref-kpi:nth-child(4){
+ background:linear-gradient(135deg,#223b39,#2c263e)!important;
+}
+body.sde-reference-admin .ref-command .ops-kpis .ops-card.ref-kpi h3{
+ color:#f0e9e0!important;font-size:.87rem!important;line-height:1.4;
+}
+body.sde-reference-admin .ref-command .ops-kpis .ops-card.ref-kpi strong{
+ color:#ffe1a4!important;font-variant-numeric:tabular-nums;
+}
+body.sde-reference-admin .ref-command .ops-kpis .ops-card.ref-kpi:focus-within{
+ outline:3px solid #ffe0a0!important;outline-offset:3px!important;
+}
+@media(max-width:1100px){
+ body.sde-reference-admin .ref-command-focus .ref-priority{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+}
+@media(max-width:650px){
+ body.sde-reference-admin .ref-command-focus{padding:16px 13px;gap:15px;border-radius:15px}
+ body.sde-reference-admin .ref-command-focus-head{align-items:stretch;gap:12px}
+ body.sde-reference-admin .ref-command-focus-status{
+  min-width:0;width:100%;justify-content:flex-start;
+ }
+ body.sde-reference-admin .ref-command-focus .ref-priority{
+  grid-template-columns:minmax(0,1fr);gap:8px;
+ }
+ body.sde-reference-admin .ref-command-focus .ref-priority>button{
+  min-height:58px;padding:10px 13px!important;
+ }
+ body.sde-reference-admin .ref-command .ops-kpis{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+ }
+ body.sde-reference-admin .ref-command .ops-kpis .ops-card.ref-kpi{
+  min-height:118px;padding:12px 10px;
+ }
+ body.sde-reference-admin .ref-command .ops-kpis .ops-card.ref-kpi h3{
+  font-size:.77rem!important;line-height:1.3;
+ }
+}
+@media(max-width:360px){
+ body.sde-reference-admin .ref-command .ops-kpis{grid-template-columns:minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-reference-admin .ref-command-focus .ref-priority>button{
+  transition:none!important;transform:none!important;
+ }
+}

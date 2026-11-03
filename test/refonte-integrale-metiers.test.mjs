@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
+import {JSDOM} from 'jsdom';
 const file=p=>readFileSync(p,'utf8');
 test('La vitrine, les espaces privés et les modules utilisent une charte réellement compilée',()=>{
  const css=file('frontend/business-mosaic.css'),entry=file('frontend/experience.css');
@@ -162,4 +163,56 @@ test('Priorité 03 : galerie, soutien et pages publiques partagent les principes
  assert.match(extras,/\.sde-standalone-bottom/);
  assert.match(extras,/@media\(max-width:900px\)/);
  for(const term of ['ressources-grille','hub-grid','sde-initiative-section','sde-public-bottom-nav'])assert.ok(global.includes(term));
+});
+
+
+test('Nouvelle étape : cinq pôles accessibles avec onglets, liens directs et sections existantes',()=>{
+ const names=['pole-reveil','pole-social','pole-logistique','pole-medias','pole-formation'];
+ for(const name of names){
+  const doc=new JSDOM(file('public/vitrine/'+name+'.html')).window.document;
+  const switcher=doc.querySelector('nav.sde-poles-switcher');
+  const jumps=doc.querySelector('nav.sde-section-jumps');
+  assert.ok(switcher,name+' sélecteur des pôles manquant');
+  assert.ok(jumps,name+' accès directs manquants');
+  assert.equal(switcher.querySelectorAll('a').length,5);
+  assert.equal(switcher.querySelectorAll('a[aria-current="page"]').length,1);
+  assert.equal(switcher.querySelector('a[aria-current="page"]').getAttribute('href'),'/'+name);
+  for(const slug of names)assert.ok(switcher.querySelector('a[href="/'+slug+'"]'),slug);
+  for(const a of jumps.querySelectorAll('a[href^="#"]')){
+   const id=a.getAttribute('href').slice(1);
+   assert.ok(doc.getElementById(id),name+' ancre absente : '+id);
+  }
+  assert.ok(jumps.querySelector('a.sde-section-jumps-cta[href="#engager"]'));
+ }
+});
+test('Nouvelle étape : prières, missions et bibliothèque ont des raccourcis sans actions fictives',()=>{
+ const paths=['prieres','missions-humanitaires','ressources'];
+ for(const page of paths){
+  const doc=new JSDOM(file('public/vitrine/'+page+'.html')).window.document;
+  const nav=doc.querySelector('nav.sde-section-jumps');
+  assert.ok(nav,page+' navigation absente');
+  for(const a of nav.querySelectorAll('a[href^="#"]')){
+   const anchor=a.getAttribute('href').slice(1);
+   assert.ok(doc.getElementById(anchor),page+' ancre introuvable : '+anchor);
+  }
+  assert.ok(nav.querySelectorAll('a').length>=3);
+  assert.ok(nav.querySelector('a.sde-section-jumps-cta'));
+ }
+ const prayer=file('public/vitrine/prieres.html');
+ assert.ok(prayer.includes('data-sde-anonymous-prayer'),'Anonymat de prière préservé');
+ const resources=file('public/vitrine/ressources.html');
+ assert.ok(resources.includes('ressources-grille'),'Bibliothèque existante préservée');
+});
+test('Nouvelle étape : palette publique et poste de commandement premium accessibles sur mobile',()=>{
+ const site=file('public/vitrine/sde-sitewide-2026.css');
+ const admin=file('frontend/reference.css'),ops=file('frontend/operations.jsx');
+ for(const token of ['.sde-poles-switcher','.sde-section-jumps','[aria-current="page"]','data-sde-page="pole-social"','prefers-reduced-motion:reduce'])
+  assert.ok(site.includes(token),'CSS public '+token);
+ assert.ok(site.includes('@media(max-width:800px)'));
+ assert.ok(site.includes('overflow-x:auto'));
+ for(const token of ['Finition premium du poste de commandement','.ref-command-focus .ref-priority','.ref-command-focus-status','@media(max-width:650px)','outline:3px'])
+  assert.ok(admin.includes(token),'CSS commande '+token);
+ for(const target of ['adhesions','scanner','academy-direction','rendezvous','suivi-poles','finance-direction'])
+  assert.ok(ops.includes("portal.selectionner('"+target+"')"),'Module '+target);
+ assert.ok(ops.includes('portal.compte.niveau>=2'),'Finances direction toujours conditionnelles');
 });
