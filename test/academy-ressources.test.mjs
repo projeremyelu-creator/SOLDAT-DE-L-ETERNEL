@@ -560,6 +560,7 @@ test("Soldiers Academy : les ressources des cours et niveaux verrouillés ne tra
 test("Soldiers Academy : acquis antérieurs conservés sans nouvelle demande et progression non effacée",async()=>{
  const {env,sql}=monde();comptes(sql);
  const ancien={connecte:true,id:"m2",nom:"Ancien apprenant",niveau:0};
+ await api(env,ancien,"GET","/api/soldiers-academy");
  sql.prepare("INSERT INTO academy_2027_submissions(id,compte,cours,type,reponses,statut,score,date_soumission) VALUES(?,?,?,'quiz','[]','note',90,1)").run("ancien_quiz","m2","SA-01");
  let r=await api(env,ancien,"GET","/api/soldiers-academy");
  assert.equal(r.json.courses[0].acces.statut,"approuve");
