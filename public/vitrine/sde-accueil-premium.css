@@ -132,3 +132,21 @@ body.sde-premium-home{--ap-navy0:#07122b;--ap-navy1:#0d1f4a;--ap-navy2:#142c63;-
   min-height:3.15em;
  }
 }
+
+
+/* Tablette paysage 1000–1099px : le remplacement de la police Cinzel
+   réduisait la hauteur du texte et déplaçait de 60px la carte TPA.
+   Fixer l'ancrage vertical du contenu et conserver la place du paragraphe,
+   plutôt que centrer dynamiquement deux colonnes de hauteurs différentes. */
+@media (min-width:1000px) and (max-width:1099px){
+ .ap-hero .ap-hero-inner{
+  align-items:start;
+ }
+ .ap-hero .ap-hero-copy,
+ .ap-hero .ap-poster{
+  align-self:start;
+ }
+ .ap-hero .ap-hero-copy .ap-lead{
+  min-height:calc(1.65em * 4);
+ }
+}
