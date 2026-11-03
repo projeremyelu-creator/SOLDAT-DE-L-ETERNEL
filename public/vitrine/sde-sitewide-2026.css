@@ -1615,7 +1615,7 @@ body.sde-unifie.sde-ivoire :is(.sde-section-jumps,.sde-poles-switcher) a:focus-v
 body.sde-unifie.sde-ivoire .sde-pole-hero{
  border-top:3px solid var(--sde-pole-accent,#efc680)!important;
 }
-body.sde-unifie.sde-ivoire .sde-pole .sde-pole-img{
+body.sde-unifie.sde-ivoire.sde-pole .sde-pole-img{
  border-radius:13px!important;
 }
 body.sde-unifie.sde-ivoire [id="vision"],
