@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {DOMAINES,CONTROLES,recetteProduction} from '../scripts/recette-production.mjs';
 
 const html=(text,extra={})=>new Response('<!doctype html><title>SDE</title>'+text,{status:200,headers:{'content-type':'text/html; charset=UTF-8',...extra}});
-function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=false,sessionExposee=false,erreurDomaine=false,marqueObsolete=false,stylePilotageObsolete=false,siteObsolete=false,academyExposee=false,academyCatalogueObsolete=false,academyRetourPerdu=false}={}){
+function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=false,sessionExposee=false,erreurDomaine=false,marqueObsolete=false,stylePilotageObsolete=false,siteObsolete=false,academyExposee=false,academyCatalogueObsolete=false,academyRetourPerdu=false,academyScriptObsolete=false}={}){
   const appels=[];
   const fetcher=async(url,opts)=>{
     const u=new URL(url),p=u.pathname;
@@ -17,7 +17,7 @@ function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=fals
       return html(academyCatalogueObsolete?'<h1>Ancien programme Soldiers Academy 12 cours</h1>':'<h1>Soldiers Academy 24 cours · 192 h</h1>'+Array.from({length:24},(_,i)=>'<article class="course" data-level="'+(Math.floor(i/8)+1)+'"><b>SA-'+String(i+1).padStart(2,'0')+'</b></article>').join(''));
     if(CONTROLES.some(c=>c.path===p&&c.type==='page-publique'))return html(siteObsolete?'<main>Page SDE ancienne</main>':'<main>Page SDE</main><link rel="stylesheet" href="/vitrine/sde-sitewide-2026.css?v=20261030global">');
     if(p==='/connexion')return html('<form>Connexion mot de passe</form><aside id="sde-event-root"><a href="/programmes#tpa-2026">TPA 2026</a></aside>',{'cache-control':'no-store','x-robots-tag':'noindex, nofollow'});
-    if(['/mon-espace','/administration','/mon-espace/academy','/administration/academy'].includes(p))return pagePriveExposee
+    if(['/mon-espace','/administration','/mon-espace/academy','/administration/academy','/mon-espace/enseignants'].includes(p))return pagePriveExposee
       ?html('Contenu confidentiel')
       :new Response(null,{status:302,headers:{'cache-control':'private, no-store','x-robots-tag':'noindex, nofollow',location:(lienExterne?'https://autre-site.example':u.origin)+'/connexion?retour='+encodeURIComponent(academyRetourPerdu&&p.endsWith('/academy')?p.replace('/academy',''):p)}});
     if(p==='/api/sante')return Response.json({ok:true,assetRevision:(process.env.SDE_EXPECTED_REV||'abcdef123456').slice(0,12)});
@@ -26,6 +26,10 @@ function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=fals
     if(p==='/api/moi')return Response.json({connecte:sessionExposee});
     if(p==='/api/notifications-status')return Response.json({erreur:'refuse'},{status:403});
     if(p==='/vitrine/infire-2026/chronogramme-officiel.pdf')return new Response('%PDF-1.7\n% Simulateur de document officiel',{headers:{'content-type':'application/pdf'}});
+    if(p==='/vitrine/sde-academy-parcours.js')return new Response(academyScriptObsolete
+      ? 'const obsoleteAcademy = true;'
+      : 'function actualiserRessourcesCours(){}; const controle = "data-refresh-course-resources";',
+      {headers:{'content-type':'text/javascript'}});
     if(p.endsWith('.js'))return new Response(p.includes('operations-assets')?(marqueObsolete?'const brand="SDE DIGITAL";':'const brand="SDE - MOUVEMENT";'):'const id="sde-direct-tabs";',{headers:{'content-type':'text/javascript'}});
     if(p==='/vitrine/sde-sitewide-2026.css')return new Response(siteObsolete?'.ancien{}':'--sde-forest:#172b25;.sde-further{}@keyframes sde-site-countdown-reveal{}',{headers:{'content-type':'text/css'}});
     if(p.endsWith('.css'))return new Response(p.includes('sde-experience')?(stylePilotageObsolete?'.obsolete{}':'.ref-feature{}@keyframes sde-feature-sheen{}'):(styleObsolete?'.obsolete{}':'#sde-direct-menu-toggle{}'),{headers:{'content-type':'text/css'}});
@@ -123,10 +127,10 @@ test('Recette production : cibler les fichiers versionnés de Cloudflare',async(
 test('Recette Academy 2027 : catalogue 24 cours et protection des sessions sur les deux domaines',async()=>{
  const f=simulateur(),kinds=['academy-public','academy-redirection-membre','academy-redirection-admin','academy-api-protegee'];
  const checks=CONTROLES.filter(x=>kinds.includes(x.type));
- assert.equal(checks.length,5);
+ assert.equal(checks.length,7);
  const bilan=await recetteProduction({fetcher:f.fetcher,controles:checks,essais:1});
  assert.equal(bilan.ok,true);
- assert.equal(bilan.total,10);
+ assert.equal(bilan.total,14);
  assert.ok(f.appels.every(x=>x.opts.method==='GET'&&x.opts.redirect==='manual'&&!x.opts.headers.cookie));
 });
 test('Recette Academy 2027 : refus de fuite, de catalogue ancien et de perte de retour direct',async()=>{
@@ -142,4 +146,16 @@ test('Recette Academy 2027 : refus de fuite, de catalogue ancien et de perte de 
    assert.equal(b.ok,false,'Une régression '+type+' ne doit pas réussir');
    assert.equal(b.reussis,0);
  }
+});
+
+test('Recette Academy : studio et publication des supports, version effective du script sur les deux domaines',async()=>{
+ const f=simulateur();
+ const controle=CONTROLES.filter(c=>c.type==='academy-script'||c.path==='/mon-espace/enseignants'||c.path==='/api/soldiers-academy/ressources/etat');
+ assert.equal(controle.length,3);
+ const bilan=await recetteProduction({fetcher:f.fetcher,controles:controle,essais:1});
+ assert.equal(bilan.total,6);
+ assert.equal(bilan.ok,true);
+ const ancien=simulateur({academyScriptObsolete:true});
+ const ref=await recetteProduction({fetcher:ancien.fetcher,domaines:[DOMAINES[0]],controles:CONTROLES.filter(c=>c.type==='academy-script'),essais:1});
+ assert.equal(ref.ok,false,'Un ancien script Academy en production ne doit pas être validé.');
 });
