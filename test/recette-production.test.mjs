@@ -21,7 +21,7 @@ function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=fals
       ?html('Contenu confidentiel')
       :new Response(null,{status:302,headers:{'cache-control':'private, no-store','x-robots-tag':'noindex, nofollow',location:(lienExterne?'https://autre-site.example':u.origin)+'/connexion?retour='+encodeURIComponent(academyRetourPerdu&&p.endsWith('/academy')?p.replace('/academy',''):p)}});
     if(p==='/api/sante')return Response.json({ok:true,assetRevision:(process.env.SDE_EXPECTED_REV||'abcdef123456').slice(0,12)});
-    if(p==='/api/soldiers-academy'||p==='/api/soldiers-academy/cours/SA-01')
+    if(p==='/api/soldiers-academy'||p==='/api/soldiers-academy/cours/SA-01'||p==='/api/soldiers-academy/ressources/etat')
       return Response.json(academyExposee?{ok:true,courses:['private']}: {ok:false,message:'Connexion requise.'},{status:academyExposee?200:401,headers:{'cache-control':'private, no-store'}});
     if(p==='/api/moi')return Response.json({connecte:sessionExposee});
     if(p==='/api/notifications-status')return Response.json({erreur:'refuse'},{status:403});
