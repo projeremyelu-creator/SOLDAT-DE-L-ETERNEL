@@ -32,3 +32,17 @@ test("La bande 960–1100 px réserve 300 px et conserve quatre lignes indépend
  assert.match(rule,/\.iv-intro \.iv-sub \{\s*min-height:30px/);
  assert.match(html,/sde-sitewide-2026\.css\?v=[a-z0-9]+/i);
 });
+
+
+test("La nouvelle composition TPA garde la réserve visuelle 300/260 px de la recette Chromium",()=>{
+ const premium=readFileSync("public/vitrine/sde-premium-public.css","utf8");
+ const source=readFileSync("public/vitrine/portail.html","utf8");
+ assert.ok(source.indexOf('class="m-welcome"')<source.indexOf('class="iv-vitrine"'));
+ const fix=premium.slice(premium.lastIndexOf("Recette réelle Chromium 03/11"));
+ assert.ok(fix.startsWith("Recette réelle Chromium 03/11"));
+ assert.match(fix,/@media \(min-width:960px\) and \(max-width:1100px\)/);
+ assert.match(fix,/height:300px!important;min-height:300px!important;max-height:300px!important/);
+ assert.match(fix,/@media \(min-width:1101px\)/);
+ assert.match(fix,/height:260px!important;min-height:260px!important;max-height:260px!important/);
+ assert.match(fix,/@media\(max-width:959px\)/);
+});
