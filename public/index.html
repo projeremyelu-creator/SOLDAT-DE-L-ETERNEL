@@ -36,7 +36,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
 <link rel="stylesheet" href="/vitrine/sde-marque.css?v=20261029a">
 <link rel="stylesheet" href="/vitrine/ivoire-app.css?v=20261030a">
 <link rel="stylesheet" href="/vitrine/sde-premium-app.css?v=20261102refonte">
-<link rel="stylesheet" href="/vitrine/sde-fusion.css?v=20261103b">
+<link rel="stylesheet" href="/vitrine/sde-fusion.css?v=20261103c">
 <link rel="stylesheet" href="/vitrine/sde-tactique.css?v=20261103">
 <script>/* Palette des espaces privés appliquée avant le premier affichage (Fusion violet · vert · or par défaut). */try{var d=document.documentElement,v=localStorage.getItem("sde-private-palette-version")==="fusion-04"?localStorage.getItem("sde-private-palette"):"fusion";d.setAttribute("data-sde-palette",/^(fusion|ivoire|terracotta|militaire|violet|tactique)$/.test(v||"")?v:"fusion")}catch(e){document.documentElement.setAttribute("data-sde-palette","fusion")}</script>
 <script defer src="/sde-bridge.js?v=20261025e"></script>
@@ -537,6 +537,16 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     { id: "secretariat", ico: "i-scroll", court: "Décisions", long: "Secrétariat", desc: "Registre des décisions" },
   ];
   const PRIMAIRES = ["accueil", "membres", "agenda", "finances"];
+  /* Trois familles de modules : Commandement (bleu nuit), Spiritualité (violet profond), Missions (vert militaire) */
+  const FAMILLES = {
+    cmd: { nom: "Commandement", sous: "Piloter, décider, rendre compte" },
+    spi: { nom: "Spiritualité", sous: "Prier, enseigner, former" },
+    mis: { nom: "Missions", sous: "Servir sur le terrain" },
+  };
+  const FAM_DE = { accueil: "cmd", membres: "cmd", finances: "cmd", secretariat: "cmd", assistant: "cmd",
+    espace: "spi", chambre: "spi", academie: "spi", portevoix: "spi", arsenal: "spi", mediatheque: "spi",
+    agenda: "mis", garnisons: "mis", projets: "mis" };
+  const famDe = (id) => FAM_DE[id] || "cmd";
 
   /* ════════════════════════ État ════════════════════════ */
   const S = {
@@ -941,7 +951,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const autres = vis.filter((o) => !estPrim(o));
     const compact = prim.length + autres.length > 5;
     const badges = badgesNav();
-    const b = (o, x) => { const dot = badges[o.id] ? `<span class="notif-dot" aria-label="${badges[o.id]} nouveau(x)"></span>` : ""; return `<button class="nav-btn${x ? " nav-x" : ""}${o.id === S.vue ? " on" : ""}" type="button" data-vue="${o.id}"${o.id === S.vue ? ' aria-current="page"' : ""}><span class="badge">${I(o.ico)}${dot}</span><span class="l-short">${o.court}</span><span class="l-long">${o.long}</span></button>`; };
+    const b = (o, x) => { const dot = badges[o.id] ? `<span class="notif-dot" aria-label="${badges[o.id]} nouveau(x)"></span>` : ""; return `<button class="nav-btn${x ? " nav-x" : ""}${o.id === S.vue ? " on" : ""}" type="button" data-fam="${famDe(o.id)}" data-vue="${o.id}"${o.id === S.vue ? ' aria-current="page"' : ""}><span class="badge">${I(o.ico)}${dot}</span><span class="l-short">${o.court}</span><span class="l-long">${o.long}</span></button>`; };
     const plusOn = S.vue === "plus" || autres.some((o) => o.id === S.vue);
     const html = prim.map((o) => b(o, false)).join("") + (autres.length ? `<span class="nav-sep${compact ? " nav-x" : ""}" aria-hidden="true">Modules</span>` : "") + autres.map((o) => b(o, compact)).join("")
       + (compact ? `<button class="nav-btn nav-plus${plusOn ? " on" : ""}" type="button" data-vue="plus"${S.vue === "plus" ? ' aria-current="page"' : ""}>${I("i-grid")}<span class="l-short">Plus</span><span class="l-long">Tous les modules</span></button>` : "");
@@ -3941,7 +3951,11 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     let out = secHead("Modules", { eyebrow: "Toutes les sections du Quartier Général" });
     const vis = ongletsVisibles().filter((o) => o.id !== "accueil");
     const estClair = document.documentElement.getAttribute("data-theme") === "light";
-    return out + `<div class="tiles">${vis.map((o) => `<button class="tile" type="button" data-vue="${o.id}"><span class="tile-ico" aria-hidden="true">${I(o.ico)}</span><span class="tile-t">${esc(o.long)}</span><span class="tile-d">${esc(o.desc || "")}</span><span class="tile-m">${esc(resumeModule(o.id))}</span></button>`).join("")}</div>`
+    const groupes = Object.keys(FAMILLES).map((k) => {
+      const liste = vis.filter((o) => famDe(o.id) === k);
+      return liste.length ? `<section class="fam" data-fam="${k}" aria-labelledby="fam-${k}"><h3 class="fam-h" id="fam-${k}"><span class="fam-dot" aria-hidden="true"></span>${esc(FAMILLES[k].nom)}<small>${esc(FAMILLES[k].sous)}</small></h3><div class="tiles">${liste.map((o) => `<button class="tile" type="button" data-fam="${famDe(o.id)}" data-vue="${o.id}"><span class="tile-ico" aria-hidden="true">${I(o.ico)}</span><span class="tile-t">${esc(o.long)}</span><span class="tile-d">${esc(o.desc || "")}</span><span class="tile-m">${esc(resumeModule(o.id))}</span></button>`).join("")}</div></section>` : "";
+    }).join("");
+    return out + groupes
       + `<section class="card" style="margin-top:16px"><p class="eyebrow">${I("i-settings")} Apparence</p><button class="row" type="button" data-act="basculer-theme"><span class="row-main"><span class="row-t">${estClair ? "Passer en mode sombre" : "Passer en mode clair"}</span><span class="row-m">${estClair ? "Fond sombre, texte clair — confort nocturne" : "Fond clair, texte sombre — confort diurne"}</span></span><span class="row-r">${estClair ? I("i-moon") : I("i-sun")}</span></button></section>`;
   };
   /* Parcours du membre dans les modules : formations, chaîne de prière, livres empruntés */

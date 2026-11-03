@@ -117,3 +117,20 @@ test("Palette Tactique et modules tactiques fondés sur des données réelles", 
   const app = lire("public/index.html");
   assert.ok(app.includes("function radarPriere") && app.includes("out += radarPriere(enP)"));
 });
+
+test("Onglets : trois familles Commandement, Spiritualité, Missions, chaque module dans une seule famille", () => {
+  const app = lire("public/index.html"), css = lire("public/vitrine/sde-fusion.css");
+  for (const k of ["const FAMILLES", "const FAM_DE", 'cmd: { nom: "Commandement"', 'spi: { nom: "Spiritualité"', 'mis: { nom: "Missions"', 'data-fam="${famDe(o.id)}"', 'class="fam-h"']) assert.ok(app.includes(k), k);
+  const bloc = app.slice(app.indexOf("const FAM_DE"), app.indexOf("const famDe"));
+  const ids = [...app.slice(app.indexOf("const ONGLETS"), app.indexOf("const PRIMAIRES")).matchAll(/\{ id: "(\w+)"/g)].map((m) => m[1]);
+  assert.ok(ids.length >= 14);
+  for (const id of ids) assert.equal((bloc.match(new RegExp(`\\b${id}: "(cmd|spi|mis)"`, "g")) || []).length, 1, "famille de " + id);
+  for (const k of ["--fam-cmd:#1b2f6b", "--fam-spi:#5b21b6", "--fam-mis:#3f6b34", ".tile[data-fam]", ".nav-btn[data-fam]"]) assert.ok(css.includes(k), k);
+});
+
+test("Portail React : les modules du menu portent leur famille de couleur", () => {
+  const shell = lire("frontend/reference-shell.jsx"), css = lire("frontend/reference.css");
+  assert.match(shell, /const FAM=\{[^}]*'rendezvous':'mis'[^}]*'academy-direction':'spi'[^}]*\};const famOf=/);
+  assert.equal((shell.match(/data-fam=\{famOf\(module\)\}/g) || []).length, 2, "menu latéral et menu mobile");
+  for (const k of ["--fam-cmd:#1b2f6b", "--fam-spi:#5b21b6", "--fam-mis:#3f6b34", 'button[data-fam="mis"]']) assert.ok(css.includes(k), k);
+});
