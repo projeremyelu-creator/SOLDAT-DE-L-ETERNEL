@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {existsSync,readFileSync} from 'node:fs';
+import {existsSync,readFileSync,statSync} from 'node:fs';
 const lire=f=>readFileSync(f,'utf8');
 const page=n=>lire(`public/vitrine/${n}.html`);
 const PAGES={mouvement:'spi',programmes:'mis',soutenir:'cmd',temoignages:'spi',rejoindre:'cmd'};
@@ -129,4 +129,18 @@ test('Agenda public .ics : événements publics à venir et programme phare, jam
  for(const interdit of ['Interne secret','Comité','Passé','copie'])assert.ok(!ics.includes(interdit),interdit);
  assert.equal((ics.match(/BEGIN:VEVENT/g)||[]).length,2,'un rendez-vous public + le programme phare, sans doublon');
  assert.ok(ics.includes('DTSTART:20991218T200000Z'));
+});
+
+test('Notre Mouvement : film de présentation hébergé, sous la limite des ressources, sans lecture automatique',()=>{
+ const h=page('mouvement'),mp4='public/vitrine/media/presentation-sde.mp4',affiche='public/vitrine/media/presentation-sde-affiche.webp';
+ assert.ok(existsSync(mp4)&&existsSync(affiche));
+ assert.ok(statSync(mp4).size<25*1024*1024,'limite Cloudflare de 25 Mo par fichier');
+ assert.equal(readFileSync(mp4).subarray(4,8).toString(),'ftyp','conteneur MP4 valide');
+ const video=h.match(/<video[^>]*>/)[0];
+ assert.match(video,/\bcontrols\b/);assert.match(video,/preload="none"/);assert.match(video,/poster="\/vitrine\/media\/presentation-sde-affiche\.webp"/);
+ assert.doesNotMatch(video,/autoplay/);
+ assert.ok(h.includes('<source src="/vitrine/media/presentation-sde.mp4" type="video/mp4">'));
+ assert.ok(h.includes('id="film-description"')&&video.includes('aria-describedby="film-description"'),'description accessible');
+ assert.ok(h.includes('href="#film"')&&h.includes('id="film"'));
+ assert.doesNotMatch(lire('public/sw-public.js').match(/PUBLIC_ASSETS\s*=\s*([^;]+);/)[1],/mp4/,'les vidéos ne passent pas par le cache du service worker');
 });
