@@ -4,12 +4,13 @@
    - Dès la publication, tous les apprenants qui ont accès au cours (ou à la bibliothèque générale) la voient dans leur espace.
    - Aucune ressource ne contient de corrigé : les corrigés restent dans academy-correctifs.js (serveur seulement). */
 import {SOLDIERS_ACADEMY_2027 as PROGRAMME} from "./soldiers-academy-2027.js";
+import {LOVE_SCHOOL,LOVE_SCHOOL_IDS} from "./love-school.js";
 
 const reply=(data,status=200)=>Response.json(data,{status,headers:{"cache-control":"private, no-store","x-content-type-options":"nosniff"}});
 const error=(message,status=400)=>reply({ok:false,message},status);
 const propre=(v,max)=>String(v??"").replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g," ").replace(/[ \t]+/g," ").trim().slice(0,max);
 const IDS_COURS=PROGRAMME.courses.map(c=>c.id);
-export const PORTEES=[...IDS_COURS,"N1","N2","N3","GENERAL"];
+export const PORTEES=[...IDS_COURS,...LOVE_SCHOOL_IDS,"N1","N2","N3","GENERAL"];
 export const TYPES=["video","fichier","lien","note","exercice"];
 const ID_MEDIA=/^[a-z0-9]{20}$/;
 const FONCTIONS=["enseignant","coach"];
@@ -85,11 +86,11 @@ export async function ressourcesApprenant(env,{peutNiveau}){
     if(/^N[123]$/.test(p))return Number(p[1]);
     return PROGRAMME.courses.find(c=>c.id===p)?.level||0;
   };
-  const visibles=rows.filter(r=>(r.portee==="GENERAL"||peutNiveau(niveauDe(r.portee))));
+  const visibles=rows.filter(r=>(r.portee==="GENERAL"||LOVE_SCHOOL_IDS.includes(r.portee)||peutNiveau(niveauDe(r.portee))));
   const parCours={},generales=[];
   for(const r of visibles){
     const v=vuePublique(r);
-    if(IDS_COURS.includes(r.portee))(parCours[r.portee]=parCours[r.portee]||[]).push(v);
+    if(IDS_COURS.includes(r.portee)||LOVE_SCHOOL_IDS.includes(r.portee))(parCours[r.portee]=parCours[r.portee]||[]).push(v);
     else generales.push(v);
   }
   const limite=Date.now()-14*864e5;
@@ -108,7 +109,7 @@ export async function ressourcesApi(req,env,u,path){
     if(!fonction)return error("Espace réservé aux enseignants et coachs désignés.",403);
     const rows=(await env.DB.prepare("SELECT * FROM academy_2027_ressources"+(admin?"":" WHERE auteur=?")+" ORDER BY cree DESC LIMIT 1500").bind(...(admin?[]:[String(u.id)])).all()).results||[];
     const autorisees=await porteesAutorisees(env,u);
-    const out={ok:true,fonction,moi:String(u.id),autorisees,ressources:rows.map(r=>vuePublique(r,{gerer:true})),cours:PROGRAMME.courses.map(c=>({id:c.id,title:c.title,level:c.level})),types:TYPES};
+    const out={ok:true,fonction,moi:String(u.id),autorisees,ressources:rows.map(r=>vuePublique(r,{gerer:true})),cours:[...PROGRAMME.courses.map(c=>({id:c.id,title:c.title,level:c.level})),...LOVE_SCHOOL.courses.map(c=>({id:c.id,title:c.title,bonus:true}))],types:TYPES};
     if(admin){
       out.formateurs=((await env.DB.prepare("SELECT f.compte,f.fonction,f.portees,f.cree,c.nom,c.email FROM academy_2027_formateurs f LEFT JOIN comptes c ON c.id=f.compte ORDER BY f.cree DESC LIMIT 200").all()).results||[]).map(x=>({compte:x.compte,fonction:x.fonction,portees:(()=>{try{return JSON.parse(x.portees||"[]")}catch{return []}})(),nom:x.nom||"Compte SDE",email:x.email||"",cree:x.cree}));
     }

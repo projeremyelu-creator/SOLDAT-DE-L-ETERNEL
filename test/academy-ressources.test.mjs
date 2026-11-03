@@ -254,3 +254,67 @@ test("Actualisation des supports du cours ouvert : action visible et non destruc
   assert.ok(!fn.includes("await reload("),"ni les exercices ni la progression ne sont rechargés");
   assert.ok(page.includes("sde-academy-parcours.js?v="),"script versionné pour les navigateurs");
 });
+
+
+test("Love School : six cours bonus distincts du tronc commun et enseignements complets",async()=>{
+ const {env,sql}=monde();comptes(sql);
+ const anon={connecte:false,id:null,niveau:0};
+ assert.equal((await api(env,anon,"GET","/api/soldiers-academy/love-school")).statut,401);
+ const result=await api(env,eleve,"GET","/api/soldiers-academy/love-school");
+ assert.equal(result.statut,200);
+ assert.equal(result.json.ecole.title,"Love School");
+ assert.equal(result.json.ecole.nature,"bonus");
+ assert.equal(result.json.ecole.certification,false);
+ assert.deepEqual(result.json.ecole.courses.map(c=>c.id),["LS-01","LS-02","LS-03","LS-04","LS-05","LS-06"]);
+ for(const c of result.json.ecole.courses){
+  assert.ok(c.title.length>12&&c.objectives.length>=2&&c.scriptures.length>=2&&c.lessons.length>=2&&c.practice.length>30);
+  assert.deepEqual(c.ressources,[]);
+ }
+ assert.equal(PROG.courses.length,24);
+ const main=(await api(env,eleve,"GET","/api/soldiers-academy")).json;
+ assert.equal(main.courses.length,24);
+ assert.equal(main.progress.passed,0);
+ assert.equal(main.programme.durationHours,192);
+ assert.equal(main.certificates.length,0);
+});
+
+test("Love School : l'enseignant publie uniquement dans ses bonus confiés, jamais de brouillons visibles",async()=>{
+ const {env,sql}=monde();comptes(sql);
+ assert.equal((await api(env,prof,"POST",R,{portee:"LS-01",type:"note",titre:"Ébauche bonus",texte:"Travail pédagogique de réflexion."})).statut,403);
+ assert.equal((await api(env,direction,"POST","/api/soldiers-academy/formateurs",{compte:"prof@exemple.test",fonction:"enseignant",portees:["LS-01"]})).statut,201);
+ const gestion=(await api(env,prof,"GET",R+"/gestion")).json;
+ assert.ok(gestion.cours.some(c=>c.id==="LS-01"&&c.bonus));
+ assert.deepEqual(gestion.autorisees,["LS-01"]);
+ assert.equal((await api(env,prof,"POST",R,{portee:"LS-02",type:"note",titre:"Cours non confié",texte:"Contenu qui ne doit pas être publié."})).statut,400);
+ const pub=await api(env,prof,"POST",R,{portee:"LS-01",type:"note",titre:"Fiche d'amour",texte:"La bienveillance et le respect sont essentiels."});
+ const draft=await api(env,prof,"POST",R,{portee:"LS-01",type:"note",titre:"Brouillon privé",texte:"Brouillon interne pédagogique pour les formateurs.",publie:false});
+ assert.equal(pub.statut,201);assert.equal(draft.statut,201);
+ const vue=(await api(env,eleve,"GET","/api/soldiers-academy/love-school")).json;
+ const ressources=vue.ecole.courses.find(c=>c.id==="LS-01").ressources;
+ assert.equal(ressources.length,1);
+ assert.equal(ressources[0].titre,"Fiche d'amour");
+ assert.ok(!JSON.stringify(vue).includes("Brouillon privé"));
+ assert.ok(!JSON.stringify(vue).includes("auteurId"));
+ const main=(await api(env,eleve,"GET","/api/soldiers-academy")).json;
+ assert.equal(main.courses.length,24);
+ assert.equal(main.ressources.parCours["LS-01"],1);
+ assert.equal(main.ressources.parCours["LS-02"],undefined);
+ assert.equal(main.progress.passed,0);
+});
+
+test("Love School : onglet interactif, affichage accessible et studio des enseignants",()=>{
+ const html=readFileSync("public/vitrine/sde-academy-parcours.html","utf8");
+ const js=readFileSync("public/vitrine/sde-academy-parcours.js","utf8");
+ const studio=readFileSync("public/vitrine/sde-academy-enseignants.js","utf8");
+ const css=readFileSync("public/vitrine/sde-academy-onglets.css","utf8");
+ for(const id of ["tab-love","pane-love","loveSchoolCourses","loveSchoolDetail","refreshLoveSchool","loveStatus"])assert.ok(html.includes('id="'+id+'"'),id);
+ assert.ok(html.includes('aria-controls="pane-love"'));
+ assert.match(html,/Love School · Bonus/);
+ assert.match(js,/request\("\/love-school"\)/);
+ assert.match(js,/data-love-course/);
+ assert.match(js,/UI\.ressourceHtml/);
+ assert.match(js,/location\.hash==="#love-school"/);
+ assert.match(studio,/Love School · bonus/);
+ assert.match(css,/\.love-hero/);
+ assert.match(css,/prefers-reduced-motion:reduce/);
+});

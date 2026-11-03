@@ -20,7 +20,7 @@ const libellePortee=p=>{
 };
 function optionsPortees(){
   const ok=new Set(G.autorisees);
-  const groupes=[["Général",["GENERAL"]],["Niveaux",["N1","N2","N3"]],["Cours",G.cours.map(c=>c.id)]];
+  const groupes=[["Général",["GENERAL"]],["Niveaux",["N1","N2","N3"]],["Cours du tronc commun",G.cours.filter(c=>!c.bonus).map(c=>c.id)],["Love School · bonus",G.cours.filter(c=>c.bonus).map(c=>c.id)]];
   return groupes.map(([t,l])=>{const o=l.filter(x=>ok.has(x));return o.length?'<optgroup label="'+esc(t)+'">'+o.map(x=>'<option value="'+esc(x)+'">'+esc(libellePortee(x))+'</option>').join("")+'</optgroup>':""}).join("");
 }
 function typeUI(){
