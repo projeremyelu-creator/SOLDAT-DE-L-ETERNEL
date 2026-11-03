@@ -6,6 +6,7 @@ import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {memberAcademySummary} from "./member-academy-summary.js";
 import {soldiersAcademyApi,verifierAttestation} from "./sde-academy-api.js";
+import {rappelsCohortes} from "./academy-extras.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {squadChatApi} from "./squad-chat.js";
 import {courrielApi,lancerCourriels} from "./courriel.js";
@@ -301,6 +302,35 @@ async function apiInscription(req, env, ctx) {
   } catch (e) { return erreur("existe", "Un compte existe déjà avec cette adresse.", 409); }
   notifySde(env,ctx,"inscription",{nom:prenoms+" "+nom,email,tel:telephone});
   return json({ ok: true, matricule }, 200, { "set-cookie": await ouvrirSession(env, email) });
+}
+/* Inscription aux cours Soldiers Academy ouverte à toute personne, membre ou non.
+   Crée un compte « apprenant » au rôle existant « attente » (niveau 0) : accès à l'espace Academy seulement,
+   aucune fiche de membre, aucun accès aux autres espaces privés. La direction voit la demande dans les préinscriptions. */
+async function apiAcademyInscription(req, env, ctx) {
+  const ip = ipDe(req);
+  if (await bloque(env, "acad-insc:" + ip, 10)) return erreur("rate_limited", "Trop d’inscriptions depuis ce réseau : réessayez dans un quart d’heure.", 429);
+  let b; try { b = await req.json(); } catch { return erreur("invalid_argument", "Données invalides."); }
+  const email = normEmail(b.email), prenoms = propre(b.prenoms, 80), nom = propre(b.nom, 80).toUpperCase(), telephone = propre(b.telephone, 30);
+  const pays = propre(b.pays, 60) || "Côte d'Ivoire", ville = propre(b.ville, 80);
+  if (!EMAIL_OK.test(email)) return erreur("invalid_argument", "Adresse e-mail invalide.");
+  if (!prenoms || !nom) return erreur("invalid_argument", "Indiquez votre nom et vos prénoms.");
+  if (!mdpValide(b.motDePasse)) return erreur("invalid_argument", "Le mot de passe doit compter au moins 8 caractères.");
+  if (telephone && telephone.replace(/\D/g, "").length < 8) return erreur("invalid_argument", "Numéro de téléphone invalide.");
+  if (b.consentement !== true) return erreur("invalid_argument", "Acceptez l’utilisation de vos données pour le suivi de votre formation.");
+  const existe = await env.DB.prepare("SELECT email FROM comptes WHERE email = ?").bind(email).first();
+  if (existe || proprietaires(env).includes(email)) return erreur("existe", "Un compte existe déjà avec cette adresse. Connectez-vous pour accéder à vos cours.", 409);
+  await compter(env, "acad-insc:" + ip);
+  const id = await idDeEmail(email), t = Date.now();
+  try {
+    await env.DB.prepare("INSERT INTO comptes (email, id, nom, role, cree, derniere, mdp) VALUES (?, ?, ?, 'attente', ?, ?, ?)").bind(email, id, prenoms + " " + nom, t, t, await empreinteMdp(b.motDePasse)).run();
+  } catch (e) { return erreur("existe", "Un compte existe déjà avec cette adresse.", 409); }
+  /* Trace pour la direction (best effort : la table des préinscriptions est gérée hors de ce dépôt). */
+  try {
+    const deja = await env.DB.prepare("SELECT id FROM preinscriptions_academy WHERE email = ? AND statut NOT IN ('refusee') LIMIT 1").bind(email).first();
+    if (!deja) await env.DB.prepare("INSERT INTO preinscriptions_academy (nom, prenom, email, telephone, date_naissance, ville, pays, niveau_souhaite, motivation, experience, eglise_origine) VALUES (?, ?, ?, ?, '', ?, ?, 'Niveau 1', ?, '', '')").bind(nom, prenoms, email, telephone || "", ville, pays, "Inscription directe aux cours (compte apprenant, non-membre possible).").run();
+  } catch (e) { /* la création du compte reste valable */ }
+  notifySde(env, ctx, "academy", { nom: prenoms + " " + nom, email, tel: telephone });
+  return json({ ok: true, retour: "/mon-espace/academy" }, 200, { "set-cookie": await ouvrirSession(env, email) });
 }
 async function apiConnexionMdp(req, env) {
   const b = await req.json();
@@ -1629,7 +1659,7 @@ async function nettoyerTentatives(env) {
 export default {
   async scheduled(ev, env, ctx) {
     if (ev.cron === "0 2 * * *") ctx.waitUntil(Promise.all([sauvegarder(env), nettoyerMedias(env), syncEspacesMembres(env), nettoyerSessions(env), nettoyerTentatives(env)]));
-    ctx.waitUntil(Promise.all([flushNotices(env),sendPortalReminders(env),lancerCourriels(env).catch(e=>console.warn("Courriels : échec",e?.name||"Erreur"))]));
+    ctx.waitUntil(Promise.all([flushNotices(env),sendPortalReminders(env),rappelsCohortes(env,{courriel:notificationConfigured(env)?(m)=>env.EMAIL.send({from:String(env.NOTIFICATION_FROM),to:m.to,subject:m.subject,text:m.text}):null}).catch(e=>console.warn("Academy : rappels de cohorte en échec",e?.name||"Erreur")),lancerCourriels(env).catch(e=>console.warn("Courriels : échec",e?.name||"Erreur"))]));
   },
   async fetch(req, env, ctx) {
     /* Ressources publiées sous /_v/<révision>/… : même fichier, adresse unique par déploiement (cache toujours à jour). */
@@ -1960,6 +1990,7 @@ async function traiter(req, env, ctx) {
         }
       }
       if (p === "/api/inscription" && req.method === "POST") return apiInscription(req, env, ctx);
+      if (p === "/api/academy-inscription" && req.method === "POST") return apiAcademyInscription(req, env, ctx);
       if (p === "/api/connexion" && req.method === "POST") return apiConnexionMdp(req, env);
       if (p === "/api/activation" && req.method === "POST") return apiActivation(req, env);
       if (p === "/api/mot-de-passe" && req.method === "POST") return apiMotDePasse(req, env, u);

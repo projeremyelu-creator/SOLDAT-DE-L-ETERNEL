@@ -303,6 +303,29 @@ h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.1
       </div>
     </div>
 
+    <!-- ═══ INSCRIPTION DIRECTE AUX COURS (ouverte à tous, membre ou non) ═══ -->
+    <div id="inscription-cours" style="margin:0 0 36px">
+      <h2 style="font-size: 1.3rem; color: var(--or); text-align: center; margin-bottom: 8px;">Suivre les cours dès maintenant</h2>
+      <p style="text-align:center;color:var(--texte-2);max-width:640px;margin:0 auto 20px">Ouvert à toute personne, membre du mouvement ou non. Créez votre compte apprenant : il donne accès à vos cours, vos évaluations et vos attestations, sans accès aux autres espaces du mouvement.</p>
+      <form id="form-inscription-cours" novalidate>
+        <div class="form-carte">
+          <div class="grille">
+            <div class="champ"><label for="ic-prenoms">Prénoms <span class="req">*</span></label><input id="ic-prenoms" name="prenoms" autocomplete="given-name" autocapitalize="words" maxlength="80" required></div>
+            <div class="champ"><label for="ic-nom">Nom <span class="req">*</span></label><input id="ic-nom" name="nom" autocomplete="family-name" autocapitalize="words" maxlength="80" required></div>
+            <div class="champ"><label for="ic-email">Adresse e-mail <span class="req">*</span></label><input id="ic-email" name="email" type="email" autocomplete="email" maxlength="120" required></div>
+            <div class="champ"><label for="ic-tel">Téléphone</label><input id="ic-tel" name="telephone" type="tel" autocomplete="tel" maxlength="30"></div>
+            <div class="champ"><label for="ic-pays">Pays</label><input id="ic-pays" name="pays" autocomplete="country-name" maxlength="60" placeholder="Côte d'Ivoire"></div>
+            <div class="champ"><label for="ic-ville">Ville</label><input id="ic-ville" name="ville" autocomplete="address-level2" maxlength="80"></div>
+            <div class="champ plein"><label for="ic-mdp">Mot de passe <span class="req">*</span></label><input id="ic-mdp" name="motDePasse" type="password" autocomplete="new-password" minlength="8" maxlength="200" required><span class="aide">8 caractères minimum.</span></div>
+            <div class="champ plein"><label style="display:flex;gap:10px;align-items:flex-start;font-weight:500"><input type="checkbox" name="consentement" required style="width:auto;margin-top:4px"> <span>J'accepte que mes données (identité, coordonnées, résultats) soient utilisées par le Mouvement SDE pour le suivi de ma formation. Les attestations sont internes au mouvement.</span></label></div>
+          </div>
+          <p id="ic-message" role="status" aria-live="polite" style="min-height:1.4em;margin:10px 0"></p>
+          <button class="bouton-envoyer" type="submit" id="ic-envoyer">Créer mon compte et ouvrir mes cours</button>
+          <p style="text-align:center;margin-top:12px"><a href="/connexion?retour=%2Fmon-espace%2Facademy">J'ai déjà un compte — me connecter</a></p>
+        </div>
+      </form>
+    </div>
+
     <!-- ═══ FORMULAIRE DE PRÉINSCRIPTION ═══ -->
     <div id="zoneFormulaire">
       <h2 style="font-size: 1.3rem; color: var(--or); text-align: center; margin-bottom: 24px;">Formulaire de préinscription</h2>
@@ -510,6 +533,7 @@ form.addEventListener("submit", async (e) => {
   }
 });
 </script>
+<script defer src="/vitrine/sde-academy-inscription.js?v=20271103"></script>
 <script defer src="/vitrine/portail-unifie.js?v=20261030p"></script>
 <script defer src="/vitrine/pwa-public.js?v=20261027b"></script>
 </body>
