@@ -57,3 +57,100 @@ fieldset.field{border:1px solid var(--line);border-radius:12px;padding:12px}.chi
 #loveSchoolDetail .love-lesson p{line-height:1.7}
 @media(max-width:720px){.love-hero{padding:20px}.love-hero:before{right:8px;font-size:3rem}.love-card{min-height:unset}}
 @media(prefers-reduced-motion:reduce){.love-card,.love-lesson{animation:none!important;transition:none!important}}
+
+
+/* Love School Signature 2027 — bordeaux, rose poudré, or champagne et ivoire.
+   Toutes les animations sont décoratives, suspendues au choix et désactivées via reduced motion. */
+#pane-love{--love-rose:#f9b7cd;--love-gold:#f4d19a;--love-wine:#651f47;--love-cream:#fff5eb;--love-ink:#120f21}
+#tab-love{color:#ffd7e5;border-color:#ad6b82;background:#55284145;transition:transform .25s ease,background .25s ease}
+#tab-love[aria-selected=true]{color:#270e20;background:linear-gradient(125deg,#f8bacc,#f2d194);box-shadow:0 -4px 16px #a92e5a25}
+#tab-love .love-bonus{font-size:.66rem;padding:1px 6px;background:#7f2c50;color:#fff0dc;border:1px solid #d6a0a9}
+#tab-love[aria-selected=true] .love-bonus{background:#66223f;color:#fff}
+.love-hero{isolation:isolate;position:relative;overflow:hidden;min-height:400px;display:flex;align-items:center;padding:clamp(24px,5.5vw,62px);margin:18px 0 22px;border-radius:27px;border:1px solid #cc8196;background:radial-gradient(circle at 87% 15%,#ad486b88,transparent 38%),radial-gradient(circle at 10% 98%,#6c3a91aa,transparent 52%),linear-gradient(125deg,#311631 5%,#642043 53%,#321a43 100%);box-shadow:0 17px 45px #0004,0 0 0 1px #fff1 inset}
+.love-hero:before{content:none}
+.love-hero:after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(115deg,transparent 15%,#ffe1eb13 45%,transparent 68%);transform:translateX(-100%);animation:loveSheen 12s ease-in-out infinite}
+.love-hero-content{position:relative;z-index:2;max-width:790px}
+.love-eyebrow{font-size:.79rem;letter-spacing:.14em;font-weight:850;color:#f8cdd7}
+.love-eyebrow span{color:#ffdc9c}
+.love-hero h2{font-weight:900;letter-spacing:-.055em;font-size:clamp(3rem,7.5vw,5.8rem);line-height:1.04;margin:14px 0 13px;color:#fffaf3;text-shadow:0 4px 22px #30101b88}
+.love-hero h2 em{color:#ffcf9b;background:linear-gradient(115deg,#f4cd9a,#ffecbe);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-style:normal}
+.love-title-heart{display:inline-block;font-size:.32em;vertical-align:top;color:#f7a2c4;filter:drop-shadow(0 0 15px #f2a8b3);animation:loveBeat 3.5s ease-in-out infinite}
+.love-hero .love-tagline{font-size:clamp(1.08rem,2vw,1.47rem);font-weight:750;color:#ffefda;line-height:1.4;margin:0 0 12px}
+.love-hero .love-intro{font-size:1rem;color:#f5ddec;line-height:1.7;max-width:680px}
+.love-hero-stats{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0 17px}
+.love-hero-stats span{display:flex;gap:7px;align-items:center;border:1px solid #ffe3f05c;background:#fff2;padding:8px 13px;border-radius:999px;font-size:.84rem;color:#fff8f1;backdrop-filter:blur(7px)}
+.love-hero-stats strong{color:#ffda9c;font-size:1.2rem;font-weight:900}
+.love-hero-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.love-hero-actions .love-start{border-color:#ffd9a8;background:linear-gradient(130deg,#ffddac,#efb9c8);color:#351731;box-shadow:0 7px 18px #0b081236}
+.love-hero-actions .love-start:hover{background:linear-gradient(130deg,#ffedcf,#ffd3e0)}
+.love-hero-actions .love-pause{border-color:#f7dfd78a;background:#24132981;color:#fff1e7;font-size:.84rem}
+.love-ornaments{position:absolute;inset:0;pointer-events:none;z-index:0}
+.love-heart{position:absolute;line-height:1;color:#ffc8db;opacity:.55;font-family:Georgia,serif;text-shadow:0 0 25px #f4b1c1;animation:loveFloat 9s ease-in-out infinite}
+.love-heart-one{font-size:8.5rem;top:8%;right:4%;opacity:.24}
+.love-heart-two{font-size:4rem;bottom:13%;right:14%;animation-delay:-3s;opacity:.45}
+.love-heart-three{font-size:2rem;top:24%;right:32%;animation-delay:-5s;opacity:.36}
+.love-heart-four{font-size:5.5rem;bottom:2%;right:0%;animation-delay:-7s;opacity:.19}
+.love-halo{position:absolute;border:1px solid #ffc6df42;border-radius:50%;filter:blur(.3px);animation:loveHalo 14s ease-in-out infinite}
+.love-halo-one{width:290px;height:290px;right:-85px;top:-105px}
+.love-halo-two{width:500px;height:500px;right:-260px;bottom:-280px;animation-delay:-7s}
+.love-intro-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:20px 0}
+.love-promise{display:flex;flex-direction:column;gap:4px;padding:17px 18px;background:linear-gradient(135deg,#301e3d,#1d263d);border:1px solid #845469;border-radius:17px}
+.love-promise>span{color:#ffcbd9;font-size:1.55rem;line-height:1}
+.love-promise strong{color:#ffe0aa}
+.love-promise small{color:#e1ccdf;font-size:.84rem}
+.love-guide{padding:16px 20px;background:#2f1d3099;border:1px solid #79556b;border-radius:17px;margin:17px 0;color:#f6dce9}
+.love-guide p{margin:6px 0;line-height:1.55;font-size:.91rem}
+.love-guide strong{color:#ffe1ae}
+.love-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-top:28px}
+.love-toolbar h3{margin:0;color:#fff0e1;font-size:1.5rem}
+.love-toolbar .button{border-color:#a67088}
+.love-collection{margin:25px 0 34px}
+.love-collection-title{display:flex;align-items:center;gap:12px;margin:0 0 12px;font-size:1.18rem;color:#ffe0ac}
+.love-collection-title span{display:grid;place-items:center;width:40px;height:40px;border:1px solid #e4a0b3;background:#572547;border-radius:12px;color:#fbd1de}
+.love-collection>p{color:#dfcbdc;margin:0 0 13px;font-size:.9rem}
+.love-card{position:relative;overflow:hidden;min-height:270px;padding:20px;background:linear-gradient(145deg,#231b37 3%,#42243c 100%);border:1px solid #815467;box-shadow:0 8px 23px #0002;transition:transform .25s ease,border-color .25s,box-shadow .25s}
+.love-card:before{content:"♡";position:absolute;font-size:6.5rem;right:-12px;top:-27px;opacity:.075;color:#ffd8e1;pointer-events:none}
+.love-card:hover{transform:translateY(-5px);border-color:#e9a6b9;box-shadow:0 16px 25px #0003}
+.love-card h3{font-size:1.15rem;line-height:1.4;color:#fff1e8;position:relative}
+.love-card .code{color:#ffcd9c}
+.love-card .muted{color:#e0c9d9}
+.love-card .button{background:#3d2545;border-color:#cb91a0;color:#ffe2e7;margin-top:auto}
+.love-card .button:hover{background:#5b2b50}
+.love-card .love-lock{font-size:.76rem;color:#ffd5a7;font-weight:700}
+.love-card-adult{border-color:#a76d6c;background:linear-gradient(145deg,#2d1b30,#4c263b)}
+.love-detail{border:1px solid #a46983;background:linear-gradient(140deg,#261d37,#182741);padding:clamp(18px,3vw,30px);scroll-margin-top:150px}
+.love-detail h2{color:#ffebdb;font-size:clamp(1.55rem,3vw,2rem)}
+.love-detail h3{font-size:1.08rem;color:#ffd7a2;margin:25px 0 9px}
+.love-detail .love-lesson{border:1px solid #795374;background:#35253d;border-radius:13px;margin:10px 0;padding:14px}
+.love-detail .love-lesson summary{color:#ffdaa9;font-weight:800}
+.love-detail .love-lesson p{color:#f1dfe9;line-height:1.75}
+.love-quiz{border:1px solid #825770;border-radius:15px;padding:16px;margin:12px 0;background:#2e2440}
+.love-quiz legend{padding:0 5px;color:#ffe2b8;font-weight:750}
+.love-quiz label{display:flex;align-items:flex-start;gap:10px;margin:8px 0;color:#f6e5ef;cursor:pointer}
+.love-quiz input{accent-color:#f4c99a;flex:0 0 auto;margin-top:6px}
+.love-quiz .love-feedback{min-height:1.2rem;margin:10px 0 0}
+.love-adult-note{border:1px solid #e3b78a;background:#42303a;color:#ffe2ce;padding:17px;border-radius:14px}
+.love-adult-note strong{color:#ffdfaa}
+.love-adult-confirm{display:flex;gap:10px;align-items:flex-start;margin:15px 0;color:#fff0df}
+.love-adult-confirm input{accent-color:#f6c08f;flex:0 0 auto;margin-top:5px;width:18px;height:18px}
+.love-reference a{color:#ffdaa9}
+@keyframes loveFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-22px) rotate(9deg)}}
+@keyframes loveBeat{0%,42%,100%{transform:scale(1)}48%{transform:scale(1.15)}55%{transform:scale(1.02)}62%{transform:scale(1.12)}}
+@keyframes loveHalo{0%,100%{transform:scale(.88);opacity:.4}50%{transform:scale(1.16);opacity:.83}}
+@keyframes loveSheen{0%,30%,100%{transform:translateX(-130%)}57%{transform:translateX(130%)}}
+#pane-love.love-motion-paused .love-heart,#pane-love.love-motion-paused .love-halo,#pane-love.love-motion-paused .love-title-heart,#pane-love.love-motion-paused .love-hero:after,#pane-love.love-motion-paused .love-card{animation:none!important;transition:none!important}
+@media(max-width:720px){
+ .love-hero{min-height:0;padding:25px 20px;border-radius:20px}
+ .love-hero h2{font-size:clamp(2.8rem,12vw,4.1rem)}
+ .love-heart-one{font-size:5rem;right:-10px}
+ .love-hero-stats{gap:6px}
+ .love-hero-stats span{padding:7px 10px}
+ .love-intro-grid{grid-template-columns:1fr}
+ .love-promise{flex-direction:row;gap:12px;align-items:center}
+ .love-promise strong{min-width:120px}
+ .love-card{min-height:unset}
+ .love-detail{scroll-margin-top:115px}
+}
+@media(prefers-reduced-motion:reduce){
+ #pane-love *,#pane-love *:before,#pane-love *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
