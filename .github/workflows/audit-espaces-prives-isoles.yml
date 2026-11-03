@@ -9,6 +9,8 @@ on:
       - 'public/vitrine/tableaux-de-bord.css'
       - 'public/vitrine/tableaux-de-bord.js'
       - 'public/vitrine/sde-premium-dashboards.css'
+      - 'public/vitrine/sde-fusion.css'
+      - 'test/contraste-poles-2026.test.mjs'
   push:
     branches: [main]
     paths:
@@ -19,6 +21,8 @@ on:
       - 'public/vitrine/tableaux-de-bord.css'
       - 'public/vitrine/tableaux-de-bord.js'
       - 'public/vitrine/sde-premium-dashboards.css'
+      - 'public/vitrine/sde-fusion.css'
+      - 'test/contraste-poles-2026.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
