@@ -176,6 +176,18 @@ export async function mediaAcademyAutorise(env,u,mediaId){
  try{
   lignes=(await env.DB.prepare("SELECT cours,statut FROM academy_2027_acces WHERE compte=?").bind(String(u.id)).all()).results||[];
  }catch(e){if(/no such table/i.test(String(e?.message||e)))return {restreint:true,autorise:false};throw e;}
- const approves=new Set(lignes.filter(r=>r.statut==="approuve").map(r=>r.cours));
- return {restreint:true,autorise:tous.every(c=>portees.includes(c.id)||portees.includes("N"+c.level)||approves.has(c.id))};
+ const etats=Object.fromEntries(lignes.map(r=>[r.cours,r.statut]));
+ const sansDecision=tous.filter(c=>!etats[c.id]&&!portees.includes(c.id)&&!portees.includes("N"+c.level)).map(c=>c.id);
+ const anciens=new Set();
+ if(sansDecision.length){
+   const markers=sansDecision.map(()=>"?").join(",");
+   try{
+     const [copies,suivis]=await Promise.all([
+       env.DB.prepare("SELECT DISTINCT cours FROM academy_2027_submissions WHERE compte=? AND cours IN ("+markers+")").bind(String(u.id),...sansDecision).all(),
+       env.DB.prepare("SELECT cours FROM academy_2027_suivi WHERE compte=? AND cours IN ("+markers+")").bind(String(u.id),...sansDecision).all()
+     ]);
+     for(const row of [...(copies.results||[]),...(suivis.results||[])])anciens.add(row.cours);
+   }catch(e){if(!/no such table/i.test(String(e?.message||e)))throw e}
+ }
+ return {restreint:true,autorise:tous.every(c=>portees.includes(c.id)||portees.includes("N"+c.level)||etats[c.id]==="approuve"||(!etats[c.id]&&anciens.has(c.id)))};
 }
