@@ -214,3 +214,28 @@ test("Confidentialité : chaque enseignant consulte ses propres brouillons, la d
  assert.deepEqual(coachList.map(x=>x.id),[b.json.id],"le coach ne lit pas le brouillon de l'enseignante");
  assert.equal(adminList.length,2,"la direction conserve une vue complète");
 });
+
+test("Synchronisation bibliothèque : une publication devient visible sans exposer les cours verrouillés",async()=>{
+  const {env,sql}=monde();comptes(sql);
+  const p="/api/soldiers-academy/ressources/etat";
+  const before=await api(env,eleve,"GET",p);
+  assert.equal(before.statut,200);
+  assert.deepEqual(before.json.ressources,{generales:[],nouveautes:[],parCours:{}});
+  assert.equal((await api(env,{connecte:false,id:null,niveau:0},"GET",p)).statut,401);
+  await api(env,direction,"POST","/api/soldiers-academy/formateurs",{compte:"prof@exemple.test",fonction:"enseignant",portees:["SA-01","SA-09","GENERAL"]});
+  await api(env,prof,"POST",R,{portee:"SA-01",type:"note",titre:"Leçon supplémentaire",texte:"Explications bibliques complémentaires pour les nouveaux inscrits."});
+  await api(env,prof,"POST",R,{portee:"GENERAL",type:"note",titre:"Guide pédagogique",texte:"Principes de participation pour les étudiants."});
+  await api(env,prof,"POST",R,{portee:"SA-09",type:"note",titre:"Niveau suivant",texte:"Notions ministérielles réservées aux niveaux supérieurs."});
+  const after=(await api(env,eleve,"GET",p)).json.ressources;
+  assert.equal(after.parCours["SA-01"],1);
+  assert.equal(after.parCours["SA-09"],undefined,"Le niveau verrouillé reste invisible.");
+  assert.equal(after.generales.length,1);
+  assert.ok(after.nouveautes.some(x=>x.titre==="Leçon supplémentaire"));
+  const page=readFileSync(new URL("../public/vitrine/sde-academy-parcours.html",import.meta.url),"utf8");
+  const script=readFileSync(new URL("../public/vitrine/sde-academy-parcours.js",import.meta.url),"utf8");
+  assert.match(page,/id="refreshAcademyResources"/);
+  assert.match(page,/id="academySyncStatus"/);
+  assert.match(script,/request\("\/ressources\/etat"\)/);
+  assert.match(script,/setInterval\(\(\)=>synchroniserRessources\(\),90000\)/);
+  assert.match(script,/document\.hidden/);
+});
