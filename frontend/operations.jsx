@@ -302,7 +302,7 @@ function Command({portal}){
   <button type="button" onClick={()=>portal.selectionner('scanner')}><RefIcon name="qr"/><span>Pointages et QR</span><span aria-hidden="true">↗</span></button>
   <button type="button" onClick={()=>portal.selectionner('academy-direction')}><RefIcon name="academy"/><span>Validations Academy</span><span aria-hidden="true">↗</span></button>
   <button type="button" onClick={()=>portal.selectionner('rendezvous')}><RefIcon name="mission"/><span>Agenda des rencontres</span><span aria-hidden="true">↗</span></button>
-  <button type="button" onClick={()=>portal.selectionner('suivi-poles')}><RefIcon name="mission"/><span>Missions et cinq pôles</span><span aria-hidden="true">↗</span></button>
+  <button type="button" onClick={()=>portal.selectionner('suivi-poles')}><RefIcon name="mission"/><span>Consulter le suivi des pôles</span><span aria-hidden="true">↗</span></button>
   {portal.compte.niveau>=2&&<button type="button" onClick={()=>portal.selectionner('finance-direction')}><RefIcon name="money"/><span>Contrôle des finances</span><span aria-hidden="true">↗</span></button>}
  </div>
  </section><OfficialTpaCard/>
