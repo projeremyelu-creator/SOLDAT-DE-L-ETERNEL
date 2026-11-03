@@ -56,6 +56,10 @@ VAPID_SUBJECT = "mailto:infosoldat@gmail.com"
 #   wrangler secret put VAPID_PRIVATE_KEY
 # VAPID_SUBJECT = "mailto:infosoldat@gmail.com"
 
+# ── Courriels automatiques (Resend) ──
+# Secrets à ajouter dans Cloudflare : RESEND_API_KEY, COURRIEL_FROM, COURRIEL_SECRET (et COURRIEL_WEBHOOK_SECRET si Make/Zapier).
+# Voir docs/courriels-resend-sde.md
+
 # ── WhatsApp Business Cloud API ──
 # Créer une app Meta Business : https://developers.facebook.com/
 # Puis ajoutez les secrets :

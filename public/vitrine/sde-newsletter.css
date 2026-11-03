@@ -1,0 +1,5 @@
+.nl-themes{border:1px solid var(--bord,#d9d2ee);border-radius:12px;padding:12px 14px;display:grid;gap:8px}
+.nl-themes legend{font-weight:800;padding:0 6px}
+.nl-piege{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
+#nl-etat{padding:12px 14px;border-radius:12px;border:1px solid var(--bord,#d9d2ee)}
+#nl-etat[data-etat="erreur"]{border-color:#c0392b}
