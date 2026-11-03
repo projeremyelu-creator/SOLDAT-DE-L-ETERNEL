@@ -159,3 +159,12 @@ test('Recette Academy : studio et publication des supports, version effective du
  const ref=await recetteProduction({fetcher:ancien.fetcher,domaines:[DOMAINES[0]],controles:CONTROLES.filter(c=>c.type==='academy-script'),essais:1});
  assert.equal(ref.ok,false,'Un ancien script Academy en production ne doit pas être validé.');
 });
+
+test('RECETTE EXTERNE PONCTUELLE — vérifier réellement les deux domaines Academy après déploiement', {timeout:300000},async()=>{
+ const {recetteAcademyProduction}=await import('../scripts/recette-academy-production.mjs');
+ const controle=await recetteAcademyProduction({essais:2,timeoutMs:8000,rapport:r=>{
+  console.log('PRODUCTION ACADEMY',r.ok?'OK':'ÉCHEC',r.domaine+r.path,r.erreur||'');
+ }});
+ console.log('BILAN PRODUCTION ACADEMY',controle.reussis+'/'+controle.total);
+ assert.equal(controle.ok,true,JSON.stringify(controle.resultats.filter(x=>!x.ok),null,2));
+});
