@@ -171,8 +171,7 @@ test("RECETTE PROD TEMPORAIRE : verrouillage pédagogique des 34 cours et Studio
  for(const domain of ["https://mouvement-sde.org","https://app.mouvement-sde.org"]){
    const resources=[
     ["/vitrine/sde-academy-parcours.js",["avantCoursAcademy","demanderCoursAcademy","data-sa-demander","data-love-demander","chargerLoveSchool"]],
-    ["/vitrine/sde-academy-enseignants.js",["chargerValidations","data-acces-source","/acces/decision","/love-school/acces/decision"]],
-    ["/vitrine/academy-enseignants.html",["pane-validations","tab-validations"]]
+    ["/vitrine/sde-academy-enseignants.js",["chargerValidations","data-acces-source","/acces/decision","/love-school/acces/decision"]]
    ];
    for(const [path,marqueurs] of resources){
     const res=await fetch(domain+path,{redirect:"manual",signal:AbortSignal.timeout(15000),headers:{"cache-control":"no-cache"}});
@@ -181,6 +180,10 @@ test("RECETTE PROD TEMPORAIRE : verrouillage pédagogique des 34 cours et Studio
     for(const m of marqueurs)assert.ok(content.includes(m),"Version non publiee "+domain+path+" : "+m);
     console.log("ACCES 34 PROD FRONTEND OK",domain+path);
    }
+   // Le Studio HTML lui-même est privé : redirection pour visiteur anonyme, contrairement au JS statique.
+   const studio=await fetch(domain+"/vitrine/academy-enseignants.html",{redirect:"manual",signal:AbortSignal.timeout(15000),headers:{"cache-control":"no-cache"}});
+   assert.equal(studio.status,307,"Le Studio HTML doit rediriger l'anonyme vers sa connexion : "+domain);
+   console.log("ACCES 34 PROD STUDIO PRIVE 307",domain);
    for(const path of ["/api/soldiers-academy/acces/gestion","/api/soldiers-academy/love-school/acces/gestion","/api/soldiers-academy/love-school/cours/LS-01","/api/soldiers-academy/cours/SA-01"]){
     const res=await fetch(domain+path,{redirect:"manual",signal:AbortSignal.timeout(15000),headers:{"accept":"application/json","cache-control":"no-cache"}});
     assert.equal(res.status,401,"API privee exposee "+domain+path+" : "+res.status);
