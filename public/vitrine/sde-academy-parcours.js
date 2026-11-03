@@ -86,8 +86,22 @@ function renderCohortes(){
 function renderSpecialisations(){
  const sp=snapshot.specialisations;if(!sp)return;
  text("specNote",sp.ouvertes?"Les 24 cours sont validés : vous pouvez choisir votre école de spécialisation auprès de la direction pédagogique.":"Accessibles après la validation des 24 cours du tronc commun.");
- $("specList").innerHTML=sp.ecoles.map(e=>'<article class="card"><span class="code">'+esc(e.code)+' · Pôle '+esc(e.pole)+'</span><h3>'+esc(e.titre)+'</h3><p>'+esc(e.objectif)+'</p><ul>'+e.ateliers.map(a=>'<li>'+esc(a[1])+'</li>').join("")+'</ul><small>Soutenance : '+esc(e.soutenance)+'</small></article>').join("");
+ const mes=new Map((sp.mesInscriptions||[]).map(x=>[x.ecole,x]));
+ const etat={demande:'<span class="chip pending">Demande en cours d’examen</span>',acceptee:'<span class="chip ok">Inscrit</span>',refusee:'<span class="chip">Demande non retenue</span>'};
+ $("specList").innerHTML=sp.ecoles.map(e=>{
+  const m=mes.get(e.code);
+  let action="";
+  if(m&&m.statut!=="refusee")action=etat[m.statut]+' <button type="button" class="button" data-ecole-retirer="'+esc(e.code)+'">Retirer</button>';
+  else if(sp.ouvertes)action=(m?etat.refusee+'<small class="muted"> '+esc(m.commentaire)+'</small><br>':"")+'<form data-ecole-form="'+esc(e.code)+'"><label class="field">Motivation (facultatif)<textarea name="motivation" maxlength="600" placeholder="Pourquoi cette école ?"></textarea></label><button class="button primary" type="submit">S’inscrire à cette école</button></form>';
+  else action='<span class="chip">Après les 24 cours</span>';
+  return '<article class="card"><span class="code">'+esc(e.code)+' · Pôle '+esc(e.pole)+'</span><h3>'+esc(e.titre)+'</h3><p>'+esc(e.objectif)+'</p><ul>'+e.ateliers.map(a=>'<li>'+esc(a[1])+'</li>').join("")+'</ul><small>Soutenance : '+esc(e.soutenance)+'</small><div>'+action+'</div></article>';
+ }).join("");
  $("masterList").innerHTML=sp.masterclass.map(m=>'<article class="card"><span class="code">'+esc(m.code)+'</span><h3>'+esc(m.titre)+'</h3><p>'+esc(m.deroulement)+'</p><small>Livrable : '+esc(m.livrable)+'</small></article>').join("");
+}
+function renderEcolesAdmin(){
+ const n=$("ecolesAdmin");if(!n||!gestion)return;
+ const list=gestion.ecolesDemandes||[];
+ n.innerHTML=list.length?list.map(d=>'<article class="review"><div class="eyebrow">'+esc(d.ecole)+' · demande du '+esc(new Date(d.demandeLe).toLocaleDateString("fr-FR"))+'</div><h3>'+esc(d.titre)+'</h3><p>Apprenant : <strong>'+esc(d.nom)+'</strong></p>'+(d.motivation?'<div class="correction">'+esc(d.motivation)+'</div>':"")+'<form data-ecole-decision data-compte="'+esc(d.compte)+'" data-ecole="'+esc(d.ecole)+'"><label class="field">Commentaire (obligatoire en cas de refus)<input name="commentaire" maxlength="400"></label><button class="button primary" type="submit" data-statut="acceptee">Accepter</button> <button class="button" type="submit" data-statut="refusee">Refuser</button></form></article>').join(""):'<p class="muted">Aucune demande d’inscription aux écoles.</p>';
 }
 function renderCohortesAdmin(){
  const n=$("cohortesAdmin");if(!n||!gestion)return;
@@ -136,7 +150,7 @@ async function loadGestion(){
  try{
   gestion=await request("/gestion");
   $("pendingCopies").innerHTML=gestion.pending.length?gestion.pending.map(reviewHtml).join(""):'<p class="muted">Aucune copie actuellement en attente.</p>';
-  renderCohortesAdmin();
+  renderCohortesAdmin();renderEcolesAdmin();
   $("attendanceCourse").innerHTML=gestion.courses.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.id)+' — '+esc(c.title)+'</option>').join("");
   $("accountsList").innerHTML=[...new Set(gestion.students.map(x=>x.compte))].map(id=>'<option value="'+esc(id)+'"></option>').join("");
   alertMessage("Tableau des corrections actualisé.","adminStatus");
@@ -147,11 +161,12 @@ async function reload(){
 }
 document.addEventListener("click",async ev=>{
  const btn=ev.target.closest("[data-course]");if(btn&&!btn.disabled){openCourse(btn.dataset.course);return;}
- const act=ev.target.closest("[data-avis-lus],[data-cohorte-rejoindre],[data-cohorte-quitter],[data-cohorte-clore]");if(!act)return;
+ const act=ev.target.closest("[data-avis-lus],[data-cohorte-rejoindre],[data-cohorte-quitter],[data-cohorte-clore],[data-ecole-retirer]");if(!act)return;
  try{
   if(act.hasAttribute("data-avis-lus"))await request("/avis/lus","POST",{});
   else if(act.dataset.cohorteRejoindre)await request("/cohortes/rejoindre","POST",{id:act.dataset.cohorteRejoindre});
   else if(act.dataset.cohorteQuitter)await request("/cohortes/quitter","POST",{id:act.dataset.cohorteQuitter});
+  else if(act.dataset.ecoleRetirer)await request("/ecoles/retirer","POST",{ecole:act.dataset.ecoleRetirer});
   else if(act.dataset.cohorteClore){await request("/cohortes/clore","PATCH",{id:act.dataset.cohorteClore});await loadGestion();}
   await reload();
  }catch(e){alertMessage(e.message);}
@@ -165,6 +180,22 @@ document.addEventListener("submit",async ev=>{
    await request("/soumettre","POST",{courseId:"PROJET",type:"projet",answers:snapshot.projet.criteres.map((_,i)=>form.elements["partie"+i].value.trim())});
    alertMessage("Votre projet a été remis pour correction.");await reload();
   }catch(e){alertMessage(e.message);btn.disabled=false;}
+  return;
+ }
+ if(form.dataset.ecoleForm){
+  ev.preventDefault();const btn=form.querySelector("button");btn.disabled=true;
+  try{
+   await request("/ecoles/inscrire","POST",{ecole:form.dataset.ecoleForm,motivation:form.elements.motivation.value.trim()});
+   alertMessage("Votre demande d’inscription a été transmise.");await reload();
+  }catch(e){alertMessage(e.message);btn.disabled=false;}
+  return;
+ }
+ if(form.hasAttribute("data-ecole-decision")){
+  ev.preventDefault();const btn=ev.submitter||form.querySelector("button"),statut=btn?.dataset.statut;
+  try{
+   await request("/ecoles/decision","PATCH",{compte:form.dataset.compte,ecole:form.dataset.ecole,statut,commentaire:form.elements.commentaire.value.trim()});
+   alertMessage("Décision enregistrée.","adminStatus");await loadGestion();
+  }catch(e){alertMessage(e.message,"adminStatus");}
   return;
  }
  if(form.id==="cohorteForm"){

@@ -212,6 +212,8 @@ async function loadPilotage(){
     la.append(pilotageLigne("Apprenants actifs",ac.apprenants+" apprenant(s) ayant remis au moins une copie"));
     la.append(pilotageLigne("Corrections",ac.copiesEnAttente+" copie(s) en attente · "+ac.copiesNotees30j+" corrigée(s) sur 30 jours",ac.copiesEnAttente===0));
     la.append(pilotageLigne("Attestations délivrées","Niveau I : "+ac.attestations.niveau1+" · Niveau II : "+ac.attestations.niveau2+" · Niveau III : "+ac.attestations.niveau3+" · Parcours : "+ac.attestations.parcours));
+    const ec=Object.entries(ac.ecoles||{}).map(([code,v])=>code+" : "+v.acceptee+" inscrit(s), "+v.demande+" demande(s)");
+    la.append(pilotageLigne("Écoles de spécialisation",ec.length?ec.join(" · "):"Aucune inscription pour le moment",!(ac.ecoles&&Object.values(ac.ecoles).some(v=>v.demande>0))));
     if(!ac.cohortes.length)la.append(pilotageLigne("Aucune cohorte ouverte","La direction pédagogique peut en créer une dans l'espace Academy.",false));
     for(const x of ac.cohortes)la.append(pilotageLigne("Cohorte « "+x.nom+" » · niveau "+x.niveau,"Début "+x.debut+" · "+x.effectif+" inscrit(s)"));
    }

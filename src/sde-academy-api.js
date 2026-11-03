@@ -4,7 +4,7 @@
 import {SOLDIERS_ACADEMY_2027 as PROGRAMME} from "./soldiers-academy-2027.js";
 import {CORRECTIFS,BAREME_EXERCICE,BAREME_EXAMEN} from "./academy-correctifs.js";
 import {SPECIALISATIONS} from "./academy-specialisations.js";
-import {initExtras,notifierCompte,notifierDirection,avisNonLus,marquerAvisLus,cohortesVue,cohortesGestion,cohortesApi,verifierAttestation as verifierAttestationPublique} from "./academy-extras.js";
+import {initExtras,notifierCompte,notifierDirection,avisNonLus,marquerAvisLus,cohortesVue,cohortesGestion,cohortesApi,ecolesApi,ecolesDuCompte,ecolesGestion,verifierAttestation as verifierAttestationPublique} from "./academy-extras.js";
 export const verifierAttestation=verifierAttestationPublique;
 const COURSES=PROGRAMME.courses;
 const courseFor=id=>COURSES.find(c=>c.id===id);
@@ -100,10 +100,10 @@ export async function soldiersAcademyApi(req,env,u,path){
     const d=await state(env,account);
     const pj=await projetEtat(env,account);
     const peutRejoindre=n=>n===1||d.completedLevel(n-1);
-    const [cohortes,avis]=await Promise.all([cohortesVue(env,u,{peutRejoindre}),avisNonLus(env,account)]);
+    const [cohortes,avis,mesEcoles]=await Promise.all([cohortesVue(env,u,{peutRejoindre}),avisNonLus(env,account),ecolesDuCompte(env,account)]);
     const projet={ouvert:d.allPassed(),criteres:PROJET_CRITERES.map(([libelle,points])=>({libelle,points})),enAttente:pj.enAttente,soumisLe:pj.soumisLe,meilleur:pj.meilleur,acquis:pj.acquis,dernier:pj.dernier};
     return response({ok:true,programme:{version:PROGRAMME.version,status:"adopte",durationHours:192,levels:PROGRAMME.levels,evaluation:PROGRAMME.evaluation},name:u.nom||"Membre SDE",admin,progress:d.progress,courses:publicProgress(d),certificates:d.certificates,projet,parcoursComplet:d.certificates.some(c=>c.niveau===4),
-      specialisations:{ecoles:SPECIALISATIONS.ecoles,masterclass:SPECIALISATIONS.masterclass,ouvertes:d.allPassed()},cohortes,avis});
+      specialisations:{ecoles:SPECIALISATIONS.ecoles,masterclass:SPECIALISATIONS.masterclass,ouvertes:d.allPassed(),mesInscriptions:mesEcoles},cohortes,avis});
   }
   if(path.startsWith("/api/soldiers-academy/cours/")&&req.method==="GET"){
     const c=courseFor(decodeURIComponent(path.slice("/api/soldiers-academy/cours/".length)));
@@ -148,8 +148,8 @@ export async function soldiersAcademyApi(req,env,u,path){
       if(x.type==="exam")return {consignes:c.exam.map(e=>e.task+" ("+e.points+" points)"),bareme:BAREME_EXAMEN+" Barème par épreuve : "+c.exam.map(e=>e.points).join(" + ")+" = 100.",corriges:k.exam};
       return {consignes:c.exercises.map(e=>e.instruction),bareme:BAREME_EXERCICE,corriges:null};
     };
-    const cohortes=await cohortesGestion(env);
-    return response({ok:true,pending:rows.map(x=>({...x,reponses:JSON.parse(x.reponses||"[]"),nom:x.nom||"Apprenant",aide:aide(x)})),students:suivi,courses:COURSES.map(c=>({id:c.id,title:c.title,level:c.level})),cohortes});
+    const cohortes=await cohortesGestion(env),ecolesDemandes=await ecolesGestion(env);
+    return response({ok:true,pending:rows.map(x=>({...x,reponses:JSON.parse(x.reponses||"[]"),nom:x.nom||"Apprenant",aide:aide(x)})),students:suivi,courses:COURSES.map(c=>({id:c.id,title:c.title,level:c.level})),cohortes,ecolesDemandes});
   }
   if(path==="/api/soldiers-academy/noter"&&req.method==="PATCH"){
     if(!admin)return error("Accès réservé aux correcteurs.",403);
@@ -181,6 +181,10 @@ export async function soldiersAcademyApi(req,env,u,path){
     return response({ok:true,attestation:certificate,level:level===4?{id:4,title:"Parcours intégral Soldiers Academy"}:PROGRAMME.levels[level-1],name:u.nom||"Apprenant Soldiers Academy"});
   }
   if(path==="/api/soldiers-academy/avis/lus"&&req.method==="POST"){await marquerAvisLus(env,account);return response({ok:true});}
+  if(path.startsWith("/api/soldiers-academy/ecoles")){
+    const d=await state(env,account);
+    return ecolesApi(req,env,u,path,{admin,ouvert:d.allPassed()});
+  }
   if(path.startsWith("/api/soldiers-academy/cohortes")){
     const d=await state(env,account);
     return cohortesApi(req,env,u,path,{admin,peutRejoindre:n=>n===1||d.completedLevel(n-1)});
