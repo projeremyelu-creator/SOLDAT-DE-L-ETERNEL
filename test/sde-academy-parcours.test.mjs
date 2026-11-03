@@ -1,110 +1,114 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import {MODULES_ACADEMY,NIVEAUX_ACADEMY} from "../src/sde-academy-catalogue.js";
+import {SOLDIERS_ACADEMY_2027 as CATALOGUE} from "../src/soldiers-academy-2027.js";
 import {soldiersAcademyApi} from "../src/sde-academy-api.js";
-
-const repoRoot=new URL("../",import.meta.url);
-test("Douze fiches complètes et 60 questions vérifiables",()=>{
-  assert.equal(MODULES_ACADEMY.length,12);
-  assert.equal(NIVEAUX_ACADEMY.length,4);
-  assert.equal(new Set(MODULES_ACADEMY.map(m=>m.id)).size,12);
-  assert.equal(MODULES_ACADEMY.reduce((n,m)=>n+m.quiz.length,0),60);
-  const noms=["Identité en Christ","Prière et intimité","Parole de Dieu","Sainteté et maturité","Saint-Esprit et dons","Intercession","Discernement prophétique","Évangélisation","Leadership","Gouvernance","Entrepreneuriat","Impact humanitaire"];
-  assert.deepEqual(MODULES_ACADEMY.map(m=>m.titre),noms);
-  MODULES_ACADEMY.forEach((m,i)=>{
-    assert.equal(m.numero,i+1);
-    assert.equal(m.niveau,Math.floor(i/3)+1);
-    assert.ok(m.objectifs.length>=3,m.titre+" objectifs");
-    assert.ok(m.chapitres.length>=3,m.titre+" chapitres");
-    assert.ok(m.chapitres.every(c=>c.titre.length>4&&c.contenu.length>240),m.titre+" explications");
-    assert.ok(m.exercices.length>=2,m.titre+" exercices");
-    assert.ok(m.exercices.every(e=>e.criteres.length>=3&&e.livrable),m.titre+" grilles");
-    assert.ok(m.references.length>=3,m.titre+" textes");
-    assert.equal(m.quiz.length,5);
-    assert.ok(m.quiz.every(q=>q.choix.length===3&&q.reponse>=0&&q.reponse<3&&q.explication.length>20),m.titre+" quiz");
-    assert.equal(m.validation.quizMinimum,80);
-    assert.equal(m.validation.formateurValide,true);
-  });
-  NIVEAUX_ACADEMY.forEach((n,i)=>assert.deepEqual(n.modules,MODULES_ACADEMY.slice(i*3,i*3+3).map(m=>m.id)));
+test("24 cours et 192 heures : contenu complet sans corrigés",()=>{
+  const cs=CATALOGUE.courses;
+  assert.equal(cs.length,24);assert.equal(CATALOGUE.durationHours,192);
+  assert.equal(cs.reduce((a,c)=>a+c.units.length,0),96);
+  assert.equal(cs.reduce((a,c)=>a+c.quiz.length,0),120);
+  assert.equal(cs.reduce((a,c)=>a+c.exam.length,0),72);
+  assert.deepEqual(cs.map(c=>c.id),Array.from({length:24},(_,i)=>"SA-"+String(i+1).padStart(2,"0")));
+  for(const c of cs){
+    assert.equal(c.durationHours,8);assert.equal(c.goals.length,3);assert.equal(c.units.length,4);
+    assert.equal(c.exercises.length,2);assert.equal(c.quiz.length,5);assert.equal(c.exam.length,3);
+    assert.equal(c.exam.reduce((n,e)=>n+e.points,0),100);
+    assert.ok(c.units.every(x=>x.body.length>90));
+    assert.ok(c.quiz.every(q=>q.reponse===undefined&&q.points===20));
+  }
 });
-class FakeDB{
-  constructor(){this.rows=new Map()}
-  prepare(sql){
-    const db=this;
-    return {sql,values:[],bind(...values){this.values=values;return this},
-      async run(){
-        if(sql.startsWith("INSERT INTO academy_parcours"))db.rows.set(this.values[0],JSON.parse(this.values[1]));
-        return {success:true};
-      },
-      async first(){
-        if(sql.startsWith("SELECT data FROM academy_parcours")){const d=db.rows.get(this.values[0]);return d?{data:JSON.stringify(d)}:null}
-        return null;
-      },
-      async all(){
-        if(sql.startsWith("SELECT a.compte,a.data"))return {results:[...db.rows].map(([compte,d])=>({compte,data:JSON.stringify(d),nom:compte}))};
-        return {results:[]};
-      }
+class FakeDB {
+ constructor(){this.subs=new Map();this.att=new Map();this.certs=new Map();}
+ prepare(sql){
+  const d=this;
+  return {values:[],bind(...v){this.values=v;return this},
+    async run(){
+      const v=this.values;
+      if(sql.startsWith("INSERT INTO academy_2027_submissions"))d.subs.set(v[0],{id:v[0],compte:v[1],cours:v[2],type:v[3],reponses:v[4],statut:"en_attente",score:null,commentaire:"",date_soumission:v[5]});
+      if(sql.startsWith("UPDATE academy_2027_submissions")){const a=d.subs.get(v[4]);if(a&&a.statut==="en_attente"){a.statut="note";a.score=v[0];a.commentaire=v[1];}}
+      if(sql.startsWith("INSERT INTO academy_2027_suivi"))d.att.set(v[0]+":"+v[1],{compte:v[0],cours:v[1],presence:v[2],participation:v[3]});
+      if(sql.startsWith("INSERT OR IGNORE INTO academy_2027_attestations")){const k=v[0]+":"+v[1];if(!d.certs.has(k))d.certs.set(k,{compte:v[0],niveau:v[1],code:v[2],delivree_le:v[3]});}
+      return {success:true};
+    },
+    async first(){
+      const v=this.values;
+      if(sql.startsWith("SELECT id FROM academy_2027_submissions"))return [...d.subs.values()].find(s=>s.compte===v[0]&&s.cours===v[1]&&s.type===v[2]&&s.statut==="en_attente")||null;
+      if(sql.startsWith("SELECT id,compte,statut FROM academy_2027_submissions"))return d.subs.get(v[0])||null;
+      return null;
+    },
+    async all(){
+      const v=this.values;
+      if(sql.startsWith("SELECT id,cours,type,statut,score,commentaire,date_soumission"))return {results:[...d.subs.values()].filter(s=>s.compte===v[0])};
+      if(sql.startsWith("SELECT cours,presence,participation"))return {results:[...d.att.values()].filter(s=>s.compte===v[0])};
+      if(sql.startsWith("SELECT niveau,code,delivree_le"))return {results:[...d.certs.values()].filter(s=>s.compte===v[0])};
+      if(sql.startsWith("SELECT a.id,a.compte"))return {results:[...d.subs.values()].filter(s=>s.statut==="en_attente").map(s=>({...s,nom:s.compte}))};
+      if(sql.startsWith("SELECT DISTINCT compte,cours"))return {results:[...d.subs.values()].map(s=>({compte:s.compte,cours:s.cours}))};
+      return {results:[]};
     }
   }
+ }
 }
 const env={DB:new FakeDB()};
-const member={connecte:true,id:"test-member",nom:"Soldat Test",niveau:0};
-const trainer={connecte:true,id:"test-admin",nom:"Formateur Test",niveau:2};
-const req=(path,body,method="POST")=>new Request("https://mouvement-sde.org"+path,{method,headers:body===undefined?{}:{"content-type":"application/json"},body:body===undefined?undefined:JSON.stringify(body)});
-async function call(path,user,body,method=body===undefined?"GET":"POST"){
-  const r=await soldiersAcademyApi(req(path,body,method),env,user,path);
-  return {status:r.status,body:await r.json()};
+const student={connecte:true,id:"student-2027",nom:"Soldat Étudiant",niveau:0};
+const other={connecte:true,id:"other-2027",nom:"Autre membre",niveau:0};
+const trainer={connecte:true,id:"trainer-2027",nom:"Formateur",niveau:2};
+async function call(path,user=student,body,method=body?"POST":"GET"){
+  const url="https://mouvement-sde.org"+path;
+  const req=new Request(url,{method,headers:body?{"content-type":"application/json"}:{},body:body===undefined?undefined:JSON.stringify(body)});
+  const resp=await soldiersAcademyApi(req,env,user,new URL(url).pathname);
+  return {status:resp.status,result:await resp.json()};
 }
-const keyFor=(m,i)=>{const q=m.quiz[i],rotation=(i*2+Math.floor(i/3)+m.numero)%3;return (q.reponse-rotation+3)%3};
-test("Accès privé : session, cours verrouillés et clés cachées",async()=>{
-  const path="/api/soldiers-academy";
-  assert.equal((await call(path,{connecte:false,id:null})).status,401);
-  const {body}=await call(path,member);
-  assert.equal(body.resume.pourcentage,0);
-  assert.equal(body.modules.length,12);
-  assert.equal(body.modules[3].verrouille,true);
-  assert.equal(body.modules[3].chapitres,undefined);
-  assert.equal(body.modules[0].quiz[0].reponse,undefined);
-  assert.equal(body.modules[0].chapitres.length,3);
-  assert.equal((await call("/api/soldiers-academy/corrections",member)).status,403);
-  assert.equal((await call("/api/soldiers-academy/examen",member,{niveau:1,reponses:[0,0,0,0,0]})).status,403);
+test("Droits : authentification, corrections privées, progression isolée et niveaux verrouillés",async()=>{
+  assert.equal((await call("/api/soldiers-academy",{connecte:false})).status,401);
+  const s=await call("/api/soldiers-academy");
+  assert.equal(s.result.courses.length,24);
+  assert.equal(s.result.progress.passed,0);
+  assert.equal(s.result.courses[8].locked,true);
+  assert.equal((await call("/api/soldiers-academy/cours/SA-09")).status,403);
+  assert.equal((await call("/api/soldiers-academy/cours/SA-01")).status,200);
+  assert.equal((await call("/api/soldiers-academy/gestion")).status,403);
+  assert.equal((await call("/api/soldiers-academy/attestation?niveau=1")).status,403);
+  assert.equal((await call("/api/soldiers-academy/corrections")).status,404);
 });
-test("Évaluation réelle : quiz + correction du travail + examen de niveau",async()=>{
-  for(const m of MODULES_ACADEMY.slice(0,3)){
-    const answers=m.quiz.map((q,i)=>keyFor(m,i));
-    const passed=(await call("/api/soldiers-academy/quiz",member,{moduleId:m.id,reponses:answers})).body;
-    assert.equal(passed.score,100);
-    const text="Synthèse écrite de mon exercice pratique : j'ai relu les passages, décrit ma démarche, appliqué chaque critère et identifié une amélioration réalisable.";
-    const submitted=await call("/api/soldiers-academy/exercice",member,{moduleId:m.id,texte:text});
-    assert.equal(submitted.status,200);
-    const pending=(await call("/api/soldiers-academy/corrections",trainer)).body.demandes;
-    assert.ok(pending.some(x=>x.moduleId===m.id&&x.compte===member.id));
-    const approved=await call("/api/soldiers-academy/correction",trainer,{moduleId:m.id,compte:member.id,statut:"valide",commentaire:"Travail vérifié."},"PATCH");
-    assert.equal(approved.status,200);
+async function passOne(id){
+  const c=CATALOGUE.courses.find(x=>x.id===id);
+  for(const type of ["quiz","exercises","exam"]){
+    const items=c[type];
+    const answers=items.map((_,i)=>"Analyse biblique contextualisée et application concrète, réponse "+(i+1)+".");
+    const submit=await call("/api/soldiers-academy/soumettre",student,{courseId:id,type,answers});
+    assert.equal(submit.status,201);
+    assert.equal((await call("/api/soldiers-academy/soumettre",student,{courseId:id,type,answers})).status,409);
+    assert.equal((await call("/api/soldiers-academy/noter",student,{id:submit.result.id,score:95,comment:"Validé."},"PATCH")).status,403);
+    assert.equal((await call("/api/soldiers-academy/noter",trainer,{id:submit.result.id,score:90,comment:"Travail sérieux et clair."},"PATCH")).status,200);
   }
-  const before=(await call("/api/soldiers-academy",member)).body;
-  assert.equal(before.resume.valides,3);
-  assert.equal(before.resume.pourcentage,25);
-  assert.equal(before.niveaux[0].examenDisponible,true);
-  assert.equal(before.niveaux[1].verrouille,true);
-  const firstExam=[0,1,2,3,4].map(i=>(3-((i*2+Math.floor(i/3)+1)%3))%3);
-  const exam=await call("/api/soldiers-academy/examen",member,{niveau:1,reponses:firstExam});
-  assert.equal(exam.status,200);
-  assert.equal(exam.body.score,100);
-  assert.match(exam.body.attestation,/^SDE-ACA-\d{4}-[A-F0-9]{8}$/);
-  const after=(await call("/api/soldiers-academy",member)).body;
-  assert.equal(after.niveaux[0].valide,true);
-  assert.equal(after.modules[3].verrouille,false);
-  assert.equal(after.resume.pourcentage,25);
+  assert.equal((await call("/api/soldiers-academy/assiduite",trainer,{compte:student.id,courseId:id,attendance:90,participation:90},"PATCH")).status,200);
+}
+test("Notation et attestation du niveau 1 après huit cours",async()=>{
+  await passOne("SA-01");
+  let p=(await call("/api/soldiers-academy")).result;
+  assert.equal(p.progress.passed,1);
+  assert.equal(p.courses[0].average,90);
+  assert.equal(p.courses[8].locked,true);
+  assert.equal((await call("/api/soldiers-academy",other)).result.progress.passed,0);
+  for(let i=2;i<=8;i++)await passOne("SA-"+String(i).padStart(2,"0"));
+  p=(await call("/api/soldiers-academy")).result;
+  assert.equal(p.progress.passed,8);
+  assert.equal(p.courses[8].locked,false);
+  assert.equal(p.certificates.length,1);
+  assert.match(p.certificates[0].code,/^SDE-ACA-2027-N1-[A-F0-9-]{8}$/);
+  assert.equal((await call("/api/soldiers-academy/attestation?niveau=1")).status,200);
+  assert.equal((await call("/api/soldiers-academy/attestation?niveau=2")).status,403);
 });
-test("Page et routes intégrées dans le portail, sans modifier la vitrine publique",()=>{
+test("Liens et route publique du nouveau programme",()=>{
   const worker=readFileSync(new URL("../src/worker.js",import.meta.url),"utf8");
   const app=readFileSync(new URL("../public/index.html",import.meta.url),"utf8");
   const academy=readFileSync(new URL("../public/vitrine/academy.html",import.meta.url),"utf8");
+  const page=readFileSync(new URL("../public/vitrine/sde-academy-parcours.html",import.meta.url),"utf8");
   assert.match(worker,/soldiersAcademyApi\(req, env, u, p\)/);
-  assert.match(worker,/\/mon-espace\/academy/);
-  assert.match(worker,/\/administration\/academy/);
-  assert.match(app,/Ouvrir mon parcours et mes 12 cours/);
-  assert.match(academy,/Accéder à mes 12 cours/);
+  assert.match(worker,/\/academy-programme-24/);
+  assert.match(app,/Ouvrir mon parcours et mes 24 cours/);
+  assert.match(academy,/Accéder à mes 24 cours/);
+  assert.match(page,/192 heures/);
+  assert.doesNotMatch(page,/12 cours/);
 });
