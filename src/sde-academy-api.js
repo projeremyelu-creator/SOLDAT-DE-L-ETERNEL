@@ -55,6 +55,12 @@ function passed(mod){return Number(mod?.score)>=80&&mod?.exercice?.statut==="val
 function niveauValide(data,num){return !!(data.niveaux?.[num]?.attestation&&Number(data.niveaux[num].score)>=80);}
 function unlocked(data,n){return n===1||niveauValide(data,n-1);}
 function allowedExam(data,n){return unlocked(data,n)&&NIVEAUX_ACADEMY[n-1].modules.every(id=>passed(data.modules?.[id]));}
+function variantQuestions(questions,salt=0){
+  return questions.map((q,i)=>{
+    const rotation=(i*2+Math.floor(i/3)+salt)%q.choix.length;
+    return {...q,choix:q.choix.map((_,j)=>q.choix[(j+rotation)%q.choix.length]),reponse:(q.reponse-rotation+q.choix.length)%q.choix.length};
+  });
+}
 function quizPublic(q){return {question:q.question,choix:q.choix};}
 function modulePublic(m,data){
   const ouvert=unlocked(data,m.niveau);
@@ -62,11 +68,11 @@ function modulePublic(m,data){
   const {exercice,score,essais,quizLe}=state;
   const base={id:m.id,numero:m.numero,titre:m.titre,niveau:m.niveau,dureeMinutes:m.dureeMinutes,verrouille:!ouvert,progression:{score:Number.isFinite(score)?score:null,quizReussi:Number(score)>=80,exercice:exercice?{statut:exercice.statut,commentaire:exercice.commentaire||"",soumisLe:exercice.soumisLe||null,texte:exercice.texte||""}:null,essais:essais||0,quizLe:quizLe||null,valide:passed(state)}};
   if(!ouvert)return base;
-  return {...base,objectifs:m.objectifs,references:m.references,chapitres:m.chapitres,exercices:m.exercices,medias:m.medias,validation:m.validation,quiz:m.quiz.map(quizPublic)};
+  return {...base,objectifs:m.objectifs,references:m.references,chapitres:m.chapitres,exercices:m.exercices,medias:m.medias,validation:m.validation,quiz:variantQuestions(m.quiz,m.numero).map(quizPublic)};
 }
 function niveauxPublic(data){
  return NIVEAUX_ACADEMY.map(l=>({...l,verrouille:!unlocked(data,l.id),examenDisponible:allowedExam(data,l.id),
-  examen:allowedExam(data,l.id)?EXAMENS[l.id-1].questions.map(quizPublic):null,
+  examen:allowedExam(data,l.id)?variantQuestions(EXAMENS[l.id-1].questions,l.id).map(quizPublic):null,
   progression:data.niveaux?.[l.id]||null,
   valide:niveauValide(data,l.id)}));
 }
@@ -122,7 +128,7 @@ export async function soldiersAcademyApi(req,env,u,pathname){
   if(!idModule(body.moduleId))return error("Module inconnu.");
   const mod=moduleOf(body.moduleId);
   if(!unlocked(data,mod.niveau))return error("Ce niveau est verrouillé.",403);
-  const result=grade(mod.quiz,body.reponses);
+  const result=grade(variantQuestions(mod.quiz,mod.numero),body.reponses);
   if(!result)return error("Répondez à toutes les questions.");
   const state=data.modules[mod.id]||{};
   // Une réussite acquise n'est jamais effacée par une tentative ultérieure.
@@ -146,7 +152,7 @@ export async function soldiersAcademyApi(req,env,u,pathname){
   const niveau=Number(body.niveau);
   if(!Number.isInteger(niveau)||niveau<1||niveau>4)return error("Niveau inconnu.");
   if(!allowedExam(data,niveau))return error("Terminez les trois modules et leurs exercices validés avant l'évaluation finale.",403);
-  const result=grade(EXAMENS[niveau-1].questions,body.reponses);
+  const result=grade(variantQuestions(EXAMENS[niveau-1].questions,niveau),body.reponses);
   if(!result)return error("Répondez à toutes les questions.");
   const previous=data.niveaux[niveau]||{};
   const passedNow=result.score>=80;
