@@ -733,5 +733,695 @@ export const MODULES_ACADEMY=[
       "exerciceRequis": true,
       "formateurValide": true
     }
+  },
+  {
+    "id": "m07",
+    "titre": "Discernement prophétique",
+    "references": [
+      "1 Thessaloniciens 5.19-22",
+      "1 Corinthiens 14.29",
+      "Deutéronome 18.20-22",
+      "1 Jean 4.1"
+    ],
+    "objectifs": [
+      "Exposer des critères bibliques d'évaluation des paroles prophétiques.",
+      "Distinguer observation, interprétation, impression et affirmation vérifiable.",
+      "Adopter une conduite non coercitive face à une parole sensible."
+    ],
+    "chapitres": [
+      {
+        "titre": "Prophétie et discernement dans l'Église",
+        "contenu": "1 Thessaloniciens 5.19-22 appelle à ne pas mépriser les paroles prophétiques tout en examinant toute chose. 1 Corinthiens 14.29 prévoit explicitement une évaluation communautaire. La perspective prophétique chrétienne vise l'édification, la consolation et l'appel à la fidélité; elle ne soustrait personne aux questions. L'apprenant repère la différence entre un texte biblique, une interprétation, une intuition et une prédiction vérifiable. Une annonce non confirmée ne doit pas être présentée comme un fait certain."
+      },
+      {
+        "titre": "Critères de fiabilité et redevabilité",
+        "contenu": "1 Jean 4.1 demande de mettre les esprits à l'épreuve; Deutéronome 18.20-22 souligne la gravité de parler abusivement au nom de Dieu. Toute parole doit être examinée au regard du message biblique, de la cohérence, des faits connus, des conséquences et du caractère de son auteur. Une révélation prétendue ne confère pas une immunité disciplinaire. Les responsables doivent documenter les corrections et permettre aux personnes concernées de répondre librement. L'absence de confirmation oblige à la prudence et, le cas échéant, à une rectification."
+      },
+      {
+        "titre": "Accompagner sans peur ni emprise",
+        "contenu": "Une parole spirituelle ne doit pas menacer une personne pour obtenir de l'argent, une relation, une soumission ou une décision médicale. Avant de transmettre un message personnel, on demande son accord; on évite les diagnostics mystiques, les accusations sans preuve et les annonces de mort. Le destinataire reste libre de demander du temps et d'autres avis. Dans Soldiers Academy, l'excellence prophétique implique écoute, modestie, confidentialité, humilité et possibilité de reconnaître publiquement une erreur proportionnellement à sa diffusion."
+      }
+    ],
+    "exercices": [
+      {
+        "titre": "Grille de discernement",
+        "consigne": "Analyser un message fictif annonçant un changement d'emploi certain et demandant un paiement pour l'obtenir.",
+        "livrable": "Grille argumentée : source, fondement, éléments vérifiables, risques et réponse pastorale.",
+        "criteres": [
+          "Capacité à identifier la coercition",
+          "Examen des faits",
+          "Respect de la liberté"
+        ]
+      },
+      {
+        "titre": "Mise en situation",
+        "consigne": "Préparer une réponse à une parole prophétique non confirmée, sans humilier son auteur ni la personne destinataire.",
+        "livrable": "Réponse rédigée en 200 à 300 mots avec démarche de vérification.",
+        "criteres": [
+          "Clarté",
+          "Prudence",
+          "Redevabilité"
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "Selon 1 Thessaloniciens 5, les paroles prophétiques doivent être :",
+        "choix": [
+          "Examinées avec discernement",
+          "Toujours acceptées immédiatement",
+          "Toutes publiées sans filtre"
+        ],
+        "reponse": 0,
+        "explication": "Le passage encourage à examiner toute chose et à retenir ce qui est bon."
+      },
+      {
+        "question": "Dans 1 Corinthiens 14.29, une parole est :",
+        "choix": [
+          "Soumise au discernement d'autres personnes",
+          "Soustraite à toute évaluation",
+          "Un ordre médical"
+        ],
+        "reponse": 0,
+        "explication": "Le discernement communautaire fait partie de la démarche décrite."
+      },
+      {
+        "question": "Une prédiction non confirmée doit être présentée comme :",
+        "choix": [
+          "Une certitude absolue",
+          "Une affirmation incertaine appelant à prudence",
+          "Un ordre à exécuter"
+        ],
+        "reponse": 1,
+        "explication": "L'incertitude doit rester explicite tant que les faits ne confirment pas l'annonce."
+      },
+      {
+        "question": "Demander de l'argent sous menace spirituelle est :",
+        "choix": [
+          "Une pratique acceptable",
+          "Une pression abusive",
+          "Une preuve de don"
+        ],
+        "reponse": 1,
+        "explication": "La pression et l'exploitation financière contredisent une conduite responsable."
+      },
+      {
+        "question": "Face à une correction documentée, le responsable devrait :",
+        "choix": [
+          "Accepter l'examen et rectifier si nécessaire",
+          "Menacer le demandeur",
+          "Supprimer tous les faits"
+        ],
+        "reponse": 0,
+        "explication": "La redevabilité suppose une possibilité réelle de correction."
+      }
+    ],
+    "numero": 7,
+    "niveau": 3,
+    "dureeMinutes": 150,
+    "medias": {
+      "audio": null,
+      "video": null
+    },
+    "validation": {
+      "quizMinimum": 80,
+      "exerciceRequis": true,
+      "formateurValide": true
+    }
+  },
+  {
+    "id": "m08",
+    "titre": "Évangélisation",
+    "references": [
+      "Matthieu 28.18-20",
+      "Actes 1.8",
+      "1 Pierre 3.15-16",
+      "Luc 10.25-37"
+    ],
+    "objectifs": [
+      "Présenter le cœur de l'Évangile clairement et sans manipulation.",
+      "Construire un témoignage adapté au contexte local et numérique.",
+      "Organiser une action d'annonce associée au respect et au service."
+    ],
+    "chapitres": [
+      {
+        "titre": "Annoncer l'Évangile avec justesse",
+        "contenu": "Matthieu 28.18-20 met en avant la mission de faire des disciples en enseignant à observer la parole de Jésus. L'annonce chrétienne présente la personne de Christ, sa mort et sa résurrection, la grâce et l'invitation à une réponse libre. Elle ne réduit pas l'Évangile à une solution financière ou à une promesse de guérison. Les disciples parlent avec honnêteté sur leur propre expérience et distinguent conviction religieuse, faits vérifiables et avis personnels. Un refus doit être accueilli sans hostilité."
+      },
+      {
+        "titre": "Écouter avant de communiquer",
+        "contenu": "1 Pierre 3.15-16 associe l'explication de l'espérance à la douceur et au respect. En visite de proximité, dans une école, en entreprise ou sur les réseaux sociaux, le contexte détermine la manière de s'exprimer. L'évangéliste pose des questions ouvertes et demande la permission avant d'aborder un sujet spirituel. Les mineurs et personnes vulnérables nécessitent une attention particulière : aucune collecte de coordonnées sans base légitime, aucun portrait publié sans autorisation adéquate."
+      },
+      {
+        "titre": "Former des disciples et servir la communauté",
+        "contenu": "Actes 1.8 présente le témoignage comme une mission qui s'étend; Luc 10.25-37 rappelle la compassion concrète envers le prochain. L'évangélisation ne s'arrête pas au premier échange : elle suppose accueil, découverte de la Bible, accompagnement libre et orientation vers une communauté. Une action SDE peut associer une rencontre respectueuse, une entraide transparente et un suivi consenti. Les résultats sont évalués avec honnêteté : nombre de conversations consenties, demandes d'accompagnement et besoins sociaux identifiés."
+      }
+    ],
+    "exercices": [
+      {
+        "titre": "Présentation de l'Évangile",
+        "consigne": "Rédiger un message oral de quatre minutes présentant Christ, la grâce et une invitation libre, avec deux références bibliques.",
+        "livrable": "Script de 450 mots maximum et retour d'un binôme.",
+        "criteres": [
+          "Clarté doctrinale",
+          "Ton respectueux",
+          "Absence de promesse non fondée"
+        ]
+      },
+      {
+        "titre": "Action locale",
+        "consigne": "Proposer un projet d'évangélisation et de service pour un quartier, avec autorisations, budget et suivi.",
+        "livrable": "Plan d'une page précisant public, équipe, consentement et indicateurs.",
+        "criteres": [
+          "Faisabilité",
+          "Protection des personnes",
+          "Évaluation mesurable"
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "Dans Matthieu 28, la mission porte notamment sur :",
+        "choix": [
+          "Faire des disciples et enseigner",
+          "Obtenir des inscriptions forcées",
+          "Garantir la richesse"
+        ],
+        "reponse": 0,
+        "explication": "La commission met l'accent sur les disciples et l'enseignement."
+      },
+      {
+        "question": "Selon 1 Pierre 3, une explication de la foi se fait avec :",
+        "choix": [
+          "Douceur et respect",
+          "Menace et pression",
+          "Mépris du désaccord"
+        ],
+        "reponse": 0,
+        "explication": "La lettre relie le témoignage à la douceur et au respect."
+      },
+      {
+        "question": "Après un refus de discussion spirituelle, il convient de :",
+        "choix": [
+          "Respecter la décision",
+          "Insister jusqu'à obtenir un accord",
+          "Exposer la personne publiquement"
+        ],
+        "reponse": 0,
+        "explication": "La liberté de conscience suppose le respect d'un refus."
+      },
+      {
+        "question": "Une photo de bénéficiaire à publier exige :",
+        "choix": [
+          "L'autorisation adaptée à sa situation",
+          "Aucune démarche",
+          "L'accord d'un voisin"
+        ],
+        "reponse": 0,
+        "explication": "Le consentement et la protection des personnes sont essentiels."
+      },
+      {
+        "question": "Un indicateur honnête d'une action d'évangélisation est :",
+        "choix": [
+          "Les échanges réellement consentis",
+          "Les décisions attribuées sans vérification",
+          "Les contacts obtenus sous pression"
+        ],
+        "reponse": 0,
+        "explication": "La mesure doit décrire des faits observables sans inventer de résultats."
+      }
+    ],
+    "numero": 8,
+    "niveau": 3,
+    "dureeMinutes": 150,
+    "medias": {
+      "audio": null,
+      "video": null
+    },
+    "validation": {
+      "quizMinimum": 80,
+      "exerciceRequis": true,
+      "formateurValide": true
+    }
+  },
+  {
+    "id": "m09",
+    "titre": "Leadership",
+    "references": [
+      "Marc 10.42-45",
+      "Jean 13.1-17",
+      "1 Timothée 3.1-7",
+      "Exode 18.17-23"
+    ],
+    "objectifs": [
+      "Expliquer le leadership de service dans la perspective chrétienne.",
+      "Conduire une réunion participative et gérer un désaccord.",
+      "Mettre en place délégation, redevabilité et protection des personnes."
+    ],
+    "chapitres": [
+      {
+        "titre": "L'autorité au service d'autrui",
+        "contenu": "Marc 10.42-45 oppose la domination à un modèle de service; Jean 13 illustre cette orientation par le geste du lavement des pieds. Le leader ne confond pas responsabilité et privilège. Il cherche à faire grandir les autres, rend ses décisions intelligibles, admet ses erreurs et protège le temps de l'équipe. L'exemplarité concerne également l'usage des fonds, la parole donnée et les relations interpersonnelles. Le ministère n'exempte pas du respect des règles communes."
+      },
+      {
+        "titre": "Compétence, caractère et délégation",
+        "contenu": "1 Timothée 3.1-7 souligne le rôle du caractère et de la bonne conduite dans l'exercice d'une responsabilité. Exode 18.17-23 montre l'intérêt d'une répartition des tâches pour éviter l'épuisement du chef et les retards du service. Un responsable définit les rôles, explicite les résultats attendus, fixe des délais réalisables et accompagne sans microgestion. La reconnaissance des contributions et l'apprentissage continu soutiennent la relève et réduisent la dépendance à une seule personne."
+      },
+      {
+        "titre": "Conflits, communication et sécurité",
+        "contenu": "Un leader organise un échange où chacun peut exposer les faits, distingue désaccord doctrinal, difficulté opérationnelle et comportement dangereux. Il évite les décisions prises sous colère, documente les arbitrages et prévoit un recours indépendant pour les signalements sensibles. Les allégations d'abus ne doivent pas être traitées comme de simples conflits à réconcilier. Dans les équipes SDE, les responsables utilisent des comptes rendus brefs, suivent les actions et sollicitent l'aide appropriée lorsque le problème dépasse leur mandat."
+      }
+    ],
+    "exercices": [
+      {
+        "titre": "Réunion de pôle",
+        "consigne": "Préparer une réunion de 30 minutes avec ordre du jour, rôles, décisions et suivi.",
+        "livrable": "Agenda et modèle de procès-verbal avec responsable et échéance pour chaque action.",
+        "criteres": [
+          "Clarté des décisions",
+          "Participation équilibrée",
+          "Suivi vérifiable"
+        ]
+      },
+      {
+        "titre": "Cas de délégation",
+        "consigne": "Une équipe a trois missions et un responsable surchargé : proposer la répartition des tâches et la méthode de suivi.",
+        "livrable": "Matrice responsabilités, délais, risques et plan de relève.",
+        "criteres": [
+          "Délégation réelle",
+          "Charge de travail réaliste",
+          "Prévention des risques"
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "Selon Marc 10, le modèle de leadership proposé par Jésus met en avant :",
+        "choix": [
+          "Le service",
+          "La domination",
+          "L'impunité"
+        ],
+        "reponse": 0,
+        "explication": "Le passage place le service au cœur de l'autorité."
+      },
+      {
+        "question": "Le conseil de Jéthro en Exode 18 vise notamment :",
+        "choix": [
+          "La délégation de responsabilités",
+          "L'accumulation de tâches sur une personne",
+          "L'abolition de toute organisation"
+        ],
+        "reponse": 0,
+        "explication": "La répartition des responsabilités rend le service plus soutenable."
+      },
+      {
+        "question": "Quel signe traduit une redevabilité réelle ?",
+        "choix": [
+          "L'acceptation du contrôle et des corrections",
+          "Le secret systématique",
+          "L'absence de procès-verbal"
+        ],
+        "reponse": 0,
+        "explication": "Un leader responsable peut expliquer et corriger ses actes."
+      },
+      {
+        "question": "Une allégation d'abus nécessite :",
+        "choix": [
+          "Une protection et un traitement adaptés",
+          "Une simple médiation obligatoire",
+          "Un effacement des traces"
+        ],
+        "reponse": 0,
+        "explication": "La sécurité et la procédure appropriée priment."
+      },
+      {
+        "question": "Une délégation efficace précise :",
+        "choix": [
+          "Le responsable, le résultat et le délai",
+          "Seulement une intention vague",
+          "Uniquement le nom du chef"
+        ],
+        "reponse": 0,
+        "explication": "Les rôles et objectifs définis permettent un suivi."
+      }
+    ],
+    "numero": 9,
+    "niveau": 3,
+    "dureeMinutes": 150,
+    "medias": {
+      "audio": null,
+      "video": null
+    },
+    "validation": {
+      "quizMinimum": 80,
+      "exerciceRequis": true,
+      "formateurValide": true
+    }
+  },
+  {
+    "id": "m10",
+    "titre": "Gouvernance",
+    "references": [
+      "1 Corinthiens 14.40",
+      "Actes 6.1-7",
+      "Proverbes 11.14",
+      "2 Corinthiens 8.20-21"
+    ],
+    "objectifs": [
+      "Décrire la structure des pôles, les responsabilités et les circuits de décision.",
+      "Appliquer la Règle des 4 Yeux aux opérations sensibles.",
+      "Rédiger un compte rendu et un contrôle de transparence financière."
+    ],
+    "chapitres": [
+      {
+        "titre": "Pourquoi gouverner une organisation chrétienne",
+        "contenu": "1 Corinthiens 14.40 associe la vie communautaire à l'ordre; Actes 6.1-7 montre une réponse organisationnelle à une injustice de distribution. La gouvernance transforme la vision en décisions justes, documentées et contrôlables. Dans le Mouvement SDE, l'organisation comporte un Directoire Général et cinq pôles complémentaires. Leurs missions doivent être définies, les mandats limités aux compétences confiées et les informations personnelles protégées. L'enthousiasme spirituel ne remplace ni les procédures ni la responsabilité."
+      },
+      {
+        "titre": "Séparation des tâches et Règle des 4 Yeux",
+        "contenu": "2 Corinthiens 8.20-21 encourage le soin apporté à la gestion des ressources aux yeux de Dieu et des personnes. Pour les dépenses, une demande est distincte de son approbation, de son paiement et de sa vérification. La Règle des 4 Yeux exige deux personnes autorisées pour valider une opération sensible, notamment une sortie financière, un changement d'accès ou un partage de donnée confidentielle. Les seuils et exceptions sont formalisés; les traces des décisions restent consultables par les personnes habilitées."
+      },
+      {
+        "titre": "Réunions, rapports et transparence",
+        "contenu": "Proverbes 11.14 met en valeur la pluralité des conseils. Une réunion structurée comporte convocation, ordre du jour, quorum si prévu, procès-verbal, responsables désignés et date de suivi. Les indicateurs utiles à SDE incluent la participation, la progression de la Soldiers Academy, l'exécution des missions et les budgets effectivement engagés. Les dossiers pastoraux n'entrent pas dans des tableaux de bord publics. La transparence implique la bonne information à la bonne personne, sans divulgation abusive."
+      }
+    ],
+    "exercices": [
+      {
+        "titre": "Procédure de dépense",
+        "consigne": "Décrire le parcours d'une demande fictive de dépense de 75 000 FCFA avec demandeur, contrôle, approbateur et pièces justificatives.",
+        "livrable": "Schéma de validation incluant deux personnes habilitées et archivage.",
+        "criteres": [
+          "Règle des 4 Yeux",
+          "Séparation des tâches",
+          "Traçabilité"
+        ]
+      },
+      {
+        "titre": "Procès-verbal d'AG",
+        "consigne": "Rédiger un procès-verbal fictif d'assemblée avec bilan, projections, décisions et responsables.",
+        "livrable": "Document de 1 à 2 pages, sans données sensibles.",
+        "criteres": [
+          "Décisions datées",
+          "Attribution des actions",
+          "Clarté et conformité"
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "Quel est l'objectif de la Règle des 4 Yeux ?",
+        "choix": [
+          "Faire vérifier une décision sensible par deux personnes autorisées",
+          "Multiplier les signatures sans contrôle",
+          "Supprimer toutes les délégations"
+        ],
+        "reponse": 0,
+        "explication": "Le contrôle croisé réduit les erreurs et les abus."
+      },
+      {
+        "question": "Dans Actes 6, une difficulté de distribution conduit à :",
+        "choix": [
+          "Une organisation du service",
+          "L'ignorance de la plainte",
+          "La suppression du service"
+        ],
+        "reponse": 0,
+        "explication": "Le texte présente une réponse organisationnelle à un problème réel."
+      },
+      {
+        "question": "Quel document garde la trace d'une réunion ?",
+        "choix": [
+          "Le procès-verbal",
+          "Une rumeur",
+          "Une simple capture non datée"
+        ],
+        "reponse": 0,
+        "explication": "Le procès-verbal consigne décisions et responsabilités."
+      },
+      {
+        "question": "La transparence exige-t-elle de publier les dossiers pastoraux ?",
+        "choix": [
+          "Oui, systématiquement",
+          "Non, ils doivent rester protégés",
+          "Oui, pour obtenir plus de dons"
+        ],
+        "reponse": 1,
+        "explication": "La transparence financière n'autorise pas la divulgation de données sensibles."
+      },
+      {
+        "question": "Une décision financière sûre sépare notamment :",
+        "choix": [
+          "Demande, approbation et vérification",
+          "Toutes les étapes entre les mains d'un seul acteur",
+          "Le paiement de toute justification"
+        ],
+        "reponse": 0,
+        "explication": "La séparation des étapes rend les contrôles effectifs."
+      }
+    ],
+    "numero": 10,
+    "niveau": 4,
+    "dureeMinutes": 150,
+    "medias": {
+      "audio": null,
+      "video": null
+    },
+    "validation": {
+      "quizMinimum": 80,
+      "exerciceRequis": true,
+      "formateurValide": true
+    }
+  },
+  {
+    "id": "m11",
+    "titre": "Entrepreneuriat",
+    "references": [
+      "Proverbes 21.5",
+      "Luc 14.28-30",
+      "Colossiens 3.23",
+      "Proverbes 16.11"
+    ],
+    "objectifs": [
+      "Élaborer un projet économique responsable et réaliste.",
+      "Construire un budget simple et des indicateurs de suivi.",
+      "Évaluer les risques, la légalité et l'éthique d'une activité."
+    ],
+    "chapitres": [
+      {
+        "titre": "Travail, vocation et service",
+        "contenu": "Colossiens 3.23 invite à travailler consciencieusement; Proverbes 16.11 souligne l'importance de mesures justes. L'entrepreneuriat peut être un moyen de créer de la valeur, de soutenir une famille et d'apporter des solutions à la société. Il ne constitue pas une preuve de faveur spirituelle, et la foi n'offre aucune garantie de profit. Le disciple distingue une idée motivante d'un besoin réel, écoute les clients potentiels et respecte les exigences légales et fiscales de son contexte."
+      },
+      {
+        "titre": "Construire un modèle économique simple",
+        "contenu": "Luc 14.28-30 enseigne l'importance de calculer avant de bâtir. Un projet commence par la clientèle, le problème résolu, l'offre, les coûts fixes et variables, le prix, les canaux de vente et la trésorerie. L'apprenant ne confond pas chiffre d'affaires et bénéfice. Il peut établir un budget mensuel en francs CFA, calculer la marge unitaire et comparer plusieurs scénarios de demande. Les dépenses personnelles et les ressources du mouvement sont séparées par principe."
+      },
+      {
+        "titre": "Risques, intégrité et amélioration continue",
+        "contenu": "Proverbes 21.5 met en valeur la planification sérieuse. Une activité comporte des risques de marché, de trésorerie, de sécurité et de réputation. Le responsable met en place des justificatifs, suit l'encaissement, définit une réserve adaptée et vérifie la conformité des contrats. Les promesses de gains rapides et les sollicitations d'investissement non contrôlées sont des signaux d'alerte. Dans la formation SDE, un projet est évalué par sa faisabilité, son utilité sociale et l'honnêteté de ses chiffres."
+      }
+    ],
+    "exercices": [
+      {
+        "titre": "Microprojet chiffré",
+        "consigne": "Présenter un service ou produit pertinent en Côte d'Ivoire avec coût, prix, charges, marge et clientèle cible.",
+        "livrable": "Business model d'une page et budget mensuel en FCFA.",
+        "criteres": [
+          "Calculs justes",
+          "Hypothèses explicites",
+          "Faisabilité commerciale"
+        ]
+      },
+      {
+        "titre": "Analyse de risques",
+        "consigne": "Construire une matrice de quatre risques d'une activité fictive et indiquer mesures préventives.",
+        "livrable": "Tableau probabilité, impact, prévention et responsable.",
+        "criteres": [
+          "Risques pertinents",
+          "Mesures proportionnées",
+          "Responsabilités claires"
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "Avant de lancer un projet, Luc 14.28 encourage à :",
+        "choix": [
+          "Évaluer les coûts",
+          "Dépêcher les paiements",
+          "Ignorer le budget"
+        ],
+        "reponse": 0,
+        "explication": "La parabole met en avant le calcul préalable des ressources."
+      },
+      {
+        "question": "Le chiffre d'affaires correspond :",
+        "choix": [
+          "Aux ventes totales",
+          "Au bénéfice net",
+          "À la réserve bancaire"
+        ],
+        "reponse": 0,
+        "explication": "Le chiffre d'affaires est la somme des ventes, avant déduction des charges."
+      },
+      {
+        "question": "Si un produit est vendu 5 000 FCFA et coûte 3 000 FCFA à produire, la marge brute unitaire est :",
+        "choix": [
+          "2 000 FCFA",
+          "3 000 FCFA",
+          "8 000 FCFA"
+        ],
+        "reponse": 0,
+        "explication": "La marge brute unitaire vaut 5 000 moins 3 000, soit 2 000 FCFA."
+      },
+      {
+        "question": "Les fonds du mouvement et les fonds personnels doivent être :",
+        "choix": [
+          "Séparés et tracés",
+          "Mélangés librement",
+          "Non documentés"
+        ],
+        "reponse": 0,
+        "explication": "La séparation protège la bonne gestion et la confiance."
+      },
+      {
+        "question": "Quel signe appelle à la prudence économique ?",
+        "choix": [
+          "Une promesse de gains garantis sans risque",
+          "Un budget documenté",
+          "Un contrat transparent"
+        ],
+        "reponse": 0,
+        "explication": "Aucune activité sérieuse ne peut garantir universellement des gains sans risque."
+      }
+    ],
+    "numero": 11,
+    "niveau": 4,
+    "dureeMinutes": 150,
+    "medias": {
+      "audio": null,
+      "video": null
+    },
+    "validation": {
+      "quizMinimum": 80,
+      "exerciceRequis": true,
+      "formateurValide": true
+    }
+  },
+  {
+    "id": "m12",
+    "titre": "Impact humanitaire",
+    "references": [
+      "Jacques 2.14-17",
+      "Matthieu 25.31-40",
+      "Luc 10.25-37",
+      "Michée 6.8"
+    ],
+    "objectifs": [
+      "Identifier des besoins sociaux avec participation des bénéficiaires.",
+      "Planifier une action humanitaire sûre, impartiale et budgétée.",
+      "Construire des critères de résultats et de transparence."
+    ],
+    "chapitres": [
+      {
+        "titre": "La compassion devenue action",
+        "contenu": "Jacques 2.14-17 et Matthieu 25.31-40 relient la foi à l'attention aux besoins concrets. Le service humanitaire vise la dignité des personnes, pas la visibilité du groupe. Les bénéficiaires ne doivent pas être obligés de participer à des activités religieuses pour recevoir une aide essentielle. La compassion s'exerce auprès de personnes diverses, avec respect de leurs convictions et de leur intimité. Chaque projet commence par une écoute des besoins exprimés, et non par des hypothèses imposées de l'extérieur."
+      },
+      {
+        "titre": "Du besoin au projet opérationnel",
+        "contenu": "Dans la parabole du bon Samaritain (Luc 10.25-37), l'aide tient compte de la situation immédiate puis d'une continuité de soins. Une mission SDE, par exemple auprès de veuves, d'orphelins ou de familles vulnérables, commence par une évaluation de terrain, un choix de priorités, un budget et des partenaires fiables. Les activités sont conçues avec les bénéficiaires. La protection de l'enfance, la confidentialité, les autorisations parentales et les règles de sécurité sont intégrées avant toute action."
+      },
+      {
+        "titre": "Mesurer l'impact et rendre des comptes",
+        "contenu": "Michée 6.8 invite à agir avec justice et humilité. Une action humanitaire suit des indicateurs de réalisation — kits remis, familles rencontrées, dépenses justifiées — et des résultats observables — besoins effectivement couverts, satisfaction, suivi. Le responsable conserve les justificatifs, réalise des contrôles croisés et publie un bilan agrégé sans noms ni images non autorisés. Un projet peut reconnaître ses limites et réviser sa méthode. Le but est un impact durable, non l'accumulation de témoignages forcés."
+      }
+    ],
+    "exercices": [
+      {
+        "titre": "Mission de solidarité",
+        "consigne": "Concevoir une action pour 20 ménages avec besoins vérifiés, budget, responsabilités et mesures de protection.",
+        "livrable": "Fiche projet et budget détaillé en FCFA.",
+        "criteres": [
+          "Participation des bénéficiaires",
+          "Faisabilité et sécurité",
+          "Budget contrôlable"
+        ]
+      },
+      {
+        "titre": "Rapport d'impact",
+        "consigne": "Construire un tableau de bord fictif de mission avec activités, dépenses, difficultés et résultats réels.",
+        "livrable": "Rapport d'une page et proposition d'amélioration.",
+        "criteres": [
+          "Mesures vérifiables",
+          "Confidentialité",
+          "Transparence sur les limites"
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "question": "Jacques 2 associe la foi vivante à :",
+        "choix": [
+          "Des actes de solidarité",
+          "La seule communication publique",
+          "L'indifférence aux besoins"
+        ],
+        "reponse": 0,
+        "explication": "Le passage souligne la nécessité d'une aide concrète."
+      },
+      {
+        "question": "L'aide humanitaire doit-elle dépendre d'une conversion ?",
+        "choix": [
+          "Oui",
+          "Non",
+          "Seulement pour les familles"
+        ],
+        "reponse": 1,
+        "explication": "Une aide essentielle doit respecter la dignité et la liberté de conscience."
+      },
+      {
+        "question": "Le début responsable d'une mission consiste à :",
+        "choix": [
+          "Identifier avec les personnes leurs besoins",
+          "Distribuer sans évaluation",
+          "Photographier tous les bénéficiaires"
+        ],
+        "reponse": 0,
+        "explication": "Une écoute préalable évite les réponses inadaptées."
+      },
+      {
+        "question": "Un rapport public de mission doit :",
+        "choix": [
+          "Publier les résultats agrégés sans exposer les personnes",
+          "Diffuser les dossiers médicaux",
+          "Inventer les résultats manquants"
+        ],
+        "reponse": 0,
+        "explication": "La transparence ne dispense pas de protéger les données personnelles."
+      },
+      {
+        "question": "Quel indicateur représente un résultat vérifiable ?",
+        "choix": [
+          "Les ménages ayant reçu l'aide annoncée",
+          "Les intentions supposées des bénéficiaires",
+          "Les miracles garantis"
+        ],
+        "reponse": 0,
+        "explication": "Les bénéficiaires aidés selon des critères constatables constituent une mesure vérifiable."
+      }
+    ],
+    "numero": 12,
+    "niveau": 4,
+    "dureeMinutes": 150,
+    "medias": {
+      "audio": null,
+      "video": null
+    },
+    "validation": {
+      "quizMinimum": 80,
+      "exerciceRequis": true,
+      "formateurValide": true
+    }
   }
 ];
