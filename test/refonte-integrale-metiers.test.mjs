@@ -163,3 +163,47 @@ test('Priorité 03 : galerie, soutien et pages publiques partagent les principes
  assert.match(extras,/@media\(max-width:900px\)/);
  for(const term of ['ressources-grille','hub-grid','sde-initiative-section','sde-public-bottom-nav'])assert.ok(global.includes(term));
 });
+
+
+test('Pages complémentaires : navigation contextuelle cohérente avec les ancres réelles',()=>{
+ const pages={
+  'pole-reveil':['vision','actions','objectifs','departements','projets','engager'],
+  'pole-social':['vision','actions','objectifs','departements','projets','engager'],
+  'pole-logistique':['vision','actions','objectifs','departements','projets','engager'],
+  'pole-medias':['vision','actions','objectifs','departements','projets','engager'],
+  'pole-formation':['vision','actions','objectifs','departements','projets','engager'],
+  'prieres':['parcours','sujet-anonyme','requete'],
+  'missions-humanitaires':['actions','participer'],
+  'ressources':['ressources','galerie']
+ };
+ for(const [slug,ids] of Object.entries(pages)){
+  const html=file('public/vitrine/'+slug+'.html');
+  const nav=html.match(/<nav class="sde-section-jumpnav"[\s\S]*?<\/nav>/)?.[0];
+  assert.ok(nav, 'Navigation contextuelle absente : '+slug);
+  const links=[...nav.matchAll(/href="#([^"]+)"/g)].map(x=>x[1]);
+  assert.deepEqual(links,ids,'Ancres inattendues : '+slug);
+  for(const id of ids)assert.ok(html.includes('id="'+id+'"'),slug+' : cible non accessible #'+id);
+  assert.ok(nav.includes('aria-label="Accès direct aux sections de cette page"'));
+ }
+ const css=file('public/vitrine/sde-sitewide-2026.css');
+ assert.ok(css.includes('Navigation contextuelle premium · Pôles'));
+ assert.ok(css.includes('sde-section-jumpnav-list'));
+ assert.ok(css.includes('overscroll-behavior-x:contain'));
+ assert.ok(css.includes('prefers-reduced-motion:reduce'));
+});
+test('Poste de commandement : un centre d’actions non répété et couleurs des trois univers',()=>{
+ const jsx=file('frontend/operations.jsx');
+ const css=file('frontend/reference.css');
+ const start=jsx.indexOf('function Command({portal})');
+ const end=jsx.indexOf('function ',start+10);
+ const body=jsx.slice(start, end>start?end:undefined);
+ assert.ok(body.includes('Actions immédiates'));
+ assert.ok(body.includes('Fiches des membres'));
+ assert.ok(body.includes('Publier une communication'));
+ assert.ok(body.includes('TacticalCommandPanel dashboard={d}'));
+ assert.ok(body.includes('<OfficialTpaCard/>'));
+ assert.ok(!body.includes('<QuickActions portal={portal}/>'),'Pas de second bloc de raccourcis');
+ assert.ok(body.indexOf('TacticalCommandPanel dashboard={d}')<body.indexOf('<OfficialTpaCard/>'),'Pilotage avant événement');
+ for(const label of ['Poste de commandement premium 03/11','--cmd-navy','#322049','#214538','ref-priority','@media(max-width:660px)'])assert.ok(css.includes(label),label);
+ assert.ok(css.includes('prefers-reduced-motion:reduce'));
+});
