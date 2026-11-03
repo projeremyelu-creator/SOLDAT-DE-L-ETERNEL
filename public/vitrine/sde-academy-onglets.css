@@ -39,3 +39,21 @@ fieldset.field{border:1px solid var(--line);border-radius:12px;padding:12px}.chi
 .vide{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
 @media(max-width:720px){.tabs{top:64px}.tabs button{padding:9px 12px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-delay:0s!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
+
+
+/* Love School — école bonus distincte du tronc commun 24 cours */
+.love-hero{position:relative;overflow:hidden;padding:clamp(20px,4vw,34px);margin:18px 0;border:1px solid #a47780;border-radius:22px;background:radial-gradient(circle at 96% 5%,#60395a,transparent 44%),linear-gradient(125deg,#111e3a,#271a3e);box-shadow:0 12px 38px #0003}
+.love-hero:before{content:"✦";position:absolute;right:20px;top:8px;font-size:4rem;opacity:.13;pointer-events:none}
+.love-hero h2{font-size:clamp(2rem,5vw,3.25rem);line-height:1.1;margin:10px 0;color:#fff}
+.love-hero h2 em{color:#f4cb91;font-style:normal}
+.love-hero p{max-width:790px;color:#e7e0e7}
+.love-hero .muted{color:#d7cbdc}
+.love-bonus{background:#57324f;color:#ffe8c2;border:1px solid #d5a776;font-weight:800}
+.love-card{background:linear-gradient(145deg,#192946,#261d37);border-color:#70516e;min-height:240px}
+.love-card .code{color:#f2cd95}
+.love-card .button{margin-top:auto}
+#loveSchoolDetail h3{font-size:1.02rem;color:#f3d3aa}
+#loveSchoolDetail .love-lesson{border-color:#654865}
+#loveSchoolDetail .love-lesson p{line-height:1.7}
+@media(max-width:720px){.love-hero{padding:20px}.love-hero:before{right:8px;font-size:3rem}.love-card{min-height:unset}}
+@media(prefers-reduced-motion:reduce){.love-card,.love-lesson{animation:none!important;transition:none!important}}
