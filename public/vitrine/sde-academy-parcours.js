@@ -7,6 +7,59 @@ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 let snapshot=null;
 let activeCourse=null;
 let gestion=null;
+
+let activeTab="cours",publishedResources=[];
+const resourceApi="/api/soldiers-academy/contenus";
+function activateTab(name){
+ activeTab=["cours","ressources","parcours"].includes(name)?name:"cours";
+ document.querySelectorAll("[data-academy-panel]").forEach(x=>{x.hidden=x.dataset.academyPanel!==activeTab});
+ document.querySelectorAll("[data-academy-tab]").forEach(x=>{const on=x.dataset.academyTab===activeTab;x.setAttribute("aria-selected",String(on));x.tabIndex=on?0:-1;});
+}
+function embeddedVideo(raw){
+ let u;try{u=new URL(raw)}catch{return ""}
+ const host=u.hostname.toLowerCase(),p=u.pathname.split("/").filter(Boolean);
+ if(["youtube.com","www.youtube.com","m.youtube.com","youtu.be","youtube-nocookie.com","www.youtube-nocookie.com"].includes(host)){
+  const id=host==="youtu.be"?p[0]:u.searchParams.get("v")||(["embed","shorts","live"].includes(p[0])?p[1]:"");
+  if(/^[A-Za-z0-9_-]{11}$/.test(id||""))return "https://www.youtube-nocookie.com/embed/"+id;
+ }
+ if(["vimeo.com","www.vimeo.com","player.vimeo.com"].includes(host)){
+  const id=p[p.length-1];if(/^\d{6,15}$/.test(id||""))return "https://player.vimeo.com/video/"+id;
+ }
+ return "";
+}
+function resourceCard(r){
+ const labels={lecon:"Leçon écrite",video:"Vidéo",audio:"Audio",document:"Document",exercice:"Exercice",lien:"Lien"};
+ const emb=r.kind==="video"&&r.url?embeddedVideo(r.url):"";
+ const player=r.kind==="video"?(r.hasFile?'<video controls preload="none" src="'+esc(r.fileUrl)+'"></video>':emb?'<iframe class="video-frame" loading="lazy" src="'+esc(emb)+'" referrerpolicy="strict-origin-when-cross-origin" title="'+esc(r.title)+'" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>':""):(r.kind==="audio"&&r.hasFile?'<audio controls preload="none" src="'+esc(r.fileUrl)+'"></audio>':"");
+ return '<article class="resource-card '+(r.seen?"seen":"")+'"><div class="row"><span class="resource-badge">'+esc(labels[r.kind]||"Support")+'</span>'+(r.updatedAt>Date.now()-604800000?'<span class="chip pending">Nouveau</span>':"")+'</div><h3>'+esc(r.title)+'</h3><small>'+esc(r.courseId)+(r.lesson?' · Leçon '+esc(r.lesson):" · Complément")+' · '+esc(r.author)+'</small><p>'+esc(r.description)+'</p>'+player+
+ (r.text?'<details><summary>Lire les enseignements / consignes</summary><div class="text-lesson">'+esc(r.text)+'</div></details>':"")+
+ '<div class="resource-actions">'+(r.hasFile?'<a class="btn" href="'+esc(r.fileUrl)+'" target="_blank" rel="noopener noreferrer">Consulter · '+esc(r.fileName||"Support")+'</a>':"")+
+ (r.url?'<a class="btn" href="'+esc(r.url)+'" target="_blank" rel="noopener noreferrer">Ouvrir le lien</a>':"")+
+ '<button class="btn" type="button" data-mark-resource="'+esc(r.id)+'" '+(r.seen?"disabled":"")+'>'+(r.seen?"✓ Consultée":"Marquer comme consultée")+'</button></div></article>';
+}
+function filterResources(){
+ const cours=$("resourceCourse")?.value||"",kind=$("resourceKind")?.value||"";
+ const items=publishedResources.filter(r=>(!cours||r.courseId===cours)&&(!kind||r.kind===kind));
+ $("resourcesCards").innerHTML=items.length?items.map(resourceCard).join(""):'<p class="muted">Aucun support publié pour ce filtre.</p>';
+ text("resourceCount",publishedResources.length?"("+publishedResources.length+")":"");
+ text("resourcesStatus",publishedResources.length+" ressource(s) publiée(s), "+publishedResources.filter(r=>r.seen).length+" consultée(s).");
+}
+async function loadResources(){
+ try{const r=await fetch(resourceApi,{credentials:"same-origin",cache:"no-store"}),j=await r.json();
+  if(!r.ok||!j.ok)throw Error(j.message||"Ressources indisponibles");
+  publishedResources=j.resources||[];filterResources();
+ }catch(e){text("resourcesStatus",e.message);}
+}
+async function checkStudio(){
+ if(snapshot?.admin){$("studioShortcut").hidden=false;return}
+ try{const r=await fetch(resourceApi+"/studio",{credentials:"same-origin",cache:"no-store"});if(r.ok)$("studioShortcut").hidden=false;}catch{}
+}
+function setupResources(){
+ const s=$("resourceCourse");
+ if(s)s.innerHTML='<option value="">Tous les cours</option>'+snapshot.courses.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.id)+' — '+esc(c.title)+'</option>').join("");
+ activateTab(activeTab);
+}
+
 const text=(id,v)=>{const n=$(id);if(n)n.textContent=String(v??"");};
 function alertMessage(message,id="status"){text(id,message);}
 async function request(path,method="GET",payload){
@@ -56,6 +109,7 @@ function progress(){
  text("statPassed",v.passed+" / 24");text("statPercent",v.percentage+" %");text("statCert",snapshot.certificates.filter(x=>x.niveau<=3).length+" / 3");
  $("progressBar").value=v.passed;
  renderCatalogue();renderCertificates();renderAvis();renderProjet();renderCohortes();renderSpecialisations();$("studentPage").hidden=false;
+ setupResources();
  const admin=!!snapshot.admin;$("adminShortcut").hidden=!admin;$("adminPage").hidden=!admin;
 }
 function renderAvis(){
@@ -119,11 +173,12 @@ function renderExerciseForm(course,kind,items,existing){
 }
 async function openCourse(id){
  try{
+  activateTab("cours");
   alertMessage("Ouverture du cours "+id+"…");
   const d=await request("/cours/"+encodeURIComponent(id));const c=d.course;
   activeCourse=c;const s=snapshot.courses.find(x=>x.id===id);
   const panel=$("courseDetail");panel.hidden=false;
-  panel.innerHTML='<div class="eyebrow">'+esc(c.id)+' · Niveau '+c.level+' · 8 heures</div><h2>'+esc(c.title)+'</h2><p>'+esc(c.purpose)+'</p><p><strong>Lectures bibliques :</strong> '+esc(c.refs)+'</p><h3>Objectifs pédagogiques</h3><ol class="numbered">'+c.goals.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol><h3>Les quatre leçons</h3>'+c.units.map(x=>'<div class="lesson"><div class="eyebrow">Leçon '+x.number+' · 90 minutes</div><h3>'+esc(x.title)+'</h3><p>'+esc(x.body)+'</p><p class="muted"><strong>À lire :</strong> '+esc(x.scriptures)+'</p></div>').join("")+'<h3>Suivi des acquis</h3><p>Quiz : '+esc(scoreText(s.quiz))+' · Travaux : '+esc(scoreText(s.exercises))+' · Participation : '+esc(scoreText(s.participation))+' · Examen : '+esc(scoreText(s.exam))+' · Assiduité : '+esc(s.attendance)+' %</p><p><strong>Note finale :</strong> '+esc(scoreText(s.average))+' · '+(s.passed?"Cours validé":"Validation : 70/100 et au moins 80 % de présence")+'</p>'+(s.feedback?.length?'<h3>Retours de correction</h3><ul>'+s.feedback.map(f=>'<li><strong>'+esc(f.type)+' · '+esc(f.score)+'/100</strong> — '+esc(f.commentaire)+'</li>').join('')+'</ul>':'')+renderExerciseForm(c,"quiz",c.quiz,s)+renderExerciseForm(c,"exercises",c.exercises,s)+renderExerciseForm(c,"exam",c.exam,s)+'<button class="button" type="button" id="backCourses">← Revenir à la liste</button>';
+  panel.innerHTML='<div class="eyebrow">'+esc(c.id)+' · Niveau '+c.level+' · 8 heures</div><h2>'+esc(c.title)+'</h2><p>'+esc(c.purpose)+'</p><p><strong>Lectures bibliques :</strong> '+esc(c.refs)+'</p><h3>Objectifs pédagogiques</h3><ol class="numbered">'+c.goals.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol><h3>Les quatre leçons</h3>'+c.units.map(x=>'<details class="lesson"><summary>Leçon '+x.number+' · '+esc(x.title)+' · 90 minutes</summary><p>'+esc(x.body)+'</p><p class="muted"><strong>À lire :</strong> '+esc(x.scriptures)+'</p></details>').join("")+'<h3>Suivi des acquis</h3><p>Quiz : '+esc(scoreText(s.quiz))+' · Travaux : '+esc(scoreText(s.exercises))+' · Participation : '+esc(scoreText(s.participation))+' · Examen : '+esc(scoreText(s.exam))+' · Assiduité : '+esc(s.attendance)+' %</p><p><strong>Note finale :</strong> '+esc(scoreText(s.average))+' · '+(s.passed?"Cours validé":"Validation : 70/100 et au moins 80 % de présence")+'</p>'+(s.feedback?.length?'<h3>Retours de correction</h3><ul>'+s.feedback.map(f=>'<li><strong>'+esc(f.type)+' · '+esc(f.score)+'/100</strong> — '+esc(f.commentaire)+'</li>').join('')+'</ul>':'')+renderExerciseForm(c,"quiz",c.quiz,s)+renderExerciseForm(c,"exercises",c.exercises,s)+renderExerciseForm(c,"exam",c.exam,s)+'<button class="button" type="button" id="backCourses">← Revenir à la liste</button>';
   $("backCourses").addEventListener("click",()=>{panel.hidden=true;$("catalogue").scrollIntoView({behavior:"smooth"});});
   panel.scrollIntoView({behavior:"smooth",block:"start"});alertMessage("Cours "+id+" ouvert.");
  }catch(e){alertMessage(e.message);}
@@ -160,6 +215,11 @@ async function reload(){
  snapshot=await request("");progress();
 }
 document.addEventListener("click",async ev=>{
+ const tab=ev.target.closest("[data-academy-tab]");if(tab){activateTab(tab.dataset.academyTab);if(tab.dataset.academyTab==="ressources")await loadResources();return;}
+ const mark=ev.target.closest("[data-mark-resource]");
+ if(mark){mark.disabled=true;try{const r=await fetch(resourceApi+"/"+encodeURIComponent(mark.dataset.markResource)+"/consulte",{method:"POST",credentials:"same-origin"});
+  if(!r.ok)throw Error("Impossible d'enregistrer la lecture.");await loadResources();
+ }catch(e){text("resourcesStatus",e.message);mark.disabled=false;}return;}
  const btn=ev.target.closest("[data-course]");if(btn&&!btn.disabled){openCourse(btn.dataset.course);return;}
  const act=ev.target.closest("[data-avis-lus],[data-cohorte-rejoindre],[data-cohorte-quitter],[data-cohorte-clore],[data-ecole-retirer]");if(!act)return;
  try{
@@ -225,10 +285,16 @@ document.addEventListener("submit",async ev=>{
 (async()=>{
  try{
   await reload();alertMessage("Bienvenue dans votre parcours Soldiers Academy 2027.");
+  await loadResources();await checkStudio();
   if(snapshot.admin)await loadGestion();
  }catch(e){
    alertMessage(e.message+" — connectez-vous à votre espace personnel.");
    $("studentPage").hidden=true;$("adminPage").hidden=true;
  }
+$("refreshResources")?.addEventListener("click",loadResources);
+$("resourceCourse")?.addEventListener("change",filterResources);
+$("resourceKind")?.addEventListener("change",filterResources);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&snapshot)loadResources()});
+setInterval(()=>{if(!document.hidden&&snapshot)loadResources()},90000);
 })();
 })();
