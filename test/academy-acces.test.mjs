@@ -50,7 +50,7 @@ test("Soldiers Academy : les 24 fiches affichent objectifs, conditions et restri
    assert.equal(course.acces.autorise,false);
    assert.ok(course.objectifs.length>=2&&course.conditions.length>=4&&course.restrictions.length>=5,course.id);
    assert.equal(course.units,undefined,course.id);
-   assert.equal(course.exam,undefined,course.id);
+   assert.equal(course.exam,null,course.id+' : seul le score, pas les consignes');
    assert.equal((await get(env,apprenant,ROOT+"/cours/"+course.id)).status,403,course.id);
  }
  const denied=await submit(env,"SA-01");assert.equal(denied.status,403);
@@ -131,7 +131,7 @@ test("Soldiers Academy : ressources numériques et médias fermés jusqu'à vali
 
 test("Soldiers Academy : conserver l'accès déjà entamé sans déverrouiller les autres",async()=>{
  const {env,sql}=environnement();
- sql.exec("CREATE TABLE IF NOT EXISTS academy_2027_submissions(id TEXT PRIMARY KEY,compte TEXT NOT NULL,cours TEXT NOT NULL,type TEXT NOT NULL,reponses TEXT NOT NULL,statut TEXT NOT NULL,date_soumission INTEGER NOT NULL)");
+ await get(env,apprenant,ROOT); // Initialise les tables de suivi sans modifier les archives
  sql.prepare("INSERT INTO academy_2027_submissions(id,compte,cours,type,reponses,statut,date_soumission) VALUES(?,?,?,?,?,?,?)")
    .run("historique1",apprenant.id,"SA-01","quiz","[]","en_attente",1);
  const r=await get(env,apprenant,ROOT);
