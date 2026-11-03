@@ -123,3 +123,14 @@ test('Stabilité du titre premium à 1100 et 1280 px avant chargement de la poli
  assert.ok(html.includes('class="ap-hero-copy"'));
  assert.ok(html.includes('id="titre-accueil"'));
 });
+
+
+test('L’accueil stabilise les deux colonnes entre 1000 et 1099 px',()=>{
+ const css=lire('public/vitrine/sde-accueil-premium.css');
+ const fix=css.slice(css.indexOf('Seuil tablette large (1024 px)'));
+ assert.ok(fix.startsWith('Seuil tablette large (1024 px)'));
+ assert.match(fix,/@media \(min-width:1000px\) and \(max-width:1099px\)/);
+ assert.match(fix,/\.ap-hero-inner\s*\{\s*align-items:start;/);
+ assert.match(fix,/\.ap-hero \.ap-hero-copy h1\s*\{[\s\S]*?font-size:clamp\(2\.5rem,3\.9vw,3rem\)/);
+ assert.match(fix,/\.ap-hero \.ap-poster\s*\{\s*align-self:start;/);
+});
