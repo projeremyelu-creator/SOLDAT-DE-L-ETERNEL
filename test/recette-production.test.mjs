@@ -159,3 +159,33 @@ test('Recette Academy : studio et publication des supports, version effective du
  const ref=await recetteProduction({fetcher:ancien.fetcher,domaines:[DOMAINES[0]],controles:CONTROLES.filter(c=>c.type==='academy-script'),essais:1});
  assert.equal(ref.ok,false,'Un ancien script Academy en production ne doit pas être validé.');
 });
+
+
+test("RECETTE PROD TEMPORAIRE : verrouillage pédagogique des 34 cours et Studio sur les deux domaines", {timeout:270000},async()=>{
+ const {recetteAcademyProduction}=await import("../scripts/recette-academy-production.mjs");
+ const bilan=await recetteAcademyProduction({essais:3,timeoutMs:12000,rapport:r=>{
+  console.log("ACCES 34 PROD",r.ok?"OK":"ECHEC",r.domaine+r.path,r.erreur||"");
+ }});
+ console.log("ACCES 34 PROD ANCIENNE RECETTE",bilan.reussis+"/"+bilan.total);
+ assert.equal(bilan.ok,true,JSON.stringify(bilan.resultats.filter(x=>!x.ok),null,2));
+ for(const domain of ["https://mouvement-sde.org","https://app.mouvement-sde.org"]){
+   const resources=[
+    ["/vitrine/sde-academy-parcours.js",["avantCoursAcademy","demanderCoursAcademy","data-sa-demander","data-love-demander","chargerLoveSchool"]],
+    ["/vitrine/sde-academy-enseignants.js",["chargerValidations","data-acces-source","/acces/decision","/love-school/acces/decision"]],
+    ["/vitrine/academy-enseignants.html",["pane-validations","tab-validations"]]
+   ];
+   for(const [path,marqueurs] of resources){
+    const res=await fetch(domain+path,{redirect:"manual",signal:AbortSignal.timeout(15000),headers:{"cache-control":"no-cache"}});
+    assert.equal(res.status,200,"Asset indisponible "+domain+path+" : "+res.status);
+    const content=await res.text();
+    for(const m of marqueurs)assert.ok(content.includes(m),"Version non publiee "+domain+path+" : "+m);
+    console.log("ACCES 34 PROD FRONTEND OK",domain+path);
+   }
+   for(const path of ["/api/soldiers-academy/acces/gestion","/api/soldiers-academy/love-school/acces/gestion","/api/soldiers-academy/love-school/cours/LS-01","/api/soldiers-academy/cours/SA-01"]){
+    const res=await fetch(domain+path,{redirect:"manual",signal:AbortSignal.timeout(15000),headers:{"accept":"application/json","cache-control":"no-cache"}});
+    assert.equal(res.status,401,"API privee exposee "+domain+path+" : "+res.status);
+    assert.match(res.headers.get("cache-control")||"",/no-store/,"Pas de cache des informations privees");
+    console.log("ACCES 34 PROD API ANONYME PROTEGEE",domain+path);
+   }
+ }
+});
