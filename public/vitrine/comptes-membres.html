@@ -1,0 +1,22 @@
+<!doctype html><html lang="fr" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Comptes des membres | Mouvement SDE</title><meta name="description" content="Création des comptes à partir de la liste des membres, réservée à l’administration."><meta name="robots" content="noindex, nofollow"><link rel="canonical" href="https://mouvement-sde.org/squads"><link rel="stylesheet" href="/vitrine/sde-hub.css?v=20261031"><script defer src="/vitrine/sde-hub.js?v=20261031"></script><link rel="stylesheet" href="/vitrine/sde-premium-public.css?v=20261102refonte">
+<link rel="stylesheet" href="/vitrine/sde-espace-prive.css?v=20261103b">
+<link rel="stylesheet" href="/vitrine/sde-fusion.css?v=20261103">
+</head><body class="sde-espace-prive" data-fam="cmd"><header class="sde-hub-head"><div class="inner"><a class="sde-mark" href="/"><img src="/vitrine/logo-96.webp" alt="" width="50" height="50">SDE — MOUVEMENT</a><nav class="sde-hub-nav" aria-label="Espace membre"><a href="/">Accueil</a><a href="/mon-espace">Mon espace</a><a href="/squads" aria-current="page">Squads</a><a href="/empreinte">Empreinte</a></nav><div class="hub-langs"><button data-theme-toggle aria-label="Changer de thème">☼</button></div></div></header>
+<main class="hub-main" id="contenu">
+<p class="hub-breadcrumb"><a href="/">Accueil</a> / <a href="/mon-espace">Mon espace</a> / Comptes des membres</p>
+<section class="hub-hero"><span class="hub-kicker">ADMINISTRATION</span><h1>Comptes des membres</h1><p class="hub-lead">Crée un compte pour chaque fiche de la liste des membres qui n’en a pas, avec un mot de passe temporaire unique. Le membre le change dès sa première connexion.</p></section>
+<p id="cm-etat" class="sq-etat" role="status" aria-live="polite">Vérification de vos droits…</p>
+<section id="cm-refus" class="hub-section" hidden><h2>Accès réservé</h2><p>Cette page est réservée aux administrateurs. <a href="/connexion?retour=%2Fadministration">Me connecter</a></p></section>
+<section id="cm-bloc" class="hub-section" hidden>
+<h2>Comment ça marche</h2>
+<ul class="em-points"><li>Chaque membre reçoit un mot de passe <strong>différent</strong>, de 12 caractères, valable 14 jours.</li><li>Il se connecte avec son <strong>matricule</strong> (ou son e-mail) et ce mot de passe, puis choisit le sien.</li><li>Les mots de passe ne sont affichés <strong>qu’une seule fois</strong> : téléchargez la liste avant de quitter la page, et remettez à chacun le sien en privé.</li><li>Les fiches inactives, sans e-mail valide ou déjà reliées à un compte sont ignorées et listées.</li></ul>
+<p><button type="button" class="hub-btn" id="cm-apercu">Aperçu (ne crée rien)</button></p>
+<div id="cm-resume" hidden></div>
+<form id="cm-creer" class="hub-form" hidden><label class="cm-case"><input type="checkbox" id="cm-ok" required> Je comprends que les mots de passe ne seront affichés qu’une fois et que je dois les remettre en privé.</label><button type="submit" class="hub-btn" id="cm-lancer">Créer les comptes</button></form>
+<div id="cm-resultat" hidden><h2>Comptes créés</h2><p id="cm-compte"></p><p><button type="button" class="hub-btn" id="cm-csv">Télécharger la liste (CSV)</button> <button type="button" class="sq-lien" id="cm-imprimer">Imprimer</button></p><div class="cm-table-zone"><table class="cm-table"><thead><tr><th>Nom</th><th>Matricule</th><th>E-mail</th><th>Mot de passe temporaire</th></tr></thead><tbody id="cm-lignes"></tbody></table></div></div>
+<div id="cm-ignores" hidden><h2>Fiches ignorées</h2><ul id="cm-ignores-liste" class="em-points"></ul></div>
+</section>
+</main>
+<footer class="hub-footer"><div class="inner"><nav aria-label="Navigation de pied de page"><a href="/mouvement">Le Mouvement</a><a href="/programmes">Programmes</a><a href="/contact">Contact</a><a href="/contact#confidentialite">Confidentialité et protection des données</a></nav><p>© 2026 Mouvement Prophético-Apostolique Soldats de l'Éternel · Cocody Deux-Plateaux, Abidjan · <a href="mailto:infosoldat@gmail.com">infosoldat@gmail.com</a></p><p class="sde-social"><span>Suivez-nous</span> <a href="https://www.tiktok.com/@mouvement.sde" target="_blank" rel="noopener noreferrer" aria-label="TikTok du Mouvement SDE (nouvel onglet)">TikTok</a> <a href="https://www.facebook.com/share/1GkJmWSyqj/" target="_blank" rel="noopener noreferrer" aria-label="Page Facebook du Mouvement SDE (nouvel onglet)">Facebook</a></p></div></footer>
+<script src="/vitrine/sde-comptes-membres.js?v=20261103b" defer></script>
+</body></html>

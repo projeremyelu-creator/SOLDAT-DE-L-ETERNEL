@@ -40,3 +40,10 @@ html[data-theme="dark"] .sde-espace-prive .sq-nonlus{color:#10131f}
 .sde-espace-prive .hub-footer .sde-social{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:8px 0 0}
 .sde-espace-prive .hub-footer .sde-social a{min-height:44px;display:inline-flex;align-items:center}
 .sde-espace-prive .sq-membres+.hub-form{margin-top:16px}.sde-espace-prive h3{margin-top:28px}
+.sde-espace-prive .cm-table-zone{overflow:auto;max-width:100%;margin-top:14px;border:1px solid var(--bord);border-radius:12px}
+.sde-espace-prive .cm-table{width:100%;border-collapse:collapse;font-size:.92rem}
+.sde-espace-prive .cm-table th,.sde-espace-prive .cm-table td{padding:8px 12px;text-align:start;border-bottom:1px solid var(--bord);white-space:nowrap}
+.sde-espace-prive .cm-table td:last-child{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;letter-spacing:.04em}
+.sde-espace-prive .cm-case{display:flex;gap:10px;align-items:flex-start}
+.sde-espace-prive .cm-case input{width:auto;margin-top:4px}
+@media print{.sde-hub-head,.hub-footer,.hub-breadcrumb,#cm-apercu,#cm-creer,#cm-csv,#cm-imprimer{display:none!important}}
