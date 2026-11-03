@@ -1353,3 +1353,170 @@ body.sde-reference-admin .ref-command .ops-kpis .ops-card.ref-kpi:focus-within{
   transition:none!important;transform:none!important;
  }
 }
+
+
+/* SDE DIGITAL — Pilotage vivant, indicateurs issus de /api/tableau-de-bord.
+   Cartes cliquables, fiche métier, rafraîchissement volontaire et période
+   des présences filtrable ; aucune valeur de comparaison inventée. */
+body.sde-reference-admin .ref-command .ref-command-livebar{
+ display:flex;flex-wrap:wrap;gap:9px 16px;
+ justify-content:space-between;align-items:center;
+ margin:0 0 14px;min-width:0;
+}
+body.sde-reference-admin .ref-command .ref-command-livebar .ref-live{
+ margin:0;line-height:1.4;flex:1 1 270px;
+}
+body.sde-reference-admin .ref-command .ref-command-refresh{
+ flex:0 0 auto;min-height:42px!important;
+ padding:8px 13px!important;border-radius:10px!important;
+ background:linear-gradient(125deg,#253954,#332849)!important;
+ color:#f6dfa6!important;border:1px solid #b99a5a!important;
+ font-weight:800!important;letter-spacing:0!important;
+ cursor:pointer;box-shadow:0 4px 16px #0002;
+}
+body.sde-reference-admin .ref-command .ref-command-refresh:hover:not(:disabled),
+body.sde-reference-admin .ref-command .ref-command-refresh:focus-visible{
+ background:#e9c883!important;color:#121c2e!important;
+ outline:2px solid #e9c883;outline-offset:2px;
+}
+body.sde-reference-admin .ref-command .ref-command-refresh:disabled{
+ opacity:.7;cursor:progress;
+}
+body.sde-reference-admin .ref-command .ref-kpis-live .ref-kpi{
+ position:relative;min-width:0;
+ border-color:#b19a6c65;
+ overflow:hidden;
+ isolation:isolate;
+}
+body.sde-reference-admin .ref-command .ref-kpis-live .ref-kpi:before{
+ content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+ border-radius:4px;background:linear-gradient(#f4db91,#9780bc);
+ pointer-events:none;
+}
+body.sde-reference-admin .ref-command .ref-kpis-live .ref-kpi:nth-child(3):before{
+ background:linear-gradient(#92bca0,#446e54);
+}
+body.sde-reference-admin .ref-command .ref-kpis-live .ref-kpi.is-selected{
+ border-color:#dcbf79!important;
+ box-shadow:0 0 0 2px #dabd7855,0 11px 26px #11192e25!important;
+}
+body.sde-reference-admin .ref-command .ref-kpis-live .ref-kpi-number{
+ display:block;min-width:0;
+ font-variant-numeric:tabular-nums;
+ color:inherit;
+}
+@keyframes sde-kpi-updated{
+ 0%{text-shadow:0 0 0 #e9cb8700;filter:brightness(1)}
+ 45%{text-shadow:0 0 16px #f4d58ba8;filter:brightness(1.15)}
+ 100%{text-shadow:0 0 0 #e9cb8700;filter:brightness(1)}
+}
+body.sde-reference-admin .ref-command .ref-kpis-live .ref-kpi-number.is-updated{
+ animation:sde-kpi-updated .95s ease-out 1;
+}
+body.sde-reference-admin .ref-command .ref-kpis-live .ref-kpi-hint{
+ position:absolute;right:12px;bottom:8px;z-index:1;
+ color:#d8c28b;font-size:.68rem;font-weight:700;
+ letter-spacing:.012em;pointer-events:none;
+}
+body.sde-reference-admin .ref-command .ref-kpis-live .ref-kpi-hint span{
+ display:inline-block;margin-left:2px;
+}
+body.sde-reference-admin .ref-command .ref-kpis-live .ref-kpi>.ref-kpi-go{
+ z-index:3!important;
+}
+body.sde-reference-admin .ref-command .ref-kpi-fiche{
+ margin:-3px 0 17px;display:grid;gap:10px;
+ border:1px solid #c0a66b;border-radius:14px;
+ padding:16px clamp(14px,2vw,24px);
+ background:linear-gradient(115deg,#162741,#292142);
+ box-shadow:0 11px 29px #080c1b38;
+ color:#f7efde;
+}
+body.sde-reference-admin .ref-command .ref-kpi-fiche[hidden]{display:none!important}
+body.sde-reference-admin .ref-command .ref-kpi-fiche-heading{
+ display:flex;flex-wrap:wrap;gap:8px 18px;
+ justify-content:space-between;align-items:center;
+}
+body.sde-reference-admin .ref-command .ref-kpi-fiche-eyebrow{
+ display:block;font-size:.66rem;font-weight:850;letter-spacing:.11em;
+ color:#ebcb81!important;line-height:1.45;
+}
+body.sde-reference-admin .ref-command .ref-kpi-fiche-heading h3{
+ margin:3px 0 0;color:#fff6df!important;
+ font-size:clamp(1.13rem,2vw,1.46rem);line-height:1.2;
+}
+body.sde-reference-admin .ref-command .ref-kpi-fiche-value{
+ font:800 clamp(1.55rem,3vw,2.2rem)/1.1 system-ui,sans-serif;
+ color:#f6d78f!important;font-variant-numeric:tabular-nums;
+}
+body.sde-reference-admin .ref-command .ref-kpi-fiche p{
+ margin:0;max-width:78ch;color:#e5e8f1!important;
+ line-height:1.48;font-size:.87rem;
+}
+body.sde-reference-admin .ref-command .ref-kpi-fiche-actions{
+ display:flex;flex-wrap:wrap;gap:8px;
+}
+body.sde-reference-admin .ref-command .ref-kpi-fiche-actions button{
+ min-height:43px!important;
+ border-radius:9px!important;padding:9px 14px!important;
+ cursor:pointer;font-size:.8rem!important;
+}
+body.sde-reference-admin .ref-command .ref-kpi-fiche-open{
+ background:#e9c983!important;color:#1b2333!important;
+ border:1px solid #e9c983!important;font-weight:800!important;
+}
+body.sde-reference-admin .ref-command .ref-kpi-fiche-close{
+ background:#263754!important;color:#f6f4ef!important;
+ border:1px solid #8292b1!important;
+}
+body.sde-reference-admin .ref-command .ref-kpi-fiche-actions button:focus-visible{
+ outline:3px solid #edcd87;outline-offset:2px;
+}
+body.sde-reference-admin .ref-command .ref-command-chart>h3{
+ padding-right:170px;
+}
+body.sde-reference-admin .ref-command .ref-chart-filter{
+ position:absolute;right:12px;top:9px;z-index:2;
+ display:flex;align-items:center;gap:7px;
+ font-size:.72rem;color:#e4dfd5;
+}
+body.sde-reference-admin .ref-command .ref-chart-filter select{
+ min-height:37px;padding:5px 9px;
+ border-radius:8px;border:1px solid #bba36a;
+ background:#233550;color:#fff7e9;
+ font:700 .76rem system-ui,sans-serif;
+}
+body.sde-reference-admin .ref-command .ref-chart-filter select:focus-visible{
+ outline:3px solid #e9cb87;outline-offset:2px;
+}
+@media(max-width:760px){
+ body.sde-reference-admin .ref-command .ref-command-livebar{
+  align-items:stretch;gap:8px;
+ }
+ body.sde-reference-admin .ref-command .ref-command-livebar .ref-live{
+  flex-basis:100%;font-size:.75rem!important;
+ }
+ body.sde-reference-admin .ref-command .ref-command-refresh{
+  justify-self:start;padding:8px 13px!important;
+ }
+ body.sde-reference-admin .ref-command .ref-kpis-live .ref-kpi-hint{
+  right:9px;bottom:5px;font-size:.62rem;
+ }
+ body.sde-reference-admin .ref-command .ref-kpi-fiche{
+  margin:1px 0 15px;padding:14px;border-radius:12px;
+ }
+ body.sde-reference-admin .ref-command .ref-command-chart>h3{
+  padding-right:0;
+ }
+ body.sde-reference-admin .ref-command .ref-chart-filter{
+  position:static;display:inline-flex;margin:4px 0 9px;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-reference-admin .ref-command .ref-kpis-live .ref-kpi-number.is-updated{
+  animation:none!important;
+ }
+}
+body[data-motion=paused].sde-reference-admin .ref-command .ref-kpis-live .ref-kpi-number.is-updated{
+ animation:none!important;
+}
