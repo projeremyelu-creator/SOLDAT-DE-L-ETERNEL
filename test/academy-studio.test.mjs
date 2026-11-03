@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {DatabaseSync} from "node:sqlite";
+import {JSDOM} from "jsdom";
 import {academyContenusApi} from "../src/academy-contenus.js";
 
 const base="/api/soldiers-academy/contenus";
@@ -124,4 +125,22 @@ test("Navigation : les nouveaux onglets et la page studio utilisent les routes p
  assert.match(page,/id="resourcesCards"/);
  assert.match(studio,/id="resourceForm"/);assert.match(studio,/id="staffForm"/);
  assert.match(studio,/\/vitrine\/sde-premium-public\.css/);
+});
+
+test("Accessibilité : les trois onglets sont liés aux panneaux du même espace membre",()=>{
+ const html=readFileSync(new URL("../public/vitrine/sde-academy-parcours.html",import.meta.url),"utf8");
+ const doc=new JSDOM(html).window.document;
+ assert.ok(doc.querySelector("#studentPage"));
+ for(const [tab,id] of [["cours","coursPanel"],["ressources","resourcesSection"],["parcours","parcoursPanel"]]){
+  const b=doc.querySelector('[data-academy-tab="'+tab+'"]');
+  assert.ok(b,'Onglet '+tab+' présent');
+  assert.equal(b.getAttribute("aria-controls"),id);
+  assert.ok(doc.querySelector("#"+id),"Panneau "+id+" présent");
+  assert.ok(doc.querySelector("#studentPage").contains(doc.querySelector("#"+id)),"Panneau privé dans l'espace apprenant");
+ }
+ const studio=readFileSync(new URL("../public/vitrine/sde-academy-studio.html",import.meta.url),"utf8");
+ const d=new JSDOM(studio).window.document;
+ assert.equal(d.querySelectorAll("#resourceForm").length,1);
+ assert.equal(d.querySelectorAll("#staffForm").length,1);
+ assert.ok(d.querySelector('script[src*="sde-academy-studio.js"]'));
 });
