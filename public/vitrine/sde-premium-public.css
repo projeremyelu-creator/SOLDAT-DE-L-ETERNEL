@@ -941,8 +941,8 @@ html body.sde-accueil-maquette.sde-ivoire .m-panel .m-card{
 /* SDE PREMIUM V2 · Trois univers, accueil sans nouvelle donnée inventée.
    Violet : spiritualité. Bleu nuit : commandement. Vert : missions. */
 html body.sde-premium-home .sde-premium-pillars{
- width:min(1180px,calc(100% - 40px));max-width:1180px;margin-inline:auto;
- margin:clamp(18px,3vw,35px) 0 clamp(12px,2vw,22px);
+ width:min(1180px,calc(100% - 40px));max-width:1180px;
+ margin:clamp(18px,3vw,35px) auto clamp(12px,2vw,22px);
  padding:clamp(17px,3vw,29px);
  border:1px solid rgba(227,188,111,.43);border-radius:21px;
  background:linear-gradient(135deg,rgba(18,25,48,.98),rgba(36,21,58,.96) 62%,rgba(22,53,44,.95));
