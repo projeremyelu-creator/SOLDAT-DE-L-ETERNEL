@@ -7,6 +7,7 @@ import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {memberAcademySummary} from "./member-academy-summary.js";
 import {soldiersAcademyApi,verifierAttestation} from "./sde-academy-api.js";
 import {mediaLoveAutorise} from "./love-school-acces.js";
+import {mediaAcademyAutorise} from "./soldiers-academy-acces.js";
 import {fonctionFormateur} from "./academy-ressources.js";
 import {rappelsCohortes} from "./academy-extras.js";
 import {prayerWallApi} from "./prayer-wall.js";
@@ -1442,6 +1443,10 @@ async function servirMedia(req, env, u, id) {
   try { accesLove = await mediaLoveAutorise(env, u, m.id); }
   catch { return new Response("Vérification d'accès au média indisponible.", {status:503,headers:{"cache-control":"no-store"}}); }
   if (!accesLove.autorise) return new Response("Ressource Love School verrouillée : demandez la validation de ce cours.", {status:403,headers:{"cache-control":"no-store","content-type":"text/plain; charset=utf-8"}});
+  let accesAcademy;
+  try { accesAcademy = await mediaAcademyAutorise(env,u,m.id); }
+  catch { return new Response("Vérification d'accès Academy indisponible.", {status:503,headers:{"cache-control":"no-store"}}); }
+  if (!accesAcademy.autorise) return new Response("Document Soldiers Academy verrouillé jusqu'à validation pédagogique.", {status:403,headers:{"cache-control":"no-store","content-type":"text/plain; charset=utf-8"}});
   let debut = 0, fin = m.taille - 1, partiel = false;
   const r = /^bytes=(\d*)-(\d*)$/.exec(req.headers.get("range") || "");
   if (r && (r[1] !== "" || r[2] !== "")) {
@@ -1469,7 +1474,7 @@ async function servirMedia(req, env, u, id) {
   const h = {
     "content-type": m.mime, "content-length": String(fin - debut + 1), "accept-ranges": "bytes",
     "content-disposition": `${enLigne ? "inline" : "attachment"}; filename*=UTF-8''${encodeURIComponent(m.nom)}`,
-    "cache-control": accesLove.restreint ? "private, no-store" : (m.visibilite === "public" ? "public, max-age=86400" : "private, max-age=3600"),
+    "cache-control": (accesLove.restreint || accesAcademy.restreint) ? "private, no-store" : (m.visibilite === "public" ? "public, max-age=86400" : "private, max-age=3600"),
   };
   if (m.genre !== "pdf") h["content-security-policy"] = "default-src 'none'; img-src 'self'; media-src 'self'; style-src 'unsafe-inline'; sandbox";
   if (partiel) h["content-range"] = `bytes ${debut}-${fin}/${m.taille}`;
