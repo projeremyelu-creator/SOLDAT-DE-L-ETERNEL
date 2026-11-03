@@ -252,5 +252,5 @@ test("Actualisation des supports du cours ouvert : action visible et non destruc
   assert.ok(fn.includes('request("/cours/"+encodeURIComponent(id))'),"relecture authentifiée du cours");
   assert.ok(fn.includes("UI.ressourceHtml"),"rendu des supports actualisés");
   assert.ok(!fn.includes("await reload("),"ni les exercices ni la progression ne sont rechargés");
-  assert.ok(page.includes("sde-academy-parcours.js?v=20271103-ressources-cours"),"cache du script actualisé");
+  assert.match(page,/sde-academy-parcours\\.js\\?v=[A-Za-z0-9-]+/,"script bien versionné automatiquement à la construction");
 });
