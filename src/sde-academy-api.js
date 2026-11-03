@@ -2,7 +2,7 @@
    L'ancien cursus de douze modules est remplacé, sans destruction des archives personnelles.
    Aucun corrigé n'est publié dans le dépôt ni dans les réponses API. */
 import {SOLDIERS_ACADEMY_2027 as PROGRAMME} from "./soldiers-academy-2027.js";
-import {LOVE_SCHOOL} from "./love-school.js";
+import {LOVE_SCHOOL,LOVE_SCHOOL_PUBLICS} from "./love-school.js";
 import {CORRECTIFS,BAREME_EXERCICE,BAREME_EXAMEN} from "./academy-correctifs.js";
 import {SPECIALISATIONS} from "./academy-specialisations.js";
 import {initRessources,ressourcesApi,ressourcesApprenant,fonctionFormateur} from "./academy-ressources.js";
@@ -117,7 +117,7 @@ export async function soldiersAcademyApi(req,env,u,path){
     await initRessources(env);
     const biblio=await ressourcesApprenant(env,{peutNiveau:()=>false});
     return response({ok:true,ecole:{
-      title:LOVE_SCHOOL.title,subtitle:LOVE_SCHOOL.subtitle,nature:LOVE_SCHOOL.nature,
+      title:LOVE_SCHOOL.title,subtitle:LOVE_SCHOOL.subtitle,nature:LOVE_SCHOOL.nature,parcours:LOVE_SCHOOL_PUBLICS,
       certification:false,
       courses:LOVE_SCHOOL.courses.map(c=>c.adultOnly
         ?{id:c.id,title:c.title,theme:c.theme,track:c.track,adultOnly:true,ressources:[]}
