@@ -173,3 +173,21 @@ fieldset.field{border:1px solid var(--line);border-radius:12px;padding:12px}.chi
 @media(max-width:920px){.love-audience-choices{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){.love-audience{padding:17px 14px}.love-audience-choices{gap:8px}.love-audience-choice{min-height:114px;padding:12px 11px}.love-audience-choice strong{font-size:.94rem}.love-audience-choice small{font-size:.72rem}}
 @media(prefers-reduced-motion:reduce){.love-audience-choice{transition:none!important}.love-audience-choice:hover{transform:none}}
+
+
+/* Gouvernance pédagogique : indication des modules verrouillés, sans divulguer les leçons. */
+.card.locked{border-color:#765a68;background:linear-gradient(145deg,#17233b,#241e32)}
+.card.locked .code{color:#ffd49f}
+.card.locked .button{border-color:#d6a6b3;background:#3b2b43;color:#ffe4e3}
+.card.locked .button:hover{background:#553247}
+#courseDetail>.eyebrow{letter-spacing:.065em}
+#courseDetail:has([data-sa-demander]){border-color:#bb8a9e}
+#courseDetail [data-sa-demander]{background:linear-gradient(135deg,#f2d3a7,#f3b8c8);color:#271a32}
+#courseDetail #saAccessStatus{font-weight:650;color:#f6dba5}
+.love-card.love-locked{border-style:dashed;border-color:#9f7088}
+.love-card.love-unlocked{border-color:#ba986a}
+.love-acces-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;line-height:1.4;border:1px solid #e0b6ad;border-radius:999px;font-size:.79rem;font-weight:750;max-width:max-content}
+.love-acces-locked{background:#49283e;color:#ffe2d6}
+.love-acces-ok{background:#33473a;color:#f3eecb;border-color:#90ae81}
+.love-decision-card{border-color:#88667f}
+@media(prefers-reduced-motion:reduce){.card.locked{transition:none!important}}
