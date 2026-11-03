@@ -322,3 +322,63 @@ test('Chat Squad : notification discrète aux autres membres, une fois par tranc
  // l'envoi d'un message n'échoue jamais à cause des notifications
  assert.equal((await w.appel(`/api/squads/${id}/messages`,{methode:'POST',jeton:paul,corps:{texte:'Bonjour'}})).statut,200);
 });
+
+/* ───────── comptes des membres : mot de passe temporaire unique ───────── */
+test('Comptes des membres : aperçu, création, mot de passe temporaire unique à changer, expiration',async()=>{
+ const w=monde();
+ const admin=w.compte('adm','Admin SDE','admin'),simple=w.compte('simple','Simple Soldat');
+ const fiche=(id,d)=>w.sql.prepare("INSERT INTO docs(path,parent,id,data,version,maj) VALUES(?,?,?,?,1,?)").run('membres/'+id,'membres',id,JSON.stringify(d),Date.now());
+ fiche('f1',{nom:'KONE',prenoms:'Awa',email:'Awa.Kone@Exemple.test',telephone:'0102030405',actif:true});
+ fiche('f2',{nom:'TRAORE',prenoms:'Moussa',email:'moussa@exemple.test',matricule:'SDE-0002',actif:true});
+ fiche('f3',{nom:'SANS',prenoms:'Mail',email:'',actif:true});
+ fiche('f4',{nom:'ANCIEN',prenoms:'Inactif',email:'inactif@exemple.test',actif:false});
+ fiche('f5',{nom:'DOUBLON',prenoms:'Awa',email:'awa.kone@exemple.test',actif:true});
+ fiche('f6',{nom:'DEJA',prenoms:'Simple',email:'simple@exemple.test',actif:true});
+ const creer=(jeton,simuler)=>w.appel('/api/comptes/membres',{methode:'POST',jeton,corps:{simuler}});
+ assert.equal((await creer(undefined,true)).statut,403);
+ assert.equal((await creer(simple,true)).statut,403,'réservé aux administrateurs');
+ const ap=await creer(admin,true);
+ assert.equal(ap.statut,200);assert.equal(ap.json.simulation,true);assert.equal(ap.json.acreer,2);assert.equal(ap.json.total,6);
+ assert.equal(w.sql.prepare("SELECT COUNT(*) AS n FROM comptes WHERE email LIKE '%kone%' OR email LIKE 'moussa%'").get().n,0,'l’aperçu n’écrit rien');
+ const raisons=ap.json.ignores.map(i=>i.raison).join('|');
+ for(const r of ['inactive','absente ou invalide','en double','existe déjà'])assert.ok(raisons.includes(r),r);
+ const reel=await creer(admin,false);
+ assert.equal(reel.statut,200);assert.equal(reel.json.crees.length,2);assert.equal(reel.json.restants,0);
+ const [a,m]=reel.json.crees;
+ assert.match(a.motDePasse,/^[2-9A-HJKMNP-Z]{4}-[2-9A-HJKMNP-Z]{4}-[2-9A-HJKMNP-Z]{4}$/);
+ assert.notEqual(a.motDePasse,m.motDePasse,'un mot de passe différent par membre');
+ assert.equal(m.matricule,'SDE-0002','le matricule de la fiche est conservé');
+ assert.match(a.matricule,/^\d{6}$/);
+ const compte=w.sql.prepare('SELECT * FROM comptes WHERE email=?').get('awa.kone@exemple.test');
+ assert.equal(compte.role,'soldat');assert.equal(compte.membreId,'f1');assert.ok(!compte.mdp.includes(a.motDePasse),'seule l’empreinte est conservée');
+ const f1=JSON.parse(w.sql.prepare("SELECT data FROM docs WHERE path='membres/f1'").get().data);
+ assert.equal(f1.compteId,compte.id);assert.equal(f1.matricule,a.matricule);
+ assert.equal((await creer(admin,false)).json.crees.length,0,'rien à recréer');
+ // connexion avec le matricule et le mot de passe temporaire
+ const co=await w.appel('/api/connexion',{methode:'POST',corps:{email:a.matricule,motDePasse:a.motDePasse}});
+ assert.equal(co.statut,200);assert.equal(co.json.changerMotDePasse,true);
+ const cookie=co.entetes.get('set-cookie').match(/sde_s=([^;]+)/)[1];
+ assert.equal((await w.appel('/api/moi',{jeton:cookie})).json.mdpTemporaire,true);
+ const ch=await w.appel('/api/mot-de-passe',{methode:'POST',jeton:cookie,corps:{ancien:a.motDePasse,nouveau:'Mon-Propre-Mot-2026'}});
+ assert.equal(ch.statut,200);
+ assert.equal((await w.appel('/api/moi',{jeton:cookie})).json.mdpTemporaire,false);
+ assert.equal((await w.appel('/api/connexion',{methode:'POST',corps:{email:a.matricule,motDePasse:a.motDePasse}})).statut,401,'l’ancien mot de passe temporaire ne marche plus');
+ const co2=await w.appel('/api/connexion',{methode:'POST',corps:{email:a.matricule,motDePasse:'Mon-Propre-Mot-2026'}});
+ assert.equal(co2.statut,200);assert.equal(co2.json.changerMotDePasse,false);
+ // expiration du mot de passe temporaire de l'autre membre
+ w.sql.prepare('UPDATE comptes_mdp_temp SET expire=? WHERE email=?').run(Date.now()-1000,'moussa@exemple.test');
+ const exp=await w.appel('/api/connexion',{methode:'POST',corps:{email:'SDE-0002',motDePasse:m.motDePasse}});
+ assert.equal(exp.statut,401);assert.match(exp.json.message||'',/expiré/);
+});
+
+test('Comptes des membres : pages, route, redirection et pas de mot de passe commun',()=>{
+ const worker_=readFileSync('src/worker.js','utf8'),mod=readFileSync('src/comptes-membres.js','utf8'),login=readFileSync('public/vitrine/portail-connexion.js','utf8');
+ assert.match(worker_,/"\/mot-de-passe": "\/vitrine\/mot-de-passe\.html"/);assert.match(worker_,/"\/comptes-membres": "\/vitrine\/comptes-membres\.html"/);
+ assert.match(login,/\/mot-de-passe\?retour=/,'la connexion renvoie vers le changement du mot de passe temporaire');
+ assert.ok(!/1991/.test(mod),'aucun mot de passe commun codé en dur');
+ for(const [page,script] of [['mot-de-passe','sde-mot-de-passe.js'],['comptes-membres','sde-comptes-membres.js']]){
+  const h=readFileSync(`public/vitrine/${page}.html`,'utf8');
+  assert.match(h,/noindex/);assert.ok(h.includes(script));assert.ok(!/<script(?![^>]*\bsrc=)[^>]*>/.test(h),'pas de script en ligne (CSP)');
+  assert.ok(h.includes('sde-premium-public.css')||h.includes('sde-fusion.css'));
+ }
+});

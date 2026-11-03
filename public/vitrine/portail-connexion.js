@@ -60,6 +60,7 @@
      status.replaceChildren(document.createTextNode("Votre compte est connecté, mais l'administration est réservée aux responsables habilités. "));
      const lien=document.createElement("a");lien.href="/mon-espace";lien.textContent="Ouvrir mon espace membre";status.append(lien);return;
     }
+    if(me.mdpTemporaire===true||result.changerMotDePasse===true){location.assign("/mot-de-passe?retour="+encodeURIComponent(destination));return}
     location.assign(destination);
    } catch(_){status.textContent="Connexion impossible. Vérifiez votre réseau et réessayez."}
    finally{button.disabled=false}

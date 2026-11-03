@@ -7,6 +7,7 @@ import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {memberAcademySummary} from "./member-academy-summary.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {squadChatApi} from "./squad-chat.js";
+import {comptesMembresApi,mdpTemporaire,oublierMdpTemporaire} from "./comptes-membres.js";
 import {passkeysApi} from "./passkeys.js";
 import {sdeExpansionApi} from "./sde-expansion.js";
 import {financesPubliques} from "./sde-financements.js";
@@ -315,8 +316,10 @@ async function apiConnexionMdp(req, env) {
   if (Number(String(c.mdp).split("$")[1]) < ITERATIONS) {
     try { await env.DB.prepare("UPDATE comptes SET mdp = ? WHERE email = ?").bind(await empreinteMdp(b.motDePasse), c.email).run(); } catch (e) { /* le hachage actuel reste valable */ }
   }
+  const temp = await mdpTemporaire(env, c.email);
+  if (temp && Number(temp.expire) < Date.now()) return erreur("expire", "Ce mot de passe temporaire a expiré : demandez-en un nouveau à l’administration.", 401);
   await effacer(env, "e:" + saisie);
-  return json({ ok: true }, 200, { "set-cookie": await ouvrirSession(env, email) });
+  return json({ ok: true, changerMotDePasse: !!temp }, 200, { "set-cookie": await ouvrirSession(env, email) });
 }
 async function apiActivation(req, env) {
   const b = await req.json();
@@ -330,6 +333,7 @@ async function apiActivation(req, env) {
     return erreur("refuse", "Adresse ou code d’activation incorrect, ou code expiré : demandez-en un nouveau au secrétariat.", 401);
   }
   await env.DB.prepare("UPDATE comptes SET mdp = ?, activation = NULL WHERE email = ?").bind(await empreinteMdp(b.motDePasse), email).run();
+  await oublierMdpTemporaire(env, email);
   await effacer(env, "e:" + email);
   return json({ ok: true }, 200, { "set-cookie": await ouvrirSession(env, email) });
 }
@@ -344,6 +348,7 @@ async function apiMotDePasse(req, env, u) {
     env.DB.prepare("UPDATE comptes SET mdp = ? WHERE email = ?").bind(await empreinteMdp(b.nouveau), u.email),
     env.DB.prepare("DELETE FROM sessions WHERE email = ? AND jeton <> ?").bind(u.email, u.jeton),
   ]);
+  await oublierMdpTemporaire(env, u.email);
   return json({ ok: true });
 }
 async function poserCode(env, email) {
@@ -367,11 +372,13 @@ async function apiComptes(req, env, u) {
   if (roleCible === "admin" && u.niveau < 3) return erreur("refuse", "Seul le propriétaire modifie un administrateur.", 403);
   if (b.supprimer) {
     await env.DB.batch([env.DB.prepare("DELETE FROM comptes WHERE email = ?").bind(email), env.DB.prepare("DELETE FROM sessions WHERE email = ?").bind(email)]);
+    await oublierMdpTemporaire(env, email);
     return json({ ok: true });
   }
   if (b.reinitialiser) {
     if (!cible) return erreur("invalid_argument", "Compte introuvable.");
     await env.DB.batch([env.DB.prepare("UPDATE comptes SET mdp = NULL WHERE email = ?").bind(email), env.DB.prepare("DELETE FROM sessions WHERE email = ?").bind(email)]);
+    await oublierMdpTemporaire(env, email);
     return json({ ok: true, code: await poserCode(env, email) });
   }
   if (b.membreId !== undefined) {
@@ -1694,6 +1701,8 @@ async function traiter(req, env, ctx) {
         "/contact": "/vitrine/rejoindre.html",
         "/temoignages": "/vitrine/temoignages.html",
         "/squads": "/vitrine/squads.html",
+  "/mot-de-passe": "/vitrine/mot-de-passe.html",
+  "/comptes-membres": "/vitrine/comptes-membres.html",
         "/empreinte": "/vitrine/empreinte.html",
         "/soldiers-voice": "/vitrine/soldiers-voice.html",
         "/soldiers-award": "/vitrine/soldiers-award.html",
@@ -1912,7 +1921,7 @@ async function traiter(req, env, ctx) {
       }
       if (p === "/api/os-v31") return await apiSdeOs31(req, env, u);
       if (p === "/api/tableau-de-bord") return apiTableauDeBord(req, env, u);
-      if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
+      if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", mdpTemporaire: u.connecte ? !!(await mdpTemporaire(env, u.email)) : false, ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
       if (p === "/api/inscription" && req.method === "POST") return apiInscription(req, env, ctx);
       if (p === "/api/connexion" && req.method === "POST") return apiConnexionMdp(req, env);
       if (p === "/api/activation" && req.method === "POST") return apiActivation(req, env);
@@ -1942,6 +1951,11 @@ async function traiter(req, env, ctx) {
       if (p === "/api/deconnexion" && req.method === "POST") {
         if (u.jeton) await env.DB.prepare("DELETE FROM sessions WHERE jeton = ?").bind(u.jeton).run();
         return json({ ok: true }, 200, { "set-cookie": "sde_s=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0" });
+      }
+      if (p === "/api/comptes/membres") {
+        const reponse = await comptesMembresApi(req, env, u, { normEmail, EMAIL_OK, idDeEmail, nouveauMatricule, empreinteMdp, ecrireDoc, proprietaires: () => proprietaires(env) });
+        if (reponse.ok && req.method === "POST") await portalAudit(env, u, "comptes", "creation-membres");
+        return reponse;
       }
       if (p === "/api/comptes") {
         const reponse=await apiComptes(req,env,u);
