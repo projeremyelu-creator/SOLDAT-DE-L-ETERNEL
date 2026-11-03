@@ -1,0 +1,7 @@
+.access-empreinte{display:grid;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(237,208,137,.35)}
+.access-empreinte-bouton{min-height:48px;padding:12px 16px;border-radius:12px;border:1.5px solid #edd089;background:transparent;color:#edd089;font:inherit;font-weight:800;cursor:pointer}
+.access-empreinte-bouton:hover,.access-empreinte-bouton:focus-visible{background:#edd089;color:#1a1530}
+.access-empreinte-bouton:disabled{opacity:.6;cursor:wait}
+.access-empreinte small{color:inherit;opacity:.85}
+:root[data-theme="light"] .access-empreinte-bouton{border-color:#85650f;color:#6b4f0a}
+:root[data-theme="light"] .access-empreinte-bouton:hover,:root[data-theme="light"] .access-empreinte-bouton:focus-visible{background:#6b4f0a;color:#fff}

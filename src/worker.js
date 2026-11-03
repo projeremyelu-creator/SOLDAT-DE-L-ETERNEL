@@ -6,6 +6,8 @@ import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {memberAcademySummary} from "./member-academy-summary.js";
 import {prayerWallApi} from "./prayer-wall.js";
+import {squadChatApi} from "./squad-chat.js";
+import {passkeysApi} from "./passkeys.js";
 import {sdeExpansionApi} from "./sde-expansion.js";
 import {financesPubliques} from "./sde-financements.js";
 import {apiSdeOs31,SDE_OS_31} from "./os-v31.js";
@@ -1691,6 +1693,8 @@ async function traiter(req, env, ctx) {
         "/priere": "/vitrine/prieres.html",
         "/contact": "/vitrine/rejoindre.html",
         "/temoignages": "/vitrine/temoignages.html",
+        "/squads": "/vitrine/squads.html",
+        "/empreinte": "/vitrine/empreinte.html",
         "/soldiers-voice": "/vitrine/soldiers-voice.html",
         "/soldiers-award": "/vitrine/soldiers-award.html",
         "/pole-reveil": "/vitrine/pole-reveil.html",
@@ -1891,6 +1895,10 @@ async function traiter(req, env, ctx) {
       const qr=await memberQrApi(req,env,u);if(qr)return qr;
       const mur=await prayerWallApi(req,env,u,ctx,{blocked:(key,max)=>bloque(env,key,max),count:key=>compter(env,key)});
       if(mur)return mur;
+      const squads=await squadChatApi(req,env,u,{blocked:(key,max)=>bloque(env,key,max),count:key=>compter(env,key)});
+      if(squads)return squads;
+      const passkeys=await passkeysApi(req,env,u,{blocked:(key,max)=>bloque(env,key,max),count:key=>compter(env,key),ip:ipDe,ouvrirSession:email=>ouvrirSession(env,email)});
+      if(passkeys)return passkeys;
       const portail=await portalApi(req,env,u,{
         list:path=>lireRequete(env,{path}),write:(op,path,data)=>ecrireDoc(env,op,path,data),
         notify:(type,details)=>notifySde(env,ctx,type,details),

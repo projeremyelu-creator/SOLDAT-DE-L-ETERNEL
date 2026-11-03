@@ -17,6 +17,7 @@ const ADMIN=[
  {group:'Programmes',module:'rendezvous',title:'Agenda et inscriptions',desc:'Calendrier, événements et confirmations.',icon:'mission'},
  {group:'Programmes',module:'agenda',title:'Gestion des rassemblements',desc:'Programmation, convocations et émargements.',icon:'mission'},
  {group:'Communication',module:'portevoix',title:'Communications',desc:'Annonces, notifications et messages officiels.',icon:'communication'},
+ {group:'Communication',module:'squads',href:'/squads',title:'Squads',desc:'Créer les Squads, en gérer les membres et modérer.',icon:'members'},
  {group:'Communication',module:'mediatheque',title:'Médiathèque',desc:'Photos IN FIRE, vidéos et ressources multimédia.',icon:'academy'},
  {group:'Communication',module:'site-public',title:'Publications du site',desc:'Actualiser le site et mettre la TPA en valeur.',icon:'mission',min:2},
  {group:'Finances',module:'finance-direction',title:'Rapports financiers',desc:'Entrées, dépenses et budgets des missions.',icon:'money',min:2},
@@ -28,6 +29,7 @@ const MEMBER=[
  {group:'Mon parcours',module:'espace-soldat',title:'Mon tableau de bord',desc:'Mes prochaines étapes et ma carte de membre.',icon:'home'},
  {group:'Mon parcours',module:'espace',title:'Mon profil et mes informations',desc:'Modifier les coordonnées et consulter ma fiche.',icon:'members'},
  {group:'Mon parcours',module:'carteqr',title:'Ma carte QR',desc:'Carte sécurisée à présenter aux responsables.',icon:'qr'},
+ {group:'Mon parcours',module:'empreinte',href:'/empreinte',title:'Empreinte et Face ID',desc:'Se connecter et confirmer mon identité en un geste.',icon:'settings'},
  {group:'Mon parcours',module:'contributions',title:'Mes cotisations',desc:'Historique individuel et situation enregistrée.',icon:'money'},
  {group:'Formation',module:'academie',title:'Mes formations',desc:'Modules et progression Soldiers Academy.',icon:'academy'},
  {group:'Formation',module:'parcours',title:'Lecture et prière',desc:'Cheminement spirituel hebdomadaire personnel.',icon:'academy'},
@@ -35,6 +37,7 @@ const MEMBER=[
  {group:'Vie communautaire',module:'rendezvous',title:'Agenda et inscriptions',desc:'Événements et confirmation de ma participation.',icon:'mission'},
  {group:'Vie communautaire',module:'priere',title:'Mes intentions de prière',desc:'Déposer et retrouver mes demandes personnelles.',icon:'communication'},
  {group:'Vie communautaire',module:'mur',title:'Mur de prière',desc:'Prier ensemble et soutenir la communauté.',icon:'communication'},
+ {group:'Vie communautaire',module:'squads',href:'/squads',title:'Mes Squads',desc:'Échanger avec les soldats de ma Squad.',icon:'members'},
  {group:'Vie communautaire',module:'engagements',title:'Mes missions et engagements',desc:'Actions, tâches et responsabilités confiées.',icon:'mission'},
  {group:'Vie communautaire',module:'mediatheque',title:'Médiathèque du mouvement',desc:'Albums, vidéos, audios et témoignages.',icon:'academy'},
  {group:'Vie communautaire',module:'preferences',title:'Notifications et rappels',desc:'Gérer les préférences de notification.',icon:'bell'}
@@ -126,7 +129,7 @@ export function BusinessMosaic({portal,direction}){
   </div>
   <div className="sde-mosaic-filters" role="group" aria-label="Catégories des modules">{groups.map(g=><button key={g} type="button" onClick={()=>setGroup(g)} aria-pressed={group===g}>{g}</button>)}</div>
   <div className="sde-mosaic-grid">
-   {rows.map((r,i)=><button className="sde-mosaic-module" key={r.module} type="button" onClick={()=>go(r.module)} aria-label={'Ouvrir '+r.title}>
+   {rows.map((r,i)=><button className="sde-mosaic-module" key={r.module} type="button" onClick={()=>r.href?location.assign(r.href):go(r.module)} aria-label={'Ouvrir '+r.title}>
      <span className="sde-mosaic-icon"><RefIcon name={r.icon}/></span>
      <span className="sde-mosaic-category">{r.group}</span>
      <strong>{r.title}</strong><span className="sde-mosaic-description">{r.desc}</span>

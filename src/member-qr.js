@@ -1,4 +1,5 @@
 /* QR de présence : signature serveur, session obligatoire, scan réservé aux responsables. */
+import {preuveValide} from './passkeys.js';
 const reply=(d,status=200)=>Response.json(d,{status,headers:{'cache-control':'private, no-store'}});
 const fail=(message,status=400)=>reply({ok:false,message},status);
 const enc=new TextEncoder();
@@ -24,9 +25,11 @@ export async function memberQrApi(req,env,u){
  if(path==='/api/ma-carte-qr'){
   if(req.method!=='GET')return fail('GET uniquement.',405);
   const m=await member(env,u.id,u.membreId);if(!m)return fail('Aucune fiche membre active reliée à ce compte.',404);
-  const expire=Date.now()+7*86400000,payload=b64(enc.encode(JSON.stringify({c:u.id,m:u.membreId,x:expire}))),k=await key(env,true);
+  /* Avec une preuve d'empreinte récente, le QR vaut 10 minutes et porte la mention « identité confirmée ». */
+  const confirmee=await preuveValide(env,u.id,new URL(req.url).searchParams.get('preuve'));
+  const expire=Date.now()+(confirmee?10*60000:7*86400000),payload=b64(enc.encode(JSON.stringify(confirmee?{c:u.id,m:u.membreId,x:expire,b:1}:{c:u.id,m:u.membreId,x:expire}))),k=await key(env,true);
   const signature=b64(await crypto.subtle.sign('HMAC',k,enc.encode(payload)));
-  return reply({code:'SDE1.'+payload+'.'+signature,expire,nom:[m.prenoms,m.nom].filter(Boolean).join(' ')||u.nom,matricule:m.matricule||u.matricule||''});
+  return reply({code:'SDE1.'+payload+'.'+signature,expire,identiteConfirmee:confirmee,nom:[m.prenoms,m.nom].filter(Boolean).join(' ')||u.nom,matricule:m.matricule||u.matricule||''});
  }
  if(u.niveau<1)return fail('Pointage réservé aux responsables.',403);
  await ensure(env);
@@ -56,5 +59,5 @@ export async function memberQrApi(req,env,u){
   env.DB.prepare('INSERT INTO pointages_qr(id,evenement,membre,acteur,cree) SELECT ?,?,?,?,? WHERE changes()>0').bind(crypto.randomUUID(),b.evenement,claim.m,u.id,now),
   env.DB.prepare("INSERT INTO revs(parent,rev) VALUES('evenements',1) ON CONFLICT(parent) DO UPDATE SET rev=rev+1")
  ]);
- return reply({ok:true,deja:!result[0]?.meta?.changes,nom:[m.prenoms,m.nom].filter(Boolean).join(' ')||'Membre',rencontre:String(e.titre||'Rencontre').slice(0,140)});
+ return reply({ok:true,deja:!result[0]?.meta?.changes,identiteConfirmee:claim.b===1,nom:[m.prenoms,m.nom].filter(Boolean).join(' ')||'Membre',rencontre:String(e.titre||'Rencontre').slice(0,140)});
 }
