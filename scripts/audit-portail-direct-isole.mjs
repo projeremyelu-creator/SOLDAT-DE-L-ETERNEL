@@ -8,17 +8,19 @@ mkdirSync(out,{recursive:true});
 const domain='https://mouvement-sde.org';
 const modes=[
  {mode:'administration',niveau:2},
+ {mode:'administration',niveau:1},
  {mode:'mon-espace',niveau:0}
 ];
 const widths=[320,390,768,1280];
 const report={type:'coque-reelle-js-css-session-simulee',checks:[],issues:[]};
 const icons='<span class="ico" aria-hidden="true">◇</span>';
-const keys=['accueil','synthese','membres','chambre','agenda','academie','arsenal','espace','finances','scanner','mur','preferences','portevoix'];
+const keys=['accueil','synthese','membres','garnisons','chambre','agenda','academie','arsenal','espace','finances','scanner','mur','preferences','portevoix'];
 const fixture=`<!doctype html><html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="stylesheet" href="/vitrine/portail-direct.css">
 <link rel="stylesheet" href="/vitrine/sde-mobile-correctifs-20261103.css">
-<link rel="stylesheet" href="/vitrine/sde-poste-commandement-v2.css"></head>
+<link rel="stylesheet" href="/vitrine/sde-poste-commandement-v2.css">
+<link rel="stylesheet" href="/vitrine/sde-command-v4.css"></head>
 <body><header class="hdr"><button id="btn-reglages">Réglages</button><button id="btn-compte">Mon compte</button></header>
 <div class="shell"><nav class="nav" id="nav" aria-label="Sections"> ${keys.map((k,i)=>`<button class="nav-btn ${i===0?'on':''}" data-vue="${k}" ${i===0?'aria-current="page"':''} type="button">${k}</button>`).join('')}</nav>
 <main id="main" class="main" tabindex="-1"><div class="view">
@@ -27,13 +29,14 @@ const fixture=`<!doctype html><html lang="fr"><head>
 <article class="stat"><div class="stat-l">${icons}Membres</div><strong class="stat-v">33</strong></article>
 <article class="stat"><div class="stat-l">${icons}Programmes</div><strong class="stat-v">1</strong></article>
 </div></div></main></div>
-<script defer src="/vitrine/portail-direct.js"></script></body></html>`;
+<script defer src="/vitrine/portail-direct.js"></script>
+<script defer src="/vitrine/sde-command-v4.js"></script></body></html>`;
 const mime={'.css':'text/css','.js':'application/javascript','.png':'image/png','.html':'text/html'};
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
 try{
  for(const mode of modes){
   for(const width of widths){
-   const label=mode.mode+'-'+width,context=await browser.newContext({
+   const label=mode.mode+'-role'+mode.niveau+'-'+width,context=await browser.newContext({
     viewport:{width,height:width===1280?900:width===768?1024:844},
     isMobile:width<761,hasTouch:width<761,locale:'fr-CI',reducedMotion:'reduce'});
    await context.route('**/*',async route=>{
@@ -74,13 +77,21 @@ try{
        menuAvailable:!!menu&&getComputedStyle(menu).display!=='none',
        navAccessible:!!document.querySelector('#sde-direct-top .sde-direct-head-links'),
        adminLinkHidden:!!document.querySelector('.sde-direct-admin-link')?.hidden,
-       adminTabs:document.querySelectorAll('#sde-direct-tabs button[data-module="membres"]').length};
+       adminTabs:document.querySelectorAll('#sde-direct-tabs button[data-module="membres"]').length,
+       commandCount:document.querySelectorAll('#sde-command-v4 .sde-command-v4-item').length,
+       commandFinances:!!document.querySelector('#sde-command-v4 [data-module="finances"]'),
+       mobileBottomCount:document.querySelectorAll('.sde-command-v4-bottom [data-module]').length};
     });
     if(response.status()!==200)throw Error('HTTP');
     if(status.docWidth>width+3||status.bodyWidth>width+3)throw Error('Débordement horizontal '+JSON.stringify(status));
     if(status.headIntersections)throw Error('Chevauchement en-tête '+JSON.stringify(status));
     if(!status.navAccessible)throw Error('Navigation privée absente');
-    if(mode.niveau===0&&(!status.adminLinkHidden||status.adminTabs!==0))throw Error('Rôles non respectés');
+    if(mode.niveau===0&&(!status.adminLinkHidden||status.adminTabs!==0||status.commandCount!==0||status.mobileBottomCount!==0))throw Error('Rôles membre non respectés');
+    if(mode.niveau>=1){
+     if(status.commandCount<5)throw Error('Modules rapides administrateur indisponibles');
+     if(status.commandFinances!==(mode.niveau>=2))throw Error('Visibilité finances non conforme');
+     if(status.mobileBottomCount!==5)throw Error('Navigation SDE 5 onglets incomplète');
+    }
     if(width<=760){
      if(!status.menuAvailable)throw Error('Menu Rubriques indisponible');
      const menu=page.locator('#sde-direct-menu-toggle');
@@ -91,6 +102,15 @@ try{
      if(await menu.getAttribute('aria-expanded')!=='false')throw Error('Rubriques ne se referment pas');
      const focus=await page.evaluate(()=>document.activeElement?.id);
      if(focus!=='main')throw Error('Le focus ne suit pas la navigation ('+focus+')');
+     if(mode.niveau>=1){
+      const nav=page.locator('.sde-command-v4-bottom');
+      await nav.locator('[data-module="membres"]').click();
+      if(new URL(page.url()).searchParams.get('module')!=='membres')
+       throw Error('Raccourci membres inopérant');
+      await nav.locator('[data-module="plus"]').click();
+      if(await menu.getAttribute('aria-expanded')!=='true')throw Error('Onglet Plus inopérant');
+      await menu.click();
+     }
     }
     if(errors.length)throw Error('Erreurs script : '+errors.join('; '));
     await page.screenshot({path:out+'/'+label+'.png',animations:'disabled'});
