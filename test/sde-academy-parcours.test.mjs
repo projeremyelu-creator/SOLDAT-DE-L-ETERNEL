@@ -19,7 +19,7 @@ test("24 cours et 192 heures : contenu complet sans corrigés",()=>{
   }
 });
 class FakeDB {
- constructor(){this.subs=new Map();this.att=new Map();this.certs=new Map();}
+ constructor(){this.subs=new Map();this.att=new Map();this.certs=new Map();this.autorisations=new Set(CATALOGUE.courses.map(c=>c.id));}
  prepare(sql){
   const d=this;
   return {values:[],bind(...v){this.values=v;return this},
@@ -35,11 +35,13 @@ class FakeDB {
       const v=this.values;
       if(sql.startsWith("SELECT id FROM academy_2027_submissions"))return [...d.subs.values()].find(s=>s.compte===v[0]&&s.cours===v[1]&&s.type===v[2]&&s.statut==="en_attente")||null;
       if(sql.startsWith("SELECT id,compte,statut FROM academy_2027_submissions"))return d.subs.get(v[0])||null;
+      if(sql.startsWith("SELECT statut FROM academy_2027_acces"))return v[0]==="student-2027"&&d.autorisations.has(v[1])?{statut:"approuve"}:null;
       return null;
     },
     async all(){
       const v=this.values;
       if(sql.startsWith("SELECT id,cours,type,statut,score,commentaire,date_soumission"))return {results:[...d.subs.values()].filter(s=>s.compte===v[0])};
+      if(sql.startsWith("SELECT cours,statut,demande_le,decision_le,commentaire FROM academy_2027_acces"))return {results:v[0]==="student-2027"?[...d.autorisations].map(cours=>({cours,statut:"approuve",demande_le:1,decision_le:1,commentaire:""})):[]};
       if(sql.startsWith("SELECT cours,presence,participation"))return {results:[...d.att.values()].filter(s=>s.compte===v[0])};
       if(sql.startsWith("SELECT niveau,code,delivree_le"))return {results:[...d.certs.values()].filter(s=>s.compte===v[0])};
       if(sql.startsWith("SELECT a.id,a.compte"))return {results:[...d.subs.values()].filter(s=>s.statut==="en_attente").map(s=>({...s,nom:s.compte}))};
