@@ -114,3 +114,12 @@ test('/api/impact : totaux calculés sur de vraies fiches, doublons de pays fusi
  assert.deepEqual({...body,majLe:undefined},{ok:true,membresActifs:2,pays:2,formations:1,missionsEnCours:1,rendezVousAVenir:1,majLe:undefined});
  assert.ok(!JSON.stringify(body).match(/Secret|a@b\.c/));
 });
+
+
+test('Stabilité du titre premium à 1100 et 1280 px avant chargement de la police',()=>{
+ const css=lire('public/vitrine/sde-accueil-premium.css');
+ assert.ok(css.includes('@media(min-width:1000px)'));
+ assert.match(css,/\.ap-hero \.ap-hero-copy h1\s*\{\s*min-height:3\.15em;/);
+ assert.ok(html.includes('class="ap-hero-copy"'));
+ assert.ok(html.includes('id="titre-accueil"'));
+});
