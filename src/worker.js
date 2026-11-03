@@ -1895,7 +1895,7 @@ async function traiter(req, env, ctx) {
       const qr=await memberQrApi(req,env,u);if(qr)return qr;
       const mur=await prayerWallApi(req,env,u,ctx,{blocked:(key,max)=>bloque(env,key,max),count:key=>compter(env,key)});
       if(mur)return mur;
-      const squads=await squadChatApi(req,env,u,{blocked:(key,max)=>bloque(env,key,max),count:key=>compter(env,key)});
+      const squads=await squadChatApi(req,env,u,{blocked:(key,max)=>bloque(env,key,max),count:key=>compter(env,key),apres:tache=>typeof ctx?.waitUntil==='function'?ctx.waitUntil(tache):tache});
       if(squads)return squads;
       const passkeys=await passkeysApi(req,env,u,{blocked:(key,max)=>bloque(env,key,max),count:key=>compter(env,key),ip:ipDe,ouvrirSession:email=>ouvrirSession(env,email)});
       if(passkeys)return passkeys;
