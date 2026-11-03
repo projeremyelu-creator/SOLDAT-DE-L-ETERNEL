@@ -11,7 +11,7 @@ const aller=(chemin)=>new Response(null,{status:303,headers:{location:BASE+chemi
 const fail=(message,status=400)=>json({ok:false,message},status);
 export const THEMES=['hebdo','nouveau','agenda'];
 export const ABONNEMENTS=[...THEMES,'academy'];
-export const ECOLES={1:'Fondations',2:'Maturité',3:'Service et Leadership',4:'Mission et Influence'};
+export const ECOLES={1:'Fondations',2:'Équipement',3:'Commandement'};
 export const LIBELLES={hebdo:'Lettre hebdomadaire',nouveau:'Nouveaux cultes et rassemblements',agenda:'Alertes d’agenda (3 jours et la veille)'};
 export const LIBELLE_ACADEMY='Résumés de cours Soldiers Academy';
 const EMAIL_OK=/^[^@\s]{1,64}@[^@\s]{1,190}\.[^@\s]{2,24}$/;
@@ -266,7 +266,7 @@ export async function courrielApi(req,env,u,s){
    let lien=String(b.resume.lien||'').trim();
    if(titre.length<3)return fail('Donnez un titre au résumé.');
    if(texte.length<30)return fail('Le résumé est trop court (30 caractères au moins).');
-   if(ecole&&!ECOLES[ecole])return fail('École inconnue.');
+   if(ecole&&!ECOLES[ecole])return fail('Niveau inconnu.');
    if(lien){try{const l=new URL(lien);if(l.protocol!=='https:')throw 0;lien=l.href.slice(0,500)}catch{return fail('Le lien de la fiche doit être une adresse https valide.')}}
    const id=crypto.randomUUID();
    await env.DB.prepare('INSERT INTO sde_resumes(id,ecole,titre,texte,lien,cree) VALUES(?,?,?,?,?,?)').bind(id,ecole,titre,texte,lien,Date.now()).run();
@@ -283,7 +283,7 @@ export async function courrielApi(req,env,u,s){
    const cle='resume:'+res.id;
    if(!await reserver(env,cle))return fail('Ce résumé a déjà été envoyé.',409);
    const paragraphes=String(res.texte).split(/\n{2,}/).map(x=>propre(x,1200)).filter(Boolean).slice(0,12);
-   const r=await diffuser(env,[cle],'academy','Soldiers Academy · '+res.titre,{titre:res.titre,intro:ECOLES[res.ecole]?'Soldiers Academy · École '+res.ecole+' — '+ECOLES[res.ecole]:'Soldiers Academy',blocs:[{titre:'Résumé du cours',lignes:paragraphes.map(p=>({p}))}],bouton:res.lien?{libelle:'Télécharger la fiche',url:res.lien}:null},opts);
+   const r=await diffuser(env,[cle],'academy','Soldiers Academy · '+res.titre,{titre:res.titre,intro:ECOLES[res.ecole]?'Soldiers Academy · Niveau '+res.ecole+' — '+ECOLES[res.ecole]:'Soldiers Academy',blocs:[{titre:'Résumé du cours',lignes:paragraphes.map(p=>({p}))}],bouton:res.lien?{libelle:'Télécharger la fiche',url:res.lien}:null},opts);
    if(r.sent>0)await env.DB.prepare('UPDATE sde_resumes SET envoye=?,total=? WHERE id=?').bind(Date.now(),r.sent,res.id).run();
    else return fail(r.total===0?'Aucun abonné confirmé n’a choisi les résumés de cours.':'Resend a refusé l’envoi : réessayez après vérification de la configuration.',r.total===0?409:502);
    return json({ok:true,envoyes:r.sent});

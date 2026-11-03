@@ -108,6 +108,6 @@ test('SQLite : auteur refusé, cosignature distincte et décision immuable',asyn
 });
 test('SQLite : intérêt Academy idempotent sans admission',async t=>{
  const env=database(t);for(let i=0;i<2;i++)await call(env,member,'inscription_ecole',{ecole:2});
- assert.equal(env.sql.prepare('SELECT COUNT(*) n FROM osv31_academy').get().n,1);
- assert.equal(env.sql.prepare('SELECT statut FROM osv31_academy').get().statut,'interet');
+ assert.equal(env.sql.prepare('SELECT COUNT(*) n FROM osv31_ecoles').get().n,1);
+ assert.equal(env.sql.prepare('SELECT statut FROM osv31_ecoles').get().statut,'interet');
 });

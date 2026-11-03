@@ -22,10 +22,11 @@ export const SDE_OS_31={
   {n:5,nom:"Formation & Développement Intégral",mandat:"Former le Soldat et développer ses capacités spirituelles, humaines, professionnelles et économiques."}
  ],
  ecoles:[
-  {n:1,nom:"Fondations",contenu:"Identité en Christ, Bible, prière, vie de foi, caractère et culture SDE."},
-  {n:2,nom:"Maturité",contenu:"Relations, communication, discipline, émotions, famille, temps, argent."},
-  {n:3,nom:"Service et Leadership",contenu:"Service, éthique, équipe, organisation, protocole, projets, redevabilité."},
-  {n:4,nom:"Mission et Influence",contenu:"Évangélisation, mission, implantation, entrepreneuriat et influence responsable."}
+  {n:1,nom:"Réveil et évangélisation",contenu:"Annonce, dialogue, discipulat et organisation de mission locale (pôle 1)."},
+  {n:2,nom:"Impact social et humanitaire",contenu:"Écoute des besoins, action sociale, protection des personnes et redevabilité (pôle 2)."},
+  {n:3,nom:"Logistique et organisation",contenu:"Préparation, sécurité, protocole, matériel et excellence de service (pôle 3)."},
+  {n:4,nom:"Communication, médias, relations extérieures",contenu:"Message, production, éthique de l'image et relations extérieures (pôle 4)."},
+  {n:5,nom:"Formation, développement et entrepreneuriat",contenu:"Pédagogie, développement intégral et entrepreneuriat responsable (pôle 5)."}
  ]
 };
 const CT="application/json; charset=utf-8";
@@ -39,7 +40,7 @@ const scoreMap=(raw,n)=>{
 };
 const TABLES=[
  "CREATE TABLE IF NOT EXISTS osv31_checkins (user_id TEXT NOT NULL,month TEXT NOT NULL,updated_ms INTEGER NOT NULL,dimensions TEXT NOT NULL,bien_etre TEXT NOT NULL,fractures TEXT NOT NULL,prejuges INTEGER NOT NULL,PRIMARY KEY(user_id,month))",
- "CREATE TABLE IF NOT EXISTS osv31_academy (user_id TEXT NOT NULL,ecole INTEGER NOT NULL,statut TEXT NOT NULL,updated_ms INTEGER NOT NULL,PRIMARY KEY(user_id,ecole))",
+ "CREATE TABLE IF NOT EXISTS osv31_ecoles (user_id TEXT NOT NULL,ecole INTEGER NOT NULL,statut TEXT NOT NULL,updated_ms INTEGER NOT NULL,PRIMARY KEY(user_id,ecole))",
  "CREATE TABLE IF NOT EXISTS osv31_decisions (id INTEGER PRIMARY KEY AUTOINCREMENT,cree_ms INTEGER NOT NULL,propose_par TEXT NOT NULL,review_par TEXT,review_ms INTEGER,type TEXT NOT NULL,titre TEXT NOT NULL,details TEXT NOT NULL,statut TEXT NOT NULL DEFAULT 'en_attente')"
 ];
 async function init(env){for(const sql of TABLES)await env.DB.prepare(sql).run();}
@@ -74,7 +75,7 @@ export function resumerCellules(garnisons,membres){
 async function pilotage(env){
  const [formations,garnisons,membres]=await Promise.all([lire(env,"formations"),lire(env,"garnisons"),lire(env,"membres")]);
  const interet=[];
- try{const r=await env.DB.prepare("SELECT ecole,COUNT(*) AS n FROM osv31_academy GROUP BY ecole ORDER BY ecole").all();for(const x of r.results||[])interet.push({ecole:Number(x.ecole),n:Number(x.n)})}catch{}
+ try{const r=await env.DB.prepare("SELECT ecole,COUNT(*) AS n FROM osv31_ecoles GROUP BY ecole ORDER BY ecole").all();for(const x of r.results||[])interet.push({ecole:Number(x.ecole),n:Number(x.n)})}catch{}
  let preinscriptions={};
  try{const r=await env.DB.prepare("SELECT statut,COUNT(*) AS n FROM preinscriptions_academy GROUP BY statut").all();for(const x of r.results||[])preinscriptions[safe(x.statut,30)||"nouvelle"]=Number(x.n)}catch{}
  return{formations:resumerFormations(formations),cellules:resumerCellules(garnisons,membres),interetEcoles:interet,preinscriptions};
@@ -95,7 +96,7 @@ export async function apiSdeOs31(req,env,u){
  if(action==="tableau"){
   const [a,e,d]=await Promise.all([
    env.DB.prepare("SELECT COUNT(*) AS n FROM osv31_checkins WHERE user_id=?").bind(u.id).first(),
-   env.DB.prepare("SELECT ecole,statut FROM osv31_academy WHERE user_id=? ORDER BY ecole").bind(u.id).all(),
+   env.DB.prepare("SELECT ecole,statut FROM osv31_ecoles WHERE user_id=? ORDER BY ecole").bind(u.id).all(),
    roleAdmin(u)?env.DB.prepare("SELECT COUNT(*) AS n FROM osv31_decisions WHERE statut='en_attente'").first():Promise.resolve({n:0})
   ]);
   return reply({ok:true,mesBilans:Number(a?.n||0),mesEcoles:e.results||[],decisionsEnAttente:Number(d?.n||0),referentiel:SDE_OS_31,admin:roleAdmin(u),role:u.role,profil:{nom:u.nom||"",matricule:u.matricule||""}});
@@ -119,8 +120,8 @@ export async function apiSdeOs31(req,env,u){
  }
  if(action==="inscription_ecole"){
   const ecole=Number(b.ecole);
-  if(!Number.isInteger(ecole)||ecole<1||ecole>4)return err("École non reconnue");
-  await env.DB.prepare("INSERT INTO osv31_academy (user_id,ecole,statut,updated_ms) VALUES (?,?,'interet',?) ON CONFLICT(user_id,ecole) DO UPDATE SET statut='interet',updated_ms=excluded.updated_ms")
+  if(!Number.isInteger(ecole)||ecole<1||ecole>5)return err("École non reconnue");
+  await env.DB.prepare("INSERT INTO osv31_ecoles (user_id,ecole,statut,updated_ms) VALUES (?,?,'interet',?) ON CONFLICT(user_id,ecole) DO UPDATE SET statut='interet',updated_ms=excluded.updated_ms")
    .bind(u.id,ecole,Date.now()).run();
   return reply({ok:true,message:"Votre intérêt a été enregistré ; ce n'est pas une certification."});
  }

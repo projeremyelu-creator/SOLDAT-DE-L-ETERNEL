@@ -11,7 +11,7 @@ export const POLES=[
  "Logistique & Organisation","Communication, Médias & Digital",
  "Formation & Développement Intégral"
 ];
-export const ECOLES=["Fondations","Maturité","Service & Leadership","Mission & Influence"];
+export const ECOLES=["Réveil et évangélisation","Impact social et humanitaire","Logistique et organisation","Communication, médias, relations extérieures","Formation, développement et entrepreneuriat"];
 const json=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-content-type-options":"nosniff"}});
 const err=(code,message,status=400)=>json({ok:false,code,message},status);
 const now=()=>Date.now();
@@ -34,7 +34,7 @@ async function ensure(env){
   "CREATE TABLE IF NOT EXISTS os_evaluations (id TEXT PRIMARY KEY, compte TEXT NOT NULL, cree INTEGER NOT NULL, donnees TEXT NOT NULL)",
   "CREATE INDEX IF NOT EXISTS os_eval_compte ON os_evaluations(compte,cree DESC)",
   "CREATE TABLE IF NOT EXISTS os_barometre (compte TEXT NOT NULL, periode TEXT NOT NULL, cree INTEGER NOT NULL, donnees TEXT NOT NULL, PRIMARY KEY(compte,periode))",
-  "CREATE TABLE IF NOT EXISTS os_parcours (compte TEXT NOT NULL, ecole INTEGER NOT NULL, statut TEXT NOT NULL, maj INTEGER NOT NULL, PRIMARY KEY(compte,ecole))",
+  "CREATE TABLE IF NOT EXISTS os_ecoles (compte TEXT NOT NULL, ecole INTEGER NOT NULL, statut TEXT NOT NULL, maj INTEGER NOT NULL, PRIMARY KEY(compte,ecole))",
   "CREATE TABLE IF NOT EXISTS os_actions (id TEXT PRIMARY KEY, pole INTEGER NOT NULL, titre TEXT NOT NULL, echeance TEXT, statut TEXT NOT NULL, auteur TEXT NOT NULL, maj INTEGER NOT NULL)",
   "CREATE TABLE IF NOT EXISTS os_validations (id TEXT PRIMARY KEY, objet TEXT NOT NULL, montant INTEGER NOT NULL, pole INTEGER NOT NULL, etat TEXT NOT NULL, demandeur TEXT NOT NULL, autoriseur TEXT, executeur TEXT, controleur TEXT, reference TEXT, cree INTEGER NOT NULL, maj INTEGER NOT NULL)",
   "CREATE TABLE IF NOT EXISTS os_audit (id TEXT PRIMARY KEY, cible TEXT NOT NULL, operation TEXT NOT NULL, acteur TEXT NOT NULL, cree INTEGER NOT NULL)"
@@ -44,7 +44,7 @@ async function ensure(env){
 const parse=(t)=>{try{return JSON.parse(t);}catch{return null;}};
 async function load(env,u){
  const scores=(await get(env,"SELECT id,cree,donnees FROM os_evaluations WHERE compte=? ORDER BY cree DESC LIMIT 24",u.id)).results||[];
- const parcours=(await get(env,"SELECT ecole,statut,maj FROM os_parcours WHERE compte=? ORDER BY ecole",u.id)).results||[];
+ const parcours=(await get(env,"SELECT ecole,statut,maj FROM os_ecoles WHERE compte=? ORDER BY ecole",u.id)).results||[];
  const response={ok:true,version:"3.1",profil:{id:u.id,nom:u.nom||"Membre SDE",role:u.role,niveau:u.niveau},
    dimensions:DIMENSIONS,bienEtre:BIEN_ETRE,fractures:FRACTURES,poles:POLES,ecoles:ECOLES,
    evaluations:scores.map(e=>({id:e.id,date:e.cree,...parse(e.donnees)})),
@@ -114,8 +114,8 @@ async function barometre(req,env,u){
 async function parcours(req,env,u){
  if(req.method!=="POST")return err("methode","Méthode refusée",405);
  const b=await req.json();
- if(!int(b.ecole,1,4)||!["a_decouvrir","en_cours","parcourue"].includes(b.statut))return err("parcours","École ou progression invalide.");
- await run(env,"INSERT INTO os_parcours(compte,ecole,statut,maj) VALUES (?,?,?,?) ON CONFLICT(compte,ecole) DO UPDATE SET statut=excluded.statut,maj=excluded.maj",u.id,b.ecole,b.statut,now());
+ if(!int(b.ecole,1,5)||!["a_decouvrir","en_cours","parcourue"].includes(b.statut))return err("parcours","École ou progression invalide.");
+ await run(env,"INSERT INTO os_ecoles(compte,ecole,statut,maj) VALUES (?,?,?,?) ON CONFLICT(compte,ecole) DO UPDATE SET statut=excluded.statut,maj=excluded.maj",u.id,b.ecole,b.statut,now());
  return json({ok:true,message:"Progression personnelle enregistrée. Ceci ne constitue pas une certification."});
 }
 async function actions(req,env,u,url){

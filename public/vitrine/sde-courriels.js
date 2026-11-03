@@ -32,7 +32,7 @@
   if(!j.resumes.length)rs.append(li("Aucun résumé enregistré."));
   for(const x of j.resumes){
    const e=document.createElement("li"),t=document.createElement("strong");
-   t.textContent=x.titre+(x.ecole?" · école "+x.ecole:"");e.append(t,document.createTextNode(x.envoye?" — envoyé à "+x.total+" abonné(s) le "+new Date(x.envoye).toLocaleDateString("fr-FR"):" — non envoyé "));
+   t.textContent=x.titre+(x.ecole?" · niveau "+x.ecole:"");e.append(t,document.createTextNode(x.envoye?" — envoyé à "+x.total+" abonné(s) le "+new Date(x.envoye).toLocaleDateString("fr-FR"):" — non envoyé "));
    if(!x.envoye){
     const envoyer=document.createElement("button");envoyer.type="button";envoyer.className="hub-btn";envoyer.textContent="Envoyer";
     envoyer.addEventListener("click",async()=>{
