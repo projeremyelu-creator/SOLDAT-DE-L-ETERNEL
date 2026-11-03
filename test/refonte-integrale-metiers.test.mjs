@@ -124,7 +124,8 @@ test('Priorité 01 : accueil sans double affiche TPA, vision et trois actions ma
  assert.match(home,/class="sde-hero-poster"/);
  assert.match(home,/class="iv-band sde-community-band"/);
  assert.match(home,/communion-vignette\.webp/);
- assert.equal((home.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1);
+ const hero=home.slice(home.indexOf('class="sde-hero-poster"'),home.indexOf('class="sde-hero-poster-details"'));
+ assert.equal((hero.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1);
  for(const href of ['/mouvement','/contact#rejoindre','/programmes']){
   const hero=home.slice(home.indexOf('class="m-welcome"'),home.indexOf('class="m-kpis"'));
   assert.ok(hero.includes('href="'+href+'"'),href);
