@@ -64,3 +64,11 @@ test("Refonte Fusion : espace membre et poste de commandement reconstruits sur d
   const css = lire("frontend/reference.css");
   for (const k of [".fu-tile", ".fu-ring", ".fu-donut", ".fu-quick", ".fu-spark", "prefers-reduced-motion:reduce){.fu-tile", "@media(max-width:560px){.fu-tiles{grid-template-columns:repeat(3"]) assert.ok(css.includes(k), k);
 });
+
+test("Refonte Fusion : annuaire, pointages et finances reçoivent des tuiles de synthèse réelles", () => {
+  const ops = lire("frontend/operations.jsx");
+  assert.ok(ops.includes("function Stats("));
+  for (const k of ["Membres actifs", "Certifiés Academy", "Rencontres disponibles", "Pointages récents", "Missions suivies"]) assert.ok(ops.includes(k), k);
+  assert.equal((ops.match(/<Stats /g) || []).length, 2);
+  assert.ok(lire("frontend/reference.css").includes(".fu-stats"));
+});
