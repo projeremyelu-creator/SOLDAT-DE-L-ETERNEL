@@ -291,3 +291,54 @@ body.sde-reference .ops-panel .sde-tactical-member-qr{
  body.sde-reference .ops-panel .sde-tactical{break-inside:avoid;box-shadow:none}
  body.sde-reference .ops-panel .sde-tactical-command-grid{grid-template-columns:repeat(3,1fr)}
 }
+
+
+/* Academy : modules du compte connecté, avec états et progression accessibles. */
+body.sde-reference .ops-panel .sde-tactical-training{
+ display:grid;gap:11px;min-width:0;
+ padding:12px 0 3px;border-top:1px solid rgba(235,196,123,.27);
+}
+body.sde-reference .ops-panel .sde-tactical-training h4{
+ margin:0;color:#ffe4a7!important;
+ font:800 1rem/1.2 "Saira Condensed",system-ui,sans-serif;
+ letter-spacing:.02em;
+}
+body.sde-reference .ops-panel .sde-tactical-training-course{
+ display:grid;gap:7px;min-width:0;
+ padding:11px;border:1px solid rgba(227,192,134,.26);border-radius:11px;
+ background:rgba(255,239,209,.045);
+}
+body.sde-reference .ops-panel .sde-tactical-training-heading{
+ display:flex;gap:8px;align-items:start;justify-content:space-between;
+ flex-wrap:wrap;min-width:0;
+}
+body.sde-reference .ops-panel .sde-tactical-training-heading strong{
+ color:#fff0cc!important;font-weight:850;font-size:.89rem;
+ line-height:1.35;overflow-wrap:anywhere;
+}
+body.sde-reference .ops-panel .sde-tactical-training-heading small{
+ padding:3px 7px;border:1px solid rgba(228,190,113,.35);
+ background:rgba(212,164,92,.11);border-radius:7px;
+ color:#ffdea0!important;font-size:.68rem;
+}
+body.sde-reference .ops-panel .sde-tactical-training-course>small{
+ color:#e5dfde!important;font-size:.74rem;line-height:1.4;
+}
+body.sde-reference .ops-panel .sde-tactical-training-modules{
+ list-style:none;padding:0;margin:1px 0 0;display:grid;gap:5px;
+}
+body.sde-reference .ops-panel .sde-tactical-training-modules li{
+ display:flex;align-items:start;gap:8px;min-width:0;
+ color:#e5dce4!important;font-size:.77rem;line-height:1.35;
+ overflow-wrap:anywhere;
+}
+body.sde-reference .ops-panel .sde-tactical-training-modules li span{
+ flex:0 0 14px;color:#b8b7c3!important;font-weight:800;
+}
+body.sde-reference .ops-panel .sde-tactical-training-modules li.is-complete span{
+ color:#9fe1b6!important;
+}
+@media(max-width:680px){
+ body.sde-reference .ops-panel .sde-tactical-training{gap:10px}
+ body.sde-reference .ops-panel .sde-tactical-training-course{padding:12px 10px}
+}
