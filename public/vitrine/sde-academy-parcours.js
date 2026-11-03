@@ -28,7 +28,7 @@ function embeddedVideo(raw){
  return "";
 }
 function resourceCard(r){
- const labels={lecon:"Leçon écrite",video:"Vidéo",audio:"Audio",document:"Document",exercice:"Exercice",lien:"Lien"};
+ const labels={lecon:"Leçon écrite",cours:"Cours complémentaire",video:"Vidéo",audio:"Audio",document:"Document",exercice:"Exercice",lien:"Lien"};
  const emb=r.kind==="video"&&r.url?embeddedVideo(r.url):"";
  const player=r.kind==="video"?(r.hasFile?'<video controls preload="none" src="'+esc(r.fileUrl)+'"></video>':emb?'<iframe class="video-frame" loading="lazy" src="'+esc(emb)+'" referrerpolicy="strict-origin-when-cross-origin" title="'+esc(r.title)+'" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>':""):(r.kind==="audio"&&r.hasFile?'<audio controls preload="none" src="'+esc(r.fileUrl)+'"></audio>':"");
  return '<article class="resource-card '+(r.seen?"seen":"")+'"><div class="row"><span class="resource-badge">'+esc(labels[r.kind]||"Support")+'</span>'+(r.updatedAt>Date.now()-604800000?'<span class="chip pending">Nouveau</span>':"")+'</div><h3>'+esc(r.title)+'</h3><small>'+esc(r.courseId)+(r.lesson?' · Leçon '+esc(r.lesson):" · Complément")+' · '+esc(r.author)+'</small><p>'+esc(r.description)+'</p>'+player+
