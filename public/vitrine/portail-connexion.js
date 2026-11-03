@@ -19,17 +19,25 @@
   function afficher(nom){
    const selected=tabs.some(x=>x.dataset.mode===nom)?nom:"connexion";
    for(const p of panels)p.hidden=p.id!=="panel-"+selected;
-   for(const t of tabs)t.setAttribute("aria-selected",String(t.dataset.mode===selected));
+   for(const t of tabs){
+    const active=t.dataset.mode===selected;
+    t.setAttribute("aria-selected",String(active));
+    t.tabIndex=active?0:-1;
+   }
    status.textContent=""; status.dataset.state="";
   }
   for(const tab of tabs){tab.addEventListener("click",()=>{afficher(tab.dataset.mode);tab.focus()});tab.addEventListener("keydown",event=>{
-   if(event.key==="ArrowRight"||event.key==="ArrowLeft"){
-     event.preventDefault();const index=tabs.indexOf(tab),next=tabs[(index+(event.key==="ArrowRight"?1:tabs.length-1))%tabs.length];afficher(next.dataset.mode);next.focus();
+   if(["ArrowRight","ArrowLeft","Home","End"].includes(event.key)){
+     event.preventDefault();
+     const index=tabs.indexOf(tab);
+     const next=event.key==="Home"?tabs[0]:event.key==="End"?tabs[tabs.length-1]:
+       tabs[(index+(event.key==="ArrowRight"?1:tabs.length-1))%tabs.length];
+     afficher(next.dataset.mode);next.focus();
    }
   })}
   /* Lien "Mot de passe oublié ?" sous le formulaire de connexion */
   for(const btn of document.querySelectorAll("[data-goto]")){
-   btn.addEventListener("click",()=>{afficher(btn.dataset.goto)});
+   btn.addEventListener("click",()=>{afficher(btn.dataset.goto);tabs.find(t=>t.dataset.mode===btn.dataset.goto)?.focus()});
   }
   async function envoyer(form,endpoint){
    if(!form.reportValidity())return;

@@ -170,6 +170,34 @@ try{
    report.checks.push(row);
    const screenshot=join(out,c.name+'.png');
    await page.screenshot({path:screenshot,fullPage:false,animations:'disabled'});
+   // Portail SDE : valider publiquement les parcours sans aucune connexion ni écriture.
+   if(c.name==='connexion-390'){
+    try{
+     await page.locator('#sde-splash').waitFor({state:'hidden',timeout:8000}).catch(()=>{});
+     const tabs=page.locator('.access-tabs [role="tab"]');
+     if(await tabs.count()!==4)issue(c.name,'les quatre modes du portail sont incomplets',true);
+     else{
+      for(const name of ['connexion','inscription','activation','recuperation']){
+       if(!(await page.locator('#tab-'+name).isVisible()))
+        issue(c.name,'onglet '+name+' inaccessible visuellement',true);
+      }
+      await page.locator('#tab-inscription').click({timeout:4500});
+      if(!(await page.locator('#panel-inscription').isVisible()))
+       issue(c.name,'formulaire inscription non accessible',true);
+      await page.locator('#tab-activation').click({timeout:4500});
+      if(!(await page.locator('#panel-activation').isVisible()))
+       issue(c.name,'activation de compte non accessible',true);
+      await page.locator('#tab-recuperation').click({timeout:4500});
+      if(!(await page.locator('#panel-recuperation').isVisible()))
+       issue(c.name,'récupération de compte non accessible',true);
+      await page.locator('#tab-connexion').click({timeout:4500});
+      if(!(await page.locator('#panel-connexion').isVisible()))
+       issue(c.name,'connexion non accessible après navigation',true);
+      const targets=page.locator('[data-access-target]');
+      if(await targets.count()!==2)issue(c.name,'cibles membre et administration absentes',true);
+     }
+    }catch(e){issue(c.name,'parcours de connexion inaccessible : '+String(e?.message||e).slice(0,140),true)}
+   }
    // Galerie IN FIRE : images, onglets et fermeture au clavier sur téléphone.
    // Les années 2024 et 2026 restent vides tant que le classement n'a pas été confirmé.
    if(c.name==='galerie-infire-390'){
