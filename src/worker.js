@@ -408,6 +408,91 @@ async function apiComptes(req, env, u) {
   return json({ ok: true, nouveau: true, code: await poserCode(env, email) });
 }
 
+/* Préparer les accès des fiches EXISTANTES, sans dupliquer les membres.
+ * Le mot de passe aléatoire n'est jamais stocké en clair. Il est communiqué
+ * une seule fois à l'administrateur dans la réponse no-store.
+ * L'identifiant de connexion est le matricule officiel de la fiche. */
+const matriculeValide = m => typeof m === "string" && /^[a-z0-9][a-z0-9 ._-]{2,39}$/i.test(m);
+async function apiAccesMembres(req, env, u) {
+  if (u.niveau < 2) return erreur("refuse", "Réservé aux administrateurs habilités.", 403);
+  if (!["GET","POST"].includes(req.method)) return erreur("invalid_argument", "Méthode non autorisée.", 405);
+  if (req.method === "GET") {
+    const [repertoire, comptes] = await Promise.all([
+      env.DB.prepare("SELECT id, data FROM docs WHERE parent = 'membres' ORDER BY id").all(),
+      env.DB.prepare("SELECT email, membreId, matricule FROM comptes").all(),
+    ]);
+    const comptesParFiche = new Map((comptes.results || []).filter(c => c.membreId).map(c => [c.membreId, c]));
+    const emails = new Set((comptes.results || []).map(c => normEmail(c.email)));
+    const matricules = new Set((comptes.results || []).map(c => String(c.matricule || "").toUpperCase()).filter(Boolean));
+    const rep = (repertoire.results || []).map(r => {
+      let fiche;
+      try { fiche = JSON.parse(r.data || "{}"); } catch { fiche = {}; }
+      return { id:r.id, fiche };
+    });
+    const occurrences = new Map();
+    for (const {fiche} of rep) {
+      if (!fiche.matricule) continue;
+      const cle = String(fiche.matricule).toUpperCase();
+      occurrences.set(cle, (occurrences.get(cle) || 0) + 1);
+    }
+    return json({ membres:rep.map(({id,fiche}) => {
+      const email = normEmail(fiche.email);
+      const numero = String(fiche.matricule || "");
+      const lie = comptesParFiche.get(id);
+      const etat = lie ? "actif"
+        : fiche.actif === false ? "inactif"
+        : !cheminValide("membres/" + id, true) ? "invalide"
+        : fiche.compteId ? "verifier"
+        : (EMAIL_OK.test(email) && emails.has(email)) ? "relier"
+        : (numero && (!matriculeValide(numero) || occurrences.get(numero.toUpperCase()) > 1 || matricules.has(numero.toUpperCase()))) ? "matricule_conflit"
+        : "a_creer";
+      return { id, nom:propre([fiche.prenoms,fiche.nom].filter(Boolean).join(" ") || fiche.nomComplet || "Membre SDE", 160),
+        matricule:lie?.matricule || numero, etat, compteLie:!!lie };
+    }) });
+  }
+  const b = await req.json().catch(() => ({}));
+  const mid = typeof b.membreId === "string" ? b.membreId.trim() : "";
+  if (!cheminValide("membres/" + mid,true) || mid.length > 120)
+    return erreur("invalid_argument","Identifiant de fiche invalide.");
+  const fiche = await lireDoc(env, "membres/" + mid);
+  if (!fiche) return erreur("introuvable","Fiche membre introuvable.",404);
+  if (fiche.data.actif === false) return erreur("refuse","La fiche est inactive : vérifiez-la avant de créer son accès.",409);
+  if (fiche.data.compteId) return erreur("existe","Cette fiche mentionne déjà un compte : vérifiez son rattachement.",409);
+  if (await env.DB.prepare("SELECT email FROM comptes WHERE membreId = ?").bind(mid).first())
+    return erreur("existe","Cette fiche est déjà liée à un compte.",409);
+  const emailFiche = normEmail(fiche.data.email);
+  const email = EMAIL_OK.test(emailFiche) ? emailFiche : "fiche-" + (await sha("membre:" + mid)).slice(0,30).toLowerCase() + "@membres.sde.invalid";
+  if (proprietaires(env).includes(email)) return erreur("refuse","Ce compte ne peut pas être préparé depuis une fiche membre.",403);
+  if (await env.DB.prepare("SELECT email FROM comptes WHERE email = ?").bind(email).first())
+    return erreur("existe","Un compte utilise déjà cette adresse : reliez-le à la fiche depuis Comptes et accès.",409);
+  let matricule = String(fiche.data.matricule || "").trim();
+  if (matricule && !matriculeValide(matricule))
+    return erreur("invalid_argument","Le matricule existant doit être vérifié avant la création.",409);
+  if (matricule) {
+    const [compte, doublon] = await Promise.all([
+      env.DB.prepare("SELECT email FROM comptes WHERE upper(matricule) = upper(?)").bind(matricule).first(),
+      env.DB.prepare("SELECT id FROM docs WHERE parent = 'membres' AND id <> ? AND upper(json_extract(data, '$.matricule')) = upper(?) LIMIT 1").bind(mid,matricule).first(),
+    ]);
+    if (compte || doublon) return erreur("existe","Matricule déjà utilisé : corrigez d'abord la fiche.",409);
+  } else matricule = await nouveauMatricule(env);
+  const id = await idDeEmail(email), now = Date.now();
+  const nom = propre([fiche.data.prenoms,fiche.data.nom].filter(Boolean).join(" ") || fiche.data.nomComplet || "Membre SDE",160);
+  const motDePasseProvisoire = "SDE-" + jetonAleatoire(18);
+  try {
+    await env.DB.batch([
+      env.DB.prepare("INSERT INTO comptes (email,id,nom,role,cree,derniere,mdp,membreId,matricule) VALUES (?,?,?,'soldat',?,NULL,?,?,?)")
+        .bind(email,id,nom,now,await empreinteMdp(motDePasseProvisoire),mid,matricule),
+      env.DB.prepare("UPDATE docs SET data=json_set(data,'$.compteId',?,'$.matricule',?), version=version+1,maj=? WHERE path=?")
+        .bind(id,matricule,now,"membres/" + mid),
+      bumpRev(env,"membres"),
+      env.DB.prepare("INSERT INTO meta (cle,val) VALUES (?,?)").bind("mdp_provisoire:" + id,"1"),
+    ]);
+  } catch {
+    return erreur("existe","Création impossible : cette fiche ou cet identifiant possède peut-être déjà un compte.",409);
+  }
+  return json({ok:true,membreId:mid,nom,matricule,motDePasseProvisoire,premiereConnexion:true});
+}
+
 /* ───────── espace personnel d'un compte relié à une fiche ───────── */
 const CHAMPS_FICHE = ["nom", "prenoms", "matricule", "statut", "fonction", "pole", "eglise", "garnisonId", "photoId", "anniv", "adhesion", "telephone", "email", "sexe", "quartier", "situation"];
 async function apiMonEspace(env, u) {
