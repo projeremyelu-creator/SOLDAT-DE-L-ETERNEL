@@ -32,6 +32,7 @@ export const CONTROLES = Object.freeze([
   {path:'/administration/academy',type:'academy-redirection-admin'},
   {path:'/mon-espace/enseignants',type:'academy-redirection-membre'},
   {path:'/api/soldiers-academy/ressources/etat',type:'academy-api-protegee'},
+  {path:'/api/soldiers-academy/love-school',type:'academy-api-protegee'},
   {path:'/vitrine/sde-academy-parcours.js',type:'academy-script'},
   {path:'/api/soldiers-academy',type:'academy-api-protegee'},
   {path:'/api/soldiers-academy/cours/SA-01',type:'academy-api-protegee'},
@@ -106,7 +107,7 @@ function verifierReponse(origine,controle,reponse,corps) {
   if(controle.type==='academy-script'){
     if(status!==200||!/(?:javascript|ecmascript)/i.test(type))
       erreur('Script du parcours Soldiers Academy indisponible');
-    if(!corps.includes('data-refresh-course-resources')||!corps.includes('actualiserRessourcesCours'))
+    if(!corps.includes('data-refresh-course-resources')||!corps.includes('actualiserRessourcesCours')||!corps.includes('chargerLoveSchool'))
       erreur('Ancienne interface Academy détectée : actualisation du cours absente');
     return;
   }
