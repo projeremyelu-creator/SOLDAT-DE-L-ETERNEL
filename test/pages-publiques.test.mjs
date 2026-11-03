@@ -144,3 +144,16 @@ test('Notre Mouvement : film de présentation hébergé, sous la limite des ress
  assert.ok(h.includes('href="#film"')&&h.includes('id="film"'));
  assert.doesNotMatch(lire('public/sw-public.js').match(/PUBLIC_ASSETS\s*=\s*([^;]+);/)[1],/mp4/,'les vidéos ne passent pas par le cache du service worker');
 });
+
+test('Film de présentation : bouton sur l’accueil (hors des trois actions) et rappel sur Contact',()=>{
+ const home=page('portail'),contact=page('rejoindre'),film=page('mouvement');
+ assert.ok(film.includes('id="film"'),'cible du lien');
+ const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf('</section>',home.indexOf('class="ap-hero"')));
+ const actions=hero.match(/<div class="ap-actions">[\s\S]*?<\/div>/)[0];
+ assert.equal((actions.match(/<a /g)||[]).length,3,'les trois actions d’accueil restent trois');
+ assert.ok(hero.includes('<a href="/mouvement#film" data-film-link>')&&hero.includes('Voir le film de présentation'));
+ assert.ok(!actions.includes('#film'));
+ assert.ok(contact.includes('id="film-contact"')&&contact.includes('href="/mouvement#film"'));
+ assert.ok(contact.indexOf('id="film-contact"')<contact.indexOf('id="rejoindre" aria-labelledby'),'avant le formulaire, hors des sections de texte légal');
+ assert.ok(lire('public/vitrine/sde-accueil-premium.css').includes('.ap-film'));
+});

@@ -150,3 +150,9 @@ body.sde-premium-home{--ap-navy0:#07122b;--ap-navy1:#0d1f4a;--ap-navy2:#142c63;-
   min-height:calc(1.65em * 4);
  }
 }
+
+.ap-film{margin:16px 0 0}
+.ap-film a{display:inline-flex;align-items:center;gap:10px;min-height:44px;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:4px;text-decoration-color:color-mix(in srgb,currentColor 45%,transparent)}
+.ap-film a:hover,.ap-film a:focus-visible{text-decoration-color:currentColor}
+.ap-film small{font-weight:600;opacity:.8}
+.ap-film-play{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid currentColor;font-size:.8rem;padding-left:2px}
