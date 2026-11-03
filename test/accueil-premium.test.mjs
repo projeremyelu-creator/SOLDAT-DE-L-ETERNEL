@@ -123,3 +123,16 @@ test('Stabilité du titre premium à 1100 et 1280 px avant chargement de la poli
  assert.ok(html.includes('class="ap-hero-copy"'));
  assert.ok(html.includes('id="titre-accueil"'));
 });
+
+
+test('CLS premium 1024px : en-tête et affiche ancrés avant et après le chargement de Cinzel',()=>{
+ const css=lire('public/vitrine/sde-accueil-premium.css');
+ const marker=css.lastIndexOf('Recette Chromium 1024 px (03/11/2026)');
+ assert.ok(marker>0,'Règle anti-décalage absente');
+ const fix=css.slice(marker);
+ assert.match(fix,/@media \(min-width:1000px\) and \(max-width:1100px\)/);
+ assert.match(fix,/\.ap-hero-inner\{\s*align-items:start;\s*min-height:840px;/);
+ assert.match(fix,/\.ap-poster\{\s*align-self:start;/);
+ assert.match(fix,/\.ap-eyebrow\{\s*min-height:2\.7em;/);
+ assert.match(fix,/@media \(max-width:999px\)/);
+});
