@@ -15,7 +15,7 @@
    input.parentElement.insertAdjacentElement("afterend",toggle);
   }
   const mode=()=>new URL(location.href).searchParams.get("mode")||"connexion";
-  const retour=()=>{const r=new URL(location.href).searchParams.get("retour");return ["/administration","/mon-espace","/administration/academy","/mon-espace/academy"].includes(r)?r:"/portail";};
+  const retour=()=>{const r=new URL(location.href).searchParams.get("retour");return ["/administration","/mon-espace","/administration/academy","/mon-espace/academy","/administration/academy/studio","/mon-espace/academy/studio"].includes(r)?r:"/portail";};
   function afficher(nom){
    const selected=tabs.some(x=>x.dataset.mode===nom)?nom:"connexion";
    for(const p of panels)p.hidden=p.id!=="panel-"+selected;
