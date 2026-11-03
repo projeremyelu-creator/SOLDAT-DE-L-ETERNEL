@@ -94,9 +94,10 @@ export function TacticalAcademyPanel({academy,open}){
   </div>
  </section>;
 }
-export function TacticalMemberPanel({academy,nom,matricule,qrSrc,open}){
+export function TacticalMemberPanel({academy,academyLoading=false,academyError='',nom,matricule,qrSrc,open}){
  const d=academy||{},total=count(d.modulesTotal)||0,done=count(d.modulesFaits)||0,pct=total?percent(100*done/total):null;
  const inscriptions=count(d.formations)||0,certified=count(d.certifie)||0;
+ const cours=Array.isArray(d.parcours)?d.parcours.slice(0,4):[];
  return <section className="sde-tactical sde-tactical-member" aria-label="Ma carte et mon parcours Soldiers Academy">
    <header className="sde-tactical-header"><div><span className="sde-tactical-eyebrow">S.D.E. · DOSSIER PERSONNEL</span><h2>Ma carte <em>& mon parcours</em></h2><p>Mes étapes de formation et ma carte sécurisée pour le pointage.</p></div></header>
    <div className="sde-tactical-member-grid">
@@ -111,7 +112,25 @@ export function TacticalMemberPanel({academy,nom,matricule,qrSrc,open}){
      <Action target="carteqr" open={open}>Afficher ma carte QR</Action>
     </article>
     <article className="sde-tactical-screen"><div className="sde-tactical-screen-title"><h3>Progression et intercession</h3><span>Mon espace</span></div>
-     <Radar value={pct} label="Modules suivis"/><p>{done} module(s) complété(s) sur {total||'—'}.</p>
+     <Radar value={pct} label="Modules suivis"/><p>{academyLoading?'Chargement du parcours…':academyError?'Progression indisponible.':total?done+' module(s) complété(s) sur '+total+'.':'Aucun module enregistré.'}</p>
+     <section className="sde-tactical-training" aria-label="Mes formations et modules enregistrés">
+      <h4>Mes modules de formation</h4>
+      {academyLoading&&<p role="status" className="sde-tactical-empty">Chargement des formations…</p>}
+      {academyError&&<p role="alert" className="sde-tactical-empty">{academyError}</p>}
+      {!academyLoading&&!academyError&&!cours.length&&<p className="sde-tactical-empty">Aucune formation attribuée à votre compte pour le moment.</p>}
+      {!academyLoading&&!academyError&&cours.map(c=>{const progress=percent(c.pourcentage);
+       return <div className="sde-tactical-training-course" key={c.id||c.titre}>
+         <div className="sde-tactical-training-heading"><strong>{clean(c.titre)||'Formation SDE'}</strong><small>{clean(c.statut)||'Inscrit'}</small></div>
+         <div className="sde-tactical-progress" role="progressbar" aria-label={'Avancement de '+(clean(c.titre)||'formation')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress??0} aria-valuetext={progress==null?'Aucun module disponible':progress+' %'}>
+          <i style={{width:(progress??0)+'%'}}/>
+         </div>
+         <small>{fmt(c.modulesFaits)} / {fmt(c.modulesTotal)} modules suivis</small>
+         {Array.isArray(c.modules)&&c.modules.length>0&&<ul className="sde-tactical-training-modules">
+          {c.modules.slice(0,4).map((m,i)=><li key={i} className={m.suivi?'is-complete':''}><span aria-hidden="true">{m.suivi?'✓':'○'}</span>{clean(m.titre)||'Module de formation'}</li>)}
+         </ul>}
+       </div>
+      })}
+     </section>
      <Action target="academie" open={open}>Poursuivre la formation</Action><Action target="mur" open={open}>Mur de prière</Action>
     </article>
    </div>
