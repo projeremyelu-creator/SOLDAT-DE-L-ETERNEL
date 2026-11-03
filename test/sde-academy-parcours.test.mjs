@@ -78,6 +78,8 @@ async function passOne(id){
     const answers=items.map((_,i)=>"Analyse biblique contextualisée et application concrète, réponse "+(i+1)+".");
     const submit=await call("/api/soldiers-academy/soumettre",student,{courseId:id,type,answers});
     assert.equal(submit.status,201);
+    const grader=(await call("/api/soldiers-academy/gestion",trainer)).result.pending.find(x=>x.id===submit.result.id);
+    assert.ok(grader?.questions?.length>0,"Le formateur voit les questions associées à chaque réponse");
     assert.equal((await call("/api/soldiers-academy/soumettre",student,{courseId:id,type,answers})).status,409);
     assert.equal((await call("/api/soldiers-academy/noter",student,{id:submit.result.id,score:95,comment:"Validé."},"PATCH")).status,403);
     assert.equal((await call("/api/soldiers-academy/noter",trainer,{id:submit.result.id,score:90,comment:"Travail sérieux et clair."},"PATCH")).status,200);
@@ -89,6 +91,7 @@ test("Notation et attestation du niveau 1 après huit cours",async()=>{
   let p=(await call("/api/soldiers-academy")).result;
   assert.equal(p.progress.passed,1);
   assert.equal(p.courses[0].average,90);
+  assert.equal(p.courses[0].feedback.length,3,"L'étudiant retrouve les retours de ses trois épreuves");
   assert.equal(p.courses[8].locked,true);
   assert.equal((await call("/api/soldiers-academy",other)).result.progress.passed,0);
   for(let i=2;i<=8;i++)await passOne("SA-"+String(i).padStart(2,"0"));
