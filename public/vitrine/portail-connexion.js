@@ -15,7 +15,7 @@
    input.parentElement.insertAdjacentElement("afterend",toggle);
   }
   const mode=()=>new URL(location.href).searchParams.get("mode")||"connexion";
-  const retour=()=>{const r=new URL(location.href).searchParams.get("retour");return ["/administration","/mon-espace"].includes(r)?r:"/portail";};
+  const retour=()=>{const r=new URL(location.href).searchParams.get("retour");return ["/administration","/mon-espace","/administration/academy","/mon-espace/academy"].includes(r)?r:"/portail";};
   function afficher(nom){
    const selected=tabs.some(x=>x.dataset.mode===nom)?nom:"connexion";
    for(const p of panels)p.hidden=p.id!=="panel-"+selected;
@@ -56,7 +56,7 @@
     const me=await confirmation.json();
     if(!confirmation.ok||me.connecte!==true){status.dataset.state="";status.textContent="Votre session n'a pas pu être confirmée. Réessayez de vous connecter.";return}
     const destination=retour();
-    if(destination==="/administration"&&me.niveau<1){
+    if(destination.startsWith("/administration")&&me.niveau<1){
      status.replaceChildren(document.createTextNode("Votre compte est connecté, mais l'administration est réservée aux responsables habilités. "));
      const lien=document.createElement("a");lien.href="/mon-espace";lien.textContent="Ouvrir mon espace membre";status.append(lien);return;
     }
@@ -70,7 +70,7 @@
   }
   const targets=[...document.querySelectorAll('[data-access-target]')];
   const selectTarget=target=>{for(const b of targets)b.setAttribute('aria-pressed',String(b.dataset.accessTarget===target))};
-  const initialTarget=new URL(location.href).searchParams.get('retour');selectTarget(initialTarget==='/administration'?'/administration':'/mon-espace');
+  const initialTarget=new URL(location.href).searchParams.get('retour');selectTarget(initialTarget?.startsWith('/administration')?'/administration':'/mon-espace');
   for(const button of targets)button.addEventListener('click',()=>{const url=new URL(location.href);url.searchParams.set('retour',button.dataset.accessTarget);history.replaceState({},'',url);selectTarget(button.dataset.accessTarget);afficher('connexion')});
   afficher(mode());
  };
