@@ -23,9 +23,8 @@
     $("#resume").textContent=r.valides+" module"+(r.valides>1?"s":"")+" sur 12 validé"+(r.valides>1?"s":"")+" · "+r.niveauxValides+" niveau"+(r.niveauxValides>1?"x":"")+" attesté"+(r.niveauxValides>1?"s":"");
     $("#lien-admin").hidden=!catalogue.gestion;
     renderNav();
-    if(!catalogue.modules.some(m=>m.id===active&&!m.verrouille))active=catalogue.modules.find(m=>!m.verrouille)?.id||"m01";
-    if(active.startsWith("exam-"))showExam(Number(active.slice(5)));
-    else showModule(active);
+    if(active.startsWith("exam-")&&catalogue.niveaux.some(l=>l.id===Number(active.slice(5))&&l.examenDisponible))showExam(Number(active.slice(5)));
+    else {if(!catalogue.modules.some(m=>m.id===active&&!m.verrouille))active=catalogue.modules.find(m=>!m.verrouille)?.id||"m01";showModule(active);}
   }
   function renderNav(){
     $("#navigation").innerHTML=catalogue.niveaux.map(l=>{
