@@ -111,7 +111,9 @@ test("Liens et route publique du nouveau programme",()=>{
   assert.match(parcoursJs,/aide\?\.consignes/);
   assert.match(worker,/soldiersAcademyApi\(req, env, u, p\)/);
   assert.match(worker,/\/academy-programme-24/);
-  assert.match(app,/Ouvrir mon parcours et mes 24 cours/);
+  assert.match(app,/Ouvrir le poste pédagogique|Ouvrir mes cours et mon parcours/);
+  assert.match(app,/academy27-levels/);
+  assert.doesNotMatch(app.slice(app.indexOf("  VUES.academie = function () {"),app.indexOf("  /* ── Préinscriptions Academy (admin) ── */")),/ajout-formation|renderNiveaux/);
   assert.match(academy,/Accéder à mes 24 cours/);
   assert.match(page,/192 heures/);
   assert.doesNotMatch(page,/12 cours/);

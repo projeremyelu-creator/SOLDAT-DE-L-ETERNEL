@@ -531,7 +531,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     { id: "finances", ico: "i-wallet", court: "Finances", long: "Finances", desc: "Caisse, cotisations et offrandes" },
     { id: "assistant", ico: "i-spark", court: "Éliézer", long: "Assistant Éliézer", desc: "Assistant IA : questions, textes, synthèses" },
     { id: "garnisons", ico: "i-fort", court: "Garnisons", long: "Garnisons", desc: "Points SDE, carte, structures et cellules" },
-    { id: "academie", ico: "i-cap", court: "Académie", long: "Académie", desc: "Formations et attestations" },
+    { id: "academie", ico: "i-cap", court: "Académie", long: "Soldiers Academy", desc: "24 cours · 3 niveaux · Studio pédagogique" },
     { id: "portevoix", ico: "i-horn", court: "Porte-Voix", long: "Porte-Voix", desc: "Annonces et messages" },
     { id: "chambre", ico: "i-flame", court: "Chambre Haute", long: "Chambre Haute", desc: "Intercession et prière" },
     { id: "arsenal", ico: "i-shelf", court: "Arsenal", long: "Arsenal", desc: "Médias et bibliothèque" },
@@ -2918,49 +2918,56 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
   function formationsDe(mid) {
     return S.formations.filter((f) => actifF((f.participants || {})[mid])).map((f) => ({ f, p: f.participants[mid] })).sort((a, b) => cmpFr(b.f.dateDebut || "", a.f.dateDebut || ""));
   }
+  /* Soldiers Academy 2027 : tableau de bord unique. Anciennes formations archivées, non affichées. */
+  const ACADEMY_2027_COURS=[{"id":"SA-01","title":"Le salut, la nouvelle naissance et la vie en Christ","level":1},{"id":"SA-02","title":"L’identité du fils et de la fille de Dieu","level":1},{"id":"SA-03","title":"Les fondements de la foi chrétienne","level":1},{"id":"SA-04","title":"Introduction à la Bible et à son interprétation","level":1},{"id":"SA-05","title":"La prière, le jeûne et la communion avec Dieu","level":1},{"id":"SA-06","title":"Le Saint-Esprit : personne, œuvre et dons","level":1},{"id":"SA-07","title":"La sanctification, la sainteté et le caractère chrétien","level":1},{"id":"SA-08","title":"La discipline spirituelle et les valeurs du Soldat de l’Éternel","level":1},{"id":"SA-09","title":"Les ministères et leurs fonctions dans l’Église","level":2},{"id":"SA-10","title":"Les fondements bibliques du prophétique","level":2},{"id":"SA-11","title":"Le ministère apostolique et la mission de l’Église","level":2},{"id":"SA-12","title":"Le discernement spirituel et l’épreuve des prophéties","level":2},{"id":"SA-13","title":"L’intercession stratégique et la prière persévérante","level":2},{"id":"SA-14","title":"Le combat spirituel à la lumière des Écritures","level":2},{"id":"SA-15","title":"Les dons spirituels : exercice, ordre et responsabilité","level":2},{"id":"SA-16","title":"La délivrance, l’accompagnement pastoral et l’éthique","level":2},{"id":"SA-17","title":"Le leadership christocentrique et le modèle de Jésus","level":3},{"id":"SA-18","title":"L’autorité spirituelle, le service et la redevabilité","level":3},{"id":"SA-19","title":"L’organisation et la gouvernance d’un mouvement chrétien","level":3},{"id":"SA-20","title":"La communication, la prédication et l’enseignement biblique","level":3},{"id":"SA-21","title":"La gestion des conflits et l’intelligence émotionnelle","level":3},{"id":"SA-22","title":"L’évangélisation, le discipulat et l’implantation missionnaire","level":3},{"id":"SA-23","title":"La gestion de projets, des finances et des ressources","level":3},{"id":"SA-24","title":"La vision, la transmission et la formation des futurs leaders","level":3}];
+  const ACADEMY_2027_NIVEAUX=[{"n":1,"label":"Fondations bibliques et identité","icon":"i-book","start":"SA-01","end":"SA-08","subtitle":"Nouvelle naissance, Bible, prière, sainteté et identité en Christ."},{"n":2,"label":"Équipement spirituel et ministériel","icon":"i-shield","start":"SA-09","end":"SA-16","subtitle":"Prophétique, ministère, intercession, discernement et accompagnement."},{"n":3,"label":"Leadership et commandement","icon":"i-users","start":"SA-17","end":"SA-24","subtitle":"Service, prédication, gouvernance, mission et transmission."}];
   VUES.academie = function () {
-    const c = cfg();
-    const ecr = peutEcrire();
-    let out = secHead("Académie", { eyebrow: "Formations", verset: VERSETS.academie, actions: ecr ? btn("ajout-formation", "Nouvelle formation", { ico: "i-plus", cls: "btn-primary" }) : "" });
-    if (S.etat === "absent") return out + nonConnecte("Les formations et les parcours des membres");
-    out += `<section class="card" aria-label="Parcours Soldiers Academy 2027" style="margin:14px 0;padding:20px;border:1px solid var(--or);border-radius:12px"><h3>Soldiers Academy · 24 cours officiels</h3><p>Leçons bibliques, exercices pratiques, quiz et examens évalués par un formateur et attestations de niveau. La progression affichée correspond à votre compte connecté.</p><a class="btn btn-primary" href="${peutAdmin()?"/administration/academy":"/mon-espace/academy"}">Ouvrir mon parcours et mes 24 cours →</a></section>`;
-    /* Membres connectés sans accès registre : pas de données formations */
-    if (!accesRegistre()) return out + vide("i-cap", "Les formations du mouvement seront bientôt accessibles depuis votre espace. Rapprochez-vous de votre responsable de garnison pour connaître les prochaines sessions.");
-    if (!S.pret.formations || !S.pret.membres) return out + chargement("Lecture des formations…");
-    const par = { avenir: [], encours: [], terminee: [] };
-    S.formations.forEach((f) => par[etatFormation(f)].push(f));
-    const apprenants = membresActifs().filter((m) => formationsDe(m.id).length);
-    const an = String(new Date().getFullYear());
-    const certifies = S.formations.reduce((t, f) => t + participantsF(f).filter(({ p }) => p.statut === "Certifié" && String(p.certifieLe || "").startsWith(an)).length, 0);
-    out += `<div class="stats s4">
-      <div class="stat"><span class="stat-l">${I("i-cap")}En cours</span><span class="stat-v">${nb(par.encours.length)}</span><span class="stat-m">${pluriel(par.avenir.length, "formation à venir", "formations à venir")}</span></div>
-      <div class="stat"><span class="stat-l">Apprenants</span><span class="stat-v">${nb(apprenants.length)}</span><span class="stat-m">Membres inscrits au moins une fois</span></div>
-      <div class="stat"><span class="stat-l">${I("i-award")}Certifiés en ${an}</span><span class="stat-v">${nb(certifies)}</span><span class="stat-m">Attestations délivrables</span></div>
-      <div class="stat"><span class="stat-l">Programmes</span><span class="stat-v">${nb(c.programmes.length)}</span><span class="stat-m">${esc(c.programmes.slice(0, 2).join(", "))}${c.programmes.length > 2 ? "…" : ""}</span></div></div>`;
-    const tabsAcad = [["encours", "En cours", par.encours.length], ["avenir", "À venir", par.avenir.length], ["terminees", "Terminées", par.terminee.length], ["niveaux", "Niveaux", NIVEAUX_ACAD.length], ["apprenants", "Apprenants", apprenants.length]];
-    if (peutAdmin()) tabsAcad.push(["preinscriptions", "Préinscriptions", S._preinsAcad ? S._preinsAcad.length : "…"]);
-    out += sousOnglets("academie", tabsAcad);
-    if (S.sous.academie === "niveaux") return out + renderNiveaux();
-    if (S.sous.academie === "preinscriptions" && peutAdmin()) return out + renderPreinsAcad();
-    if (S.sous.academie === "apprenants") {
-      if (!apprenants.length) return out + vide("i-cap", "Aucun membre n’est encore inscrit à une formation.");
-      return out + `<div class="list">${apprenants.map((m) => {
-        const fs = formationsDe(m.id);
-        const cert = fs.filter(({ p }) => p.statut === "Certifié").length;
-        const nva = niveauAtteint(m.id);
-        const nvLib = nva > 0 ? (NIVEAUX_ACAD[nva - 1] || {}).court || "" : "";
-        return `<button class="row" type="button" data-act="parcours-academie" data-id="${esc(m.id)}">${avatar(m)}<span class="row-main"><span class="row-t">${esc(nomComplet(m))}</span><span class="row-m">${esc(fs.map(({ f }) => f.titre).join(" · "))}</span>${NIVEAUX_ACAD.length ? `<span class="nv-dots">${NIVEAUX_ACAD.map((nv, i) => { const pr = progressionNiveau(m.id, nv.id); const cls = pr.certifiees > 0 ? "ok" : pr.enCours ? "info" : ""; return `<span class="nv-dot ${cls}" title="${esc(nv.court)}${pr.certifiees > 0 ? " ✓" : pr.enCours ? " (en cours)" : ""}" style="${cls === "ok" ? `background:${nv.couleur}` : cls === "info" ? `border-color:${nv.couleur}` : ""}"></span>`; }).join("")}</span>` : ""}</span><span class="row-r">${nva > 0 ? `<span class="chip ok" style="background:${(NIVEAUX_ACAD[nva - 1] || {}).couleur || "var(--ok)"};color:#fff">${esc(nvLib)}</span>` : ""}<span class="chip">${pluriel(fs.length, "formation", "formations")}</span>${cert ? `<span class="chip ok">${pluriel(cert, "certificat", "certificats")}</span>` : ""}</span></button>`;
-      }).join("")}</div>`;
+    const admin=peutAdmin();
+    let out=secHead("Soldiers Academy", { eyebrow: "Formation et discipulat · 2027", verset: VERSETS.academie });
+    if (S.etat==="absent") return out + nonConnecte("Les espaces Soldiers Academy et les cours");
+    if(admin&&S.sous.academie==="preinscriptions2027"){
+      out+=`<section class="academy27-section"><button class="academy27-link subtle" type="button" data-act="sous" data-vue-cible="academie" data-sous="tableau2027">← Revenir au programme 2027</button><h3>Préinscriptions Soldiers Academy 2027</h3></section>`;
+      return out+renderPreinsAcad();
     }
-    const f = S.f.academie;
-    const cle = { encours: "encours", avenir: "avenir", terminees: "terminee" }[S.sous.academie] || "encours";
-    out += `<div class="filters"><label class="sr" for="q-acad">Rechercher une formation</label><input class="search" id="q-acad" type="search" placeholder="Titre, formateur…" value="${esc(f.q)}" data-filtre="academie.q" autocomplete="off"><label class="sr" for="f-prog">Programme</label><select class="sel" id="f-prog" data-filtre="academie.programme">${options(c.programmes, f.programme, "Tous les programmes")}</select></div>`;
-    if (!S.formations.length) return out + vide("i-cap", `Aucune formation enregistrée. Créez une session de ${esc(c.programmes[0] || "formation")} : vous pourrez y inscrire des membres, suivre leur présence module par module et délivrer des attestations signées.`, ecr ? btn("ajout-formation", "Créer une formation", { ico: "i-plus", cls: "btn-primary", sm: true }) : "");
-    const q = norm(f.q);
-    const liste = par[cle].filter((x) => (!f.programme || x.programme === f.programme) && (!q || norm([x.titre, x.formateur, x.programme, x.parcours].join(" ")).includes(q)))
-      .sort((a, b) => (cle === "terminee" ? cmpFr(b.dateFin || b.dateDebut || "", a.dateFin || a.dateDebut || "") : cmpFr(a.dateDebut || "9999", b.dateDebut || "9999")));
-    if (!liste.length) return out + vide("i-search", par[cle].length ? "Aucune formation ne correspond." : `Aucune formation ${LIB_ETAT_F[cle].toLowerCase()}.`);
-    return out + `<div class="list">${liste.map(rowFormation).join("")}</div>`;
+
+    out+=`<section class="academy27-hero" aria-labelledby="academy27-title">
+      <span class="academy27-kicker">Édition officielle 2027 · Mouvement SDE</span>
+      <h3 id="academy27-title">Une école. <em>24 cours.</em> Un parcours de transformation.</h3>
+      <p>Retrouvez les cours christocentriques, les leçons interactives, les vidéos des enseignants, les évaluations et les attestations dans un parcours unique.</p>
+      <div class="academy27-metrics" aria-label="Référentiel de la formation">
+        <span><strong>24</strong><small>Cours officiels</small></span>
+        <span><strong>3</strong><small>Niveaux progressifs</small></span>
+        <span><strong>192 h</strong><small>Formation complète</small></span>
+        <span><strong>5</strong><small>Écoles de spécialisation</small></span>
+      </div>
+      <div class="academy27-actions">
+        <a class="academy27-link primary" href="${admin?"/administration/academy":"/mon-espace/academy"}">${admin?"Ouvrir le poste pédagogique":"Ouvrir mes cours et mon parcours"} →</a>
+        ${admin?'<a class="academy27-link" href="/mon-espace/enseignants">Studio enseignants & coachs →</a>':""}
+        <a class="academy27-link subtle" href="/academy-programme-24">Consulter le programme de 24 cours</a>
+      </div>
+    </section>`;
+    out+=`<section class="academy27-section" aria-labelledby="academy27-levels">
+      <div class="academy27-section-head"><div><span class="academy27-kicker">Progression officielle</span><h3 id="academy27-levels">Les trois niveaux du parcours</h3></div><span class="chip">8 cours par niveau</span></div>
+      <div class="academy27-levels">`+ACADEMY_2027_NIVEAUX.map((niv,i)=>{
+        const courses=ACADEMY_2027_COURS.filter(c=>c.level===niv.n);
+        return `<details class="academy27-level" data-level="${niv.n}" ${i===0?"open":""}>
+          <summary><span class="academy27-round">${niv.n}</span><span class="academy27-level-copy"><strong>Niveau ${["I","II","III"][i]} — ${esc(niv.label)}</strong><small>${esc(niv.subtitle)}</small></span><span class="academy27-level-meta">8 cours · 64 h</span></summary>
+          <ol class="academy27-course-list">`+courses.map(c=>`<li><span class="academy27-course-code">${c.id}</span><span>${esc(c.title)}</span></li>`).join("")+`</ol>
+          <div class="academy27-level-foot"><a href="${admin?"/administration/academy":"/mon-espace/academy"}">Accéder aux leçons, vidéos et évaluations →</a></div>
+        </details>`;
+      }).join("")+`</div>
+    </section>`;
+    out+=`<section class="academy27-section" aria-label="Pilotage de Soldiers Academy">
+      <div class="academy27-section-head"><div><span class="academy27-kicker">Commandement pédagogique</span><h3>Un seul espace pour enseigner et progresser</h3></div></div>
+      <div class="academy27-tools">
+        <a href="${admin?"/administration/academy":"/mon-espace/academy"}" class="academy27-tool"><span aria-hidden="true">📖</span><strong>Mes 24 cours</strong><small>Leçons, supports, travaux, quiz et attestations.</small><b>Ouvrir →</b></a>
+        <a href="/mon-espace/enseignants" class="academy27-tool"><span aria-hidden="true">🎓</span><strong>Enseignants & coachs</strong><small>Publier des vidéos, documents, leçons et exercices sur les cours autorisés.</small><b>Studio sécurisé →</b></a>
+        ${admin?'<a href="/administration/academy" class="academy27-tool"><span aria-hidden="true">📊</span><strong>Suivi des apprenants</strong><small>Corrections, cohortes, assiduité et progression individuelle.</small><b>Superviser →</b></a>':''}
+        ${admin?'<button type="button" class="academy27-tool" data-act="sous" data-vue-cible="academie" data-sous="preinscriptions2027"><span aria-hidden="true">📝</span><strong>Préinscriptions</strong><small>Consulter et traiter les demandes d’entrée à Soldiers Academy.</small><b>Gérer les dossiers →</b></button>':''}
+      </div>
+      <p class="academy27-note">La progression, les évaluations et les attestations sont calculées dans votre espace personnel sécurisé, à partir du programme Soldiers Academy 2027.</p>
+    </section>`;
+    return out;
   };
   /* ── Préinscriptions Academy (admin) ── */
   async function chargerPreinsAcad() {
@@ -3013,31 +3020,6 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
       ${btn("suppr-preinscription", "Supprimer", { ico: "i-trash", cls: "btn-danger", sm: true, data: `data-pid="${p.id}"` })}
     </div>`;
     ouvrir({ titre: "Préinscription · " + p.prenom + " " + p.nom, html: h });
-  }
-
-  /* ── Niveaux structurés de l'Académie ── */
-  function renderNiveaux() {
-    let h = `<div class="niveaux-parcours">`;
-    NIVEAUX_ACAD.forEach((nv, i) => {
-      const fs = S.formations.filter((f) => niveauFormation(f) === nv.id);
-      const certTotal = fs.reduce((t, f) => t + participantsF(f).filter(({ p }) => p.statut === "Certifié").length, 0);
-      const inscrits = fs.reduce((t, f) => t + participantsF(f).filter(({ p }) => p.statut !== "Abandon").length, 0);
-      h += `<div class="nv-card" style="--nv-c:${nv.couleur}">
-        <div class="nv-head">
-          <span class="nv-badge" aria-hidden="true">${I(nv.ico)}<b>${i + 1}</b></span>
-          <div><h3>${esc(nv.label)}</h3><p class="nv-desc">${esc(nv.desc)}</p></div>
-        </div>
-        <div class="nv-stats">
-          <span>${pluriel(fs.length, "formation", "formations")}</span>
-          <span>${pluriel(inscrits, "inscrit", "inscrits")}</span>
-          <span>${pluriel(certTotal, "certifié", "certifiés")}</span>
-        </div>
-        ${fs.length ? `<div class="list nv-list">${fs.map(rowFormation).join("")}</div>` : `<p class="hint">Aucune formation associée à ce niveau. Créez une formation et indiquez « ${esc(nv.court)} » dans le champ « Parcours ou niveau ».</p>`}
-      </div>`;
-      if (i < NIVEAUX_ACAD.length - 1) h += `<div class="nv-arrow" aria-hidden="true">▼</div>`;
-    });
-    h += `</div>`;
-    return h;
   }
 
   /* ── Parcours individuel d'un apprenant ── */
@@ -3324,22 +3306,13 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     } finally { S.attente -= 1; majSync(); if (b && document.contains(b)) b.disabled = false; }
   }
   function carteAcademie() {
-    var piedBtn = '<button class="link btn-neon" type="button" data-vue="academie">Voir les parcours<' + '/button>';
-    if (!S.pret.formations) return carte("Académie", chargement("Lecture des formations…"));
-    const encours = S.formations.filter((f) => etatFormation(f) === "encours");
-    const avenir = S.formations.filter((f) => etatFormation(f) === "avenir" && f.dateDebut).sort((a, b) => cmpFr(a.dateDebut, b.dateDebut));
-    if (!encours.length && !avenir.length) return carte("Académie", '<p class="hint">Aucune formation en cours ni programmée.<' + '/p>', { pied: piedBtn });
-    /* v12: collective progress gauge */
-    var pctAcad = 0;
-    if (encours.length) {
-      var total = 0, done = 0;
-      encours.forEach(function(f) { if (f.modules) { f.modules.forEach(function(m) { total++; if (m.termine || m.fait) done++; }); } });
-      pctAcad = total ? Math.round((done / total) * 100) : 0;
-    }
-    var r = 36, circ = Math.round(2 * Math.PI * r), off = Math.round(circ * (1 - pctAcad / 100));
-    var gaugeAcad = '<div style="text-align:center;margin:12px 0"><div class="cmd-gauge" style="--circ:' + circ + ';--offset:' + off + ';width:90px;height:90px;margin:0 auto"><svg viewBox="0 0 80 80"><circle class="gauge-bg" cx="40" cy="40" r="' + r + '"/' + '><circle class="gauge-fill" cx="40" cy="40" r="' + r + '" style="stroke-dasharray:' + circ + ';stroke-dashoffset:' + circ + ';--circ:' + circ + ';--offset:' + off + '"/' + '><' + '/svg><span class="gauge-txt" style="font-size:.9rem">' + pctAcad + '%<' + '/span><' + '/div><small style="color:var(--muted)">Progression collective<' + '/small><' + '/div>';
-    const corps = gaugeAcad + `<div class="list flat">${encours.concat(avenir.slice(0, Math.max(0, 3 - encours.length))).slice(0, 4).map(rowFormation).join("")}</div>`;
-    return carte("Académie", corps, { actions: encours.length ? `<span class="chip info">${pluriel(encours.length, "en cours", "en cours")}</span>` : "", pied: piedBtn });
+    const corps=`<div class="academy27-mini">
+      <span class="academy27-kicker">Soldiers Academy · 2027</span>
+      <strong>24 cours <small>·</small> 3 niveaux <small>·</small> 192 heures</strong>
+      <p>Leçons interactives, ressources des enseignants, cohortes et attestations.</p>
+      <a class="academy27-link primary" href="${peutAdmin()?"/administration/academy":"/mon-espace/academy"}">Ouvrir Soldiers Academy →</a>
+    </div>`;
+    return carte("Soldiers Academy",corps,{pied:'<button class="link btn-neon" type="button" data-vue="academie">Voir le programme 2027</button>'});
   }
 
   /* ════════════════════════ Porte-Voix ════════════════════════ */
