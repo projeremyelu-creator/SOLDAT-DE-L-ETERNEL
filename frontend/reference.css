@@ -1035,5 +1035,5 @@ body.sde-reference{--fu-s:var(--pal-surface,#fff);--fu-i:var(--pal-ink,#241446);
 .fu-spark-line{fill:none;stroke:var(--fu-g);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
 .fu-spark-area{fill:var(--fu-g);opacity:.16}
 @media(max-width:900px){.fu-deck-grid{grid-template-columns:1fr}.fu-quick{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:560px){.fu-tiles{grid-template-columns:1fr}.fu-donut{margin:0 auto}}
+@media(max-width:560px){.fu-tiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.fu-tile{grid-template-columns:1fr;grid-template-rows:auto auto auto;justify-items:start;row-gap:4px;min-height:0;padding:12px 10px}.fu-tile svg{grid-row:auto;width:26px;height:26px;padding:6px}.fu-tile span{font-size:.72rem;line-height:1.2}.fu-tile strong{font-size:1.4rem}.fu-donut{margin:0 auto}}
 @media(prefers-reduced-motion:reduce){.fu-tile,.fu-quick button{transition:none}}

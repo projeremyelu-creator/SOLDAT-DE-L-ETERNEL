@@ -62,5 +62,5 @@ test("Refonte Fusion : espace membre et poste de commandement reconstruits sur d
   // Les repères historiques du poste de commandement restent en place.
   assert.ok(ops.includes('<div className="ref-command-overview"><PendingRequests/><CommandPoles portal={portal}/></div>'));
   const css = lire("frontend/reference.css");
-  for (const k of [".fu-tile", ".fu-ring", ".fu-donut", ".fu-quick", ".fu-spark", "prefers-reduced-motion:reduce){.fu-tile"]) assert.ok(css.includes(k), k);
+  for (const k of [".fu-tile", ".fu-ring", ".fu-donut", ".fu-quick", ".fu-spark", "prefers-reduced-motion:reduce){.fu-tile", "@media(max-width:560px){.fu-tiles{grid-template-columns:repeat(3"]) assert.ok(css.includes(k), k);
 });
