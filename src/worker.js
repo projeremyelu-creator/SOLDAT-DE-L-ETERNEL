@@ -341,15 +341,20 @@ async function apiActivation(req, env) {
 async function apiMotDePasse(req, env, u) {
   if (!u.connecte) return erreur("refuse", "Connectez-vous d’abord.", 401);
   const b = await req.json();
-  if (!mdpValide(b.nouveau)) return erreur("invalid_argument", "Le nouveau mot de passe doit compter au moins 8 caractères.");
+  const provisoire = await mdpTemporaire(env,u.email);
+  if (!mdpValide(b.nouveau) || (provisoire && String(b.nouveau).length < 12))
+    return erreur("invalid_argument",provisoire ? "Choisissez au moins 12 caractères pour votre mot de passe personnel." : "Le nouveau mot de passe doit compter au moins 8 caractères.");
   if (await bloque(env, "e:" + u.email, 8)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure.", 429);
   const c = await env.DB.prepare("SELECT mdp FROM comptes WHERE email = ?").bind(u.email).first();
   if (c && c.mdp && !(await verifierMdp(b.ancien, c.mdp))) { await compter(env, "e:" + u.email); return erreur("refuse", "Mot de passe actuel incorrect.", 401); }
-  await env.DB.batch([
+  if (c?.mdp && await verifierMdp(b.nouveau,c.mdp)) return erreur("invalid_argument","Votre nouveau mot de passe doit être différent du précédent.");
+  const actions = [
     env.DB.prepare("UPDATE comptes SET mdp = ? WHERE email = ?").bind(await empreinteMdp(b.nouveau), u.email),
     env.DB.prepare("DELETE FROM sessions WHERE email = ? AND jeton <> ?").bind(u.email, u.jeton),
-  ]);
-  await oublierMdpTemporaire(env, u.email);
+  ];
+  if (provisoire) actions.push(env.DB.prepare("DELETE FROM comptes_mdp_temp WHERE email = ?").bind(u.email));
+  await env.DB.batch(actions);
+  if (!provisoire) await oublierMdpTemporaire(env, u.email);
   return json({ ok: true });
 }
 async function poserCode(env, email) {
@@ -1756,33 +1761,54 @@ async function traiter(req, env, ctx) {
           if (appHost) {
             const compte = await utilisateur(req, env);
             const destination = compte.connecte
-              ? (compte.niveau >= 1 ? "/administration" : "/mon-espace")
+              ? ((await mdpTemporaire(env,compte.email)) ? "/mot-de-passe" : compte.niveau >= 1 ? "/administration" : "/mon-espace")
               : "/connexion?retour=%2Fportail";
             return new Response(null, {status:302, headers:{location:url.origin + destination, "cache-control":"private, no-store", "x-robots-tag":"noindex, nofollow"}});
           }
           return assetPortail("/vitrine/portail.html");
         }
         if (p === "/vitrine/" || p === "/vitrine/index.html") return Response.redirect(url.origin + "/", 301);
-        if (pagesPubliques[p]) {
+        if (pagesPubliques[p] && !["/comptes-membres","/mot-de-passe"].includes(p)) {
           const page = await assetPortail(pagesPubliques[p]);
           return p === "/programmes" || p === "/contact" ? injecterSite(page, env, p === "/programmes" ? "programmes" : "contact") : page;
         }
         if (p === "/portail") {
           const u=await utilisateur(req,env);
-          const destination=u.connecte?(u.niveau>=1?"/administration":"/mon-espace"):"/connexion?retour=%2Fportail";
+          const destination=u.connecte?((await mdpTemporaire(env,u.email))?"/mot-de-passe":u.niveau>=1?"/administration":"/mon-espace"):"/connexion?retour=%2Fportail";
           return new Response(null,{status:302,headers:{location:url.origin+destination,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
         }
         if (p === "/connexion") {
           const u = await utilisateur(req, env);
           if (u.connecte) {
             const retour = url.searchParams.get("retour");
-            const dest = retour === "/mon-espace" ? "/mon-espace" : u.niveau >= 1 ? "/administration" : "/mon-espace";
+            const dest = (await mdpTemporaire(env,u.email)) ? "/mot-de-passe" :
+              retour === "/mon-espace" ? "/mon-espace" : u.niveau >= 1 ? "/administration" : "/mon-espace";
             return new Response(null,{status:302,headers:{location:url.origin + dest,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
           }
           const r = await assetPortail("/vitrine/connexion-unifiee.html");
           const n = new Response(r.body, r);
           n.headers.set("cache-control", "no-store");
           n.headers.set("x-robots-tag", "noindex, nofollow");
+          return n;
+        }
+        if (p === "/comptes-membres") {
+          const u=await utilisateur(req,env);
+          if (!u.connecte) return new Response(null,{status:302,headers:{location:url.origin+"/connexion?retour=%2Fadministration","cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
+          if (await mdpTemporaire(env,u.email)) return new Response(null,{status:302,headers:{location:url.origin+"/mot-de-passe","cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
+          if (u.niveau<2) return erreur("refuse","Page réservée aux administrateurs.",403);
+          const r=await assetPortail("/vitrine/comptes-membres.html");
+          const n=new Response(r.body,r);
+          n.headers.set("cache-control","private, no-store");
+          n.headers.set("x-robots-tag","noindex, nofollow");
+          return n;
+        }
+        if (p === "/mot-de-passe") {
+          const u=await utilisateur(req,env);
+          if (!u.connecte) return new Response(null,{status:302,headers:{location:url.origin+"/connexion?retour=%2Fmon-espace","cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
+          const r=await assetPortail("/vitrine/mot-de-passe.html");
+          const n=new Response(r.body,r);
+          n.headers.set("cache-control","private, no-store");
+          n.headers.set("x-robots-tag","noindex, nofollow");
           return n;
         }
         if (p === "/os-v31" || p === "/os-v31/") {
@@ -1810,6 +1836,8 @@ async function traiter(req, env, ctx) {
             const modeValide=["inscription","activation","recuperation"].includes(mode)?"&mode="+encodeURIComponent(mode):"";
             return new Response(null,{status:302,headers:{location:url.origin + "/connexion?retour=" + encodeURIComponent(cible) + modeValide,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
           }
+          if (await mdpTemporaire(env,u.email))
+            return new Response(null,{status:302,headers:{location:url.origin+"/mot-de-passe","cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
           if (p.startsWith("/administration") && u.niveau < 1)
             return erreur("refuse", "Accès réservé aux responsables autorisés.", 403);
           // Un seul espace interactif : les deux entrées principales ouvrent
@@ -1857,7 +1885,12 @@ async function traiter(req, env, ctx) {
       if (!r || !r.value) return new Response("Introuvable", { status: 404 });
       return new Response(r.value, { headers: { "content-type": (r.metadata && r.metadata.type) || "application/octet-stream", "cache-control": "private, max-age=86400", "x-content-type-options": "nosniff", "content-security-policy": "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; sandbox" } });
     }
-    if (p.startsWith("/m/") && (req.method === "GET" || req.method === "HEAD")) return servirMedia(req, env, await utilisateur(req, env), p.split("/")[2]);
+    if (p.startsWith("/m/") && (req.method === "GET" || req.method === "HEAD")) {
+      const u=await utilisateur(req,env);
+      if (u.connecte && await mdpTemporaire(env,u.email))
+        return erreur("mot_de_passe_provisoire","Remplacez votre mot de passe provisoire avant l'accès aux fichiers.",403);
+      return servirMedia(req,env,u,p.split("/")[2]);
+    }
     if (p === "/os-v31") return Response.redirect(url.origin + "/os-v31/" + url.search, 302);
     if (p.startsWith("/os-v31/")) {
       if (!["/os-v31/", "/os-v31/index.html", "/os-v31/sde-os.js", "/os-v31/sde-os.css"].includes(p))
@@ -1899,6 +1932,12 @@ async function traiter(req, env, ctx) {
       // Un cookie invalide ou expiré ne permet pas d'échapper au plafond anonyme.
       if (avecSession && !u.connecte && await rateLimitGlobal(env, ipGlobal))
         return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
+      if (u.connecte && await mdpTemporaire(env,u.email)) {
+        const autorise=(p === "/api/moi" && req.method === "GET") ||
+          (p === "/api/mot-de-passe" && req.method === "POST") ||
+          (p === "/api/deconnexion" && req.method === "POST");
+        if (!autorise) return erreur("mot_de_passe_provisoire","Veuillez remplacer votre mot de passe provisoire avant d'accéder à votre espace.",403);
+      }
       const extension=await sdeExpansionApi(req,env,u);if(extension)return extension;
       const campagnes=await financesPubliques(req,env,u);if(campagnes)return campagnes;
       const rsvp=await eventRsvpApi(req,env,u);if(rsvp)return rsvp;
