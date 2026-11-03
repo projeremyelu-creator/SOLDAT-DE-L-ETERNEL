@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#111c32">
+<title>Première connexion sécurisée — Mouvement SDE</title>
+<link rel="icon" href="/vitrine/logo-96.png">
+<link rel="stylesheet" href="/vitrine/premiere-connexion.css?v=20261103">
+<script src="/vitrine/premiere-connexion.js?v=20261103" defer></script>
+</head><body>
+<main class="sde-first-shell">
+<header class="sde-first-heading"><img src="/vitrine/logo-sde.webp" alt="" width="64" height="64">
+<div><p>MOUVEMENT PROPHÉTICO-APOSTOLIQUE SDE</p><h1>Sécurisez votre espace membre</h1></div></header>
+<section class="sde-first-card" aria-labelledby="sde-first-title">
+<span class="sde-first-tag">Première connexion</span>
+<h2 id="sde-first-title">Choisissez votre mot de passe personnel</h2>
+<p>Le mot de passe remis par l'administration est provisoire. Pour protéger votre fiche et vos données, vous devez le remplacer avant d'ouvrir votre espace.</p>
+<form id="sde-first-form" autocomplete="on">
+<label for="sde-first-ancien">Mot de passe provisoire reçu</label>
+<input id="sde-first-ancien" type="password" name="ancien" autocomplete="current-password" required>
+<label for="sde-first-nouveau">Nouveau mot de passe personnel</label>
+<input id="sde-first-nouveau" type="password" name="nouveau" autocomplete="new-password" minlength="12" maxlength="200" required aria-describedby="sde-first-help">
+<small id="sde-first-help">Au moins 12 caractères. N'utilisez pas le mot de passe provisoire.</small>
+<label for="sde-first-confirmation">Confirmez le nouveau mot de passe</label>
+<input id="sde-first-confirmation" type="password" name="confirmation" autocomplete="new-password" minlength="12" maxlength="200" required>
+<label class="sde-first-show"><input id="sde-first-visible" type="checkbox"> Afficher les mots de passe</label>
+<button type="submit" id="sde-first-submit">Enregistrer et ouvrir mon espace</button>
+<p id="sde-first-message" role="status" aria-live="polite"></p>
+</form>
+</section>
+<footer><p>Ce mot de passe n'est pas communiqué à l'administration après sa création. Ne le partagez avec personne.</p>
+<button type="button" id="sde-first-logout">Me déconnecter</button></footer>
+</main></body></html>
