@@ -13,11 +13,11 @@ test('Le fond du pied de page n’hérite plus du sélecteur ID transparent',()=
   const css=read('public/vitrine/ivoire-pages.css');
   assert.ok(!css.includes(':is(main,#contenu,.site-footer,.pied)'));
   assert.match(css,/html body\.sde-ivoire :is\(main,#contenu\)/);
-  assert.match(css,/background:#172b25!important/);
+  assert.match(css,/background:#1c0f33!important/);
   const global=read('public/vitrine/sde-sitewide-2026.css');
   const foot=global.slice(global.indexOf('Correction structurelle du pied de page public.'));
   assert.ok(foot.length>1900);
-  assert.match(foot,/background:#172b25!important;background-color:#172b25!important/);
+  assert.match(foot,/background:#1c0f33!important;background-color:#1c0f33!important/);
   assert.match(foot,/color:#f7f3e8!important/);
   assert.match(foot,/color:#f6d58e!important/);
   assert.match(foot,/footer\.site-footer> :is\(section,div\)/);

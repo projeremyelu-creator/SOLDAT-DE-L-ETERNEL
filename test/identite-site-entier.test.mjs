@@ -15,7 +15,8 @@ test('Identité SDE : les 16 pages publiques utilisent toutes le même thème fi
     const doc=new JSDOM(source).window.document;
     const links=[...doc.querySelectorAll('head link[rel=stylesheet]')].map(el=>el.getAttribute('href'));
     assert.equal(links.filter(x=>x.includes('sde-sitewide-2026.css')).length,1,page);
-    assert.ok(links.at(-1).includes('sde-sitewide-2026.css'),page+' : feuille CSS chargée en dernier');
+    assert.ok(links.at(-1).includes('sde-fusion.css'),page+' : charte Fusion chargée en dernier');
+    assert.equal(links.filter(x=>x.includes('sde-fusion.css')).length,1,page);
     assert.match(source,/<body\b/,page+' : contenu existant présent');
     assert.ok(!source.includes('SDE DIGITAL — MILITAIRE PREMIUM'),page);
   }
