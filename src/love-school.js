@@ -185,3 +185,32 @@ export const LOVE_SCHOOL = Object.freeze({
 });
 export const LOVE_SCHOOL_ADULT_IDS = Object.freeze(LOVE_SCHOOL.courses.filter(c=>c.adultOnly).map(c=>c.id));
 export const LOVE_SCHOOL_IDS = Object.freeze(LOVE_SCHOOL.courses.map(c=>c.id));
+
+/**
+ * Recommandations de cours par étape relationnelle.
+ * Filtrage purement pédagogique : pas d'enregistrement du statut matrimonial.
+ * Certains cours sont partagés par plusieurs parcours ; l'accès adulte reste inchangé.
+ */
+export const LOVE_SCHOOL_PUBLICS = Object.freeze([
+  Object.freeze({
+    id:"singles",
+    title:"Singles — Se préparer à aimer",
+    summary:"Grandir dans son identité, discerner ses relations et développer une communication saine.",
+    symbol:"♡",
+    ids:Object.freeze(["LS-01","LS-02","LS-03","LS-04","LS-05","LS-07","LS-08"])
+  }),
+  Object.freeze({
+    id:"fiances",
+    title:"Fiancés — Se préparer à l’engagement",
+    summary:"Se connaître, dialoguer et construire un projet de foyer fondé sur le respect et la responsabilité.",
+    symbol:"◇",
+    ids:Object.freeze(["LS-01","LS-03","LS-04","LS-05","LS-06","LS-07","LS-08","LS-10"])
+  }),
+  Object.freeze({
+    id:"maries",
+    title:"Mariés — Cultiver et fortifier son alliance",
+    summary:"Entretenir l’amour au quotidien, communiquer et aborder l’intimité conjugale avec respect.",
+    symbol:"♥",
+    ids:Object.freeze(["LS-01","LS-04","LS-05","LS-06","LS-07","LS-08","LS-09","LS-10"])
+  })
+]);

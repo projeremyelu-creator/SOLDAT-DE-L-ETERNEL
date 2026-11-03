@@ -69,7 +69,7 @@ function vuLe(){try{return Number(localStorage.getItem("sde-academy-biblio-vu"))
 /* Love School : formation facultative, sans impact sur la note ni le certificat Academy.
    Les modules 18+ se consultent après déclaration explicite de majorité (non vérifiée).
    Aucun âge, quiz sensible ou donnée intime n'est enregistré sur le navigateur ou le serveur. */
-let loveSchool=null,loveSelected=null,loveBusy=false;
+let loveSchool=null,loveSelected=null,loveBusy=false,lovePublicActif="tous";
 const LOVE_GROUPS=[
  {id:"fondations",title:"01 · Les fondements du cœur",desc:"Identité, amour christocentrique et discernement relationnel.",symbol:"♡",ids:["LS-01","LS-02","LS-03"]},
  {id:"relations",title:"02 · L’art d’aimer et de communiquer",desc:"Respect, gestion des conflits, langages de l’amour et écoute.",symbol:"✧",ids:["LS-04","LS-05","LS-07","LS-08"]},
@@ -88,11 +88,29 @@ function loveCourseCard(c,i){
 }
 function afficherLoveCatalogue(){
  const cours=loveList(),zone=$("loveSchoolCourses");
- zone.innerHTML=LOVE_GROUPS.map((g,i)=>{
-   const selections=g.ids.map(id=>cours.find(c=>c.id===id)).filter(Boolean);
-   return '<section class="love-collection" aria-labelledby="love-section-'+esc(g.id)+'"><h4 class="love-collection-title" id="love-section-'+esc(g.id)+'"><span aria-hidden="true">'+g.symbol+'</span> '+esc(g.title)+'</h4><p>'+esc(g.desc)+'</p><div class="grid">'+selections.map((c,j)=>loveCourseCard(c,j)).join("")+'</div></section>';
- }).join("");
- text("loveStatus",cours.length+" cours bonus facultatifs · aucun effet sur vos attestations ou votre progression Academy.");
+ const publics=Array.isArray(loveSchool?.parcours)?loveSchool.parcours:[];
+ const parcours=publics.find(p=>p.id===lovePublicActif);
+ for(const bouton of document.querySelectorAll("#loveAudienceChoices [data-love-public]")){
+   const actif=bouton.dataset.lovePublic===lovePublicActif;
+   bouton.setAttribute("aria-pressed",String(actif));
+ }
+ if(parcours){
+   const selection=parcours.ids.map(id=>cours.find(c=>c.id===id)).filter(Boolean);
+   zone.innerHTML='<section class="love-collection love-collection-public" aria-labelledby="love-public-title">'+
+   '<h4 class="love-collection-title" id="love-public-title"><span aria-hidden="true">'+esc(parcours.symbol)+'</span> '+esc(parcours.title)+'</h4>'+
+   '<p>'+esc(parcours.summary)+'</p>'+
+   '<div class="grid">'+selection.map((c,i)=>loveCourseCard(c,i)).join("")+'</div></section>';
+   text("loveAudienceSummary",selection.length+" cours conseillés · "+parcours.summary+
+     (selection.some(c=>c.adultOnly)?" Les modules 18+ nécessitent une déclaration de majorité.":""));
+   text("loveStatus","Parcours "+parcours.title+" : "+selection.length+" cours facultatifs, sans modification de votre progression.");
+ }else{
+   zone.innerHTML=LOVE_GROUPS.map(g=>{
+     const selection=g.ids.map(id=>cours.find(c=>c.id===id)).filter(Boolean);
+     return '<section class="love-collection" aria-labelledby="love-section-'+esc(g.id)+'"><h4 class="love-collection-title" id="love-section-'+esc(g.id)+'"><span aria-hidden="true">'+g.symbol+'</span> '+esc(g.title)+'</h4><p>'+esc(g.desc)+'</p><div class="grid">'+selection.map((c,j)=>loveCourseCard(c,j)).join("")+'</div></section>';
+   }).join("");
+   text("loveAudienceSummary","Tous les "+cours.length+" cours bonus sont disponibles. Sélectionnez Singles, Fiancés ou Mariés pour une recommandation adaptée.");
+   text("loveStatus",cours.length+" cours bonus facultatifs · aucun effet sur vos attestations ou votre progression Academy.");
+ }
 }
 function afficherLoveCours(id){
  const c=loveList().find(x=>x.id===id);
@@ -335,6 +353,15 @@ async function reload(){
 document.addEventListener("click",async ev=>{
  const refresh=ev.target.closest("[data-refresh-course-resources]");
  if(refresh){await actualiserRessourcesCours(refresh);return;}
+ const publicChoix=ev.target.closest("[data-love-public]");if(publicChoix){
+   const id=publicChoix.dataset.lovePublic;
+   if(["tous","singles","fiances","maries"].includes(id)){
+     lovePublicActif=id;loveSelected=null;
+     $("loveSchoolDetail").hidden=true;
+     afficherLoveCatalogue();
+   }
+   return;
+ }
  const love=ev.target.closest("[data-love-course]");if(love){mainTabs.activer("love");afficherLoveCours(love.dataset.loveCourse);return;}
  const adult=ev.target.closest("[data-love-adulte]");if(adult){ouvrirLoveAdulte(adult.dataset.loveAdulte,adult);return;}
  const test=ev.target.closest("[data-love-quiz]");if(test){verifierLoveQuiz(test);return;}

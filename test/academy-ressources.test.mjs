@@ -405,3 +405,66 @@ test("Love School : nouveau design animé contrôlable et textes exacts accessib
  assert.match(css,/@keyframes loveSheen/);
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
 });
+
+
+test("Love School : répartir les dix cours entre Singles, Fiancés et Mariés",async()=>{
+ const {LOVE_SCHOOL,LOVE_SCHOOL_PUBLICS}=await import("../src/love-school.js");
+ const IDs=new Set(LOVE_SCHOOL.courses.map(c=>c.id));
+ assert.equal(IDs.size,10);
+ assert.deepEqual(LOVE_SCHOOL_PUBLICS.map(p=>p.id),["singles","fiances","maries"]);
+ assert.deepEqual(LOVE_SCHOOL_PUBLICS.map(p=>p.ids.length),[7,8,8]);
+ const singles=LOVE_SCHOOL_PUBLICS[0].ids;
+ const fiances=LOVE_SCHOOL_PUBLICS[1].ids;
+ const maries=LOVE_SCHOOL_PUBLICS[2].ids;
+ assert.deepEqual(singles,["LS-01","LS-02","LS-03","LS-04","LS-05","LS-07","LS-08"]);
+ assert.deepEqual(fiances,["LS-01","LS-03","LS-04","LS-05","LS-06","LS-07","LS-08","LS-10"]);
+ assert.deepEqual(maries,["LS-01","LS-04","LS-05","LS-06","LS-07","LS-08","LS-09","LS-10"]);
+ for(const p of LOVE_SCHOOL_PUBLICS){
+  assert.ok(p.title.includes("—")&&p.summary.length>40);
+  assert.equal(new Set(p.ids).size,p.ids.length,"Pas de cours en double dans le même parcours");
+  assert.ok(p.ids.every(id=>IDs.has(id)),"Tous les cours recommandés existent dans Love School");
+ }
+ assert.ok(!singles.includes("LS-09")&&!singles.includes("LS-10"),"L'intimité adulte ne fait pas partie du parcours Singles");
+ assert.ok(fiances.includes("LS-10")&&!fiances.includes("LS-09"),"Les fiancés reçoivent une préparation santé adulte, les positions sont proposées aux mariés");
+ assert.ok(maries.includes("LS-09")&&maries.includes("LS-10"),"Les mariés ont accès au parcours d'intimité sur déclaration de majorité");
+});
+
+test("Love School : API recommande les parcours sans enregistrer de situation matrimoniale",async()=>{
+ const {env,sql}=monde();comptes(sql);
+ const response=await api(env,eleve,"GET","/api/soldiers-academy/love-school");
+ assert.equal(response.statut,200);
+ const parcours=response.json.ecole.parcours;
+ assert.equal(parcours.length,3);
+ assert.ok(parcours[0].title.startsWith("Singles"));
+ assert.ok(parcours[1].title.startsWith("Fiancés"));
+ assert.ok(parcours[2].title.startsWith("Mariés"));
+ assert.equal(response.json.ecole.courses.length,10);
+ assert.ok(!response.json.ecole.courses.find(c=>c.id==="LS-09").lessons,"Le filtre n'ouvre pas les cours adultes");
+ const normal=await api(env,eleve,"GET","/api/soldiers-academy");
+ assert.equal(normal.json.courses.length,24);
+ assert.equal(normal.json.programme.durationHours,192);
+ assert.equal(normal.json.progress.passed,0);
+ assert.equal(normal.json.certificates.length,0);
+});
+
+test("Love School : commandes de filtres accessibles et sélection temporaire sur mobile",()=>{
+ const html=readFileSync("public/vitrine/sde-academy-parcours.html","utf8");
+ const js=readFileSync("public/vitrine/sde-academy-parcours.js","utf8");
+ const css=readFileSync("public/vitrine/sde-academy-onglets.css","utf8");
+ for(const id of ["tous","singles","fiances","maries"]){
+  assert.ok(html.includes('data-love-public="'+id+'"'),"Bouton du parcours "+id);
+ }
+ assert.ok(html.includes('id="loveAudienceChoices" role="group"'));
+ assert.ok(html.includes('id="loveAudienceSummary" aria-live="polite"'));
+ assert.ok(html.includes('aria-pressed="true"'));
+ assert.match(html,/Ce choix reste libre et n'enregistre aucune information/);
+ assert.match(js,/lovePublicActif="tous"/);
+ assert.match(js,/bouton\.setAttribute\("aria-pressed"/);
+ assert.match(js,/parcours\.ids\.map/);
+ assert.match(js,/loveSelected=null/);
+ assert.match(css,/\.love-audience-choices/);
+ assert.match(css,/\.love-audience-choice\[aria-pressed="true"\]/);
+ assert.match(css,/@media\(max-width:480px\)/);
+ const section=js.slice(js.indexOf("let loveSchool="),js.indexOf("function renderBiblio()"));
+ assert.ok(!section.includes('localStorage.setItem'),"Le choix Singles, Fiancés, Mariés n'est pas sauvegardé");
+});
