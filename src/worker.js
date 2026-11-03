@@ -148,11 +148,11 @@ async function utilisateur(req, env) {
   const jeton = cookies(req).sde_s;
   const anonyme = { connecte: false, niveau: 0, role: "visiteur", id: null, email: null, nom: "" };
   if (!jeton) return anonyme;
-  const s = await env.DB.prepare("SELECT s.email, s.expire, c.id, c.nom, c.photo, c.role, c.membreId, c.matricule FROM sessions s LEFT JOIN comptes c ON c.email = s.email WHERE s.jeton = ?").bind(jeton).first();
+  const s = await env.DB.prepare("SELECT s.email, s.expire, c.id, c.nom, c.photo, c.role, c.membreId, c.matricule, (SELECT val FROM meta WHERE cle = 'mdp_provisoire:' || c.id) AS mdpProvisoire FROM sessions s LEFT JOIN comptes c ON c.email = s.email WHERE s.jeton = ?").bind(jeton).first();
   if (!s || s.expire < Date.now()) return anonyme;
   let role = s.role || "attente";
   if (proprietaires(env).includes(String(s.email).toLowerCase())) role = "proprietaire";
-  return { connecte: true, niveau: ROLES[role] ?? 0, role, id: s.id || (await idDeEmail(s.email)), email: s.email, nom: s.nom || "", photo: s.photo || "", membreId: s.membreId || null, matricule: s.matricule || "", jeton };
+  return { connecte: true, niveau: ROLES[role] ?? 0, role, id: s.id || (await idDeEmail(s.email)), email: s.email, nom: s.nom || "", photo: s.photo || "", membreId: s.membreId || null, matricule: s.matricule || "", premiereConnexion: s.mdpProvisoire === "1", jeton };
 }
 
 /* ───────── documents ───────── */
@@ -304,8 +304,8 @@ async function apiConnexionMdp(req, env) {
   const saisie = normEmail(b.email), ip = ipDe(req);
   if (await bloque(env, "e:" + saisie, 8) || await bloque(env, "ip:" + ip, 40)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure avant de réessayer.", 429);
   let c = null;
-  if (EMAIL_OK.test(saisie)) c = await env.DB.prepare("SELECT email, mdp, activation FROM comptes WHERE email = ?").bind(saisie).first();
-  else if (/^[a-z0-9][a-z0-9 ._-]{2,39}$/i.test(saisie)) c = await env.DB.prepare("SELECT email, mdp, activation FROM comptes WHERE upper(matricule) = upper(?)").bind(saisie).first();
+  if (EMAIL_OK.test(saisie)) c = await env.DB.prepare("SELECT email, mdp, activation, (SELECT val FROM meta WHERE cle = 'mdp_provisoire:' || comptes.id) AS mdpProvisoire FROM comptes WHERE email = ?").bind(saisie).first();
+  else if (/^[a-z0-9][a-z0-9 ._-]{2,39}$/i.test(saisie)) c = await env.DB.prepare("SELECT email, mdp, activation, (SELECT val FROM meta WHERE cle = 'mdp_provisoire:' || comptes.id) AS mdpProvisoire FROM comptes WHERE upper(matricule) = upper(?)").bind(saisie).first();
   const email = c ? c.email : saisie;
   if (!c || !c.mdp || !(await verifierMdp(b.motDePasse, c.mdp))) {
     await compter(env, "e:" + saisie); await compter(env, "ip:" + ip);
@@ -316,7 +316,7 @@ async function apiConnexionMdp(req, env) {
     try { await env.DB.prepare("UPDATE comptes SET mdp = ? WHERE email = ?").bind(await empreinteMdp(b.motDePasse), c.email).run(); } catch (e) { /* le hachage actuel reste valable */ }
   }
   await effacer(env, "e:" + saisie);
-  return json({ ok: true }, 200, { "set-cookie": await ouvrirSession(env, email) });
+  return json({ ok: true, premiereConnexion: c.mdpProvisoire === "1" }, 200, { "set-cookie": await ouvrirSession(env, email) });
 }
 async function apiActivation(req, env) {
   const b = await req.json();
@@ -336,13 +336,15 @@ async function apiActivation(req, env) {
 async function apiMotDePasse(req, env, u) {
   if (!u.connecte) return erreur("refuse", "Connectez-vous d’abord.", 401);
   const b = await req.json();
-  if (!mdpValide(b.nouveau)) return erreur("invalid_argument", "Le nouveau mot de passe doit compter au moins 8 caractères.");
+  if (!mdpValide(b.nouveau) || (u.premiereConnexion && String(b.nouveau).length < 12)) return erreur("invalid_argument", u.premiereConnexion ? "Choisissez au moins 12 caractères pour votre nouveau mot de passe personnel." : "Le nouveau mot de passe doit compter au moins 8 caractères.");
   if (await bloque(env, "e:" + u.email, 8)) return erreur("rate_limited", "Trop d’essais : patientez un quart d’heure.", 429);
   const c = await env.DB.prepare("SELECT mdp FROM comptes WHERE email = ?").bind(u.email).first();
   if (c && c.mdp && !(await verifierMdp(b.ancien, c.mdp))) { await compter(env, "e:" + u.email); return erreur("refuse", "Mot de passe actuel incorrect.", 401); }
+  if (c?.mdp && await verifierMdp(b.nouveau, c.mdp)) return erreur("invalid_argument", "Choisissez un mot de passe différent du précédent.");
   await env.DB.batch([
     env.DB.prepare("UPDATE comptes SET mdp = ? WHERE email = ?").bind(await empreinteMdp(b.nouveau), u.email),
     env.DB.prepare("DELETE FROM sessions WHERE email = ? AND jeton <> ?").bind(u.email, u.jeton),
+    env.DB.prepare("DELETE FROM meta WHERE cle = ?").bind("mdp_provisoire:" + u.id),
   ]);
   return json({ ok: true });
 }
@@ -1912,7 +1914,7 @@ async function traiter(req, env, ctx) {
       }
       if (p === "/api/os-v31") return await apiSdeOs31(req, env, u);
       if (p === "/api/tableau-de-bord") return apiTableauDeBord(req, env, u);
-      if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
+      if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", premiereConnexion: !!u.premiereConnexion, ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
       if (p === "/api/inscription" && req.method === "POST") return apiInscription(req, env, ctx);
       if (p === "/api/connexion" && req.method === "POST") return apiConnexionMdp(req, env);
       if (p === "/api/activation" && req.method === "POST") return apiActivation(req, env);
