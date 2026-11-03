@@ -11,6 +11,11 @@ const ORIGINE="https://mouvement-sde.org";
 function monde(){
   const sql=new DatabaseSync(":memory:");
   sql.exec(readFileSync("schema.sql","utf8"));
+  // Les tests historiques simulent un apprenant ayant déjà reçu ses validations.
+  // Les nouveaux scénarios d'accès utilisent des comptes sans autorisation initiale.
+  sql.exec("CREATE TABLE IF NOT EXISTS academy_2027_acces (compte TEXT NOT NULL,cours TEXT NOT NULL,statut TEXT NOT NULL CHECK(statut IN ('en_attente','approuve','refuse','revoque')),demande_le INTEGER NOT NULL,decision_le INTEGER,decideur TEXT,commentaire TEXT NOT NULL DEFAULT '',PRIMARY KEY(compte,cours))");
+  for(const c of PROG.courses)
+    sql.prepare("INSERT INTO academy_2027_acces(compte,cours,statut,demande_le) VALUES(?,?,'approuve',1)").run("m1",c.id);
   const stmt=(q,args=[])=>({
     bind:(...a)=>stmt(q,a),
     first:async()=>sql.prepare(q).get(...args)??null,
