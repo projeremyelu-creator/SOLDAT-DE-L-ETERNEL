@@ -1,3 +1,4 @@
+import {sendPushNotification} from './web-push.js';
 /* Chat Squad : une messagerie texte par Squad, réservée à ses membres.
    - L'administration (niveau 2+) crée les Squads et en gère les membres.
    - Un responsable de Squad et l'administration peuvent retirer un message.
@@ -15,7 +16,8 @@ async function ensure(env){
   'CREATE INDEX IF NOT EXISTS sde_squad_membres_compte ON sde_squad_membres(compte)',
   'CREATE TABLE IF NOT EXISTS sde_squad_messages (id TEXT PRIMARY KEY,squad TEXT NOT NULL,auteur TEXT NOT NULL,nom TEXT NOT NULL,texte TEXT NOT NULL,cree INTEGER NOT NULL,statut TEXT NOT NULL DEFAULT \'publie\',retire_par TEXT)',
   'CREATE INDEX IF NOT EXISTS sde_squad_messages_fil ON sde_squad_messages(squad,cree)',
-  'CREATE TABLE IF NOT EXISTS sde_squad_lectures (squad TEXT NOT NULL,compte TEXT NOT NULL,vu INTEGER NOT NULL,PRIMARY KEY(squad,compte))'
+  'CREATE TABLE IF NOT EXISTS sde_squad_lectures (squad TEXT NOT NULL,compte TEXT NOT NULL,vu INTEGER NOT NULL,PRIMARY KEY(squad,compte))',
+  'CREATE TABLE IF NOT EXISTS sde_squad_push (squad TEXT NOT NULL,compte TEXT NOT NULL,dernier INTEGER NOT NULL,PRIMARY KEY(squad,compte))'
  ])await env.DB.prepare(sql).run();
 }
 const propre=(v,max)=>typeof v==='string'?v.replace(/\s+/g,' ').trim().slice(0,max):'';
@@ -29,6 +31,26 @@ export async function droitSquad(env,u,squadId){
  return {squad,droit:m?(m.role==='responsable'?'responsable':'membre'):null};
 }
 const vueSquad=(s,extra={})=>({id:s.id,nom:s.nom,description:s.description,pole:s.pole,statut:s.statut,...extra});
+
+export const PUSH_INTERVALLE=5*60*1000;
+/* Prévient les autres membres d'un nouveau message, sans jamais en révéler le contenu
+   ni l'auteur, au plus une fois toutes les 5 minutes par membre et par Squad. */
+export async function notifierSquad(env,squadId,auteur,{send=sendPushNotification,now=Date.now()}={}){
+ if(!env?.VAPID_PUBLIC_KEY||!env?.VAPID_PRIVATE_KEY)return{sent:0,reason:'config'};
+ await env.DB.prepare('CREATE TABLE IF NOT EXISTS push_subs (userId TEXT NOT NULL,endpoint TEXT NOT NULL,p256dh TEXT,auth TEXT,cree INTEGER,PRIMARY KEY(userId,endpoint))').run();
+ const squad=await env.DB.prepare('SELECT nom FROM sde_squads WHERE id=?').bind(squadId).first();
+ if(!squad)return{sent:0};
+ const {results}=await env.DB.prepare('SELECT p.userId,p.endpoint,p.p256dh,p.auth FROM push_subs p JOIN sde_squad_membres m ON m.compte=p.userId LEFT JOIN sde_squad_push d ON d.squad=m.squad AND d.compte=m.compte WHERE m.squad=? AND m.compte<>? AND (d.dernier IS NULL OR d.dernier<?)').bind(squadId,auteur,now-PUSH_INTERVALLE).all();
+ const abonnements=results||[];
+ let sent=0;const prevenus=new Set();
+ for(const sub of abonnements){
+  const r=await send(sub,{title:'SDE · '+String(squad.nom).slice(0,60),body:'Nouveau message dans votre Squad.',url:'/squads',tag:'sde-squad-'+squadId},env).catch(()=>({ok:false}));
+  if(r&&r.ok){sent++;prevenus.add(sub.userId)}
+  else if(r&&r.reason==='expired')await env.DB.prepare('DELETE FROM push_subs WHERE userId=? AND endpoint=?').bind(sub.userId,sub.endpoint).run();
+ }
+ for(const compte of prevenus)await env.DB.prepare('INSERT INTO sde_squad_push(squad,compte,dernier) VALUES(?,?,?) ON CONFLICT(squad,compte) DO UPDATE SET dernier=excluded.dernier').bind(squadId,compte,now).run();
+ return{sent,total:abonnements.length};
+}
 export async function squadChatApi(req,env,u,services){
  const url=new URL(req.url),path=url.pathname;
  if(path!=='/api/squads'&&!path.startsWith('/api/squads/'))return null;
@@ -144,6 +166,8 @@ export async function squadChatApi(req,env,u,services){
   const id=crypto.randomUUID(),t=Date.now();
   await env.DB.prepare('INSERT INTO sde_squad_messages(id,squad,auteur,nom,texte,cree,statut) VALUES(?,?,?,?,?,?,?)').bind(id,squadId,u.id,String(u.nom||'Membre SDE').slice(0,100),texte,t,'publie').run();
   await env.DB.prepare('INSERT INTO sde_squad_lectures(squad,compte,vu) VALUES(?,?,?) ON CONFLICT(squad,compte) DO UPDATE SET vu=excluded.vu').bind(squadId,u.id,t).run();
+  const prevenir=notifierSquad(env,squadId,u.id).catch(()=>{});
+  if(typeof services.apres==='function')services.apres(prevenir);else await prevenir;
   return json({ok:true,id,cree:t});
  }
  if(m==='DELETE'&&cible){

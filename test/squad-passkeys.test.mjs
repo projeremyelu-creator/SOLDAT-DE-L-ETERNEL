@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {DatabaseSync} from 'node:sqlite';
 import crypto from 'node:crypto';
 import worker from '../src/worker.js';
+import {notifierSquad,PUSH_INTERVALLE} from '../src/squad-chat.js';
 import {b64u,lireAuthData,signatureDerVersBrute} from '../src/passkeys.js';
 
 const ORIGINE='https://mouvement-sde.org',RP='mouvement-sde.org';
@@ -295,4 +296,29 @@ test('Confidentialité : information sur les messages de Squad et la clé d’ap
  assert.ok(h.includes('id="squads-empreinte"'));
  assert.match(h,/ni votre empreinte ni votre visage/);
  assert.match(h,/visibles par ses membres, ses responsables et l'administration/);
+});
+
+test('Chat Squad : notification discrète aux autres membres, une fois par tranche de 5 minutes',async()=>{
+ const w=monde();
+ const admin=w.compte('adm','Admin SDE','admin'),alice=w.compte('alice','Alice K.'),paul=w.compte('paul','Paul D.');w.compte('hors','Hors Squad');
+ const id=(await w.appel('/api/squads',{methode:'POST',jeton:admin,corps:{nom:'Squad Notif'}})).json.id;
+ for(const c of ['alice','paul'])await w.appel(`/api/squads/${id}/membres`,{methode:'PUT',jeton:admin,corps:{compte:c}});
+ await w.env.DB.prepare('CREATE TABLE IF NOT EXISTS push_subs (userId TEXT NOT NULL,endpoint TEXT NOT NULL,p256dh TEXT,auth TEXT,cree INTEGER,PRIMARY KEY(userId,endpoint))').run();
+ for(const c of ['alice','paul','hors'])w.sql.prepare('INSERT INTO push_subs(userId,endpoint,p256dh,auth,cree) VALUES(?,?,?,?,?)').run(c,'https://push.exemple/'+c,'k','a',1);
+ const envPush={...w.env,VAPID_PUBLIC_KEY:'pub',VAPID_PRIVATE_KEY:'priv'};
+ const envoyes=[];const send=async(sub,payload)=>{envoyes.push({userId:sub.userId,payload});return{ok:true}};
+ assert.equal((await notifierSquad(w.env,id,'alice',{send})).sent,0,'sans clés VAPID, rien ne part');
+ const r1=await notifierSquad(envPush,id,'alice',{send,now:1e9});
+ assert.equal(r1.sent,1);assert.deepEqual(envoyes.map(e=>e.userId),['paul'],'ni l’auteur, ni un non-membre');
+ const note=envoyes[0].payload;
+ assert.equal(note.url,'/squads');assert.equal(note.body,'Nouveau message dans votre Squad.');
+ assert.ok(!JSON.stringify(note).includes('Alice'),'ni le nom de l’auteur ni le texte du message');
+ assert.equal((await notifierSquad(envPush,id,'alice',{send,now:1e9+1000})).sent,0,'au plus une fois par tranche');
+ assert.equal((await notifierSquad(envPush,id,'alice',{send,now:1e9+PUSH_INTERVALLE+1})).sent,1,'de nouveau après 5 minutes');
+ // abonnement expiré : supprimé
+ const expire=async()=>({ok:false,reason:'expired'});
+ await notifierSquad(envPush,id,'adm',{send:expire,now:2e9});
+ assert.equal(w.sql.prepare("SELECT COUNT(*) AS n FROM push_subs WHERE userId='alice'").get().n,0);
+ // l'envoi d'un message n'échoue jamais à cause des notifications
+ assert.equal((await w.appel(`/api/squads/${id}/messages`,{methode:'POST',jeton:paul,corps:{texte:'Bonjour'}})).statut,200);
 });
