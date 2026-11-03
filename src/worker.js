@@ -9,6 +9,7 @@ import {soldiersAcademyApi} from "./sde-academy-api.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {squadChatApi} from "./squad-chat.js";
 import {courrielApi,lancerCourriels} from "./courriel.js";
+import {formulairePublic,formulairesApi} from "./formulaires.js";
 import {comptesMembresApi,mdpTemporaire,oublierMdpTemporaire,estInterne} from "./comptes-membres.js";
 import {passkeysApi} from "./passkeys.js";
 import {sdeExpansionApi} from "./sde-expansion.js";
@@ -1705,6 +1706,7 @@ async function traiter(req, env, ctx) {
         "/squads": "/vitrine/squads.html",
   "/mot-de-passe": "/vitrine/mot-de-passe.html",
   "/courriels": "/vitrine/courriels.html",
+  "/formulaires": "/vitrine/formulaires.html",
   "/comptes-membres": "/vitrine/comptes-membres.html",
         "/empreinte": "/vitrine/empreinte.html",
         "/soldiers-voice": "/vitrine/soldiers-voice.html",
@@ -1764,6 +1766,13 @@ async function traiter(req, env, ctx) {
           return assetPortail("/vitrine/portail.html");
         }
         if (p === "/vitrine/" || p === "/vitrine/index.html") return Response.redirect(url.origin + "/", 301);
+        if (/^\/f\/[a-z0-9-]{2,39}$/.test(p)) {
+          const r = await assetPortail("/vitrine/formulaire-public.html");
+          const n = new Response(r.body, r);
+          n.headers.set("cache-control", "no-store");
+          n.headers.set("x-robots-tag", "noindex, nofollow");
+          return n;
+        }
         if (pagesPubliques[p]) {
           const page = await assetPortail(pagesPubliques[p]);
           return p === "/programmes" || p === "/contact" ? injecterSite(page, env, p === "/programmes" ? "programmes" : "contact") : page;
@@ -1890,6 +1899,10 @@ async function traiter(req, env, ctx) {
     const avecSession = !!cookies(req).sde_s;
     if (!avecSession && await rateLimitGlobal(env, ipGlobal)) return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
     if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
+    if (p.startsWith("/api/f/")) {
+      const publie = await formulairePublic(req, env, { blocked: (key, max) => bloque(env, key, max), count: key => compter(env, key), ip: ipDe, notify: (type, details) => notifySde(env, ctx, type, details) });
+      if (publie) return publie;
+    }
     if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
     if (p === "/api/engager/suivi" && req.method === "GET") return apiEngagerSuivi(req, env);
     if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
@@ -1934,6 +1947,13 @@ async function traiter(req, env, ctx) {
         if (courriel) {
           if (p === "/api/courriels" && req.method === "POST" && courriel.ok) await portalAudit(env, u, "courriels", "modification");
           return courriel;
+        }
+      }
+      if (p === "/api/formulaires") {
+        const formulaires = await formulairesApi(req, env, u, {});
+        if (formulaires) {
+          if (req.method === "POST" && formulaires.ok) await portalAudit(env, u, "formulaires", "modification");
+          return formulaires;
         }
       }
       if (p === "/api/inscription" && req.method === "POST") return apiInscription(req, env, ctx);

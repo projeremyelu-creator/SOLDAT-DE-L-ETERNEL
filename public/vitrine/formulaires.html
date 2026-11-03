@@ -1,0 +1,22 @@
+<!doctype html><html lang="fr" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Formulaires | Mouvement SDE</title><meta name="description" content="Création et suivi des formulaires du Mouvement SDE, réservé à l’administration."><meta name="robots" content="noindex, nofollow"><link rel="canonical" href="https://mouvement-sde.org/formulaires"><link rel="stylesheet" href="/vitrine/sde-hub.css?v=20261031"><script defer src="/vitrine/sde-hub.js?v=20261031"></script><link rel="stylesheet" href="/vitrine/sde-premium-public.css?v=20261102refonte">
+<link rel="stylesheet" href="/vitrine/sde-espace-prive.css?v=20261103b">
+<link rel="stylesheet" href="/vitrine/sde-fusion.css?v=20261103">
+</head><body class="sde-espace-prive" data-fam="cmd"><header class="sde-hub-head"><div class="inner"><a class="sde-mark" href="/"><img src="/vitrine/logo-96.webp" alt="" width="50" height="50">SDE — MOUVEMENT</a><nav class="sde-hub-nav" aria-label="Espace membre"><a href="/">Accueil</a><a href="/mon-espace">Mon espace</a><a href="/squads" aria-current="page">Squads</a><a href="/empreinte">Empreinte</a></nav><div class="hub-langs"><button data-theme-toggle aria-label="Changer de thème">☼</button></div></div></header>
+<main class="hub-main" id="contenu">
+<p class="hub-breadcrumb"><a href="/">Accueil</a> / <a href="/mon-espace">Mon espace</a> / Formulaires</p>
+<section class="hub-hero"><span class="hub-kicker">ADMINISTRATION</span><h1>Formulaires</h1><p class="hub-lead">Créez des formulaires (bénévolat, inscription à un événement, avis…), partagez leur lien et consultez les réponses reçues. Tout reste dans votre base.</p></section>
+<p id="fo-etat" class="sq-etat" role="status" aria-live="polite">Vérification de vos droits…</p>
+<section id="fo-refus" class="hub-section" hidden><h2>Accès réservé</h2><p>Cette page est réservée aux administrateurs. <a href="/connexion?retour=%2Fadministration">Me connecter</a></p></section>
+<div id="fo-bloc" hidden>
+<section class="hub-section"><h2>Mes formulaires</h2><p class="hub-note">Un formulaire est fermé tant que vous ne l’ouvrez pas. Les réponses ne peuvent pas être effacées depuis cette page.</p><ul id="fo-liste" class="co-scenarios"></ul>
+<p><strong>Partir d’un modèle :</strong> <span id="fo-modeles"></span></p></section>
+<section class="hub-section" id="fo-edition" hidden><h2 id="fo-titre-edition">Modifier</h2>
+<form id="fo-form" class="hub-form"><label>Adresse du formulaire<input name="slug" required pattern="[a-z0-9][a-z0-9\-]{1,38}" maxlength="39"><small>mouvement-sde.org/f/<span id="fo-slug-apercu"></span></small></label><label>Titre<input name="titre" required minlength="3" maxlength="120"></label><label>Introduction<textarea name="intro" rows="3" maxlength="1000"></textarea></label><label>Message de remerciement<input name="confirmation" maxlength="300"></label>
+<fieldset><legend>Champs</legend><div id="fo-champs"></div><button type="button" class="hub-btn" id="fo-ajouter">Ajouter un champ</button></fieldset>
+<button type="submit" class="hub-btn">Enregistrer le formulaire</button></form></section>
+<section class="hub-section" id="fo-reponses" hidden><h2 id="fo-titre-reponses">Réponses</h2><p id="fo-total"></p><p><a class="hub-btn" id="fo-csv" href="#">Télécharger en CSV</a></p><div class="cm-table-zone"><table class="cm-table" id="fo-table"></table></div></section>
+</div>
+</main>
+<footer class="hub-footer"><div class="inner"><nav aria-label="Navigation de pied de page"><a href="/mouvement">Le Mouvement</a><a href="/programmes">Programmes</a><a href="/contact">Contact</a><a href="/contact#confidentialite">Confidentialité et protection des données</a></nav><p>© 2026 Mouvement Prophético-Apostolique Soldats de l'Éternel · Cocody Deux-Plateaux, Abidjan · <a href="mailto:infosoldat@gmail.com">infosoldat@gmail.com</a></p><p class="sde-social"><span>Suivez-nous</span> <a href="https://www.tiktok.com/@mouvement.sde" target="_blank" rel="noopener noreferrer" aria-label="TikTok du Mouvement SDE (nouvel onglet)">TikTok</a> <a href="https://www.facebook.com/share/1GkJmWSyqj/" target="_blank" rel="noopener noreferrer" aria-label="Page Facebook du Mouvement SDE (nouvel onglet)">Facebook</a></p></div></footer>
+<script src="/vitrine/sde-formulaires.js?v=20261103a" defer></script>
+</body></html>
