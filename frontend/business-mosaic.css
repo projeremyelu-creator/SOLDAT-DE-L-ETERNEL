@@ -565,3 +565,38 @@ html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll :is(a,but
   transition:none!important;animation:none!important;
  }
 }
+
+
+/* Actions du tableau : le remplissage des textes est explicite pour
+   empêcher qu'une couleur héritée du TD efface le libellé sur un bouton or. */
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll tbody :is(button,a){
+ background:linear-gradient(115deg,#f6d99c,#d4aa61)!important;
+ color:#19253b!important;-webkit-text-fill-color:#19253b!important;
+ border:1px solid #f3d593!important;
+}
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll tbody :is(button,a) :is(span,strong,small){
+ color:inherit!important;-webkit-text-fill-color:inherit!important;
+}
+/* La commande de pause reste disponible, mais n'occulte plus les
+   fiches membres par un grand bandeau flottant sur petit écran. */
+@media(max-width:720px){
+ html body.sde-reference .sde-ambiance-ctl{
+  box-sizing:border-box;position:fixed;
+  bottom:calc(84px + env(safe-area-inset-bottom));
+  left:auto!important;right:9px!important;
+  display:grid!important;place-items:center!important;
+  min-width:44px!important;width:44px!important;max-width:44px!important;
+  min-height:44px!important;height:44px!important;
+  padding:0!important;border-radius:50%!important;
+  border:1px solid #f1d38e!important;
+  background:#1b2441ee!important;color:#ffe0a1!important;
+  overflow:hidden;white-space:nowrap;font-size:0!important;
+  z-index:75;box-shadow:0 5px 17px rgba(5,9,28,.3);
+ }
+ html body.sde-reference .sde-ambiance-ctl::before{
+  content:"Ⅱ";display:block;font:900 20px/1 system-ui,sans-serif;
+ }
+ html body.sde-reference .sde-ambiance-ctl[aria-pressed="true"]::before{
+  content:"▶";font-size:17px;
+ }
+}
