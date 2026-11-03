@@ -1851,7 +1851,7 @@ async function traiter(req, env, ctx) {
              "/mon-espace/academy","/administration/academy","/mon-espace/enseignants","/administration/enseignants"].includes(p)) {
           const u = await utilisateur(req, env);
           if (!u.connecte) {
-            const cible=(p.endsWith("/academy")||p.endsWith("/enseignants"))?p:(p.startsWith("/administration")?"/administration":"/mon-espace");
+            const cible=p.endsWith("/academy")?p:(p.endsWith("/enseignants")?p:(p.startsWith("/administration")?"/administration":"/mon-espace"));
             const mode=url.searchParams.get("mode");
             const modeValide=["inscription","activation","recuperation"].includes(mode)?"&mode="+encodeURIComponent(mode):"";
             return new Response(null,{status:302,headers:{location:url.origin + "/connexion?retour=" + encodeURIComponent(cible) + modeValide,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
