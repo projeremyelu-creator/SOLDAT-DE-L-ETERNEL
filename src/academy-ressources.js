@@ -79,7 +79,7 @@ function vuePublique(r,{gerer=false}={}){
   return {id:r.id,portee:r.portee,type:r.type,titre:r.titre,description:r.description,url:r.url,genre:r.genre,texte:r.texte,auteur:r.auteur_nom,cree:r.cree,...(gerer?{publie:!!r.publie,media:r.media,maj:r.maj,auteurId:r.auteur}:{})};
 }
 /* Ressources visibles par un apprenant : publiées, dans un niveau ouvert (ou bibliothèque générale). */
-export async function ressourcesApprenant(env,{peutNiveau,peutBonusAdulte=false,bonusAutorises=[]}){
+export async function ressourcesApprenant(env,{peutNiveau,peutBonusAdulte=false,bonusAutorises=[],coursAutorises=[]}){
   const rows=(await env.DB.prepare("SELECT * FROM academy_2027_ressources WHERE publie=1 ORDER BY cree DESC LIMIT 1500").all()).results||[];
   const niveauDe=p=>{
     if(p==="GENERAL")return 1;
@@ -89,9 +89,14 @@ export async function ressourcesApprenant(env,{peutNiveau,peutBonusAdulte=false,
   // Love School : jamais de supports bonus dans la bibliothèque/les API ordinaires.
   // Seul un accès serveur approuvé et ciblé autorise les ressources d'un module.
   const permis=new Set(bonusAutorises.filter(id=>LOVE_SCHOOL_IDS.includes(id)));
-  const visibles=rows.filter(r=>LOVE_SCHOOL_IDS.includes(r.portee)
-    ?permis.has(r.portee)&&(peutBonusAdulte||!LOVE_SCHOOL_ADULT_IDS.includes(r.portee))
-    :(r.portee==="GENERAL"||peutNiveau(niveauDe(r.portee))));
+  const accesAcademy=new Set(coursAutorises.filter(id=>IDS_COURS.includes(id)));
+  const niveauEntier=n=>PROGRAMME.courses.filter(c=>c.level===n).every(c=>accesAcademy.has(c.id));
+  const visibles=rows.filter(r=>{
+    if(LOVE_SCHOOL_IDS.includes(r.portee))return permis.has(r.portee)&&(peutBonusAdulte||!LOVE_SCHOOL_ADULT_IDS.includes(r.portee));
+    if(IDS_COURS.includes(r.portee))return accesAcademy.has(r.portee)&&peutNiveau(niveauDe(r.portee));
+    if(/^N[123]$/.test(r.portee))return niveauEntier(Number(r.portee[1]))&&peutNiveau(niveauDe(r.portee));
+    return r.portee==="GENERAL";
+  });
   const parCours={},generales=[];
   for(const r of visibles){
     const v=vuePublique(r);
