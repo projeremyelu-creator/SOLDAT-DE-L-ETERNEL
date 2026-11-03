@@ -65,6 +65,39 @@ function progress(){
  const admin=!!snapshot.admin;$("adminShortcut").hidden=!admin;$("adminPage").hidden=!admin;$("studioShortcut").hidden=!(admin||snapshot.formateur);
 }
 function vuLe(){try{return Number(localStorage.getItem("sde-academy-biblio-vu"))||0}catch{return 0}}
+
+/* Love School : complément optionnel, sans note, niveau ni attestation. */
+let loveSchool=null,loveSelected=null,loveBusy=false;
+function afficherLoveCours(id){
+  const c=loveSchool?.courses?.find(x=>x.id===id);
+  if(!c)return;
+  loveSelected=id;
+  const zone=$("loveSchoolDetail"),UI=window.SDEAcademyUI;
+  const chapitres=c.lessons.map((l,i)=>'<details class="love-lesson"'+(i===0?' open':'')+'><summary>Leçon '+(i+1)+' — '+esc(l.title)+'</summary><p>'+esc(l.body)+'</p><p class="muted"><strong>Question de réflexion :</strong> '+esc(l.reflection)+'</p></details>').join("");
+  const documents=c.ressources?.length?c.ressources.map((r,i)=>UI.ressourceHtml(r,i)).join(""):'<p class="muted">Aucune vidéo ou document supplémentaire publié pour ce cours pour le moment.</p>';
+  zone.innerHTML='<div class="eyebrow">Love School · '+esc(c.id)+' · Bonus facultatif</div><h2>'+esc(c.title)+'</h2><p class="muted">'+esc(c.theme)+'</p><h3>Passages bibliques</h3><p>'+c.scriptures.map(esc).join(' · ')+'</p><h3>Objectifs</h3><ul>'+c.objectives.map(o=>'<li>'+esc(o)+'</li>').join("")+'</ul><h3>Enseignement</h3>'+chapitres+'<h3>Exercice de réflexion personnel</h3><p>'+esc(c.practice)+'</p><p class="muted">Aucune remise ni donnée personnelle sensible n’est demandée.</p><h3>Ressources des enseignants et coachs</h3><div class="stack">'+documents+'</div><div class="actions"><button type="button" class="button" data-love-retour>Retour aux cours Love School</button></div>';
+  zone.hidden=false;zone.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function afficherLoveCatalogue(){
+  const cours=loveSchool?.courses||[];
+  const zone=$("loveSchoolCourses");
+  zone.innerHTML=cours.map((c,i)=>'<article class="card love-card" style="--i:'+i+'"><span class="code">'+esc(c.id)+' · BONUS</span><h3>'+esc(c.title)+'</h3><p class="muted">'+esc(c.theme)+'</p><small>'+c.lessons.length+' leçons · '+(c.ressources?.length||0)+' support(s) publiés</small><button type="button" class="button" data-love-course="'+esc(c.id)+'">Ouvrir le cours</button></article>').join("");
+  text("loveStatus",cours.length+" cours bonus facultatifs disponibles. Ressources réservées aux membres connectés.");
+}
+async function chargerLoveSchool({force=false}={}){
+  if(loveBusy)return;
+  if(loveSchool&&!force){afficherLoveCatalogue();return;}
+  loveBusy=true;
+  const action=$("refreshLoveSchool");if(action)action.disabled=true;
+  text("loveStatus","Chargement des cours Love School…");
+  try{
+    const data=await request("/love-school");
+    loveSchool=data.ecole;afficherLoveCatalogue();
+    if(loveSelected)afficherLoveCours(loveSelected);
+  }catch(e){text("loveStatus",e.message||"Love School momentanément indisponible.");}
+  finally{loveBusy=false;if(action)action.disabled=false;}
+}
+
 function renderBiblio(){
  const r=snapshot.ressources||{generales:[],nouveautes:[]};
  const nouv=(r.nouveautes||[]),vu=vuLe(),fraiches=nouv.filter(x=>x.cree>vu);
@@ -229,6 +262,8 @@ async function reload(){
 document.addEventListener("click",async ev=>{
  const refresh=ev.target.closest("[data-refresh-course-resources]");
  if(refresh){await actualiserRessourcesCours(refresh);return;}
+ const love=ev.target.closest("[data-love-course]");if(love){mainTabs.activer("love");afficherLoveCours(love.dataset.loveCourse);return;}
+ const retour=ev.target.closest("[data-love-retour]");if(retour){$("loveSchoolDetail").hidden=true;$("loveSchoolCourses").scrollIntoView({behavior:"smooth"});return;}
  const btn=ev.target.closest("[data-course]");if(btn&&!btn.disabled){openCourse(btn.dataset.course,btn.dataset.ongletCours);return;}
  const act=ev.target.closest("[data-avis-lus],[data-cohorte-rejoindre],[data-cohorte-quitter],[data-cohorte-clore],[data-ecole-retirer]");if(!act)return;
  try{
@@ -293,14 +328,16 @@ document.addEventListener("submit",async ev=>{
 });
 (async()=>{
  try{
-  mainTabs=window.SDEAcademyUI.tabs($("mainTabs"),id=>{if(id==="biblio"){synchroniserRessources({manuel:true});try{localStorage.setItem("sde-academy-biblio-vu",String(Date.now()))}catch{}$("badgeBiblio").hidden=true;}});
+  mainTabs=window.SDEAcademyUI.tabs($("mainTabs"),id=>{if(id==="love")chargerLoveSchool();if(id==="biblio"){synchroniserRessources({manuel:true});try{localStorage.setItem("sde-academy-biblio-vu",String(Date.now()))}catch{}$("badgeBiblio").hidden=true;}});
   await reload();alertMessage("Bienvenue dans votre parcours Soldiers Academy 2027.");
+  if(location.hash==="#love-school")mainTabs.activer("love");
   if(snapshot.admin)await loadGestion();
  }catch(e){
    alertMessage(e.message+" — connectez-vous à votre espace personnel.");
    $("studentPage").hidden=true;$("adminPage").hidden=true;
  }
 $("refreshAcademyResources")?.addEventListener("click",()=>synchroniserRessources({manuel:true}));
+$("refreshLoveSchool")?.addEventListener("click",()=>chargerLoveSchool({force:true}));
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)synchroniserRessources();});
 setInterval(()=>synchroniserRessources(),90000);
 })();
