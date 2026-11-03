@@ -788,3 +788,151 @@ html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-sub{
   grid-template-rows:none!important;
  }
 }
+
+
+/* Édition premium SDE 03+04 · Accueil raffiné
+ * Une hiérarchie claire, un seul programme phare, trois chemins directs.
+ * Bleu nuit (pilotage) · violet profond (spiritualité) · vert militaire (missions).
+ */
+html body.sde-accueil-maquette.sde-ivoire{
+ --sde-commande-nuit:#101b33;
+ --sde-spirituel-violet:#321b53;
+ --sde-missions-vert:#1d4538;
+ --sde-accent-or:#e3be78;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome{
+ position:relative;
+ isolation:isolate;
+ border:1px solid rgba(242,204,139,.52)!important;
+ box-shadow:0 20px 56px rgba(4,5,17,.31),inset 0 1px 0 rgba(255,239,187,.13)!important;
+ background:linear-gradient(107deg,rgba(14,21,45,.985) 0%,rgba(45,20,76,.94) 57%,rgba(25,66,53,.74) 100%),
+ url('/vitrine/photos/hero-sde-1280.webp') center 42%/cover no-repeat!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome::before{
+ content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;
+ background:radial-gradient(circle at 14% 15%,rgba(220,182,113,.15),transparent 43%),
+ radial-gradient(circle at 93% 88%,rgba(80,151,116,.15),transparent 38%);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-kicker{
+ color:#f6d593!important;letter-spacing:.15em!important;
+ font-weight:900!important;font-size:clamp(.74rem,1vw,.9rem)!important;
+ text-transform:uppercase;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome h1{
+ font-weight:750!important;letter-spacing:-.02em!important;
+ color:#ffefd0!important;text-shadow:0 7px 30px rgba(0,0,0,.26);
+ margin-bottom:clamp(13px,1.9vw,23px);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-italic{
+ font-family:"Cormorant Garamond",Georgia,serif;
+ color:#f9d99f!important;
+ font-size:clamp(1.32rem,2vw,1.75rem)!important;
+ line-height:1.25;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome :is(.m-fondation,.m-verset,p){
+ color:#f0e7ef!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions{
+ display:flex;flex-wrap:wrap;gap:10px!important;margin-top:clamp(21px,2.8vw,34px);
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions .m-btn{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-width:0;min-height:49px!important;
+ border:1px solid rgba(243,213,159,.66)!important;
+ border-radius:12px!important;
+ background:rgba(11,20,40,.7)!important;
+ color:#fff1d5!important;font-size:.89rem!important;
+ text-align:center;font-weight:800!important;
+ box-shadow:0 8px 20px rgba(10,5,22,.14)!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions .m-btn.m-gold{
+ background:linear-gradient(120deg,#f7dea1,#d6aa61)!important;
+ color:#231530!important;border-color:#f8e2ad!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions .m-btn:is(:hover,:focus-visible){
+ box-shadow:0 10px 24px rgba(12,5,32,.3)!important;
+ border-color:#fff0c8!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster{
+ position:relative;border-color:#eac883!important;
+ background:linear-gradient(160deg,rgba(50,25,83,.97),rgba(18,32,47,.96) 65%,rgba(23,67,50,.96))!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .sde-hero-poster-details h2{
+ color:#fff1d4!important;font-weight:800!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-kpis{
+ margin-top:18px;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-kpi{
+ border:1px solid rgba(226,186,117,.4)!important;
+ background:linear-gradient(145deg,rgba(34,25,58,.96),rgba(21,37,51,.95))!important;
+ box-shadow:0 13px 27px rgba(7,10,26,.18)!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-kpi :is(strong,span,small){
+ color:#f7eddf!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-kpi strong{
+ color:#ffdf98!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-kpi:nth-child(2){
+ background:linear-gradient(145deg,#2d1c49,#192d43)!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-kpi:nth-child(3){
+ background:linear-gradient(145deg,#1a3b35,#17283e)!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-band{
+ background:linear-gradient(130deg,#281944,#173b37)!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-frame img{
+ aspect-ratio:1.75/1;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-main>.iv-vitrine .iv-frame .sde-hero-cta{
+ background:linear-gradient(115deg,#eccb89,#cfab68)!important;
+ color:#261832!important;font-weight:850!important;
+}
+html body.sde-accueil-maquette.sde-ivoire .fu-strip{
+ border:1px solid rgba(231,195,120,.39)!important;
+ border-radius:17px;overflow:hidden;
+ box-shadow:0 10px 28px rgba(13,6,27,.14);
+}
+html body.sde-accueil-maquette.sde-ivoire .fu-strip a{
+ min-width:0;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-panel .m-band h2{
+ text-wrap:balance;
+}
+html body.sde-accueil-maquette.sde-ivoire .m-panel .m-card{
+ border:1px solid rgba(213,184,133,.31)!important;
+}
+@media(max-width:900px){
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome{
+  background:linear-gradient(150deg,rgba(20,20,48,.97),rgba(49,20,78,.9) 55%,rgba(22,61,47,.89)),
+  url('/vitrine/photos/hero-sde-640.webp') center/cover no-repeat!important;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions{
+  gap:8px!important;
+ }
+}
+@media(max-width:600px){
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome h1{
+  font-size:clamp(1.75rem,7vw,2.55rem)!important;line-height:1.12!important;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions .m-btn{
+  flex:1 1 100%!important;min-height:47px!important;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .fu-strip{
+  border-radius:14px;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-kpis{
+  gap:9px;
+ }
+ html body.sde-accueil-maquette.sde-ivoire .m-kpi{
+  padding:12px 10px!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-accueil-maquette.sde-ivoire .m-welcome .m-actions .m-btn,
+ html body.sde-accueil-maquette.sde-ivoire .m-kpi{
+  transition:none!important;transform:none!important;
+ }
+}
