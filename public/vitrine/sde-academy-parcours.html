@@ -4,7 +4,7 @@
 <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0d1b32">
 <title>Soldiers Academy · Programme 2027 · Mouvement SDE</title>
 <link rel="icon" href="/vitrine/logo-96.png"><link rel="stylesheet" href="/vitrine/sde-premium-public.css">
-<link rel="stylesheet" href="/vitrine/sde-academy-onglets.css"><script defer src="/vitrine/vendor/qrcode-generator-1.4.4.js"></script><script defer src="/vitrine/sde-academy-ui.js?v=20271103-studio"></script><script defer src="/vitrine/sde-academy-parcours.js?v=20271103-love-school-10"></script>
+<link rel="stylesheet" href="/vitrine/sde-academy-onglets.css"><script defer src="/vitrine/vendor/qrcode-generator-1.4.4.js"></script><script defer src="/vitrine/sde-academy-ui.js?v=20271103-studio"></script><script defer src="/vitrine/sde-academy-parcours.js?v=20271103-love-school-publics"></script>
 </head><body>
 <a class="skip" href="#main">Passer au contenu principal</a>
 <header><div class="inner"><a class="identity" href="/"><img alt="" src="/vitrine/logo-96.png"><span><strong>S.D.E. · SOLDIERS ACADEMY</strong><small>École de discipulat et de leadership</small></span></a><nav aria-label="Navigation"><a href="/academy-programme-24">Programme</a><a href="/mon-espace/academy#love-school">Love School · Bonus</a><a href="/mon-espace">Mon espace</a><a href="/mon-espace/enseignants" id="studioShortcut" hidden>Studio enseignants</a><a href="/administration" id="adminShortcut" hidden>Commandement</a></nav></div></header>
@@ -52,8 +52,20 @@
     <p><strong>Votre parcours, votre rythme.</strong> Les dix cours Love School sont facultatifs et ne modifient pas les 24 cours, les 192 heures, les évaluations ou les attestations de Soldiers Academy.</p>
     <p><strong>Confidentialité.</strong> Les exercices se réalisent à titre personnel. Aucun récit intime, photographie, donnée médicale ni expérience sexuelle n’est exigé. Les modules LS-09 et LS-10 requièrent une déclaration de majorité, non vérifiée automatiquement.</p>
   </section>
+  <section class="love-audience" aria-labelledby="loveAudienceTitle">
+    <div class="eyebrow">À chacun son chemin</div>
+    <h3 id="loveAudienceTitle">Quel parcours souhaitez-vous découvrir ?</h3>
+    <p>Singles, fiancés ou mariés : retrouvez les enseignements les plus adaptés à votre étape de vie. Ce choix reste libre et n'enregistre aucune information sur votre situation personnelle.</p>
+    <div class="love-audience-choices" id="loveAudienceChoices" role="group" aria-label="Afficher les cours selon le public">
+      <button class="love-audience-choice" type="button" data-love-public="tous" aria-pressed="true"><span aria-hidden="true">✦</span><strong>Tous les cours</strong><small>10 cours bonus</small></button>
+      <button class="love-audience-choice" type="button" data-love-public="singles" aria-pressed="false"><span aria-hidden="true">♡</span><strong>Singles</strong><small>7 cours · Se préparer à aimer</small></button>
+      <button class="love-audience-choice" type="button" data-love-public="fiances" aria-pressed="false"><span aria-hidden="true">◇</span><strong>Fiancés</strong><small>8 cours · Préparer l'engagement</small></button>
+      <button class="love-audience-choice" type="button" data-love-public="maries" aria-pressed="false"><span aria-hidden="true">♥</span><strong>Mariés</strong><small>8 cours · Fortifier son alliance</small></button>
+    </div>
+    <p class="love-audience-summary" id="loveAudienceSummary" aria-live="polite">Tous les dix cours bonus de Love School sont présentés ci-dessous.</p>
+  </section>
   <div class="love-toolbar">
-    <div><div class="eyebrow">Les parcours de l’amour</div><h3>Choisissez votre chemin</h3></div>
+    <div><div class="eyebrow">Votre bibliothèque de l'amour</div><h3>Les enseignements à explorer</h3></div>
     <button class="button" id="refreshLoveSchool" type="button">Actualiser les cours et supports</button>
   </div>
   <p id="loveStatus" class="status" role="status" aria-live="polite"></p>
