@@ -323,3 +323,47 @@ body :is(button,a,summary,input,select,textarea):focus-visible {
     content:"▶";font-size:17px!important;
   }
 }
+
+
+/* PageSpeed Mobile 03/11/2026 : corriger les cartes ivoire de l'accueil.
+ * Les styles globaux de Fusion prévalaient sur les couleurs explicites des
+ * titres des rendez-vous et des missions (texte doré trop pâle sur ivoire).
+ * Aucune autre page ni aucune zone privée n'est modifiée. */
+html body.sde-unifie.sde-premium-home .ap-main :is(.ap-next,.ap-upcoming,.ap-mission,.ap-indicateurs,.ap-panel,.ap-card){
+  background:#fffaf0!important;
+  color:#281549!important;
+  border-color:#d7c398!important;
+}
+html body.sde-unifie.sde-premium-home .ap-main :is(.ap-next,.ap-upcoming,.ap-mission,.ap-indicateurs,.ap-panel,.ap-card) :is(h3,h4,strong,b){
+  color:#281549!important;
+  -webkit-text-fill-color:#281549!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body.sde-unifie.sde-premium-home .ap-main :is(.ap-next,.ap-upcoming,.ap-mission,.ap-indicateurs,.ap-panel,.ap-card) :is(p,li,dt,dd,small,em){
+  color:#332449!important;
+  -webkit-text-fill-color:#332449!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body.sde-unifie.sde-premium-home .ap-main :is(.ap-next,.ap-upcoming,.ap-mission,.ap-indicateurs,.ap-panel,.ap-card) :is(a:not(.ap-btn),span:not(.ap-tag):not(.ap-date):not(.ap-num)){
+  color:#332449!important;
+  -webkit-text-fill-color:#332449!important;
+  opacity:1!important;
+}
+html body.sde-unifie.sde-premium-home .ap-main .ap-next .ap-tag{
+  background:#fdf0cc!important;
+  color:#5a3c00!important;
+  -webkit-text-fill-color:#5a3c00!important;
+}
+html body.sde-unifie.sde-premium-home .ap-main .ap-mission em{
+  color:#295139!important;
+  -webkit-text-fill-color:#295139!important;
+}
+/* La photo d'ambiance d'arrière-plan n'apporte aucune information sur un
+ * téléphone : économiser son téléchargement (~79 Ko) à l'affichage initial. */
+@media(max-width:860px){
+ html body.sde-unifie.sde-premium-home .ap-hero .ap-hero-bg{
+  background-image:none!important;
+ }
+}
