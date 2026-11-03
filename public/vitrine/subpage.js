@@ -304,7 +304,7 @@
         const data=await r.json();
         if(!r.ok||!data.ok)throw Error(data.message||"L'envoi a échoué");
         $("#envoi-titre").textContent="✓ Votre demande a été transmise au secrétariat.";
-        $("#envoi-msg").textContent="Elle est enregistrée. Un responsable vous recontactera.";
+        $("#envoi-msg").textContent="Elle est enregistrée. Un responsable vous recontactera.";if(data.reference&&$("#envoi-ref")){$("#envoi-ref").textContent=String(data.reference).slice(0,20);$("#envoi-ref-bloc").hidden=false;if($("#s-ref"))$("#s-ref").value=String(data.reference).slice(0,20);}
       }catch(err){
         $("#envoi-titre").textContent="⚠ Envoi indisponible.";
         $("#envoi-msg").textContent="Vous pouvez adresser votre demande par e-mail au secrétariat.";

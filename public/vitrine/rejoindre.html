@@ -24,8 +24,9 @@
 <link rel="stylesheet" href="/vitrine/sde-premium-public.css?v=20261102refonte">
 <link rel="stylesheet" href="/vitrine/sde-sitewide-2026.css?v=20261030footerfix">
 
+<link rel="stylesheet" href="/vitrine/sde-pages-premium.css?v=20261103">
 <link rel="stylesheet" href="/vitrine/sde-fusion.css?v=20261103">
-</head><body class="sde-unifie sde-subpage sde-ivoire" data-sde-page="rejoindre">
+</head><body class="sde-unifie sde-subpage sde-ivoire sde-pages-premium" data-fam="cmd" data-sde-page="rejoindre">
 <a class="skip" href="#contenu">Accéder au contenu</a>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
   <symbol id="i-fleche" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10h10M11 6l4 4-4 4"/></symbol>
@@ -42,6 +43,7 @@
   </div>
 </header>
 <main id="contenu"><div class="sde-intro"><div class="sde-kicker">Mouvement Prophético-Apostolique SDE</div><h1>Nous contacter</h1><p>Une question, une demande de prière, envie de rejoindre le mouvement ? Contactez le secrétariat ou remplissez le formulaire ci-dessous.</p><nav class="sde-crumbs" aria-label="Fil d'Ariane"><a href="/">Accueil</a> · Contact</nav><div class="sde-page-actions"><a href="/rubriques">Toutes les rubriques</a><a class="sde-secondary" href="/mon-espace">Mon espace SDE</a></div></div>
+<nav class="pg-tabs" aria-label="Dans cette page"><ul><li><a href="#coordonnees">Coordonnées</a></li><li><a href="#rejoindre">Rejoindre</a></li><li><a href="#suivi">Suivre ma demande</a></li><li><a href="#membres">Espace soldat</a></li><li><a href="#faq">Questions</a></li></ul></nav>
 <section class="section" id="coordonnees" aria-labelledby="titre-coordonnees">
     <div class="enveloppe">
       <div class="tete-section revele">
@@ -102,6 +104,8 @@
           <div class="envoi" id="envoi" hidden>
             <b id="envoi-titre">Merci pour votre démarche.</b>
             <p id="envoi-msg" style="color:var(--gris);font-size:.95rem">Votre demande a bien été transmise à l’équipe du Mouvement SDE.</p>
+            <p id="envoi-ref-bloc" hidden>Votre référence : <span class="pg-ref" id="envoi-ref"></span><br><small>Conservez-la : elle vous permet de suivre votre demande ci-dessous, avec les 4 derniers chiffres de votre téléphone.</small></p>
+            <ol class="pg-steps" aria-label="Étapes de votre demande"><li class="fait"><b>Demande reçue</b><small>Enregistrée par le secrétariat.</small></li><li><b>Prise de contact</b><small>Un responsable vous écrit ou vous appelle (du lundi au samedi).</small></li><li><b>Intégration</b><small>Orientation vers un pôle, un programme ou une formation.</small></li></ol>
             <pre id="envoi-texte"></pre>
             <div class="actions">
               <a class="bouton b-contour" id="envoi-mail" href="#"><svg aria-hidden="true"><use href="#i-msg"/></svg>Doubler par e-mail</a>
@@ -112,6 +116,15 @@
       </div>
     </div>
   </section>
+<section class="pg-wrap" id="suivi" aria-labelledby="titre-suivi"><div class="pg-block">
+<h2 id="titre-suivi">Suivre ma demande</h2>
+<p>Saisissez la référence reçue à l’envoi (par exemple SDE-12) et les 4 derniers chiffres du téléphone, ou l’adresse e-mail, indiqués dans votre demande. Seul l’état général s’affiche : aucune donnée personnelle n’est montrée.</p>
+<div class="pg-suivi"><form id="form-suivi" novalidate>
+<label>Référence<input id="s-ref" name="ref" placeholder="SDE-12" maxlength="14" autocomplete="off" required></label>
+<label>4 derniers chiffres du téléphone ou e-mail<input id="s-contact" name="contact" maxlength="160" autocomplete="off" required></label>
+<button class="pg-btn plein" type="submit">Voir l’état de ma demande</button></form>
+<div class="pg-suivi-res" id="suivi-res" role="status" aria-live="polite"></div></div>
+</div></section>
 <section class="section" id="membres" aria-labelledby="titre-membres">
     <div class="enveloppe">
       <div class="tete-section revele">
@@ -183,4 +196,5 @@
 <script defer src="/vitrine/portail-unifie.js?v=20261030p"></script>
 <script defer src="/vitrine/subpage.js?v=20261027a"></script>
 <script defer src="/vitrine/pwa-public.js?v=20261027b"></script>
+<script defer src="/vitrine/sde-suivi-demande.js?v=20261103"></script>
 </body></html>

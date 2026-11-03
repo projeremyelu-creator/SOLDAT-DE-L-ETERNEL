@@ -1,0 +1,55 @@
+/* Pages publiques premium — navigation interne, étapes, suivi, témoignages, paiements.
+   Trois familles : Commandement (bleu nuit) · Spiritualité (violet profond) · Missions (vert militaire). */
+body.sde-pages-premium{--fam-cmd:#1b2f6b;--fam-spi:#5b21b6;--fam-mis:#3f6b34;--fam:var(--fam-cmd);--pg-line:#ded4f2;--pg-ink:#241446;--pg-soft:#f3effb}
+body.sde-pages-premium[data-fam="spi"]{--fam:var(--fam-spi)}
+body.sde-pages-premium[data-fam="mis"]{--fam:var(--fam-mis)}
+body.sde-pages-premium[data-fam="cmd"]{--fam:var(--fam-cmd)}
+.pg-tabs{position:sticky;top:0;z-index:30;background:rgba(255,253,248,.94);backdrop-filter:blur(8px);border-bottom:3px solid var(--fam);box-shadow:0 6px 18px rgba(20,12,50,.08)}
+.pg-tabs ul{list-style:none;margin:0 auto;padding:8px 16px;display:flex;gap:8px;overflow-x:auto;max-width:1180px;scrollbar-width:thin}
+.pg-tabs a{display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--fam);color:var(--fam);font-weight:700;text-decoration:none;white-space:nowrap;background:#fff;transition:background .18s ease,color .18s ease}
+.pg-tabs a:hover,.pg-tabs a:focus-visible,.pg-tabs a[aria-current="true"]{background:var(--fam);color:#fff}
+.pg-tabs a:focus-visible{outline:3px solid #e8b84b;outline-offset:2px}
+html{scroll-padding-top:76px}
+.pg-block{max-width:1180px;margin:0 auto;padding:clamp(28px,5vw,56px) 16px}
+.pg-block h2{margin:0 0 8px;color:var(--fam);font-size:clamp(1.4rem,1.1rem + 1.4vw,2rem)}
+.pg-block>p{max-width:64ch;line-height:1.65;color:var(--pg-ink)}
+.pg-steps{counter-reset:pg;list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.pg-steps li{counter-increment:pg;position:relative;padding:18px 16px 16px 62px;border-radius:18px;background:#fff;border:1px solid var(--pg-line);box-shadow:0 8px 22px rgba(42,18,96,.06);min-height:92px}
+.pg-steps li::before{content:counter(pg);position:absolute;left:14px;top:16px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--fam);color:#fff;font-weight:800}
+.pg-steps li.fait{border-color:var(--fam)}
+.pg-steps b{display:block;color:var(--pg-ink)}.pg-steps small{display:block;margin-top:4px;color:#4b3f6b;line-height:1.5}
+.pg-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+.pg-btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 22px;border-radius:999px;border:2px solid var(--fam);color:var(--fam);font-weight:700;text-decoration:none;background:#fff;cursor:pointer;font:inherit;font-weight:700}
+.pg-btn:hover,.pg-btn:focus-visible{background:var(--fam);color:#fff}
+.pg-btn.plein{background:var(--fam);color:#fff}.pg-btn.plein:hover{filter:brightness(1.12)}
+.pg-note{margin:14px 0 0;padding:12px 16px;border-left:4px solid var(--fam);background:var(--pg-soft);border-radius:0 12px 12px 0;color:var(--pg-ink);line-height:1.55}
+/* Suivi de demande */
+.pg-suivi{margin-top:22px;padding:clamp(16px,3vw,26px);border-radius:20px;background:#fff;border:1px solid var(--pg-line)}
+.pg-suivi form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;align-items:end}
+.pg-suivi label{display:grid;gap:4px;font-weight:700;color:var(--pg-ink);font-size:.92rem}
+.pg-suivi input{min-height:44px;padding:8px 12px;border:1.5px solid #bfb3dd;border-radius:12px;font:inherit}
+.pg-suivi-res{margin-top:14px;min-height:1.4em;line-height:1.55;color:var(--pg-ink)}
+.pg-suivi-res[data-erreur="true"]{color:#8a1c1c;font-weight:700}
+.pg-ref{display:inline-block;margin:6px 0;padding:6px 14px;border-radius:999px;background:var(--pg-soft);border:1.5px dashed var(--fam);font-weight:800;letter-spacing:.06em;color:var(--fam)}
+/* Paiements */
+.pay-liste{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.pay-liste li{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:14px 16px;border-radius:16px;background:#fff;border:1px solid var(--pg-line)}
+.pay-etat{font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:#fdf0cc;color:#5a3c00}
+.pay-etat.actif{background:#dff2d8;color:#1f4a17}
+/* Témoignages */
+.tm-filtres{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.tm-filtres button{min-height:44px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--fam);background:#fff;color:var(--fam);font:inherit;font-weight:700;cursor:pointer}
+.tm-filtres button[aria-pressed="true"]{background:var(--fam);color:#fff}
+.tm-grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:8px}
+.tm-carte{display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:20px;background:#fff;border:1px solid var(--pg-line);box-shadow:0 10px 26px rgba(42,18,96,.07);color:var(--pg-ink)}
+.tm-carte img{width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;border-radius:14px}
+.tm-carte .tm-cat{align-self:flex-start;font-size:.76rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--pg-soft);color:var(--fam)}
+.tm-carte blockquote{margin:0;line-height:1.65;white-space:pre-line}
+.tm-carte footer{margin-top:auto;font-weight:700;color:#4b3f6b}
+.tm-carte audio{width:100%}
+.tm-vide{padding:22px;border-radius:18px;border:1.5px dashed var(--fam);background:var(--pg-soft);color:var(--pg-ink);line-height:1.6}
+@media(max-width:620px){.pg-tabs a{padding:8px 12px}.pg-steps li{padding-left:58px}}
+@media(prefers-reduced-motion:reduce){.pg-tabs a{transition:none}}
+.pg-wrap{background:var(--pg-soft);color:var(--pg-ink)}
+.pg-wrap .pg-block{padding-block:clamp(24px,4vw,44px)}
+body.pg-tabs-static .pg-tabs{position:static}

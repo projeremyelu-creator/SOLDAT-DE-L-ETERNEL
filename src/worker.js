@@ -744,6 +744,68 @@ async function apiImpact(env) {
   }, 200, { "cache-control": "public, max-age=300" });
 }
 
+/* Agenda public synchronisable (.ics) : uniquement les rendez-vous publics à venir et le programme phare. */
+function icsDate(d) { return String(d).replace(/-/g, ""); }
+async function apiAgendaPublic(env) {
+  const jour = new Date(Date.now()).toISOString().slice(0, 10);
+  const evts = (await lireRequete(env, { path: "evenements" })).filter((e) => e.data?.date >= jour && TYPES_PUBLICS.includes(e.data?.type) && e.data?.prive !== true);
+  let phare = null;
+  try {
+    const r = await env.ASSETS.fetch(new Request("https://mouvement-sde.org/vitrine/evenement-phare.json"));
+    if (r.ok) phare = await r.json();
+  } catch { phare = null; }
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
+  let ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//MPA SDE//Agenda public//FR\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nX-WR-CALNAME:Agenda public SDE\r\n";
+  const vevent = (uid, titre, debutUtc, minutes, lieu, desc) => {
+    const fin = new Date(debutUtc.getTime() + minutes * 60000);
+    const f = (x) => x.toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
+    return `BEGIN:VEVENT\r\nUID:${uid}@mouvement-sde.org\r\nDTSTAMP:${stamp}\r\nDTSTART:${f(debutUtc)}\r\nDTEND:${f(fin)}\r\nSUMMARY:${icsEsc(titre)}\r\n${lieu ? `LOCATION:${icsEsc(lieu)}\r\n` : ""}${desc ? `DESCRIPTION:${icsEsc(desc)}\r\n` : ""}END:VEVENT\r\n`;
+  };
+  const titreCourt = String(phare?.titreCourt || "").toLowerCase();
+  for (const e of evts) {
+    const d = e.data;
+    if (titreCourt && String(d.titre || "").toLowerCase().includes(titreCourt)) continue;
+    const heure = /^([01]\d|2[0-3]):[0-5]\d$/.test(String(d.heure || "")) ? d.heure : "08:00";
+    const debut = new Date(`${d.date}T${heure}:00Z`);
+    if (Number.isNaN(debut.getTime())) continue;
+    ics += vevent(String(e.id || "").replace(/[^a-z0-9]/gi, "") || icsDate(d.date), String(d.titre || "Rassemblement").slice(0, 140), debut, Math.min(1440, Math.max(15, Number(d.duree) || 120)), String(d.lieu || "").slice(0, 200), String(d.description || "").slice(0, 400));
+  }
+  if (phare?.debut && Date.parse(phare.debut) > Date.now()) ics += vevent(String(phare.id || "phare").replace(/[^a-z0-9-]/gi, ""), String(phare.titre).slice(0, 140), new Date(phare.debut), 150, String(phare.lieu || ""), String(phare.description || ""));
+  ics += "END:VCALENDAR\r\n";
+  return new Response(ics, { headers: { "content-type": "text/calendar; charset=utf-8", "content-disposition": 'inline; filename="agenda-public-sde.ics"', "cache-control": "public, max-age=900" } });
+}
+
+/* Témoignages publiés sur le site : uniquement ceux validés par un responsable ET explicitement marqués « vitrine ». */
+const CATEGORIES_TEMOIGNAGES = ["Cheminement spirituel", "Vie communautaire", "Service et engagement", "Guérison et restauration", "Autre parcours de foi"];
+function mediaSur(m) {
+  if (!m || typeof m !== "object") return null;
+  const type = ["photo", "video", "audio"].includes(m.type) ? m.type : "";
+  let url = String(m.url || "").trim();
+  if (!type || !url) return null;
+  if (/^\/vitrine\/[\w./-]+$/.test(url) && !url.includes("..")) return { type, url };
+  /* La politique de sécurité n'autorise les images et sons que depuis le site : seule la vidéo peut être un lien externe. */
+  if (type !== "video") return null;
+  try {
+    const u = new URL(url);
+    if (u.protocol !== "https:" || /[\s"'<>]/.test(url)) return null;
+    return { type, url: u.href };
+  } catch { return null; }
+}
+async function apiTemoignagesPublics(env) {
+  const rows = await lireRequete(env, { path: "annonces" });
+  const liste = rows.filter((a) => a.data?.type === "temoignage" && a.data?.publie !== false && a.data?.vitrine === true)
+    .sort((a, b) => (b.data.creeLe || 0) - (a.data.creeLe || 0)).slice(0, 30)
+    .map((a) => ({
+      id: String(a.id).slice(0, 60),
+      auteur: String(a.data.auteur || "Un soldat").slice(0, 60),
+      texte: String(a.data.texte || a.data.contenu || "").slice(0, 1200),
+      categorie: CATEGORIES_TEMOIGNAGES.includes(a.data.categorie) ? a.data.categorie : "Autre parcours de foi",
+      media: mediaSur(a.data.media),
+      date: a.data.creeLe ? new Date(a.data.creeLe).toISOString().slice(0, 10) : ""
+    })).filter((t) => t.texte);
+  return json({ ok: true, categories: CATEGORIES_TEMOIGNAGES, temoignages: liste }, 200, { "cache-control": "public, max-age=300" });
+}
+
 /* Contenu public modifiable : documents site/contact, site/programmes, site/banniere.
    Écriture réservée aux administrateurs (REGLES) ; lecture publique en texte seul, champs filtrés. */
 const txt = (v, n) => String(v ?? "").replace(/[\u0000-\u001f\u007f]/g, " ").trim().slice(0, n);
@@ -891,7 +953,7 @@ async function apiEngager(req, env, ctx) {
   )`).run();
   await env.DB.prepare(`CREATE INDEX IF NOT EXISTS engagements_cree ON engagements(traite, cree)`).run();
 
-  await env.DB.prepare(`INSERT INTO engagements (cree, objet, pole, source, nom, tel, email, ville, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+  const insertion = await env.DB.prepare(`INSERT INTO engagements (cree, objet, pole, source, nom, tel, email, ville, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
     .bind(Date.now(), objet, pole, source, nom, tel, email, ville, objet === "Devenir membre" ? `Programme : ${programme}\nMotivation : ${motivation}${message ? `\nMessage : ${message}` : ""}` : message)
     .run();
 
@@ -901,7 +963,34 @@ async function apiEngager(req, env, ctx) {
     await Promise.allSettled([alerterSecretariat(env, sec.emails, { objet, nom, tel, email, ville }), accuserReception(env, { nom, objet, email })]);
   })().catch(() => {});
   if (typeof ctx?.waitUntil === "function") ctx.waitUntil(suite);
-  return json({ ok: true, message: "Votre demande a bien été transmise au secrétariat du mouvement. Nous vous recontacterons sous peu." });
+  const numero = Number(insertion?.meta?.last_row_id) || 0;
+  return json({ ok: true, reference: numero ? "SDE-" + numero : "", message: "Votre demande a bien été transmise au secrétariat du mouvement. Nous vous recontacterons sous peu." });
+}
+
+/* Suivi d'une demande : la référence ne suffit pas, il faut aussi les 4 derniers chiffres du téléphone
+   ou l'e-mail donnés dans la demande. Seul un état général est renvoyé, jamais de donnée personnelle. */
+async function apiEngagerSuivi(req, env) {
+  const url = new URL(req.url);
+  const ref = String(url.searchParams.get("ref") || "").trim().toUpperCase().replace(/^SDE-?/, "");
+  const contact = String(url.searchParams.get("contact") || "").trim().toLowerCase().slice(0, 160);
+  if (!/^\d{1,9}$/.test(ref) || contact.length < 4) return erreur("champ_manquant", "Indiquez la référence reçue et les 4 derniers chiffres de votre téléphone (ou votre e-mail).");
+  const cle = "suivi:" + ipDe(req);
+  if (await bloque(env, cle, 20)) return erreur("rate_limited", "Trop de vérifications. Réessayez plus tard.", 429);
+  await compter(env, cle);
+  const neutre = () => erreur("introuvable", "Aucune demande ne correspond à ces informations.", 404);
+  let ligne = null;
+  try {
+    ligne = await env.DB.prepare("SELECT cree, objet, tel, email, traite FROM engagements WHERE id = ?").bind(Number(ref)).first();
+  } catch { return neutre(); }
+  if (!ligne) return neutre();
+  const chiffres = String(ligne.tel || "").replace(/\D/g, "");
+  const okTel = /^\d{4}$/.test(contact) && chiffres.length >= 4 && chiffres.endsWith(contact);
+  const okMail = contact.includes("@") && String(ligne.email || "").toLowerCase() === contact;
+  if (!okTel && !okMail) return neutre();
+  const traite = Number(ligne.traite) === 1;
+  return json({ ok: true, reference: "SDE-" + Number(ref), objet: String(ligne.objet || ""), recueLe: new Date(Number(ligne.cree)).toISOString().slice(0, 10),
+    etape: traite ? 3 : 2, statut: traite ? "Traitée" : "Reçue par le secrétariat",
+    message: traite ? "Votre demande a été traitée par le secrétariat." : "Votre demande est bien reçue et en attente de prise de contact." }, 200, { "cache-control": "no-store" });
 }
 
 /* Secrétariat : accès facultatif aux demandes, activé et alimenté par un administrateur
@@ -1723,6 +1812,8 @@ async function traiter(req, env, ctx) {
       }
       if (p === "/api/public") return apiPublic(env);
       if (p === "/api/impact" && req.method === "GET") return apiImpact(env);
+      if (p === "/api/agenda-public.ics" && req.method === "GET") return apiAgendaPublic(env);
+      if (p === "/api/temoignages-publics" && req.method === "GET") return apiTemoignagesPublics(env);
       if (p === "/api/site" && req.method === "GET") return apiSite(env);
       if (p === "/api/visites") return apiVisites(req, env);
       // Les formulaires publics passent par les contrôles d'origine et de débit ci-dessous.
@@ -1780,6 +1871,7 @@ async function traiter(req, env, ctx) {
     if (!avecSession && await rateLimitGlobal(env, ipGlobal)) return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
     if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
     if (p === "/api/engager" && req.method === "POST") return apiEngager(req, env, ctx);
+    if (p === "/api/engager/suivi" && req.method === "GET") return apiEngagerSuivi(req, env);
     if (p === "/api/preinscription-academy" && req.method === "POST") return apiPreinscriptionAcademy(req, env, ctx);
     if (p === "/api/priere-anonyme" && req.method === "POST") return apiPriereAnonyme(req,env,ctx);
     if (p === "/api/site" && req.method === "GET") return apiSite(env);
