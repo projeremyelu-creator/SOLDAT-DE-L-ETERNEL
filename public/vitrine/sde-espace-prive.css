@@ -47,3 +47,7 @@ html[data-theme="dark"] .sde-espace-prive .sq-nonlus{color:#10131f}
 .sde-espace-prive .cm-case{display:flex;gap:10px;align-items:flex-start}
 .sde-espace-prive .cm-case input{width:auto;margin-top:4px}
 @media print{.sde-hub-head,.hub-footer,.hub-breadcrumb,#cm-apercu,#cm-creer,#cm-csv,#cm-imprimer{display:none!important}}
+.sde-espace-prive .co-scenarios{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.sde-espace-prive .co-scenarios li{padding:12px 14px;border:1px solid var(--bord);border-radius:12px;background:var(--card)}
+.sde-espace-prive .co-scenarios input{width:auto;margin-inline-end:6px}
+.sde-espace-prive #co-apercu-zone{margin-top:14px;padding:14px;border:1px dashed var(--bord);border-radius:12px}

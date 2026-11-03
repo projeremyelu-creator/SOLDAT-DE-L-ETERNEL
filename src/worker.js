@@ -7,6 +7,7 @@ import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {memberAcademySummary} from "./member-academy-summary.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {squadChatApi} from "./squad-chat.js";
+import {courrielApi,lancerCourriels} from "./courriel.js";
 import {comptesMembresApi,mdpTemporaire,oublierMdpTemporaire,estInterne} from "./comptes-membres.js";
 import {passkeysApi} from "./passkeys.js";
 import {sdeExpansionApi} from "./sde-expansion.js";
@@ -1626,7 +1627,7 @@ async function nettoyerTentatives(env) {
 export default {
   async scheduled(ev, env, ctx) {
     if (ev.cron === "0 2 * * *") ctx.waitUntil(Promise.all([sauvegarder(env), nettoyerMedias(env), syncEspacesMembres(env), nettoyerSessions(env), nettoyerTentatives(env)]));
-    ctx.waitUntil(Promise.all([flushNotices(env),sendPortalReminders(env)]));
+    ctx.waitUntil(Promise.all([flushNotices(env),sendPortalReminders(env),lancerCourriels(env).catch(e=>console.warn("Courriels : échec",e?.name||"Erreur"))]));
   },
   async fetch(req, env, ctx) {
     /* Ressources publiées sous /_v/<révision>/… : même fichier, adresse unique par déploiement (cache toujours à jour). */
@@ -1702,6 +1703,7 @@ async function traiter(req, env, ctx) {
         "/temoignages": "/vitrine/temoignages.html",
         "/squads": "/vitrine/squads.html",
   "/mot-de-passe": "/vitrine/mot-de-passe.html",
+  "/courriels": "/vitrine/courriels.html",
   "/comptes-membres": "/vitrine/comptes-membres.html",
         "/empreinte": "/vitrine/empreinte.html",
         "/soldiers-voice": "/vitrine/soldiers-voice.html",
@@ -1922,6 +1924,13 @@ async function traiter(req, env, ctx) {
       if (p === "/api/os-v31") return await apiSdeOs31(req, env, u);
       if (p === "/api/tableau-de-bord") return apiTableauDeBord(req, env, u);
       if (p === "/api/moi") return json({ connecte: u.connecte, id: u.id, email: estInterne(u.email) ? "" : u.email, nom: u.nom, photo: u.photo || "", role: u.role, libRole: LIB_ROLES[u.role] || "Visiteur", niveau: u.niveau, membreId: u.membreId || null, matricule: u.matricule || "", mdpTemporaire: u.connecte ? !!(await mdpTemporaire(env, u.email)) : false, ia: !!env.ANTHROPIC_API_KEY && u.niveau >= 1 });
+      if (p.startsWith("/api/newsletter") || p.startsWith("/api/courriels")) {
+        const courriel = await courrielApi(req, env, u, { blocked: (key, max) => bloque(env, key, max), count: key => compter(env, key), ip: ipDe });
+        if (courriel) {
+          if (p === "/api/courriels" && req.method === "POST" && courriel.ok) await portalAudit(env, u, "courriels", "modification");
+          return courriel;
+        }
+      }
       if (p === "/api/inscription" && req.method === "POST") return apiInscription(req, env, ctx);
       if (p === "/api/connexion" && req.method === "POST") return apiConnexionMdp(req, env);
       if (p === "/api/activation" && req.method === "POST") return apiActivation(req, env);
