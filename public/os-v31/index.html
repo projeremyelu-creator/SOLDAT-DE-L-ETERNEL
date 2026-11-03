@@ -7,8 +7,8 @@
 <link rel="icon" href="/icone-192.png"><link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;500;600;700;800&family=Saira+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/os-v31/sde-os.css?v=31a">
-<script defer src="/os-v31/sde-os.js?v=31a"></script>
+<link rel="stylesheet" href="/os-v31/sde-os.css?v=31b">
+<script defer src="/os-v31/sde-os.js?v=31b"></script>
 <script defer src="/vitrine/portail-espace.js?v=20261026c"></script>
 </head>
 <body data-presentation="institutionnel">
@@ -56,6 +56,15 @@
       <section class="workspace-view active" id="view-tableau" aria-labelledby="dashboard-label">
         <div class="hero"><div class="hero-copy"><span class="eyebrow light">POSTE DE COMMANDEMENT · SDE OS 3.1</span><h2 id="dashboard-label">Équiper chaque vie.<br><em>Servir les nations.</em></h2><p>Une expérience numérique enracinée dans la vision, le développement intégral et la redevabilité du Mouvement Soldat De l'Éternel.</p><div class="hero-actions"><button type="button" data-route="integral" class="primary-button">Mon bilan intégral ↗</button><button type="button" data-route="academy" class="outline-button">Soldiers Academy</button></div></div><div class="hero-seal" aria-hidden="true"><span>SDE</span><strong>LE RÉVEIL<br>SPIRITUEL<br>DES NATIONS</strong><small>ÉDITION SOLDIER HOUSE</small></div></div>
         <div class="overview-grid" id="kpi-grid"><article class="stat-card"><span>Auto-évaluations personnelles</span><strong id="stat-checkins">—</strong><small>Enregistrées dans votre espace</small></article><article class="stat-card"><span>Mon parcours Academy</span><strong id="stat-school">—</strong><small>Écoles pour lesquelles vous avez manifesté un intérêt</small></article><article class="stat-card admin-stat" hidden><span>Décisions en attente</span><strong id="stat-pending">—</strong><small>Validation collégiale à examiner</small></article><article class="stat-card"><span>Architecture SDE</span><strong>5 <small>pôles</small></strong><small>Structure institutionnelle du mouvement</small></article></div>
+        <section id="pilotage-admin" class="pilotage-admin" aria-labelledby="pilotage-titre" hidden>
+          <div class="section-head"><div><span class="eyebrow">PILOTAGE · ADMINISTRATION</span><h2 id="pilotage-titre">Formations et cellules</h2></div><button id="pilotage-actualiser" class="quiet-button" type="button">Actualiser ↻</button></div>
+          <p class="hint" id="pilotage-etat" role="status">Chargement des données réelles…</p>
+          <div class="overview-grid" id="pilotage-kpi"></div>
+          <div class="card-layout">
+            <div class="panel"><div class="panel-head"><h3>Inscriptions aux formations</h3><span class="private-chip">Effectifs, sans noms</span></div><div id="pilotage-formations" class="history-grid"></div><p class="hint" id="pilotage-ecoles"></p></div>
+            <div class="panel"><div class="panel-head"><h3>Cellules et cellules de prière</h3><span class="private-chip">Registre des garnisons</span></div><div id="pilotage-cellules" class="history-grid"></div></div>
+          </div>
+        </section>
         <div class="section-head"><div><span class="eyebrow">ACCÈS IMMÉDIAT</span><h2>Votre écosystème SDE</h2></div><button id="bento-menu-open" class="quiet-button" type="button">Explorer les modules ↗</button></div>
         <div class="bento-nav" aria-label="Navigation par cartes Bento">
           <button data-route="integral" class="bento-card bento-large" type="button"><span class="big-icon">◎</span><span class="bento-text"><b>Soldat Intégral</b><small>Sept dimensions institutionnelles et suivi volontaire</small></span><span>↗</span></button>

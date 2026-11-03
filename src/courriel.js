@@ -10,7 +10,10 @@ const json=(corps,status=200)=>Response.json(corps,{status,headers:{'cache-contr
 const aller=(chemin)=>new Response(null,{status:303,headers:{location:BASE+chemin,'cache-control':'no-store'}});
 const fail=(message,status=400)=>json({ok:false,message},status);
 export const THEMES=['hebdo','nouveau','agenda'];
+export const ABONNEMENTS=[...THEMES,'academy'];
+export const ECOLES={1:'Fondations',2:'Maturité',3:'Service et Leadership',4:'Mission et Influence'};
 export const LIBELLES={hebdo:'Lettre hebdomadaire',nouveau:'Nouveaux cultes et rassemblements',agenda:'Alertes d’agenda (3 jours et la veille)'};
+export const LIBELLE_ACADEMY='Résumés de cours Soldiers Academy';
 const EMAIL_OK=/^[^@\s]{1,64}@[^@\s]{1,190}\.[^@\s]{2,24}$/;
 const LOT=100,MAX_LOTS=40;
 export const courrielConfigure=env=>!!(env?.RESEND_API_KEY&&env?.COURRIEL_FROM&&env?.COURRIEL_SECRET);
@@ -43,6 +46,7 @@ export async function ensure(env){
  for(const sql of [
   'CREATE TABLE IF NOT EXISTS sde_abonnes (email TEXT PRIMARY KEY,nom TEXT NOT NULL DEFAULT \'\',themes TEXT NOT NULL,statut TEXT NOT NULL,cree INTEGER NOT NULL,confirme INTEGER,confirmation_envoyee INTEGER NOT NULL DEFAULT 0,derniere_demande INTEGER NOT NULL DEFAULT 0)',
   'CREATE TABLE IF NOT EXISTS sde_courriel_envois (cle TEXT PRIMARY KEY,envoye INTEGER NOT NULL,total INTEGER NOT NULL DEFAULT 0)',
+  'CREATE TABLE IF NOT EXISTS sde_resumes (id TEXT PRIMARY KEY,ecole INTEGER NOT NULL DEFAULT 0,titre TEXT NOT NULL,texte TEXT NOT NULL,lien TEXT NOT NULL DEFAULT \'\',cree INTEGER NOT NULL,envoye INTEGER,total INTEGER NOT NULL DEFAULT 0)',
   'CREATE TABLE IF NOT EXISTS meta (cle TEXT PRIMARY KEY, val TEXT)'
  ])await env.DB.prepare(sql).run();
 }
@@ -70,11 +74,11 @@ export async function envoyerLot(env,messages,{fetchImpl=fetch}={}){
 /* ── mise en forme ── */
 const dateFr=iso=>{try{return new Date(iso+'T12:00:00Z').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',timeZone:'UTC'})}catch{return iso}};
 const ligneEvt=e=>[dateFr(e.date),e.heure,e.lieu].filter(Boolean).join(' · ');
-function gabarit({titre,intro,blocs,lienDesabo}){
+function gabarit({titre,intro,blocs,lienDesabo,bouton}){
  const html='<!doctype html><html lang="fr"><body style="margin:0;background:#f4f1fb;font-family:Arial,Helvetica,sans-serif;color:#1d1633"><div style="max-width:600px;margin:0 auto;padding:24px 16px"><div style="background:#3b1d7a;color:#f3d98b;padding:20px 24px;border-radius:12px 12px 0 0"><strong style="font-size:18px">Mouvement SDE · Soldats de l’Éternel</strong></div><div style="background:#fff;padding:24px;border-radius:0 0 12px 12px"><h1 style="font-size:22px;margin:0 0 12px">'+esc(titre)+'</h1>'+(intro?'<p style="line-height:1.5">'+esc(intro)+'</p>':'')+
-  blocs.map(b=>'<h2 style="font-size:16px;color:#3b1d7a;margin:22px 0 8px">'+esc(b.titre)+'</h2>'+b.lignes.map(l=>'<p style="margin:0 0 10px;line-height:1.45"><strong>'+esc(l.t)+'</strong>'+(l.d?'<br><span style="color:#5a5072">'+esc(l.d)+'</span>':'')+'</p>').join('')).join('')+
-  '<p style="margin:26px 0 0"><a href="'+BASE+'/programmes" style="background:#f3d98b;color:#1d1633;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:bold">Voir le programme complet</a></p></div><p style="font-size:12px;color:#6b6280;line-height:1.5;text-align:center;margin:16px 0 0">Vous recevez ce message car vous vous êtes inscrit à la lettre du Mouvement SDE.<br><a href="'+esc(lienDesabo)+'" style="color:#3b1d7a">Me désinscrire en un clic</a> · Contact : infosoldat@gmail.com</p></div></body></html>';
- const texte=[titre,'',intro||'',...blocs.flatMap(b=>['',b.titre.toUpperCase(),...b.lignes.map(l=>'- '+l.t+(l.d?' ('+l.d+')':''))]),'','Programme : '+BASE+'/programmes','','Me désinscrire : '+lienDesabo].filter((l,i,a)=>!(l===''&&a[i-1]==='')).join('\n');
+  blocs.map(b=>'<h2 style="font-size:16px;color:#3b1d7a;margin:22px 0 8px">'+esc(b.titre)+'</h2>'+b.lignes.map(l=>l.p!==undefined?'<p style="margin:0 0 12px;line-height:1.55">'+esc(l.p)+'</p>':'<p style="margin:0 0 10px;line-height:1.45"><strong>'+esc(l.t)+'</strong>'+(l.d?'<br><span style="color:#5a5072">'+esc(l.d)+'</span>':'')+'</p>').join('')).join('')+
+  '<p style="margin:26px 0 0"><a href="'+esc(bouton?bouton.url:BASE+'/programmes')+'" style="background:#f3d98b;color:#1d1633;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:bold">'+esc(bouton?bouton.libelle:'Voir le programme complet')+'</a></p></div><p style="font-size:12px;color:#6b6280;line-height:1.5;text-align:center;margin:16px 0 0">Vous recevez ce message car vous vous êtes inscrit à la lettre du Mouvement SDE.<br><a href="'+esc(lienDesabo)+'" style="color:#3b1d7a">Me désinscrire en un clic</a> · Contact : infosoldat@gmail.com</p></div></body></html>';
+ const texte=[titre,'',intro||'',...blocs.flatMap(b=>['',b.titre.toUpperCase(),...b.lignes.map(l=>l.p!==undefined?l.p:'- '+l.t+(l.d?' ('+l.d+')':''))]),'',(bouton?bouton.libelle+' : '+bouton.url:'Programme : '+BASE+'/programmes'),'','Me désinscrire : '+lienDesabo].filter((l,i,a)=>!(l===''&&a[i-1]==='')).join('\n');
  return{html,text:texte};
 }
 async function pourAbonne(env,abonne,sujet,contenu){
@@ -196,7 +200,7 @@ export async function courrielApi(req,env,u,s){
   const email=String(b.email||'').trim().toLowerCase(),nom=propre(b.nom,100);
   if(!EMAIL_OK.test(email))return fail('Adresse e-mail invalide.');
   if(b.consentement!==true)return fail('Votre consentement est nécessaire pour vous inscrire.');
-  const themes=(Array.isArray(b.themes)?b.themes:THEMES).filter(t=>THEMES.includes(t));
+  const themes=(Array.isArray(b.themes)?b.themes:THEMES).filter(t=>ABONNEMENTS.includes(t));
   if(!themes.length)return fail('Choisissez au moins un type de message.');
   await ensure(env);
   const ex=await env.DB.prepare('SELECT statut,derniere_demande FROM sde_abonnes WHERE email=?').bind(email).first();
@@ -241,10 +245,11 @@ export async function courrielApi(req,env,u,s){
   await ensure(env);
   if(req.method==='GET'){
    const lignes=(await env.DB.prepare('SELECT statut,themes FROM sde_abonnes').all()).results||[];
-   const par={};for(const t of THEMES)par[t]=lignes.filter(l=>l.statut==='actif'&&String(l.themes).split(',').includes(t)).length;
+   const par={};for(const t of ABONNEMENTS)par[t]=lignes.filter(l=>l.statut==='actif'&&String(l.themes).split(',').includes(t)).length;
    const envois=(await env.DB.prepare('SELECT cle,envoye,total FROM sde_courriel_envois ORDER BY envoye DESC LIMIT 12').all()).results||[];
    return json({ok:true,configure:courrielConfigure(env),manque:['RESEND_API_KEY','COURRIEL_FROM','COURRIEL_SECRET'].filter(k=>!env[k]),
-    webhook:String(env.COURRIEL_WEBHOOK_SECRET||'').length>=24,scenarios:await reglages(env),libelles:LIBELLES,
+    webhook:String(env.COURRIEL_WEBHOOK_SECRET||'').length>=24,scenarios:await reglages(env),libelles:LIBELLES,academy:LIBELLE_ACADEMY,ecoles:ECOLES,
+    resumes:((await env.DB.prepare('SELECT id,ecole,titre,cree,envoye,total FROM sde_resumes ORDER BY cree DESC LIMIT 20').all()).results||[]),
     abonnes:{actifs:lignes.filter(l=>l.statut==='actif').length,enAttente:lignes.filter(l=>l.statut==='en_attente').length,desabonnes:lignes.filter(l=>l.statut==='desabonne').length,parTheme:par},envois});
   }
   if(req.method!=='POST')return fail('Méthode refusée.',405);
@@ -255,6 +260,33 @@ export async function courrielApi(req,env,u,s){
    if(apres.nouveau&&!avant.nouveau)await amorcer(env,Date.now());
    await ecrireReglages(env,apres);
    return json({ok:true,scenarios:apres});
+  }
+  if(b.resume&&typeof b.resume==='object'){
+   const titre=propre(b.resume.titre,140),texte=String(b.resume.texte||'').replace(/\r/g,'').trim().slice(0,4000),ecole=Number(b.resume.ecole)||0;
+   let lien=String(b.resume.lien||'').trim();
+   if(titre.length<3)return fail('Donnez un titre au résumé.');
+   if(texte.length<30)return fail('Le résumé est trop court (30 caractères au moins).');
+   if(ecole&&!ECOLES[ecole])return fail('École inconnue.');
+   if(lien){try{const l=new URL(lien);if(l.protocol!=='https:')throw 0;lien=l.href.slice(0,500)}catch{return fail('Le lien de la fiche doit être une adresse https valide.')}}
+   const id=crypto.randomUUID();
+   await env.DB.prepare('INSERT INTO sde_resumes(id,ecole,titre,texte,lien,cree) VALUES(?,?,?,?,?,?)').bind(id,ecole,titre,texte,lien,Date.now()).run();
+   return json({ok:true,id});
+  }
+  if(typeof b.supprimerResume==='string'){
+   const r=await env.DB.prepare('DELETE FROM sde_resumes WHERE id=? AND envoye IS NULL').bind(b.supprimerResume).run();
+   return r?.meta?.changes?json({ok:true}):fail('Ce résumé est introuvable ou déjà envoyé.',404);
+  }
+  if(typeof b.envoyerResume==='string'){
+   if(!courrielConfigure(env))return fail('L’envoi n’est pas encore configuré.',409);
+   const res=await env.DB.prepare('SELECT * FROM sde_resumes WHERE id=?').bind(b.envoyerResume).first();
+   if(!res)return fail('Résumé introuvable.',404);
+   const cle='resume:'+res.id;
+   if(!await reserver(env,cle))return fail('Ce résumé a déjà été envoyé.',409);
+   const paragraphes=String(res.texte).split(/\n{2,}/).map(x=>propre(x,1200)).filter(Boolean).slice(0,12);
+   const r=await diffuser(env,[cle],'academy','Soldiers Academy · '+res.titre,{titre:res.titre,intro:ECOLES[res.ecole]?'Soldiers Academy · École '+res.ecole+' — '+ECOLES[res.ecole]:'Soldiers Academy',blocs:[{titre:'Résumé du cours',lignes:paragraphes.map(p=>({p}))}],bouton:res.lien?{libelle:'Télécharger la fiche',url:res.lien}:null},opts);
+   if(r.sent>0)await env.DB.prepare('UPDATE sde_resumes SET envoye=?,total=? WHERE id=?').bind(Date.now(),r.sent,res.id).run();
+   else return fail(r.total===0?'Aucun abonné confirmé n’a choisi les résumés de cours.':'Resend a refusé l’envoi : réessayez après vérification de la configuration.',r.total===0?409:502);
+   return json({ok:true,envoyes:r.sent});
   }
   if(b.apercu===true){
    const c=await contenuHebdo(env,Date.now());

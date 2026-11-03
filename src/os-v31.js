@@ -44,6 +44,41 @@ const TABLES=[
 ];
 async function init(env){for(const sql of TABLES)await env.DB.prepare(sql).run();}
 const jsonField=v=>{try{return JSON.parse(v);}catch{return [];}};
+
+/* Agrégats de pilotage (administrateurs) : effectifs de formation et cellules. Aucun nom de participant. */
+const lire=async(env,parent)=>((await env.DB.prepare("SELECT id,data FROM docs WHERE parent=?").bind(parent).all()).results||[]).map(r=>{try{return{id:r.id,...JSON.parse(r.data)}}catch{return null}}).filter(Boolean);
+export function resumerFormations(formations){
+ const lignes=[];let inscrits=0,certifies=0;
+ for(const f of formations){
+  const parts=f.participants&&typeof f.participants==="object"?Object.values(f.participants).filter(p=>p&&typeof p==="object"):[];
+  const actifs=parts.filter(p=>!["Retiré","Abandon"].includes(p.statut));
+  const cert=actifs.filter(p=>p.statut==="Certifié").length;
+  inscrits+=actifs.length;certifies+=cert;
+  lignes.push({titre:safe(f.titre||"Formation",140),debut:safe(f.dateDebut,10),inscrits:actifs.length,certifies:cert,retires:parts.length-actifs.length});
+ }
+ lignes.sort((a,b)=>String(b.debut).localeCompare(String(a.debut))||a.titre.localeCompare(b.titre,"fr"));
+ return{lignes:lignes.slice(0,12),total:formations.length,inscrits,certifies};
+}
+export function resumerCellules(garnisons,membres){
+ const par=new Map(garnisons.map(g=>[g.id,g]));
+ const enfants=new Map();for(const g of garnisons){const k=g.parentId||"";if(!enfants.has(k))enfants.set(k,[]);enfants.get(k).push(g.id)}
+ const descendance=id=>{const vus=new Set([id]),pile=[id];while(pile.length){for(const c of enfants.get(pile.pop())||[])if(!vus.has(c)){vus.add(c);pile.push(c)}}return vus};
+ const nombre=new Map();for(const m of membres)if(m.actif!==false&&m.garnisonId)nombre.set(m.garnisonId,(nombre.get(m.garnisonId)||0)+1);
+ const cellules=garnisons.filter(g=>g.type==="Cellule").map(g=>{
+  const ids=descendance(g.id);let n=0;for(const i of ids)n+=nombre.get(i)||0;
+  const texte=[g.nom,g.description,g.objet].map(x=>safe(x,200)).join(" ");
+  return{nom:safe(g.nom||"Cellule",120),priere:/pri[eè]re|intercess|veill/i.test(texte),statut:safe(g.statut||"Active",30),ville:safe(g.ville,80),pays:safe(g.pays,60),jour:safe(g.jour,20),heure:safe(g.heure,5),membres:n,responsable:!!g.responsableId,parent:par.get(g.parentId)?safe(par.get(g.parentId).nom,120):""};
+ }).sort((a,b)=>Number(b.priere)-Number(a.priere)||a.nom.localeCompare(b.nom,"fr"));
+ return{cellules:cellules.slice(0,40),total:cellules.length,priere:cellules.filter(c=>c.priere).length,sansResponsable:cellules.filter(c=>!c.responsable).length};
+}
+async function pilotage(env){
+ const [formations,garnisons,membres]=await Promise.all([lire(env,"formations"),lire(env,"garnisons"),lire(env,"membres")]);
+ const interet=[];
+ try{const r=await env.DB.prepare("SELECT ecole,COUNT(*) AS n FROM osv31_academy GROUP BY ecole ORDER BY ecole").all();for(const x of r.results||[])interet.push({ecole:Number(x.ecole),n:Number(x.n)})}catch{}
+ let preinscriptions={};
+ try{const r=await env.DB.prepare("SELECT statut,COUNT(*) AS n FROM preinscriptions_academy GROUP BY statut").all();for(const x of r.results||[])preinscriptions[safe(x.statut,30)||"nouvelle"]=Number(x.n)}catch{}
+ return{formations:resumerFormations(formations),cellules:resumerCellules(garnisons,membres),interetEcoles:interet,preinscriptions};
+}
 export async function apiSdeOs31(req,env,u){
  if(req.method!=="POST")return err("Méthode non autorisée",405);
  if(!u?.connecte||!u.id)return err("Connexion requise à votre compte SDE",401);
@@ -53,6 +88,10 @@ export async function apiSdeOs31(req,env,u){
  const action=safe(b.action,40);
  if(action==="referentiel")return reply({ok:true,referentiel:SDE_OS_31,role:u.role,admin:roleAdmin(u)});
  await init(env);
+ if(action==="pilotage"){
+  if(!roleAdmin(u))return err("Réservé aux administrateurs",403);
+  return reply({ok:true,...(await pilotage(env))});
+ }
  if(action==="tableau"){
   const [a,e,d]=await Promise.all([
    env.DB.prepare("SELECT COUNT(*) AS n FROM osv31_checkins WHERE user_id=?").bind(u.id).first(),

@@ -164,3 +164,41 @@ test('Courriels : câblage du worker, page d’inscription, tâche planifiée',(
  assert.ok(!/RESEND_API_KEY\s*=\s*['"]re_/.test(c),'aucune clé en dur');
  assert.ok(readFileSync('public/vitrine/courriels.html','utf8').includes('noindex'));
 });
+
+test('Courriels : résumés de cours Soldiers Academy — enregistrés, envoyés sur clic, une seule fois, aux abonnés concernés',async()=>{
+ const w=await pret(CONF),f=faux(),reel=globalThis.fetch;globalThis.fetch=f.f;
+ try{
+  const admin=w.compte('adm','Admin','admin'),simple=w.compte('s','Simple');
+  abonne(w,'a@exemple.test','hebdo,academy');abonne(w,'b@exemple.test','hebdo');abonne(w,'c@exemple.test','academy','en_attente');
+  const post=(jeton,corps)=>w.appel('/api/courriels',{methode:'POST',jeton,corps});
+  assert.equal((await post(simple,{resume:{titre:'x',texte:'y'}})).statut,403);
+  assert.equal((await post(admin,{resume:{titre:'Co',texte:'x'.repeat(40)}})).statut,400,'titre trop court');
+  assert.equal((await post(admin,{resume:{titre:'Cours',texte:'court'}})).statut,400,'résumé trop court');
+  assert.equal((await post(admin,{resume:{titre:'Cours',texte:'x'.repeat(40),lien:'http://non-securise.test'}})).statut,400,'https obligatoire');
+  assert.equal((await post(admin,{resume:{titre:'Cours',texte:'x'.repeat(40),lien:'javascript:alert(1)'}})).statut,400);
+  const cree=await post(admin,{resume:{ecole:1,titre:'Identité en Christ <b>',texte:'Premier paragraphe du cours.\n\nSecond paragraphe : prier chaque jour.',lien:'https://mouvement-sde.org/vitrine/media/fiche-fondations.pdf'}});
+  assert.equal(cree.statut,200);const id=cree.json.id;
+  assert.equal(f.envois.length,0,'enregistrer n’envoie rien');
+  const etat=(await w.appel('/api/courriels',{jeton:admin})).json;
+  assert.equal(etat.resumes.length,1);assert.equal(etat.abonnes.parTheme.academy,1,'seulement l’abonné confirmé qui a choisi les résumés');
+  const env=await post(admin,{envoyerResume:id});
+  assert.equal(env.statut,200);assert.equal(env.json.envoyes,1);
+  const m=f.messages()[0];
+  assert.equal(m.to[0],'a@exemple.test');assert.match(m.subject,/^Soldiers Academy · Identité en Christ/);
+  assert.match(m.html,/Premier paragraphe/);assert.match(m.html,/Second paragraphe/);assert.ok(!m.html.includes('<b>'),'titre échappé');
+  assert.match(m.html,/href="https:\/\/mouvement-sde\.org\/vitrine\/media\/fiche-fondations\.pdf"/);assert.match(m.html,/Télécharger la fiche/);
+  assert.match(m.text,/Télécharger la fiche : https:/);assert.match(m.headers['List-Unsubscribe'],/desabonner/);
+  assert.equal((await post(admin,{envoyerResume:id})).statut,409,'jamais deux fois');
+  assert.equal((await post(admin,{supprimerResume:id})).statut,404,'un résumé envoyé reste dans l’historique');
+  assert.equal(f.envois.length,1);
+  // sans abonné concerné
+  w.sql.exec("UPDATE sde_abonnes SET statut='desabonne'");
+  const autre=(await post(admin,{resume:{titre:'Autre cours',texte:'y'.repeat(40)}})).json.id;
+  assert.equal((await post(admin,{envoyerResume:autre})).statut,409);
+  assert.equal(w.sql.prepare("SELECT COUNT(*) AS n FROM sde_courriel_envois WHERE cle=?").get('resume:'+autre).n,0,'réservation libérée');
+  assert.equal((await post(admin,{supprimerResume:autre})).json.ok,true);
+  // l'inscription publique accepte le thème « academy »
+  assert.equal((await w.appel('/api/newsletter',{methode:'POST',corps:{email:'nouveau@exemple.test',themes:['academy'],consentement:true}})).statut,200);
+  assert.equal(w.sql.prepare("SELECT themes FROM sde_abonnes WHERE email='nouveau@exemple.test'").get().themes,'academy');
+ }finally{globalThis.fetch=reel}
+});
