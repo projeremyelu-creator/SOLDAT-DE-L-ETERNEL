@@ -310,3 +310,60 @@ test('Fidélité mobile SDE : Academy et Agenda affichent leurs cartes sans cont
   assert.equal(c.errors.length,0);
  }finally{c.close()}
 });
+
+test('Pilotage : chiffres réels animés, détails interactifs et navigation depuis les cartes',async()=>{
+ const c=await page('/administration?module=pilotage','admin');
+ try{
+  await waitFor(()=>c.d.querySelectorAll('.ref-command .ref-kpi-interactive').length===4);
+  const kpis=[...c.d.querySelectorAll('.ref-command .ref-kpi-interactive')];
+  assert.deepEqual(kpis.map(x=>x.querySelector('h3')?.textContent),[
+   'Membres actifs','Demandes en attente','Pôles de mission','Programmes publiés'
+  ]);
+  assert.ok(kpis.every(x=>x.querySelector('.ref-kpi-number')));
+  const details=c.d.getElementById('ref-kpi-fiche');
+  assert.ok(details);
+  assert.equal(details.hidden,true);
+  const members=kpis[0].querySelector('button.ref-kpi-go');
+  members.click();
+  await waitFor(()=>!details.hidden);
+  assert.equal(members.getAttribute('aria-expanded'),'true');
+  assert.match(details.textContent,/Membres actifs/);
+  assert.match(details.textContent,/Membres actuellement actifs/);
+  details.querySelector('button.ref-kpi-fiche-open').click();
+  await tick();
+  assert.equal(new URLSearchParams(c.w.location.search).get('module'),'annuaire');
+  assert.deepEqual(c.errors,[]);
+ }finally{c.close()}
+});
+test('Pilotage : actualisation à la demande et filtre interactif des rencontres',async()=>{
+ const c=await page('/administration?module=pilotage','admin');
+ try{
+  await waitFor(()=>c.d.querySelector('.ref-command-refresh'));
+  const refresh=c.d.querySelector('.ref-command-refresh');
+  assert.match(refresh.textContent,/Actualiser les chiffres/);
+  refresh.click();
+  await waitFor(()=>/Actualiser les chiffres/.test(refresh.textContent));
+  const select=c.d.querySelector('.ref-chart-filter select');
+  assert.ok(select,'Filtre des présences disponible');
+  assert.deepEqual([...select.options].map(o=>o.value),['3','7']);
+  select.value='3';
+  select.dispatchEvent(new c.w.Event('change',{bubbles:true}));
+  await waitFor(()=>select.value==='3');
+  assert.match(c.d.querySelector('.ref-command-livebar').textContent,/toutes les 60 s/);
+  assert.deepEqual(c.errors,[]);
+ }finally{c.close()}
+});
+test('Pilotage : animation à changements réels, lecture AA et mouvement réduit',()=>{
+ const indicator=readFileSync('frontend/pilotage-indicators.jsx','utf8');
+ const css=readFileSync('frontend/reference.css','utf8');
+ assert.match(indicator,/indicateurs\?\.\[item\.champ\]\?\?null/);
+ assert.match(indicator,/aria-expanded/);
+ assert.match(indicator,/onOpen\(active\.module\)/);
+ assert.match(indicator,/is-updated/);
+ assert.match(css,/@keyframes sde-kpi-updated/);
+ assert.match(css,/body\[data-motion=paused\]/);
+ assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
+ assert.match(css,/\.ref-command-refresh/);
+ assert.match(css,/\.ref-kpi-fiche/);
+ assert.ok(!indicator.includes('Math.random'));
+});
