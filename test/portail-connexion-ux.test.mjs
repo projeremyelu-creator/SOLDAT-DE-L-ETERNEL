@@ -6,3 +6,41 @@ test('Récupération : formulaire accessible et demande envoyée au serveur sans
 test('Connexion : une panne réseau affiche une erreur et permet un nouvel essai',async()=>{const c=ui(()=>{throw Error('offline')});try{const f=c.d.getElementById('form-connexion');f.elements.email.value='alice@example.org';f.elements.motDePasse.value='test';f.dispatchEvent(new c.w.Event('submit',{bubbles:true,cancelable:true}));await pause();assert.match(c.d.getElementById('access-message').textContent,/impossible|réseau/i);assert.equal(f.querySelector('[type=submit]').disabled,false)}finally{c.dom.window.close()}});
 test('Connexion : une session non confirmée ne provoque pas de redirection silencieuse',async()=>{const c=ui(path=>({ok:true,json:async()=>path==='/api/moi'?{connecte:false,niveau:0}:{ok:true}}));try{const f=c.d.getElementById('form-connexion');f.elements.email.value='alice@example.org';f.elements.motDePasse.value='test';f.dispatchEvent(new c.w.Event('submit',{bubbles:true,cancelable:true}));await pause();assert.match(c.d.getElementById('access-message').textContent,/confirmée|session/i);assert.equal(c.w.location.pathname,'/connexion')}finally{c.dom.window.close()}});
 test('Compatibilité : connexion aux anciens comptes et huit caractères pour les nouveaux mots de passe',()=>{const c=ui();try{const signin=c.d.querySelector('#form-connexion input[name=motDePasse]');signin.value='1234';assert.equal(signin.hasAttribute('minlength'),false);assert.equal(signin.checkValidity(),true);const signup=c.d.querySelector('#form-inscription input[name=motDePasse]');signup.value='1234';assert.equal(signup.minLength,8);const activation=c.d.querySelector('#form-activation input[name=motDePasse]');assert.equal(activation.minLength,8)}finally{c.dom.window.close()}});
+
+
+test('Maquette 03+04 : les quatre modes du portail demeurent accessibles avec cible membre ou direction',()=>{
+ const c=ui();try{
+  const tabs=[...c.d.querySelectorAll('.access-tabs [role="tab"]')];
+  assert.deepEqual(tabs.map(t=>t.dataset.mode),['connexion','inscription','activation','recuperation']);
+  const targets=c.d.querySelectorAll('[data-access-target]');
+  assert.equal(targets.length,2);
+  assert.equal(tabs[0].tabIndex,0);
+  assert.equal(tabs[1].tabIndex,-1);
+  tabs[1].click();
+  assert.equal(tabs[1].getAttribute('aria-selected'),'true');
+  assert.equal(c.d.getElementById('panel-inscription').hidden,false);
+  assert.equal(c.d.getElementById('panel-connexion').hidden,true);
+  tabs[1].dispatchEvent(new c.w.KeyboardEvent('keydown',{key:'End',bubbles:true}));
+  assert.equal(c.d.getElementById('panel-recuperation').hidden,false);
+  assert.equal(c.d.activeElement,tabs[3]);
+  tabs[3].dispatchEvent(new c.w.KeyboardEvent('keydown',{key:'Home',bubbles:true}));
+  assert.equal(c.d.getElementById('panel-connexion').hidden,false);
+  assert.equal(c.d.activeElement,tabs[0]);
+  c.d.getElementById('access-forgot').click();
+  assert.equal(c.d.getElementById('panel-recuperation').hidden,false);
+  assert.equal(c.d.activeElement,tabs[3]);
+ }finally{c.dom.window.close()}
+});
+test('Maquette 03+04 : mise en page mobile à hauteur naturelle et formulaires visibles',()=>{
+ const css=readFileSync('frontend/reference.css','utf8');
+ const entry=readFileSync('frontend/experience.css','utf8');
+ const html=readFileSync('public/vitrine/connexion-unifiee.html','utf8');
+ assert.ok(entry.includes('@import "./reference.css"'));
+ assert.ok(html.includes('sde-reference-login'));
+ assert.match(css,/Fidélité 03\+04 · portail d'entrée/);
+ assert.match(css,/body\.sde-reference-login \.access-shell\{[\s\S]*?min-height:100svh!important/);
+ assert.match(css,/body\.sde-reference-login \.access-tabs\{[\s\S]*?display:grid!important/);
+ assert.match(css,/body\.sde-reference-login \.access-password-toggle\{[\s\S]*?position:static!important/);
+ assert.match(css,/@media\(max-width:360px\)/);
+ assert.match(css,/prefers-reduced-motion:reduce/);
+});
