@@ -392,3 +392,176 @@ body.sde-reference .ops-panel .ops-table-scroll{overflow-x:auto}
  .sde-mosaic-insights{grid-template-columns:1fr 1fr}
  .sde-mosaic-insight{break-inside:avoid;box-shadow:none}
 }
+
+
+/* ═══ Accessibilité SDE : tableaux métiers et annuaire mobile, 03/11/2026 ═══
+   Correction d'un conflit de palettes : --pal-ink foncé était appliqué
+   aux cellules alors que l'annuaire et certains tableaux restent bleu nuit.
+   Palette unique à contraste élevé sur les données, tous rôles/thèmes.
+   Ne modifie aucune donnée, aucune autorisation et aucune action. */
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll{
+ box-sizing:border-box;
+ max-width:100%;min-width:0;
+ color:#f8f3ec!important;
+ background:#15243b!important;
+ border:1px solid rgba(230,192,118,.47)!important;
+ border-radius:15px!important;
+ overflow-x:auto;overflow-y:hidden;
+ -webkit-overflow-scrolling:touch;
+}
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll table{
+ border-collapse:separate;border-spacing:0;
+ width:100%;max-width:100%;
+ background:transparent!important;
+ color:#f8f3ec!important;
+ font-size:clamp(.85rem,1.2vw,1rem)!important;
+ text-align:left;
+}
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll :is(caption,thead th){
+ color:#f9d590!important;
+ -webkit-text-fill-color:#f9d590!important;
+ background:#1d2d46!important;
+ font-weight:850!important;
+ font-size:clamp(.75rem,1vw,.875rem)!important;
+ text-transform:none!important;
+ letter-spacing:.02em!important;
+ opacity:1!important;
+}
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll :is(tbody th,tbody td){
+ color:#f7f2eb!important;
+ -webkit-text-fill-color:#f7f2eb!important;
+ background:transparent;
+ border-color:rgba(235,207,150,.21)!important;
+ font-size:clamp(.85rem,1.15vw,.97rem)!important;
+ font-weight:500;
+ line-height:1.5!important;
+ vertical-align:middle;
+ padding:13px 15px!important;
+ text-align:left;
+ opacity:1!important;
+ overflow-wrap:anywhere;
+}
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll tbody th{
+ font-weight:800!important;color:#fff1c8!important;
+ -webkit-text-fill-color:#fff1c8!important;
+}
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll tbody :is(small,.ops-course-label){
+ display:block;margin-top:5px;
+ color:#ded5e7!important;-webkit-text-fill-color:#ded5e7!important;
+ font-size:.83rem!important;line-height:1.4!important;
+ opacity:1!important;overflow-wrap:anywhere;
+}
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll tbody tr:nth-child(even){
+ background:#1b2f49!important;
+}
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll tbody tr:hover,
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll tbody tr:focus-within{
+ background:#2a3c57!important;
+}
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll :is(a,button){
+ min-height:44px;
+ border-radius:9px!important;
+ font-size:.83rem!important;
+ font-weight:800!important;
+}
+html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll :is(a,button):focus-visible{
+ outline:3px solid #ffe2a2!important;outline-offset:2px!important;
+}
+/* Écran large : six colonnes affichées sans confondre les informations. */
+@media(min-width:721px){
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-directory-scroll .ops-annuaire-table{
+  min-width:760px;table-layout:auto;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-directory-scroll .ops-annuaire-table tbody th{
+  min-width:170px;
+ }
+}
+/* Écran mobile : les lignes de l'annuaire deviennent de vraies fiches
+   compactes ; aucun défilement horizontal ni colonne cachée.
+   Les cellules restent dans le tableau sémantique pour les lecteurs d'écran. */
+@media(max-width:720px){
+ html[data-sde-palette] body.sde-reference[data-sde-module="annuaire"] .ops-panel .ops-directory-scroll{
+  width:100%;overflow:visible!important;background:transparent!important;
+  border:0!important;border-radius:0!important;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table{
+  display:block;width:100%;min-width:0!important;table-layout:auto;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table thead{
+  position:absolute!important;width:1px!important;height:1px!important;
+  padding:0!important;margin:-1px!important;overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:12px;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody tr{
+  box-sizing:border-box;display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:start;gap:0 12px;
+  min-width:0;width:100%;height:auto!important;min-height:0!important;
+  margin:0!important;padding:13px 15px!important;
+  border:1px solid rgba(240,203,137,.4);
+  border-radius:15px;
+  background:#192b43!important;
+  box-shadow:0 7px 17px rgba(4,9,23,.17);
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody tr:nth-child(even){
+  background:#20334b!important;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody th{
+  display:block;grid-column:1/-1;min-width:0!important;
+  margin:0 0 8px;padding:0 0 11px!important;
+  font-size:1.05rem!important;line-height:1.4!important;
+  border-bottom:1px solid rgba(226,194,127,.33)!important;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody th small{
+  font-size:.79rem!important;font-weight:500;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody td{
+  display:block;box-sizing:border-box;min-width:0!important;
+  width:100%;max-width:100%;
+  height:auto!important;min-height:0!important;
+  padding:7px 0 10px!important;
+  margin:0;border-bottom:1px solid rgba(225,194,139,.16)!important;
+  font-size:.88rem!important;line-height:1.5!important;
+  overflow-wrap:anywhere;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody td::before{
+  content:attr(data-label);display:block;
+  margin:0 0 3px;padding:0;
+  font-size:.7rem;line-height:1.3;
+  font-weight:850;letter-spacing:.035em;
+  color:#f6d48e!important;-webkit-text-fill-color:#f6d48e!important;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody td:nth-child(4){
+  grid-column:1/-1;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody td:nth-child(6){
+  grid-column:1/-1;display:flex;gap:10px;align-items:center;
+  flex-wrap:wrap;padding:10px 0 0!important;border-bottom:0!important;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody td:nth-child(6)::before{
+  display:none;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody td:nth-child(6) button{
+  width:100%;max-width:100%;
+  justify-content:center;min-height:45px;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table .ops-course-label{
+  min-width:0!important;max-width:100%;
+ }
+}
+@media(max-width:350px){
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody tr{
+  grid-template-columns:minmax(0,1fr);padding:12px!important;
+ }
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody td:nth-child(n){
+  grid-column:1/-1;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-table-scroll tbody tr{
+  transition:none!important;animation:none!important;
+ }
+}
