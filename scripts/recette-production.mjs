@@ -30,6 +30,9 @@ export const CONTROLES = Object.freeze([
   {path:'/academy-programme-24',type:'academy-public'},
   {path:'/mon-espace/academy',type:'academy-redirection-membre'},
   {path:'/administration/academy',type:'academy-redirection-admin'},
+  {path:'/mon-espace/enseignants',type:'academy-redirection-membre'},
+  {path:'/api/soldiers-academy/ressources/etat',type:'academy-api-protegee'},
+  {path:'/vitrine/sde-academy-parcours.js',type:'academy-script'},
   {path:'/api/soldiers-academy',type:'academy-api-protegee'},
   {path:'/api/soldiers-academy/cours/SA-01',type:'academy-api-protegee'},
   {path:'/enseignements',type:'page-publique'},
@@ -100,6 +103,13 @@ function verifierReponse(origine,controle,reponse,corps) {
     return;
   }
 
+  if(controle.type==='academy-script'){
+    if(status!==200||!/(?:javascript|ecmascript)/i.test(type))
+      erreur('Script du parcours Soldiers Academy indisponible');
+    if(!corps.includes('data-refresh-course-resources')||!corps.includes('actualiserRessourcesCours'))
+      erreur('Ancienne interface Academy détectée : actualisation du cours absente');
+    return;
+  }
   if(controle.type==='academy-public'){
     if(status!==200||!type.includes('text/html'))erreur('Catalogue Academy public inaccessible');
     const cards=(corps.match(/class="course" data-level="[123]"/g)||[]).length;

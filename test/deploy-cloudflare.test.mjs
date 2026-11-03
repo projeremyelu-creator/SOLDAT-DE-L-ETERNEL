@@ -14,5 +14,6 @@ test('Les déploiements concurrents ne remplacent pas la dernière version',()=>
  assert.match(workflow,/concurrency:\s*\n\s*group: sde-cloudflare-deploiement-production/);
  assert.match(workflow,/git ls-remote origin refs\/heads\/main/);
  assert.match(workflow,/HEAD_SHA.*GITHUB_SHA/);
- assert.ok((workflow.match(/steps\.dernier\.outputs\.deployer == 'true'/g)||[]).length===2);
+ assert.ok((workflow.match(/steps\.dernier\.outputs\.deployer == 'true'/g)||[]).length>=3);
+ assert.match(workflow,/recette-academy-production\.mjs/);
 });
