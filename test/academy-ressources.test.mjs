@@ -588,3 +588,17 @@ test("Studio Academy : file de validation commune aux 34 cours avec refus et com
  assert.match(espace,/Restrictions et règles de protection/);
  assert.match(route,/academyAutorise\(env,account,c/);
 });
+
+test("Identité Soldiers Academy : bleu nuit, or, violet, insignes de niveau, brevet imprimable, Love School préservée",()=>{
+  const lire=f=>readFileSync(f,"utf8");
+  const css=lire("public/vitrine/sde-academy-identite.css"),parcours=lire("public/vitrine/sde-academy-parcours.html"),studio=lire("public/vitrine/academy-enseignants.html"),js=lire("public/vitrine/sde-academy-parcours.js");
+  for(const [nom,h] of [["parcours",parcours],["studio",studio]]){
+    assert.ok(h.indexOf("sde-academy-onglets.css")>0&&h.indexOf("sde-academy-onglets.css")<h.indexOf("sde-academy-identite.css"),nom+" : l'identité se charge après la base");
+  }
+  for(const couleur of ["#6B4FA0","#D4AF37","#071525"])assert.ok(css.includes(couleur),couleur);
+  assert.match(css,/\.insigne/);assert.match(css,/\.brevet/);assert.match(css,/@media print/);
+  assert.match(css,/#tab-love\[aria-selected=true\]/,"l'onglet Love School garde son accent bordeaux");
+  assert.ok(!/\.love-/.test(css),"aucune règle ne modifie les composants propres à la Love School");
+  assert.match(js,/class="insigne/);assert.match(js,/\['I','II','III'\]/);assert.match(js,/class="brevet"/);assert.match(js,/logo-96\.png/);
+  assert.ok(parcours.includes("Ézéchiel 37.10"),"le verset de base figure dans l'espace");
+});

@@ -1,0 +1,75 @@
+/* Soldiers Academy — identité « commandement » : bleu nuit, or, violet SDE, vert treillis pour les acquis.
+   Chargée après sde-academy-onglets.css. La Love School garde sa propre identité (bordeaux et or). */
+:root{--sa-nuit:#071525;--sa-violet:#6B4FA0;--sa-violet-clair:#c9b9ee;--sa-or:#D4AF37;--sa-or-clair:#efd77f;--sa-treillis:#4a7c59;--sa-treillis-clair:#a6dcb7;--sa-serif:Georgia,"Cormorant Garamond","Times New Roman",serif}
+
+/* En-tête et titres : sobriété, capitales espacées, serif pour la solennité */
+header{border-bottom:1px solid var(--sa-or);box-shadow:0 1px 0 #6B4FA0aa,0 8px 24px #0006}
+.identity strong{text-transform:uppercase;letter-spacing:.14em;font-family:var(--sa-serif)}
+.identity small{color:var(--sa-or-clair);letter-spacing:.06em}
+.hero{position:relative;padding-left:22px;border-left:4px solid var(--sa-or)}
+.hero h1,.level h2,#pane-parcours h2,#pane-cohortes h2,#pane-ecoles h2,#pane-projet h2,#pane-biblio h2{font-family:var(--sa-serif);letter-spacing:.01em}
+.hero h1 em{color:var(--sa-or-clair)}
+.hero .eyebrow,.eyebrow{letter-spacing:.2em}
+.verset{margin:18px 0 6px;padding:12px 16px;max-width:820px;border-left:3px solid var(--sa-violet);background:#6B4FA01f;font-family:var(--sa-serif);font-size:1.05rem;font-style:italic;color:#efe9fb}
+.verset cite{display:block;margin-top:6px;font-style:normal;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sa-or-clair)}
+
+/* Indicateurs : plaques d'état */
+.metric{border-radius:6px;border-top:3px solid var(--sa-or);background:linear-gradient(180deg,#16294a,#112038)}
+.metric strong{font-family:var(--sa-serif);color:var(--sa-or-clair)}
+#progressBar{border-radius:4px;height:14px;position:relative}
+#progressBar::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(100%/24 - 1px),#07152566 calc(100%/24 - 1px),#07152566 calc(100%/24))}
+#progressBar i{border-radius:3px;background:linear-gradient(90deg,#6B4FA0,#D4AF37)}
+
+/* Onglets : la couleur active reprend l'accent de chaque école */
+.tabs{border-bottom-color:var(--sa-or)}
+.tabs button{border-radius:6px 6px 0 0;text-transform:uppercase;letter-spacing:.06em;font-size:.82rem}
+.tabs button[aria-selected=true]{background:var(--sa-or);color:var(--sa-nuit);box-shadow:inset 0 -3px 0 var(--sa-violet)}
+.tabs button#tab-love[aria-selected=true]{background:linear-gradient(135deg,#7a2c45,#b34a67);color:#fff;box-shadow:inset 0 -3px 0 #f2cd95}
+.tabs.sub button[aria-selected=true]{background:var(--sa-violet);color:#fff;box-shadow:inset 0 -3px 0 var(--sa-or)}
+
+/* Niveaux : insignes en écusson */
+.level{border-left:4px solid var(--sa-or);padding-left:14px;margin:34px 0 14px}
+.level-titre{display:flex;align-items:center;gap:14px}
+.level-titre h2{margin:0}
+.insigne{flex:none;display:inline-grid;place-items:center;width:46px;height:54px;clip-path:polygon(50% 0,100% 12%,100% 62%,50% 100%,0 62%,0 12%);background:linear-gradient(160deg,var(--sa-or-clair),var(--sa-or) 60%,#9c7c1c);color:var(--sa-nuit);font:800 1.15rem var(--sa-serif);padding-bottom:4px}
+.insigne.acquis{background:linear-gradient(160deg,#a6dcb7,var(--sa-treillis) 65%,#2f5a3d);color:#fff}
+.insigne.acquis::after{content:"✓";position:absolute;font-size:.7rem;transform:translateY(15px)}
+.insigne{position:relative}
+
+/* Cartes de cours : fiches de service */
+#pane-parcours .card{border-radius:6px;border-top:3px solid var(--sa-or);background:linear-gradient(180deg,#16294a,#122238)}
+#pane-parcours .card .code{font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:.12em;color:var(--sa-or-clair);font-weight:700}
+#pane-parcours .card h3{font-family:var(--sa-serif);font-size:1.12rem}
+#pane-parcours .card.passed{border-top-color:var(--sa-treillis);box-shadow:inset 4px 0 0 var(--sa-treillis)}
+#pane-parcours .card.locked{border-top-color:#4a5870;filter:saturate(.6)}
+.chip.ok{background:#1d4430;color:var(--sa-treillis-clair);border:1px solid #3f7a58}
+.chip.pending{background:#4e3d17;color:#ffe3a3;border:1px solid #8a6d22}
+
+/* Panneaux, boutons, leçons : angles nets, filet violet */
+#pane-parcours .panel,#pane-cohortes .panel,#pane-ecoles .panel,#pane-projet .panel,#pane-biblio .panel,#adminPage{border-radius:6px;border-top:3px solid var(--sa-violet)}
+#pane-parcours .panel h2,#pane-cohortes .panel h2,#pane-ecoles .panel h2,#pane-projet .panel h2,#pane-biblio .panel h2{color:var(--sa-violet-clair)}
+.btn,.button{border-radius:6px;letter-spacing:.04em}
+.btn.primary,.button.primary{background:var(--sa-or);border-color:var(--sa-or)}
+.btn.primary:hover,.button.primary:hover{background:var(--sa-or-clair)}
+details.lecon{border-radius:6px}
+details.lecon[open]{border-color:var(--sa-or);box-shadow:inset 3px 0 0 var(--sa-violet)}
+.review,.exam-form,.ressource{border-radius:6px}
+
+/* Attestation : brevet officiel */
+.brevet{position:relative;padding:clamp(24px,4vw,44px);text-align:center;background:radial-gradient(ellipse at 50% 0,#243b63 0,#0d1b32 70%);border:2px solid var(--sa-or);outline:1px solid var(--sa-or);outline-offset:-10px;border-radius:4px;animation:paneIn .5s ease both}
+.brevet-logo{width:76px;height:76px;object-fit:contain;margin:0 auto 6px;display:block}
+#courseDetail .brevet h2,.brevet h2{font-family:var(--sa-serif);text-transform:uppercase;letter-spacing:.1em;color:var(--sa-or-clair);margin:6px 0 14px}
+.brevet .eyebrow{color:var(--sa-violet-clair)}
+.brevet p{max-width:640px;margin:8px auto}
+.brevet .qr{margin:16px auto}
+.brevet .button{margin-top:10px}
+@media print{
+ .brevet{background:#fff!important;color:#111!important;border-color:#8a6d22!important;outline-color:#8a6d22!important}
+ .brevet *{color:#111!important}
+ .brevet .button{display:none!important}
+ body{background:#fff!important}
+}
+@media(max-width:720px){.hero{padding-left:14px}.insigne{width:40px;height:48px}.level-titre{gap:10px}}
+#pane-parcours #courseDetail .brevet h2{color:var(--sa-or-clair)}
+@media(max-width:720px){header{position:static}.tabs{top:0}}
+@media(max-width:720px){.tabs{flex-wrap:nowrap;scrollbar-width:thin}.tabs button{flex:none}}
