@@ -1263,6 +1263,13 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     if (S.etat === "absent") return out + nonConnecte("Les cultes, réunions, formations et conférences");
     if (!S.pret.evenements) return out + chargement("Lecture de l’agenda…");
     const av = aVenir(), pa = passes();
+    const moisEnCours = aujourdhui().slice(0, 7);
+    out += `<div class="stats s4 pv-stats" role="list" aria-label="Chiffres de l’agenda">
+      <div class="stat" role="listitem"><span class="stat-l">${I("i-cal")}À venir</span><span class="stat-v">${nb(av.length)}</span><span class="stat-m">Rassemblements programmés</span></div>
+      <div class="stat" role="listitem"><span class="stat-l">${I("i-cal")}Ce mois-ci</span><span class="stat-v">${nb(av.filter((e) => e.date.slice(0, 7) === moisEnCours).length)}</span><span class="stat-m">Restants dans le mois</span></div>
+      <div class="stat in" role="listitem"><span class="stat-l">${I("i-flame")}Prochain</span><span class="stat-v">${av[0] ? esc(fmtCourt(av[0].date)) : "—"}</span><span class="stat-m">${av[0] ? esc(av[0].titre || "") : "Aucun rassemblement programmé"}</span></div>
+      <div class="stat" role="listitem"><span class="stat-l">${I("i-check")}Passés</span><span class="stat-v">${nb(pa.length)}</span><span class="stat-m">Avec pointage possible</span></div>
+    </div>`;
     out += sousOnglets("agenda", [["avenir", "À venir", av.length], ["passes", "Passés", pa.length], ["assiduite", "Assiduité", null]]);
     if (S.sous.agenda === "assiduite") return out + (accesRegistre() ? vueAssiduite() : vide("i-lock", "L’assiduité des membres est réservée aux responsables qui ont accès au registre."));
     const f = S.f.agenda;

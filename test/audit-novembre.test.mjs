@@ -94,3 +94,11 @@ test("Refonte Fusion : Chambre Haute avec tuiles réelles, cotisations et prièr
   const css = lire("public/vitrine/sde-fusion.css");
   for (const k of [".cot-mois i.ok", ".cot-mois i.du", ".pr-row.urgent", ".cr-jour.auj", ".chip-btn.on"]) assert.ok(css.includes(k), k);
 });
+
+test("Refonte Fusion : agenda avec tuiles réelles, projets et fiche membre au style Fusion", () => {
+  const app = lire("public/index.html");
+  const bloc = app.slice(app.indexOf("VUES.agenda = function"), app.indexOf("Secrétariat ═"));
+  for (const k of ["Chiffres de l’agenda", "av.length", "pa.length", "moisEnCours", "fmtCourt(av[0].date)"]) assert.ok(bloc.includes(k), k);
+  const css = lire("public/vitrine/sde-fusion.css");
+  for (const k of [".subtab.on", ".day-h", ".bar i", ".ident{", ".ident h3"]) assert.ok(css.includes(k), k);
+});
