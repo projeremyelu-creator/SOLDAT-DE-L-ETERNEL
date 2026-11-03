@@ -36,8 +36,9 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
 <link rel="stylesheet" href="/vitrine/sde-marque.css?v=20261029a">
 <link rel="stylesheet" href="/vitrine/ivoire-app.css?v=20261030a">
 <link rel="stylesheet" href="/vitrine/sde-premium-app.css?v=20261102refonte">
-<link rel="stylesheet" href="/vitrine/sde-fusion.css?v=20261103">
-<script>/* Palette des espaces privés appliquée avant le premier affichage (Fusion violet · vert · or par défaut). */try{var d=document.documentElement,v=localStorage.getItem("sde-private-palette-version")==="fusion-04"?localStorage.getItem("sde-private-palette"):"fusion";d.setAttribute("data-sde-palette",/^(fusion|ivoire|terracotta|militaire|violet)$/.test(v||"")?v:"fusion")}catch(e){document.documentElement.setAttribute("data-sde-palette","fusion")}</script>
+<link rel="stylesheet" href="/vitrine/sde-fusion.css?v=20261103b">
+<link rel="stylesheet" href="/vitrine/sde-tactique.css?v=20261103">
+<script>/* Palette des espaces privés appliquée avant le premier affichage (Fusion violet · vert · or par défaut). */try{var d=document.documentElement,v=localStorage.getItem("sde-private-palette-version")==="fusion-04"?localStorage.getItem("sde-private-palette"):"fusion";d.setAttribute("data-sde-palette",/^(fusion|ivoire|terracotta|militaire|violet|tactique)$/.test(v||"")?v:"fusion")}catch(e){document.documentElement.setAttribute("data-sde-palette","fusion")}</script>
 <script defer src="/sde-bridge.js?v=20261025e"></script>
 <script>/* Thème : applique le choix utilisateur avant le premier paint */
 (function(){try{var t=localStorage.getItem("sde-theme");if(t){document.documentElement.setAttribute("data-theme",t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==="light"?"#eef0f5":"#0f1e3d";}}catch(e){}}());
@@ -3597,6 +3598,18 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const enPriere = (p.statut || "En prière") === "En prière";
     return `<div class="pr-row${p.urgent && enPriere ? " urgent" : ""}"><button class="pr-main" type="button" data-act="voir-priere" data-id="${esc(p.id)}"${conf ? ' data-conf="1"' : ""}><span class="row-main"><span class="row-t">${p.urgent && enPriere ? `<span class="chip danger">Urgent</span> ` : ""}${esc(p.sujet || "Requête")}</span><span class="row-m">${esc(meta)}</span>${p.statut === "Exaucée" && p.temoignage ? `<span class="row-q">${esc(p.temoignage)}</span>` : ""}</span></button><span class="pr-side">${enPriere && peutEcrire() && S.me.id ? `<button class="btn btn-sm ${moi ? "btn-ghost" : "btn-primary"}" type="button" data-act="j-ai-prie" data-id="${esc(p.id)}"${conf ? ' data-conf="1"' : ""} aria-pressed="${!!moi}">${I("i-flame")}${moi ? "Prié" : "J’ai prié"}</button>` : ""}<span class="chip">${pluriel(n, "intercesseur", "intercesseurs")}</span></span></div>`;
   }
+  function radarPriere(liste) {
+    const cats = CATEGORIES_PRIERE, n = cats.length, max = Math.max(1, ...cats.map((c) => liste.filter((p) => (p.categorie || "Autre") === c).length));
+    const cx = 110, cy = 110, R = 80;
+    const pt = (i, v) => { const a = (-Math.PI / 2) + (2 * Math.PI * i) / n; return [cx + Math.cos(a) * R * v, cy + Math.sin(a) * R * v]; };
+    const vals = cats.map((c) => liste.filter((p) => (p.categorie || "Autre") === c).length);
+    const poly = vals.map((v, i) => pt(i, v / max).map((x) => x.toFixed(1)).join(",")).join(" ");
+    const anneaux = [0.25, 0.5, 0.75, 1].map((k) => `<polygon points="${cats.map((_, i) => pt(i, k).map((x) => x.toFixed(1)).join(",")).join(" ")}" class="rd-ring"/>`).join("");
+    const axes = cats.map((c, i) => { const [x, y] = pt(i, 1), [lx, ly] = pt(i, 1.2); return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" class="rd-axe"/><text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="rd-lab" text-anchor="${lx < cx - 4 ? "end" : lx > cx + 4 ? "start" : "middle"}" dominant-baseline="middle">${esc(c.split(" ")[0])}</text>`; }).join("");
+    const total = vals.reduce((t, v) => t + v, 0);
+    const desc = cats.map((c, i) => `${c} : ${vals[i]}`).join(", ");
+    return `<section class="card rd-card"><div class="card-h"><h2 class="card-t">Radar des requêtes</h2></div><div class="rd-wrap"><svg class="rd-svg" viewBox="0 0 220 220" role="img" aria-label="${esc("Requêtes en prière par catégorie. " + desc)}">${anneaux}${axes}${total ? `<polygon points="${poly}" class="rd-zone"/>` : ""}</svg><ul class="rd-list">${cats.map((c, i) => `<li><span>${esc(c)}</span><strong>${nb(vals[i])}</strong></li>`).join("")}</ul></div><p class="hint">${total ? `${pluriel(total, "requête en prière", "requêtes en prière")}, réparties par catégorie.` : "Le radar se dessinera dès qu’une requête sera en prière."}</p></section>`;
+  }
   VUES.chambre = function () {
     const ecr = peutEcrire();
     let out = secHead("Chambre Haute", { eyebrow: "Intercession et prière", verset: VERSETS.chambre, actions: ecr ? btn("ajout-priere", "Nouvelle requête", { ico: "i-plus", cls: "btn-primary" }) : "" });
@@ -3612,6 +3625,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
       <div class="stat in" role="listitem"><span class="stat-l">${I("i-check")}Exaucées</span><span class="stat-v">${nb(exa.length)}</span><span class="stat-m">Témoignages enregistrés</span></div>
       <div class="stat" role="listitem"><span class="stat-l">${I("i-users")}Intercesseurs</span><span class="stat-v">${nb(intercesseursSemaine().length)}</span><span class="stat-m">Engagés dans la chaîne</span></div>
     </div>`;
+    out += radarPriere(enP);
     const ong = [["requetes", "En prière", enP.length], ["exaucees", "Témoignages", exa.length], ["chaine", "Chaîne de prière", null]];
     if (accesDirection()) ong.push(["confidentielles", "Confidentielles", S.pret.prieresConf ? S.prieresConf.filter((p) => (p.statut || "En prière") === "En prière").length : null]);
     ong.push(["closes", "Closes", S.prieres.filter((p) => p.statut === "Close").length]);

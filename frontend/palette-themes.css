@@ -9,6 +9,7 @@
 .ref-toolbar .ref-palette-menu .ref-palette-option{display:flex;width:100%;gap:12px;align-items:center;justify-content:flex-start;min-height:47px;padding:8px 10px;margin:5px 0;border:1px solid #c9a14a33;border-radius:7px;background:#ffffff08;color:inherit;text-align:left;font-size:12px;cursor:pointer}
 .ref-toolbar .ref-palette-menu .ref-palette-option[aria-pressed=true]{border-color:#c9a14a;background:#c9a14a26}
 .ref-palette-swatch{display:inline-block;flex:none;width:35px;height:25px;border-radius:4px;border:1px solid #ffffff55}
+.ref-palette-tactique .ref-palette-swatch{background:linear-gradient(130deg,#0c1530 45%,#6b1730 45% 72%,#e2c26a 72%)}
 .ref-palette-militaire .ref-palette-swatch{background:linear-gradient(130deg,#0a121b 55%,#c9a14a 55%,#2b3421)}
 .ref-palette-ivoire .ref-palette-swatch{background:linear-gradient(130deg,#293526 45%,#fbf9f1 45%,#cfac59)}
 .ref-palette-violet .ref-palette-swatch{background:linear-gradient(130deg,#310d31 45%,#faf8f2 45%,#bd9754)}

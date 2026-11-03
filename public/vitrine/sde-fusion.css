@@ -223,3 +223,13 @@ html body.sde-unifie .site-brand{color:var(--fu-gold-2)!important}
 :root[data-sde-palette=fusion] .ident p{color:#e2d8fa}
 :root[data-sde-palette=fusion] .ident .av{box-shadow:0 0 0 3px #e8b84b}
 :root[data-sde-palette=fusion] .h3{color:#3a1a78}
+
+/* Radar des requêtes de prière (toutes palettes) */
+.rd-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+.rd-svg{width:min(100%,260px);height:auto;flex:none}
+.rd-ring{fill:none;stroke:var(--line-strong,#c3c9d8);stroke-width:.8;opacity:.7}
+.rd-axe{stroke:var(--line-strong,#c3c9d8);stroke-width:.8;opacity:.6}
+.rd-lab{font-size:8px;fill:var(--muted,#535c75)}
+.rd-zone{fill:var(--gold-mark,#b8901f);fill-opacity:.28;stroke:var(--gold-mark,#b8901f);stroke-width:2;stroke-linejoin:round}
+.rd-list{list-style:none;margin:0;padding:0;display:grid;gap:5px;flex:1 1 200px;font-size:.9rem}
+.rd-list li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line,#dde1ea);padding-bottom:4px}
