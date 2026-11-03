@@ -67,3 +67,19 @@ test("Toute redirection d'un accès privé interdit cache et référencement",()
   assert.doesNotMatch(block,/return Response\.redirect\(/);
  }
 });
+
+test("Accès direct Soldiers Academy : le retour membre/admin reste sur la rubrique demandée",()=>{
+ for(const [path,target] of [["/mon-espace/academy","/mon-espace"],["/administration/academy","/administration"]]){
+   const {d,m,a}=prepare("https://mouvement-sde.org/connexion?retour="+encodeURIComponent(path));
+   assert.equal((target==="/administration"?a:m).getAttribute("aria-pressed"),"true");
+   d.window.close();
+ }
+ assert.match(loginJs,/\/mon-espace\/academy/);
+ assert.match(loginJs,/\/administration\/academy/);
+ assert.match(loginJs,/destination\.startsWith\("\/administration"\)/);
+ const worker=readFileSync("src/worker.js","utf8");
+ assert.match(worker,/p\.endsWith\("\/academy"\)\?p/);
+ const changePassword=readFileSync("public/vitrine/sde-mot-de-passe.js","utf8");
+ assert.match(changePassword,/\/mon-espace\/academy/);
+ assert.match(changePassword,/\/administration\/academy/);
+});
