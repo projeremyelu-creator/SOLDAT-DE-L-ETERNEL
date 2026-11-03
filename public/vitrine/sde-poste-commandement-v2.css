@@ -1,0 +1,217 @@
+/* SDE OS · Poste de commandement / espace membre · 03.11.2026
+   Surface réelle de /administration et /mon-espace, sans modification de la
+   session, des permissions, des données ou des routes de l'application. */
+body.sde-direct {
+  --sde-cmd-night:#111d35;
+  --sde-cmd-violet:#302052;
+  --sde-cmd-gold:#f1cf88;
+}
+body.sde-direct #sde-direct-top {
+  background:linear-gradient(115deg,#101c33,#24173d)!important;
+  border-bottom:1px solid rgba(241,207,136,.75)!important;
+}
+body.sde-direct #sde-direct-top .sde-direct-header {
+  gap:8px;
+  padding:10px clamp(14px,2.5vw,32px);
+}
+body.sde-direct #sde-direct-top .sde-direct-head-links {
+  display:flex;gap:5px;align-items:center;flex-wrap:wrap;
+  min-width:0;margin-left:auto;
+}
+body.sde-direct #sde-direct-top .sde-direct-head-links a {
+  display:inline-flex;justify-content:center;align-items:center;
+  min-height:43px;min-width:0;
+  padding:9px 12px;
+  border:1px solid rgba(226,205,163,.22);
+  color:#eff2fc;
+}
+body.sde-direct #sde-direct-top .sde-direct-head-links a[aria-current=page] {
+  color:#171d2c!important;background:#f1cf88!important;
+  border-color:#f1cf88!important;
+}
+body.sde-direct #sde-direct-top .sde-direct-logo{
+  margin:0 auto 0 0;
+  color:#ffdfa0!important;-webkit-text-fill-color:#ffdfa0!important;
+  flex:none;letter-spacing:.03em;
+}
+body.sde-direct #sde-direct-top .sde-direct-gear,
+body.sde-direct #sde-direct-top .sde-direct-account {
+  font-size:.8rem;
+  background:#263752;
+  color:#fff7e7;
+  border:1px solid rgba(241,207,136,.45);
+}
+body.sde-direct #sde-direct-top .sde-direct-gear:hover,
+body.sde-direct #sde-direct-top .sde-direct-account:hover{
+  color:#161d2b;background:#f1cf88;
+}
+body.sde-direct #sde-direct-top .sde-direct-intro {
+  background:linear-gradient(105deg,rgba(30,23,64,.62),rgba(16,28,51,.5));
+}
+body.sde-direct #sde-direct-tabs {
+  background:linear-gradient(180deg,#17243d,#1d2a43)!important;
+  border-right:1px solid rgba(241,207,136,.45)!important;
+  overscroll-behavior:contain;
+}
+body.sde-direct #sde-direct-tabs button {
+  color:#e9eefa;background:rgba(255,255,255,.045);
+  border:1px solid rgba(220,228,248,.11);
+  transition:background .12s ease,border-color .12s ease;
+}
+body.sde-direct #sde-direct-tabs button[aria-current=page]{
+  background:#f1cf88!important;color:#14213a!important;
+  border-color:#f1cf88!important;
+}
+body.sde-direct #sde-direct-tabs button:hover:not([aria-current=page]){
+  border-color:#d5b16c;background:#35415c;
+}
+body.sde-direct .view :is(.stat,.tile,.card) {
+  border-radius:16px;
+  min-width:0;
+}
+body.sde-direct .view .stat {
+  border:1px solid #d7c397;
+  box-shadow:0 6px 22px rgba(24,25,48,.08);
+  padding:clamp(13px,2.2vw,20px);
+}
+body.sde-direct .view .stat-v {
+  font-size:clamp(1.5rem,3vw,2rem);
+  font-variant-numeric:tabular-nums;
+  line-height:1.14;
+}
+body.sde-direct .view .sec-title{
+  line-height:1.17;
+  text-wrap:balance;
+  overflow-wrap:normal;
+}
+body.sde-direct .view .sec-head{gap:12px;min-width:0}
+body.sde-direct #main:focus,
+body.sde-direct #sde-priere-panel:focus{outline:none}
+body.sde-direct #main:focus-visible,
+body.sde-direct #sde-priere-panel:focus-visible{
+  outline:3px solid #d3ab61;
+  outline-offset:-4px;
+}
+@media (max-width:760px){
+  body.sde-direct #sde-direct-top .sde-direct-header{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto auto!important;
+    grid-template-areas:"logo gear account" "links links links"!important;
+    grid-template-rows:auto auto!important;
+    gap:7px!important;padding:9px 12px!important;
+    width:100%;box-sizing:border-box;
+    align-items:center!important;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-logo{
+    grid-area:logo!important;
+    font-size:1.03rem!important;
+    min-width:0!important;max-width:100%;
+    padding:4px!important;
+    justify-self:start;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-logo img{
+    width:36px!important;height:36px!important;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-gear{
+    grid-area:gear!important;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-account{
+    grid-area:account!important;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-gear,
+  body.sde-direct #sde-direct-top .sde-direct-account{
+    width:auto!important;max-width:91px!important;
+    min-width:66px!important;min-height:42px!important;
+    padding:7px 9px!important;font-size:.73rem!important;
+    line-height:1.15!important;overflow-wrap:normal;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-head-links{
+    grid-area:links!important;
+    margin:0!important;min-width:0;width:100%!important;
+    display:flex!important;flex-wrap:wrap!important;gap:5px!important;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-head-links a{
+    flex:1 1 90px;min-width:0;min-height:40px!important;
+    white-space:normal!important;text-align:center;
+    font-size:.76rem!important;line-height:1.15!important;
+    padding:7px 7px!important;overflow-wrap:normal;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-intro{
+    padding:12px 15px 8px!important;
+    background:linear-gradient(110deg,rgba(30,23,64,.38),rgba(16,28,51,.3));
+  }
+  body.sde-direct #sde-direct-top .sde-direct-eyebrow{
+    margin-bottom:4px!important;font-size:.62rem!important;
+    letter-spacing:.07em!important;line-height:1.3!important;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-title{
+    font-size:clamp(1.48rem,7.1vw,1.85rem)!important;
+    margin:0 0 5px!important;line-height:1.1!important;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-description{
+    font-size:.79rem!important;line-height:1.36!important;
+    margin:0!important;
+    display:-webkit-box!important;-webkit-box-orient:vertical!important;
+    -webkit-line-clamp:2!important;line-clamp:2!important;
+    overflow:hidden!important;
+  }
+  body.sde-direct #sde-direct-top .sde-spirit-actions{
+    display:flex!important;flex-wrap:nowrap!important;
+    gap:7px!important;overflow-x:auto!important;
+    overscroll-behavior-inline:contain;scroll-snap-type:x proximity;
+    scrollbar-width:thin;
+    margin:10px -2px 5px!important;padding:0 2px 5px!important;
+  }
+  body.sde-direct #sde-direct-top .sde-spirit-quick{
+    flex:0 0 auto!important;min-width:128px!important;max-width:180px!important;
+    min-height:42px!important;height:auto!important;
+    padding:7px 10px!important;font-size:.76rem!important;
+    border-radius:10px!important;line-height:1.22!important;
+    scroll-snap-align:start!important;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-loading{
+    font-size:.7rem!important;line-height:1.25!important;
+    margin:2px 0 0!important;
+  }
+  body.sde-direct #sde-direct-menu-toggle{
+    display:flex!important;
+    min-height:44px!important;
+    margin:7px 12px 4px auto!important;
+    padding:8px 13px!important;
+    max-width:calc(100% - 24px)!important;
+    background:#243551!important;border-color:#dfb86d!important;
+    color:#f7e9c6!important;
+    box-shadow:none!important;
+  }
+  body.sde-direct #sde-direct-tabs{
+    padding:9px 12px!important;
+    gap:6px!important;min-height:0!important;
+  }
+  body.sde-direct #sde-direct-tabs .sde-direct-tab {
+    min-height:46px!important;font-size:.8rem!important;
+  }
+  body.sde-direct .main{
+    padding:14px 13px calc(100px + env(safe-area-inset-bottom))!important;
+    width:100%!important;max-width:100%!important;
+    box-sizing:border-box!important;
+  }
+  body.sde-direct .view .sec-title{
+    font-size:clamp(1.6rem,7vw,2.2rem)!important;
+  }
+  body.sde-direct .view :is(.stat,.tile,.card) {
+    min-width:0!important;
+    overflow-wrap:anywhere;
+  }
+}
+@media(max-width:355px){
+  body.sde-direct #sde-direct-top .sde-direct-gear,
+  body.sde-direct #sde-direct-top .sde-direct-account{
+    min-width:56px!important;padding:6px!important;font-size:.68rem!important;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-head-links a{
+    flex-basis:85px;font-size:.69rem!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body.sde-direct #sde-direct-tabs button{transition:none}
+}
