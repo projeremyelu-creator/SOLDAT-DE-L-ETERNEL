@@ -5,6 +5,7 @@
  * Aucune capture persistée.
  */
 import {chromium} from 'playwright';
+import {lectureDeRecetteAutorisee} from './recette-lecture-seule.mjs';
 
 const base='https://mouvement-sde.org';
 const accounts=[
@@ -21,22 +22,18 @@ try{
   const context=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true,locale:'fr-CI'});
   const page=await context.newPage();
   const blocked=[];
-  // Interdire toute écriture serveur non nécessaire au chargement des tableaux.
-  await context.route('**/*',async(route)=>{
-   const req=route.request();
-   const u=new URL(req.url());
-   if(u.origin!==base)return route.continue();
-   const method=req.method();
-   if(!u.pathname.startsWith('/api/')||method==='GET'||method==='HEAD')return route.continue();
-   const p=u.pathname;
-   if(method==='POST'&&(p==='/api/connexion'||p==='/api/sync'))return route.continue();
-   if(method==='POST'&&p==='/api/db'){
-    let op='';
-    try{op=String(req.postDataJSON()?.op||'')}catch(_){}
-    if(op==='get'||op==='query')return route.continue();
-   }
-   blocked.push(method+' '+p);
-   await route.fulfill({status:403,contentType:'application/json',body:'{"message":"Action interdite en recette lecture seule"}'});
+  // Rien ne doit être transmis vers un autre domaine depuis une session QA.
+  // Seuls le login et les lectures du Worker peuvent traverser ce pare-feu.
+  await context.route('**/*',async route=>{
+   const req=route.request(),u=new URL(req.url());
+   if(u.origin!==base){blocked.push('ressource externe');await route.abort();return}
+   const permitted=lectureDeRecetteAutorisee({
+     method:req.method(),pathname:u.pathname,body:req.postData()
+   });
+   if(permitted)return route.continue();
+   blocked.push(req.method()+' '+u.pathname);
+   await route.fulfill({status:403,contentType:'application/json',
+     body:'{"message":"Action interdite en recette lecture seule"}'});
   });
   try{
    await page.goto(base+'/connexion?retour='+encodeURIComponent(account.path),{waitUntil:'domcontentloaded',timeout:30000});
