@@ -3,7 +3,7 @@
  "use strict";
  const $=id=>document.getElementById(id);
  const etat=$("mp-etat"),bloc=$("mp-bloc"),connexion=$("mp-connexion"),form=$("mp-form");
- const retour=()=>{const r=new URL(location.href).searchParams.get("retour");return ["/administration","/mon-espace"].includes(r)?r:"/mon-espace"};
+ const retour=()=>{const r=new URL(location.href).searchParams.get("retour");return ["/administration","/mon-espace","/administration/academy","/mon-espace/academy"].includes(r)?r:"/mon-espace"};
  const dire=(t,erreur)=>{etat.textContent=t;etat.dataset.etat=erreur?"erreur":""};
  (async()=>{
   try{

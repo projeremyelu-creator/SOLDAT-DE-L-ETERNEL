@@ -27,6 +27,11 @@ export const CONTROLES = Object.freeze([
   {path:'/mouvement',type:'page-publique'},
   {path:'/programmes',type:'page-publique'},
   {path:'/academy',type:'page-publique'},
+  {path:'/academy-programme-24',type:'academy-public'},
+  {path:'/mon-espace/academy',type:'academy-redirection-membre'},
+  {path:'/administration/academy',type:'academy-redirection-admin'},
+  {path:'/api/soldiers-academy',type:'academy-api-protegee'},
+  {path:'/api/soldiers-academy/cours/SA-01',type:'academy-api-protegee'},
   {path:'/enseignements',type:'page-publique'},
   {path:'/missions',type:'page-publique'},
   {path:'/priere',type:'page-publique'},
@@ -92,6 +97,33 @@ function verifierReponse(origine,controle,reponse,corps) {
     if(status!==200||!type.includes('application/json'))erreur('API de session indisponible');
     let data;try{data=JSON.parse(corps)}catch{erreur('Réponse session non JSON')}
     if(data.connecte!==false)erreur('Session anonyme reconnue comme connectée');
+    return;
+  }
+
+  if(controle.type==='academy-public'){
+    if(status!==200||!type.includes('text/html'))erreur('Catalogue Academy public inaccessible');
+    const cards=(corps.match(/class="course" data-level="[123]"/g)||[]).length;
+    if(cards!==24||!/192 h/i.test(corps)||!/SA-01/.test(corps)||!/SA-24/.test(corps))
+      erreur('Ancien catalogue ou cours incomplets : '+cards+' cartes au lieu de 24');
+    return;
+  }
+  if(controle.type==='academy-redirection-membre'||controle.type==='academy-redirection-admin'){
+    if(status!==302)erreur('Page Academy privée accessible sans session');
+    const dest=new URL(lieu||'',origine);
+    if(dest.origin!==origine||dest.pathname!=='/connexion'||dest.searchParams.get('retour')!==controle.path)
+      erreur('Le retour direct Academy après connexion est perdu ou redirigé hors domaine');
+    if(!/no-store/.test(reponse.headers.get('cache-control')||''))erreur('Redirection Academy mise en cache');
+    if(!/noindex/i.test(reponse.headers.get('x-robots-tag')||''))erreur('Redirection Academy indexable');
+    return;
+  }
+  if(controle.type==='academy-api-protegee'){
+    if(status!==401||!type.includes('application/json'))
+      erreur('API Academy accessible sans authentification ou réponse incohérente');
+    let data;try{data=JSON.parse(corps)}catch{erreur('Réponse Academy non JSON')}
+    if(data.ok!==false||/"(courses|course|reponses|score|certificates)"/.test(corps))
+      erreur('Données de formation divulguées à un visiteur anonyme');
+    if(!/no-store/.test(reponse.headers.get('cache-control')||''))
+      erreur('Données de l’Academy potentiellement mises en cache');
     return;
   }
   if(status!==200)erreur('Ressource inaccessible');
@@ -169,7 +201,7 @@ export async function recetteProduction({fetcher=fetch,domaines=DOMAINES,control
             signal:AbortSignal.timeout(timeoutMs),
             headers:{'accept':'text/html, application/json, text/css, text/javascript, */*'}
           });
-          const corps=controle.type==='redirection-membre'||controle.type==='redirection-admin'||(controle.type==='accueil'&&origine==='https://app.mouvement-sde.org')||controle.type==='statut-admin-protege'?'':await response.text();
+          const corps=controle.type==='redirection-membre'||controle.type==='redirection-admin'||(controle.type==='accueil'&&origine==='https://app.mouvement-sde.org')||controle.type==='statut-admin-protege'||controle.type.startsWith('academy-redirection-')?'':await response.text();
           verifierReponse(origine,controle,response,corps);
           reussi=true;
         }catch(error){

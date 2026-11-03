@@ -89,6 +89,7 @@ test("Notation et attestation du niveau 1 après huit cours",async()=>{
   let p=(await call("/api/soldiers-academy")).result;
   assert.equal(p.progress.passed,1);
   assert.equal(p.courses[0].average,90);
+  assert.equal(p.courses[0].feedback.length,3,"Les corrections des trois évaluations doivent être consultables par leur apprenant");
   assert.equal(p.courses[8].locked,true);
   assert.equal((await call("/api/soldiers-academy",other)).result.progress.passed,0);
   for(let i=2;i<=8;i++)await passOne("SA-"+String(i).padStart(2,"0"));
@@ -105,6 +106,9 @@ test("Liens et route publique du nouveau programme",()=>{
   const app=readFileSync(new URL("../public/index.html",import.meta.url),"utf8");
   const academy=readFileSync(new URL("../public/vitrine/academy.html",import.meta.url),"utf8");
   const page=readFileSync(new URL("../public/vitrine/sde-academy-parcours.html",import.meta.url),"utf8");
+  const parcoursJs=readFileSync(new URL("../public/vitrine/sde-academy-parcours.js",import.meta.url),"utf8");
+  assert.match(parcoursJs,/Retours de correction/);
+  assert.match(parcoursJs,/aide\?\.consignes/);
   assert.match(worker,/soldiersAcademyApi\(req, env, u, p\)/);
   assert.match(worker,/\/academy-programme-24/);
   assert.match(app,/Ouvrir mon parcours et mes 24 cours/);

@@ -47,12 +47,12 @@ async function state(env,account){
     env.DB.prepare("SELECT niveau,code,delivree_le FROM academy_2027_attestations WHERE compte=?").bind(id).all()
   ]);
   const overview={};
-  for(const c of COURSES)overview[c.id]={id:c.id,level:c.level,quiz:null,exercises:null,exam:null,attendance:0,participation:null,pending:[],passed:false,average:null};
+  for(const c of COURSES)overview[c.id]={id:c.id,level:c.level,quiz:null,exercises:null,exam:null,attendance:0,participation:null,pending:[],feedback:[],passed:false,average:null};
   for(const v of att.results||[]){const x=overview[v.cours];if(x){x.attendance=v.presence;x.participation=v.participation;}}
   for(const s of sub.results||[]){
     const x=overview[s.cours];if(!x||!types.includes(s.type))continue;
     if(s.statut==="en_attente")x.pending.push({id:s.id,type:s.type,submittedAt:s.date_soumission});
-    if(s.statut==="note"&&value(s.score,0,100))x[s.type]=Math.max(x[s.type]??0,s.score);
+    if(s.statut==="note"&&value(s.score,0,100)){x[s.type]=Math.max(x[s.type]??0,s.score);x.feedback.push({type:s.type,score:s.score,commentaire:s.commentaire||""});}
   }
   for(const x of Object.values(overview)){
     const valid=types.every(t=>x[t]!==null)&&x.participation!==null;
@@ -68,7 +68,7 @@ function publicProgress(data){
   return COURSES.map(c=>{
     const v=data.overview[c.id];
     const locked=c.level>1&&!data.completedLevel(c.level-1);
-    return {id:c.id,title:c.title,level:c.level,durationHours:c.durationHours,locked,quiz:v.quiz,exercises:v.exercises,exam:v.exam,participation:v.participation,attendance:v.attendance,average:v.average,passed:v.passed,pending:v.pending};
+    return {id:c.id,title:c.title,level:c.level,durationHours:c.durationHours,locked,quiz:v.quiz,exercises:v.exercises,exam:v.exam,participation:v.participation,attendance:v.attendance,average:v.average,passed:v.passed,pending:v.pending,feedback:v.feedback};
   });
 }
 async function issueCertificates(env,account){
