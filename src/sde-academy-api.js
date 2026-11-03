@@ -4,6 +4,7 @@
 import {SOLDIERS_ACADEMY_2027 as PROGRAMME} from "./soldiers-academy-2027.js";
 import {LOVE_SCHOOL,LOVE_SCHOOL_PUBLICS} from "./love-school.js";
 import {initLoveAcces,loveAccesApi,loveEtats,loveAutorise,loveMeta} from "./love-school-acces.js";
+import {initAcademyAcces,etatsAcademy,academyStatut,academyMeta,academyAutorise,academyAccesApi} from "./soldiers-academy-acces.js";
 import {CORRECTIFS,BAREME_EXERCICE,BAREME_EXAMEN} from "./academy-correctifs.js";
 import {SPECIALISATIONS} from "./academy-specialisations.js";
 import {initRessources,ressourcesApi,ressourcesApprenant,fonctionFormateur} from "./academy-ressources.js";
@@ -67,11 +68,14 @@ async function state(env,account){
   const allPassed=()=>[1,2,3].every(completedLevel);
   return {overview,certificates,completedLevel,allPassed,progress:{passed:COURSES.filter(c=>overview[c.id].passed).length,total:24,percentage:Math.round(COURSES.filter(c=>overview[c.id].passed).length/24*100)}};
 }
-function publicProgress(data){
+function publicProgress(data,etats={}){
   return COURSES.map(c=>{
     const v=data.overview[c.id];
-    const locked=c.level>1&&!data.completedLevel(c.level-1);
-    return {id:c.id,title:c.title,level:c.level,durationHours:c.durationHours,locked,quiz:v.quiz,exercises:v.exercises,exam:v.exam,participation:v.participation,attendance:v.attendance,average:v.average,passed:v.passed,pending:v.pending,feedback:v.feedback};
+    const preRequis=c.level===1||data.completedLevel(c.level-1);
+    const description=academyMeta(c,etats[c.id],v,preRequis);
+    return {id:c.id,title:c.title,level:c.level,durationHours:c.durationHours,locked:!description.acces.autorise,
+      ...description,quiz:v.quiz,exercises:v.exercises,exam:v.exam,participation:v.participation,attendance:v.attendance,
+      average:v.average,passed:v.passed,pending:v.pending,feedback:v.feedback};
   });
 }
 async function issueCertificates(env,account){
@@ -90,9 +94,17 @@ async function issueCertificates(env,account){
   }
   return nouvelles;
 }
-async function ressourcesPour(env,d){
-  try{await initRessources(env);return await ressourcesApprenant(env,{peutNiveau:n=>n===1||(n>1&&d.completedLevel(n-1))})}
-  catch{return {parCours:{},generales:[],nouveautes:[]}}
+async function ressourcesPour(env,d,compte){
+  try{
+    await initRessources(env);
+    await initAcademyAcces(env);
+    const etats=await etatsAcademy(env,compte);
+    const coursAutorises=COURSES.filter(c=>{
+      const prerequis=c.level===1||d.completedLevel(c.level-1);
+      return academyStatut(c,etats[c.id],d.overview[c.id],prerequis).autorise;
+    }).map(c=>c.id);
+    return await ressourcesApprenant(env,{peutNiveau:n=>n===1||(n>1&&d.completedLevel(n-1)),coursAutorises});
+  }catch{return {parCours:{},generales:[],nouveautes:[]}}
 }
 function canAccess(c,data){return c.level===1||data.completedLevel(c.level-1);}
 function counts(c,type){return type==="quiz"?c.quiz:type==="exercises"?c.exercises:c.exam;}
@@ -103,6 +115,10 @@ export async function soldiersAcademyApi(req,env,u,path){
   const admin=Number(u.niveau)>=2;
   const account=String(u.id);
   await init(env);
+  if(path.startsWith("/api/soldiers-academy/acces")){
+    const d=path.endsWith("/demander")?await state(env,account):null;
+    return academyAccesApi(req,env,u,path,{completedLevel:d?.completedLevel,overview:d?.overview});
+  }
   // Love School : toutes les leçons, vidéos, documents et quiz sont désormais
   // contrôlés par un droit individuel, attribué par un coach/professeur habilité.
   if(path.startsWith("/api/soldiers-academy/love-school/acces"))
@@ -147,9 +163,10 @@ export async function soldiersAcademyApi(req,env,u,path){
     const d=await state(env,account);
     const pj=await projetEtat(env,account);
     const peutRejoindre=n=>n===1||d.completedLevel(n-1);
-    const [cohortes,avis,mesEcoles,biblio,fonction]=await Promise.all([cohortesVue(env,u,{peutRejoindre}),avisNonLus(env,account),ecolesDuCompte(env,account),ressourcesPour(env,d),fonctionFormateur(env,u)]);
+    await initAcademyAcces(env);
+    const [cohortes,avis,mesEcoles,biblio,fonction,accesCours]=await Promise.all([cohortesVue(env,u,{peutRejoindre}),avisNonLus(env,account),ecolesDuCompte(env,account),ressourcesPour(env,d,account),fonctionFormateur(env,u),etatsAcademy(env,account)]);
     const projet={ouvert:d.allPassed(),criteres:PROJET_CRITERES.map(([libelle,points])=>({libelle,points})),enAttente:pj.enAttente,soumisLe:pj.soumisLe,meilleur:pj.meilleur,acquis:pj.acquis,dernier:pj.dernier};
-    return response({ok:true,programme:{version:PROGRAMME.version,status:"adopte",durationHours:192,levels:PROGRAMME.levels,evaluation:PROGRAMME.evaluation},name:u.nom||"Membre SDE",admin,progress:d.progress,courses:publicProgress(d),certificates:d.certificates,projet,parcoursComplet:d.certificates.some(c=>c.niveau===4),
+    return response({ok:true,programme:{version:PROGRAMME.version,status:"adopte",durationHours:192,levels:PROGRAMME.levels,evaluation:PROGRAMME.evaluation},name:u.nom||"Membre SDE",admin,progress:d.progress,courses:publicProgress(d,accesCours),certificates:d.certificates,projet,parcoursComplet:d.certificates.some(c=>c.niveau===4),
       specialisations:{ecoles:SPECIALISATIONS.ecoles,masterclass:SPECIALISATIONS.masterclass,ouvertes:d.allPassed(),mesInscriptions:mesEcoles},cohortes,avis,
       ressources:{generales:biblio.generales,nouveautes:biblio.nouveautes,parCours:Object.fromEntries(Object.entries(biblio.parCours).map(([k,v])=>[k,v.length]))},formateur:fonction||null});
   }
@@ -158,7 +175,9 @@ export async function soldiersAcademyApi(req,env,u,path){
     if(!c)return error("Cours introuvable.",404);
     const dc=await state(env,account);
     if(!canAccess(c,dc))return error("Validez le niveau précédent pour ouvrir ce cours.",403);
-    const biblioCours=await ressourcesPour(env,dc);
+    await initAcademyAcces(env);
+    if(!(await academyAutorise(env,account,c,dc.overview[c.id])))return error("Cours verrouillé : demandez une validation au coach ou professeur.",403);
+    const biblioCours=await ressourcesPour(env,dc,account);
     return response({ok:true,course:c,ressources:biblioCours.parCours[c.id]||[],disclaimer:"Formation interne au Mouvement SDE. Les travaux et examens sont évalués par un responsable habilité."});
   }
   if(path==="/api/soldiers-academy/soumettre"&&req.method==="POST"){
@@ -176,7 +195,10 @@ export async function soldiersAcademyApi(req,env,u,path){
     }
     const c=courseFor(body.courseId);const type=body.type;
     if(!c||!types.includes(type))return error("Cours ou type d'épreuve invalide.");
-    if(!canAccess(c,await state(env,account)))return error("Niveau verrouillé.",403);
+    const dCourse=await state(env,account);
+    if(!canAccess(c,dCourse))return error("Niveau verrouillé.",403);
+    await initAcademyAcces(env);
+    if(!(await academyAutorise(env,account,c,dCourse.overview[c.id])))return error("Cours verrouillé : une validation pédagogique préalable est nécessaire.",403);
     const prompts=counts(c,type);
     if(!Array.isArray(body.answers)||body.answers.length!==prompts.length||body.answers.some(x=>typeof x!=="string"||x.trim().length<12||x.length>8000))return error("Répondez à toutes les questions (minimum 12 caractères par réponse).");
     const pending=await env.DB.prepare("SELECT id FROM academy_2027_submissions WHERE compte=? AND cours=? AND type=? AND statut='en_attente' LIMIT 1").bind(account,c.id,type).first();
