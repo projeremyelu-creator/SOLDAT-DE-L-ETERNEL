@@ -27,6 +27,26 @@
    });
    e.append(l);s.append(e);
   }
+  $("co-academy-n").textContent=String(a.parTheme.academy||0);
+  const rs=$("co-resumes");rs.replaceChildren();
+  if(!j.resumes.length)rs.append(li("Aucun résumé enregistré."));
+  for(const x of j.resumes){
+   const e=document.createElement("li"),t=document.createElement("strong");
+   t.textContent=x.titre+(x.ecole?" · école "+x.ecole:"");e.append(t,document.createTextNode(x.envoye?" — envoyé à "+x.total+" abonné(s) le "+new Date(x.envoye).toLocaleDateString("fr-FR"):" — non envoyé "));
+   if(!x.envoye){
+    const envoyer=document.createElement("button");envoyer.type="button";envoyer.className="hub-btn";envoyer.textContent="Envoyer";
+    envoyer.addEventListener("click",async()=>{
+     if(!confirm("Envoyer ce résumé à tous les abonnés concernés ? Cette action est définitive."))return;
+     envoyer.disabled=true;
+     try{const r=await api({envoyerResume:x.id});dire("Résumé envoyé à "+r.envoyes+" abonné(s).");afficher(await api())}
+     catch(err){dire(err.message,true);envoyer.disabled=false}
+    });
+    const sup=document.createElement("button");sup.type="button";sup.className="sq-lien";sup.textContent="Supprimer";
+    sup.addEventListener("click",async()=>{try{await api({supprimerResume:x.id});afficher(await api())}catch(err){dire(err.message,true)}});
+    e.append(envoyer,document.createTextNode(" "),sup);
+   }
+   rs.append(e);
+  }
   const v=$("co-envois");v.replaceChildren();
   if(!j.envois.length)v.append(li("Aucun envoi pour le moment."));
   for(const x of j.envois)v.append(li(x.cle+" — "+x.total+" destinataire(s) — "+new Date(x.envoye).toLocaleString("fr-FR")));
@@ -38,6 +58,11 @@
    afficher(await api());$("co-bloc").hidden=false;etat.textContent="";
   }catch(err){dire(err.message||"Chargement impossible.",true)}
  })();
+ $("co-resume").addEventListener("submit",async ev=>{
+  ev.preventDefault();const f=ev.currentTarget,d=Object.fromEntries(new FormData(f).entries());
+  try{await api({resume:{ecole:Number(d.ecole),titre:d.titre,texte:d.texte,lien:d.lien}});f.reset();dire("Résumé enregistré. Il n’est pas encore envoyé.");afficher(await api())}
+  catch(err){dire(err.message,true)}
+ });
  $("co-apercu").addEventListener("click",async()=>{
   const z=$("co-apercu-zone");z.replaceChildren();z.hidden=false;
   try{

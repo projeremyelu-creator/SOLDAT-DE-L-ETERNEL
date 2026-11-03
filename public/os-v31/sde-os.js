@@ -166,7 +166,48 @@ function decorate(){
  $("#governance-private").hidden=!state.admin;
  $("#governance-locked").hidden=state.admin;
  updateOverview();
+ loadPilotage();
 }
+
+/* Pilotage (administrateurs) : inscriptions aux formations et cellules, données réelles, sans noms. */
+function pilotageLigne(titre,detail,ok){
+ const row=document.createElement("div");row.className="history-item";
+ const a=document.createElement("strong");a.textContent=titre;const b=document.createElement("span");b.textContent=detail;
+ if(ok===false)b.style.opacity=".75";
+ row.append(a,b);return row;
+}
+function pilotageKpi(libelle,valeur,note){
+ const card=document.createElement("article");card.className="stat-card";
+ const a=document.createElement("span");a.textContent=libelle;const b=document.createElement("strong");b.textContent=String(valeur);const c=document.createElement("small");c.textContent=note;
+ card.append(a,b,c);return card;
+}
+async function loadPilotage(){
+ const zone=$("#pilotage-admin");if(!zone)return;
+ zone.hidden=!state.admin;if(!state.admin)return;
+ const etat=$("#pilotage-etat");etat.textContent="Chargement des données réelles…";
+ try{
+  const d=await api("pilotage"),f=d.formations,c=d.cellules;
+  const pre=Object.values(d.preinscriptions||{}).reduce((x,y)=>x+y,0);
+  $("#pilotage-kpi").replaceChildren(
+   pilotageKpi("Inscrits en formation",f.inscrits,f.total+" formation(s) enregistrée(s)"),
+   pilotageKpi("Certifiés",f.certifies,"Participants certifiés"),
+   pilotageKpi("Préinscriptions Academy",pre,"Demandes reçues depuis le site"),
+   pilotageKpi("Cellules",c.total,c.priere+" de prière · "+c.sansResponsable+" sans responsable"));
+  const lf=$("#pilotage-formations");lf.replaceChildren();
+  if(!f.lignes.length)lf.append(pilotageLigne("Aucune formation enregistrée","Créez une formation dans Soldiers Academy pour suivre les inscriptions.",false));
+  for(const x of f.lignes)lf.append(pilotageLigne(x.titre+(x.debut?" · "+x.debut:""),x.inscrits+" inscrit(s) · "+x.certifies+" certifié(s)"+(x.retires?" · "+x.retires+" retiré(s)":"")));
+  const noms={1:"Fondations",2:"Maturité",3:"Service et Leadership",4:"Mission et Influence"};
+  $("#pilotage-ecoles").textContent=d.interetEcoles.length?"Intérêt exprimé par les membres : "+d.interetEcoles.map(x=>(noms[x.ecole]||"École "+x.ecole)+" "+x.n).join(" · ")+".":"Aucun intérêt exprimé pour les quatre écoles pour le moment.";
+  const lc=$("#pilotage-cellules");lc.replaceChildren();
+  if(!c.cellules.length)lc.append(pilotageLigne("Aucune cellule enregistrée","Ajoutez des garnisons de type « Cellule » (nom, lieu, jour, responsable) pour les suivre ici.",false));
+  for(const x of c.cellules){
+   const lieu=[x.ville,x.pays].filter(Boolean).join(", "),quand=[x.jour,x.heure].filter(Boolean).join(" ");
+   lc.append(pilotageLigne(x.nom+(x.priere?" · prière":""),[x.membres+" membre(s)",lieu,quand,x.responsable?"":"sans responsable",x.statut!=="Active"?x.statut:""].filter(Boolean).join(" · ")));
+  }
+  etat.textContent="Données du registre au "+new Date().toLocaleDateString("fr-FR")+".";
+ }catch(err){etat.textContent=err.message||"Chargement impossible.";}
+}
+document.addEventListener("click",e=>{if(e.target&&e.target.id==="pilotage-actualiser")loadPilotage();});
 function updateOverview(){
  const d=state.data;
  $("#stat-checkins").textContent=d.mesBilans;
