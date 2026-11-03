@@ -21,11 +21,14 @@ test('Accueil premium : trois univers reliés aux vraies rubriques publiques',()
    assert.ok(panel.textContent.includes(label));
    assert.ok(panel.querySelector('a[href="'+path+'"]'),path);
   }
-  const actions=doc.querySelector('.m-welcome .m-actions');
+ assert.ok(doc.querySelector('.ap-hero'),"Nouvelle vitrine immersive préservée");
+ assert.ok(doc.querySelector('.ap-agenda'),"Agenda dynamique préservé");
+ assert.ok(doc.querySelector('.ap-indicateurs'),"Indicateurs vérifiés préservés");
+  const actions=doc.querySelector('.ap-hero .ap-actions');
   assert.ok(actions,'Trois actions d’accueil présentes');
   assert.equal(actions.querySelectorAll('a').length,3);
-  assert.ok(doc.querySelector('.sde-hero-poster img[src="/vitrine/illus/tpa-2026.webp"]'));
-  assert.equal(doc.querySelectorAll('.iv-vitrine img[src="/vitrine/illus/tpa-2026.webp"]').length,0);
+  assert.ok(doc.querySelector('.ap-poster img[src="/vitrine/illus/tpa-2026.webp"]'));
+  assert.equal(doc.querySelectorAll('.sde-premium-pillars img[src="/vitrine/illus/tpa-2026.webp"]').length,0);
  }finally{dom.window.close()}
 });
 
