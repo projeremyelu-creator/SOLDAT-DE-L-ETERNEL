@@ -45,7 +45,7 @@ test('Une fiche sans e-mail conserve ses coordonnées et reçoit une connexion p
  try{
   f.account('chef','admin');
   f.doc('membres/no-mail',{nom:'ZEREOUE',prenoms:'Emmanuel',telephone:'0708070900',pole:'Formation',actif:true});
-  const r=await f.call('/api/comptes/membres','chef','POST',{simuler:false});
+  const r=await f.call('/api/comptes/membres','chef','POST',{simuler:false,sansEmail:true});
   assert.equal(r.status,200);assert.equal(r.body.crees.length,1);
   const issued=r.body.crees[0];
   assert.equal(issued.email,'');assert.match(issued.matricule,/^\d{6}$/);
@@ -62,7 +62,7 @@ test('Première connexion : les pages, fichiers et APIs privées restent fermés
  try{
   f.account('chef','admin');
   f.doc('membres/membre',{nom:'MORIBA',prenoms:'Danielle',matricule:'SDE-CI-2099',actif:true});
-  const creation=(await f.call('/api/comptes/membres','chef','POST',{simuler:false})).body.crees[0];
+  const creation=(await f.call('/api/comptes/membres','chef','POST',{simuler:false,sansEmail:true})).body.crees[0];
   const signed=await signIn(f,creation.matricule,creation.motDePasse);
   assert.equal(signed.status,200);assert.equal(signed.body.changerMotDePasse,true);assert.ok(signed.cookie);
   const moi=await (await session(f,signed.cookie,'/api/moi')).json();
