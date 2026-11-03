@@ -69,7 +69,7 @@ test("Refonte Fusion : annuaire, pointages et finances reçoivent des tuiles de 
   const ops = lire("frontend/operations.jsx");
   assert.ok(ops.includes("function Stats("));
   for (const k of ["Membres actifs", "Certifiés Academy", "Rencontres disponibles", "Pointages récents", "Missions suivies"]) assert.ok(ops.includes(k), k);
-  assert.equal((ops.match(/<Stats /g) || []).length, 2);
+  assert.ok((ops.match(/<Stats /g) || []).length >= 2);
   assert.ok(lire("frontend/reference.css").includes(".fu-stats"));
 });
 
@@ -79,4 +79,10 @@ test("Refonte Fusion : Porte-Voix avec tuiles réelles et style Fusion", () => {
   for (const k of ["pv-stats", "Annonces actives", "Messages ciblés", "Rappels du jour", "rappelsEnAttente()", "S.diffusions.length", "annoncesActives()"]) assert.ok(bloc.includes(k), k);
   const css = lire("public/vitrine/sde-fusion.css");
   for (const k of [".annonce", ".msgbox", ".stat{", ".chip.gold"]) assert.ok(css.includes(k), k);
+});
+
+test("Refonte Fusion : bibliothèque, agenda et Academy reçoivent tuiles et anneau réels", () => {
+  const ops = lire("frontend/operations.jsx");
+  for (const k of ["Chiffres de la bibliothèque", "Chiffres de l’agenda", "Rencontres annoncées", "Progression collective : "]) assert.ok(ops.includes(k), k);
+  assert.equal((ops.match(/<Stats /g) || []).length, 4);
 });
