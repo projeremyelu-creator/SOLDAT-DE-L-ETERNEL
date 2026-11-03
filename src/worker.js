@@ -1822,6 +1822,8 @@ async function traiter(req, env, ctx) {
           const n = new Response(r.body,r);
           n.headers.set("cache-control","private, no-store");
           n.headers.set("x-robots-tag","noindex, nofollow");
+          if (p.endsWith("/academy")) n.headers.set("content-security-policy",
+            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
           if (p.endsWith("/os-v31")) n.headers.set("content-security-policy",
             "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
           return n;
