@@ -1766,7 +1766,7 @@ async function traiter(req, env, ctx) {
           return assetPortail("/vitrine/portail.html");
         }
         if (p === "/vitrine/" || p === "/vitrine/index.html") return Response.redirect(url.origin + "/", 301);
-        if (pagesPubliques[p]) {
+        if (pagesPubliques[p] && !["/comptes-membres","/mot-de-passe"].includes(p)) {
           const page = await assetPortail(pagesPubliques[p]);
           return p === "/programmes" || p === "/contact" ? injecterSite(page, env, p === "/programmes" ? "programmes" : "contact") : page;
         }
