@@ -132,3 +132,37 @@ body.sde-premium-home{--ap-navy0:#07122b;--ap-navy1:#0d1f4a;--ap-navy2:#142c63;-
   min-height:3.15em;
  }
 }
+
+
+/* Recette Chromium 1024 px (03/11/2026) :
+   le titre et l'affiche se déplaçaient vers le haut quand Cinzel finissait
+   de charger (CLS de laboratoire 0.152). Dans la bande tablette/desktop,
+   ancrer les deux colonnes au bord supérieur plutôt que de les recentrer
+   à chaque recalcul typographique. Réserver aussi la hauteur du hero
+   pour stabiliser le contenu situé immédiatement en dessous. */
+@media (min-width:1000px) and (max-width:1100px){
+ body.sde-premium-home .ap-hero-inner{
+  align-items:start;
+  min-height:840px;
+  box-sizing:border-box;
+ }
+ body.sde-premium-home .ap-hero-copy{
+  align-self:start;
+ }
+ body.sde-premium-home .ap-poster{
+  align-self:start;
+ }
+ body.sde-premium-home .ap-eyebrow{
+  min-height:2.7em;
+  line-height:1.35;
+ }
+ body.sde-premium-home .ap-hero h1{
+  min-height:3.15em;
+ }
+}
+/* Les écrans plus petits restent naturellement fluides et sans hauteur fixe. */
+@media (max-width:999px){
+ body.sde-premium-home .ap-hero-inner{
+  min-height:0;
+ }
+}
