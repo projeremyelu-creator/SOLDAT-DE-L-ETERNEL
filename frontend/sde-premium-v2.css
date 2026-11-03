@@ -1,0 +1,219 @@
+/* SDE DESIGN SYSTEM — édition Premium V2 (03/11/2026).
+   Palette fonctionnelle et présentation des actions du commandement.
+   Les droits métier restent pilotés par les API et le routeur existants. */
+body.sde-reference{
+ --sde-command-navy:#13203c;
+ --sde-spiritual-violet:#402269;
+ --sde-mission-green:#1a5342;
+ --sde-premium-gold:#ecc981;
+ --sde-module-accent:var(--sde-premium-gold);
+ --sde-module-surface:#1c2b43;
+}
+body.sde-reference[data-sde-module="pilotage"],
+body.sde-reference[data-sde-module="centre-command"],
+body.sde-reference[data-sde-module="scanner"],
+body.sde-reference[data-sde-module="annuaire"],
+body.sde-reference[data-sde-module="finance-direction"]{
+ --sde-module-accent:#ecc981;
+ --sde-module-surface:#172942;
+}
+body.sde-reference[data-sde-module="priere"],
+body.sde-reference[data-sde-module="mur"],
+body.sde-reference[data-sde-module="chambre"],
+body.sde-reference[data-sde-module="parcours"],
+body.sde-reference[data-sde-module="bibliotheque"],
+body.sde-reference[data-sde-module="academie"],
+body.sde-reference[data-sde-module="academy-direction"]{
+ --sde-module-accent:#d5a4ee;
+ --sde-module-surface:#392351;
+}
+body.sde-reference[data-sde-module="suivi-poles"],
+body.sde-reference[data-sde-module="projets"],
+body.sde-reference[data-sde-module="engagements"],
+body.sde-reference[data-sde-module="rendezvous"],
+body.sde-reference[data-sde-module="agenda"]{
+ --sde-module-accent:#94d8b1;
+ --sde-module-surface:#1b493b;
+}
+body.sde-reference .ops-panel>.ops-heading{
+ position:relative;
+ border-bottom:2px solid var(--sde-module-accent);
+ padding-bottom:clamp(13px,2vw,21px);
+ margin-bottom:clamp(18px,2.4vw,26px);
+}
+body.sde-reference .ops-panel>.ops-heading .ops-eyebrow{
+ color:var(--sde-module-accent)!important;
+ letter-spacing:.12em;font-weight:900;
+}
+body.sde-reference .ops-panel>.ops-heading h2{
+ line-height:1.13;overflow-wrap:anywhere;
+}
+body.sde-reference .ops-panel .ops-kpis>.ops-card,
+body.sde-reference .ops-panel .ops-kpis>.ref-kpi{
+ min-width:0;border-radius:16px!important;
+}
+body.sde-reference .ops-panel :is(.ops-card,.ref-kpi,.ops-course,.ref-command-chart,.ref-command-academy) :is(p,small,span,strong){
+ overflow-wrap:anywhere;
+}
+/* Le panneau stratégique vient après les quatre chiffres clés, avant le reste. */
+body.sde-reference .ref-command-focus{
+ color:#f8f1e7!important;
+ margin:clamp(12px,2vw,24px) 0;
+ border:1px solid rgba(240,201,125,.56);
+ border-radius:19px;overflow:hidden;
+ padding:clamp(16px,2.4vw,25px);
+ background:radial-gradient(ellipse at 91% 12%,rgba(153,54,82,.24),transparent 48%),
+ linear-gradient(132deg,#111e38,#172e43 60%,#203d34)!important;
+ box-shadow:0 14px 33px rgba(7,16,33,.2);
+}
+body.sde-reference .ref-command-focus-head{
+ display:flex;align-items:center;justify-content:space-between;
+ flex-wrap:wrap;gap:13px;margin-bottom:17px;
+}
+body.sde-reference .ref-command-focus-eyebrow{
+ color:#f5cc80!important;
+ font-size:.7rem;font-weight:850;letter-spacing:.16em;
+}
+body.sde-reference .ref-command-focus h2{
+ margin:5px 0 7px;
+ color:#fff0ce!important;
+ font:800 clamp(1.55rem,2.9vw,2.25rem)/1.12 "Saira Condensed",system-ui,sans-serif;
+}
+body.sde-reference .ref-command-focus-head p{
+ color:#e0e3e6!important;margin:0;
+ font-size:.87rem;line-height:1.5;
+}
+body.sde-reference .ref-command-focus-status{
+ min-width:155px;max-width:235px;
+ display:grid;gap:2px;justify-items:center;
+ padding:11px 18px;border:1px solid rgba(241,203,138,.44);
+ border-radius:12px;background:rgba(13,26,44,.6);
+}
+body.sde-reference .ref-command-focus-status strong{
+ font-size:clamp(1.65rem,3vw,2.15rem);
+ font-weight:900;color:#ffe2a3!important;
+ font-variant-numeric:tabular-nums;
+}
+body.sde-reference .ref-command-focus-status span{
+ color:#e9e8ea!important;font-size:.73rem;text-align:center;
+}
+body.sde-reference .ref-command-focus .ref-priority{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:9px;padding:0!important;margin:0!important;
+ background:transparent!important;border:0!important;
+}
+body.sde-reference .ref-command-focus .ref-priority button{
+ min-width:0;min-height:58px;width:100%;
+ display:flex;align-items:center;gap:10px;
+ padding:10px 12px;border:1px solid rgba(233,197,134,.43)!important;
+ border-radius:11px!important;
+ background:rgba(255,255,255,.065)!important;
+ color:#f7ecdd!important;text-align:left;
+ font-size:.83rem;font-weight:850;
+ transition:background-color .16s ease,border-color .16s ease;
+}
+body.sde-reference .ref-command-focus .ref-priority button svg{
+ flex:0 0 22px;width:22px;height:22px;
+ color:#ffde9d!important;stroke-width:1.7;
+}
+body.sde-reference .ref-command-focus .ref-priority button>span:nth-child(2){
+ flex:1;min-width:0;color:#f7ecdd!important;
+}
+body.sde-reference .ref-command-focus .ref-priority button>span:last-child{
+ color:#ffde9d!important;flex:0 0 auto;
+}
+body.sde-reference .ref-command-focus .ref-priority button:hover{
+ background:rgba(237,196,118,.16)!important;
+ border-color:#f7d798!important;
+}
+body.sde-reference .ref-command-focus .ref-priority button:focus-visible{
+ outline:3px solid #ffe3a7!important;outline-offset:2px!important;
+}
+/* Tables : hiérarchie de lecture commune, aussi lorsque la table a un TH de ligne. */
+body.sde-reference .ops-panel .ops-table-scroll tbody th[scope="row"]{
+ color:#f9ebd5!important;
+ background:transparent!important;
+ font-weight:850;text-align:left;padding:12px 11px!important;
+ border-bottom:1px solid rgba(205,201,217,.2)!important;
+}
+body.sde-reference .ops-panel .ops-table-scroll tbody th[scope="row"] small{
+ display:block;color:#d7e0e3!important;
+ font-size:.77rem;line-height:1.4;margin-top:3px;
+}
+body.sde-reference .ops-panel .ops-table-scroll tbody tr:hover th[scope="row"]{
+ background:rgba(230,190,110,.1)!important;
+}
+body.sde-reference .ops-panel .ops-table-scroll tbody td a{
+ color:#ffe1a0!important;text-decoration:underline;text-underline-offset:3px;
+}
+body.sde-reference .ref-tabbar button[aria-current="page"]{
+ border-top:2px solid #e8c47a!important;
+}
+body.sde-reference :is(.ref-tabbar button,.ref-sidebar button):focus-visible{
+ outline:3px solid #ffdf92!important;outline-offset:2px!important;
+}
+@media(max-width:980px){
+ body.sde-reference .ref-command-focus .ref-priority{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+}
+@media(max-width:620px){
+ body.sde-reference .ref-command-focus{
+  padding:14px;border-radius:16px;
+ }
+ body.sde-reference .ref-command-focus-head{
+  align-items:stretch;
+ }
+ body.sde-reference .ref-command-focus-status{
+  max-width:none;width:100%;
+  grid-template-columns:auto 1fr;justify-items:start;align-items:center;
+ }
+ body.sde-reference .ref-command-focus .ref-priority{
+  grid-template-columns:minmax(0,1fr);
+ }
+ body.sde-reference .ref-command-focus .ref-priority button{
+  min-height:50px;
+ }
+ body.sde-reference .ops-panel>.ops-heading{
+  padding-bottom:14px;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-reference .ref-command-focus .ref-priority button{
+  transition:none!important;
+ }
+}
+
+
+/* Les longues rubriques sont organisées par groupes dans le même menu. */
+body.sde-reference .ref-sidebar nav .ref-nav-section,
+body.sde-reference .ref-mobile-drawer nav .ref-nav-section{
+ display:block;align-self:stretch;
+ margin:13px 4px 4px;padding:5px 8px;
+ border-bottom:1px solid rgba(230,193,125,.32);
+ color:#f2d497!important;
+ font-size:.65rem;line-height:1.35;font-weight:900;
+ letter-spacing:.11em;text-transform:uppercase;
+}
+body.sde-reference .ref-sidebar nav .ref-nav-section:first-child,
+body.sde-reference .ref-mobile-drawer nav .ref-nav-section:first-child{
+ margin-top:0;
+}
+body.sde-reference .ref-mobile-drawer nav .ref-nav-section{
+ margin:9px 2px 2px;
+ color:#573270!important;border-bottom-color:rgba(83,50,111,.29);
+}
+body.sde-reference .ref-sidebar nav button,
+body.sde-reference .ref-mobile-drawer nav button{
+ text-align:left;line-height:1.3;min-height:44px;
+}
+body.sde-reference .ref-sidebar nav button[aria-current="page"],
+body.sde-reference .ref-mobile-drawer nav button[aria-current="page"]{
+ box-shadow:inset 3px 0 var(--sde-premium-gold);
+}
+@media(max-width:760px){
+ body.sde-reference .ref-mobile-drawer nav .ref-nav-section{
+  padding-block:7px;margin-top:9px;
+ }
+}

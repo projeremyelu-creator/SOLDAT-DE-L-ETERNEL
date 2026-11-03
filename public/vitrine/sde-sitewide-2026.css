@@ -1441,3 +1441,79 @@ html body.sde-unifie:not(.sde-tableau) .hub-grid>*{
   transition:none!important;transform:none!important;
  }
 }
+
+
+/* SDE Premium V2 : accents sémantiques partagés par les pages publiques.
+   Le fond général et les contrastes existants sont préservés. */
+html body.sde-unifie.sde-subpage{
+ --sde-page-accent:#e6c482;
+ --sde-page-accent-soft:rgba(229,190,119,.15);
+ --sde-page-bg:#17243b;
+}
+html body.sde-unifie.sde-subpage:is([data-sde-page="prieres"],[data-sde-page="academy"],[data-sde-page="ressources"],[data-sde-page="temoignages"],[data-sde-page="soldiers-voice"]){
+ --sde-page-accent:#d5b2f0;
+ --sde-page-accent-soft:rgba(168,107,207,.18);
+ --sde-page-bg:#32214e;
+}
+html body.sde-unifie.sde-subpage:is([data-sde-page="missions-humanitaires"],[data-sde-page="projets"],[data-sde-page^="pole-"],[data-sde-page="missions"],[data-sde-page="soutenir"]){
+ --sde-page-accent:#a5dfb9;
+ --sde-page-accent-soft:rgba(104,179,134,.19);
+ --sde-page-bg:#173f34;
+}
+html body.sde-unifie.sde-subpage:is([data-sde-page="gouvernance"],[data-sde-page="mouvement"],[data-sde-page="programmes"],[data-sde-page="calendrier"]){
+ --sde-page-accent:#f1ca85;
+ --sde-page-accent-soft:rgba(224,181,107,.16);
+ --sde-page-bg:#152b44;
+}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-lead,.sde-hero,.m-band,.hub-hero){
+ border-bottom:2px solid var(--sde-page-accent)!important;
+ background-image:
+ radial-gradient(ellipse at 87% 6%,var(--sde-page-accent-soft),transparent 54%),
+ linear-gradient(120deg,#18142e 0%,var(--sde-page-bg) 100%)!important;
+}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-lead,.sde-hero,.hub-hero) :is(h1,h2,p,a){
+ text-wrap:pretty;
+}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-section,.section[id],.hub-section)>:is(h2,h3),
+html body.sde-unifie.sde-subpage :is(.sde-initiative-section,.section[id],.hub-section) .tete-section h2{
+ text-wrap:balance;letter-spacing:-.017em;
+}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-card,.ressource-carte,.programme,.pole-carte,.hub-card,.hub-form){
+ min-width:0;border:1px solid rgba(183,159,123,.42)!important;
+ box-shadow:0 12px 32px rgba(14,12,33,.09);
+ border-radius:16px!important;
+}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-card,.ressource-carte,.programme,.pole-carte,.hub-card):hover{
+ border-color:var(--sde-page-accent)!important;
+}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-card,.ressource-carte,.programme,.pole-carte,.hub-card) :is(h2,h3,h4){
+ line-height:1.24;overflow-wrap:anywhere;
+}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-card,.ressource-carte,.programme,.pole-carte,.hub-card) :is(p,li,small){
+ line-height:1.55;overflow-wrap:anywhere;
+}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-card,.ressource-carte,.programme,.pole-carte,.hub-card) :is(a,button):focus-visible{
+ outline:3px solid var(--sde-page-accent)!important;outline-offset:3px!important;
+}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-section,.section[id],.hub-section) :is(input,textarea,select){
+ max-width:100%;min-width:0;line-height:1.4;
+}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-section,.section[id],.hub-section) :is(input,textarea,select):focus-visible{
+ outline:3px solid var(--sde-page-accent)!important;
+}
+html body.sde-unifie.sde-subpage .site-footer{
+ border-top:2px solid var(--sde-page-accent);
+}
+@media(max-width:680px){
+ html body.sde-unifie.sde-subpage :is(.sde-initiative-lead,.hub-hero){
+  padding-inline:clamp(14px,4vw,23px);
+ }
+ html body.sde-unifie.sde-subpage :is(.sde-initiative-card,.ressource-carte,.programme,.hub-card){
+  border-radius:13px!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-unifie.sde-subpage :is(.sde-initiative-card,.ressource-carte,.programme,.pole-carte,.hub-card){
+  transition:none!important;transform:none!important;
+ }
+}
