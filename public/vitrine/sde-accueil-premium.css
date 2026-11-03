@@ -132,3 +132,20 @@ body.sde-premium-home{--ap-navy0:#07122b;--ap-navy1:#0d1f4a;--ap-navy2:#142c63;-
   min-height:3.15em;
  }
 }
+
+
+/* Seuil tablette large (1024 px) : éviter le recentrage vertical
+   des deux colonnes lors du remplacement de la police de titre.
+   Leurs positions hautes restent fixes même si le texte se recompose. */
+@media (min-width:1000px) and (max-width:1099px){
+ .ap-hero-inner{
+  align-items:start;
+ }
+ .ap-hero .ap-hero-copy h1{
+  font-size:clamp(2.5rem,3.9vw,3rem);
+  min-height:3.15em;
+ }
+ .ap-hero .ap-poster{
+  align-self:start;
+ }
+}
