@@ -70,7 +70,7 @@ form().addEventListener("submit",async ev=>{
  ev.preventDefault();const btn=$("saveResource");btn.disabled=true;
  try{
   const resource=body(),file=form().elements.file.files?.[0]||null;
-  if(file&&!["video","audio","document"].includes(resource.kind))throw Error("Sélectionnez Vidéo, Audio ou Document pour envoyer ce fichier.");
+  if(file&&!["video","audio","document","cours"].includes(resource.kind))throw Error("Sélectionnez Vidéo, Audio ou Document pour envoyer ce fichier.");
   if(file&&file.size>8*1024*1024)throw Error("Taille maximale : 8 Mo.");
   const desiredPublished=resource.published;
   if(file)resource.published=false;
@@ -82,8 +82,8 @@ form().addEventListener("submit",async ev=>{
   }
   if(file)await upload(id,file);
   if(file&&desiredPublished)await api("/"+encodeURIComponent(id),"PATCH",{published:true});
-  status("editorStatus",desiredPublished?"Ressource publiée et visible pour tous les apprenants.":"Brouillon enregistré dans votre studio.");
   resetForm();await refresh();
+  status("editorStatus",desiredPublished?"Ressource publiée et visible pour tous les apprenants.":"Brouillon enregistré dans votre studio.");
  }catch(e){status("editorStatus",e.message);}finally{btn.disabled=false;}
 });
 $("resetResource").addEventListener("click",resetForm);
