@@ -8432,6 +8432,47 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   function messageActivation(c) {
     return `Shalom${c.nom ? " " + c.nom.split(/\s+/)[0] : ""} !\n\nTon accès à MPA SDE est prêt.\n1. Ouvre ${URL_APP_H}\n2. Touche le cadenas, puis « J’ai un code »\n3. Saisis ton adresse ${c.email}, le code ${c.code} et choisis ton mot de passe.\n\nLe code est valable 14 jours et ne sert qu’une fois.\n— ${cfg().nomCourt}`;
   }
+
+  /* Attribution individuelle depuis la liste des membres : aucun doublon de fiche,
+     un mot de passe aléatoire par personne, affiché une seule fois au secrétariat. */
+  function blocAccesMembres() {
+    if (CPT.accesErr) return '<section class="cpt-provision"><h3>Accès des membres</h3><p class="note danger">' + esc(CPT.accesErr) + '</p></section>';
+    if (!Array.isArray(CPT.acces)) return '<p class="hint">Chargement des fiches et des comptes liés…</p>';
+    const labels = { a_creer: "À créer", provisoire: "Mot de passe provisoire", actif: "Compte actif",
+      inactif: "Fiche inactive", relier: "Compte existant à relier", verifier: "Rattachement à vérifier",
+      invalide: "Fiche invalide", matricule_conflit: "Matricule à corriger" };
+    const aCreer = CPT.acces.filter(m => m.etat === "a_creer").length;
+    const relies = CPT.acces.filter(m => m.etat === "actif" || m.etat === "provisoire").length;
+    let html = '<section class="cpt-provision" aria-labelledby="cpt-provision-titre">';
+    html += '<h3 id="cpt-provision-titre">Accès individuels des fiches membres</h3>';
+    html += '<p class="hint">' + CPT.acces.length + ' fiches · ' + relies + ' comptes liés · ' + aCreer + ' accès à créer. Les données des fiches existantes sont conservées.</p>';
+    html += '<p class="hint">Chaque membre se connecte avec son <b>matricule</b> et un <b>mot de passe provisoire différent</b>. Le remplacement par un mot de passe personnel est obligatoire à la première connexion.</p>';
+    if (aCreer) html += '<button class="btn btn-primary btn-sm" type="button" data-act="cpt-creer-tous"' +
+      (CPT.enCours ? ' disabled' : '') + '>Créer les ' + aCreer + ' accès manquants</button>';
+    if (CPT.livres.length) {
+      html += '<div class="cpt-credentials" role="region" aria-label="Identifiants générés à transmettre en privé">';
+      html += '<h4>Identifiants provisoires — affichés uniquement maintenant</h4>';
+      html += '<p class="hint">Copiez-les et transmettez-les séparément à chaque personne. Ils ne sont jamais enregistrés en clair sur le serveur. Après fermeture de cette fenêtre, seuls les comptes subsistent.</p>';
+      for (const r of CPT.livres) {
+        html += '<div class="cpt-credential"><strong>' + esc(r.nom) + '</strong><small>Matricule : <b>' + esc(r.matricule) + '</b></small>';
+        html += '<label for="cpt-secret-' + esc(r.membreId) + '">Mot de passe provisoire</label>';
+        html += '<input class="inp inp-sm" id="cpt-secret-' + esc(r.membreId) + '" type="password" readonly autocomplete="off" value="' + esc(r.motDePasseProvisoire) + '">';
+        html += '<div class="btn-row"><button class="btn btn-sm" type="button" data-act="cpt-voir-acces" data-id="' + esc(r.membreId) + '">Afficher / masquer</button>';
+        html += '<button class="btn btn-sm" type="button" data-act="cpt-copier-acces" data-id="' + esc(r.membreId) + '">Copier les identifiants</button></div></div>';
+      }
+      html += '<button class="btn btn-sm" type="button" data-act="cpt-secrets-ok">J’ai transmis ces identifiants — les masquer</button></div>';
+    }
+    html += '<div class="cpt-provision-list" role="list" aria-label="État des fiches membres">';
+    for (const m of CPT.acces) {
+      html += '<div class="cpt-provision-line" role="listitem"><span><b>' + esc(m.nom) + '</b><small>' +
+        esc(m.matricule || "Matricule à attribuer") + ' · ' + esc(labels[m.etat] || m.etat) + '</small></span>';
+      if (m.etat === "a_creer") html += '<button class="btn btn-sm" type="button" data-act="cpt-creer" data-id="' + esc(m.id) + '">Créer l’accès</button>';
+      else if (m.etat === "provisoire") html += '<button class="btn btn-sm" type="button" data-act="cpt-renouveler" data-id="' + esc(m.id) + '">Regénérer le provisoire</button>';
+      html += '</div>';
+    }
+    html += '</div><p class="hint">Les fiches « Compte existant à relier » doivent être reliées dans la liste des comptes ci-dessous, sans écraser leur mot de passe. Les fiches inactives ou avec des identifiants en conflit ne sont pas modifiées automatiquement.</p></section>';
+    return html;
+  }
   function ficheComptes() {
     const m = moiH();
     if (CPT.err) return `<p class="note danger">${esc(CPT.err)}</p>`;
@@ -8445,7 +8486,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     const tailleKo = (n) => (n > 1048576 ? (n / 1048576).toFixed(1).replace(".", ",") + " Mo" : Math.max(1, Math.round((n || 0) / 1024)) + " Ko");
     const sauv = CPT.sauv ? `<details class="imp-h"><summary>Sauvegardes automatiques</summary><p class="hint">Toute la base (membres, agenda, caisse, comptes sans mots de passe) est sauvegardée chaque nuit à 2 h et gardée 35 jours. Pour restaurer, le propriétaire utilise « Transférer des données » avec le fichier téléchargé.</p><div class="btn-row">${btn("sauv-maintenant", "Sauvegarder maintenant", { ico: "i-down", sm: true })}</div>${CPT.sauv.length ? `<ul class="esp-l">${CPT.sauv.map((x) => `<li><span><b>${esc(fmtLong(x.jour))}</b><small>${esc(nb(x.documents || 0))} documents · ${esc(tailleKo(x.taille))}</small></span><a class="btn btn-sm" href="/api/sauvegardes/${esc(x.jour)}" download>${I("i-down")}Télécharger</a></li>`).join("")}</ul>` : `<p class="hint">Aucune sauvegarde pour l’instant : la première sera faite cette nuit.</p>`}</details>` : "";
     const etat = (c) => c.actif ? (c.derniere ? "dernière connexion " + fmtStamp(c.derniere) : "actif") : c.aActiver ? "en attente d’activation" : "sans mot de passe";
-    return imp + sauv + code + `<p class="hint" style="margin-top:0">Les soldats créent eux-mêmes leur compte et reçoivent un matricule à 6 chiffres. Pour un responsable, ajoutez son adresse avec son rôle : un code d’activation s’affiche, à lui transmettre pour qu’il choisisse son mot de passe.</p>
+    return imp + sauv + code + blocAccesMembres() + `<p class="hint" style="margin-top:0">Les soldats créent eux-mêmes leur compte et reçoivent un matricule à 6 chiffres. Pour un responsable, ajoutez son adresse avec son rôle : un code d’activation s’affiche, à lui transmettre pour qu’il choisisse son mot de passe.</p>
       <form class="form compte-aj" id="f-compte" novalidate><div class="f2">${champ("cp-email", "Adresse e-mail", inp("cp-email", "email", "", 'type="email" autocomplete="off" placeholder="prenom.nom@gmail.com" required'))}${champ("cp-nom", "Nom", inp("cp-nom", "nom", "", 'autocomplete="off"'))}</div>${champ("cp-role", "Rôle", `<select class="inp" id="cp-role" name="role">${opts("contributeur")}</select>`)}<button class="btn btn-primary btn-sm" type="submit">${I("i-plus")}Ajouter ou mettre à jour</button></form>
       <div class="list" style="margin-top:14px">${CPT.liste.map((c) => {
         const proprio = c.role === "proprietaire";
