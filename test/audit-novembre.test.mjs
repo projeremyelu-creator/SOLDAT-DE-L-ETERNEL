@@ -86,3 +86,11 @@ test("Refonte Fusion : bibliothèque, agenda et Academy reçoivent tuiles et ann
   for (const k of ["Chiffres de la bibliothèque", "Chiffres de l’agenda", "Rencontres annoncées", "Progression collective : "]) assert.ok(ops.includes(k), k);
   assert.equal((ops.match(/<Stats /g) || []).length, 4);
 });
+
+test("Refonte Fusion : Chambre Haute avec tuiles réelles, cotisations et prières au style Fusion", () => {
+  const app = lire("public/index.html");
+  const bloc = app.slice(app.indexOf("VUES.chambre = function"), app.indexOf("function vueChaine"));
+  for (const k of ["Chiffres de la Chambre Haute", "enP.filter((p) => p.urgent).length", "exa.length", "intercesseursSemaine().length"]) assert.ok(bloc.includes(k), k);
+  const css = lire("public/vitrine/sde-fusion.css");
+  for (const k of [".cot-mois i.ok", ".cot-mois i.du", ".pr-row.urgent", ".cr-jour.auj", ".chip-btn.on"]) assert.ok(css.includes(k), k);
+});

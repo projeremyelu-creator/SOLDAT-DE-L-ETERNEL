@@ -191,3 +191,21 @@ html body.sde-unifie .site-brand{color:var(--fu-gold-2)!important}
 :root[data-sde-palette=fusion] .msgbox{background:#f8f5fd!important;border:1px solid #ded4f2!important;color:#241446!important;border-radius:14px}
 :root[data-sde-palette=fusion] .chip.gold{background:#fdf0cc!important;color:#5a3c00!important;border-color:#e8b84b!important}
 @media (prefers-reduced-motion:reduce){:root[data-sde-palette=fusion] .stat{transition:none}}
+
+/* Chambre Haute et cotisations — charte Fusion */
+:root[data-sde-palette=fusion] .stat.in .stat-l{color:#16503c!important}
+:root[data-sde-palette=fusion] .stat.out .stat-l{color:#8a4b00!important}
+:root[data-sde-palette=fusion] .cot-mois i{background:#f1ecfa!important;color:#5f4f8c!important}
+:root[data-sde-palette=fusion] .cot-mois i.ok,:root[data-sde-palette=fusion] .legend i.c-ok{background:#5b21b6!important;color:#fff!important}
+:root[data-sde-palette=fusion] .cot-mois i.du{background:#fdf0cc!important;color:#6b4300!important;box-shadow:inset 0 0 0 1px #e8b84b!important}
+:root[data-sde-palette=fusion] .legend i.c-du{background:#fdf0cc!important;box-shadow:inset 0 0 0 1px #e8b84b!important}
+:root[data-sde-palette=fusion] .cot-mois i.fut{background:transparent!important;color:#5f4f8c!important;box-shadow:inset 0 0 0 1px #cdbdf0!important}
+:root[data-sde-palette=fusion] .chip-btn{color:#5d4f80}
+:root[data-sde-palette=fusion] .chip-btn.on{background:#5b21b6!important;color:#fff!important}
+:root[data-sde-palette=fusion] .chip.ok{background:#e1f2e8!important;color:#0f3d2e!important}
+:root[data-sde-palette=fusion] .chip.warn{background:#fdf0cc!important;color:#5a3c00!important}
+:root[data-sde-palette=fusion] .pr-row.urgent{box-shadow:inset 4px 0 0 #e8b84b}
+:root[data-sde-palette=fusion] .card.sujet{border-left:5px solid #e8b84b}
+:root[data-sde-palette=fusion] .sujet-t{color:#2a1260}
+:root[data-sde-palette=fusion] .cr-jour.auj{border-color:#e8b84b!important;box-shadow:inset 0 3px 0 #e8b84b!important}
+:root[data-sde-palette=fusion] .cr-h{color:#5b21b6;font-weight:700}
