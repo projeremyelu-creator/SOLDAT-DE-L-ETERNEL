@@ -102,3 +102,18 @@ test("Refonte Fusion : agenda avec tuiles réelles, projets et fiche membre au s
   const css = lire("public/vitrine/sde-fusion.css");
   for (const k of [".subtab.on", ".day-h", ".bar i", ".ident{", ".ident h3"]) assert.ok(css.includes(k), k);
 });
+
+test("Palette Tactique et modules tactiques fondés sur des données réelles", () => {
+  const shell = lire("frontend/reference-shell.jsx");
+  assert.match(shell, /\['tactique','Tactique · Bleu nuit · Bordeaux · Or'\]/);
+  assert.match(lire("public/index.html"), /fusion\|ivoire\|terracotta\|militaire\|violet\|tactique/);
+  assert.match(lire("public/index.html"), /sde-tactique\.css/);
+  const css = lire("public/vitrine/sde-tactique.css");
+  for (const k of ['data-sde-palette="tactique"', "#6b1730", "--pal-surface"]) assert.ok(css.includes(k), k);
+  const ops = lire("frontend/operations.jsx");
+  for (const k of ["function RankPath", "function CountryBoard", "rankIndex", "fonction de responsabilité confiée".replace("f", "F")]) assert.ok(ops.includes(k), k);
+  assert.match(ops, /Grade déduit automatiquement/);
+  assert.ok(lire("src/operations.js").includes("pays:paysDe(m.data.garnisonId)"));
+  const app = lire("public/index.html");
+  assert.ok(app.includes("function radarPriere") && app.includes("out += radarPriere(enP)"));
+});

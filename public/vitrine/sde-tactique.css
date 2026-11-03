@@ -1,0 +1,39 @@
+/* Palette « Tactique » — bleu nuit, or et bordeaux (maquettes Poste de commandement et Soldiers Academy).
+   Présentation uniquement : aucune logique, aucun rôle, aucune donnée modifiés. */
+:root[data-sde-palette="tactique"][data-sde-palette]{
+  --night:#0c1530;--night-2:#16264d;--night-3:#2c4377;
+  --gold:#e2c26a;--gold-mark:#d4ad48;--gold-on-night:#e8cf91;--on-night:#fff;--on-night-muted:#b8c1d8;
+  --bg:#080d1c;--surface:#101a33;--surface-2:#17223f;--line:#26345a;--line-strong:#3a4c7c;
+  --ink:#e9ecf5;--muted:#a9b2c8;
+  --in:#7fb0ea;--out:#e48553;--in-soft:#172a47;--out-soft:#3a2116;
+  --ok:#63c793;--ok-soft:#15301f;--warn:#f0b64c;--warn-soft:#382a0d;--danger:#ff8f86;--danger-soft:#4a1522;
+  --info-soft:#1b2645;--track:#232e4c;--meter:#c9a14a;
+  --btn:#e2c26a;--btn-ink:#0c1530;--focus:#e2c26a;--scrim:rgba(0,0,0,.66);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px rgba(0,0,0,.5);
+  color-scheme:dark;
+}
+:root[data-sde-palette=tactique] body{background:#080d1c!important;color:#e9ecf5}
+:root[data-sde-palette=tactique] .hdr{background:linear-gradient(100deg,#0c1530 0%,#2a1030 55%,#6b1730 100%)!important;border-bottom:1px solid #e2c26a66}
+:root[data-sde-palette=tactique] .nav{background:#0a1226!important;border-right:1px solid #26345a}
+:root[data-sde-palette=tactique] .nav :is(a,button)[aria-current],:root[data-sde-palette=tactique] .nav .nav-btn.on{background:linear-gradient(90deg,#6b173055,transparent)!important;box-shadow:inset 3px 0 0 #e2c26a}
+:root[data-sde-palette=tactique] .card,:root[data-sde-palette=tactique] .stat,:root[data-sde-palette=tactique] .annonce{background:linear-gradient(160deg,#121d3a,#0f1830)!important;border:1px solid #26345a!important}
+:root[data-sde-palette=tactique] .annonce{border-left:5px solid #8a1f3c!important}
+:root[data-sde-palette=tactique] .annonce.epingle{border-left-color:#e2c26a!important}
+:root[data-sde-palette=tactique] .btn-primary{background:linear-gradient(135deg,#f0d586,#d4ad48)!important;color:#0c1530!important}
+:root[data-sde-palette=tactique] .subtab.on,:root[data-sde-palette=tactique] .chip-btn.on{background:#8a1f3c!important;border-color:#8a1f3c!important;color:#fff!important}
+:root[data-sde-palette=tactique] .bar i{background:linear-gradient(90deg,#8a1f3c,#e2c26a)!important}
+:root[data-sde-palette=tactique] .cot-mois i.ok{background:#8a1f3c!important;color:#fff!important}
+:root[data-sde-palette=tactique] .ident{background:linear-gradient(120deg,#0c1530,#4a1226);border-radius:16px;padding:16px;border:1px solid #e2c26a55}
+:root[data-sde-palette=tactique] .ident .av{box-shadow:0 0 0 3px #e2c26a}
+:root[data-sde-palette=tactique] .day-h{color:#e2c26a;border-bottom:2px solid #8a1f3c;display:inline-block}
+:root[data-sde-palette=tactique] .rd-zone{fill:#8a1f3c;fill-opacity:.45;stroke:#e2c26a}
+/* Espaces React (administration, espace membre) : jetons clairs des tuiles adaptés au fond sombre */
+html:is([data-sde-palette="tactique"],[data-sde-palette="militaire"]) body.sde-reference{
+  --pal-surface:#111b35;--pal-ink:#e9ecf5;--pal-muted:#a9b2c8;--pal-line:#26345a;--pal-accent:#e2c26a;--pal-accent-light:#e2c26a;--pal-tint:#1b2645}
+html[data-sde-palette="tactique"] body.sde-reference .ref-toolbar{background:linear-gradient(100deg,#0c1530,#2a1030 60%,#6b1730)!important;border-bottom:1px solid #e2c26a66}
+html[data-sde-palette="tactique"] body.sde-reference .fu-quick button:hover,html[data-sde-palette="tactique"] body.sde-reference .fu-tile:hover{background:#6b173044;border-color:#e2c26a}
+html[data-sde-palette="tactique"] body.sde-reference .fu-ring{background:conic-gradient(#e2c26a var(--p),#26345a 0)}
+html[data-sde-palette="tactique"] body.sde-reference .fu-rank-list .is-done .fu-insignia{background:#8a1f3c;color:#f0d586}
+html[data-sde-palette="tactique"] body.sde-reference .fu-rank-list .is-now .fu-insignia{background:#e2c26a;color:#0c1530}
+html:is([data-sde-palette="tactique"],[data-sde-palette="militaire"]) body.sde-reference .fu-quick button:hover{color:#fff}
+html:is([data-sde-palette="tactique"],[data-sde-palette="militaire"]) body.sde-reference .fu-quick button:hover svg{color:#e2c26a}

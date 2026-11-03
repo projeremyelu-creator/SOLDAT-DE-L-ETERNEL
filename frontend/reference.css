@@ -1023,7 +1023,7 @@ body.sde-reference{--fu-s:var(--pal-surface,#fff);--fu-i:var(--pal-ink,#241446);
 .fu-quick button{display:flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:10px 14px;border-radius:14px;border:1px solid var(--fu-g);background:var(--fu-s);color:var(--fu-i);font-weight:700;cursor:pointer;transition:background .16s ease,color .16s ease}
 .fu-quick button svg{width:20px;height:20px;color:var(--fu-a)}
 .fu-quick button:hover{background:var(--fu-g);color:#2b1450}.fu-quick button:hover svg{color:#2b1450}
-.fu-admin-row{display:grid;grid-template-columns:minmax(0,1fr);gap:13px;margin:13px 0 0}.fu-admin-row>.ops-card{margin:0}
+.fu-admin-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:13px 0 0}@media(max-width:900px){.fu-admin-row{grid-template-columns:1fr}}.fu-admin-row>.ops-card{margin:0}
 .fu-donut-wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-bottom:12px}
 .fu-donut{width:150px;height:150px}
 .fu-donut::before{content:"";position:absolute;inset:26px;border-radius:50%;background:var(--fu-s)}
@@ -1044,3 +1044,17 @@ body.sde-reference{--fu-s:var(--pal-surface,#fff);--fu-i:var(--pal-ink,#241446);
 .fu-stat span{font-size:.78rem;color:var(--fu-m)}.fu-stat strong{font-size:1.35rem;line-height:1.15}
 .ops-card .fu-spark{height:34px}
 @media(max-width:700px){.fu-stats,.fu-stats:has(>:nth-child(3):last-child){grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.fu-ranks{margin:0}.fu-rank-list{list-style:none;margin:6px 0 10px;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.fu-rank-list li{display:grid;justify-items:center;text-align:center;gap:4px;padding:12px 8px;border:1px solid var(--fu-l);border-radius:14px;background:var(--fu-s);color:var(--fu-i)}
+.fu-rank-list small{font-size:.72rem;color:var(--fu-m);line-height:1.25}
+.fu-insignia{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--fu-t);color:var(--fu-a)}
+.fu-insignia svg{width:32px;height:32px}
+.fu-rank-list .is-done .fu-insignia{background:var(--fu-a);color:#fff}
+.fu-rank-list .is-now{border-color:var(--fu-g);box-shadow:0 0 0 2px var(--fu-g)}
+.fu-rank-list .is-now .fu-insignia{background:var(--fu-g);color:#2b1450}
+.fu-rank-list .is-locked{opacity:.7}.fu-rank-list .is-locked .fu-insignia{background:transparent;border:1px dashed var(--fu-l);color:var(--fu-m)}
+.fu-country-list{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:9px}
+.fu-country-list li{display:grid;grid-template-columns:minmax(80px,.8fr) minmax(0,2fr) auto;gap:10px;align-items:center;font-size:.9rem}
+.fu-country-bar{height:10px;border-radius:999px;background:var(--fu-t);overflow:hidden}.fu-country-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--fu-a),var(--fu-g))}
+@media(max-width:700px){.fu-rank-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
