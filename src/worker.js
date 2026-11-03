@@ -329,7 +329,10 @@ async function apiActivation(req, env) {
     await compter(env, "e:" + email); await compter(env, "ip:" + ip);
     return erreur("refuse", "Adresse ou code d’activation incorrect, ou code expiré : demandez-en un nouveau au secrétariat.", 401);
   }
-  await env.DB.prepare("UPDATE comptes SET mdp = ?, activation = NULL WHERE email = ?").bind(await empreinteMdp(b.motDePasse), email).run();
+  await env.DB.batch([
+    env.DB.prepare("UPDATE comptes SET mdp = ?, activation = NULL WHERE email = ?").bind(await empreinteMdp(b.motDePasse), email),
+    env.DB.prepare("DELETE FROM meta WHERE cle = 'mdp_provisoire:' || (SELECT id FROM comptes WHERE email = ?)").bind(email),
+  ]);
   await effacer(env, "e:" + email);
   return json({ ok: true }, 200, { "set-cookie": await ouvrirSession(env, email) });
 }
@@ -373,7 +376,9 @@ async function apiComptes(req, env, u) {
   }
   if (b.reinitialiser) {
     if (!cible) return erreur("invalid_argument", "Compte introuvable.");
-    await env.DB.batch([env.DB.prepare("UPDATE comptes SET mdp = NULL WHERE email = ?").bind(email), env.DB.prepare("DELETE FROM sessions WHERE email = ?").bind(email)]);
+    await env.DB.batch([env.DB.prepare("UPDATE comptes SET mdp = NULL WHERE email = ?").bind(email),
+      env.DB.prepare("DELETE FROM sessions WHERE email = ?").bind(email),
+      env.DB.prepare("DELETE FROM meta WHERE cle = 'mdp_provisoire:' || (SELECT id FROM comptes WHERE email = ?)").bind(email)]);
     return json({ ok: true, code: await poserCode(env, email) });
   }
   if (b.membreId !== undefined) {
@@ -1832,7 +1837,7 @@ async function traiter(req, env, ctx) {
           if (appHost) {
             const compte = await utilisateur(req, env);
             const destination = compte.connecte
-              ? (compte.niveau >= 1 ? "/administration" : "/mon-espace")
+              ? (compte.premiereConnexion ? "/premiere-connexion" : compte.niveau >= 1 ? "/administration" : "/mon-espace")
               : "/connexion?retour=%2Fportail";
             return new Response(null, {status:302, headers:{location:url.origin + destination, "cache-control":"private, no-store", "x-robots-tag":"noindex, nofollow"}});
           }
@@ -1845,20 +1850,32 @@ async function traiter(req, env, ctx) {
         }
         if (p === "/portail") {
           const u=await utilisateur(req,env);
-          const destination=u.connecte?(u.niveau>=1?"/administration":"/mon-espace"):"/connexion?retour=%2Fportail";
+          const destination=u.connecte?(u.premiereConnexion?"/premiere-connexion":u.niveau>=1?"/administration":"/mon-espace"):"/connexion?retour=%2Fportail";
           return new Response(null,{status:302,headers:{location:url.origin+destination,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
         }
         if (p === "/connexion") {
           const u = await utilisateur(req, env);
           if (u.connecte) {
             const retour = url.searchParams.get("retour");
-            const dest = retour === "/mon-espace" ? "/mon-espace" : u.niveau >= 1 ? "/administration" : "/mon-espace";
+            const dest = u.premiereConnexion ? "/premiere-connexion" : retour === "/mon-espace" ? "/mon-espace" : u.niveau >= 1 ? "/administration" : "/mon-espace";
             return new Response(null,{status:302,headers:{location:url.origin + dest,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
           }
           const r = await assetPortail("/vitrine/connexion-unifiee.html");
           const n = new Response(r.body, r);
           n.headers.set("cache-control", "no-store");
           n.headers.set("x-robots-tag", "noindex, nofollow");
+          return n;
+        }
+        if (p === "/premiere-connexion") {
+          const u = await utilisateur(req,env);
+          const dest = !u.connecte ? "/connexion?retour=%2Fmon-espace" :
+            !u.premiereConnexion ? (u.niveau>=1?"/administration":"/mon-espace") : null;
+          if (dest) return new Response(null,{status:302,headers:{location:url.origin+dest,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
+          const r = await assetPortail("/vitrine/premiere-connexion.html");
+          const n = new Response(r.body,r);
+          n.headers.set("cache-control","private, no-store");
+          n.headers.set("x-robots-tag","noindex, nofollow");
+          n.headers.set("content-security-policy","default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
           return n;
         }
         if (p === "/os-v31" || p === "/os-v31/") {
@@ -1886,6 +1903,8 @@ async function traiter(req, env, ctx) {
             const modeValide=["inscription","activation","recuperation"].includes(mode)?"&mode="+encodeURIComponent(mode):"";
             return new Response(null,{status:302,headers:{location:url.origin + "/connexion?retour=" + encodeURIComponent(cible) + modeValide,"cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
           }
+          if (u.premiereConnexion)
+            return new Response(null,{status:302,headers:{location:url.origin+"/premiere-connexion","cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"}});
           if (p.startsWith("/administration") && u.niveau < 1)
             return erreur("refuse", "Accès réservé aux responsables autorisés.", 403);
           // Un seul espace interactif : les deux entrées principales ouvrent
@@ -1933,7 +1952,11 @@ async function traiter(req, env, ctx) {
       if (!r || !r.value) return new Response("Introuvable", { status: 404 });
       return new Response(r.value, { headers: { "content-type": (r.metadata && r.metadata.type) || "application/octet-stream", "cache-control": "private, max-age=86400", "x-content-type-options": "nosniff", "content-security-policy": "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; sandbox" } });
     }
-    if (p.startsWith("/m/") && (req.method === "GET" || req.method === "HEAD")) return servirMedia(req, env, await utilisateur(req, env), p.split("/")[2]);
+    if (p.startsWith("/m/") && (req.method === "GET" || req.method === "HEAD")) {
+      const u = await utilisateur(req,env);
+      if (u.premiereConnexion) return erreur("mot_de_passe_provisoire","Changez votre mot de passe provisoire avant d'accéder aux fichiers.",403);
+      return servirMedia(req,env,u,p.split("/")[2]);
+    }
     if (p === "/os-v31") return Response.redirect(url.origin + "/os-v31/" + url.search, 302);
     if (p.startsWith("/os-v31/")) {
       if (!["/os-v31/", "/os-v31/index.html", "/os-v31/sde-os.js", "/os-v31/sde-os.css"].includes(p))
@@ -1975,6 +1998,13 @@ async function traiter(req, env, ctx) {
       // Un cookie invalide ou expiré ne permet pas d'échapper au plafond anonyme.
       if (avecSession && !u.connecte && await rateLimitGlobal(env, ipGlobal))
         return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
+      // La première connexion n'ouvre aucun module privé tant que le mot de
+      // passe personnel n'a pas remplacé le secret provisoire.
+      if (u.connecte && u.premiereConnexion &&
+          !(p === "/api/moi" && req.method === "GET") &&
+          !(p === "/api/mot-de-passe" && req.method === "POST") &&
+          !(p === "/api/deconnexion" && req.method === "POST"))
+        return erreur("mot_de_passe_provisoire","Vous devez changer votre mot de passe provisoire pour accéder à l'espace SDE.",403);
       const extension=await sdeExpansionApi(req,env,u);if(extension)return extension;
       const campagnes=await financesPubliques(req,env,u);if(campagnes)return campagnes;
       const rsvp=await eventRsvpApi(req,env,u);if(rsvp)return rsvp;
@@ -2029,6 +2059,11 @@ async function traiter(req, env, ctx) {
       if (p === "/api/deconnexion" && req.method === "POST") {
         if (u.jeton) await env.DB.prepare("DELETE FROM sessions WHERE jeton = ?").bind(u.jeton).run();
         return json({ ok: true }, 200, { "set-cookie": "sde_s=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0" });
+      }
+      if (p === "/api/acces-membres") {
+        const reponse = await apiAccesMembres(req,env,u);
+        if (req.method === "POST" && reponse.ok) await portalAudit(env,u,"comptes","creation-acces-fiche");
+        return reponse;
       }
       if (p === "/api/comptes") {
         const reponse=await apiComptes(req,env,u);
