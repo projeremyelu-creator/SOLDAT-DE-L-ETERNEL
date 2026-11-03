@@ -44,3 +44,24 @@ test('Maquette 03+04 : mise en page mobile à hauteur naturelle et formulaires v
  assert.match(css,/@media\(max-width:360px\)/);
  assert.match(css,/prefers-reduced-motion:reduce/);
 });
+
+
+test('Connexion dégradée : quatre onglets restent accessibles même sans la feuille React',()=>{
+ const html=readFileSync('public/vitrine/connexion-unifiee.html','utf8');
+ const dom=new JSDOM(html,{url:'https://mouvement-sde.org/connexion',runScripts:'outside-only',pretendToBeVisual:true});
+ try{
+  const d=dom.window.document,css=d.getElementById('sde-auth-critical-css');
+  assert.ok(css,'Style de secours chargé indépendamment du bundle');
+  assert.ok(css.textContent.includes('html body.sde-reference-login .access-tabs{'));
+  assert.match(css.textContent,/display:grid!important/);
+  assert.match(css.textContent,/@media\(max-width:680px\)/);
+  assert.match(css.textContent,/html body\.sde-reference-login \.access-content\{/);
+  assert.match(css.textContent,/html body\.sde-reference-login \.access-panel\[hidden\]/);
+  const tabs=d.querySelectorAll('.access-tabs [role="tab"]');
+  assert.equal(tabs.length,4);
+  const styles=[...d.querySelectorAll('head style')];
+  assert.equal(styles.at(-1),css,'Le style de secours est prioritaire en cascade');
+  const scripts=[...d.querySelectorAll('script[src]')];
+  assert.ok(scripts.some(x=>x.src.includes('/vitrine/portail-connexion.js')),'L'+'authentification existante est conservée');
+ }finally{dom.window.close()}
+});
