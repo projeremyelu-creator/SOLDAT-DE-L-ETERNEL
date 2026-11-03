@@ -2,6 +2,7 @@
  * Auto-évaluation volontaire et non clinique ; valeurs individuelles visibles uniquement par leur auteur.
  * Les règles des quatre yeux concernent le circuit de décisions SDE OS et ne déclenchent aucun paiement.
  */
+import {pilotageAcademy} from "./academy-extras.js";
 export const SDE_OS_31={
  version:"3.1",
  devises:["Réveiller","Restaurer","Former","Équiper","Envoyer"],
@@ -78,7 +79,7 @@ async function pilotage(env){
  try{const r=await env.DB.prepare("SELECT ecole,COUNT(*) AS n FROM osv31_ecoles GROUP BY ecole ORDER BY ecole").all();for(const x of r.results||[])interet.push({ecole:Number(x.ecole),n:Number(x.n)})}catch{}
  let preinscriptions={};
  try{const r=await env.DB.prepare("SELECT statut,COUNT(*) AS n FROM preinscriptions_academy GROUP BY statut").all();for(const x of r.results||[])preinscriptions[safe(x.statut,30)||"nouvelle"]=Number(x.n)}catch{}
- return{formations:resumerFormations(formations),cellules:resumerCellules(garnisons,membres),interetEcoles:interet,preinscriptions};
+ return{formations:resumerFormations(formations),cellules:resumerCellules(garnisons,membres),interetEcoles:interet,preinscriptions,academy:await pilotageAcademy(env)};
 }
 export async function apiSdeOs31(req,env,u){
  if(req.method!=="POST")return err("Méthode non autorisée",405);

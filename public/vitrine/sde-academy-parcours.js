@@ -36,7 +36,7 @@ function renderCatalogue(){
 function renderCertificates(){
  const n=$("certificates");n.innerHTML="";
  for(const x of snapshot.certificates){
-  const btn=document.createElement("button");btn.className="button";btn.textContent="Attestation · Niveau "+x.niveau;
+  const btn=document.createElement("button");btn.className="button";btn.textContent=x.niveau===4?"Certificat de parcours":"Attestation · Niveau "+x.niveau;
   btn.addEventListener("click",()=>showCertificate(x.niveau));n.appendChild(btn);
  }
 }
@@ -45,16 +45,54 @@ async function showCertificate(level){
    const x=await request("/attestation?niveau="+encodeURIComponent(level));
    const d=$("courseDetail");
    const title=x.level?.title||"Niveau "+level;
-   d.innerHTML='<div class="eyebrow">Attestation interne · Soldiers Academy</div><h2>'+esc(title)+'</h2><p>Le Mouvement SDE atteste que <strong>'+esc(x.name)+'</strong> a validé le niveau '+level+' du parcours pédagogique 2027.</p><p><strong>Référence :</strong> '+esc(x.attestation.code)+'</p><p><strong>Date d’enregistrement :</strong> '+esc(new Date(x.attestation.delivree_le).toLocaleDateString("fr-FR"))+'</p><p class="muted">Attestation interne ne valant pas diplôme académique reconnu par l’État. Sous réserve de validation institutionnelle du programme.</p><button class="button primary" type="button" id="printCert">Imprimer cette attestation</button>';
-   d.hidden=false;$("printCert").addEventListener("click",()=>window.print());d.scrollIntoView({behavior:"smooth"});
+   d.innerHTML='<div class="eyebrow">Attestation interne · Soldiers Academy</div><h2>'+esc(title)+'</h2><p>Le Mouvement SDE atteste que <strong>'+esc(x.name)+'</strong> a validé '+(level===4?'les 24 cours et le projet intégrateur':'le niveau '+level)+' du parcours pédagogique 2027.</p><p><strong>Référence :</strong> '+esc(x.attestation.code)+'</p><div class="qr" id="certQr" role="img" aria-label="QR code de vérification"></div><p class="muted">Vérification publique : '+esc(location.origin)+'/verifier-attestation</p><p><strong>Date d’enregistrement :</strong> '+esc(new Date(x.attestation.delivree_le).toLocaleDateString("fr-FR"))+'</p><p class="muted">Attestation interne ne valant pas diplôme académique reconnu par l’État. Elle est vérifiable en ligne grâce au numéro ci-dessus.</p><button class="button primary" type="button" id="printCert">Imprimer cette attestation</button>';
+   d.hidden=false;$("printCert").addEventListener("click",()=>window.print());
+   try{if(typeof qrcode==="function"){const q=qrcode(0,"M");q.addData(location.origin+"/verifier-attestation?code="+encodeURIComponent(x.attestation.code));q.make();$("certQr").innerHTML=q.createSvgTag(4,0);}}catch{}
+   d.scrollIntoView({behavior:"smooth"});
  }catch(e){alertMessage(e.message);}
 }
 function progress(){
  const v=snapshot.progress;
- text("statPassed",v.passed+" / 24");text("statPercent",v.percentage+" %");text("statCert",snapshot.certificates.length+" / 3");
+ text("statPassed",v.passed+" / 24");text("statPercent",v.percentage+" %");text("statCert",snapshot.certificates.filter(x=>x.niveau<=3).length+" / 3");
  $("progressBar").value=v.passed;
- renderCatalogue();renderCertificates();$("studentPage").hidden=false;
+ renderCatalogue();renderCertificates();renderAvis();renderProjet();renderCohortes();renderSpecialisations();$("studentPage").hidden=false;
  const admin=!!snapshot.admin;$("adminShortcut").hidden=!admin;$("adminPage").hidden=!admin;
+}
+function renderAvis(){
+ const n=$("avis"),list=snapshot.avis||[];
+ if(!list.length){n.hidden=true;n.innerHTML="";return;}
+ n.hidden=false;
+ n.innerHTML='<strong>Nouveautés</strong>'+list.map(a=>'<p>'+esc(new Date(a.cree).toLocaleDateString("fr-FR"))+' — '+esc(a.texte)+'</p>').join("")+'<button type="button" class="button" data-avis-lus>Marquer comme lu</button>';
+}
+function renderProjet(){
+ const n=$("projetSection"),p=snapshot.projet;
+ if(!p||!p.ouvert){n.hidden=true;n.innerHTML="";return;}
+ n.hidden=false;
+ let corps="";
+ if(p.acquis)corps='<p><span class="chip ok">Projet validé</span> Note : '+esc(p.meilleur)+'/100.'+(snapshot.parcoursComplet?" Votre certificat de parcours est disponible ci-dessus.":"")+'</p>';
+ else if(p.enAttente)corps='<p><span class="chip pending">Correction en attente</span> Remis le '+esc(new Date(p.soumisLe).toLocaleDateString("fr-FR"))+'. La soutenance (12 min + 8 min de questions) est fixée par la direction pédagogique.</p>';
+ else corps=(p.dernier?'<p class="muted">Dernière note : '+esc(p.dernier.score)+'/100 — '+esc(p.dernier.commentaire)+' Vous pouvez remettre une version améliorée.</p>':"")+
+  '<form id="projetForm"><p class="muted">Projet de service réellement utile à un pôle SDE. Rédigez chaque partie (40 caractères minimum).</p>'+
+  p.criteres.map((c,i)=>'<label class="field"><strong>'+(i+1)+'. '+esc(c.libelle)+'</strong> <span class="muted">('+esc(c.points)+' points)</span><textarea required minlength="40" maxlength="8000" name="partie'+i+'" aria-label="'+esc(c.libelle)+'"></textarea></label>').join("")+
+  '<button class="button primary" type="submit">Remettre mon projet</button></form>';
+ n.innerHTML='<div class="eyebrow">Projet intégrateur</div><h2 id="projetTitre">Projet de fin de parcours</h2>'+corps;
+}
+function renderCohortes(){
+ const n=$("cohortesList"),list=snapshot.cohortes||[];
+ if(!list.length){n.innerHTML='<p class="muted">Aucune cohorte ouverte pour le moment. La direction pédagogique les annonce ici.</p>';return;}
+ n.innerHTML=list.map(c=>'<article class="review"><div class="eyebrow">Niveau '+esc(c.niveau)+' · '+esc(c.debut)+' → '+esc(c.fin)+'</div><h3>'+esc(c.nom)+'</h3><p class="muted">'+esc(c.effectif)+' inscrit(s)</p><details><summary>Calendrier des 8 semaines</summary>'+c.semaines.map(w=>'<div class="week"><b>Semaine '+esc(w.semaine)+' · '+esc(w.du.slice(5))+'</b><span>'+esc(w.cours)+' — '+esc(w.titre)+'</span></div>').join("")+'</details>'+
+  (c.inscrit?'<button type="button" class="button" data-cohorte-quitter="'+esc(c.id)+'">Quitter la cohorte</button> <span class="chip ok">Inscrit</span>':(c.peutRejoindre?'<button type="button" class="button primary" data-cohorte-rejoindre="'+esc(c.id)+'">Rejoindre</button>':'<span class="chip">Niveau verrouillé</span>'))+'</article>').join("");
+}
+function renderSpecialisations(){
+ const sp=snapshot.specialisations;if(!sp)return;
+ text("specNote",sp.ouvertes?"Les 24 cours sont validés : vous pouvez choisir votre école de spécialisation auprès de la direction pédagogique.":"Accessibles après la validation des 24 cours du tronc commun.");
+ $("specList").innerHTML=sp.ecoles.map(e=>'<article class="card"><span class="code">'+esc(e.code)+' · Pôle '+esc(e.pole)+'</span><h3>'+esc(e.titre)+'</h3><p>'+esc(e.objectif)+'</p><ul>'+e.ateliers.map(a=>'<li>'+esc(a[1])+'</li>').join("")+'</ul><small>Soutenance : '+esc(e.soutenance)+'</small></article>').join("");
+ $("masterList").innerHTML=sp.masterclass.map(m=>'<article class="card"><span class="code">'+esc(m.code)+'</span><h3>'+esc(m.titre)+'</h3><p>'+esc(m.deroulement)+'</p><small>Livrable : '+esc(m.livrable)+'</small></article>').join("");
+}
+function renderCohortesAdmin(){
+ const n=$("cohortesAdmin");if(!n||!gestion)return;
+ const list=gestion.cohortes||[];
+ n.innerHTML=list.length?list.map(c=>'<article class="review"><div class="eyebrow">Niveau '+esc(c.niveau)+' · début '+esc(c.debut)+' · '+(c.statut==="ouverte"?"ouverte":"close")+'</div><h3>'+esc(c.nom)+'</h3><p>'+esc(c.membres.length)+' inscrit(s) : '+(c.membres.map(m=>esc(m.nom)).join(", ")||"aucun")+'</p>'+(c.statut==="ouverte"?'<button type="button" class="button" data-cohorte-clore="'+esc(c.id)+'">Clore la cohorte</button>':"")+'</article>').join(""):'<p class="muted">Aucune cohorte créée.</p>';
 }
 function questionLabel(item,index,kind){
  const title=kind==="quiz"?item.question:kind==="exercises"?item.instruction:item.task;
@@ -89,13 +127,16 @@ async function submitCopy(form){
 }
 function reviewHtml(item){
  const course=gestion.courses.find(x=>x.id===item.cours);
- let prompts=course?course.title:"Cours";
- return '<article class="review"><div class="eyebrow">'+esc(item.cours)+' · '+esc(item.type)+'</div><h3>'+esc(prompts)+'</h3><p>Apprenant : <strong>'+esc(item.nom)+'</strong> · Compte : <code>'+esc(item.compte)+'</code></p><p class="muted">Soumis le '+esc(new Date(item.date_soumission).toLocaleString("fr-FR"))+'</p><details><summary>Lire les réponses à corriger</summary>'+item.reponses.map((a,i)=>'<p class="muted">Réponse '+(i+1)+'</p><div class="correction">'+esc(a)+'</div>').join("")+'</details><form data-grade="'+esc(item.id)+'"><label class="field">Note sur 100<input type="number" name="score" min="0" max="100" required></label><label class="field">Commentaire du formateur<textarea name="comment" required minlength="3" maxlength="2000" placeholder="Justifiez la note et proposez une piste de progrès"></textarea></label><button class="button primary" type="submit">Valider la correction</button></form></article>';
+ let prompts=item.cours==="PROJET"?"Projet intégrateur":course?course.title:"Cours";
+ const aide=item.aide||{};
+ const aideHtml=(aide.bareme||aide.corriges)?'<div class="help"><strong>Aide à la correction (réservée aux formateurs)</strong>'+(aide.bareme?'<p>'+esc(aide.bareme)+'</p>':"")+(aide.corriges?'<ol>'+aide.corriges.map((c,i)=>'<li>'+(aide.consignes&&aide.consignes[i]?'<em>'+esc(aide.consignes[i])+'</em><br>':"")+'Attendu : '+esc(c)+'</li>').join("")+'</ol>':(aide.consignes&&aide.consignes.length?'<ol>'+aide.consignes.map(c=>'<li>'+esc(c)+'</li>').join("")+'</ol>':""))+'</div>':"";
+ return '<article class="review"><div class="eyebrow">'+esc(item.cours)+' · '+esc(item.type)+'</div><h3>'+esc(prompts)+'</h3><p>Apprenant : <strong>'+esc(item.nom)+'</strong> · Compte : <code>'+esc(item.compte)+'</code></p><p class="muted">Soumis le '+esc(new Date(item.date_soumission).toLocaleString("fr-FR"))+'</p><details><summary>Lire les réponses à corriger</summary>'+item.reponses.map((a,i)=>'<p class="muted">Réponse '+(i+1)+'</p><div class="correction">'+esc(a)+'</div>').join("")+'</details>'+aideHtml+'<form data-grade="'+esc(item.id)+'"><label class="field">Note sur 100<input type="number" name="score" min="0" max="100" required></label><label class="field">Commentaire du formateur<textarea name="comment" required minlength="3" maxlength="2000" placeholder="Justifiez la note et proposez une piste de progrès"></textarea></label><button class="button primary" type="submit">Valider la correction</button></form></article>';
 }
 async function loadGestion(){
  try{
   gestion=await request("/gestion");
   $("pendingCopies").innerHTML=gestion.pending.length?gestion.pending.map(reviewHtml).join(""):'<p class="muted">Aucune copie actuellement en attente.</p>';
+  renderCohortesAdmin();
   $("attendanceCourse").innerHTML=gestion.courses.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.id)+' — '+esc(c.title)+'</option>').join("");
   $("accountsList").innerHTML=[...new Set(gestion.students.map(x=>x.compte))].map(id=>'<option value="'+esc(id)+'"></option>').join("");
   alertMessage("Tableau des corrections actualisé.","adminStatus");
@@ -104,10 +145,36 @@ async function loadGestion(){
 async function reload(){
  snapshot=await request("");progress();
 }
-document.addEventListener("click",ev=>{const btn=ev.target.closest("[data-course]");if(btn&&!btn.disabled)openCourse(btn.dataset.course);});
+document.addEventListener("click",async ev=>{
+ const btn=ev.target.closest("[data-course]");if(btn&&!btn.disabled){openCourse(btn.dataset.course);return;}
+ const act=ev.target.closest("[data-avis-lus],[data-cohorte-rejoindre],[data-cohorte-quitter],[data-cohorte-clore]");if(!act)return;
+ try{
+  if(act.hasAttribute("data-avis-lus"))await request("/avis/lus","POST",{});
+  else if(act.dataset.cohorteRejoindre)await request("/cohortes/rejoindre","POST",{id:act.dataset.cohorteRejoindre});
+  else if(act.dataset.cohorteQuitter)await request("/cohortes/quitter","POST",{id:act.dataset.cohorteQuitter});
+  else if(act.dataset.cohorteClore){await request("/cohortes/clore","PATCH",{id:act.dataset.cohorteClore});await loadGestion();}
+  await reload();
+ }catch(e){alertMessage(e.message);}
+});
 document.addEventListener("submit",async ev=>{
  const form=ev.target;if(!(form instanceof HTMLFormElement))return;
  if(form.dataset.submit){ev.preventDefault();await submitCopy(form);return;}
+ if(form.id==="projetForm"){
+  ev.preventDefault();const btn=form.querySelector("button");btn.disabled=true;
+  try{
+   await request("/soumettre","POST",{courseId:"PROJET",type:"projet",answers:snapshot.projet.criteres.map((_,i)=>form.elements["partie"+i].value.trim())});
+   alertMessage("Votre projet a été remis pour correction.");await reload();
+  }catch(e){alertMessage(e.message);btn.disabled=false;}
+  return;
+ }
+ if(form.id==="cohorteForm"){
+  ev.preventDefault();const b=new FormData(form),btn=form.querySelector("button");btn.disabled=true;
+  try{
+   await request("/cohortes","POST",{nom:b.get("nom"),niveau:Number(b.get("niveau")),debut:b.get("debut")});
+   alertMessage("Cohorte créée.","adminStatus");form.reset();await reload();await loadGestion();
+  }catch(e){alertMessage(e.message,"adminStatus");}finally{btn.disabled=false;}
+  return;
+ }
  if(form.dataset.grade){
   ev.preventDefault();const btn=form.querySelector("button");btn.disabled=true;
   try{

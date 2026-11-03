@@ -2,6 +2,10 @@
    L'ancien cursus de douze modules est remplacé, sans destruction des archives personnelles.
    Aucun corrigé n'est publié dans le dépôt ni dans les réponses API. */
 import {SOLDIERS_ACADEMY_2027 as PROGRAMME} from "./soldiers-academy-2027.js";
+import {CORRECTIFS,BAREME_EXERCICE,BAREME_EXAMEN} from "./academy-correctifs.js";
+import {SPECIALISATIONS} from "./academy-specialisations.js";
+import {initExtras,notifierCompte,notifierDirection,avisNonLus,marquerAvisLus,cohortesVue,cohortesGestion,cohortesApi,verifierAttestation as verifierAttestationPublique} from "./academy-extras.js";
+export const verifierAttestation=verifierAttestationPublique;
 const COURSES=PROGRAMME.courses;
 const courseFor=id=>COURSES.find(c=>c.id===id);
 const response=(data,status=200)=>Response.json(data,{status,headers:{"cache-control":"private, no-store","x-content-type-options":"nosniff"}});
@@ -9,6 +13,8 @@ const error=(message,status=400)=>response({ok:false,message},status);
 const safeText=(s,max=14000)=>String(s??"").trim().slice(0,max);
 const key=(account,course)=>String(account)+":"+course;
 const types=["quiz","exercises","exam"];
+const PROJET_ID="PROJET";
+const PROJET_CRITERES=SPECIALISATIONS.projet;
 const levelCourses=level=>COURSES.filter(c=>c.level===level);
 const value=(v,lo,hi)=>Number.isInteger(v)&&v>=lo&&v<=hi;
 async function init(env){
@@ -17,6 +23,16 @@ async function init(env){
   await env.DB.prepare("CREATE INDEX IF NOT EXISTS idx_academy_2027_submissions_statut ON academy_2027_submissions(statut,date_soumission)").run();
   await env.DB.prepare("CREATE TABLE IF NOT EXISTS academy_2027_suivi (compte TEXT NOT NULL, cours TEXT NOT NULL, presence INTEGER NOT NULL DEFAULT 0, participation INTEGER, modifie_le INTEGER NOT NULL, par TEXT NOT NULL, PRIMARY KEY(compte,cours))").run();
   await env.DB.prepare("CREATE TABLE IF NOT EXISTS academy_2027_attestations (compte TEXT NOT NULL, niveau INTEGER NOT NULL, code TEXT NOT NULL UNIQUE, delivree_le INTEGER NOT NULL, PRIMARY KEY(compte,niveau))").run();
+  await initExtras(env);
+}
+/* Projet intégrateur : ouvert quand les 24 cours sont validés ; 5 réponses (une par critère), noté sur 100, acquis à 70. */
+async function projetEtat(env,account){
+  const rows=(await env.DB.prepare("SELECT id,statut,score,commentaire,date_soumission FROM academy_2027_submissions WHERE compte=? AND cours=? ORDER BY date_soumission DESC LIMIT 20").bind(String(account),PROJET_ID).all()).results||[];
+  const enAttente=rows.find(r=>r.statut==="en_attente")||null;
+  const notes=rows.filter(r=>r.statut==="note"&&value(r.score,0,100));
+  const meilleur=notes.length?Math.max(...notes.map(r=>r.score)):null;
+  const dernier=notes[0]||null;
+  return {enAttente:!!enAttente,soumisLe:enAttente?.date_soumission||null,meilleur,acquis:meilleur!==null&&meilleur>=70,dernier:dernier?{score:dernier.score,commentaire:dernier.commentaire||""}:null};
 }
 async function readBody(req){
   const s=await req.text();
@@ -45,7 +61,8 @@ async function state(env,account){
   }
   const certificates=cert.results||[];
   const completedLevel=n=>levelCourses(n).every(c=>overview[c.id].passed);
-  return {overview,certificates,completedLevel,progress:{passed:COURSES.filter(c=>overview[c.id].passed).length,total:24,percentage:Math.round(COURSES.filter(c=>overview[c.id].passed).length/24*100)}};
+  const allPassed=()=>[1,2,3].every(completedLevel);
+  return {overview,certificates,completedLevel,allPassed,progress:{passed:COURSES.filter(c=>overview[c.id].passed).length,total:24,percentage:Math.round(COURSES.filter(c=>overview[c.id].passed).length/24*100)}};
 }
 function publicProgress(data){
   return COURSES.map(c=>{
@@ -56,14 +73,19 @@ function publicProgress(data){
 }
 async function issueCertificates(env,account){
   const snapshot=await state(env,account);
-  for(let level=1;level<=3;level++){
-    if(!snapshot.completedLevel(level))continue;
-    const exists=snapshot.certificates.some(c=>c.niveau===level);
-    if(exists)continue;
-    const token=crypto.randomUUID().slice(0,8).toUpperCase();
-    const code="SDE-ACA-2027-N"+level+"-"+token;
-    await env.DB.prepare("INSERT OR IGNORE INTO academy_2027_attestations(compte,niveau,code,delivree_le) VALUES(?,?,?,?)").bind(String(account),level,code,Date.now()).run();
+  const nouvelles=[];
+  const delivrer=async(niveau,tag)=>{
+    if(snapshot.certificates.some(c=>c.niveau===niveau))return;
+    const code="SDE-ACA-2027-"+tag+"-"+crypto.randomUUID().replace(/-/g,"").slice(0,8).toUpperCase();
+    const r=await env.DB.prepare("INSERT OR IGNORE INTO academy_2027_attestations(compte,niveau,code,delivree_le) VALUES(?,?,?,?)").bind(String(account),niveau,code,Date.now()).run();
+    if(r.meta?.changes!==0)nouvelles.push(niveau);
+  };
+  for(let level=1;level<=3;level++)if(snapshot.completedLevel(level))await delivrer(level,"N"+level);
+  if(snapshot.allPassed()&&(await projetEtat(env,account)).acquis)await delivrer(4,"PARCOURS");
+  for(const n of nouvelles){
+    await notifierCompte(env,account,{titre:"SDE · Soldiers Academy",corps:n===4?"Félicitations : votre certificat de parcours est disponible dans votre espace Academy.":"Félicitations : l'attestation du niveau "+n+" est disponible"+(n<3?", et le niveau suivant est ouvert.":". Le projet intégrateur est ouvert."),tag:"sde-academy-attestation"});
   }
+  return nouvelles;
 }
 function canAccess(c,data){return c.level===1||data.completedLevel(c.level-1);}
 function counts(c,type){return type==="quiz"?c.quiz:type==="exercises"?c.exercises:c.exam;}
@@ -76,16 +98,32 @@ export async function soldiersAcademyApi(req,env,u,path){
   await init(env);
   if(path==="/api/soldiers-academy"&&req.method==="GET"){
     const d=await state(env,account);
-    return response({ok:true,programme:{version:PROGRAMME.version,status:PROGRAMME.status,durationHours:192,levels:PROGRAMME.levels,evaluation:PROGRAMME.evaluation},name:u.nom||"Membre SDE",admin,progress:d.progress,courses:publicProgress(d),certificates:d.certificates});
+    const pj=await projetEtat(env,account);
+    const peutRejoindre=n=>n===1||d.completedLevel(n-1);
+    const [cohortes,avis]=await Promise.all([cohortesVue(env,u,{peutRejoindre}),avisNonLus(env,account)]);
+    const projet={ouvert:d.allPassed(),criteres:PROJET_CRITERES.map(([libelle,points])=>({libelle,points})),enAttente:pj.enAttente,soumisLe:pj.soumisLe,meilleur:pj.meilleur,acquis:pj.acquis,dernier:pj.dernier};
+    return response({ok:true,programme:{version:PROGRAMME.version,status:"adopte",durationHours:192,levels:PROGRAMME.levels,evaluation:PROGRAMME.evaluation},name:u.nom||"Membre SDE",admin,progress:d.progress,courses:publicProgress(d),certificates:d.certificates,projet,parcoursComplet:d.certificates.some(c=>c.niveau===4),
+      specialisations:{ecoles:SPECIALISATIONS.ecoles,masterclass:SPECIALISATIONS.masterclass,ouvertes:d.allPassed()},cohortes,avis});
   }
   if(path.startsWith("/api/soldiers-academy/cours/")&&req.method==="GET"){
     const c=courseFor(decodeURIComponent(path.slice("/api/soldiers-academy/cours/".length)));
     if(!c)return error("Cours introuvable.",404);
     if(!canAccess(c,await state(env,account)))return error("Validez le niveau précédent pour ouvrir ce cours.",403);
-    return response({ok:true,course:c,disclaimer:"Référentiel en attente d'approbation du Directoire. Les travaux et examens sont évalués par un responsable habilité."});
+    return response({ok:true,course:c,disclaimer:"Formation interne au Mouvement SDE. Les travaux et examens sont évalués par un responsable habilité."});
   }
   if(path==="/api/soldiers-academy/soumettre"&&req.method==="POST"){
     let body;try{body=await readBody(req)}catch{return error("Requête JSON invalide ou trop volumineuse.",413)}
+    if(body.courseId===PROJET_ID&&body.type==="projet"){
+      const d=await state(env,account),pj=await projetEtat(env,account);
+      if(!d.allPassed())return error("Le projet intégrateur s'ouvre quand les 24 cours sont validés.",403);
+      if(pj.enAttente)return error("Votre projet attend déjà sa correction.",409);
+      if(pj.acquis)return error("Votre projet est déjà validé.",409);
+      if(!Array.isArray(body.answers)||body.answers.length!==PROJET_CRITERES.length||body.answers.some(x=>typeof x!=="string"||x.trim().length<40||x.length>8000))return error("Renseignez les "+PROJET_CRITERES.length+" parties du dossier (minimum 40 caractères chacune).");
+      const id=crypto.randomUUID();
+      await env.DB.prepare("INSERT INTO academy_2027_submissions(id,compte,cours,type,reponses,statut,date_soumission) VALUES(?,?,?,?,?,'en_attente',?)").bind(id,account,PROJET_ID,"projet",JSON.stringify(body.answers.map(x=>safeText(x,8000))),Date.now()).run();
+      await notifierDirection(env,"Un projet intégrateur attend sa correction.");
+      return response({ok:true,id,message:"Projet remis pour correction et soutenance."},201);
+    }
     const c=courseFor(body.courseId);const type=body.type;
     if(!c||!types.includes(type))return error("Cours ou type d'épreuve invalide.");
     if(!canAccess(c,await state(env,account)))return error("Niveau verrouillé.",403);
@@ -95,13 +133,23 @@ export async function soldiersAcademyApi(req,env,u,path){
     if(pending)return error("Une copie de cette épreuve attend déjà sa correction.",409);
     const id=crypto.randomUUID();
     await env.DB.prepare("INSERT INTO academy_2027_submissions(id,compte,cours,type,reponses,statut,date_soumission) VALUES(?,?,?,?,?,'en_attente',?)").bind(id,account,c.id,type,JSON.stringify(body.answers.map(x=>safeText(x,8000))),Date.now()).run();
+    await notifierDirection(env,"Une copie ("+c.id+") attend sa correction.");
     return response({ok:true,id,message:"Copie remise au formateur. La note sera disponible après correction."},201);
   }
   if(path==="/api/soldiers-academy/gestion"&&req.method==="GET"){
     if(!admin)return error("Accès réservé à la direction pédagogique.",403);
     const rows=(await env.DB.prepare("SELECT a.id,a.compte,a.cours,a.type,a.reponses,a.date_soumission,c.nom FROM academy_2027_submissions a LEFT JOIN comptes c ON c.id=a.compte WHERE a.statut='en_attente' ORDER BY a.date_soumission ASC LIMIT 100").all()).results||[];
     const suivi=(await env.DB.prepare("SELECT DISTINCT compte,cours FROM academy_2027_submissions ORDER BY cours LIMIT 200").all()).results||[];
-    return response({ok:true,pending:rows.map(x=>({...x,reponses:JSON.parse(x.reponses||"[]"),nom:x.nom||"Apprenant"})),students:suivi,courses:COURSES.map(c=>({id:c.id,title:c.title,level:c.level}))});
+    const aide=x=>{
+      if(x.cours===PROJET_ID)return {consignes:PROJET_CRITERES.map(([l,p])=>l+" ("+p+" points)"),bareme:"Total sur 100 : "+PROJET_CRITERES.map(([l,p])=>l+" "+p).join(" ; ")+". Acquis à partir de 70. Soutenance : 12 min + 8 min de questions.",corriges:null};
+      const c=courseFor(x.cours),k=CORRECTIFS[x.cours];
+      if(!c||!k)return {consignes:[],bareme:"",corriges:null};
+      if(x.type==="quiz")return {consignes:c.quiz.map(q=>q.question),bareme:"5 questions de 20 points : note sur 100.",corriges:k.quiz};
+      if(x.type==="exam")return {consignes:c.exam.map(e=>e.task+" ("+e.points+" points)"),bareme:BAREME_EXAMEN+" Barème par épreuve : "+c.exam.map(e=>e.points).join(" + ")+" = 100.",corriges:k.exam};
+      return {consignes:c.exercises.map(e=>e.instruction),bareme:BAREME_EXERCICE,corriges:null};
+    };
+    const cohortes=await cohortesGestion(env);
+    return response({ok:true,pending:rows.map(x=>({...x,reponses:JSON.parse(x.reponses||"[]"),nom:x.nom||"Apprenant",aide:aide(x)})),students:suivi,courses:COURSES.map(c=>({id:c.id,title:c.title,level:c.level})),cohortes});
   }
   if(path==="/api/soldiers-academy/noter"&&req.method==="PATCH"){
     if(!admin)return error("Accès réservé aux correcteurs.",403);
@@ -111,6 +159,8 @@ export async function soldiersAcademyApi(req,env,u,path){
     if(!s)return error("Copie introuvable.",404);
     if(s.statut!=="en_attente")return error("Cette copie a déjà été corrigée.",409);
     await env.DB.prepare("UPDATE academy_2027_submissions SET statut='note',score=?,commentaire=?,date_correction=?,correcteur=? WHERE id=? AND statut='en_attente'").bind(b.score,safeText(b.comment,2000),Date.now(),account,b.id).run();
+    const sujet=s.cours===PROJET_ID?"projet intégrateur":s.cours;
+    await notifierCompte(env,s.compte,{titre:"SDE · Soldiers Academy",corps:"Votre copie ("+sujet+") a été corrigée : "+b.score+"/100. Consultez le commentaire dans votre espace Academy.",tag:"sde-academy-note"});
     await issueCertificates(env,s.compte);
     return response({ok:true,message:"Note enregistrée."});
   }
@@ -125,10 +175,15 @@ export async function soldiersAcademyApi(req,env,u,path){
   if(path==="/api/soldiers-academy/attestation"&&req.method==="GET"){
     const url=new URL(req.url);
     const level=Number(url.searchParams.get("niveau"));
-    if(!value(level,1,3))return error("Niveau invalide.");
+    if(!value(level,1,4))return error("Niveau invalide.");
     const d=await state(env,account),certificate=d.certificates.find(c=>c.niveau===level);
-    if(!certificate||!d.completedLevel(level))return error("L'attestation n'est pas encore acquise.",403);
-    return response({ok:true,attestation:certificate,level:PROGRAMME.levels[level-1],name:u.nom||"Apprenant Soldiers Academy"});
+    if(!certificate||(level<4&&!d.completedLevel(level))||(level===4&&!d.allPassed()))return error("L'attestation n'est pas encore acquise.",403);
+    return response({ok:true,attestation:certificate,level:level===4?{id:4,title:"Parcours intégral Soldiers Academy"}:PROGRAMME.levels[level-1],name:u.nom||"Apprenant Soldiers Academy"});
+  }
+  if(path==="/api/soldiers-academy/avis/lus"&&req.method==="POST"){await marquerAvisLus(env,account);return response({ok:true});}
+  if(path.startsWith("/api/soldiers-academy/cohortes")){
+    const d=await state(env,account);
+    return cohortesApi(req,env,u,path,{admin,peutRejoindre:n=>n===1||d.completedLevel(n-1)});
   }
   return error("Ancienne interface désactivée : utilisez le programme 2027.",404);
 }

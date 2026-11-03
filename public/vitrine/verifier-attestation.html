@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0d1b32">
+<meta name="description" content="Vérifier l'authenticité d'une attestation ou d'un certificat Soldiers Academy du Mouvement SDE.">
+<title>Vérifier une attestation · Soldiers Academy | Mouvement SDE</title>
+<link rel="icon" href="/vitrine/logo-96.png"><link rel="stylesheet" href="/vitrine/sde-premium-public.css">
+<style>
+:root{color-scheme:dark;--navy:#071525;--panel:#142640;--line:#3a4c64;--gold:#e4bc64;--ivory:#f8f5ed;--muted:#c0ccdd;--ok:#2f7d57;--ko:#8d3b4a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse 85% 34% at 55% 0,#2b254e 0,transparent 90%),var(--navy);font:16px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ivory);min-height:100vh}a{color:var(--gold)}
+header{border-bottom:1px solid #5a4d32;background:#0b1930ee}.inner{max-width:760px;margin:auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.id{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ivory);font-weight:800;letter-spacing:.06em}.id img{width:42px;height:42px;object-fit:contain}
+main{max-width:760px;margin:auto;padding:30px 18px 70px}.eyebrow{text-transform:uppercase;color:var(--gold);font-size:.76rem;font-weight:800;letter-spacing:.17em}h1{font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.1;margin:8px 0 12px}.lead{color:var(--muted)}
+form{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}input{flex:1;min-width:220px;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:#0c1a2e;color:var(--ivory);font:inherit;letter-spacing:.05em;text-transform:uppercase}button{padding:13px 22px;border-radius:12px;border:0;background:var(--gold);color:#071525;font:inherit;font-weight:800;cursor:pointer}input:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+#resultat{border-radius:16px;padding:18px;border:1px solid var(--line);background:var(--panel)}#resultat[hidden]{display:none}#resultat.ok{border-color:var(--ok)}#resultat.ko{border-color:var(--ko)}#resultat h2{margin:0 0 6px;font-size:1.25rem}.muted{color:var(--muted);font-size:.9rem}
+</style></head><body>
+<header><div class="inner"><a class="id" href="/"><img alt="" src="/vitrine/logo-96.png">S.D.E. · SOLDIERS ACADEMY</a><a href="/academy-programme-24">Programme</a></div></header>
+<main id="main"><div class="eyebrow">Vérification publique</div><h1>Vérifier une attestation</h1>
+<p class="lead">Saisissez le numéro inscrit sur l'attestation ou le certificat (ou scannez son QR code). La vérification indique seulement si le document est authentique, son intitulé et sa date : jamais le nom ni les notes de la personne.</p>
+<form id="verif" novalidate><label class="muted" for="code" hidden>Numéro d'attestation</label><input id="code" name="code" inputmode="text" autocomplete="off" maxlength="40" placeholder="SDE-ACA-2027-N1-XXXXXXXX" required><button type="submit">Vérifier</button></form>
+<div id="resultat" role="status" aria-live="polite" hidden></div>
+<p class="muted">Formation interne au Mouvement SDE — sans équivalence académique officielle.</p></main>
+<script src="/vitrine/sde-verifier-attestation.js" defer></script></body></html>
