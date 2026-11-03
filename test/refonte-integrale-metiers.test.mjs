@@ -86,3 +86,32 @@ test('Tableaux SDE : données réelles pour les barres, formations, rendez-vous,
  assert.ok(css.includes(".sde-mosaic-bar-track"));
  assert.ok(css.includes(".sde-mosaic-course-list"));
 });
+
+
+test('Références tactiques SDE : trois écrans fonctionnels et styles responsives compilables',()=>{
+ const ops=file('frontend/operations.jsx'),tac=file('frontend/tactical-panels.jsx');
+ const css=file('frontend/tactical-panels.css'),entry=file('frontend/experience.css');
+ assert.ok(entry.includes('@import "./tactical-panels.css"'));
+ assert.ok(ops.includes("from './tactical-panels.jsx'"));
+ for(const tag of ['TacticalCommandPanel dashboard={d}','TacticalAcademyPanel academy={d}','TacticalMemberPanel academy={acad.data}'])assert.ok(ops.includes(tag),tag);
+ for(const tag of ['export function TacticalCommandPanel','export function TacticalAcademyPanel','export function TacticalMemberPanel'])assert.ok(tac.includes(tag),tag);
+ assert.match(css,/sde-tactical-command-grid/);
+ assert.match(css,/sde-tactical-academy-grid/);
+ assert.match(css,/sde-tactical-member-grid/);
+ assert.match(css,/@media\(max-width:680px\)/);
+ assert.match(css,/prefers-reduced-motion/);
+});
+test('Terminal tactique : agrégats API, aucun GPS ni biométrie artificielle',()=>{
+ const tac=file('frontend/tactical-panels.jsx');
+ const ops=file('frontend/operations.jsx');
+ const backend=file('src/dashboard-metrics.js');
+ for(const key of ['d.frequentation','d.indicateurs?.presence?.taux','missions.tachesTotal','d.indicateurs?.demandesAdhesion','d.actualiseLe'])assert.ok(tac.includes(key),key);
+ for(const key of ['d.progression','d.formations','d.prets','d.modulesTotal'])assert.ok(tac.includes(key),'Donnée Academy absente : '+key);
+ assert.ok(tac.includes('qrSrc'), 'Carte existante réutilisée, sans recréer de QR');
+ assert.ok(tac.includes('aucune géolocalisation'), 'Avertissement cartographique requis');
+ assert.ok(tac.includes('Aucun contrôle biométrique'));
+ assert.ok(ops.includes("useData('/api/tableau-de-bord'"));
+ assert.ok(ops.includes("useData('/api/pilotage-academy'"));
+ assert.ok(ops.includes("useData('/api/mon-parcours-academy'"));
+ assert.ok(backend.includes('dashboardMetrics'));
+});
