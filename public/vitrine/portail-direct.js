@@ -132,7 +132,7 @@
     let panneau=null,histoire=null,messagePriere=null,champPriere=null,envoiPriere=null;
     if(mode==="membre"&&main?.parentElement){
       panneau=element("section","sde-spiritual-panel");panneau.id="sde-priere-panel";
-      panneau.hidden=true;panneau.setAttribute("aria-labelledby","sde-priere-titre");
+      panneau.hidden=true;panneau.tabIndex=-1;panneau.setAttribute("aria-labelledby","sde-priere-titre");
       const h=element("h2","", "Mes prières et mon intercession");h.id="sde-priere-titre";
       const aide=element("p","", "Choisissez vos destinataires avant l'envoi. Une requête d'intercession est visible par les responsables habilités ; une demande confidentielle reste réservée au leader et à votre historique personnel.");
       const form=element("form","sde-priere-form");
@@ -287,7 +287,7 @@
           const nom=b.dataset.vue;
           const item=element("button","sde-direct-tab",catalogue[nom]);
           item.type="button";item.dataset.module=nom;
-          item.addEventListener("click",()=>selectionner(nom));
+          item.addEventListener("click",()=>selectionner(nom,{userInitiated:true}));
           tabs.append(item);
         }
         etat.textContent="Cliquez sur une rubrique pour afficher directement son contenu, sans changer de page.";
