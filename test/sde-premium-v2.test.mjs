@@ -11,6 +11,7 @@ test('Accueil premium : trois univers reliés aux vraies rubriques publiques',()
   const doc=dom.window.document;
   const pillars=doc.querySelectorAll('.sde-premium-pillars-grid .sde-premium-pillar');
   assert.equal(pillars.length,3);
+  assert.ok(doc.querySelector('.sde-premium-commandement a[href="/gouvernance"]'),"Lien organisation vers la gouvernance réelle");
   for(const [selector,label,path] of [
    ['.sde-premium-spiritualite','Spiritualité','/priere'],
    ['.sde-premium-commandement','Commandement','/portail'],
@@ -71,4 +72,15 @@ test('Navigation privée : regroupements et cinq onglets dont Plus, sans extensi
  for(const name of ['ref-command-focus','ref-command-focus-head','ref-nav-section','sde-module-accent'])assert.ok(ui.includes(name),name);
  assert.ok(ui.includes('@media(max-width:620px)'));
  assert.ok(ui.includes('prefers-reduced-motion:reduce'));
+});
+
+
+test('Audit mobile : contrôler le nouveau hero premium et l’image TPA, sans anciens sélecteurs obligatoires',()=>{
+ const audit=read('scripts/audit-public-mobile.mjs');
+ assert.ok(audit.includes("'.ap-hero'"),'Le nouvel accueil doit être détecté');
+ assert.ok(audit.includes("'.ap-hero-inner'"),'La hauteur réelle du nouvel accueil doit être mesurée');
+ assert.ok(audit.includes(".ap-poster-media img"),'Le chargement réel de l’affiche TPA doit être vérifié');
+ assert.ok(audit.includes("!row.premiumHome"),'Les hauteurs de l’ancienne maquette ne doivent pas s’imposer à la nouvelle');
+ assert.ok(audit.includes("row.premiumHeroHeight>=280"),'Le nouvel accueil conserve un contrôle de hauteur');
+ assert.ok(audit.includes("!row.tpaPosters||!row.tpaPosterLoaded"),'Une affiche absente reste une erreur critique');
 });
