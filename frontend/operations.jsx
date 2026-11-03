@@ -8,6 +8,8 @@ import Chart from 'chart.js/auto';
 import qrcode from 'qrcode-generator';
 import {SitePublic} from './site-public.jsx';
 import {FinancementsPublies} from './financements-publies.jsx';
+import {finPromotion} from './evenement-phare.js';
+import {usePhare} from './use-phare.js';
 const modules=new Set(['centre-membre','centre-command','carteqr','scanner','pilotage','finance-direction','academy-direction','annuaire','bibliotheque','rendezvous','site-public','espace-soldat','adhesions','anniversaires','suivi-poles']);
 const titles={'centre-membre':'Tous mes services SDE','centre-command':'Centre opérationnel du Mouvement',carteqr:'Ma carte de présence',scanner:'Scanner & activités',pilotage:'Poste de commandement','finance-direction':'Finances & missions','academy-direction':'Gestion de la Soldiers Academy',annuaire:'Annuaire des membres',bibliotheque:'Bibliothèque & enseignements',rendezvous:'Événements & notifications','site-public':'Contenu du site public','espace-soldat':'Mon espace Soldat',adhesions:'Demandes d’adhésion',anniversaires:'Anniversaires des membres','suivi-poles':'Suivi des pôles'};
 async function api(path,method='GET',body){const r=await fetch(path,{method,credentials:'same-origin',cache:'no-store',headers:{'content-type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.message||'Le service est indisponible. Réessayez.');return d}
@@ -154,6 +156,7 @@ function PoleTracking({portal}){
 /* Rendez-vous officiel publié sur la vitrine. Ne crée pas de faux dossier
    D1 ni d'inscription : les indicateurs admin restent ceux de la base. */
 function OfficialTpaCard(){
+ const phare=usePhare();
  const [details,setDetails]=useState(false),openButton=useRef(null),closeButton=useRef(null);
  useEffect(()=>{
   if(!details)return;
@@ -164,17 +167,17 @@ function OfficialTpaCard(){
   document.addEventListener('keydown',onKey);
   return()=>{document.body.style.overflow=before;document.removeEventListener('keydown',onKey);};
  },[details]);
- if(Date.now()>=Date.parse('2026-12-19T00:00:00Z'))return null;
+ if(Date.now()>=finPromotion(phare.debut))return null;
  const close=()=>{setDetails(false);openButton.current?.focus()};
  return <>
-  <section className="sde-official-tpa" aria-label="Traversée Prophétique Annuelle TPA 2026">
-   <button type="button" ref={openButton} className="sde-official-tpa-poster" onClick={()=>setDetails(true)} aria-label="Afficher tous les détails du programme TPA 2026">
-    <img src="/vitrine/illus/tpa-2026.webp" alt="Affiche officielle de la Traversée Prophétique Annuelle 2026" width="160" height="160" loading="lazy"/>
+  <section className="sde-official-tpa" aria-label={phare.titre}>
+   <button type="button" ref={openButton} className="sde-official-tpa-poster" onClick={()=>setDetails(true)} aria-label={`Afficher tous les détails du programme ${phare.titreCourt}`}>
+    <img src={phare.affiche} alt={`Affiche officielle : ${phare.titre}`} width="160" height="160" loading="lazy"/>
    </button>
    <div className="sde-official-tpa-info">
     <span className="sde-official-tpa-tag">À venir · Programme officiel SDE</span>
-    <h3>Traversée Prophétique Annuelle — TPA 2026</h3>
-    <p><time dateTime="2026-12-18T20:00:00+00:00">Vendredi 18 décembre 2026 · 20h00</time> · Google Meet</p>
+    <h3>{phare.titre}</h3>
+    <p><time dateTime={phare.debut}>{phare.dateLibelle} · {phare.heure}</time> · {phare.lieu}</p>
     <button type="button" className="sde-tpa-more" onClick={()=>setDetails(true)} aria-haspopup="dialog" aria-expanded={details}>Voir les détails du programme →</button>
    </div>
   </section>
@@ -182,18 +185,18 @@ function OfficialTpaCard(){
     <section className="sde-tpa-dialog" role="dialog" aria-modal="true" aria-labelledby="sde-tpa-dialog-title" aria-describedby="sde-tpa-dialog-desc">
      <header className="sde-tpa-dialog-head"><span>ÉVÉNEMENT OFFICIEL · MOUVEMENT SDE</span><button type="button" ref={closeButton} onClick={close} aria-label="Fermer les détails de la TPA">✕ Fermer</button></header>
      <div className="sde-tpa-dialog-content">
-      <img src="/vitrine/illus/tpa-2026.webp" alt="Affiche TPA 2026 : Traversée Prophétique Annuelle, vendredi 18 décembre à 20h sur Google Meet" width="600" height="600"/>
+      <img src={phare.affiche} alt={`Affiche ${phare.titreCourt} : ${phare.dateLibelle} à ${phare.heure} — ${phare.lieu}`} width="600" height="600"/>
       <div className="sde-tpa-dialog-details">
-       <h2 id="sde-tpa-dialog-title">Traversée Prophétique Annuelle — TPA 2026</h2>
-       <p id="sde-tpa-dialog-desc">Un temps annuel de prière, d’enseignement prophétique et de consécration pour achever l’année en Christ et se préparer à la nouvelle saison.</p>
+       <h2 id="sde-tpa-dialog-title">{phare.titre}</h2>
+       <p id="sde-tpa-dialog-desc">{phare.description}</p>
        <dl>
-        <div><dt>Date</dt><dd>Vendredi 18 décembre 2026</dd></div>
-        <div><dt>Heure</dt><dd>20h00 · Heure d’Abidjan (GMT)</dd></div>
-        <div><dt>Lieu</dt><dd>En ligne, sur Google Meet</dd></div>
+        <div><dt>Date</dt><dd>{phare.dateLibelle}</dd></div>
+        <div><dt>Heure</dt><dd>{phare.heure} · Heure d’Abidjan (GMT)</dd></div>
+        <div><dt>Lieu</dt><dd>{phare.lieu}</dd></div>
         <div><dt>Organisateur</dt><dd>Mouvement Prophético-Apostolique Soldat de l’Éternel (SDE)</dd></div>
        </dl>
        <p className="sde-tpa-join-note">Le lien direct de la réunion Google Meet n’est pas encore renseigné dans cette annonce.</p>
-       <a href="/programmes#tpa-2026">Consulter la page officielle du programme →</a>
+       <a href={phare.fiche}>Consulter la page officielle du programme →</a>
       </div>
      </div>
     </section>

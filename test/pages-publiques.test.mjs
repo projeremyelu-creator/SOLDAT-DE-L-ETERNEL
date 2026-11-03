@@ -172,3 +172,23 @@ test('Réseaux sociaux : TikTok et Facebook officiels dans tous les pieds de pag
  assert.ok(lire('public/vitrine/index.html').includes(`"sameAs":["${TT}","${FB}"]`));
  assert.doesNotMatch(TT,/[?&](_r|_t)=/,'sans paramètres de suivi');
 });
+
+test('Fiche TPA unique : le tableau de bord lit evenement-phare.json et garde un secours identique',async()=>{
+ const {PHARE_DEFAUT,pharePublie,finPromotion}=await import('../frontend/evenement-phare.js');
+ const fiche=JSON.parse(lire('public/vitrine/evenement-phare.json'));
+ for(const k of ['id','titre','titreCourt','debut','dateLibelle','heure','lieu','description','affiche','fiche'])
+  assert.equal(PHARE_DEFAUT[k],fiche[k],'le secours reprend la fiche centrale : '+k);
+ assert.equal(finPromotion(fiche.debut),Date.parse('2026-12-19T00:00:00Z'),'fin de promotion = minuit du jour J');
+ // une fiche modifiée est reprise ; des valeurs invalides ou dangereuses sont ignorées
+ const maj=pharePublie({titre:'Nouveau titre',debut:'2027-01-08T20:00:00+00:00',dateLibelle:'Vendredi 8 janvier 2027',heure:'19h30',affiche:'/vitrine/illus/x.webp',fiche:'/programmes#x'});
+ assert.equal(maj.titre,'Nouveau titre');assert.equal(maj.heure,'19h30');assert.equal(maj.fiche,'/programmes#x');
+ const mauvais=pharePublie({titre:'',debut:'pas une date',affiche:'https://exemple.test/x.png',fiche:'//evil.test',lieu:42,dateLibelle:'x'.repeat(500)});
+ assert.deepEqual(mauvais,PHARE_DEFAUT);
+ for(const nul of [null,undefined,[],'texte',42])assert.deepEqual(pharePublie(nul),PHARE_DEFAUT);
+ const ops=lire('frontend/operations.jsx');
+ assert.ok(ops.includes("from './use-phare.js'")&&ops.includes('usePhare()'));
+ assert.ok(lire('frontend/use-phare.js').includes('/vitrine/evenement-phare.json'));
+ assert.ok(!ops.includes("Date.parse('2026-12-19T00:00:00Z')"),'plus de date codée en dur dans la carte');
+ assert.ok(!/<h3>Traversée Prophétique Annuelle — TPA 2026<\/h3>/.test(ops));
+ assert.ok(lire('public/vitrine/sde-fiche-phare.js').includes('/vitrine/evenement-phare.json'),'même source côté pages publiques');
+});
