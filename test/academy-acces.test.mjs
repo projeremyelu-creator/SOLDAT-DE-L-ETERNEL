@@ -129,6 +129,26 @@ test("Soldiers Academy : ressources numériques et médias fermés jusqu'à vali
  assert.equal((await mediaAcademyAutorise(env,autre,mediaId)).autorise,false);
 });
 
+test("Love School : un fichier partagé entre deux modules exige les deux validations",async()=>{
+ const {env,sql}=environnement();
+ await get(env,apprenant,ROOT+"/love-school");
+ await get(env,apprenant,ROOT+"/ressources/etat");
+ const mediaId="uvwxyz1234567890abcd";
+ for(const id of ["LS-01","LS-02"]){
+   sql.prepare("INSERT INTO academy_2027_ressources(id,portee,type,titre,description,url,media,genre,texte,auteur,auteur_nom,publie,cree,maj) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+     .run("multi-"+id,id,"fichier","Document partagé","","/m/"+mediaId+"/document.pdf",mediaId,"pdf","",prof.id,prof.nom,1,1,1);
+ }
+ assert.equal((await mediaLoveAutorise(env,apprenant,mediaId)).autorise,false);
+ await post(env,apprenant,ROOT+"/love-school/acces/demander",{cours:"LS-01"});
+ await patch(env,direction,ROOT+"/love-school/acces/decision",{cours:"LS-01",compte:apprenant.id,decision:"approuve"});
+ assert.equal((await mediaLoveAutorise(env,apprenant,mediaId)).autorise,false,"Un seul module débloqué ne suffit pas");
+ await post(env,apprenant,ROOT+"/love-school/acces/demander",{cours:"LS-02"});
+ await patch(env,direction,ROOT+"/love-school/acces/decision",{cours:"LS-02",compte:apprenant.id,decision:"approuve"});
+ assert.equal((await mediaLoveAutorise(env,apprenant,mediaId)).autorise,true);
+ assert.equal((await mediaLoveAutorise(env,autre,mediaId)).autorise,false);
+ assert.equal((await mediaLoveAutorise(env,direction,mediaId)).autorise,true);
+});
+
 test("Soldiers Academy : conserver l'accès déjà entamé sans déverrouiller les autres",async()=>{
  const {env,sql}=environnement();
  await get(env,apprenant,ROOT); // Initialise les tables de suivi sans modifier les archives
