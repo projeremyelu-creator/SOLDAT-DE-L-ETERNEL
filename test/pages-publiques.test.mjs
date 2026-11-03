@@ -162,6 +162,9 @@ test('Réseaux sociaux : TikTok et Facebook officiels dans tous les pieds de pag
  const TT='https://www.tiktok.com/@mouvement.sde',FB='https://www.facebook.com/share/1GkJmWSyqj/';
  const pages=readdirSync('public/vitrine').filter(f=>f.endsWith('.html')).filter(f=>lire('public/vitrine/'+f).includes('class="site-footer'));
  assert.ok(pages.length>=20,'pieds de page détectés');
+ const hub=readdirSync('public/vitrine').filter(f=>f.endsWith('.html')&&lire('public/vitrine/'+f).includes('class="hub-footer"'));
+ assert.ok(hub.length>=10,'pages de type hub détectées');
+ for(const f of hub){const h=lire('public/vitrine/'+f),pied=h.slice(h.indexOf('class="hub-footer"'),h.indexOf('</footer>',h.indexOf('class="hub-footer"')));assert.ok(pied.includes(TT)&&pied.includes(FB),f+' : réseaux dans le pied de page hub')}
  for(const f of pages){
   const h=lire('public/vitrine/'+f),pied=h.slice(h.indexOf('<footer'),h.indexOf('</footer>'));
   assert.ok(pied.includes(`href="${TT}" target="_blank" rel="noopener noreferrer"`),f+' : TikTok');

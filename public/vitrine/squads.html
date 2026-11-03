@@ -1,0 +1,31 @@
+<!doctype html><html lang="fr" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mes Squads | Mouvement SDE</title><meta name="description" content="Messagerie des Squads du Mouvement SDE, réservée à leurs membres."><meta name="robots" content="noindex, nofollow"><link rel="canonical" href="https://mouvement-sde.org/squads"><link rel="stylesheet" href="/vitrine/sde-hub.css?v=20261031"><script defer src="/vitrine/sde-hub.js?v=20261031"></script><link rel="stylesheet" href="/vitrine/sde-premium-public.css?v=20261102refonte">
+<link rel="stylesheet" href="/vitrine/sde-espace-prive.css?v=20261103a">
+<link rel="stylesheet" href="/vitrine/sde-fusion.css?v=20261103">
+</head><body class="sde-espace-prive" data-fam="spi"><header class="sde-hub-head"><div class="inner"><a class="sde-mark" href="/"><img src="/vitrine/logo-96.webp" alt="" width="50" height="50">SDE — MOUVEMENT</a><nav class="sde-hub-nav" aria-label="Espace membre"><a href="/">Accueil</a><a href="/mon-espace">Mon espace</a><a href="/squads" aria-current="page">Squads</a><a href="/empreinte">Empreinte</a></nav><div class="hub-langs"><button data-theme-toggle aria-label="Changer de thème">☼</button></div></div></header>
+<main class="hub-main" id="contenu">
+<p class="hub-breadcrumb"><a href="/">Accueil</a> / <a href="/mon-espace">Mon espace</a> / Squads</p>
+<section class="hub-hero"><span class="hub-kicker">VIE FRATERNELLE</span><h1>Mes Squads</h1><p class="hub-lead">Échangez avec les soldats de votre Squad. Les messages sont réservés à ses membres, à ses responsables et à l’administration du mouvement.</p></section>
+<p id="sq-etat" class="sq-etat" role="status" aria-live="polite">Chargement de vos Squads…</p>
+<section id="sq-connexion" class="hub-section" hidden><h2>Connexion requise</h2><p>Connectez-vous avec votre matricule pour retrouver vos Squads.</p><p><a class="hub-btn" href="/connexion?retour=%2Fmon-espace">Me connecter</a></p></section>
+<section id="sq-liste" class="hub-section" aria-labelledby="sq-titre-liste" hidden><h2 id="sq-titre-liste">Mes Squads</h2><ul id="sq-cartes" class="sq-cartes"></ul><p id="sq-vide" class="sq-vide" hidden>Vous n’êtes membre d’aucune Squad pour le moment. L’administration vous ajoutera à la Squad de votre pôle ou de votre équipe.</p></section>
+<section id="sq-fil" class="hub-section sq-fil" aria-labelledby="sq-fil-titre" hidden>
+ <p><button type="button" class="sq-lien" id="sq-retour">← Toutes mes Squads</button></p>
+ <h2 id="sq-fil-titre" tabindex="-1"></h2><p id="sq-fil-desc" class="sq-desc"></p>
+ <ol id="sq-messages" class="sq-messages" aria-label="Messages de la Squad" aria-live="polite"></ol>
+ <p class="sq-plus"><button type="button" class="sq-lien" id="sq-anciens" hidden>Afficher les messages précédents</button></p>
+ <form id="sq-envoi" class="sq-envoi"><label for="sq-texte">Votre message</label><textarea id="sq-texte" rows="3" maxlength="1000" required placeholder="Écrivez à votre Squad…"></textarea><div class="sq-envoi-bas"><small id="sq-compteur">0 / 1000</small><button type="submit" class="hub-btn" id="sq-envoyer">Envoyer</button></div></form>
+ <p id="sq-archive" class="sq-desc" hidden>Cette Squad est archivée : elle reste consultable mais ne reçoit plus de messages.</p>
+ <p class="sq-regles">Écrivez avec respect et discernement. Ne partagez ni mot de passe, ni informations privées d’autrui. Un responsable peut retirer un message ; vous pouvez retirer les vôtres.</p>
+ <section id="sq-gestion" class="sq-gestion" aria-labelledby="sq-gestion-titre" hidden><h3 id="sq-gestion-titre">Gérer cette Squad</h3>
+  <ul id="sq-membres" class="sq-membres"></ul>
+  <form id="sq-ajout" class="sq-ajout"><label for="sq-recherche">Ajouter un membre (nom ou matricule)</label><div class="sq-ligne"><input id="sq-recherche" type="search" autocomplete="off" minlength="2" maxlength="40" placeholder="Ex. KONE ou SDE-0001"><button type="submit" class="hub-btn">Chercher</button></div></form>
+  <ul id="sq-resultats" class="sq-membres"></ul>
+  <p><button type="button" class="sq-lien" id="sq-archiver"></button></p>
+ </section>
+</section>
+<section id="sq-admin" class="hub-section" aria-labelledby="sq-admin-titre" hidden><h2 id="sq-admin-titre">Créer une Squad</h2>
+ <form id="sq-creer" class="hub-form"><label>Nom de la Squad<input name="nom" required minlength="3" maxlength="60" autocomplete="off"></label><label>Pôle<select name="pole"><option value="">Aucun pôle</option><option value="REV">Réveil et évangélisation (REV)</option><option value="ISH">Impact social et humanitaire (ISH)</option><option value="LO">Logistique et organisation (LO)</option><option value="CMR">Communication, médias et relations extérieures (CMR)</option><option value="FDE">Formation, développement et entrepreneuriat (FDE)</option></select></label><label>Description (facultatif)<input name="description" maxlength="300" autocomplete="off"></label><button type="submit" class="hub-btn">Créer la Squad</button></form></section>
+</main>
+<footer class="hub-footer"><div class="inner"><nav aria-label="Navigation de pied de page"><a href="/mouvement">Le Mouvement</a><a href="/programmes">Programmes</a><a href="/contact">Contact</a><a href="/contact#confidentialite">Confidentialité et protection des données</a></nav><p>© 2026 Mouvement Prophético-Apostolique Soldats de l'Éternel · Cocody Deux-Plateaux, Abidjan · <a href="mailto:infosoldat@gmail.com">infosoldat@gmail.com</a></p><p class="sde-social"><span>Suivez-nous</span> <a href="https://www.tiktok.com/@mouvement.sde" target="_blank" rel="noopener noreferrer" aria-label="TikTok du Mouvement SDE (nouvel onglet)">TikTok</a> <a href="https://www.facebook.com/share/1GkJmWSyqj/" target="_blank" rel="noopener noreferrer" aria-label="Page Facebook du Mouvement SDE (nouvel onglet)">Facebook</a></p></div></footer>
+<script src="/vitrine/sde-squads.js?v=20261103a" defer></script>
+</body></html>

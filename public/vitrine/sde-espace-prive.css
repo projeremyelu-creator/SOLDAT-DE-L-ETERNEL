@@ -1,0 +1,42 @@
+/* Pages d'espace membre (Squads, Empreinte) : thème hub, couleurs par famille — Violet = Spiritualité, Bleu nuit = Commandement. */
+body.sde-espace-prive{--fam:#5b21b6}
+body.sde-espace-prive[data-fam="cmd"]{--fam:#1b2f6b}
+html[data-theme="dark"] body.sde-espace-prive{--fam:#b79cf2}
+html[data-theme="dark"] body.sde-espace-prive[data-fam="cmd"]{--fam:#9db4ff}
+body.sde-espace-prive .hub-hero{border-inline-start:6px solid var(--fam)}
+body.sde-espace-prive .hub-kicker{color:var(--fam)}
+.sde-espace-prive .sq-etat{min-height:1.5em;color:var(--muted);margin:14px 0}
+.sde-espace-prive .sq-etat[data-etat="erreur"]{color:#ffb4b4}
+html[data-theme="light"] .sde-espace-prive .sq-etat[data-etat="erreur"]{color:#8a1c1c}
+.sde-espace-prive .sq-cartes,.sde-espace-prive .sq-membres,.sde-espace-prive .em-points{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.sde-espace-prive .em-points{list-style:disc;padding-inline-start:22px}
+.sde-espace-prive .sq-cartes{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.sde-espace-prive .sq-carte button{width:100%;text-align:start;display:grid;gap:6px;min-height:44px;padding:16px;border-radius:14px;border:1.5px solid var(--bord);border-top:5px solid var(--fam);background:var(--card);color:var(--texte)}
+.sde-espace-prive .sq-carte button:hover,.sde-espace-prive .sq-carte button:focus-visible{border-color:var(--fam)}
+.sde-espace-prive .sq-carte strong{font-size:1.1rem}
+.sde-espace-prive .sq-meta{font-size:.88rem;color:var(--muted)}
+.sde-espace-prive .sq-nonlus{display:inline-block;min-width:1.6em;padding:2px 8px;border-radius:99px;background:var(--fam);color:#fff;font-weight:800;font-size:.8rem;text-align:center}
+html[data-theme="dark"] .sde-espace-prive .sq-nonlus{color:#10131f}
+.sde-espace-prive .sq-lien{background:none;border:0;color:var(--or);text-decoration:underline;text-underline-offset:4px;padding:10px 0;min-height:44px}
+.sde-espace-prive .sq-desc,.sde-espace-prive .sq-vide,.sde-espace-prive .sq-regles{color:var(--muted)}
+.sde-espace-prive .sq-regles{font-size:.88rem;margin-top:12px}
+.sde-espace-prive .sq-messages{list-style:none;margin:16px 0;padding:0;display:grid;gap:10px;max-height:min(60vh,560px);overflow:auto;padding-inline-end:4px}
+.sde-espace-prive .sq-msg{max-width:min(640px,92%);padding:10px 14px;border-radius:14px;background:var(--card);border:1px solid var(--bord);justify-self:start}
+.sde-espace-prive .sq-msg.sq-moi{justify-self:end;border-color:var(--fam);background:color-mix(in srgb,var(--fam) 14%,var(--card))}
+.sde-espace-prive .sq-msg-tete{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.sde-espace-prive .sq-msg-tete strong{color:var(--texte)}
+.sde-espace-prive .sq-texte{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.sde-espace-prive .sq-retirer{background:none;border:0;color:var(--muted);text-decoration:underline;min-height:36px;padding:0 4px}
+.sde-espace-prive .sq-envoi{display:grid;gap:8px}
+.sde-espace-prive .sq-envoi textarea,.sde-espace-prive .sq-ligne input,.sde-espace-prive .hub-form input,.sde-espace-prive .hub-form select{width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--bord);background:var(--surface);color:var(--texte);min-height:44px}
+.sde-espace-prive .sq-envoi-bas,.sde-espace-prive .sq-ligne{display:flex;gap:10px;justify-content:space-between;align-items:center}
+.sde-espace-prive .sq-ligne input{flex:1}
+.sde-espace-prive .sq-membres li{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--bord);border-radius:12px;background:var(--card)}
+.sde-espace-prive .sq-gestion{margin-top:28px;padding-top:18px;border-top:1px solid var(--bord)}
+.sde-espace-prive .hub-btn{min-height:44px}
+@media(max-width:620px){.sde-espace-prive .sq-msg{max-width:100%}.sde-espace-prive .sq-envoi-bas,.sde-espace-prive .sq-ligne{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.sde-espace-prive *{scroll-behavior:auto!important;transition:none!important}}
+.sde-espace-prive [hidden]{display:none!important}
+.sde-espace-prive .hub-footer .sde-social{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:8px 0 0}
+.sde-espace-prive .hub-footer .sde-social a{min-height:44px;display:inline-flex;align-items:center}
+.sde-espace-prive .sq-membres+.hub-form{margin-top:16px}.sde-espace-prive h3{margin-top:28px}
