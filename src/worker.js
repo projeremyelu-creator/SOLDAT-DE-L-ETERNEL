@@ -727,6 +727,23 @@ async function apiPublic(env) {
   return json({ evenements: evts }, 200, { "cache-control": "public, max-age=300" });
 }
 
+/* Indicateurs publics de la page d'accueil : agrégats uniquement (aucun nom, aucune coordonnée),
+   calculés à chaque requête sur les fiches réelles ; mis en cache cinq minutes. */
+async function apiImpact(env) {
+  const jour = new Date(Date.now()).toISOString().slice(0, 10);
+  const [membres, garnisons, formations, projets, evenements] = await Promise.all(["membres", "garnisons", "formations", "projets", "evenements"].map((path) => lireRequete(env, { path })));
+  const pays = new Set(garnisons.map((g) => String(g.data?.pays || "").trim().toLowerCase()).filter(Boolean));
+  return json({
+    ok: true,
+    membresActifs: membres.filter((m) => m.data?.actif !== false).length,
+    pays: pays.size,
+    formations: formations.length,
+    missionsEnCours: projets.filter((p) => p.data?.statut === "En cours").length,
+    rendezVousAVenir: evenements.filter((e) => e.data?.date >= jour && TYPES_PUBLICS.includes(e.data?.type) && e.data?.prive !== true).length,
+    majLe: new Date().toISOString()
+  }, 200, { "cache-control": "public, max-age=300" });
+}
+
 /* Contenu public modifiable : documents site/contact, site/programmes, site/banniere.
    Écriture réservée aux administrateurs (REGLES) ; lecture publique en texte seul, champs filtrés. */
 const txt = (v, n) => String(v ?? "").replace(/[\u0000-\u001f\u007f]/g, " ").trim().slice(0, n);
@@ -1705,6 +1722,7 @@ async function traiter(req, env, ctx) {
         }
       }
       if (p === "/api/public") return apiPublic(env);
+      if (p === "/api/impact" && req.method === "GET") return apiImpact(env);
       if (p === "/api/site" && req.method === "GET") return apiSite(env);
       if (p === "/api/visites") return apiVisites(req, env);
       // Les formulaires publics passent par les contrôles d'origine et de débit ci-dessous.
