@@ -1,0 +1,30 @@
+name: Recette privée authentifiée SDE — comptes de test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-avec-session:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.4'
+      - name: Vérifier le script de recette
+        run: node --check scripts/audit-prive-authentifie.mjs
+      - name: Installer Chromium sans toucher aux données
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.0
+          npx playwright install --with-deps chromium
+      - name: Vérifier les parcours connectés des comptes de test dédiés
+        run: node scripts/audit-prive-authentifie.mjs
+        env:
+          SDE_QA_MEMBER_LOGIN: ${{ secrets.SDE_QA_MEMBER_LOGIN }}
+          SDE_QA_MEMBER_PASSWORD: ${{ secrets.SDE_QA_MEMBER_PASSWORD }}
+          SDE_QA_ADMIN_LOGIN: ${{ secrets.SDE_QA_ADMIN_LOGIN }}
+          SDE_QA_ADMIN_PASSWORD: ${{ secrets.SDE_QA_ADMIN_PASSWORD }}
