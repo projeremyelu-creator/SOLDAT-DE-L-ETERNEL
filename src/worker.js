@@ -1817,8 +1817,9 @@ async function traiter(req, env, ctx) {
           // Un seul espace interactif : les deux entrées principales ouvrent
           // directement l'application native, jamais une page de liens intermédiaire.
           // Les routes /outils restent disponibles pour les anciens favoris.
-          const fichier = p.endsWith("/academy")?"/vitrine/sde-academy-parcours.html":(p.endsWith("/os-v31")?"/os-v31/index.html":"/index.html");
-          const r = await assetPortail(fichier);
+          const fichier = p.endsWith("/os-v31")?"/os-v31/index.html":"/index.html";
+          const fichierAcademy = p.endsWith("/academy")?"/vitrine/sde-academy-parcours.html":fichier;
+          const r = await assetPortail(fichierAcademy);
           const n = new Response(r.body,r);
           n.headers.set("cache-control","private, no-store");
           n.headers.set("x-robots-tag","noindex, nofollow");
