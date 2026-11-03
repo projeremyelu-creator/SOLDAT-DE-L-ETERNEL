@@ -453,6 +453,7 @@ try{
        ctaPosition:ctaStyle.position,
        animation:ctaStyle.animationName,
        transform:ctaStyle.transform,
+       headerHidden:headerStyle.display==='none',
        scrollY:Math.round(window.scrollY),
        headerMoved:Math.round(header.getBoundingClientRect().top-initialHeader),
        ctaMoved:Math.round(cta.getBoundingClientRect().top-initialCTA)
@@ -464,10 +465,14 @@ try{
       if(['sticky','fixed'].includes(motion.position))issue(c.name,'en-tête encore flottant : '+motion.position,true);
       if(motion.accessPosition!=='static'||motion.ctaPosition!=='static')issue(c.name,'bouton non ancré dans le flux normal',true);
       if(motion.animation!=='none'||motion.transform!=='none')issue(c.name,'bouton encore animé ou transformé',true);
-      if(motion.scrollY>=90&&Math.abs(motion.headerMoved+motion.scrollY)>8)
-       issue(c.name,'l’en-tête se déplace indépendamment du document',true);
-      if(motion.scrollY>=90&&Math.abs(motion.headerMoved-motion.ctaMoved)>8)
-       issue(c.name,'le bouton ballotte par rapport à son en-tête',true);
+      // Sur la page de connexion l'en-tête et le bouton sont masqués
+      // (display:none) : leur rectangle reste à zéro, il n'y a rien à mesurer.
+      if(!motion.headerHidden){
+       if(motion.scrollY>=90&&Math.abs(motion.headerMoved+motion.scrollY)>8)
+        issue(c.name,'l’en-tête se déplace indépendamment du document',true);
+       if(motion.scrollY>=90&&Math.abs(motion.headerMoved-motion.ctaMoved)>8)
+        issue(c.name,'le bouton ballotte par rapport à son en-tête',true);
+      }
      }
      await page.evaluate(()=>scrollTo(0,0));
     }catch(error){
