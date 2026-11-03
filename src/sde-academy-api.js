@@ -102,14 +102,26 @@ export async function soldiersAcademyApi(req,env,u,path){
   const admin=Number(u.niveau)>=2;
   const account=String(u.id);
   await init(env);
-  // École bonus : lecture réservée aux sessions connectées, sans progression ni attestation.
+  // Love School : les bonus adultes restent hors de la réponse GET standard.
+  // Une déclaration de majorité explicite ouvre les contenus adultes pour cette seule consultation.
+  // Elle n'est PAS une vérification d'âge ; aucun âge ni détail intime n'est enregistré.
+  if(path==="/api/soldiers-academy/love-school/adulte"&&req.method==="POST"){
+    let b;try{b=await readBody(req)}catch{return error("Confirmation invalide.",400)}
+    if(b?.confirmationMajeur!==true)return error("Confirmez votre majorité pour accéder à ces cours.",403);
+    await initRessources(env);
+    const ressources=await ressourcesApprenant(env,{peutNiveau:()=>false,peutBonusAdulte:true});
+    return response({ok:true,verificationAge:"declarative_non_verifiee",
+      courses:LOVE_SCHOOL.courses.filter(c=>c.adultOnly).map(c=>({...c,ressources:ressources.parCours[c.id]||[]}))});
+  }
   if(path==="/api/soldiers-academy/love-school"&&req.method==="GET"){
     await initRessources(env);
     const biblio=await ressourcesApprenant(env,{peutNiveau:()=>false});
     return response({ok:true,ecole:{
       title:LOVE_SCHOOL.title,subtitle:LOVE_SCHOOL.subtitle,nature:LOVE_SCHOOL.nature,
       certification:false,
-      courses:LOVE_SCHOOL.courses.map(c=>({...c,ressources:biblio.parCours[c.id]||[]}))
+      courses:LOVE_SCHOOL.courses.map(c=>c.adultOnly
+        ?{id:c.id,title:c.title,theme:c.theme,track:c.track,adultOnly:true,ressources:[]}
+        :{...c,ressources:biblio.parCours[c.id]||[]})
     }});
   }
   if(path==="/api/soldiers-academy/ressources/etat"&&req.method==="GET"){

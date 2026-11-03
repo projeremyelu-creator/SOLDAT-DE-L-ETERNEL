@@ -66,36 +66,109 @@ function progress(){
 }
 function vuLe(){try{return Number(localStorage.getItem("sde-academy-biblio-vu"))||0}catch{return 0}}
 
-/* Love School : complément optionnel, sans note, niveau ni attestation. */
+/* Love School : formation facultative, sans impact sur la note ni le certificat Academy.
+   Les modules 18+ se consultent après déclaration explicite de majorité (non vérifiée).
+   Aucun âge, quiz sensible ou donnée intime n'est enregistré sur le navigateur ou le serveur. */
 let loveSchool=null,loveSelected=null,loveBusy=false;
-function afficherLoveCours(id){
-  const c=loveSchool?.courses?.find(x=>x.id===id);
-  if(!c)return;
-  loveSelected=id;
-  const zone=$("loveSchoolDetail"),UI=window.SDEAcademyUI;
-  const chapitres=c.lessons.map((l,i)=>'<details class="love-lesson"'+(i===0?' open':'')+'><summary>Leçon '+(i+1)+' — '+esc(l.title)+'</summary><p>'+esc(l.body)+'</p><p class="muted"><strong>Question de réflexion :</strong> '+esc(l.reflection)+'</p></details>').join("");
-  const documents=c.ressources?.length?c.ressources.map((r,i)=>UI.ressourceHtml(r,i)).join(""):'<p class="muted">Aucune vidéo ou document supplémentaire publié pour ce cours pour le moment.</p>';
-  zone.innerHTML='<div class="eyebrow">Love School · '+esc(c.id)+' · Bonus facultatif</div><h2>'+esc(c.title)+'</h2><p class="muted">'+esc(c.theme)+'</p><h3>Passages bibliques</h3><p>'+c.scriptures.map(esc).join(' · ')+'</p><h3>Objectifs</h3><ul>'+c.objectives.map(o=>'<li>'+esc(o)+'</li>').join("")+'</ul><h3>Enseignement</h3>'+chapitres+'<h3>Exercice de réflexion personnel</h3><p>'+esc(c.practice)+'</p><p class="muted">Aucune remise ni donnée personnelle sensible n’est demandée.</p><h3>Ressources des enseignants et coachs</h3><div class="stack">'+documents+'</div><div class="actions"><button type="button" class="button" data-love-retour>Retour aux cours Love School</button></div>';
-  zone.hidden=false;zone.scrollIntoView({behavior:"smooth",block:"start"});
+const LOVE_GROUPS=[
+ {id:"fondations",title:"01 · Les fondements du cœur",desc:"Identité, amour christocentrique et discernement relationnel.",symbol:"♡",ids:["LS-01","LS-02","LS-03"]},
+ {id:"relations",title:"02 · L’art d’aimer et de communiquer",desc:"Respect, gestion des conflits, langages de l’amour et écoute.",symbol:"✧",ids:["LS-04","LS-05","LS-07","LS-08"]},
+ {id:"intimite",title:"03 · Engagement et intimité responsable",desc:"Foyer, santé et intimité adulte abordés avec dignité.",symbol:"♥",ids:["LS-06","LS-09","LS-10"]}
+];
+const loveList=()=>loveSchool?.courses||[];
+function loveCourseCard(c,i){
+ const adulte=!!c.adultOnly;
+ const lecons=Array.isArray(c.lessons)?c.lessons.length:0;
+ const ressources=Array.isArray(c.ressources)?c.ressources.length:0;
+ return '<article class="card love-card '+(adulte?'love-card-adult':'')+'" style="--i:'+i+'">'+
+ '<span class="code">'+esc(c.id)+' · '+(adulte?'18+':'BONUS')+'</span>'+
+ '<h3>'+esc(c.title)+'</h3><p class="muted">'+esc(c.theme)+'</p>'+
+ (adulte?'<p class="love-lock">♡ Contenu pédagogique adulte · déclaration de majorité nécessaire</p>':'<small>'+lecons+' leçons · '+ressources+' support(s) publiés</small>')+
+ '<button type="button" class="button" data-love-course="'+esc(c.id)+'">'+(adulte?'Consulter le module 18+':'Découvrir le cours')+'</button></article>';
 }
 function afficherLoveCatalogue(){
-  const cours=loveSchool?.courses||[];
-  const zone=$("loveSchoolCourses");
-  zone.innerHTML=cours.map((c,i)=>'<article class="card love-card" style="--i:'+i+'"><span class="code">'+esc(c.id)+' · BONUS</span><h3>'+esc(c.title)+'</h3><p class="muted">'+esc(c.theme)+'</p><small>'+c.lessons.length+' leçons · '+(c.ressources?.length||0)+' support(s) publiés</small><button type="button" class="button" data-love-course="'+esc(c.id)+'">Ouvrir le cours</button></article>').join("");
-  text("loveStatus",cours.length+" cours bonus facultatifs disponibles. Ressources réservées aux membres connectés.");
+ const cours=loveList(),zone=$("loveSchoolCourses");
+ zone.innerHTML=LOVE_GROUPS.map((g,i)=>{
+   const selections=g.ids.map(id=>cours.find(c=>c.id===id)).filter(Boolean);
+   return '<section class="love-collection" aria-labelledby="love-section-'+esc(g.id)+'"><h4 class="love-collection-title" id="love-section-'+esc(g.id)+'"><span aria-hidden="true">'+g.symbol+'</span> '+esc(g.title)+'</h4><p>'+esc(g.desc)+'</p><div class="grid">'+selections.map((c,j)=>loveCourseCard(c,j)).join("")+'</div></section>';
+ }).join("");
+ text("loveStatus",cours.length+" cours bonus facultatifs · aucun effet sur vos attestations ou votre progression Academy.");
+}
+function afficherLoveCours(id){
+ const c=loveList().find(x=>x.id===id);
+ if(!c)return;
+ loveSelected=id;
+ const zone=$("loveSchoolDetail"),UI=window.SDEAcademyUI;
+ if(c.adultOnly&&!Array.isArray(c.lessons)){
+   zone.innerHTML='<div class="eyebrow">Love School · '+esc(c.id)+' · Accès adulte</div>'+
+   '<h2>'+esc(c.title)+'</h2><p class="muted">'+esc(c.theme)+'</p>'+
+   '<div class="love-adult-note"><strong>Module destiné aux personnes majeures.</strong>'+
+   '<p>Ce cours traite de l’intimité et de la santé sexuelle sous un angle éducatif, non graphique et respectueux. Vous pouvez quitter ce module sans conséquence sur votre parcours. Aucune information intime ne sera demandée.</p>'+
+   '<p>L’accès repose sur votre déclaration de majorité ; il ne s’agit pas d’une vérification officielle de l’âge.</p></div>'+
+   '<label class="love-adult-confirm"><input type="checkbox" id="loveAdultCheck"> Je déclare avoir au moins 18 ans et souhaite consulter cet enseignement pédagogique.</label>'+
+   '<div class="actions"><button type="button" class="button primary" data-love-adulte="'+esc(c.id)+'">Accéder au module adulte</button><button type="button" class="button" data-love-retour>Retour aux cours</button></div>'+
+   '<p class="status" role="status" id="loveAdultStatus" aria-live="polite"></p>';
+   zone.hidden=false;zone.scrollIntoView({behavior:"smooth",block:"start"});return;
+ }
+ const lecons=Array.isArray(c.lessons)?c.lessons:[];
+ const chapitres=lecons.map((l,i)=>'<details class="love-lesson"'+(i===0?' open':'')+'><summary>Leçon '+(i+1)+' — '+esc(l.title)+'</summary><p>'+esc(l.body)+'</p><p class="muted"><strong>À méditer :</strong> '+esc(l.reflection)+'</p></details>').join("");
+ const documents=c.ressources?.length?c.ressources.map((r,i)=>UI.ressourceHtml(r,i)).join(""):'<p class="muted">Aucun support vidéo ou document complémentaire n’a encore été publié pour ce cours.</p>';
+ const quiz=(c.quiz||[]).map((q,i)=>'<fieldset class="love-quiz" data-love-question="'+i+'"><legend>Question '+(i+1)+' — '+esc(q.question)+'</legend>'+
+ q.options.map((o,j)=>'<label><input type="radio" name="love-'+esc(c.id)+'-'+i+'" value="'+j+'"> <span>'+esc(o)+'</span></label>').join("")+
+ '<button type="button" class="button" data-love-quiz="'+esc(c.id)+'" data-question="'+i+'">Vérifier ma réponse</button><p class="love-feedback" role="status" aria-live="polite"></p></fieldset>').join("");
+ const references=(c.references||[]).filter(x=>UI.urlSure(x.url)).map(x=>'<li class="love-reference"><a href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">'+esc(x.label)+'</a></li>').join("");
+ zone.innerHTML='<div class="eyebrow">Love School · '+esc(c.id)+' · '+(c.adultOnly?'Module adulte 18+':'Cours bonus')+'</div>'+
+ '<h2>'+esc(c.title)+'</h2><p class="muted">'+esc(c.theme)+'</p>'+
+ (c.adultOnly?'<div class="love-adult-note">Contenu réservé aux adultes sur déclaration de majorité, non vérifiée. Information pédagogique générale, sans caractère de conseil médical individualisé.</div>':'')+
+ '<h3>Paroles bibliques pour méditer</h3><p>'+c.scriptures.map(esc).join(' · ')+'</p>'+
+ '<h3>Objectifs du cours</h3><ul>'+c.objectives.map(o=>'<li>'+esc(o)+'</li>').join("")+'</ul>'+
+ '<h3>Les enseignements</h3>'+chapitres+
+ '<h3>Mise en pratique personnelle</h3><p>'+esc(c.practice)+'</p>'+
+ '<p class="muted">Cet exercice reste personnel : aucune réponse intime ni donnée de santé n’est recueillie.</p>'+
+ (c.advice?'<div class="love-guide"><p><strong>Conseil pédagogique :</strong> '+esc(c.advice)+'</p></div>':'')+
+ (quiz?'<h3>Quiz de compréhension (non noté)</h3><p class="muted">Ces questions d’entraînement n’influencent pas votre progression ou vos attestations.</p>'+quiz:'')+
+ (references?'<h3>Pour aller plus loin : sources institutionnelles</h3><ul>'+references+'</ul>':'')+
+ '<h3>Vidéos, audios et supports des enseignants</h3><div class="stack">'+documents+'</div>'+
+ '<div class="actions"><button type="button" class="button" data-love-retour>Revenir aux dix cours</button></div>';
+ zone.hidden=false;zone.scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function ouvrirLoveAdulte(id,bouton){
+ if(!$("loveAdultCheck")?.checked){text("loveAdultStatus","Cochez la déclaration de majorité pour accéder à ce module.");return;}
+ if(bouton)bouton.disabled=true;
+ text("loveAdultStatus","Ouverture du module…");
+ try{
+  const r=await request("/love-school/adulte","POST",{confirmationMajeur:true});
+  if(r.verificationAge!=="declarative_non_verifiee")throw Error("Confirmation de majorité indisponible.");
+  loveSchool.courses=loveList().map(c=>r.courses.find(x=>x.id===c.id)||c);
+  afficherLoveCatalogue();afficherLoveCours(id);
+ }catch(e){text("loveAdultStatus",e.message||"Accès indisponible.");}
+ finally{if(bouton&&bouton.isConnected)bouton.disabled=false;}
+}
+function verifierLoveQuiz(bouton){
+ const id=bouton.dataset.loveQuiz,i=Number(bouton.dataset.question),c=loveList().find(x=>x.id===id);
+ const q=c?.quiz?.[i];if(!q)return;
+ const field=bouton.closest(".love-quiz"),choix=field?.querySelector('input[type="radio"]:checked'),retour=field?.querySelector(".love-feedback");
+ if(!retour)return;
+ if(!choix){retour.textContent="Choisissez une réponse pour vous entraîner.";return;}
+ retour.textContent=(Number(choix.value)===q.answer?"Bonne réponse. ":"À revoir. ")+q.explanation;
 }
 async function chargerLoveSchool({force=false}={}){
-  if(loveBusy)return;
-  if(loveSchool&&!force){afficherLoveCatalogue();return;}
-  loveBusy=true;
-  const action=$("refreshLoveSchool");if(action)action.disabled=true;
-  text("loveStatus","Chargement des cours Love School…");
-  try{
-    const data=await request("/love-school");
-    loveSchool=data.ecole;afficherLoveCatalogue();
-    if(loveSelected)afficherLoveCours(loveSelected);
-  }catch(e){text("loveStatus",e.message||"Love School momentanément indisponible.");}
-  finally{loveBusy=false;if(action)action.disabled=false;}
+ if(loveBusy)return;
+ if(loveSchool&&!force){afficherLoveCatalogue();return;}
+ loveBusy=true;const action=$("refreshLoveSchool");if(action)action.disabled=true;
+ text("loveStatus","Chargement de Love School…");
+ try{
+  const data=await request("/love-school");
+  loveSchool=data.ecole;
+  afficherLoveCatalogue();
+  if(loveSelected)afficherLoveCours(loveSelected);
+ }catch(e){text("loveStatus",e.message||"Love School momentanément indisponible.");}
+ finally{loveBusy=false;if(action)action.disabled=false;}
+}
+function basculerLoveAnimations(){
+ const pane=$("pane-love"),pause=pane.classList.toggle("love-motion-paused"),bouton=$("loveMotionToggle");
+ bouton.setAttribute("aria-pressed",String(pause));
+ bouton.textContent=pause?"Reprendre les animations":"Mettre les animations en pause";
 }
 
 function renderBiblio(){
@@ -263,7 +336,9 @@ document.addEventListener("click",async ev=>{
  const refresh=ev.target.closest("[data-refresh-course-resources]");
  if(refresh){await actualiserRessourcesCours(refresh);return;}
  const love=ev.target.closest("[data-love-course]");if(love){mainTabs.activer("love");afficherLoveCours(love.dataset.loveCourse);return;}
- const retour=ev.target.closest("[data-love-retour]");if(retour){$("loveSchoolDetail").hidden=true;$("loveSchoolCourses").scrollIntoView({behavior:"smooth"});return;}
+ const adult=ev.target.closest("[data-love-adulte]");if(adult){ouvrirLoveAdulte(adult.dataset.loveAdulte,adult);return;}
+ const test=ev.target.closest("[data-love-quiz]");if(test){verifierLoveQuiz(test);return;}
+ const retour=ev.target.closest("[data-love-retour]");if(retour){loveSelected=null;$("loveSchoolDetail").hidden=true;$("loveSchoolCourses").scrollIntoView({behavior:"smooth"});return;}
  const btn=ev.target.closest("[data-course]");if(btn&&!btn.disabled){openCourse(btn.dataset.course,btn.dataset.ongletCours);return;}
  const act=ev.target.closest("[data-avis-lus],[data-cohorte-rejoindre],[data-cohorte-quitter],[data-cohorte-clore],[data-ecole-retirer]");if(!act)return;
  try{
@@ -338,6 +413,7 @@ document.addEventListener("submit",async ev=>{
  }
 $("refreshAcademyResources")?.addEventListener("click",()=>synchroniserRessources({manuel:true}));
 $("refreshLoveSchool")?.addEventListener("click",()=>chargerLoveSchool({force:true}));
+$("loveMotionToggle")?.addEventListener("click",basculerLoveAnimations);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)synchroniserRessources();});
 setInterval(()=>synchroniserRessources(),90000);
 })();
