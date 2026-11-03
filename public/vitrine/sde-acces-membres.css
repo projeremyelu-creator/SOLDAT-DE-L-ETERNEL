@@ -1,0 +1,78 @@
+/* SDE · Provisionnement des comptes à partir de la liste des membres.
+   Panneau réservé aux administrateurs. Aucun secret conservé dans ce fichier. */
+.cpt-provision {
+  margin:18px 0;
+  padding:clamp(15px,2vw,23px);
+  border:1px solid rgba(228,193,118,.53);
+  border-left:4px solid #e8c77f;
+  border-radius:14px;
+  background:linear-gradient(135deg,#182a45,#332442);
+  color:#f8f2e6;
+  box-shadow:0 10px 28px #0e14252b;
+}
+.cpt-provision h3 {
+  color:#f5d58b;
+  font-size:clamp(1.05rem,2vw,1.32rem);
+  margin:0 0 9px;
+  line-height:1.23;
+}
+.cpt-provision h4 {color:#eed190;margin:0 0 8px;font-size:1rem}
+.cpt-provision .hint {color:#e4e8f2!important;font-size:.84rem;line-height:1.5}
+.cpt-provision>.btn {margin:9px 0 13px;min-height:44px}
+.cpt-provision-list {
+  display:grid;gap:6px;max-height:340px;
+  overflow-y:auto;overscroll-behavior:contain;
+  margin:12px 0;border-radius:10px;
+  scrollbar-width:thin;
+}
+.cpt-provision-line {
+  display:flex;flex-wrap:wrap;align-items:center;
+  justify-content:space-between;gap:9px;
+  padding:10px 12px;
+  border:1px solid rgba(224,213,186,.14);
+  border-radius:9px;
+  background:rgba(255,255,255,.055);
+}
+.cpt-provision-line>span {min-width:0;display:grid;gap:3px;flex:1 1 190px}
+.cpt-provision-line b {font-size:.85rem;color:#fff6e5;overflow-wrap:anywhere}
+.cpt-provision-line small{color:#c6d6e6;font-size:.75rem;line-height:1.3}
+.cpt-provision-line button{min-height:42px!important;flex-shrink:0}
+.cpt-credentials{
+  display:grid;gap:12px;
+  border:2px solid #d2aa62;
+  border-radius:12px;
+  background:#fff7e9;color:#22243a;
+  padding:16px;
+  margin:12px 0;
+}
+.cpt-credentials h4 {color:#342246}
+.cpt-credentials .hint {color:#4a4960!important}
+.cpt-credential {
+  display:grid;grid-template-columns:minmax(0,1fr);gap:6px;
+  background:#fff;
+  border:1px solid #d1c1a2;
+  border-radius:10px;
+  padding:12px;
+}
+.cpt-credential strong{font-size:.9rem;color:#28233b}
+.cpt-credential small{font-size:.81rem;color:#473f58}
+.cpt-credential label{font-size:.81rem;color:#28233b;font-weight:800}
+.cpt-credential input {
+  color:#242336!important;background:#fff!important;
+  border:1px solid #a29a93;
+  width:100%;min-height:43px;
+  font:700 .88rem ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+.cpt-credential .btn-row{display:flex;flex-wrap:wrap;gap:7px}
+.cpt-credentials button:focus-visible,.cpt-provision button:focus-visible{
+  outline:3px solid #f4d58b;outline-offset:2px;
+}
+@media(max-width:480px){
+  .cpt-provision{padding:12px}
+  .cpt-provision-line{padding:10px}
+  .cpt-provision-line button{width:100%}
+  .cpt-credentials{padding:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .cpt-provision,.cpt-credentials{animation:none!important;transition:none!important}
+}
