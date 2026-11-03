@@ -204,6 +204,18 @@ async function loadPilotage(){
    const lieu=[x.ville,x.pays].filter(Boolean).join(", "),quand=[x.jour,x.heure].filter(Boolean).join(" ");
    lc.append(pilotageLigne(x.nom+(x.priere?" · prière":""),[x.membres+" membre(s)",lieu,quand,x.responsable?"":"sans responsable",x.statut!=="Active"?x.statut:""].filter(Boolean).join(" · ")));
   }
+  const ac=d.academy,la=$("#pilotage-academy");
+  if(la){
+   la.replaceChildren();
+   if(!ac)la.append(pilotageLigne("Données Academy indisponibles","Réessayez dans un instant.",false));
+   else{
+    la.append(pilotageLigne("Apprenants actifs",ac.apprenants+" apprenant(s) ayant remis au moins une copie"));
+    la.append(pilotageLigne("Corrections",ac.copiesEnAttente+" copie(s) en attente · "+ac.copiesNotees30j+" corrigée(s) sur 30 jours",ac.copiesEnAttente===0));
+    la.append(pilotageLigne("Attestations délivrées","Niveau I : "+ac.attestations.niveau1+" · Niveau II : "+ac.attestations.niveau2+" · Niveau III : "+ac.attestations.niveau3+" · Parcours : "+ac.attestations.parcours));
+    if(!ac.cohortes.length)la.append(pilotageLigne("Aucune cohorte ouverte","La direction pédagogique peut en créer une dans l'espace Academy.",false));
+    for(const x of ac.cohortes)la.append(pilotageLigne("Cohorte « "+x.nom+" » · niveau "+x.niveau,"Début "+x.debut+" · "+x.effectif+" inscrit(s)"));
+   }
+  }
   etat.textContent="Données du registre au "+new Date().toLocaleDateString("fr-FR")+".";
  }catch(err){etat.textContent=err.message||"Chargement impossible.";}
 }

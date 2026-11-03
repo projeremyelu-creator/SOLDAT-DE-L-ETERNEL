@@ -5,7 +5,7 @@ import {memberQrApi} from "./member-qr.js";
 import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {memberAcademySummary} from "./member-academy-summary.js";
-import {soldiersAcademyApi} from "./sde-academy-api.js";
+import {soldiersAcademyApi,verifierAttestation} from "./sde-academy-api.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {squadChatApi} from "./squad-chat.js";
 import {courrielApi,lancerCourriels} from "./courriel.js";
@@ -1699,6 +1699,7 @@ async function traiter(req, env, ctx) {
         "/programmes": "/vitrine/programmes.html",
         "/academy": "/vitrine/academy.html",
         "/academy-programme-24": "/vitrine/academy-programme-24.html",
+        "/verifier-attestation": "/vitrine/verifier-attestation.html",
         "/enseignements": "/vitrine/ressources.html",
         "/missions": "/vitrine/projets.html",
         "/priere": "/vitrine/prieres.html",
@@ -1900,6 +1901,7 @@ async function traiter(req, env, ctx) {
     const avecSession = !!cookies(req).sde_s;
     if (!avecSession && await rateLimitGlobal(env, ipGlobal)) return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
     if (p === "/api/formulaire" && req.method === "POST") return apiFormulaire(req, env, ctx);
+    if (p === "/api/academy-verification" && req.method === "GET") return verifierAttestation(req, env);
     if (p.startsWith("/api/f/")) {
       const publie = await formulairePublic(req, env, { blocked: (key, max) => bloque(env, key, max), count: key => compter(env, key), ip: ipDe, notify: (type, details) => notifySde(env, ctx, type, details) });
       if (publie) return publie;
