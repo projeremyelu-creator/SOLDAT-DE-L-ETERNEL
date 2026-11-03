@@ -2,6 +2,7 @@
    L'ancien cursus de douze modules est remplacé, sans destruction des archives personnelles.
    Aucun corrigé n'est publié dans le dépôt ni dans les réponses API. */
 import {SOLDIERS_ACADEMY_2027 as PROGRAMME} from "./soldiers-academy-2027.js";
+import {LOVE_SCHOOL} from "./love-school.js";
 import {CORRECTIFS,BAREME_EXERCICE,BAREME_EXAMEN} from "./academy-correctifs.js";
 import {SPECIALISATIONS} from "./academy-specialisations.js";
 import {initRessources,ressourcesApi,ressourcesApprenant,fonctionFormateur} from "./academy-ressources.js";
@@ -101,6 +102,16 @@ export async function soldiersAcademyApi(req,env,u,path){
   const admin=Number(u.niveau)>=2;
   const account=String(u.id);
   await init(env);
+  // École bonus : lecture réservée aux sessions connectées, sans progression ni attestation.
+  if(path==="/api/soldiers-academy/love-school"&&req.method==="GET"){
+    await initRessources(env);
+    const biblio=await ressourcesApprenant(env,{peutNiveau:()=>false});
+    return response({ok:true,ecole:{
+      title:LOVE_SCHOOL.title,subtitle:LOVE_SCHOOL.subtitle,nature:LOVE_SCHOOL.nature,
+      certification:false,
+      courses:LOVE_SCHOOL.courses.map(c=>({...c,ressources:biblio.parCours[c.id]||[]}))
+    }});
+  }
   if(path==="/api/soldiers-academy/ressources/etat"&&req.method==="GET"){
     const d=await state(env,account);
     const biblio=await ressourcesPour(env,d);
