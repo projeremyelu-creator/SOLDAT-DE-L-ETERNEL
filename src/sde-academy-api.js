@@ -3,6 +3,7 @@
    Aucun corrigé n'est publié dans le dépôt ni dans les réponses API. */
 import {SOLDIERS_ACADEMY_2027 as PROGRAMME} from "./soldiers-academy-2027.js";
 import {LOVE_SCHOOL,LOVE_SCHOOL_PUBLICS} from "./love-school.js";
+import {initLoveAcces,loveAccesApi,loveEtats,loveAutorise,loveMeta} from "./love-school-acces.js";
 import {CORRECTIFS,BAREME_EXERCICE,BAREME_EXAMEN} from "./academy-correctifs.js";
 import {SPECIALISATIONS} from "./academy-specialisations.js";
 import {initRessources,ressourcesApi,ressourcesApprenant,fonctionFormateur} from "./academy-ressources.js";
@@ -102,28 +103,38 @@ export async function soldiersAcademyApi(req,env,u,path){
   const admin=Number(u.niveau)>=2;
   const account=String(u.id);
   await init(env);
-  // Love School : les bonus adultes restent hors de la réponse GET standard.
-  // Une déclaration de majorité explicite ouvre les contenus adultes pour cette seule consultation.
-  // Elle n'est PAS une vérification d'âge ; aucun âge ni détail intime n'est enregistré.
-  if(path==="/api/soldiers-academy/love-school/adulte"&&req.method==="POST"){
-    let b;try{b=await readBody(req)}catch{return error("Confirmation invalide.",400)}
-    if(b?.confirmationMajeur!==true)return error("Confirmez votre majorité pour accéder à ces cours.",403);
-    await initRessources(env);
-    const ressources=await ressourcesApprenant(env,{peutNiveau:()=>false,peutBonusAdulte:true});
-    return response({ok:true,verificationAge:"declarative_non_verifiee",
-      courses:LOVE_SCHOOL.courses.filter(c=>c.adultOnly).map(c=>({...c,ressources:ressources.parCours[c.id]||[]}))});
-  }
+  // Love School : toutes les leçons, vidéos, documents et quiz sont désormais
+  // contrôlés par un droit individuel, attribué par un coach/professeur habilité.
+  if(path.startsWith("/api/soldiers-academy/love-school/acces"))
+    return loveAccesApi(req,env,u,path);
   if(path==="/api/soldiers-academy/love-school"&&req.method==="GET"){
-    await initRessources(env);
-    const biblio=await ressourcesApprenant(env,{peutNiveau:()=>false});
+    await initLoveAcces(env);
+    const etats=await loveEtats(env,account);
     return response({ok:true,ecole:{
       title:LOVE_SCHOOL.title,subtitle:LOVE_SCHOOL.subtitle,nature:LOVE_SCHOOL.nature,parcours:LOVE_SCHOOL_PUBLICS,
       certification:false,
-      courses:LOVE_SCHOOL.courses.map(c=>c.adultOnly
-        ?{id:c.id,title:c.title,theme:c.theme,track:c.track,adultOnly:true,ressources:[]}
-        :{...c,ressources:biblio.parCours[c.id]||[]})
+      courses:LOVE_SCHOOL.courses.map(c=>loveMeta(c,etats[c.id]))
     }});
   }
+  if(path.startsWith("/api/soldiers-academy/love-school/cours/")){
+    const id=decodeURIComponent(path.slice("/api/soldiers-academy/love-school/cours/".length));
+    const c=LOVE_SCHOOL.courses.find(x=>x.id===id);
+    if(!c)return error("Cours Love School introuvable.",404);
+    await initLoveAcces(env);
+    if(!(await loveAutorise(env,account,id)))
+      return error("Module verrouillé : demandez sa validation à un professeur ou coach.",403);
+    if(c.adultOnly){
+      if(req.method!=="POST")return error("Ce module adulte nécessite une confirmation de majorité dans une requête dédiée.",403);
+      let b;try{b=await readBody(req)}catch{return error("Déclaration invalide.",400)}
+      if(b?.confirmationMajeur!==true)return error("Confirmez avoir au moins 18 ans.",403);
+    }else if(req.method!=="GET")return error("Méthode non autorisée.",405);
+    await initRessources(env);
+    const supports=await ressourcesApprenant(env,{peutNiveau:()=>false,bonusAutorises:[id],peutBonusAdulte:!!c.adultOnly});
+    return response({ok:true,cours:{...c,ressources:supports.parCours[id]||[]},statut:"approuve",
+      verificationAge:c.adultOnly?"declarative_non_verifiee":null});
+  }
+  if(path==="/api/soldiers-academy/love-school/adulte")
+    return error("Ancien accès désactivé. Actualisez Love School puis ouvrez individuellement chaque cours autorisé.",410);
   if(path==="/api/soldiers-academy/ressources/etat"&&req.method==="GET"){
     const d=await state(env,account);
     const biblio=await ressourcesPour(env,d);
