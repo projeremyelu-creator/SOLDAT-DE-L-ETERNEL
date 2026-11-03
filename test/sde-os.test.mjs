@@ -17,7 +17,7 @@ function db(){
    },
    async all(){
     if(query.includes("FROM os_evaluations WHERE compte"))return {results:assessments.filter(x=>x.compte===args[0]).sort((a,b)=>b.cree-a.cree)};
-    if(query.includes("FROM os_parcours WHERE compte"))return {results:progress.filter(x=>x.compte===args[0])};
+    if(query.includes("FROM os_ecoles WHERE compte"))return {results:progress.filter(x=>x.compte===args[0])};
     if(query.includes("SELECT periode, COUNT(*)"))return {results:[...new Set(baro.map(x=>x.periode))].map(periode=>({periode,n:baro.filter(x=>x.periode===periode).length}))};
     if(query.includes("SELECT donnees FROM os_barometre WHERE periode"))return {results:baro.filter(x=>x.periode===args[0]).map(x=>({donnees:x.donnees}))};
     if(query.includes("SELECT id,pole,titre,echeance"))return {results:actions};
@@ -34,7 +34,7 @@ function db(){
       baro.push({compte:args[0],periode:args[1],donnees:args[3]});
     }else if(query.startsWith("DELETE FROM os_barometre")){
       for(let i=baro.length-1;i>=0;i--)if(baro[i].compte===args[0]&&baro[i].periode===args[1])baro.splice(i,1);
-    }else if(query.startsWith("INSERT INTO os_parcours")){
+    }else if(query.startsWith("INSERT INTO os_ecoles")){
       const prev=progress.findIndex(x=>x.compte===args[0]&&x.ecole===args[1]);if(prev>=0)progress.splice(prev,1);
       progress.push({compte:args[0],ecole:args[1],statut:args[2],maj:args[3]});
     }else if(query.startsWith("INSERT INTO os_actions"))actions.push({id:args[0],pole:args[1],titre:args[2],echeance:args[3],statut:args[4],auteur:args[5],maj:args[6]});
@@ -59,7 +59,7 @@ const api=(database,person,path,method="GET",payload)=>sdeOsApi(
 const data=async res=>res.json();
 test("document Soldier House : 7 dimensions, 5 pôles, 4 écoles, 4 fractures + préjugés",()=>{
  assert.deepEqual(DIMENSIONS,["spirituelle","personnelle","familiale","professionnelle","economique","sociale","missionnaire"]);
- assert.equal(BIEN_ETRE.length,4);assert.equal(FRACTURES.length,5);assert.equal(POLES.length,5);assert.equal(ECOLES.length,4);
+ assert.equal(BIEN_ETRE.length,4);assert.equal(FRACTURES.length,5);assert.equal(POLES.length,5);assert.equal(ECOLES.length,5);
  assert.equal(POLES[4],"Formation & Développement Intégral");
 });
 test("les données OS sont inaccessibles sans connexion et sans droits administratifs",async()=>{
@@ -141,7 +141,7 @@ test("interface OS : 4 paradigmes, 5 navigations, aucune donnée de santé en ca
 });
 
 
-test("SDE OS : démarrage authentifié, cinq pôles, quatre écoles, navigation et recherche utilisables", async()=>{
+test("SDE OS : démarrage authentifié, cinq pôles, cinq écoles, navigation et recherche utilisables", async()=>{
  const html=load("public/os/index.html"),code=load("public/os/os.js");
  const dom=new JSDOM(html,{url:"https://app.mouvement-sde.org/os/",runScripts:"outside-only",pretendToBeVisual:true});
  const w=dom.window,d=w.document;
@@ -155,7 +155,7 @@ test("SDE OS : démarrage authentifié, cinq pôles, quatre écoles, navigation 
  d.dispatchEvent(new w.Event("DOMContentLoaded"));
  await new Promise(resolve=>setTimeout(resolve,45));
  assert.equal(d.getElementById("busy").hidden,true);
- assert.equal(d.querySelectorAll("#schools .school").length,4);
+ assert.equal(d.querySelectorAll("#schools .school").length,5);
  assert.equal(d.querySelectorAll("#poles-list .pole-card").length,5);
  assert.equal(d.querySelectorAll("#eval-fields input[type=range]").length,7);
  assert.equal(d.querySelectorAll("#wellness-fields input[type=range]").length,4);

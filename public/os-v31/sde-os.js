@@ -196,8 +196,8 @@ async function loadPilotage(){
   const lf=$("#pilotage-formations");lf.replaceChildren();
   if(!f.lignes.length)lf.append(pilotageLigne("Aucune formation enregistrée","Créez une formation dans Soldiers Academy pour suivre les inscriptions.",false));
   for(const x of f.lignes)lf.append(pilotageLigne(x.titre+(x.debut?" · "+x.debut:""),x.inscrits+" inscrit(s) · "+x.certifies+" certifié(s)"+(x.retires?" · "+x.retires+" retiré(s)":"")));
-  const noms={1:"Fondations",2:"Maturité",3:"Service et Leadership",4:"Mission et Influence"};
-  $("#pilotage-ecoles").textContent=d.interetEcoles.length?"Intérêt exprimé par les membres : "+d.interetEcoles.map(x=>(noms[x.ecole]||"École "+x.ecole)+" "+x.n).join(" · ")+".":"Aucun intérêt exprimé pour les quatre écoles pour le moment.";
+  const noms={1:"Réveil et évangélisation",2:"Impact social et humanitaire",3:"Logistique et organisation",4:"Communication et médias",5:"Formation et entrepreneuriat"};
+  $("#pilotage-ecoles").textContent=d.interetEcoles.length?"Intérêt exprimé par les membres : "+d.interetEcoles.map(x=>(noms[x.ecole]||"École "+x.ecole)+" "+x.n).join(" · ")+".":"Aucun intérêt exprimé pour les cinq écoles pour le moment.";
   const lc=$("#pilotage-cellules");lc.replaceChildren();
   if(!c.cellules.length)lc.append(pilotageLigne("Aucune cellule enregistrée","Ajoutez des garnisons de type « Cellule » (nom, lieu, jour, responsable) pour les suivre ici.",false));
   for(const x of c.cellules){
@@ -211,7 +211,7 @@ document.addEventListener("click",e=>{if(e.target&&e.target.id==="pilotage-actua
 function updateOverview(){
  const d=state.data;
  $("#stat-checkins").textContent=d.mesBilans;
- $("#stat-school").textContent=String(state.enrolled.length)+" / 4";
+ $("#stat-school").textContent=String(state.enrolled.length)+" / 5";
  $("#stat-pending").textContent=state.admin?d.decisionsEnAttente:"—";
 }
 async function refreshOverview(){

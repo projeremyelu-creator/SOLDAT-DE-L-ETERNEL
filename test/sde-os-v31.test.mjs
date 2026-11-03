@@ -12,15 +12,15 @@ const mock=()=>({DB:{prepare(sql){return {bind(...params){this.params=params;ret
 const u={connecte:true,id:"member-1",niveau:0,role:"soldat",nom:"Soldat Test"};
 const admin={connecte:true,id:"admin-1",niveau:2,role:"admin",nom:"Responsable"};
 const request=(action,details={})=>new Request("https://app.mouvement-sde.org/api/os-v31",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({action,...details})});
-test("référentiel Soldier House : sept dimensions, cinq pôles, quatre écoles, quatre fractures",()=>{
+test("référentiel Soldier House : sept dimensions, cinq pôles, cinq écoles, quatre fractures",()=>{
  assert.equal(SDE_OS_31.version,"3.1");
  assert.deepEqual(SDE_OS_31.integral,["Spirituelle","Personnelle","Familiale","Professionnelle","Économique","Sociale","Missionnaire"]);
  assert.equal(SDE_OS_31.bienEtre.length,4);
  assert.equal(SDE_OS_31.fractures.length,4);
  assert.equal(SDE_OS_31.poles.length,5);
- assert.equal(SDE_OS_31.ecoles.length,4);
- assert.equal(SDE_OS_31.ecoles[0].nom,"Fondations");
- assert.equal(SDE_OS_31.ecoles[3].nom,"Mission et Influence");
+ assert.equal(SDE_OS_31.ecoles.length,5);
+ assert.equal(SDE_OS_31.ecoles[0].nom,"Réveil et évangélisation");
+ assert.equal(SDE_OS_31.ecoles[4].nom,"Formation, développement et entrepreneuriat");
 });
 test("application complète : six vues, quatre paradigmes et cinq navigations réelles",()=>{
  const dom=new JSDOM(html,{url:"https://app.mouvement-sde.org/os-v31/",runScripts:"outside-only"});
