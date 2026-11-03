@@ -11,6 +11,11 @@ const ORIGINE="https://mouvement-sde.org";
 function monde(){
   const sql=new DatabaseSync(":memory:");
   sql.exec(readFileSync("schema.sql","utf8"));
+  // Les tests historiques simulent un apprenant ayant déjà reçu ses validations.
+  // Les nouveaux scénarios d'accès utilisent des comptes sans autorisation initiale.
+  sql.exec("CREATE TABLE IF NOT EXISTS academy_2027_acces (compte TEXT NOT NULL,cours TEXT NOT NULL,statut TEXT NOT NULL CHECK(statut IN ('en_attente','approuve','refuse','revoque')),demande_le INTEGER NOT NULL,decision_le INTEGER,decideur TEXT,commentaire TEXT NOT NULL DEFAULT '',PRIMARY KEY(compte,cours))");
+  for(const c of PROG.courses)
+    sql.prepare("INSERT INTO academy_2027_acces(compte,cours,statut,demande_le) VALUES(?,?,'approuve',1)").run("m1",c.id);
   const stmt=(q,args=[])=>({
     bind:(...a)=>stmt(q,a),
     first:async()=>sql.prepare(q).get(...args)??null,
@@ -256,7 +261,7 @@ test("Actualisation des supports du cours ouvert : action visible et non destruc
 });
 
 
-test("Love School : dix cours bonus distincts du tronc commun et enseignements complets",async()=>{
+test("Love School : dix cours avec conditions visibles et contenus verrouillés",async()=>{
  const {env,sql}=monde();comptes(sql);
  const anon={connecte:false,id:null,niveau:0};
  assert.equal((await api(env,anon,"GET","/api/soldiers-academy/love-school")).statut,401);
@@ -267,23 +272,18 @@ test("Love School : dix cours bonus distincts du tronc commun et enseignements c
  assert.equal(result.json.ecole.certification,false);
  assert.deepEqual(result.json.ecole.courses.map(c=>c.id),["LS-01","LS-02","LS-03","LS-04","LS-05","LS-06","LS-07","LS-08","LS-09","LS-10"]);
  for(const c of result.json.ecole.courses){
-  assert.ok(c.title.length>12);
-  if(c.adultOnly){
-   assert.ok(!c.lessons&&!c.quiz&&!c.objectives&&!c.practice,"Les cours adultes ne sont pas divulgués sans déclaration.");
-  }else{
-   assert.ok(c.objectives.length>=2&&c.scriptures.length>=2&&c.lessons.length>=2&&c.practice.length>30);
-  }
-  assert.deepEqual(c.ressources,[]);
+  assert.ok(c.title.length>12&&c.objectifs.length>=2&&c.conditions.length>=4&&c.restrictions.length>=4);
+  assert.equal(c.acces.statut,"verrouille");
+  for(const confidential of ["lessons","quiz","ressources","practice","scriptures"])assert.equal(c[confidential],undefined,confidential+" ne doit pas être livré avant validation");
+  assert.equal((await api(env,eleve,"GET","/api/soldiers-academy/love-school/cours/"+c.id)).statut,403,c.id);
  }
  assert.equal(PROG.courses.length,24);
  const main=(await api(env,eleve,"GET","/api/soldiers-academy")).json;
- assert.equal(main.courses.length,24);
- assert.equal(main.progress.passed,0);
- assert.equal(main.programme.durationHours,192);
- assert.equal(main.certificates.length,0);
+ assert.equal(main.courses.length,24);assert.equal(main.progress.passed,0);
+ assert.equal(main.programme.durationHours,192);assert.equal(main.certificates.length,0);
 });
 
-test("Love School : l'enseignant publie uniquement dans ses bonus confiés, jamais de brouillons visibles",async()=>{
+test("Love School : supports et quiz protégés jusqu'à décision d'un responsable habilité",async()=>{
  const {env,sql}=monde();comptes(sql);
  assert.equal((await api(env,prof,"POST",R,{portee:"LS-01",type:"note",titre:"Ébauche bonus",texte:"Travail pédagogique de réflexion."})).statut,403);
  assert.equal((await api(env,direction,"POST","/api/soldiers-academy/formateurs",{compte:"prof@exemple.test",fonction:"enseignant",portees:["LS-01"]})).statut,201);
@@ -294,16 +294,23 @@ test("Love School : l'enseignant publie uniquement dans ses bonus confiés, jama
  const pub=await api(env,prof,"POST",R,{portee:"LS-01",type:"note",titre:"Fiche d'amour",texte:"La bienveillance et le respect sont essentiels."});
  const draft=await api(env,prof,"POST",R,{portee:"LS-01",type:"note",titre:"Brouillon privé",texte:"Brouillon interne pédagogique pour les formateurs.",publie:false});
  assert.equal(pub.statut,201);assert.equal(draft.statut,201);
- const vue=(await api(env,eleve,"GET","/api/soldiers-academy/love-school")).json;
- const ressources=vue.ecole.courses.find(c=>c.id==="LS-01").ressources;
- assert.equal(ressources.length,1);
- assert.equal(ressources[0].titre,"Fiche d'amour");
- assert.ok(!JSON.stringify(vue).includes("Brouillon privé"));
- assert.ok(!JSON.stringify(vue).includes("auteurId"));
+ const nonApprouve=(await api(env,eleve,"GET","/api/soldiers-academy/love-school")).json;
+ assert.ok(!JSON.stringify(nonApprouve).includes("Fiche d'amour"));
+ assert.equal((await api(env,eleve,"GET","/api/soldiers-academy/love-school/cours/LS-01")).statut,403);
+ const demande=await api(env,eleve,"POST","/api/soldiers-academy/love-school/acces/demander",{cours:"LS-01"});
+ assert.equal(demande.statut,201);
+ assert.equal((await api(env,eleve,"GET","/api/soldiers-academy/love-school/cours/LS-01")).statut,403);
+ assert.equal((await api(env,prof,"PATCH","/api/soldiers-academy/love-school/acces/decision",{cours:"LS-02",compte:"m1",decision:"approuve"})).statut,403,"professeur ne peut valider un cours non confié");
+ const decision=await api(env,prof,"PATCH","/api/soldiers-academy/love-school/acces/decision",{cours:"LS-01",compte:"m1",decision:"approuve"});
+ assert.equal(decision.statut,200);
+ const cours=(await api(env,eleve,"GET","/api/soldiers-academy/love-school/cours/LS-01")).json.cours;
+ assert.equal(cours.ressources.length,1);assert.equal(cours.ressources[0].titre,"Fiche d'amour");
+ assert.ok(cours.lessons.length>=2);
+ assert.ok(!JSON.stringify(cours).includes("Brouillon privé"));
+ assert.ok(!JSON.stringify(cours).includes("auteurId"));
  const main=(await api(env,eleve,"GET","/api/soldiers-academy")).json;
  assert.equal(main.courses.length,24);
- assert.equal(main.ressources.parCours["LS-01"],1);
- assert.equal(main.ressources.parCours["LS-02"],undefined);
+ assert.equal(main.ressources.parCours["LS-01"],undefined,"Les supports Love School restent hors du cursus principal");
  assert.equal(main.progress.passed,0);
 });
 
@@ -343,50 +350,55 @@ test("Love School LS-07 à LS-10 : leçons complètes, exercices, quiz et source
  assert.ok(sante.references.some(x=>x.url.startsWith("https://www.cdc.gov/")));
 });
 
-test("Love School : modules 18+ non divulgués en GET, déclaration explicite uniquement, ressources cloisonnées",async()=>{
+test("Love School : cours 18+ réservés aux accès validés et à la déclaration de majorité",async()=>{
  const {env,sql}=monde();comptes(sql);
- const uri="/api/soldiers-academy/love-school/adulte";
- assert.equal((await api(env,eleve,"POST",uri,{confirmationMajeur:false})).statut,403);
- assert.equal((await api(env,eleve,"POST",uri,{confirmationMajeur:"oui"})).statut,403);
+ const uri="/api/soldiers-academy/love-school/cours/LS-09";
+ assert.equal((await api(env,eleve,"GET",uri)).statut,403);
+ assert.equal((await api(env,eleve,"POST",uri,{confirmationMajeur:true})).statut,403);
+ assert.equal((await api(env,eleve,"POST","/api/soldiers-academy/love-school/acces/demander",{cours:"LS-09"})).statut,403);
  assert.equal((await api(env,{connecte:false,id:null,niveau:0},"POST",uri,{confirmationMajeur:true})).statut,401);
  const avant=await api(env,eleve,"GET","/api/soldiers-academy/love-school");
- assert.equal(avant.statut,200);
- assert.equal(avant.json.ecole.courses.length,10);
+ assert.equal(avant.statut,200);assert.equal(avant.json.ecole.courses.length,10);
  assert.ok(!JSON.stringify(avant).includes("Grandes familles de positions et confort"));
  assert.ok(!JSON.stringify(avant).includes("IST, contraception et décisions éclairées"));
+ const demande=await api(env,eleve,"POST","/api/soldiers-academy/love-school/acces/demander",{cours:"LS-09",confirmationMajeur:true});
+ assert.equal(demande.statut,201);
+ assert.equal((await api(env,eleve,"POST",uri,{confirmationMajeur:true})).statut,403,"toujours verrouillé en attente");
+ const valid=await api(env,direction,"PATCH","/api/soldiers-academy/love-school/acces/decision",{cours:"LS-09",compte:"m1",decision:"approuve"});
+ assert.equal(valid.statut,200);
+ assert.equal((await api(env,eleve,"GET",uri)).statut,403,"le GET ne divulgue pas le module adulte");
+ assert.equal((await api(env,eleve,"POST",uri,{confirmationMajeur:false})).statut,403);
+ assert.equal((await api(env,eleve,"POST",uri,{confirmationMajeur:"oui"})).statut,403);
  const adulte=await api(env,eleve,"POST",uri,{confirmationMajeur:true});
- assert.equal(adulte.statut,200);
- assert.equal(adulte.json.verificationAge,"declarative_non_verifiee");
- assert.deepEqual(adulte.json.courses.map(x=>x.id),["LS-09","LS-10"]);
- assert.ok(adulte.json.courses.every(x=>x.lessons.length>=4&&x.quiz.length>=3));
+ assert.equal(adulte.statut,200);assert.equal(adulte.json.verificationAge,"declarative_non_verifiee");
+ assert.ok(adulte.json.cours.lessons.length>=4&&adulte.json.cours.quiz.length>=3);
  const apres=await api(env,eleve,"GET","/api/soldiers-academy/love-school");
- assert.ok(!apres.json.ecole.courses.find(x=>x.id==="LS-09").lessons,"La déclaration ne doit pas être persistée.");
+ assert.ok(!apres.json.ecole.courses.find(x=>x.id==="LS-09").lessons,"La déclaration et l'accès n'exposent pas les cours au GET standard");
 });
 
-test("Love School : supports adultes exclus des autres réponses API sans déclaration",async()=>{
+test("Love School : notes sensibles invisibles hors du cours autorisé",async()=>{
  const {env,sql}=monde();comptes(sql);
- const formation=await api(env,direction,"POST","/api/soldiers-academy/formateurs",{compte:"prof@exemple.test",fonction:"enseignant",portees:["LS-09","LS-10"]});
- assert.equal(formation.statut,201);
+ assert.equal((await api(env,direction,"POST","/api/soldiers-academy/formateurs",{compte:"prof@exemple.test",fonction:"enseignant",portees:["LS-09","LS-10"]})).statut,201);
  const r1=await api(env,prof,"POST",R,{portee:"LS-09",type:"note",titre:"Ressource confidentielle d'intimité",texte:"Contenu réservé aux cours adultes et aux apprenants ayant confirmé leur majorité."});
- assert.equal(r1.statut,201);
  const r2=await api(env,prof,"POST",R,{portee:"LS-10",type:"note",titre:"Santé sexuelle approfondie",texte:"Présentation des principes de prévention des risques et du consentement."});
- assert.equal(r2.statut,201);
+ assert.equal(r1.statut,201);assert.equal(r2.statut,201);
  const accueil=(await api(env,eleve,"GET","/api/soldiers-academy")).json;
  const etat=(await api(env,eleve,"GET",R+"/etat")).json;
  const normal=(await api(env,eleve,"GET","/api/soldiers-academy/love-school")).json;
  for(const data of [accueil,etat,normal]){
-   assert.ok(!JSON.stringify(data).includes("Ressource confidentielle d'intimité"));
-   assert.ok(!JSON.stringify(data).includes("Santé sexuelle approfondie"));
+  assert.ok(!JSON.stringify(data).includes("Ressource confidentielle d'intimité"));
+  assert.ok(!JSON.stringify(data).includes("Santé sexuelle approfondie"));
  }
  assert.equal(accueil.ressources.parCours["LS-09"],undefined);
  assert.equal(etat.ressources.parCours["LS-10"],undefined);
- const adulte=(await api(env,eleve,"POST","/api/soldiers-academy/love-school/adulte",{confirmationMajeur:true})).json;
- assert.equal(adulte.courses.find(c=>c.id==="LS-09").ressources[0].titre,"Ressource confidentielle d'intimité");
- assert.equal(adulte.courses.find(c=>c.id==="LS-10").ressources[0].titre,"Santé sexuelle approfondie");
+ await api(env,eleve,"POST","/api/soldiers-academy/love-school/acces/demander",{cours:"LS-09",confirmationMajeur:true});
+ await api(env,eleve,"POST","/api/soldiers-academy/love-school/acces/demander",{cours:"LS-10",confirmationMajeur:true});
+ for(const id of ["LS-09","LS-10"])assert.equal((await api(env,direction,"PATCH","/api/soldiers-academy/love-school/acces/decision",{cours:id,compte:"m1",decision:"approuve"})).statut,200);
+ const adultes=await Promise.all(["LS-09","LS-10"].map(id=>api(env,eleve,"POST","/api/soldiers-academy/love-school/cours/"+id,{confirmationMajeur:true})));
+ assert.equal(adultes[0].json.cours.ressources[0].titre,"Ressource confidentielle d'intimité");
+ assert.equal(adultes[1].json.cours.ressources[0].titre,"Santé sexuelle approfondie");
  const after=(await api(env,eleve,"GET","/api/soldiers-academy")).json;
- assert.equal(after.progress.passed,0);
- assert.equal(after.programme.durationHours,192);
- assert.equal(after.courses.length,24);
+ assert.equal(after.progress.passed,0);assert.equal(after.programme.durationHours,192);assert.equal(after.courses.length,24);
 });
 
 test("Love School : nouveau design animé contrôlable et textes exacts accessibles",()=>{
@@ -467,4 +479,112 @@ test("Love School : commandes de filtres accessibles et sélection temporaire su
  assert.match(css,/@media\(max-width:480px\)/);
  const section=js.slice(js.indexOf("let loveSchool="),js.indexOf("function renderBiblio()"));
  assert.ok(!section.includes('localStorage.setItem'),"Le choix Singles, Fiancés, Mariés n'est pas sauvegardé");
+});
+
+
+test("Soldiers Academy : 24 fiches admission avec objectifs, conditions et restrictions visibles sans contenu",async()=>{
+ const {env,sql}=monde();comptes(sql);
+ const nouveau={connecte:true,id:"m2",nom:"Nouvel apprenant",niveau:0};
+ const r=await api(env,nouveau,"GET","/api/soldiers-academy");
+ assert.equal(r.statut,200);
+ assert.equal(r.json.courses.length,24);
+ assert.equal(r.json.programme.durationHours,192);
+ assert.equal(r.json.progress.passed,0);
+ for(const c of r.json.courses){
+  assert.equal(c.acces.statut,"verrouille");
+  assert.ok(c.locked,c.id+" verrouillé tant que le coach n'a pas validé");
+  assert.ok(c.objectifs.length>=3,c.id+" objectifs");
+  assert.ok(c.conditions.length>=5,c.id+" conditions");
+  assert.ok(c.restrictions.length>=5,c.id+" restrictions");
+  assert.ok(c.description.length>=50,c.id+" présentation");
+  assert.ok(!("units" in c)&&!("quiz" in c&&Array.isArray(c.quiz)),c.id+" ne divulgue pas de leçons ni d'évaluations");
+  assert.equal((await api(env,nouveau,"GET","/api/soldiers-academy/cours/"+c.id)).statut,403,c.id+" inaccessible en direct");
+ }
+ assert.equal((await api(env,nouveau,"POST","/api/soldiers-academy/soumettre",{courseId:"SA-01",type:"quiz",answers:Array(5).fill("Réponse argumentée de validation préalable")})).statut,403);
+ assert.equal((await api(env,nouveau,"POST","/api/soldiers-academy/acces/demander",{cours:"SA-09"})).statut,403,"niveau II reste subordonné à la validation du niveau I");
+});
+
+test("Soldiers Academy : approbation nominative, périmètre enseignant et révocation réels",async()=>{
+ const {env,sql}=monde();comptes(sql);
+ const nouveau={connecte:true,id:"m2",nom:"Nouvel apprenant",niveau:0},url="/api/soldiers-academy/acces";
+ const req=await api(env,nouveau,"POST",url+"/demander",{cours:"SA-01"});
+ assert.equal(req.statut,201);assert.equal(req.json.statut,"en_attente");
+ assert.equal((await api(env,nouveau,"GET","/api/soldiers-academy/cours/SA-01")).statut,403);
+ const metadata=(await api(env,nouveau,"GET","/api/soldiers-academy")).json.courses[0];
+ assert.equal(metadata.acces.statut,"en_attente");assert.equal(metadata.locked,true);
+ assert.equal((await api(env,nouveau,"GET",url+"/gestion")).statut,403);
+ assert.equal((await api(env,prof,"GET",url+"/gestion")).statut,403);
+ assert.equal((await api(env,direction,"POST","/api/soldiers-academy/formateurs",{compte:"prof@exemple.test",fonction:"enseignant",portees:["SA-01"]})).statut,201);
+ assert.equal((await api(env,direction,"POST","/api/soldiers-academy/formateurs",{compte:"coach@exemple.test",fonction:"coach",portees:["SA-02"]})).statut,201);
+ const queue=(await api(env,prof,"GET",url+"/gestion")).json;
+ assert.ok(queue.demandes.some(x=>x.cours==="SA-01"&&x.compte==="m2"));
+ assert.deepEqual(queue.autorisees,["SA-01"]);
+ assert.equal((await api(env,autreProf,"PATCH",url+"/decision",{cours:"SA-01",compte:"m2",decision:"approuve"})).statut,403,"coach non affecté");
+ assert.equal((await api(env,prof,"PATCH",url+"/decision",{cours:"SA-01",compte:"f1",decision:"approuve"})).statut,403,"l'enseignant ne valide pas son compte");
+ assert.equal((await api(env,prof,"PATCH",url+"/decision",{cours:"SA-01",compte:"m2",decision:"approuve",commentaire:"Les conditions ont été lues."})).statut,200);
+ const unlocked=(await api(env,nouveau,"GET","/api/soldiers-academy/cours/SA-01")).json;
+ assert.ok(unlocked.course.units.length>=4&&unlocked.course.quiz.length>=5);
+ assert.equal((await api(env,nouveau,"GET","/api/soldiers-academy/cours/SA-02")).statut,403,"un module validé ne donne pas accès au suivant");
+ const submitted=await api(env,nouveau,"POST","/api/soldiers-academy/soumettre",{courseId:"SA-01",type:"quiz",answers:Array(5).fill("Réponse argumentée de validation pédagogique.")});
+ assert.equal(submitted.statut,201,JSON.stringify(submitted.json));
+ assert.equal((await api(env,prof,"PATCH",url+"/decision",{cours:"SA-01",compte:"m2",decision:"revoque"})).statut,200);
+ assert.equal((await api(env,nouveau,"GET","/api/soldiers-academy/cours/SA-01")).statut,403,"lecture bloquée après révocation");
+ assert.equal((await api(env,nouveau,"POST","/api/soldiers-academy/soumettre",{courseId:"SA-01",type:"exam",answers:Array(3).fill("Réponse argumentative de contrôle.")})).statut,403,"l'examen est aussi bloqué");
+ assert.equal((await api(env,nouveau,"POST",url+"/demander",{cours:"SA-01"})).statut,201,"réinscription possible");
+});
+
+test("Soldiers Academy : les ressources des cours et niveaux verrouillés ne traversent aucun endpoint",async()=>{
+ const {env,sql}=monde();comptes(sql);
+ const nouveau={connecte:true,id:"m2",nom:"Nouvel apprenant",niveau:0};
+ assert.equal((await api(env,direction,"POST","/api/soldiers-academy/formateurs",{compte:"prof@exemple.test",fonction:"coach",portees:["SA-01","SA-02","N1"]})).statut,201);
+ for(const p of ["SA-01","SA-02","N1"]){
+  const r=await api(env,prof,"POST",R,{portee:p,type:"note",titre:"Support "+p,texte:"Enseignement supplémentaire réservé aux apprenants du niveau."});
+  assert.equal(r.statut,201);
+ }
+ let accueil=(await api(env,nouveau,"GET","/api/soldiers-academy")).json;
+ assert.ok(!JSON.stringify(accueil).includes("Support SA-01"));
+ assert.deepEqual(accueil.ressources.parCours,{});
+ assert.equal((await api(env,nouveau,"GET","/api/soldiers-academy/cours/SA-01")).statut,403);
+ assert.equal((await api(env,nouveau,"GET",R+"/etat")).json.ressources.parCours["SA-01"],undefined);
+ await api(env,nouveau,"POST","/api/soldiers-academy/acces/demander",{cours:"SA-01"});
+ await api(env,prof,"PATCH","/api/soldiers-academy/acces/decision",{cours:"SA-01",compte:"m2",decision:"approuve"});
+ const cours=(await api(env,nouveau,"GET","/api/soldiers-academy/cours/SA-01")).json;
+ assert.equal(cours.ressources.length,1);assert.equal(cours.ressources[0].titre,"Support SA-01");
+ accueil=(await api(env,nouveau,"GET","/api/soldiers-academy")).json;
+ assert.equal(accueil.ressources.parCours["SA-01"],1);
+ assert.equal(accueil.ressources.parCours["SA-02"],undefined);
+ assert.ok(!JSON.stringify(accueil).includes("Support N1"),"ressource de niveau reste cachée tant que les 8 cours ne sont pas autorisés");
+ assert.equal(accueil.progress.passed,0);
+});
+
+test("Soldiers Academy : acquis antérieurs conservés sans nouvelle demande et progression non effacée",async()=>{
+ const {env,sql}=monde();comptes(sql);
+ const ancien={connecte:true,id:"m2",nom:"Ancien apprenant",niveau:0};
+ await api(env,ancien,"GET","/api/soldiers-academy");
+ sql.prepare("INSERT INTO academy_2027_submissions(id,compte,cours,type,reponses,statut,score,date_soumission) VALUES(?,?,?,'quiz','[]','note',90,1)").run("ancien_quiz","m2","SA-01");
+ let r=await api(env,ancien,"GET","/api/soldiers-academy");
+ assert.equal(r.json.courses[0].acces.statut,"approuve");
+ assert.equal(r.json.courses[0].acces.anterieurementCommence,true);
+ assert.equal((await api(env,ancien,"GET","/api/soldiers-academy/cours/SA-01")).statut,200);
+ assert.equal(r.json.progress.passed,0,"une ancienne note ne dispense pas des critères d'évaluation");
+ assert.equal(r.json.certificates.length,0);
+});
+
+test("Studio Academy : file de validation commune aux 34 cours avec refus et commentaires sécurisés",()=>{
+ const html=readFileSync("public/vitrine/academy-enseignants.html","utf8");
+ const js=readFileSync("public/vitrine/sde-academy-enseignants.js","utf8");
+ const espace=readFileSync("public/vitrine/sde-academy-parcours.js","utf8");
+ const route=readFileSync("src/sde-academy-api.js","utf8");
+ for(const id of ["tab-validations","pane-validations","loveDemandes","loveValiderActualiser","loveValidationBadge"])assert.ok(html.includes('id="'+id+'"'));
+ assert.match(js,/\/acces\/gestion/);
+ assert.match(js,/\/love-school\/acces\/gestion/);
+ assert.match(js,/data-acces-source/);
+ assert.match(js,/\/acces\/decision/);
+ assert.match(js,/\/love-school\/acces\/decision/);
+ assert.match(espace,/avantCoursAcademy/);
+ assert.match(espace,/data-sa-demander/);
+ assert.match(espace,/data-love-demander/);
+ assert.match(espace,/Objectifs du cours/);
+ assert.match(espace,/Restrictions et règles de protection/);
+ assert.match(route,/academyAutorise\(env,account,c/);
 });

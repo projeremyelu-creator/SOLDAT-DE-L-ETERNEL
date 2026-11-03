@@ -57,10 +57,51 @@ function equipe(){
   const f=G.formateurs||[];
   $("listeEquipe").innerHTML=f.length?f.map(x=>'<article class="review"><div class="eyebrow">'+esc(x.fonction)+'</div><h3>'+esc(x.nom)+'</h3><p class="muted">'+esc(x.email)+' · '+esc(x.portees.length)+' cours/portées confiés</p><details><summary>Voir les cours confiés</summary><p>'+x.portees.map(p=>esc(libellePortee(p))).join("<br>")+'</p></details><button type="button" class="button" data-retirer="'+esc(x.compte)+'">Retirer la désignation</button></article>').join(""):'<div class="vide">Aucun enseignant ni coach désigné pour l’instant.</div>';
 }
+
+/* Un seul centre de validation : 24 cours officiels + 10 modules Love School. */
+async function chargerValidations(){
+ const portees=G?.autorisees||[],admin=G?.fonction==="administrateur";
+ const besoinSA=admin||portees.some(p=>/^SA-\d{2}$/.test(p)||/^N[123]$/.test(p));
+ const besoinLove=admin||portees.some(p=>/^LS-(?:0[1-9]|10)$/.test(p));
+ const collect=[];
+ if(besoinSA)collect.push(appel("/acces/gestion").then(data=>({source:"academy",...data})));
+ if(besoinLove)collect.push(appel("/love-school/acces/gestion").then(data=>({source:"love",...data})));
+ if(!collect.length){$("loveDemandes").innerHTML='<div class="vide">Aucun cours confié à cette équipe.</div>';return;}
+ const resultat=await Promise.allSettled(collect),data=resultat.filter(x=>x.status==="fulfilled").map(x=>x.value);
+ const erreurs=resultat.filter(x=>x.status==="rejected").map(x=>x.reason?.message||"Erreur de récupération");
+ if(!data.length)throw Error(erreurs.join(" · "));
+ const demandes=data.flatMap(g=>(g.demandes||[]).map(d=>({...d,source:g.source}))).sort((a,b)=>(a.statut==="en_attente"?0:1)-(b.statut==="en_attente"?0:1)||b.demandeLe-a.demandeLe);
+ const titres=Object.fromEntries(data.flatMap(x=>x.cours||[]).map(c=>[c.id,c.title]));
+ const enAttente=demandes.filter(d=>d.statut==="en_attente");
+ const badge=$("loveValidationBadge");badge.hidden=!enAttente.length;badge.textContent=String(enAttente.length);
+ $("loveDemandes").innerHTML=demandes.length?demandes.map(d=>{
+  const etat=d.statut==="en_attente"?"À examiner":d.statut==="approuve"?"Cours ouvert":d.statut==="refuse"?"Demande refusée":"Accès retiré";
+  const prefix='data-acces-source="'+esc(d.source)+'" data-compte="'+esc(d.compte)+'" data-cours="'+esc(d.cours)+'"';
+  const actions=d.statut==="en_attente"?
+    '<div class="actions"><button type="button" class="button primary" data-love-decision="approuve" '+prefix+'>Valider et ouvrir le cours</button>'+
+    '<button type="button" class="button" data-love-decision="refuse" '+prefix+'>Refuser la demande</button></div>':
+    d.statut==="approuve"?'<div class="actions"><button type="button" class="button" data-love-decision="revoque" '+prefix+'>Retirer l’accès au cours</button></div>':'';
+  return '<article class="review love-decision-card"><div class="eyebrow">'+(d.source==="academy"?"Soldiers Academy · ":"Love School · ")+esc(d.cours)+' · '+esc(etat)+'</div>'+
+   '<h3>'+esc(titres[d.cours]||d.cours)+'</h3>'+
+   '<p><strong>Apprenant :</strong> '+esc(d.nom)+' <span class="muted">'+esc(d.email)+'</span></p>'+
+   '<p class="muted">Demande : '+esc(UI.dateFr(d.demandeLe))+(d.decisionLe?' · Décision : '+esc(UI.dateFr(d.decisionLe)):'')+'</p>'+
+   (d.commentaire?'<p class="muted">Commentaire : '+esc(d.commentaire)+'</p>':'')+
+   (actions?'<label class="field">Commentaire facultatif (sans donnée pastorale, médicale ou intime)<textarea maxlength="400" rows="2" data-love-note placeholder="Décision ou consigne pédagogique"></textarea></label>'+actions:'')+'</article>';
+ }).join(""):'<div class="vide">Aucune demande d’accès pour les cours qui vous ont été confiés.</div>';
+ $("loveValidationStatus").textContent=enAttente.length+" demande(s) en attente sur "+demandes.length+" dossier(s)."+
+  (erreurs.length?" Une source n'a pas été chargée : "+erreurs.join(" · "):"");
+}
+function rendreValidationVisible(){
+ const autorise=G?.fonction==="administrateur"||(G?.autorisees||[]).some(p=>/^(?:LS-(?:0[1-9]|10)|SA-\d{2}|N[123])$/.test(p));
+ $("tab-validations").hidden=!autorise;
+ if(!autorise)return;
+ chargerValidations().catch(e=>dire(e.message||"Impossible de charger les demandes.","loveValidationStatus"));
+}
+
 async function charger(){
   G=await appel("/ressources/gestion");
   $("champPortee").innerHTML=optionsPortees();
-  typeUI();metriques();liste();equipe();
+  typeUI();metriques();liste();equipe();rendreValidationVisible();
   $("studio").hidden=false;
 }
 /* ── Téléversement par morceaux dans la médiathèque (visibilité : comptes connectés) ── */
@@ -124,6 +165,21 @@ $("formRessource").addEventListener("submit",async e=>{
   }catch(err){dire(err.message)}finally{btn.disabled=false}
 });
 document.addEventListener("click",async e=>{
+  const decision=e.target.closest("[data-love-decision]");
+  if(decision){
+    decision.disabled=true;
+    const note=decision.closest(".love-decision-card")?.querySelector("[data-love-note]")?.value||"";
+    try{
+      const route=decision.dataset.accesSource==="academy"?"/acces/decision":"/love-school/acces/decision";
+      const d=await appel(route,"PATCH",{
+        compte:decision.dataset.compte,cours:decision.dataset.cours,decision:decision.dataset.loveDecision,commentaire:note
+      });
+      dire(d.message||"Décision enregistrée.","loveValidationStatus");
+      await chargerValidations();
+    }catch(err){dire(err.message||"Décision refusée.","loveValidationStatus")}
+    finally{if(decision.isConnected)decision.disabled=false}
+    return;
+  }
   const b=e.target.closest("[data-modifier],[data-publier],[data-supprimer],[data-retirer]");if(!b)return;
   try{
     if(b.dataset.modifier){
@@ -149,6 +205,7 @@ document.addEventListener("click",async e=>{
     }
   }catch(err){dire(err.message)}
 });
+$("loveValiderActualiser").addEventListener("click",()=>chargerValidations().catch(e=>dire(e.message,"loveValidationStatus")));
 $("toutesPortees").addEventListener("change",e=>{for(const c of document.querySelectorAll('#choixPortees input'))c.checked=e.target.checked});
 $("formFormateur").addEventListener("submit",async e=>{
   e.preventDefault();const f=e.currentTarget;
