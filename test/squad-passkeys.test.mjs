@@ -382,3 +382,32 @@ test('Comptes des membres : pages, route, redirection et pas de mot de passe com
   assert.ok(h.includes('sde-premium-public.css')||h.includes('sde-fusion.css'));
  }
 });
+
+test('Comptes des membres : option « sans e-mail », connexion par matricule seulement',async()=>{
+ const w=monde();
+ const admin=w.compte('adm','Admin SDE','admin');
+ const fiche=(id,d)=>w.sql.prepare("INSERT INTO docs(path,parent,id,data,version,maj) VALUES(?,?,?,?,1,?)").run('membres/'+id,'membres',id,JSON.stringify(d),Date.now());
+ fiche('g1',{nom:'DONGO',prenoms:'Fian Simon',email:'',actif:true});
+ fiche('g2',{nom:'MORIBA',prenoms:'Danielle',email:'pas-un-mail',matricule:'002.SDE.CIV',actif:true});
+ fiche('g3',{nom:'AVEC',prenoms:'Mail',email:'avec@exemple.test',actif:true});
+ const creer=(simuler,sansEmail)=>w.appel('/api/comptes/membres',{methode:'POST',jeton:admin,corps:{simuler,sansEmail}});
+ const sans=await creer(true,false);
+ assert.equal(sans.json.acreer,1,'par défaut, les fiches sans e-mail restent ignorées');
+ const ap=await creer(true,true);
+ assert.equal(ap.json.acreer,3);assert.equal(ap.json.sansEmail,2);
+ assert.ok(ap.json.apercu.every(a=>!a.email.includes('invalid')),'l’identifiant interne n’est jamais montré');
+ const r=await creer(false,true);
+ assert.equal(r.json.crees.length,3);
+ const dongo=r.json.crees.find(c=>c.nom.includes('DONGO')),moriba=r.json.crees.find(c=>c.nom.includes('MORIBA'));
+ assert.equal(dongo.email,'');assert.equal(moriba.matricule,'002.SDE.CIV');
+ const interne=w.sql.prepare('SELECT email,membreId FROM comptes WHERE matricule=?').get('002.SDE.CIV');
+ assert.equal(interne.email,'002.sde.civ@membre.sde.invalid');assert.equal(interne.membreId,'g2');
+ const fg=JSON.parse(w.sql.prepare("SELECT data FROM docs WHERE path='membres/g2'").get().data);
+ assert.equal(fg.email,'pas-un-mail','la fiche garde sa valeur, sans adresse fictive');assert.ok(fg.compteId);
+ const co=await w.appel('/api/connexion',{methode:'POST',corps:{email:dongo.matricule,motDePasse:dongo.motDePasse}});
+ assert.equal(co.statut,200);assert.equal(co.json.changerMotDePasse,true);
+ const cookie=co.entetes.get('set-cookie').match(/sde_s=([^;]+)/)[1];
+ const moi=(await w.appel('/api/moi',{jeton:cookie})).json;
+ assert.equal(moi.connecte,true);assert.equal(moi.email,'','aucune adresse fictive affichée');assert.equal(moi.mdpTemporaire,true);
+ assert.equal((await creer(false,true)).json.crees.length,0,'rien à recréer');
+});
