@@ -159,3 +159,41 @@ test('Recette Academy : studio et publication des supports, version effective du
  const ref=await recetteProduction({fetcher:ancien.fetcher,domaines:[DOMAINES[0]],controles:CONTROLES.filter(c=>c.type==='academy-script'),essais:1});
  assert.equal(ref.ok,false,'Un ancien script Academy en production ne doit pas être validé.');
 });
+
+
+test('RECETTE PRODUCTION TEMPORAIRE : les deux portails servent la nouvelle Academy 24+10', {timeout:240000},async()=>{
+ const {recetteAcademyProduction}=await import('../scripts/recette-academy-production.mjs');
+ const bilan=await recetteAcademyProduction({essais:3,timeoutMs:12000,rapport:r=>{
+  console.log('ACADEMY PORTAIL PROD',r.ok?'OK':'ÉCHEC',r.domaine+r.path,r.erreur||'');
+ }});
+ console.log('ACADEMY PORTAIL BILAN',bilan.reussis+'/'+bilan.total);
+ assert.equal(bilan.ok,true,JSON.stringify(bilan.resultats?.filter(x=>!x.ok)));
+ assert.equal(bilan.total,18);
+ const domaines=['https://mouvement-sde.org','https://app.mouvement-sde.org'];
+ const contenus=['/vitrine/portail-plus.js?v=20261104-academy-hub','/vitrine/portail-plus.css?v=20261104-academy-hub'];
+ for(const domaine of domaines){
+  let dernier='';
+  for(let tentative=0;tentative<8;tentative++){
+   try{
+    const reps=await Promise.all(contenus.map(path=>fetch(domaine+path,{
+     method:'GET',redirect:'manual',signal:AbortSignal.timeout(15000),headers:{'cache-control':'no-cache'}
+    })));
+    const texts=await Promise.all(reps.map(r=>r.text()));
+    assert.ok(reps.every(r=>r.status===200),domaine+' ressources HTTP : '+reps.map(r=>r.status));
+    for(const marque of [
+     "api('/api/soldiers-academy')","api('/api/soldiers-academy/love-school')",
+     "Aucune formation liée à votre fiche.","/mon-espace/academy#love-school"
+    ]){
+     assert.ok(marque!=="Aucune formation liée à votre fiche."?!texts[0].includes(marque):texts[0].includes(marque),domaine+' contenu '+marque);
+    }
+    assert.ok(texts[0].includes('Autres formations et inscriptions historiques'));
+    assert.ok(texts[1].includes('.sde-plus-academy-grid'));
+    assert.ok(texts[1].includes('.sde-academy-action'));
+    console.log('ACADEMY HUB DEPLOYE',domaine);
+    dernier='';
+    break;
+   }catch(e){dernier=e.message;console.log('ACADEMY HUB CONTROLE',domaine,'essai',tentative+1,dernier);if(tentative<7)await new Promise(r=>setTimeout(r,3000));}
+  }
+  assert.equal(dernier,'',domaine+' ancienne version en production : '+dernier);
+ }
+});
