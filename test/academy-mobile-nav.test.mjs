@@ -6,7 +6,7 @@ test("Android et PWA : le bouton Academy ouvre le portail pédagogique actuel vi
  const app=readFileSync("public/index.html","utf8");
  const css=readFileSync("public/app.css","utf8");
  assert.match(app,/if \(o\.id === "academie"\) return \`<a class="\$\{classe\} nav-academy-direct" href="\/mon-espace\/academy"/,"l'onglet du menu est un lien réel");
- assert.match(app,/data-vue === "academie"\) \{ window\.location\.assign\("\/mon-espace\/academy"\); return;/,"les raccourcis de modules évitent l'ancienne vue");
+ assert.match(app,/t\.dataset\.vue === "academie"\) \{ window\.location\.assign\("\/mon-espace\/academy"\); return;/,"les raccourcis de modules évitent l'ancienne vue");
  assert.match(app,/o\.id === "academie" \? accesRegistre\(\) \|\| S\.user !== null/,"le lien n'est pas réservé aux fiches de membres déjà attribuées");
  assert.match(app,/24 cours · 10 modules Love School · accès sur validation/,"les anciens compteurs de formations sont retirés du menu");
  assert.match(css,/\.nav-btn\.nav-academy-direct \{ text-decoration: none/,"l'onglet de lien conserve le style de la barre mobile");
