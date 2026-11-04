@@ -4,8 +4,8 @@
  */
 import {SOLDIERS_ACADEMY_2027 as PROGRAMME} from "./soldiers-academy-2027.js";
 import {LOVE_SCHOOL} from "./love-school.js";
-import {academyAutorise} from "./soldiers-academy-acces.js";
-import {loveAutorise} from "./love-school-acces.js";
+import {academyAutorise,initAcademyAcces} from "./soldiers-academy-acces.js";
+import {loveAutorise,initLoveAcces} from "./love-school-acces.js";
 import {initRessources,porteesAutorisees} from "./academy-ressources.js";
 import {notifierCompte} from "./academy-extras.js";
 
@@ -74,7 +74,7 @@ export async function academyDynamiqueApi(req,env,u,path,{state}={}){
  if(!path.startsWith(base))return null;
  if(!u?.connecte||!u.id)return fail("Connexion requise.",401);
  if(!env.DB)return fail("Base de données indisponible.",503);
- await initAcademyDynamique(env);
+ await Promise.all([initAcademyDynamique(env),initAcademyAcces(env),initLoveAcces(env)]);
  const account=String(u.id),now=Date.now(),admin=Number(u.niveau)>=2;
  const sous=path.slice(base.length);
  if(sous==="/cours"&&req.method==="GET"){
