@@ -136,6 +136,9 @@ svg { flex: none; }
 .nav-btn .ico { width: 24px; height: 24px; }
 .nav-btn.on { color: var(--ink); background: var(--surface-2); }
 .nav-btn.on .ico { color: var(--gold-mark); }
+/* L’onglet Academy est un vrai lien : navigation fiable même sur Android/PWA. */
+.nav-btn.nav-academy-direct { text-decoration: none; -webkit-tap-highlight-color: transparent; }
+.nav-btn.nav-academy-direct:focus-visible { outline: 2px solid var(--gold-mark); outline-offset: 3px; }
 .nav-btn .badge { position: relative; }
 .nav-btn .notif-dot { position: absolute; top: 0; right: -4px; width: 8px; height: 8px; border-radius: 50%; background: var(--danger, #d33); border: 2px solid var(--surface); pointer-events: none; }
 @media (min-width: 1000px) { .nav-btn .notif-dot { top: 12px; right: auto; left: 28px; } }
