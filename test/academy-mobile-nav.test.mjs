@@ -5,8 +5,8 @@ import {readFileSync} from "node:fs";
 test("Android et PWA : le bouton Academy ouvre le portail pédagogique actuel via un lien direct",()=>{
  const app=readFileSync("public/index.html","utf8");
  const css=readFileSync("public/app.css","utf8");
- assert.match(app,/if \(o\.id === "academie"\) return \`<a class="\$\{classe\} nav-academy-direct" href="\/mon-espace\/academy"/,"l'onglet du menu est un lien réel");
- assert.match(app,/data-vue === "academie"\) \{ window\.location\.assign\("\/mon-espace\/academy"\); return;/,"les raccourcis de modules évitent l'ancienne vue");
+ assert.ok(app.includes('if (o.id === "academie") return `<a class="${classe} nav-academy-direct" href="${peutAdmin()?"/administration/academy":"/mon-espace/academy"}"'),"la navigation mobile donne un lien réel et adapté au rôle");
+ assert.ok(app.includes('data-vue === "academie") { window.location.assign(peutAdmin() ? "/administration/academy" : "/mon-espace/academy"); return;'),"les autres raccourcis ouvrent le portail selon le rôle");
  assert.match(app,/o\.id === "academie" \? accesRegistre\(\) \|\| S\.user !== null/,"le lien n'est pas réservé aux fiches de membres déjà attribuées");
  assert.match(app,/24 cours · 10 modules Love School · accès sur validation/,"les anciens compteurs de formations sont retirés du menu");
  assert.match(css,/\.nav-btn\.nav-academy-direct \{ text-decoration: none/,"l'onglet de lien conserve le style de la barre mobile");
@@ -18,6 +18,8 @@ test("La route sécurisée Soldiers Academy existe et ne sert pas le contenu san
  const current=readFileSync("public/vitrine/sde-academy-parcours.html","utf8");
  const actual=readFileSync("public/vitrine/sde-academy-parcours.js","utf8");
  assert.ok(worker.includes('"/mon-espace/academy"'));
+ assert.ok(worker.includes('"/administration/academy"'));
+ assert.ok(worker.includes('u.niveau < 1'),"le poste admin refuse les comptes non responsables");
  assert.ok(worker.includes('const fichierAcademy = p.endsWith("/academy")?"/vitrine/sde-academy-parcours.html"'));
  assert.ok(worker.includes('if (!u.connecte)'));
  assert.match(worker,/cache-control","private, no-store"/);
