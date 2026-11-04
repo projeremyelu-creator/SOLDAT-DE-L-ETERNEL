@@ -8,6 +8,7 @@ import {initAcademyAcces,etatsAcademy,academyStatut,academyMeta,academyAutorise,
 import {CORRECTIFS,BAREME_EXERCICE,BAREME_EXAMEN} from "./academy-correctifs.js";
 import {SPECIALISATIONS} from "./academy-specialisations.js";
 import {initRessources,ressourcesApi,ressourcesApprenant,fonctionFormateur} from "./academy-ressources.js";
+import {academyDynamiqueApi} from "./academy-dynamique.js";
 import {initExtras,notifierCompte,notifierDirection,avisNonLus,marquerAvisLus,cohortesVue,cohortesGestion,cohortesApi,ecolesApi,ecolesDuCompte,ecolesGestion,verifierAttestation as verifierAttestationPublique} from "./academy-extras.js";
 export const verifierAttestation=verifierAttestationPublique;
 const COURSES=PROGRAMME.courses;
@@ -115,6 +116,10 @@ export async function soldiersAcademyApi(req,env,u,path){
   const admin=Number(u.niveau)>=2;
   const account=String(u.id);
   await init(env);
+  if(path.startsWith("/api/soldiers-academy/dynamique")){
+    const estEtudiant=/^\/api\/soldiers-academy\/dynamique\/(?:cours|tableau|lecon|quiz\/repondre|question)$/.test(path);
+    return academyDynamiqueApi(req,env,u,path,{state:estEtudiant?await state(env,account):null});
+  }
   if(path.startsWith("/api/soldiers-academy/acces")){
     const d=path.endsWith("/demander")?await state(env,account):null;
     return academyAccesApi(req,env,u,path,{completedLevel:d?.completedLevel,overview:d?.overview});
