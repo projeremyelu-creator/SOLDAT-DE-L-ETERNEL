@@ -34,7 +34,7 @@
   const rows=donnees?.lecons||[];return rows.filter(x=>x.terminee).length;
  }
  function refreshLecture(){
-  const zone=$("academyDynCourse");if(!zone||!donnees)return;
+  const zone=actif.startsWith("LS-")?$("academyDynLove"):$("academyDynCourse");if(!zone||!donnees)return;
   const n=leconsTerminees(),total=donnees.totalLecons||0;
   const p=total?Math.round(n*100/total):0;
   const compteur=zone.querySelector("[data-dyn-course-progress]");
@@ -80,8 +80,7 @@
    '<form data-dyn-question="'+esc(id)+'"><label class="field">Question pédagogique<textarea name="question" required minlength="10" maxlength="600" rows="3" placeholder="Que souhaitez-vous approfondir dans cette leçon ?"></textarea></label><button class="button primary" type="submit">Poser ma question</button><p class="status" role="status" aria-live="polite"></p></form>'+
    '<div class="academy-dyn-stack">'+renderQuestions(donnees.questions)+'</div></section>';
   if(id.startsWith("LS-"))zone.insertAdjacentHTML("beforeend",enPlus);
-  else $("academyDynActivities")?.replaceChildren(); // parent réservé aux activités du cours
-  if(!id.startsWith("LS-")){$("academyDynActivities").innerHTML=enPlus}
+  else if($("academyDynActivities"))$("academyDynActivities").innerHTML=enPlus;
  }
  async function chargerCours(id){
   if(id.startsWith("LS-")&&["LS-09","LS-10"].includes(id))return;
