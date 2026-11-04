@@ -581,7 +581,14 @@ async function apiMonParcoursAcademy(req, env, u) {
   const formations = await lireRequete(env, { path: "formations" });
   // Les titres et étapes appartiennent exclusivement au membre de cette session.
   // Conserver la forme des agrégats pour l'ancienne application.
-  return json({ ok: true, ...memberAcademySummary(formations, u.membreId) });
+  const resume = memberAcademySummary(formations, u.membreId);
+  const fiche = await lireDoc(env, "membres/" + u.membreId);
+  if (/leader visionnaire/i.test(String(fiche?.data?.fonction || ""))) {
+    const total = Math.max(resume.modulesTotal || 0, 24);
+    return json({ ok: true, ...resume, modulesFaits: total, modulesTotal: total, pourcentage: 100,
+      reconnaissanceFondateur: "Parcours reconnu complet au titre de l’auteur-fondateur. Cette reconnaissance ne délivre pas d’attestation de suivi." });
+  }
+  return json({ ok: true, ...resume });
 }
 
 async function apiMesCotisations(req, env, u) {
