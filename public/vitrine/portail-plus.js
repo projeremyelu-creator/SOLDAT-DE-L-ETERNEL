@@ -56,8 +56,9 @@
  }
  function renderMemberAcademy(data){
   const academy=box('Soldiers Academy');academy.classList.add('member-academy','ref-member-academy');
-  const f=(data.formations||[])[0];if(f){academy.append(node('strong',f.titre),ratio(f.faits,f.total,'modules suivis'));const next=(f.modules||[]).filter(m=>!m.suivi).sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'))[0];if(next)academy.append(note('Prochain cours : '+next.titre+(next.date?' · '+next.date:'')))}else academy.append(note('Aucun parcours renseigné sur votre fiche.'));
-  const open=route('Ouvrir mon parcours','academie');open.classList.add('ref-stretched-link');academy.append(open);panel.append(academy);
+  academy.append(note('24 cours officiels et 10 modules Love School accessibles depuis votre compte, sous validation pédagogique individuelle.'));
+  const f=(data.formations||[])[0];if(f){academy.append(note('Formation historique liée : '+f.titre));if(f.total)academy.append(ratio(f.faits,f.total,'modules suivis'))}
+  const open=lienAcademy('/mon-espace/academy','Accéder à mon Academy');open.classList.add('ref-stretched-link');academy.append(open);panel.append(academy);
  }
  function ratio(done,total,label){
   const block=node('div',undefined,'dashboard-progress');
@@ -158,12 +159,68 @@
   form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity())return;send.disabled=true;try{await api('/api/temoignages-personnels','POST',{texte:textarea.value,consentement:check.checked});form.reset();feedback('Votre témoignage a été transmis pour validation.');await showPrevious()}catch(err){feedback(err.message,true)}finally{send.disabled=false}});
   try{await showPrevious()}catch(e){if(serial===token)previous.append(note(e.message))}
  }
- function renderAcademy(data){
-  heading('Mes formations — Soldiers Academy');panel.append(note('Retrouvez vos formations et les modules suivis. La progression est renseignée par les responsables de formation ; les attestations restent soumises à leur validation.'));
-  const grid=node('div',undefined,'sde-plus-grid');
-  if(!(data.formations||[]).length)panel.append(note('Aucune formation liée à votre fiche. Contactez votre responsable pour connaître les prochaines inscriptions.'));
-  for(const f of data.formations||[]){const c=box(f.titre);c.append(note(f.statut||'Inscrit'));if(f.total){const p=node('progress');p.max=f.total;p.value=f.faits;p.setAttribute('aria-label',f.faits+' modules suivis sur '+f.total);c.append(p,note(f.faits+' modules suivis sur '+f.total))}c.append(list(f.modules||[],'Le programme détaillé sera communiqué par votre formateur.',(li,m)=>li.append(node('strong',m.titre),note((m.suivi?'Suivi':'À suivre')+(m.date?' · '+m.date:'')))));grid.append(c)}
-  panel.append(grid,route('Mon parcours de lecture et de prière','parcours'));
+ function lienAcademy(href,libelle){
+  const a=node('a',libelle,'sde-plus-button sde-academy-action');a.href=href;return a;
+ }
+ function renderAcademy(officiel,love,historique,{erreurOfficiel='',erreurLove=''}={}){
+  heading('Mes formations — Soldiers Academy');
+  panel.append(note('Un seul espace pour vos cours, votre progression et vos demandes de validation. Vous pouvez consulter les objectifs, conditions et restrictions avant l’ouverture de chaque cours.'));
+  const cards=node('div',undefined,'sde-plus-academy-grid');
+  const tronc=box('Soldiers Academy · Parcours officiel');tronc.classList.add('sde-academy-official-card');
+  tronc.append(node('p','24 cours · 3 niveaux · 192 heures','sde-academy-caption'));
+  if(Array.isArray(officiel?.courses)&&officiel.courses.length===24){
+   const avancement=Number.isInteger(officiel.progress?.passed)?officiel.progress.passed:officiel.courses.filter(c=>c.passed).length;
+   tronc.append(ratio(avancement,24,'cours validés'));
+   const enAttente=officiel.courses.filter(c=>c.acces?.statut==='en_attente').length;
+   const valides=officiel.courses.filter(c=>c.acces?.autorise).length;
+   tronc.append(note(valides+' cours autorisés · '+enAttente+' demande'+(enAttente>1?'s':'')+' en attente'));
+   const etapes=node('ul',undefined,'sde-academy-levels');
+   for(const [i,nom] of ['Fondations bibliques','Équipement spirituel','Leadership et commandement'].entries()){
+    const cours=officiel.courses.filter(c=>c.level===i+1);
+    const valid= cours.filter(c=>c.passed).length;
+    etapes.append(node('li','Niveau '+['I','II','III'][i]+' — '+nom+' : '+valid+' / '+cours.length+' cours validés'));
+   }
+   tronc.append(etapes);
+  }else tronc.append(note(erreurOfficiel?
+    'Le suivi pédagogique est momentanément indisponible. Vous pouvez ouvrir directement le catalogue de cours et renouveler la consultation.':
+    'Le suivi pédagogique de votre compte sera présenté après chargement du catalogue officiel.'));
+  tronc.append(lienAcademy('/mon-espace/academy','Ouvrir les 24 cours et leurs validations'));
+  cards.append(tronc);
+  const loveCarte=box('Love School · Parcours relationnels');loveCarte.classList.add('sde-academy-love-card');
+  loveCarte.append(node('p','10 cours bonus · Singles · Fiancés · Mariés','sde-academy-caption'));
+  const courses=love?.ecole?.courses;
+  if(Array.isArray(courses)&&courses.length){
+   const autorises=courses.filter(c=>c.acces?.autorise).length;
+   const pending=courses.filter(c=>c.acces?.statut==='en_attente').length;
+   loveCarte.append(note(autorises+' cours autorisés · '+pending+' demande'+(pending>1?'s':'')+' en attente de validation.'));
+  }else loveCarte.append(note(erreurLove?'Le statut de vos cours bonus ne peut pas être actualisé ici pour le moment.':'Choisissez votre parcours et demandez l’ouverture des modules qui vous intéressent.'));
+  loveCarte.append(note('Les modules d’intimité adulte restent soumis à une déclaration de majorité et à une approbation spécifique.'));
+  loveCarte.append(lienAcademy('/mon-espace/academy#love-school','Découvrir Love School et les 10 modules'));
+  cards.append(loveCarte);
+  panel.append(cards);
+  const marche=box('Comment accéder à un cours ?');marche.classList.add('sde-academy-steps-card');
+  const steps=node('ol',undefined,'sde-academy-steps');
+  for(const etape of [
+    'Ouvrir la fiche du cours pour lire ses objectifs, conditions et restrictions.',
+    'Cliquer sur « Demander la validation du cours ».',
+    'Attendre la décision d’un coach, d’un enseignant habilité ou de l’administration.',
+    'Après approbation, accéder aux leçons, supports, quiz et évaluations du cours autorisé.'
+  ])steps.append(node('li',etape));
+  marche.append(steps,note('Un cours validé ne déverrouille pas automatiquement les autres. Les acquis antérieurs restent conservés.'));
+  panel.append(marche);
+  const anciennes=Array.isArray(historique?.formations)?historique.formations:[];
+  if(anciennes.length){
+   const listeHistorique=box('Autres formations et inscriptions historiques');
+   listeHistorique.append(note('Ces formations ont été enregistrées dans l’ancien suivi de la fiche membre et sont distinctes du cursus officiel 2027.'));
+   for(const f of anciennes){
+    const section=node('div',undefined,'sde-academy-legacy-item');
+    section.append(node('strong',f.titre||'Formation SDE'),note(f.statut||'Inscrit'));
+    if(Number(f.total)>0)section.append(ratio(f.faits,f.total,'modules suivis'));
+    listeHistorique.append(section);
+   }
+   panel.append(listeHistorique);
+  }
+  panel.append(route('Mon parcours de lecture et de prière','parcours'));
  }
  function renderPreferences(data){
   heading('Mes rappels');panel.append(note('Choisissez les rappels affichés dans votre accueil. Les choix sont enregistrés dans votre compte et retrouvés sur vos appareils.'));
@@ -194,7 +251,20 @@
    else if(module==='engagements'){data=await api('/api/portail-resume');if(serial!==token)return;panel.replaceChildren();renderEngagements(data)}
    else if(module==='contributions'){if(!portal.compte.membreId){panel.replaceChildren();heading('Dons & Dîmes');panel.append(note('Contactez le secrétariat pour relier votre compte à votre fiche membre.'),route('Retour à mon accueil','synthese'))}else{data=await api('/api/mes-cotisations');if(serial!==token)return;panel.replaceChildren();renderContributions(data)}}
    else if(module==='parcours'){data=await api('/api/mon-parcours-spirituel');if(serial!==token)return;panel.replaceChildren();await renderCourse(data,token)}
-   else if(module==='academie'){data=await api('/api/portail-resume');if(serial!==token)return;panel.replaceChildren();renderAcademy(data)}
+   else if(module==='academie'){
+    // La liste historique « formations » appartient à un ancien module indépendant.
+    // Seule l'API Academy 2027 fournit les 24 cours, les accès individuels et les validations.
+    const dataSources=await Promise.allSettled([
+      api('/api/soldiers-academy'),
+      api('/api/soldiers-academy/love-school'),
+      summary?Promise.resolve(summary):api('/api/portail-resume')
+    ]);
+    if(serial!==token)return;
+    const result=i=>dataSources[i].status==='fulfilled'?dataSources[i].value:null;
+    const erreur=i=>dataSources[i].status==='rejected'?String(dataSources[i].reason?.message||'Service indisponible'):'';
+    panel.replaceChildren();
+    renderAcademy(result(0),result(1),result(2),{erreurOfficiel:erreur(0),erreurLove:erreur(1)});
+   }
    else if(module==='preferences'){data=await api('/api/mes-preferences');if(serial!==token)return;panel.replaceChildren();renderPreferences(data)}
    else {panel.replaceChildren();await renderManagement(token)}
   }catch(e){if(serial===token){const retry=button('Réessayer',()=>open(module));retry.dataset.plusRetry='';panel.replaceChildren(node('h2','Connexion au service indisponible'),note(e.message),retry);const a=node('a','Me reconnecter');a.href='/connexion?retour='+encodeURIComponent(location.pathname);panel.append(a)}}
