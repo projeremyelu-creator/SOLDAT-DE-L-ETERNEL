@@ -3,6 +3,11 @@
  const qs=(s)=>document.querySelector(s);
  const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const status=(el,txt,err=false)=>{if(!el)return;el.textContent=txt;el.dataset.error=String(err);};
+ // Le site est intégralement publié en français. Les langues incomplètes ne
+ // sont plus proposées tant que toutes les sections ne sont pas traduites.
+ document.querySelectorAll('[data-lang]:not([data-lang="fr"])').forEach(button=>button.remove());
+ document.querySelectorAll('[data-lang="fr"]').forEach(button=>{button.setAttribute('aria-pressed','true');button.setAttribute('aria-label','Français — langue du site');});
+ document.documentElement.lang='fr';
  for(const a of document.querySelectorAll('a[href="/contact#confidentialite"]'))a.href="/confidentialite";
  const form=qs('[data-sde-form]');
  if(form)form.addEventListener('submit',async e=>{
@@ -70,7 +75,34 @@
  }
  const search=qs('#hub-search');
  if(search){
-  const links=[['Le Mouvement','/mouvement','Vision histoire leadership'],['Soutenir le mouvement','/soutenir','Orange MTN Moov dons projets'],['Transparence','/transparence','Dons budget gouvernance'],['Soldiers Academy','/academy','Formation disciple leader prophétique'],['Enseignements','/enseignements','Livres audio ressources'],['Missions humanitaires','/missions-humanitaires','Social veuves orphelins'],['Prière','/priere','Intercession'],['Communauté','/communaute','Prière et intercession'],['Agenda','/calendrier','TPA rencontres'],['Réseau international','/reseau','Pays ville'],['Gouvernance','/gouvernance','Charte confidentialité signalement'],['Newsletter','/newsletter','Courriel']];
+  const links=[
+   ['Le Mouvement','/mouvement','Vision histoire leadership organisation'],
+   ['Programmes SDE','/programmes','IN FIRE TPA ALEPH 12 Holy Talk Holy Day Holy Brunch'],
+   ['Soutenir le mouvement','/soutenir','Orange MTN Moov dons projets'],
+   ['Missions et projets','/missions','Actions projets médiathèque IN FIRE'],
+   ['Transparence','/transparence','Dons budget gouvernance'],
+   ['Soldiers Academy','/academy','Formation disciple leader prophétique'],
+   ['Programme Academy 24 cours','/academy-programme-24','Parcours cours formation 2027'],
+   ['Enseignements','/enseignements','Livres audio ressources médiathèque'],
+   ['Album IN FIRE','/album-infire','Photos galerie 2024 2025 2026'],
+   ['Missions humanitaires','/missions-humanitaires','Social veuves orphelins Tomorrow Hope'],
+   ['Soldiers Voice','/soldiers-voice','Louange adoration musique chorale'],
+   ['Prière','/priere','Intercession intentions chaîne'],
+   ['Communauté','/communaute','Prière et intercession groupes'],
+   ['Agenda','/calendrier','TPA rencontres événements'],
+   ['Réseau international','/reseau','Pays ville groupes locaux'],
+   ['Gouvernance','/gouvernance','Charte confidentialité signalement'],
+   ['Pôle REV','/pole-reveil','Réveil évangélisation pôle 1'],
+   ['Pôle ISH','/pole-social','Impact social humanitaire pôle 2'],
+   ['Pôle LO','/pole-logistique','Logistique organisation pôle 3'],
+   ['Pôle CMR','/pole-medias','Communication médias relations extérieures pôle 4'],
+   ['Pôle FDE','/pole-formation','Formation développement entrepreneuriat pôle 5'],
+   ['Témoignages','/temoignages','Témoigner partager'],
+   ['Soldier’s Award','/soldiers-award','Reconnaissance honneur'],
+   ['Newsletter','/newsletter','Courriel nouvelles alertes'],
+   ['Contact et adhésion','/contact','Rejoindre devenir membre secrétariat'],
+   ['Toutes les rubriques','/rubriques','Répertoire navigation pages publiques']
+  ];
   let docs=[];fetch('/api/ressources-publiques').then(r=>r.ok?r.json():{ressources:[]}).then(d=>{docs=(d.ressources||[]).map(x=>[x.titre,'/enseignements',x.theme+' '+x.description]);render()}).catch(()=>{});
   const results=qs('#hub-search-results');
   const render=()=>{const q=search.value.trim().toLocaleLowerCase('fr').normalize('NFD').replace(/[\u0300-\u036f]/g,'');const data=[...links,...docs].filter(x=>!q||x.join(' ').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)).slice(0,35);
@@ -111,13 +143,13 @@
      section.append(wrap);document.querySelector('.hub-main')?.append(section);
    }).catch(()=>{});
  }
- const translation={
-  en:{'Découvrir et servir ensemble':'Discover and serve together','Soutenir le mouvement':'Support the movement','Réseau SDE':'SDE Network','Gouvernance et confiance':'Governance and trust','Recevoir les nouvelles':'Get updates'},
-  it:{'Découvrir et servir ensemble':'Scoprire e servire insieme','Soutenir le mouvement':'Sostieni il movimento','Réseau SDE':'Rete SDE','Gouvernance et confiance':'Governance e fiducia','Recevoir les nouvelles':'Ricevi notizie'}
- };
- const lang=qs('[data-current-lang]');const setLang=x=>{document.documentElement.lang=x;document.querySelectorAll('[data-i18n]').forEach(e=>{if(!e.dataset.fr)e.dataset.fr=e.textContent;e.textContent=translation[x]?.[e.dataset.fr]||e.dataset.fr});document.querySelectorAll('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lang===x)));try{localStorage.setItem('sde-hub-lang',x)}catch{}};
- document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
- try{setLang(['fr','en','it'].includes(localStorage.getItem('sde-hub-lang'))?localStorage.getItem('sde-hub-lang'):'fr')}catch{setLang('fr')}
+ // Navigation mobile commune aux nouvelles pages éditoriales.
+ if(!document.querySelector('.sde-public-bottom-nav')){
+  const items=[['/','Accueil'],['/contact#rejoindre','Rejoindre'],['/programmes#agenda','Agenda'],['/soutenir','Soutenir'],['/rubriques','Plus']];
+  const nav=document.createElement('nav');nav.className='sde-public-bottom-nav hub-bottom-nav';nav.setAttribute('aria-label','Navigation rapide SDE sur mobile');
+  for(const [href,label] of items){const a=document.createElement('a');a.href=href;a.textContent=label;if(location.pathname===(new URL(href,location.origin)).pathname)a.setAttribute('aria-current','page');nav.append(a)}
+  document.body.append(nav);document.body.classList.add('sde-has-bottom-nav');
+ }
  const th=qs('[data-theme-toggle]');th?.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=next;try{localStorage.setItem('sde-hub-theme',next)}catch{};th.setAttribute('aria-label',next==='light'?'Activer le mode sombre':'Activer le mode clair')});
  try{document.documentElement.dataset.theme=localStorage.getItem('sde-hub-theme')==='light'?'light':'dark'}catch{}
 })();

@@ -1746,6 +1746,7 @@ async function traiter(req, env, ctx) {
         "/verifier-attestation": "/vitrine/verifier-attestation.html",
         "/enseignements": "/vitrine/ressources.html",
         "/missions": "/vitrine/projets.html",
+        "/projets": "/vitrine/projets.html",
         "/priere": "/vitrine/prieres.html",
         "/contact": "/vitrine/rejoindre.html",
         "/temoignages": "/vitrine/temoignages.html",
@@ -1772,6 +1773,7 @@ async function traiter(req, env, ctx) {
         "/calendrier": "/vitrine/calendrier.html",
         "/rechercher": "/vitrine/rechercher.html",
         "/newsletter": "/vitrine/newsletter.html",
+        "/album-infire": "/vitrine/album-infire.html",
         "/rubriques": "/vitrine/plus.html"
       };
       const assetPortail = async (nom) => {
@@ -1801,6 +1803,7 @@ async function traiter(req, env, ctx) {
         throw new Error("Boucle de redirections asset");
       };
       if (req.method === "GET" || req.method === "HEAD") {
+        if (p === "/plus") return Response.redirect(url.origin + "/rubriques", 301);
         if (p === "/" || p === "/index.html") {
           if (appHost) {
             const compte = await utilisateur(req, env);
@@ -1887,7 +1890,10 @@ async function traiter(req, env, ctx) {
       }
       if (p === "/api/public") return apiPublic(env);
       if (p === "/api/impact" && req.method === "GET") return apiImpact(env);
-      if (p === "/api/agenda-public.ics" && req.method === "GET") return apiAgendaPublic(env);
+      if (p === "/api/agenda-public.ics" && (req.method === "GET" || req.method === "HEAD")) {
+        const agenda = await apiAgendaPublic(env);
+        return req.method === "HEAD" ? new Response(null, agenda) : agenda;
+      }
       if (p === "/api/temoignages-publics" && req.method === "GET") return apiTemoignagesPublics(env);
       if (p === "/api/site" && req.method === "GET") return apiSite(env);
       if (p === "/api/visites") return apiVisites(req, env);

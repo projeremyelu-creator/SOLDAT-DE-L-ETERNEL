@@ -29,7 +29,9 @@ test("Pages publiques : canonical et Open Graph", () => {
     assert.match(h, /rel="canonical"/, f);
     assert.match(h, /property="og:title"/, f);
   }
-  assert.match(lire("public/sitemap.xml"), /mouvement-sde\.org\/plus</);
+  const sitemap=lire("public/sitemap.xml");
+  assert.match(sitemap, /mouvement-sde\.org\/rubriques</);
+  assert.doesNotMatch(sitemap, /mouvement-sde\.org\/plus</);
 });
 
 test("Générateur de QR servi par le site, plus par un CDN", () => {

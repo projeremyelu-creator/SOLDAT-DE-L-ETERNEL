@@ -1,6 +1,5 @@
-/* Transition SDE - Mouvement : disparaît sans bloquer l'accès.
-   Première visite : 700 ms minimum ; visites suivantes ou animations réduites :
-   150 ms. En cas de ressource lente : 4 s maximum. */
+/* Transition SDE - Mouvement : décorative et non bloquante.
+   Elle disparaît presque immédiatement, sans attendre toutes les ressources. */
 (() => {
   "use strict";
   const splash = document.getElementById("sde-splash");
@@ -12,7 +11,7 @@
     sessionStorage.setItem("sde-splash-vu", "1");
   } catch (_) {}
   const calme = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
-  const minimum = deja || calme ? 150 : 700;
+  const minimum = deja || calme ? 0 : 180;
   let fermeturePlanifiee = false;
   let gardeFou;
   const fermer = () => {
@@ -23,10 +22,10 @@
     setTimeout(() => {
       splash.classList.add("is-done");
       splash.setAttribute("aria-hidden", "true");
-      setTimeout(() => splash.remove(), calme ? 0 : 600);
+      setTimeout(() => splash.remove(), calme ? 0 : 180);
     }, reste);
   };
-  if (document.readyState === "complete") fermer();
-  else addEventListener("load", fermer, { once: true });
-  gardeFou = setTimeout(fermer, 4000);
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fermer, { once: true });
+  else fermer();
+  gardeFou = setTimeout(fermer, 700);
 })();
