@@ -1,0 +1,62 @@
+/* SOLDIERS ACADEMY · Évolution pédagogique dynamique · 2027
+   Palette SDE : commandement bleu nuit, or et ivoire ; Love School bordeaux. */
+.academy-dyn-dashboard,.academy-dyn-course,.academy-dyn-activities,.academy-dyn-studio{
+ --dyn-gold:#e2bc6a;--dyn-navy:#101d34;--dyn-cream:#fff6e6;--dyn-purple:#453052;
+ color:var(--dyn-cream);box-sizing:border-box
+}
+.academy-dyn-dashboard{margin:1.2rem 0 1.5rem;background:linear-gradient(142deg,#101d34 0%,#1b2d49 50%,#30253e 100%);border:1px solid #af8f61;box-shadow:0 12px 28px #06112240}
+.academy-dyn-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1.2rem;flex-wrap:wrap}
+.academy-dyn-head h2,.academy-dyn-head h3{font-family:inherit;margin:.45rem 0 .6rem;color:#fbe4b8}
+.academy-dyn-head .eyebrow{color:#e7bfa2;letter-spacing:.06em;text-transform:uppercase;font-weight:750}
+.academy-dyn-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.65rem;margin:1.3rem 0}
+.academy-dyn-kpi{display:flex;flex-direction:column;gap:.4rem;min-width:0;padding:1rem .85rem;border-radius:1rem;border:1px solid #a48b7459;background:#0b182cb5}
+.academy-dyn-kpi strong{font-size:clamp(1.4rem,2.5vw,2.05rem);line-height:1.1;color:var(--dyn-gold);font-variant-numeric:tabular-nums}
+.academy-dyn-kpi span{font-size:.78rem;color:#e6e1df;line-height:1.5}
+.academy-dyn-progress{padding:.9rem 1.1rem;border:1px solid #bd9e6259;border-radius:1rem;background:#091a2a8f}
+.academy-dyn-progress>div:first-child{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.65rem}
+.academy-dyn-progress span{color:#e8d5b1;font-size:.83rem}
+.academy-dyn-progress .bar,.academy-dyn-course .bar{background:#0d1629;border:1px solid #bc9c6150;height:12px;border-radius:999px}
+.academy-dyn-progress .bar i,.academy-dyn-course .bar i{background:linear-gradient(90deg,#ac7b38,#eccd87);border-radius:999px;transition:width .35s ease}
+.academy-dyn-dashboard>h3{margin-top:1.2rem;color:#f9dfa9}
+.academy-dyn-stack{display:grid;gap:.65rem}
+.academy-dyn-session,.academy-dyn-message,.academy-dyn-studio-card{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.8rem;padding:1rem;border-radius:.9rem;border:1px solid #d1ac7b52;background:#16223c8c}
+.academy-dyn-session strong,.academy-dyn-studio-card strong{color:#ffe7c0}
+.academy-dyn-session .muted{margin:.35rem 0 0}
+.academy-dyn-course{padding:1rem 1.15rem;margin:1rem 0 1.2rem;border:1px solid #b39d7766;border-radius:1rem;background:linear-gradient(120deg,#111d35,#21233c)}
+.academy-dyn-course [data-dyn-course-progress]{color:#f6dfaf;font-weight:700;margin:0 0 .7rem}
+.academy-dyn-activities,.academy-dyn-interactions{border:1px solid #9b87a560;padding:1rem;margin:1.4rem 0;border-radius:1rem;background:linear-gradient(155deg,#171f38,#231f36)}
+.academy-dyn-interactions h3{margin-top:1.4rem;color:#ebc585}
+.academy-dyn-interactions h3:first-child{margin-top:0}
+.academy-dyn-quiz{border:1px solid #b39a775f;border-radius:1rem;padding:1rem;margin:.75rem 0;background:#111d31}
+.academy-dyn-quiz fieldset{margin:0 0 .7rem;padding:0;border:0;min-width:0}
+.academy-dyn-quiz legend{color:#ffe6bb;font-weight:750;margin-bottom:.8rem;line-height:1.5}
+.academy-dyn-quiz label{display:flex;gap:.7rem;align-items:flex-start;margin:.45rem 0;padding:.5rem;border-radius:.5rem;background:#ffffff0a;color:#f6edf2;cursor:pointer}
+.academy-dyn-quiz input[type=radio]{accent-color:#d4ae67;margin-top:.25rem;flex-shrink:0}
+.academy-dyn-quiz .status{min-height:1.4rem;color:#ffde9c}
+.academy-dyn-lesson-button{font-size:.8rem;margin-top:.6rem}
+.academy-dyn-lesson-button[aria-pressed=true]{background:#2c5341!important;border-color:#92bd9a!important;color:#eefbe9!important}
+.academy-dyn-lesson-status{display:block;margin:.5rem 0;color:#ffcbaf}
+.academy-dyn-message{display:block}
+.academy-dyn-message p{margin:.4rem 0 .6rem}
+.academy-dyn-interactions form .field textarea,.academy-dyn-form .field textarea{max-width:100%}
+.academy-dyn-interactions .status{min-height:1.2rem}
+.academy-dyn-studio-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.3rem 0}
+.academy-dyn-studio h3{color:#f7d896}
+.academy-dyn-form{padding:1.1rem;border:1px solid #a991675d;border-radius:1rem;background:#0d1b32a6;display:flex;flex-direction:column;gap:.7rem;min-width:0}
+.academy-dyn-form h3{margin:.1rem 0 .5rem}
+.academy-dyn-form .field{margin:0}
+.academy-dyn-form .status{min-height:1.5rem;max-width:100%;overflow-wrap:anywhere;color:#ffe0a5}
+.academy-dyn-studio-card{display:block;overflow-wrap:anywhere}
+.academy-dyn-studio-card .actions{display:flex;flex-wrap:wrap}
+.academy-dyn-studio-card details{margin:.65rem 0}
+.academy-dyn-studio-card form{margin-top:.75rem}
+.academy-dyn-studio-card .field{margin-bottom:.6rem}
+.academy-dyn-studio-card .status{min-height:1rem}
+.academy-dyn-studio :focus-visible,.academy-dyn-activities :focus-visible,.academy-dyn-dashboard :focus-visible,.academy-dyn-course :focus-visible{outline:3px solid #f1c56d;outline-offset:3px}
+#dynPilotage{margin-top:1.5rem;padding:1rem;border-radius:1rem;border:1px solid #bcaa8066;background:#101e35}
+#dynPilotageMetrics{grid-template-columns:repeat(auto-fit,minmax(125px,1fr))}
+#academyDynLove{border-color:#bd86a0;background:linear-gradient(130deg,#41233e,#221d35)}
+#academyDynLove h3{color:#ffe3df}
+@media(max-width:760px){.academy-dyn-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.academy-dyn-studio-grid{grid-template-columns:1fr}.academy-dyn-session{align-items:flex-start}.academy-dyn-head .button{width:100%;text-align:center}}
+@media(max-width:360px){.academy-dyn-metrics{grid-template-columns:1fr 1fr;gap:.4rem}.academy-dyn-kpi{padding:.7rem}.academy-dyn-kpi strong{font-size:1.25rem}.academy-dyn-kpi span{font-size:.7rem}}
+@media(prefers-reduced-motion:reduce){.academy-dyn-progress .bar i,.academy-dyn-course .bar i{transition:none!important}.academy-dyn-dashboard *,.academy-dyn-studio *{animation:none!important}}
