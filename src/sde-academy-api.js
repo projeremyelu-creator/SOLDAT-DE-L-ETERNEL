@@ -7,7 +7,7 @@ import {initLoveAcces,loveAccesApi,loveEtats,loveAutorise,loveMeta} from "./love
 import {initAcademyAcces,etatsAcademy,academyStatut,academyMeta,academyAutorise,academyAccesApi} from "./soldiers-academy-acces.js";
 import {CORRECTIFS,BAREME_EXERCICE,BAREME_EXAMEN} from "./academy-correctifs.js";
 import {SPECIALISATIONS} from "./academy-specialisations.js";
-import {initRessources,ressourcesApi,ressourcesApprenant,fonctionFormateur} from "./academy-ressources.js";
+import {initRessources,ressourcesApi,ressourcesApprenant,fonctionFormateur,porteesAutorisees} from "./academy-ressources.js";
 import {academyDynamiqueApi} from "./academy-dynamique.js";
 import {initExtras,notifierCompte,notifierDirection,avisNonLus,marquerAvisLus,cohortesVue,cohortesGestion,cohortesApi,ecolesApi,ecolesDuCompte,ecolesGestion,verifierAttestation as verifierAttestationPublique} from "./academy-extras.js";
 export const verifierAttestation=verifierAttestationPublique;
@@ -229,13 +229,19 @@ export async function soldiersAcademyApi(req,env,u,path){
     return response({ok:true,pending:rows.map(x=>({...x,reponses:JSON.parse(x.reponses||"[]"),nom:x.nom||"Apprenant",aide:aide(x)})),students:suivi,courses:COURSES.map(c=>({id:c.id,title:c.title,level:c.level})),cohortes,ecolesDemandes});
   }
   if(path==="/api/soldiers-academy/noter"&&req.method==="PATCH"){
-    if(!admin)return error("Accès réservé aux correcteurs.",403);
+    if(!admin&&!(await fonctionFormateur(env,u)))return error("Accès réservé aux correcteurs habilités.",403);
     let b;try{b=await readBody(req)}catch{return error("Données invalides.")}
     if(typeof b.id!=="string"||!value(b.score,0,100)||safeText(b.comment,2000).length<3)return error("Indiquez la copie, une note de 0 à 100 et un commentaire.");
-    const s=await env.DB.prepare("SELECT id,compte,statut FROM academy_2027_submissions WHERE id=?").bind(b.id).first();
+    const s=await env.DB.prepare("SELECT id,compte,cours,statut FROM academy_2027_submissions WHERE id=?").bind(b.id).first();
     if(!s)return error("Copie introuvable.",404);
+    if(!admin){
+      const c=courseFor(s.cours),portees=await porteesAutorisees(env,u);
+      if(!c||(!portees.includes(c.id)&&!portees.includes("N"+c.level)))return error("Cette copie n'appartient pas à vos cours confiés.",403);
+      if(s.compte===account)return error("Un professeur ne peut corriger sa propre copie.",403);
+    }
     if(s.statut!=="en_attente")return error("Cette copie a déjà été corrigée.",409);
-    await env.DB.prepare("UPDATE academy_2027_submissions SET statut='note',score=?,commentaire=?,date_correction=?,correcteur=? WHERE id=? AND statut='en_attente'").bind(b.score,safeText(b.comment,2000),Date.now(),account,b.id).run();
+    const edition=await env.DB.prepare("UPDATE academy_2027_submissions SET statut='note',score=?,commentaire=?,date_correction=?,correcteur=? WHERE id=? AND statut='en_attente'").bind(b.score,safeText(b.comment,2000),Date.now(),account,b.id).run();
+    if(edition.meta?.changes!==1)return error("Copie déjà corrigée par un autre responsable. Actualisez la liste.",409);
     const sujet=s.cours===PROJET_ID?"projet intégrateur":s.cours;
     await notifierCompte(env,s.compte,{titre:"SDE · Soldiers Academy",corps:"Votre copie ("+sujet+") a été corrigée : "+b.score+"/100. Consultez le commentaire dans votre espace Academy.",tag:"sde-academy-note"});
     await issueCertificates(env,s.compte);

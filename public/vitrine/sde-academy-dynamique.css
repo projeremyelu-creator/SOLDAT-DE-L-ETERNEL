@@ -60,3 +60,14 @@
 @media(max-width:760px){.academy-dyn-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.academy-dyn-studio-grid{grid-template-columns:1fr}.academy-dyn-session{align-items:flex-start}.academy-dyn-head .button{width:100%;text-align:center}}
 @media(max-width:360px){.academy-dyn-metrics{grid-template-columns:1fr 1fr;gap:.4rem}.academy-dyn-kpi{padding:.7rem}.academy-dyn-kpi strong{font-size:1.25rem}.academy-dyn-kpi span{font-size:.7rem}}
 @media(prefers-reduced-motion:reduce){.academy-dyn-progress .bar i,.academy-dyn-course .bar i{transition:none!important}.academy-dyn-dashboard *,.academy-dyn-studio *{animation:none!important}}
+
+
+/* Lecture des copies et suivi par niveau : confidentialité et contraste renforcés. */
+.academy-dyn-response{white-space:pre-wrap;overflow-wrap:anywhere;padding:.8rem 1rem;border-radius:.7rem;background:#f9eddc0c;border:1px solid #ad93675e;margin:.5rem 0 1rem;line-height:1.6}
+.academy-dyn-level-chart{display:grid;gap:.8rem;margin:1rem 0 1.2rem}
+.academy-dyn-level-row{display:grid;grid-template-columns:minmax(80px,120px) minmax(0,1fr) auto;align-items:center;gap:1rem;color:#efe3cd}
+.academy-dyn-level-row span{font-weight:700}
+.academy-dyn-level-row strong{color:#f4d18c;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:.82rem}
+.academy-dyn-level-track{height:12px;border-radius:999px;background:#0c172a;border:1px solid #f2d6a14d;overflow:hidden}
+.academy-dyn-level-track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#ac7b38,#edce8b)}
+@media(max-width:480px){.academy-dyn-level-row{grid-template-columns:65px minmax(0,1fr) 63px;gap:.5rem}.academy-dyn-level-row strong{font-size:.7rem}}

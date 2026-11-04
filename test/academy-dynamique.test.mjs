@@ -5,6 +5,7 @@ import {DatabaseSync} from "node:sqlite";
 import {soldiersAcademyApi} from "../src/sde-academy-api.js";
 import {SOLDIERS_ACADEMY_2027} from "../src/soldiers-academy-2027.js";
 import {LOVE_SCHOOL} from "../src/love-school.js";
+import {rappelsSeancesDynamique} from "../src/academy-dynamique.js";
 
 const ROOT="/api/soldiers-academy",DYN=ROOT+"/dynamique";
 const apprenant={connecte:true,id:"apprenant",nom:"Élève",niveau:0};
@@ -162,4 +163,63 @@ test("UI : tableaux, cours et studio chargent réellement les nouveaux scripts",
  for(const name of ["data-dyn-termine","academyDynCourse","academyDynActivities","academyDynLove","SDEAcademyDyn"])assert.ok(script.includes(name),name);
  assert.match(style,/prefers-reduced-motion/);
  assert.match(style,/max-width:760px/);
+});
+
+
+test("Phase 2 étendue : correction officielle par formateur désigné, interdiction des copies étrangères et de l'auto-notation",async()=>{
+ const w=world();
+ await autoriser(w);
+ await w.call(admin,"POST",ROOT+"/formateurs",{compte:"prof@exemple.test",fonction:"enseignant",portees:["SA-01"]});
+ const c=SOLDIERS_ACADEMY_2027.courses[0],answers=c.quiz.map((_,i)=>"Réponse argumentée numéro "+(i+1)+" sur ce passage biblique.");
+ const submission=await w.call(apprenant,"POST",ROOT+"/soumettre",{courseId:"SA-01",type:"quiz",answers});
+ assert.equal(submission.status,201);
+ const mine=await w.call(prof,"GET",DYN+"/studio/copies");
+ assert.equal(mine.status,200);
+ assert.equal(mine.json.copies.length,1);
+ assert.equal(mine.json.copies[0].cours,"SA-01");
+ assert.equal(mine.json.copies[0].consignes.length,c.quiz.length);
+ const stranger=await w.call(autre,"GET",DYN+"/studio/copies");
+ assert.equal(stranger.json.copies.length,0,"un apprenant ne consulte pas les copies des autres");
+ assert.equal((await w.call(autre,"PATCH",ROOT+"/noter",{id:submission.json.id,score:100,comment:"Bien"})).status,403);
+ const corrected=await w.call(prof,"PATCH",ROOT+"/noter",{id:submission.json.id,score:94,comment:"Travail solide, approfondissez la seconde réponse."});
+ assert.equal(corrected.status,200,JSON.stringify(corrected.json));
+ assert.equal((await w.call(prof,"PATCH",ROOT+"/noter",{id:submission.json.id,score:60,comment:"Reprise"})).status,409);
+ const after=await w.call(apprenant,"GET",ROOT);
+ assert.equal(after.json.courses[0].quiz,94);
+ assert.equal(after.json.progress.passed,0,"aucun certificat sans les autres critères");
+ assert.equal((await w.call(prof,"GET",DYN+"/studio/copies")).json.copies.length,0);
+ // Un coach qui suit également un cours ne peut pas corriger sa propre copie.
+ await autoriser(w,"SA-01",prof);
+ const theirs=await w.call(prof,"POST",ROOT+"/soumettre",{courseId:"SA-01",type:"quiz",answers});
+ assert.equal(theirs.status,201);
+ assert.equal((await w.call(prof,"PATCH",ROOT+"/noter",{id:theirs.json.id,score:100,comment:"Moi"})).status,403);
+});
+
+test("Phase 3 étendue : annonces et rappels de classe sans doublons, seulement aux inscrits autorisés",async()=>{
+ const w=world();await autoriser(w);
+ await w.call(admin,"POST",ROOT+"/formateurs",{compte:"prof@exemple.test",fonction:"enseignant",portees:["SA-01"]});
+ const date=new Date(Date.now()+86400e3).toISOString();
+ const session=await w.call(prof,"POST",DYN+"/studio/seance",{cours:"SA-01",titre:"Classe de méditation et questions",debut:date,duree:55,lien:"https://meet.google.com/abc-defg-hij"});
+ assert.equal(session.status,201);
+ const notification=w.sql.prepare("SELECT COUNT(*) AS n FROM academy_2027_avis WHERE compte=?").get(apprenant.id);
+ assert.equal(notification.n,1,"annonce envoyée au compte autorisé");
+ assert.equal(w.sql.prepare("SELECT COUNT(*) AS n FROM academy_2027_avis WHERE compte=?").get(autre.id).n,0,"aucun avis à un membre non autorisé");
+ const now=Date.parse(date)-35*60000;
+ const first=await rappelsSeancesDynamique(w.env,{now});
+ assert.deepEqual(first,{seances:1,notifications:1});
+ const again=await rappelsSeancesDynamique(w.env,{now});
+ assert.deepEqual(again,{seances:1,notifications:0});
+ const avis=w.sql.prepare("SELECT texte FROM academy_2027_avis WHERE compte=? ORDER BY cree").all(apprenant.id);
+ assert.equal(avis.length,2);
+ assert.ok(avis.some(x=>x.texte.includes("environ une heure")));
+});
+
+test("Phase 4 étendue : lecture par niveau calculée sans publier les données nominatives",async()=>{
+ const w=world();await autoriser(w);
+ await w.call(apprenant,"POST",DYN+"/lecon",{cours:"SA-01",lecon:1,terminee:true});
+ const pilotage=await w.call(admin,"GET",DYN+"/pilotage");
+ assert.equal(pilotage.status,200);
+ assert.deepEqual(pilotage.json.parNiveau,[{niveau:1,lecons:1},{niveau:2,lecons:0},{niveau:3,lecons:0}]);
+ assert.equal((await w.call(apprenant,"GET",DYN+"/pilotage")).status,403);
+ assert.ok(!JSON.stringify(pilotage.json).includes("apprenant@exemple.test"));
 });

@@ -10,6 +10,7 @@ import {mediaLoveAutorise} from "./love-school-acces.js";
 import {mediaAcademyAutorise} from "./soldiers-academy-acces.js";
 import {fonctionFormateur} from "./academy-ressources.js";
 import {rappelsCohortes} from "./academy-extras.js";
+import {rappelsSeancesDynamique} from "./academy-dynamique.js";
 import {prayerWallApi} from "./prayer-wall.js";
 import {squadChatApi} from "./squad-chat.js";
 import {courrielApi,lancerCourriels} from "./courriel.js";
@@ -1672,7 +1673,7 @@ async function nettoyerTentatives(env) {
 export default {
   async scheduled(ev, env, ctx) {
     if (ev.cron === "0 2 * * *") ctx.waitUntil(Promise.all([sauvegarder(env), nettoyerMedias(env), syncEspacesMembres(env), nettoyerSessions(env), nettoyerTentatives(env)]));
-    ctx.waitUntil(Promise.all([flushNotices(env),sendPortalReminders(env),rappelsCohortes(env,{courriel:notificationConfigured(env)?(m)=>env.EMAIL.send({from:String(env.NOTIFICATION_FROM),to:m.to,subject:m.subject,text:m.text}):null}).catch(e=>console.warn("Academy : rappels de cohorte en échec",e?.name||"Erreur")),lancerCourriels(env).catch(e=>console.warn("Courriels : échec",e?.name||"Erreur"))]));
+    ctx.waitUntil(Promise.all([flushNotices(env),sendPortalReminders(env),rappelsCohortes(env,{courriel:notificationConfigured(env)?(m)=>env.EMAIL.send({from:String(env.NOTIFICATION_FROM),to:m.to,subject:m.subject,text:m.text}):null}).catch(e=>console.warn("Academy : rappels de cohorte en échec",e?.name||"Erreur")),rappelsSeancesDynamique(env).catch(e=>console.warn("Academy : rappels de classes en échec",e?.name||"Erreur")),lancerCourriels(env).catch(e=>console.warn("Courriels : échec",e?.name||"Erreur"))]));
   },
   async fetch(req, env, ctx) {
     /* Ressources publiées sous /_v/<révision>/… : même fichier, adresse unique par déploiement (cache toujours à jour). */

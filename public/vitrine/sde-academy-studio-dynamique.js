@@ -40,6 +40,20 @@ function renderMessages(){
  '<button class="button primary" type="submit">'+(q.repondu?"Mettre à jour la réponse":"Répondre")+'</button><p class="status" role="status" aria-live="polite"></p></form></article>'
  ).join(""):'<p class="muted">Aucune question pédagogique reçue sur vos cours.</p>';
 }
+
+function renderCopies(){
+ const root=$("dynStudioCopies");if(!root)return;
+ const rows=ST?.copies||[];
+ root.innerHTML=rows.length?rows.map(p=>'<article class="academy-dyn-studio-card">'+
+ '<span class="eyebrow">'+esc(p.cours)+' · '+esc(p.type)+' · '+esc(format(p.date))+'</span>'+
+ '<h4>Copie de '+esc(p.nom)+'</h4>'+
+ '<details><summary>Lire les réponses du devoir</summary>'+p.reponses.map((r,i)=>'<p><strong>'+esc(p.consignes?.[i]||"Question "+(i+1))+'</strong></p><div class="academy-dyn-response">'+esc(r)+'</div>').join("")+'</details>'+
+ '<form data-dyn-grade="'+esc(p.id)+'"><label class="field">Note sur 100 <input type="number" name="score" min="0" max="100" required></label>'+
+ '<label class="field">Commentaire pédagogique <textarea name="comment" minlength="3" maxlength="2000" required rows="3"></textarea></label>'+
+ '<button type="submit" class="button primary">Enregistrer la correction</button><p class="status" role="status" aria-live="polite"></p></form></article>').join(""):
+ '<p class="muted">Aucune copie officielle à corriger dans vos cours confiés.</p>';
+}
+
 async function pilotage(){
  if(!$("dynPilotage")||!ST)return;
  try{
@@ -51,11 +65,18 @@ async function pilotage(){
    [x.questionsEnAttente,"Questions sans réponse"],[x.seancesAVenir,"Classes à venir"],
    [x.demandesEnAttente,"Demandes d'accès en attente"]
   ].map(([n,label])=>'<div class="academy-dyn-kpi"><strong>'+esc(n)+'</strong><span>'+esc(label)+'</span></div>').join("");
+  const chart=$("dynPilotageNiveaux");
+  if(chart){
+   const n=p.parNiveau||[],max=Math.max(1,...n.map(x=>x.lecons));
+   chart.innerHTML=n.map(x=>'<div class="academy-dyn-level-row"><span>Niveau '+esc(x.niveau)+'</span><div class="academy-dyn-level-track" aria-hidden="true"><i style="width:'+Math.round(100*x.lecons/max)+'%"></i></div><strong>'+esc(x.lecons)+' leçons</strong></div>').join("");
+  }
   status("dynPilotageStatus","Indicateurs calculés à partir des opérations réellement enregistrées. Aucune donnée privée individuelle n’est affichée.");
  }catch(e){if(e.message.includes("403")||e.message.includes("Réservé"))$("dynPilotage").hidden=true;else status("dynPilotageStatus",e.message)}
 }
 async function charger(){
- ST=await req("/studio");choices();renderActivites();renderSeances();renderMessages();
+ ST=await req("/studio");
+ const copies=await req("/studio/copies");ST.copies=copies.copies||[];
+ choices();renderActivites();renderSeances();renderMessages();renderCopies();
  status("dynStudioStatus","Studio dynamique prêt : "+ST.cours.length+" cours confiés · "+ST.statistiques.questionsEnAttente+" question(s) à traiter.");
  await pilotage();
 }
@@ -86,7 +107,22 @@ document.addEventListener("click",async ev=>{
  catch(e){status("dynStudioStatus",e.message)}finally{b.disabled=false}
 });
 document.addEventListener("submit",async ev=>{
- const f=ev.target;if(!(f instanceof HTMLFormElement)||!f.dataset.dynStudioReponse)return;
+ const f=ev.target;if(!(f instanceof HTMLFormElement))return;
+ if(f.dataset.dynGrade){
+   ev.preventDefault();const bouton=f.querySelector('button[type="submit"]'),message=f.querySelector(".status");
+   bouton.disabled=true;
+   try{
+    const response=await fetch("/api/soldiers-academy/noter",{
+      method:"PATCH",credentials:"same-origin",headers:{"accept":"application/json","content-type":"application/json"},
+      body:JSON.stringify({id:f.dataset.dynGrade,score:Number(f.elements.score.value),comment:f.elements.comment.value.trim()})
+    });
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok||data.ok===false)throw Error(data.message||"Correction refusée.");
+    message.textContent=data.message||"Correction enregistrée.";await charger();
+   }catch(e){message.textContent=e.message}finally{bouton.disabled=false}
+   return;
+ }
+ if(!f.dataset.dynStudioReponse)return;
  ev.preventDefault();const btn=f.querySelector('button[type="submit"]'),status=f.querySelector(".status");
  btn.disabled=true;
  try{const r=await req("/studio/repondre","POST",{id:f.dataset.dynStudioReponse,reponse:f.elements.reponse.value.trim()});status.textContent=r.message;await charger()}
