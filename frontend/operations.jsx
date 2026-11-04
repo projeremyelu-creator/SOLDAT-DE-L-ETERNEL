@@ -80,7 +80,7 @@ function SoldierSpace({portal}){
  const m=me.data?.membre||{},c=card.data;
  const nom=c?.nom||[m.prenoms,m.nom].filter(Boolean).join(' ')||portal.compte.nom||'Membre SDE';
  const prenom=String(m.prenoms||nom).trim().split(/\s+/)[0]||'Soldat';
- const salutation=/général/i.test(m.fonction||'')?'Bonjour mon Général':`Bonjour, ${prenom}`;
+ const estGeneral=/général/i.test(m.fonction||'');
  const presidentAcademy=/président et fondateur de soldiers academy/i.test(m.fonction||'');
  const initials=String(nom).trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();
  const qr=c?(()=>{const q=qrcode(0,'M');q.addData(c.code,'Byte');q.make();return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(q.createSvgTag({cellSize:4,scalable:true}))})():'';
@@ -91,7 +91,7 @@ function SoldierSpace({portal}){
  const prev=(()=>{const d=new Date();d.setMonth(d.getMonth()-1);return d.toISOString().slice(0,7)})();
  const aJour=!!paid&&paid.mois>=prev;
  return <div className="soldier-space sv">
-  <header className="sv-hello"><h1>{salutation}</h1><p>Avançons ensemble, pour un plus grand impact.</p><p className="ops-subtitle">Grandir · Servir · Impacter</p><p className="ops-welcome">Bienvenue dans votre espace SDE. Retrouvez ici les informations utiles à votre parcours, les prochains rendez-vous et les ressources disponibles.</p></header>
+  <header className="sv-hello"><h1>{estGeneral?'Bonjour mon Général':<>Bonjour, {prenom}</>}</h1><p>Avançons ensemble, pour un plus grand impact.</p><p className="ops-subtitle">Grandir · Servir · Impacter</p><p className="ops-welcome">Bienvenue dans votre espace SDE. Retrouvez ici les informations utiles à votre parcours, les prochains rendez-vous et les ressources disponibles.</p></header>
   <div className="sv-top">
    <section className="soldier-card sv-card" aria-label="Carte de membre">
     <div className="soldier-card-head"><span>SOLDAT DE L’ÉTERNEL</span><small>DISCIPLINE · UNITÉ · IMPACT</small></div>
