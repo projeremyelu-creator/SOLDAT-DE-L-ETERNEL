@@ -1730,6 +1730,17 @@ async function traiter(req, env, ctx) {
     const p = url.pathname;
     if (url.hostname === "www.mouvement-sde.org") return Response.redirect("https://mouvement-sde.org" + p + url.search, 301);
     const appHost = url.hostname === "app.mouvement-sde.org";
+    // Canonicaliser les espaces privés sur app.mouvement-sde.org pour éviter
+    // qu'une session membre du domaine public soit confondue avec la session admin.
+    const entreesPrivees = ["/connexion", "/portail", "/administration", "/mon-espace"];
+    if (!appHost && (req.method === "GET" || req.method === "HEAD")
+        && entreesPrivees.some((route) => p === route || p.startsWith(route + "/"))) {
+      return new Response(null, {status:302, headers:{
+        location:"https://app.mouvement-sde.org" + p + url.search,
+        "cache-control":"private, no-store",
+        "x-robots-tag":"noindex, nofollow"
+      }});
+    }
     if (url.hostname === "mouvement-sde.org" || appHost) {
       // Routage unifié : pages réelles, un guichet de connexion, deux espaces protégés.
       // Compatibilité des anciens liens vers le bilan annuel, sans doubler les pages indexables.
