@@ -173,3 +173,28 @@ fieldset.field{border:1px solid var(--line);border-radius:12px;padding:12px}.chi
 @media(max-width:920px){.love-audience-choices{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){.love-audience{padding:17px 14px}.love-audience-choices{gap:8px}.love-audience-choice{min-height:114px;padding:12px 11px}.love-audience-choice strong{font-size:.94rem}.love-audience-choice small{font-size:.72rem}}
 @media(prefers-reduced-motion:reduce){.love-audience-choice{transition:none!important}.love-audience-choice:hover{transform:none}}
+
+/* ── Progression par leçon (repère d'apprentissage) ── */
+.reprendre{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:center;margin:0 0 22px;padding:18px;border:1px solid var(--gold);border-radius:16px;background:linear-gradient(135deg,#6b4fa033,#d4af3714),var(--panel)}
+.reprendre-etat,.reprendre-suite{display:grid;gap:6px;min-width:0}
+.reprendre-etat strong{font-size:1.1rem}
+.reprendre-suite strong{font-size:1.05rem;overflow-wrap:anywhere}
+.reprendre-suite .button{justify-self:start;margin-top:4px}
+.reprendre-fini strong{color:var(--gold)}
+.barre-progres{height:10px;border-radius:6px;background:#ffffff1f;overflow:hidden}
+.barre-progres i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#6B4FA0,#D4AF37);transition:width .5s ease}
+.lecons-progres{display:grid;gap:5px;margin:8px 0}
+.lecons-compte{font-size:.84rem;color:var(--muted);font-weight:700}
+.lecons-compte.complet{color:var(--gold)}
+#courseProgress .lecons-progres{max-width:420px}
+.progres-ligne{margin:10px 0 0}
+.progres{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--ivory);font:inherit;font-weight:700;cursor:pointer;transition:background .2s,border-color .2s}
+.progres:hover{border-color:var(--gold);background:#ffffff0d}
+.progres:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.progres[disabled]{opacity:.6;cursor:progress}
+.progres-case{display:inline-grid;place-items:center;width:22px;height:22px;border:2px solid var(--gold);border-radius:6px;font-size:.9rem;line-height:1;color:#071525}
+.progres.fait{border-color:var(--green);background:#38785733}
+.progres.fait .progres-case{background:var(--gold)}
+.ressource.terminee{border-color:var(--green)}
+@media(max-width:720px){.reprendre{grid-template-columns:1fr;padding:14px}.reprendre-suite .button{justify-self:stretch;text-align:center}}
+@media(prefers-reduced-motion:reduce){.barre-progres i{transition:none}}

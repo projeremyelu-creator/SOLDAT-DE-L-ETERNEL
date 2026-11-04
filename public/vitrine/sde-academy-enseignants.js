@@ -36,8 +36,13 @@ function typeUI(){
 function metriques(){
   const mine=G.ressources.filter(r=>G.fonction==="administrateur"||r.auteurId===G.moi);
   const pub=mine.filter(r=>r.publie).length;
-  $("studioMetrics").innerHTML=[[G.fonction==="administrateur"?"Direction":G.fonction==="coach"?"Coach":"Enseignant","Votre fonction"],[mine.length,"Ressources déposées"],[pub,"Visibles des apprenants"],[G.autorisees.length,"Cours et portées confiés"]]
+  $("studioMetrics").innerHTML=[[G.fonction==="administrateur"?"Direction":G.fonction==="coach"?"Coach":"Enseignant","Votre fonction"],[mine.length,"Ressources déposées"],[pub,"Visibles des apprenants"],[G.autorisees.length,"Cours et portées confiés"],[mine.reduce((t,r)=>t+(G.termines?.[r.id]||0),0),"Leçons terminées par les apprenants"]]
     .map(([a,b])=>'<div class="metric"><strong>'+esc(a)+'</strong><span>'+esc(b)+'</span></div>').join("");
+}
+function suiviTermines(r){
+  if(!r.publie||/^LS-/.test(r.portee))return "";
+  const n=Number(G.termines?.[r.id]||0);
+  return ' · '+(n?n+' apprenant'+(n>1?'s':'')+' l’'+(n>1?'ont':'a')+' terminée':'Pas encore terminée par un apprenant');
 }
 function liste(){
   const admin=G.fonction==="administrateur";
@@ -46,7 +51,7 @@ function liste(){
   $("tab-liste").textContent=admin?"Supervision":"Mes publications";
   $("listeRessources").innerHTML=l.length?l.map((r,i)=>{
     const peut=admin||(r.auteurId===G.moi&&G.autorisees.includes(r.portee));
-    return '<div>'+UI.ressourceHtml(r,i,{apercu:true})+'<p class="muted">Destination : '+esc(libellePortee(r.portee))+(admin?' · Auteur : '+esc(r.auteur):"")+'</p>'+
+    return '<div>'+UI.ressourceHtml(r,i,{apercu:true})+'<p class="muted">Destination : '+esc(libellePortee(r.portee))+(admin?' · Auteur : '+esc(r.auteur):"")+suiviTermines(r)+'</p>'+
       (peut?'<div class="actions"><button type="button" class="button" data-modifier="'+esc(r.id)+'">Modifier</button><button type="button" class="button" data-publier="'+esc(r.id)+'" data-etat="'+(r.publie?"1":"0")+'">'+(r.publie?"Retirer de la publication":"Publier")+'</button><button type="button" class="button" data-supprimer="'+esc(r.id)+'">Supprimer</button></div>':"")+'</div>';
   }).join(""):'<div class="vide">Aucune ressource pour le moment. Utilisez l’onglet « Publier » pour ajouter votre première vidéo ou leçon.</div>';
 }

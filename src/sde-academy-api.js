@@ -8,6 +8,7 @@ import {initAcademyAcces,etatsAcademy,academyStatut,academyMeta,academyAutorise,
 import {CORRECTIFS,BAREME_EXERCICE,BAREME_EXAMEN} from "./academy-correctifs.js";
 import {SPECIALISATIONS} from "./academy-specialisations.js";
 import {initRessources,ressourcesApi,ressourcesApprenant,fonctionFormateur} from "./academy-ressources.js";
+import {progressionVue,marquerRessource} from "./academy-progression.js";
 import {initExtras,notifierCompte,notifierDirection,avisNonLus,marquerAvisLus,cohortesVue,cohortesGestion,cohortesApi,ecolesApi,ecolesDuCompte,ecolesGestion,verifierAttestation as verifierAttestationPublique} from "./academy-extras.js";
 export const verifierAttestation=verifierAttestationPublique;
 const COURSES=PROGRAMME.courses;
@@ -157,7 +158,14 @@ export async function soldiersAcademyApi(req,env,u,path){
     return response({ok:true,ressources:{
       generales:biblio.generales,nouveautes:biblio.nouveautes,
       parCours:Object.fromEntries(Object.entries(biblio.parCours).map(([k,v])=>[k,v.length]))
-    }});
+    },progression:await progressionVue(env,account,biblio)});
+  }
+  if(path==="/api/soldiers-academy/progression"&&req.method==="POST"){
+    let b;try{b=await readBody(req)}catch{return error("Données invalides.")}
+    const d=await state(env,account),biblio=await ressourcesPour(env,d,account);
+    const r=await marquerRessource(env,account,biblio,b||{});
+    if(r.erreur)return error(r.erreur,r.statut);
+    return response({ok:true,progression:await progressionVue(env,account,biblio)});
   }
   if(path==="/api/soldiers-academy"&&req.method==="GET"){
     const d=await state(env,account);
@@ -168,7 +176,7 @@ export async function soldiersAcademyApi(req,env,u,path){
     const projet={ouvert:d.allPassed(),criteres:PROJET_CRITERES.map(([libelle,points])=>({libelle,points})),enAttente:pj.enAttente,soumisLe:pj.soumisLe,meilleur:pj.meilleur,acquis:pj.acquis,dernier:pj.dernier};
     return response({ok:true,programme:{version:PROGRAMME.version,status:"adopte",durationHours:192,levels:PROGRAMME.levels,evaluation:PROGRAMME.evaluation},name:u.nom||"Membre SDE",admin,progress:d.progress,courses:publicProgress(d,accesCours),certificates:d.certificates,projet,parcoursComplet:d.certificates.some(c=>c.niveau===4),
       specialisations:{ecoles:SPECIALISATIONS.ecoles,masterclass:SPECIALISATIONS.masterclass,ouvertes:d.allPassed(),mesInscriptions:mesEcoles},cohortes,avis,
-      ressources:{generales:biblio.generales,nouveautes:biblio.nouveautes,parCours:Object.fromEntries(Object.entries(biblio.parCours).map(([k,v])=>[k,v.length]))},formateur:fonction||null});
+      ressources:{generales:biblio.generales,nouveautes:biblio.nouveautes,parCours:Object.fromEntries(Object.entries(biblio.parCours).map(([k,v])=>[k,v.length]))},progression:await progressionVue(env,account,biblio),formateur:fonction||null});
   }
   if(path.startsWith("/api/soldiers-academy/cours/")&&req.method==="GET"){
     const c=courseFor(decodeURIComponent(path.slice("/api/soldiers-academy/cours/".length)));
@@ -178,7 +186,8 @@ export async function soldiersAcademyApi(req,env,u,path){
     await initAcademyAcces(env);
     if(!(await academyAutorise(env,account,c,dc.overview[c.id])))return error("Cours verrouillé : demandez une validation au coach ou professeur.",403);
     const biblioCours=await ressourcesPour(env,dc,account);
-    return response({ok:true,course:c,ressources:biblioCours.parCours[c.id]||[],disclaimer:"Formation interne au Mouvement SDE. Les travaux et examens sont évalués par un responsable habilité."});
+    const prog=await progressionVue(env,account,biblioCours);
+    return response({ok:true,course:c,ressources:biblioCours.parCours[c.id]||[],faites:prog.faites,progression:prog.cours[c.id]||{fait:0,total:0},disclaimer:"Formation interne au Mouvement SDE. Les travaux et examens sont évalués par un responsable habilité."});
   }
   if(path==="/api/soldiers-academy/soumettre"&&req.method==="POST"){
     let body;try{body=await readBody(req)}catch{return error("Requête JSON invalide ou trop volumineuse.",413)}

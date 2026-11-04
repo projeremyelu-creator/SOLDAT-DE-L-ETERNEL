@@ -35,7 +35,7 @@ function tabs(liste,onChange){
 }
 
 /* Une ressource pédagogique. Tout texte passe par esc() ; les adresses sont revérifiées côté navigateur. */
-function ressourceHtml(r,i=0,{apercu=false}={}){
+function ressourceHtml(r,i=0,{apercu=false,progression=null}={}){
   const type=TYPES[r.type]?r.type:"lien";
   let corps="";
   if(type==="video"){
@@ -51,7 +51,9 @@ function ressourceHtml(r,i=0,{apercu=false}={}){
   }else{
     corps='<details class="lecon"><summary>Lire '+(type==="exercice"?"l’exercice":"la leçon")+'</summary><div class="corps"><div class="note-texte">'+esc(r.texte)+'</div></div></details>';
   }
-  return '<article class="ressource" style="--i:'+i+'"><span class="chip type-'+type+'">'+TYPES[type]+'</span>'+(apercu&&r.publie===false?' <span class="chip brouillon">Brouillon</span>':"")+'<h4>'+esc(r.titre)+'</h4>'+(r.description?'<p>'+esc(r.description)+'</p>':"")+corps+'<div class="meta">Ajouté le '+esc(dateFr(r.cree))+' par '+esc(r.auteur||"l’équipe pédagogique")+'</div></article>';
+  const fait=!!(progression&&progression.faites&&progression.faites.has(r.id));
+  const suivi=progression?'<p class="progres-ligne"><button type="button" class="progres'+(fait?' fait':'')+'" data-progres="'+esc(r.id)+'" aria-pressed="'+(fait?"true":"false")+'"><span class="progres-case" aria-hidden="true">'+(fait?"✓":"")+'</span><span class="progres-texte">'+(fait?"Terminé":"Marquer comme terminé")+'</span></button></p>':"";
+  return '<article class="ressource'+(fait?' terminee':'')+'" style="--i:'+i+'"><span class="chip type-'+type+'">'+TYPES[type]+'</span>'+(apercu&&r.publie===false?' <span class="chip brouillon">Brouillon</span>':"")+'<h4>'+esc(r.titre)+'</h4>'+(r.description?'<p>'+esc(r.description)+'</p>':"")+corps+suivi+'<div class="meta">Ajouté le '+esc(dateFr(r.cree))+' par '+esc(r.auteur||"l’équipe pédagogique")+'</div></article>';
 }
 window.SDEAcademyUI={esc,tabs,ressourceHtml,urlSure,dateFr,TYPES};
 })();

@@ -29,6 +29,56 @@ function statusFor(c){
  if(c.pending?.length)return '<span class="chip pending">Correction en attente</span>';
  return '<span class="chip ok">Accès autorisé</span>';
 }
+/* Progression par leçon : repère d'apprentissage, sans effet sur les notes, la présence ou les attestations. */
+const faitesSet=()=>new Set(snapshot?.progression?.faites||[]);
+const progresCours=id=>snapshot?.progression?.cours?.[id]||{fait:0,total:0};
+function barre(fait,total,libelle){
+ const p=total?Math.round(fait/total*100):0;
+ return '<div class="barre-progres" role="progressbar" aria-label="'+esc(libelle)+'" aria-valuemin="0" aria-valuemax="'+total+'" aria-valuenow="'+fait+'" aria-valuetext="'+fait+' sur '+total+'"><i style="width:'+p+'%"></i></div>';
+}
+function leconsCours(id){
+ const v=progresCours(id);if(!v.total)return "";
+ return '<div class="lecons-progres"><span class="lecons-compte'+(v.fait===v.total?' complet':'')+'">'+(v.fait===v.total?'✓ ':'')+'Leçons : '+v.fait+' / '+v.total+'</span>'+barre(v.fait,v.total,"Leçons terminées du cours "+id)+'</div>';
+}
+function renderReprendre(){
+ const z=$("reprendre");if(!z)return;
+ const p=snapshot?.progression;
+ if(!p||!p.total?.total){z.innerHTML="";return;}
+ const t=p.total,r=p.reprendre;
+ const intro='<div class="reprendre-etat"><span class="eyebrow">Ma progression dans les leçons</span><strong>'+t.fait+' sur '+t.total+' ressource'+(t.total>1?'s':'')+' terminée'+(t.total>1?'s':'')+' · '+t.pourcentage+' %</strong>'+barre(t.fait,t.total,"Ressources terminées")+'<small class="muted">Repère personnel : il ne remplace pas les évaluations officielles.</small></div>';
+ const suite=r?'<div class="reprendre-suite"><span class="muted">Prochaine étape · '+esc(r.portee)+' · '+esc(window.SDEAcademyUI.TYPES[r.type]||"Ressource")+'</span><strong>'+esc(r.titre)+'</strong><button type="button" class="button primary" data-course="'+esc(r.portee)+'" data-onglet-cours="ressources">Reprendre là où j’en suis →</button></div>':
+  '<div class="reprendre-suite reprendre-fini"><strong>✓ Tout ce qui est publié est terminé.</strong><span class="muted">De nouvelles ressources apparaîtront ici dès leur publication.</span></div>';
+ z.innerHTML='<div class="reprendre">'+intro+suite+'</div>';
+}
+/* Met à jour, sans recharger la page, tout ce qui dépend de la progression (cases, barres, onglet du cours ouvert). */
+function majProgres(){
+ const faites=faitesSet();
+ for(const b of document.querySelectorAll("[data-progres]")){
+  const on=faites.has(b.dataset.progres);
+  b.classList.toggle("fait",on);b.setAttribute("aria-pressed",String(on));
+  const c=b.querySelector(".progres-case"),t=b.querySelector(".progres-texte");
+  if(c)c.textContent=on?"✓":"";if(t)t.textContent=on?"Terminé":"Marquer comme terminé";
+  b.closest(".ressource")?.classList.toggle("terminee",on);
+ }
+ renderCatalogue();renderReprendre();
+ if(activeCourse){
+  const v=progresCours(activeCourse.id),o=$("tab-c-ressources");
+  if(o&&v.total)o.textContent="Ressources ("+v.fait+"/"+v.total+")";
+  const z=$("courseProgress");if(z)z.innerHTML=leconsCours(activeCourse.id);
+ }
+ const g=snapshot?.progression?.generale;if(g&&$("biblioProgres"))$("biblioProgres").textContent=g.total?"Bibliothèque générale : "+g.fait+" / "+g.total+" terminée"+(g.fait>1?"s":""):"";
+}
+async function basculerProgres(btn){
+ const id=btn.dataset.progres,fait=btn.getAttribute("aria-pressed")!=="true";
+ btn.disabled=true;
+ try{
+  const r=await request("/progression","POST",{ressource:id,fait});
+  snapshot.progression=r.progression;majProgres();
+  const v=activeCourse?progresCours(activeCourse.id):null;
+  alertMessage(fait?"Bravo, ressource terminée."+(v&&v.total?" "+activeCourse.id+" : "+v.fait+" sur "+v.total+".":""):"Ressource remise à faire.");
+ }catch(e){alertMessage(e.message);}
+ finally{btn.disabled=false;}
+}
 function nbRessources(id){
  const n=Number(snapshot.ressources?.parCours?.[id]||0);
  return n?'<span class="chip type-video">'+n+' ressource'+(n>1?"s":"")+'</span>':"";
@@ -40,7 +90,7 @@ function renderCatalogue(){
    const c=snapshot.courses.filter(x=>x.level===i+1);
    const acquis=c.length>0&&c.every(x=>x.passed);
    return '<div class="level"><div class="level-titre"><span class="insigne'+(acquis?' acquis':'')+'" aria-hidden="true">'+['I','II','III'][i]+'</span><h2>Niveau '+(i+1)+' — '+esc(title)+'</h2></div><span class="chip">'+c.filter(x=>x.passed).length+' / 8 cours validés</span></div><div class="grid">'+
-   c.map((x,i)=>'<article class="card '+(x.passed?"passed ":"")+(x.locked?"locked":"")+'" style="--i:'+i+'"><span class="code">'+esc(x.id)+' · 8 h</span><h3>'+esc(x.title)+'</h3>'+statusFor(x)+nbRessources(x.id)+'<small>Quiz : '+esc(scoreText(x.quiz))+' · Travaux : '+esc(scoreText(x.exercises))+'<br>Examen : '+esc(scoreText(x.exam))+' · Présence : '+esc(x.attendance)+' %</small><button type="button" class="button '+(x.acces?.autorise?"primary":"")+'" data-course="'+esc(x.id)+'">'+(x.acces?.autorise?"Ouvrir le cours →":"Voir les conditions d’accès")+'</button></article>').join("")+'</div>';
+   c.map((x,i)=>'<article class="card '+(x.passed?"passed ":"")+(x.locked?"locked":"")+'" style="--i:'+i+'"><span class="code">'+esc(x.id)+' · 8 h</span><h3>'+esc(x.title)+'</h3>'+statusFor(x)+nbRessources(x.id)+leconsCours(x.id)+'<small>Quiz : '+esc(scoreText(x.quiz))+' · Travaux : '+esc(scoreText(x.exercises))+'<br>Examen : '+esc(scoreText(x.exam))+' · Présence : '+esc(x.attendance)+' %</small><button type="button" class="button '+(x.acces?.autorise?"primary":"")+'" data-course="'+esc(x.id)+'">'+(x.acces?.autorise?"Ouvrir le cours →":"Voir les conditions d’accès")+'</button></article>').join("")+'</div>';
  }).join("");
 }
 function renderCertificates(){
@@ -65,7 +115,7 @@ function progress(){
  const v=snapshot.progress;
  text("statPassed",v.passed+" / 24");text("statPercent",v.percentage+" %");text("statCert",snapshot.certificates.filter(x=>x.niveau<=3).length+" / 3");
  const bar=$("progressBar");bar.setAttribute("aria-valuenow",String(v.passed));requestAnimationFrame(()=>{bar.firstElementChild.style.width=Math.round(v.passed/24*100)+"%";});
- renderCatalogue();renderCertificates();renderAvis();renderProjet();renderCohortes();renderSpecialisations();renderBiblio();$("studentPage").hidden=false;
+ renderCatalogue();renderReprendre();renderCertificates();renderAvis();renderProjet();renderCohortes();renderSpecialisations();renderBiblio();$("studentPage").hidden=false;
  $("tab-projet").hidden=!snapshot.projet?.ouvert;
  const admin=!!snapshot.admin;$("adminShortcut").hidden=!admin;$("adminPage").hidden=!admin;$("studioShortcut").hidden=!(admin||snapshot.formateur);
 }
@@ -247,7 +297,9 @@ function renderBiblio(){
  const badge=$("badgeBiblio");badge.hidden=!fraiches.length;badge.textContent=String(fraiches.length);
  const UI=window.SDEAcademyUI;
  $("biblioNouveautes").innerHTML=nouv.length?'<h3>Nouveautés des 14 derniers jours</h3><ul class="numbered">'+nouv.map(x=>'<li><span class="chip type-'+esc(x.type)+'">'+esc(UI.TYPES[x.type]||"Ressource")+'</span> '+(snapshot.courses.some(c=>c.id===x.portee)?'<button type="button" class="button" data-course="'+esc(x.portee)+'" data-onglet-cours="ressources">'+esc(x.titre)+' ('+esc(x.portee)+')</button>':esc(x.titre))+' <span class="muted">· '+esc(UI.dateFr(x.cree))+'</span></li>').join("")+'</ul>':'';
- $("biblioGenerale").innerHTML=(r.generales||[]).length?r.generales.map((x,i)=>UI.ressourceHtml(x,i)).join(""):'<div class="vide">La bibliothèque générale est vide pour le moment. Les enseignants et coachs y publient des ressources ouvertes à tous les apprenants.</div>';
+ const g=snapshot.progression?.generale,pg={faites:faitesSet()};
+ if($("biblioProgres"))$("biblioProgres").textContent=g&&g.total?"Bibliothèque générale : "+g.fait+" / "+g.total+" terminée"+(g.fait>1?"s":""):"";
+ $("biblioGenerale").innerHTML=(r.generales||[]).length?r.generales.map((x,i)=>UI.ressourceHtml(x,i,{progression:pg})).join(""):'<div class="vide">La bibliothèque générale est vide pour le moment. Les enseignants et coachs y publient des ressources ouvertes à tous les apprenants.</div>';
 }
 /* Synchronisation légère des supports publiés, sans recharger les exercices ou les vidéos en cours. */
 let syncRessourcesEnCours=false;
@@ -260,9 +312,12 @@ async function synchroniserRessources({manuel=false}={}){
     const r=await request("/ressources/etat");
     const next=r.ressources||{generales:[],nouveautes:[],parCours:{}};
     const diff=JSON.stringify(next)!==JSON.stringify(snapshot.ressources||{});
+    const progDiff=r.progression&&JSON.stringify(r.progression)!==JSON.stringify(snapshot.progression||{});
+    if(r.progression)snapshot.progression=r.progression;
+    if(progDiff&&!diff){renderBiblio();majProgres();}
     if(diff){
       snapshot.ressources=next;
-      renderBiblio();renderCatalogue();
+      renderBiblio();majProgres();
       text("academySyncStatus","Nouvelles ressources chargées. Pour un cours déjà ouvert, ouvrez l’onglet Ressources et cliquez sur « Actualiser ce cours ».");
     }else if(manuel){text("academySyncStatus","Bibliothèque à jour.");}
   }catch(e){if(manuel)text("academySyncStatus",e.message||"Actualisation indisponible.");}
@@ -371,16 +426,18 @@ async function openCourse(id,onglet){
   const d=await request("/cours/"+encodeURIComponent(id));const c=d.course;
   activeCourse=c;const s=snapshot.courses.find(x=>x.id===id);
   const UI=window.SDEAcademyUI,res=d.ressources||[];
+  if(Array.isArray(d.faites)&&snapshot.progression)snapshot.progression.faites=d.faites;
+  const pc={faites:faitesSet()},vp=d.progression||{fait:0,total:res.length};
   mainTabs.activer("parcours");
   const panel=$("courseDetail");panel.hidden=false;
   const presentation='<p>'+esc(c.purpose)+'</p><p><strong>Lectures bibliques :</strong> '+esc(c.refs)+'</p><h3>Objectifs pédagogiques</h3><ol class="numbered">'+c.goals.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol>';
   const lecons=c.units.map((x,i)=>'<details class="lecon"'+(i===0?" open":"")+'><summary><span class="chip">Leçon '+x.number+' · 90 min</span> '+esc(x.title)+'</summary><div class="corps"><p>'+esc(x.body)+'</p><p class="muted"><strong>À lire :</strong> '+esc(x.scriptures)+'</p></div></details>').join("");
-  const ressourcesListe=res.length?'<div class="stack">'+res.map((x,i)=>UI.ressourceHtml(x,i)).join("")+'</div>':'<div class="vide">Aucune ressource pour ce cours pour le moment. Vos enseignants et coachs y ajouteront des vidéos, documents et leçons : elles apparaîtront ici dès leur publication.</div>';
+  const ressourcesListe=res.length?'<div class="stack">'+res.map((x,i)=>UI.ressourceHtml(x,i,{progression:pc})).join("")+'</div>':'<div class="vide">Aucune ressource pour ce cours pour le moment. Vos enseignants et coachs y ajouteront des vidéos, documents et leçons : elles apparaîtront ici dès leur publication.</div>';
   const ressources='<div class="actions"><button type="button" class="button" data-refresh-course-resources>Actualiser ce cours</button><span id="courseResourcesStatus" role="status" aria-live="polite" class="muted"></span></div><div id="courseResourcesList">'+ressourcesListe+'</div>';
   const suivi='<h3>Suivi des acquis</h3><p>Quiz : '+esc(scoreText(s.quiz))+' · Travaux : '+esc(scoreText(s.exercises))+' · Participation : '+esc(scoreText(s.participation))+' · Examen : '+esc(scoreText(s.exam))+' · Assiduité : '+esc(s.attendance)+' %</p><p><strong>Note finale :</strong> '+esc(scoreText(s.average))+' · '+(s.passed?"Cours validé":"Validation : 70/100 et au moins 80 % de présence")+'</p>'+(s.feedback?.length?'<h3>Retours de correction</h3><ul>'+s.feedback.map(f=>'<li><strong>'+esc(f.type)+' · '+esc(f.score)+'/100</strong> — '+esc(f.commentaire)+'</li>').join('')+'</ul>':'');
   const evals=suivi+renderExerciseForm(c,"quiz",c.quiz,s)+renderExerciseForm(c,"exercises",c.exercises,s)+renderExerciseForm(c,"exam",c.exam,s);
-  const onglets=[["presentation","Présentation",presentation],["lecons","Leçons",lecons],["ressources","Ressources"+(res.length?" ("+res.length+")":""),ressources],["evaluations","Évaluations",evals]];
-  panel.innerHTML='<div class="eyebrow">'+esc(c.id)+' · Niveau '+c.level+' · 8 heures</div><h2>'+esc(c.title)+'</h2>'+(s.passed?'<span class="chip ok">Cours validé</span>':"")+
+  const onglets=[["presentation","Présentation",presentation],["lecons","Leçons",lecons],["ressources","Ressources"+(res.length?" ("+vp.fait+"/"+vp.total+")":""),ressources],["evaluations","Évaluations",evals]];
+  panel.innerHTML='<div class="eyebrow">'+esc(c.id)+' · Niveau '+c.level+' · 8 heures</div><h2>'+esc(c.title)+'</h2>'+(s.passed?'<span class="chip ok">Cours validé</span>':"")+'<div id="courseProgress">'+leconsCours(c.id)+'</div>'+
    '<div class="tabs sub" role="tablist" aria-label="Contenu du cours" id="courseTabs">'+onglets.map(([k,l],i)=>'<button type="button" role="tab" id="tab-c-'+k+'" aria-controls="pane-c-'+k+'" aria-selected="'+(i===0)+'" '+(i===0?"":'tabindex="-1"')+'>'+esc(l)+'</button>').join("")+'</div>'+
    onglets.map(([k,,html],i)=>'<div role="tabpanel" id="pane-c-'+k+'" aria-labelledby="tab-c-'+k+'" '+(i===0?'class="pane"':"hidden")+'>'+html+'</div>').join("")+
    '<button class="button" type="button" id="backCourses">← Revenir à la liste</button>';
@@ -402,9 +459,12 @@ async function actualiserRessourcesCours(button){
     if(!liste)return;
     const res=Array.isArray(d.ressources)?d.ressources:[];
     const UI=window.SDEAcademyUI;
-    liste.innerHTML=res.length?'<div class="stack">'+res.map((x,i)=>UI.ressourceHtml(x,i)).join("")+'</div>':'<div class="vide">Aucune ressource publiée pour ce cours.</div>';
+    if(Array.isArray(d.faites)&&snapshot.progression)snapshot.progression.faites=d.faites;
+    if(d.progression&&snapshot.progression)snapshot.progression.cours[id]=d.progression;
+    liste.innerHTML=res.length?'<div class="stack">'+res.map((x,i)=>UI.ressourceHtml(x,i,{progression:{faites:faitesSet()}})).join("")+'</div>':'<div class="vide">Aucune ressource publiée pour ce cours.</div>';
     const onglet=$("tab-c-ressources");
-    if(onglet)onglet.textContent="Ressources ("+res.length+")";
+    if(onglet)onglet.textContent="Ressources ("+(d.progression?d.progression.fait+"/"+d.progression.total:res.length)+")";
+    majProgres();
     text("courseResourcesStatus","Supports à jour : "+res.length+" ressource"+(res.length>1?"s":"")+".");
   }catch(e){text("courseResourcesStatus",e.message||"Actualisation indisponible.");}
   finally{button.disabled=false;}
@@ -441,6 +501,7 @@ async function reload(){
  snapshot=await request("");progress();
 }
 document.addEventListener("click",async ev=>{
+ const progresBtn=ev.target.closest("[data-progres]");if(progresBtn){await basculerProgres(progresBtn);return;}
  const saDemande=ev.target.closest("[data-sa-demander]");if(saDemande){await demanderCoursAcademy(saDemande.dataset.saDemander,saDemande);return;}
  const saRetour=ev.target.closest("[data-sa-retour]");if(saRetour){$("courseDetail").hidden=true;$("catalogue").scrollIntoView({behavior:"smooth"});return;}
  const refresh=ev.target.closest("[data-refresh-course-resources]");

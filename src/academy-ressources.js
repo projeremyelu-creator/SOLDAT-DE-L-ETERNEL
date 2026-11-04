@@ -4,6 +4,7 @@
    - Dès la publication, tous les apprenants qui ont accès au cours (ou à la bibliothèque générale) la voient dans leur espace.
    - Aucune ressource ne contient de corrigé : les corrigés restent dans academy-correctifs.js (serveur seulement). */
 import {SOLDIERS_ACADEMY_2027 as PROGRAMME} from "./soldiers-academy-2027.js";
+import {terminesParRessource} from "./academy-progression.js";
 import {LOVE_SCHOOL,LOVE_SCHOOL_IDS,LOVE_SCHOOL_ADULT_IDS} from "./love-school.js";
 
 const reply=(data,status=200)=>Response.json(data,{status,headers:{"cache-control":"private, no-store","x-content-type-options":"nosniff"}});
@@ -119,7 +120,8 @@ export async function ressourcesApi(req,env,u,path){
     if(!fonction)return error("Espace réservé aux enseignants et coachs désignés.",403);
     const rows=(await env.DB.prepare("SELECT * FROM academy_2027_ressources"+(admin?"":" WHERE auteur=?")+" ORDER BY cree DESC LIMIT 1500").bind(...(admin?[]:[String(u.id)])).all()).results||[];
     const autorisees=await porteesAutorisees(env,u);
-    const out={ok:true,fonction,moi:String(u.id),autorisees,ressources:rows.map(r=>vuePublique(r,{gerer:true})),cours:[...PROGRAMME.courses.map(c=>({id:c.id,title:c.title,level:c.level})),...LOVE_SCHOOL.courses.map(c=>({id:c.id,title:c.title,bonus:true}))],types:TYPES};
+    const termines=await terminesParRessource(env,{auteur:admin?null:String(u.id)});
+    const out={ok:true,fonction,moi:String(u.id),autorisees,termines,ressources:rows.map(r=>vuePublique(r,{gerer:true})),cours:[...PROGRAMME.courses.map(c=>({id:c.id,title:c.title,level:c.level})),...LOVE_SCHOOL.courses.map(c=>({id:c.id,title:c.title,bonus:true}))],types:TYPES};
     if(admin){
       out.formateurs=((await env.DB.prepare("SELECT f.compte,f.fonction,f.portees,f.cree,c.nom,c.email FROM academy_2027_formateurs f LEFT JOIN comptes c ON c.id=f.compte ORDER BY f.cree DESC LIMIT 200").all()).results||[]).map(x=>({compte:x.compte,fonction:x.fonction,portees:(()=>{try{return JSON.parse(x.portees||"[]")}catch{return []}})(),nom:x.nom||"Compte SDE",email:x.email||"",cree:x.cree}));
     }
