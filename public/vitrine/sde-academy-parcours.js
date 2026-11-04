@@ -66,6 +66,7 @@ function progress(){
  text("statPassed",v.passed+" / 24");text("statPercent",v.percentage+" %");text("statCert",snapshot.certificates.filter(x=>x.niveau<=3).length+" / 3");
  const bar=$("progressBar");bar.setAttribute("aria-valuenow",String(v.passed));requestAnimationFrame(()=>{bar.firstElementChild.style.width=Math.round(v.passed/24*100)+"%";});
  renderCatalogue();renderCertificates();renderAvis();renderProjet();renderCohortes();renderSpecialisations();renderBiblio();$("studentPage").hidden=false;
+ window.SDEAcademyDyn?.chargerTableau();
  $("tab-projet").hidden=!snapshot.projet?.ouvert;
  const admin=!!snapshot.admin;$("adminShortcut").hidden=!admin;$("adminPage").hidden=!admin;$("studioShortcut").hidden=!(admin||snapshot.formateur);
 }
@@ -157,7 +158,7 @@ function afficherLoveCours(id){
    zone.hidden=false;zone.scrollIntoView({behavior:"smooth",block:"start"});return;
  }
  const lecons=c.lessons;
- const chapitres=lecons.map((l,i)=>'<details class="love-lesson"'+(i===0?' open':'')+'><summary>Leçon '+(i+1)+' — '+esc(l.title)+'</summary><p>'+esc(l.body)+'</p><p class="muted"><strong>À méditer :</strong> '+esc(l.reflection)+'</p></details>').join("");
+ const chapitres=lecons.map((l,i)=>'<details class="love-lesson"'+(i===0?' open':'')+'><summary>Leçon '+(i+1)+' — '+esc(l.title)+'</summary><p>'+esc(l.body)+'</p><p class="muted"><strong>À méditer :</strong> '+esc(l.reflection)+'</p>'+(c.adultOnly?'':'<button type="button" class="button academy-dyn-lesson-button" aria-pressed="false" data-dyn-cours="'+esc(c.id)+'" data-dyn-termine="'+(i+1)+'">Marquer cette leçon comme étudiée</button><small class="academy-dyn-lesson-status" role="status"></small>')+'</details>').join("");
  const documents=c.ressources?.length?c.ressources.map((r,i)=>UI.ressourceHtml(r,i)).join(""):'<p class="muted">Aucun support complémentaire n’a encore été publié pour ce cours.</p>';
  const quiz=(c.quiz||[]).map((q,i)=>'<fieldset class="love-quiz" data-love-question="'+i+'"><legend>Question '+(i+1)+' — '+esc(q.question)+'</legend>'+
  q.options.map((o,j)=>'<label><input type="radio" name="love-'+esc(c.id)+'-'+i+'" value="'+j+'"> <span>'+esc(o)+'</span></label>').join("")+
@@ -172,7 +173,8 @@ function afficherLoveCours(id){
  (quiz?'<h3>Quiz de compréhension (non noté)</h3><p class="muted">Sans impact sur le cursus officiel.</p>'+quiz:'')+
  (references?'<h3>Sources institutionnelles</h3><ul>'+references+'</ul>':'')+
  '<h3>Supports des enseignants et coachs</h3><div class="stack">'+documents+'</div>'+
- '<div class="actions"><button type="button" class="button" data-love-retour>Retour aux cours</button></div>';
+ '<section id="academyDynLove" class="academy-dyn-course" aria-label="Activités interactives Love School"></section><div class="actions"><button type="button" class="button" data-love-retour>Retour aux cours</button></div>';
+ if(!c.adultOnly)window.SDEAcademyDyn?.chargerCours(c.id);
  zone.hidden=false;zone.scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function ouvrirLoveCours(id){
@@ -374,19 +376,20 @@ async function openCourse(id,onglet){
   mainTabs.activer("parcours");
   const panel=$("courseDetail");panel.hidden=false;
   const presentation='<p>'+esc(c.purpose)+'</p><p><strong>Lectures bibliques :</strong> '+esc(c.refs)+'</p><h3>Objectifs pédagogiques</h3><ol class="numbered">'+c.goals.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ol>';
-  const lecons=c.units.map((x,i)=>'<details class="lecon"'+(i===0?" open":"")+'><summary><span class="chip">Leçon '+x.number+' · 90 min</span> '+esc(x.title)+'</summary><div class="corps"><p>'+esc(x.body)+'</p><p class="muted"><strong>À lire :</strong> '+esc(x.scriptures)+'</p></div></details>').join("");
+  const lecons=c.units.map((x,i)=>'<details class="lecon"'+(i===0?" open":"")+'><summary><span class="chip">Leçon '+x.number+' · 90 min</span> '+esc(x.title)+'</summary><div class="corps"><p>'+esc(x.body)+'</p><p class="muted"><strong>À lire :</strong> '+esc(x.scriptures)+'</p><button type="button" class="button academy-dyn-lesson-button" aria-pressed="false" data-dyn-cours="'+esc(c.id)+'" data-dyn-termine="'+x.number+'">Marquer cette leçon comme étudiée</button><small class="academy-dyn-lesson-status" role="status"></small></div></details>').join("");
   const ressourcesListe=res.length?'<div class="stack">'+res.map((x,i)=>UI.ressourceHtml(x,i)).join("")+'</div>':'<div class="vide">Aucune ressource pour ce cours pour le moment. Vos enseignants et coachs y ajouteront des vidéos, documents et leçons : elles apparaîtront ici dès leur publication.</div>';
   const ressources='<div class="actions"><button type="button" class="button" data-refresh-course-resources>Actualiser ce cours</button><span id="courseResourcesStatus" role="status" aria-live="polite" class="muted"></span></div><div id="courseResourcesList">'+ressourcesListe+'</div>';
   const suivi='<h3>Suivi des acquis</h3><p>Quiz : '+esc(scoreText(s.quiz))+' · Travaux : '+esc(scoreText(s.exercises))+' · Participation : '+esc(scoreText(s.participation))+' · Examen : '+esc(scoreText(s.exam))+' · Assiduité : '+esc(s.attendance)+' %</p><p><strong>Note finale :</strong> '+esc(scoreText(s.average))+' · '+(s.passed?"Cours validé":"Validation : 70/100 et au moins 80 % de présence")+'</p>'+(s.feedback?.length?'<h3>Retours de correction</h3><ul>'+s.feedback.map(f=>'<li><strong>'+esc(f.type)+' · '+esc(f.score)+'/100</strong> — '+esc(f.commentaire)+'</li>').join('')+'</ul>':'');
   const evals=suivi+renderExerciseForm(c,"quiz",c.quiz,s)+renderExerciseForm(c,"exercises",c.exercises,s)+renderExerciseForm(c,"exam",c.exam,s);
   const onglets=[["presentation","Présentation",presentation],["lecons","Leçons",lecons],["ressources","Ressources"+(res.length?" ("+res.length+")":""),ressources],["evaluations","Évaluations",evals]];
   panel.innerHTML='<div class="eyebrow">'+esc(c.id)+' · Niveau '+c.level+' · 8 heures</div><h2>'+esc(c.title)+'</h2>'+(s.passed?'<span class="chip ok">Cours validé</span>':"")+
-   '<div class="tabs sub" role="tablist" aria-label="Contenu du cours" id="courseTabs">'+onglets.map(([k,l],i)=>'<button type="button" role="tab" id="tab-c-'+k+'" aria-controls="pane-c-'+k+'" aria-selected="'+(i===0)+'" '+(i===0?"":'tabindex="-1"')+'>'+esc(l)+'</button>').join("")+'</div>'+
+   '<section id="academyDynCourse" class="academy-dyn-course" aria-label="Mon suivi de lecture"></section><div class="tabs sub" role="tablist" aria-label="Contenu du cours" id="courseTabs">'+onglets.map(([k,l],i)=>'<button type="button" role="tab" id="tab-c-'+k+'" aria-controls="pane-c-'+k+'" aria-selected="'+(i===0)+'" '+(i===0?"":'tabindex="-1"')+'>'+esc(l)+'</button>').join("")+'</div>'+
    onglets.map(([k,,html],i)=>'<div role="tabpanel" id="pane-c-'+k+'" aria-labelledby="tab-c-'+k+'" '+(i===0?'class="pane"':"hidden")+'>'+html+'</div>').join("")+
-   '<button class="button" type="button" id="backCourses">← Revenir à la liste</button>';
+   '<section id="academyDynActivities" class="academy-dyn-activities" aria-label="Activités, classes virtuelles et coaching"></section><button class="button" type="button" id="backCourses">← Revenir à la liste</button>';
   const sub=UI.tabs($("courseTabs"));
   if(onglets.some(x=>x[0]===onglet))sub.activer("c-"+onglet);
   $("backCourses").addEventListener("click",()=>{panel.hidden=true;$("catalogue").scrollIntoView({behavior:"smooth"});});
+  window.SDEAcademyDyn?.chargerCours(id);
   panel.scrollIntoView({behavior:"smooth",block:"start"});alertMessage("Cours "+id+" ouvert.");
  }catch(e){alertMessage(e.message);}
 }
