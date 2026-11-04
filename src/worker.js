@@ -406,7 +406,7 @@ async function apiComptes(req, env, u) {
   const cible = await env.DB.prepare("SELECT * FROM comptes WHERE email = ?").bind(email).first();
   const roleCible = props.includes(email) ? "proprietaire" : cible ? cible.role : null;
   const associationProprietairePerso = roleCible === "proprietaire" && u.niveau >= 3 && email === u.email && b.membreId !== undefined && String(b.membreId || "").trim() !== "" && (!cible?.membreId || cible.membreId === String(b.membreId));
-  if (roleCible === "proprietaire" && !(u.niveau >= 3 && b.reinitialiser && email === u.email) && !associationProprietairePerso) return erreur("refuse", "Le compte propriétaire ne peut être relié qu’à sa propre fiche.", 403);
+  if (roleCible === "proprietaire" && !(u.niveau >= 3 && b.reinitialiser && email === u.email) && !associationProprietairePerso) return erreur("refuse", "Le compte propriétaire ne peut pas être modifié ici.", 403);
   if (roleCible === "admin" && u.niveau < 3) return erreur("refuse", "Seul le propriétaire modifie un administrateur.", 403);
   if (b.supprimer) {
     await env.DB.batch([env.DB.prepare("DELETE FROM comptes WHERE email = ?").bind(email), env.DB.prepare("DELETE FROM sessions WHERE email = ?").bind(email)]);
@@ -426,7 +426,7 @@ async function apiComptes(req, env, u) {
     if (!cheminValide("membres/" + mid, true)) return erreur("invalid_argument", "Fiche invalide.");
     const f = await lireDoc(env, "membres/" + mid);
     if (!f) return erreur("invalid_argument", "Fiche introuvable.");
-    if (props.includes(email) && normEmail(f.data.email) !== email) return erreur("refuse", "Le compte propriétaire ne peut être relié qu’à sa propre fiche.", 403);
+    if (props.includes(email) && normEmail(f.data.email) !== email) return erreur("refuse", "Le compte propriétaire ne peut pas être modifié ici.", 403);
     const deja = await env.DB.prepare("SELECT email FROM comptes WHERE membreId = ? AND email <> ?").bind(mid, email).first();
     if (deja) return erreur("invalid_argument", "Cette fiche est déjà reliée au compte " + deja.email + ".");
     let matricule = f.data.matricule || "";
