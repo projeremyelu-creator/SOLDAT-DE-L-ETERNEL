@@ -117,7 +117,7 @@ export function TacticalMemberPanel({academy,academyLoading=false,academyError='
       <h4>Mes modules de formation</h4>
       {academyLoading&&<p role="status" className="sde-tactical-empty">Chargement des formations…</p>}
       {academyError&&<p role="alert" className="sde-tactical-empty">{academyError}</p>}
-      {!academyLoading&&!academyError&&!cours.length&&<p className="sde-tactical-empty">Aucune formation attribuée à votre compte pour le moment.</p>}
+      {!academyLoading&&!academyError&&!cours.length&&!d.reconnaissanceFondateur&&<p className="sde-tactical-empty">Aucune formation attribuée à votre compte pour le moment.</p>}{d.reconnaissanceFondateur&&<p className="sde-tactical-note">{clean(d.reconnaissanceFondateur)}</p>}
       {!academyLoading&&!academyError&&cours.map(c=>{const progress=percent(c.pourcentage);
        return <div className="sde-tactical-training-course" key={c.id||c.titre}>
          <div className="sde-tactical-training-heading"><strong>{clean(c.titre)||'Formation SDE'}</strong><small>{clean(c.statut)||'Inscrit'}</small></div>
