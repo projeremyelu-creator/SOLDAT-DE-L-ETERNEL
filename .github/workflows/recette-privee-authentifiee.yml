@@ -29,13 +29,32 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22.23.4'
+      - name: Vérifier la configuration des comptes de recette
+        id: comptes
+        shell: bash
+        env:
+          SDE_QA_MEMBER_LOGIN: ${{ secrets.SDE_QA_MEMBER_LOGIN }}
+          SDE_QA_MEMBER_PASSWORD: ${{ secrets.SDE_QA_MEMBER_PASSWORD }}
+          SDE_QA_ADMIN_LOGIN: ${{ secrets.SDE_QA_ADMIN_LOGIN }}
+          SDE_QA_ADMIN_PASSWORD: ${{ secrets.SDE_QA_ADMIN_PASSWORD }}
+        run: |
+          if [[ -n "$SDE_QA_MEMBER_LOGIN" && -n "$SDE_QA_MEMBER_PASSWORD" && -n "$SDE_QA_ADMIN_LOGIN" && -n "$SDE_QA_ADMIN_PASSWORD" ]]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Recette privée non exécutée : ajoutez les quatre secrets SDE_QA_MEMBER_* et SDE_QA_ADMIN_*."
+            echo "### Recette privée non exécutée" >> "$GITHUB_STEP_SUMMARY"
+            echo "Les comptes de test dédiés ne sont pas encore configurés dans les secrets GitHub Actions." >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Vérifier le script de recette
         run: node --check scripts/audit-prive-authentifie.mjs
       - name: Installer Chromium sans toucher aux données
+        if: steps.comptes.outputs.configured == 'true'
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.0
           npx playwright install --with-deps chromium
       - name: Vérifier les parcours connectés des comptes de test dédiés
+        if: steps.comptes.outputs.configured == 'true'
         run: node scripts/audit-prive-authentifie.mjs
         env:
           SDE_QA_MEMBER_LOGIN: ${{ secrets.SDE_QA_MEMBER_LOGIN }}
