@@ -4,10 +4,10 @@
 <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0d1b32">
 <title>Studio enseignants et coachs · Soldiers Academy</title>
 <link rel="icon" href="/vitrine/logo-96.png"><link rel="stylesheet" href="/vitrine/sde-premium-public.css">
-<link rel="stylesheet" href="/vitrine/sde-academy-onglets.css">
+<link rel="stylesheet" href="/vitrine/sde-academy-onglets.css"><link rel="stylesheet" href="/vitrine/sde-academy-dynamique.css?v=20261104-phase-4">
 <link rel="stylesheet" href="/vitrine/sde-academy-identite.css">
 <script defer src="/vitrine/sde-academy-ui.js?v=20271103-studio"></script>
-<script defer src="/vitrine/sde-academy-enseignants.js?v=20271103-academy-34-validations"></script>
+<script defer src="/vitrine/sde-academy-enseignants.js?v=20261104-dynamique"></script><script defer src="/vitrine/sde-academy-studio-dynamique.js?v=20261104-phase-4"></script>
 </head><body>
 <a class="skip" href="#main">Passer au contenu principal</a>
 <header><div class="inner"><a class="identity" href="/"><img alt="" src="/vitrine/logo-96.png"><span><strong>S.D.E. · SOLDIERS ACADEMY</strong><small>Studio enseignants et coachs</small></span></a><nav aria-label="Navigation"><a href="/mon-espace/academy">Espace apprenant</a><a href="/mon-espace">Mon espace</a></nav></div></header>
@@ -20,6 +20,7 @@
 <button type="button" role="tab" id="tab-publier" aria-controls="pane-publier" aria-selected="true">Publier</button>
 <button type="button" role="tab" id="tab-liste" aria-controls="pane-liste" aria-selected="false" tabindex="-1">Mes publications</button>
 <button type="button" role="tab" id="tab-validations" aria-controls="pane-validations" aria-selected="false" tabindex="-1" hidden>Valider les 34 cours <span class="chip" id="loveValidationBadge" hidden></span></button>
+<button type="button" role="tab" id="tab-dynamique" aria-controls="pane-dynamique" aria-selected="false" tabindex="-1">Classes & activités</button>
 <button type="button" role="tab" id="tab-equipe" aria-controls="pane-equipe" aria-selected="false" tabindex="-1" hidden>Équipe pédagogique</button>
 </div>
 <div class="pane" role="tabpanel" id="pane-publier" aria-labelledby="tab-publier">
@@ -61,6 +62,47 @@
 <div class="actions"><button class="button" type="button" id="loveValiderActualiser">Actualiser les demandes</button></div>
 <p id="loveValidationStatus" class="status" role="status" aria-live="polite"></p>
 <div id="loveDemandes" class="stack" aria-label="Liste des demandes de validation Soldiers Academy et Love School"></div>
+</section>
+</div>
+<div class="pane" role="tabpanel" id="pane-dynamique" aria-labelledby="tab-dynamique" hidden>
+<section class="panel academy-dyn-studio" aria-labelledby="dynStudioTitle">
+<div class="eyebrow">Phases 1–4 · Soldiers Academy 2027</div>
+<h2 id="dynStudioTitle">Atelier pédagogique interactif</h2>
+<p class="muted">Préparez des activités QCM, programmez vos classes et répondez aux apprenants qui ont déjà reçu l'autorisation pour vos cours. Les QCM d'entraînement ne modifient pas les notes officielles. Utilisez l'onglet Publier pour ajouter les vidéos, replays et documents.</p>
+<div class="actions"><button type="button" class="button" id="dynStudioRefresh">Actualiser les activités</button></div>
+<p class="status" id="dynStudioStatus" role="status" aria-live="polite">Chargement de vos cours confiés…</p>
+<div class="academy-dyn-studio-grid">
+<form id="dynFormQuiz" class="academy-dyn-form">
+<h3>Créer un quiz interactif</h3>
+<label class="field">Cours confié <select name="cours" id="dynQuizCourse" required></select></label>
+<label class="field">Question pédagogique <textarea name="question" rows="2" required minlength="10" maxlength="240"></textarea></label>
+<label class="field">Choix A <input name="choix1" minlength="2" maxlength="150" required></label>
+<label class="field">Choix B <input name="choix2" minlength="2" maxlength="150" required></label>
+<label class="field">Choix C (facultatif) <input name="choix3" maxlength="150"></label>
+<label class="field">Choix D (facultatif) <input name="choix4" maxlength="150"></label>
+<label class="field">Bonne réponse <select name="reponse" required><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select></label>
+<label class="field">Explication après réponse <textarea name="explication" rows="3" minlength="15" maxlength="500" required placeholder="Pourquoi cette réponse est-elle juste ?"></textarea></label>
+<label class="field">Publication programmée (facultatif) <input type="datetime-local" name="publication"></label>
+<button class="button primary" type="submit">Publier cette activité</button>
+<p class="status" id="dynQuizStatus" role="status" aria-live="polite"></p>
+</form>
+<form id="dynFormMeet" class="academy-dyn-form">
+<h3>Programmer une classe virtuelle</h3>
+<label class="field">Cours confié <select name="cours" id="dynMeetCourse" required></select></label>
+<label class="field">Titre de la séance <input name="titre" minlength="5" maxlength="120" required placeholder="Ex. Étude biblique interactive"></label>
+<label class="field">Début de la séance <input type="datetime-local" name="debut" required></label>
+<label class="field">Durée (minutes) <input type="number" name="duree" min="15" max="240" value="60" required></label>
+<label class="field">Lien Google Meet <input type="url" name="lien" required placeholder="https://meet.google.com/abc-defg-hij"></label>
+<button class="button primary" type="submit">Programmer la classe</button>
+<p class="status" id="dynMeetStatus" role="status" aria-live="polite"></p>
+</form>
+</div>
+<div class="academy-dyn-studio-grid">
+<section><h3>Activités interactives publiées</h3><div id="dynStudioActivites" class="academy-dyn-stack"></div></section>
+<section><h3>Classes programmées</h3><div id="dynStudioSeances" class="academy-dyn-stack"></div></section>
+</div>
+<section aria-labelledby="dynQuestionsTitle"><h3 id="dynQuestionsTitle">Questions des apprenants</h3><p class="muted">Les échanges sont privés et réservés à l'apprenant concerné et aux professeurs habilités. Aucun renseignement pastoral, médical ou intime n'est attendu.</p><div id="dynStudioMessages" class="academy-dyn-stack"></div></section>
+<section id="dynPilotage" aria-labelledby="dynPilotageTitle" hidden><h3 id="dynPilotageTitle">Pilotage de la direction pédagogique</h3><p class="muted">Indicateurs agrégés du suivi. Ils ne constituent pas une note de maturité spirituelle.</p><div id="dynPilotageMetrics" class="academy-dyn-metrics"></div><p class="status" id="dynPilotageStatus" role="status" aria-live="polite"></p></section>
 </section>
 </div>
 <div class="pane" role="tabpanel" id="pane-equipe" aria-labelledby="tab-equipe" hidden>
