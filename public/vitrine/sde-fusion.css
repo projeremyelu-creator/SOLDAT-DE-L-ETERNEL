@@ -78,9 +78,9 @@ body.sde-unifie :is(.m-pole,.pole-card,[class*="pole-card"]) :is(p,span,li,small
 
 /* espaces sécurisés */
 body.sde-unifie .private-access-intro{color:var(--fu-muted)!important}
-body.sde-unifie :is(.private-member,.private-admin){background:linear-gradient(135deg,var(--fu-green),var(--fu-green-2))!important;border:1px solid var(--fu-line)!important;color:var(--fu-ink)!important}
-body.sde-unifie :is(.private-member,.private-admin) :is(h3,strong){color:var(--fu-gold-2)!important}
-body.sde-unifie :is(.private-member,.private-admin) :is(p,span,small){color:var(--fu-ink)!important}
+body.sde-unifie :is(.private-member,.private-login){background:linear-gradient(135deg,var(--fu-green),var(--fu-green-2))!important;border:1px solid var(--fu-line)!important;color:var(--fu-ink)!important}
+body.sde-unifie :is(.private-member,.private-login) :is(h3,strong){color:var(--fu-gold-2)!important}
+body.sde-unifie :is(.private-member,.private-login) :is(p,span,small){color:var(--fu-ink)!important}
 
 /* formulaires */
 body.sde-unifie :is(input,select,textarea):not([type=checkbox]):not([type=radio]){

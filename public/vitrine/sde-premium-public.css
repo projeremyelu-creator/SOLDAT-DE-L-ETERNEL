@@ -385,7 +385,7 @@ html body.sde-accueil-maquette.sde-ivoire .m-feature-img{
 html body.sde-accueil-maquette.sde-ivoire .m-feature::before{
  background:linear-gradient(90deg,#1d1038 4%,rgba(36,14,61,.91) 42%,rgba(16,12,31,.12) 100%);
 }
-html body.sde-accueil-maquette.sde-ivoire .private-admin{
+html body.sde-accueil-maquette.sde-ivoire .private-login{
  background:linear-gradient(125deg,#1c0f32,#321b5b)!important;
  border-color:#c7aa70!important;
 }

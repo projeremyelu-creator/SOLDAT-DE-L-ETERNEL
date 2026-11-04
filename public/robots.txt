@@ -1,7 +1,14 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /portail
+Disallow: /connexion
+Disallow: /connexion-unifiee
+Disallow: /mot-de-passe
 Disallow: /mon-espace
 Disallow: /administration
-Disallow: /connexion-unifiee
+Disallow: /comptes-membres
+Disallow: /courriels
+Disallow: /formulaires
+Disallow: /squads
 Sitemap: https://mouvement-sde.org/sitemap.xml
