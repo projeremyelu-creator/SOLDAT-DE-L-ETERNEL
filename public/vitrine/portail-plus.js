@@ -216,6 +216,7 @@
     const section=node('div',undefined,'sde-academy-legacy-item');
     section.append(node('strong',f.titre||'Formation SDE'),note(f.statut||'Inscrit'));
     if(Number(f.total)>0)section.append(ratio(f.faits,f.total,'modules suivis'));
+    if(Array.isArray(f.modules)&&f.modules.length)section.append(list(f.modules,'Le programme détaillé sera communiqué par le responsable.',(li,m)=>li.append(node('strong',m.titre||'Module'),note((m.suivi?'Suivi':'À suivre')+(m.date?' · '+m.date:'')))));
     listeHistorique.append(section);
    }
    panel.append(listeHistorique);
