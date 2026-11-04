@@ -321,6 +321,15 @@
     synchroniser();
   }
 
+  function nommerLiensSansLibelle(){
+    const noms={"/programmes#infire":"Découvrir IN FIRE","/academy":"Découvrir Soldiers Academy","/programmes":"Voir les programmes","/programmes#tpa-2026":"Découvrir la TPA 2026","/missions-humanitaires":"Découvrir les missions humanitaires","/soldiers-voice":"Découvrir Soldiers Voice","/contact#rejoindre":"Rejoindre le mouvement","/priere":"Accéder aux prières et à l’intercession"};
+    document.querySelectorAll('a[href]').forEach(lien=>{
+      if(lien.getAttribute('aria-label')||lien.textContent.trim())return;
+      const image=lien.querySelector('img[alt]')?.getAttribute('alt')?.trim();
+      lien.setAttribute('aria-label',image||noms[lien.getAttribute('href')]||'Ouvrir cette rubrique SDE');
+    });
+  }
+
   // Parcours public : cinq raccourcis fixes sur téléphone, sans accès aux
   // finances internes. « Finances » mène uniquement au soutien public.
   function installerRaccourcisPublics(){
@@ -373,7 +382,7 @@
     document.body.classList.add("sde-has-bottom-nav");
   }
 
-  const commencer=()=>{actualiserEvenements();masquerAncienneTPA();navigationAccessible();installerRaccourcisPublics();};
+  const commencer=()=>{actualiserEvenements();masquerAncienneTPA();navigationAccessible();nommerLiensSansLibelle();installerRaccourcisPublics();};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",commencer,{once:true});
   else commencer();
 })();

@@ -106,6 +106,13 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
         assert.match(signup.getAttribute("href"),/^\/contact\?objet=/);
         signup.remove();
         assert.equal(normalize(preserved.textContent),normalize(a.textContent),name+"/"+id);
+      }else if(name==="programmes"&&id==="infire"){
+        // Après la date officielle, la fiche devient une archive : plus de
+        // confirmation de venue ni de calendrier passé, mais les documents restent accessibles.
+        assert.match(b.textContent,/Événement terminé/);
+        assert.equal(b.querySelector("#f-venue"),null);
+        assert.ok(b.querySelector('a[href="/album-infire"]'));
+        assert.ok(b.querySelector('a[href="/vitrine/infire-2026/chronogramme-officiel.pdf"]'));
       }else if(name==="projets"&&id==="projets"){
         // Les textes d'origine sont inchangés ; seuls deux CTA de navigation
         // explicites ont été ajoutés aux cartes IN FIRE et Médiathèque.
@@ -116,7 +123,8 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
         assert.equal(normalize(editable.textContent),normalize(a.textContent),name+"/"+id);
       }else assert.equal(normalize(b.textContent),normalize(a.textContent),name+"/"+id);
       assert.equal(b.querySelectorAll("img").length,a.querySelectorAll("img").length,name+"/"+id+" images");
-      assert.equal(b.querySelectorAll("form").length,a.querySelectorAll("form").length,name+"/"+id+" forms");
+      if(!(name==="programmes"&&id==="infire"))
+        assert.equal(b.querySelectorAll("form").length,a.querySelectorAll("form").length,name+"/"+id+" forms");
     }
   }
 });
@@ -151,11 +159,11 @@ test("Enseignements : les ressources publiées sont téléchargeables directemen
   const card=d.window.document.querySelector("#ressources-grille .ressource-carte:not([data-sde-officiel])");assert.equal(card.querySelector("h3").textContent,"Livre SDE");
   assert.equal(card.querySelector(".res-download").getAttribute("href"),"/api/ressources-publiques/livre/telecharger");assert.match(d.window.document.getElementById("res-compteur").textContent,/2 ressources/);d.window.close();
 });
-test("MPA: programmation — calendrier et confirmation existants présents",()=>{
+test("MPA: programmation — calendrier futur et archive IN FIRE présents",()=>{
   const d=dom("programmes"),document=d.window.document;
-  assert.ok(document.querySelector("#f-venue"));
+  assert.equal(document.querySelector("#f-venue"),null);
   assert.ok(document.querySelector("#agenda-liste"));
-  assert.ok(document.querySelector('[data-ics="infire"]'));
+  assert.ok(document.querySelector('#infire a[href="/album-infire"]'));
   assert.ok(document.querySelector("#if-prog"));
   d.window.close();
 });

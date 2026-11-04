@@ -11,7 +11,7 @@ if (!Array.isArray(gallery.editions) || gallery.editions.join(',') !== '2024,202
 if (!Array.isArray(gallery.photos) || gallery.photos.length !== 10) errors.push('Le catalogue attend dix photographies.');
 const page=readFileSync(pageFile,'utf8'),programmes=readFileSync(programmesFile,'utf8'),ressources=readFileSync(ressourcesFile,'utf8');
 for(const year of gallery.editions){if(!page.includes('data-year="'+year+'"'))errors.push('Onglet '+year+' manquant.');}
-for(const [name,html] of [['programmes',programmes],['ressources',ressources]])if(!html.includes('/vitrine/album-infire.html'))errors.push('Lien galerie absent dans '+name+'.');
+for(const [name,html] of [['programmes',programmes],['ressources',ressources]])if(!html.includes('/album-infire'))errors.push('Lien galerie absent dans '+name+'.');
 for(const photo of gallery.photos || []){
  if(!gallery.editions.includes(photo.annee)) errors.push('Année non reconnue pour '+photo.numero);
  for(const key of ['image','miniature']){

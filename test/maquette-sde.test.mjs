@@ -206,12 +206,13 @@ test("identité SDE - MOUVEMENT : marque lisible, logo officiel et en-tête sans
  assert.ok(themes.includes('logo-sde.webp'),"logo officiel dans la barre latérale");
  assert.ok(themes.includes('.ref-brand-caption strong')&&themes.includes('text-overflow:ellipsis'),"en-tête sans chevauchement");
 });
-test("transition de chargement SDE : une seule fermeture et au plus quatre secondes",()=>{
+test("transition de chargement SDE : une seule fermeture et moins d'une seconde",()=>{
  const js=read("public/vitrine/sde-splash.js");
  const css=read("public/vitrine/sde-splash.css");
  assert.ok(js.includes('fermeturePlanifiee = true'),"pas de fermetures répétées");
  assert.ok(js.includes('if (fermeturePlanifiee) return'),"fermeture idempotente");
- assert.ok(js.includes('setTimeout(fermer, 4000)'),"garde-fou d'affichage");
+ assert.ok(js.includes('setTimeout(fermer, 700)'),"garde-fou d'affichage rapide");
+ assert.ok(js.includes('DOMContentLoaded'),"ne dépend pas du chargement de toutes les ressources");
  assert.ok(js.includes('prefers-reduced-motion'),"accessibilité des animations");
  assert.ok(css.includes('.sde-splash.is-done'),"fondu de la transition");
 });

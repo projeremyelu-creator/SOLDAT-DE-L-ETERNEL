@@ -15,10 +15,9 @@ test('adhésion : champs requis côté serveur, programme et motivation conserv�
   assert.equal(row.pole,base.pole);assert.match(row.message,/Soldiers Academy/);assert.match(row.message,/Grandir dans la foi/);
  }finally{f.close()}
 });
-test('événement : un contact est demandé et le bouton annonce un enregistrement',()=>{
+test('événement passé : aucune nouvelle inscription et accès aux archives',()=>{
  const d=new JSDOM(readFileSync('public/vitrine/programmes.html','utf8')).window.document;
- assert.equal(d.querySelector('#v-tel').required,true);
- assert.equal(d.querySelector('#v-accord').required,true);
- assert.match(d.querySelector('#f-venue button[type=submit]').textContent,/Confirmer ma venue/);
- assert.match(d.querySelector('#f-venue').parentElement.textContent,/08 h 00/);
+ assert.equal(d.querySelector('#f-venue'),null);
+ assert.match(d.querySelector('#infire').textContent,/Événement terminé/);
+ assert.ok(d.querySelector('#infire a[href="/album-infire"]'));
 });

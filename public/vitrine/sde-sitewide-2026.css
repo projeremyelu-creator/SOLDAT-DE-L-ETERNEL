@@ -314,6 +314,15 @@ body[data-motion="paused"].sde-unifie.sde-subpage.sde-ivoire #infire .decompte-c
   animation:none!important;transform:none!important;transition:none!important;
 }
 
+/* Correctifs de contraste prioritaires — texte sombre sur or et erreurs sur ivoire. */
+html body .ap-btn-gold,
+html body .ap-btn-gold:hover,
+html body .ap-btn-gold:focus-visible{color:#2b1450!important;-webkit-text-fill-color:#2b1450!important}
+.sde-error-page{color:#271447!important;background:#fffaf0!important}
+.sde-error-page :is(h1,h2,p,a){color:#271447!important;-webkit-text-fill-color:#271447!important}
+.sde-rubriques-completes{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:1180px;margin:18px auto 0;padding:0 18px}
+.sde-rubriques-completes a{padding:9px 12px;border:1px solid #c9a557;border-radius:999px;background:#fffaf0;color:#281549;font-weight:700;text-decoration:none}
+
 /* Sections d'initiative : textes hors cartes et formulaires toujours lisibles. */
 html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section:is(.sde-initiative-section,.sde-initiative-lead)>.enveloppe>p:not(.sde-initiative-note),
 html body.sde-unifie.sde-subpage.sde-ivoire main#contenu>section.sde-initiative-section .sde-initiative-split>div>p:not(.sde-initiative-note){
