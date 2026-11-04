@@ -80,6 +80,8 @@ function SoldierSpace({portal}){
  const m=me.data?.membre||{},c=card.data;
  const nom=c?.nom||[m.prenoms,m.nom].filter(Boolean).join(' ')||portal.compte.nom||'Membre SDE';
  const prenom=String(m.prenoms||nom).trim().split(/\s+/)[0]||'Soldat';
+ const salutation=/général/i.test(m.fonction||'')?'Bonjour mon Général':`Bonjour, ${prenom}`;
+ const presidentAcademy=/président et fondateur de soldiers academy/i.test(m.fonction||'');
  const initials=String(nom).trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();
  const qr=c?(()=>{const q=qrcode(0,'M');q.addData(c.code,'Byte');q.make();return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(q.createSvgTag({cellSize:4,scalable:true}))})():'';
  const day=iso=>{const t=new Date(iso+'T12:00:00');return Number.isNaN(t.getTime())?{d:'',m:''}:{d:t.getDate(),m:t.toLocaleDateString('fr-FR',{month:'short'}).toUpperCase()}};
@@ -89,12 +91,12 @@ function SoldierSpace({portal}){
  const prev=(()=>{const d=new Date();d.setMonth(d.getMonth()-1);return d.toISOString().slice(0,7)})();
  const aJour=!!paid&&paid.mois>=prev;
  return <div className="soldier-space sv">
-  <header className="sv-hello"><h1>Bonjour, {prenom}</h1><p>Avançons ensemble, pour un plus grand impact.</p><p className="ops-subtitle">Grandir · Servir · Impacter</p><p className="ops-welcome">Bienvenue dans votre espace SDE. Retrouvez ici les informations utiles à votre parcours, les prochains rendez-vous et les ressources disponibles.</p></header>
+  <header className="sv-hello"><h1>{salutation}</h1><p>Avançons ensemble, pour un plus grand impact.</p><p className="ops-subtitle">Grandir · Servir · Impacter</p><p className="ops-welcome">Bienvenue dans votre espace SDE. Retrouvez ici les informations utiles à votre parcours, les prochains rendez-vous et les ressources disponibles.</p></header>
   <div className="sv-top">
    <section className="soldier-card sv-card" aria-label="Carte de membre">
     <div className="soldier-card-head"><span>SOLDAT DE L’ÉTERNEL</span><small>DISCIPLINE · UNITÉ · IMPACT</small></div>
     <div className="soldier-card-body"><span className="sv-avatar" aria-hidden="true">{initials}</span><div><small>CARTE DE MEMBRE</small><strong>{c?.matricule||'Matricule à venir'}</strong><span className="sv-pill">{/leader visionnaire/i.test(m.fonction||'')?'Leader visionnaire':'Membre actif'}</span>{m.pole&&<p>PÔLE : {String(m.pole).toUpperCase()}</p>}</div>{qr&&<img src={qr} alt="QR Code personnel de présence" className="soldier-qr"/>}</div>
-    <div className="sv-card-name"><strong>{String(nom).toUpperCase()}</strong><span>Soldat de l’Éternel · Le Réveil Spirituel des Nations</span></div>
+    <div className="sv-card-name"><strong>{String(nom).toUpperCase()}</strong><span>{presidentAcademy?"Président et Fondateur de Soldiers Academy":"Soldat de l’Éternel · Le Réveil Spirituel des Nations"}</span></div>
    </section>
    <div className="sv-tiles">
     <button type="button" className="sv-tile" onClick={()=>portal.selectionner('academie')}><RefIcon name="academy"/><span>Formation</span><strong>{pct==null?'—':pct+' %'}</strong>{pct!=null&&<i className="sv-bar" style={{'--p':pct+'%'}} aria-hidden="true"/>}</button>
