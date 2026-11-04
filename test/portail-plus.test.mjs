@@ -18,3 +18,76 @@ test('Maquette direction : indicateurs et état graphique sans données fictives
 test('Engagements et cotisations : accès personnels utilisables et retour accueil',async()=>{const c=ui();try{await tick();c.d.querySelector('.member-quick-grid [data-plus-module=engagements]').click();await tick();assert.match(c.d.getElementById('sde-plus-panel').textContent,/Accueil/);assert.match(c.d.getElementById('sde-plus-panel').textContent,/Préparer la salle/);c.w.SDEPortal.selectionner('contributions');await tick();assert.match(c.d.getElementById('sde-plus-panel').textContent,/2026-10/);assert.match(c.d.getElementById('sde-plus-panel').textContent,/5.?000/);assert.ok(c.calls.some(x=>x.path==='/api/mes-cotisations'));assert.ok(!c.d.querySelector('input[name=montant]'))}finally{c.dom.window.close()}});
 test('Prochain rendez-vous : décompte sur date réelle, sans événement passé',async()=>{const c=ui();try{c.w.Date.now=()=>Date.parse('2026-10-28T08:00:00Z');await tick();const next=c.d.querySelector('.member-next-event');assert.ok(next);assert.match(next.textContent,/Veillée de prière/);assert.match(next.textContent,/J − 3/)}finally{c.dom.window.close()}});
 test('Graphique direction : sélection clavier et actualisation des indicateurs',async()=>{const c=ui('/administration',2);try{const original=c.w.fetch;c.w.fetch=async(path,options)=>path==='/api/tableau-de-bord'?{ok:true,json:async()=>({indicateurs:{membresActifs:8,presence:{taux:50},intercessions:1},missions:{actifs:2},frequentation:[{date:'2026-10-20',titre:'Veillée',presents:2,retards:1,absents:3,excuses:1}],urgences:[],activites:[]})}:original(path,options);await tick();const bar=c.d.querySelector('.command-bar-button');assert.ok(bar);bar.focus();bar.click();assert.equal(bar.getAttribute('aria-pressed'),'true');assert.match(c.d.querySelector('.command-chart-detail').textContent,/Veillée.*3 présences.*1 retards.*3 absences/);assert.match(c.d.querySelector('.command-kpis').textContent,/50 %/);c.d.querySelector('[data-dashboard-refresh]').click();await tick();assert.ok(c.d.querySelector('.command-bar-button'));assert.equal(c.w.location.pathname,'/administration')}finally{c.dom.window.close()}});
+
+
+test('Academy membre : la rubrique mobile ouvre le véritable catalogue 24 cours + 10 Love School',async()=>{
+ const c=ui('/mon-espace');
+ try{
+  await tick();
+  const fetchOriginal=c.w.fetch;
+  c.w.fetch=async(path,opts={})=>{
+   if(path==='/api/soldiers-academy'){
+    c.calls.push({path,opts});
+    return {ok:true,status:200,json:async()=>({ok:true,programme:{durationHours:192},progress:{passed:1},courses:Array.from({length:24},(_,i)=>({
+     id:'SA-'+String(i+1).padStart(2,'0'),level:1+Math.floor(i/8),
+     passed:i===0,acces:{autorise:i===0,statut:i===0?'approuve':i===1?'en_attente':'verrouille'}
+    }))})};
+   }
+   if(path==='/api/soldiers-academy/love-school'){
+    c.calls.push({path,opts});
+    return {ok:true,status:200,json:async()=>({ok:true,ecole:{courses:Array.from({length:10},(_,i)=>({
+     id:'LS-'+String(i+1).padStart(2,'0'),acces:{autorise:false,statut:i===0?'en_attente':'verrouille'}
+    }))}})};
+   }
+   return fetchOriginal(path,opts);
+  };
+  c.w.SDEPortal.selectionner('academie');
+  await tick();
+  const panel=c.d.getElementById('sde-plus-panel');
+  assert.match(panel.textContent,/24 cours · 3 niveaux · 192 heures/);
+  assert.match(panel.textContent,/1 \/ 24 cours validés/);
+  assert.match(panel.textContent,/10 cours bonus/);
+  assert.match(panel.textContent,/1 demande en attente/);
+  assert.ok(panel.querySelector('a[href="/mon-espace/academy"]'),'Lien vers les cours et les autorisations');
+  assert.ok(panel.querySelector('a[href="/mon-espace/academy#love-school"]'),'Lien direct vers Love School');
+  assert.ok(!panel.textContent.includes('Aucune formation liée à votre fiche'));
+  assert.ok(c.calls.some(x=>x.path==='/api/soldiers-academy'&&x.opts.credentials==='same-origin'));
+  assert.ok(c.calls.some(x=>x.path==='/api/soldiers-academy/love-school'));
+ }finally{c.dom.window.close()}
+});
+
+test('Academy membre : données indisponibles ne masquent jamais les deux parcours',async()=>{
+ const c=ui('/mon-espace');
+ try{
+  await tick();
+  const fetchOriginal=c.w.fetch;
+  c.w.fetch=async(path,opts)=>{
+   if(path==='/api/soldiers-academy'||path==='/api/soldiers-academy/love-school')throw Error('Réseau interrompu');
+   return fetchOriginal(path,opts);
+  };
+  c.w.SDEPortal.selectionner('academie');
+  await tick();
+  const panel=c.d.getElementById('sde-plus-panel');
+  assert.ok(panel.querySelector('a[href="/mon-espace/academy"]'));
+  assert.ok(panel.querySelector('a[href="/mon-espace/academy#love-school"]'));
+  assert.match(panel.textContent,/momentanément indisponible|ne peut pas être actualisé/);
+  assert.ok(!panel.textContent.includes('Aucune formation liée à votre fiche'));
+ }finally{c.dom.window.close()}
+});
+
+test('Academy membre : ne pas assimiler une ancienne formation absente à une non-inscription au cursus 2027',()=>{
+ const script=readFileSync('public/vitrine/portail-plus.js','utf8');
+ const index=readFileSync('public/index.html','utf8');
+ const styles=readFileSync('public/vitrine/portail-plus.css','utf8');
+ assert.ok(!script.includes('Aucune formation liée à votre fiche'));
+ assert.ok(script.includes("api('/api/soldiers-academy')"));
+ assert.ok(script.includes("api('/api/soldiers-academy/love-school')"));
+ assert.ok(script.includes('Autres formations et inscriptions historiques'));
+ assert.ok(script.includes('dataSources=await Promise.allSettled'));
+ // Le fichier index est régénéré par d'autres tests en parallèle :
+ // ici, contrôler les inclusions, la version exacte est vérifiée dans la PR.
+ assert.ok(index.includes('/vitrine/portail-plus.js?v='));
+ assert.ok(index.includes('/vitrine/portail-plus.css?v='));
+ assert.match(styles,/\.sde-plus-academy-grid/);
+ assert.match(styles,/@media\(max-width:480px\)/);
+});

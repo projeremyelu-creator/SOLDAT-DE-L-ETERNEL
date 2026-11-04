@@ -35,3 +35,35 @@
 
 .sde-menu-toggle{display:none}.sde-plus-search-status{font-size:.75rem;color:#e7c878}
 @media(max-width:760px){.sde-menu-toggle{display:inline-flex;align-items:center;justify-content:center}.sde-current-bar{flex-wrap:wrap}.sde-current-bar #sde-current-module{flex:1}.sde-current-bar .sde-menu-toggle{font-size:.75rem}}
+
+
+/* Portail Academy 2027 : le véritable cursus remplace le vieux panneau « aucune formation ». */
+.sde-plus-academy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:22px 0}
+.sde-plus-academy-grid>.sde-plus-card{display:flex;flex-direction:column;gap:8px;min-width:0;padding:clamp(18px,2.5vw,26px);background:linear-gradient(150deg,#172642,#24213c);border:1px solid #917354;color:#f7f1e8}
+.sde-plus-academy-grid>.sde-plus-card h3{color:#ffdf9d;font-size:1.25rem;line-height:1.4;margin:0}
+.sde-plus-academy-grid>.sde-plus-card .sde-plus-note{color:#e5dfec}
+.sde-plus-academy-grid .sde-academy-caption{font-size:.9rem;color:#fae8bc;margin:3px 0 9px;font-weight:700}
+.sde-plus-academy-grid .dashboard-progress{color:#fbf3e5;margin:6px 0}
+.sde-plus-academy-grid .dashboard-progress .sde-plus-note{color:#e7dce9}
+.sde-plus-academy-grid .dashboard-progress progress{accent-color:#e7c578}
+.sde-plus-academy-grid .sde-academy-love-card{background:radial-gradient(circle at 100% 5%,#86416960,transparent 52%),linear-gradient(145deg,#4b2143,#26203c);border-color:#bd85a1}
+.sde-plus-academy-grid .sde-academy-love-card h3{color:#ffdbe1}
+.sde-academy-levels{list-style:none;padding:10px 0;margin:0;display:grid;gap:8px;color:#fbf3e7;font-size:.87rem}
+.sde-academy-levels li{padding:8px 12px;border:1px solid #f7e3c02c;border-radius:10px;background:#ffffff09}
+.sde-plus-panel .sde-academy-action{display:inline-flex;align-items:center;justify-content:center;text-align:center;min-height:44px;padding:12px 16px;margin-top:auto;text-decoration:none;background:linear-gradient(125deg,#f1dba6,#e9bfc9);color:#301d3b;border:1px solid #f7e9c2;border-radius:12px;font-weight:800;white-space:normal;line-height:1.45}
+.sde-plus-panel .sde-academy-action:hover{background:#f7e6c0;color:#21172c}
+.sde-plus-panel .sde-academy-action:focus-visible{outline:3px solid #ffda94;outline-offset:4px}
+.sde-plus-panel .sde-academy-steps-card{max-width:100%;background:#f8f2e7;color:#252039;border-color:#d3b477;margin-bottom:22px}
+.sde-plus-panel .sde-academy-steps-card h3{color:#3c2747}
+.sde-academy-steps{padding-left:23px;margin:8px 0 14px;display:grid;gap:12px;font-size:.92rem;line-height:1.55;color:#30243d}
+.sde-academy-steps li::marker{font-weight:800;color:#825477}
+.sde-academy-legacy-item{border-top:1px solid #e2d6c6;margin-top:12px;padding-top:12px}
+.sde-plus-panel .member-academy .sde-academy-action{margin-top:14px}
+@media(max-width:840px){.sde-plus-academy-grid{grid-template-columns:1fr}}
+@media(max-width:480px){
+ .sde-plus-academy-grid{gap:12px}
+ .sde-plus-academy-grid>.sde-plus-card{padding:18px 15px}
+ .sde-plus-academy-grid>.sde-plus-card h3{font-size:1.13rem}
+ .sde-plus-panel .sde-academy-action{width:100%;box-sizing:border-box}
+}
+@media(prefers-reduced-motion:reduce){.sde-plus-academy-grid *{animation:none!important;transition:none!important}}
