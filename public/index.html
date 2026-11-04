@@ -612,7 +612,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
   const accesDirection = () => accesFinances();
   const peutEcrire = () => !!S.db && S.peutEcrire !== false && S.etat === "pret";
   const peutAdmin = () => !!S.db && (S.estAdmin || S.estProprio) && S.etat === "pret";
-  const ongletsVisibles = () => ONGLETS.filter((o) => (["membres", "secretariat", "garnisons", "chambre", "projets"].includes(o.id) ? accesRegistre() : o.id === "academie" ? accesRegistre() || (S.user && S.user.membreId) : ["portevoix", "arsenal"].includes(o.id) ? accesRegistre() || S.user !== null : o.id === "assistant" ? !!S.sample : o.id === "finances" ? accesFinances() || (S.etat === "connexion" && S.vue === "finances") : true));
+  const ongletsVisibles = () => ONGLETS.filter((o) => (["membres", "secretariat", "garnisons", "chambre", "projets"].includes(o.id) ? accesRegistre() : o.id === "academie" ? accesRegistre() || S.user !== null : ["portevoix", "arsenal"].includes(o.id) ? accesRegistre() || S.user !== null : o.id === "assistant" ? !!S.sample : o.id === "finances" ? accesFinances() || (S.etat === "connexion" && S.vue === "finances") : true));
 
   /* Membres */
   const nomComplet = (m) => (m ? [String(m.nom || "").toUpperCase(), m.prenoms || ""].filter(Boolean).join(" ").trim() || "Sans nom" : "");
@@ -954,7 +954,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const autres = vis.filter((o) => !estPrim(o));
     const compact = prim.length + autres.length > 5;
     const badges = badgesNav();
-    const b = (o, x) => { const dot = badges[o.id] ? `<span class="notif-dot" aria-label="${badges[o.id]} nouveau(x)"></span>` : ""; return `<button class="nav-btn${x ? " nav-x" : ""}${o.id === S.vue ? " on" : ""}" type="button" data-fam="${famDe(o.id)}" data-vue="${o.id}"${o.id === S.vue ? ' aria-current="page"' : ""}><span class="badge">${I(o.ico)}${dot}</span><span class="l-short">${o.court}</span><span class="l-long">${o.long}</span></button>`; };
+    const b = (o, x) => { const dot = badges[o.id] ? `<span class="notif-dot" aria-label="${badges[o.id]} nouveau(x)"></span>` : ""; const contenu = `<span class="badge">${I(o.ico)}${dot}</span><span class="l-short">${o.court}</span><span class="l-long">${o.long}</span>`; const classe = `nav-btn${x ? " nav-x" : ""}${o.id === S.vue ? " on" : ""}`; if (o.id === "academie") return `<a class="${classe} nav-academy-direct" href="/mon-espace/academy" data-fam="${famDe(o.id)}" aria-label="Ouvrir les 24 cours Soldiers Academy et les 10 modules Love School">${contenu}</a>`; return `<button class="${classe}" type="button" data-fam="${famDe(o.id)}" data-vue="${o.id}"${o.id === S.vue ? ' aria-current="page"' : ""}>${contenu}</button>`; };
     const plusOn = S.vue === "plus" || autres.some((o) => o.id === S.vue);
     const html = prim.map((o) => b(o, false)).join("") + (autres.length ? `<span class="nav-sep${compact ? " nav-x" : ""}" aria-hidden="true">Modules</span>` : "") + autres.map((o) => b(o, compact)).join("")
       + (compact ? `<button class="nav-btn nav-plus${plusOn ? " on" : ""}" type="button" data-vue="plus"${S.vue === "plus" ? ' aria-current="page"' : ""}>${I("i-grid")}<span class="l-short">Plus</span><span class="l-long">Tous les modules</span></button>` : "");
@@ -3915,7 +3915,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     if (id === "finances") { const s = S.pret.finances ? soldeFin(moisCourant()) : null; return s == null ? "Journal et cotisations" : `Caisse : ${fcfa(s)}`; }
     if (id === "agenda") { const e = aVenir()[0]; return e ? `Prochain : ${e.titre} · ${fmtCourt(e.date)}` : "Aucun rassemblement programmé"; }
     if (id === "garnisons") return S.pret.garnisons ? `${pluriel(pointsSDE().length, "point SDE", "points SDE")} · ${pluriel(S.garnisons.length, "structure", "structures")}` : "";
-    if (id === "academie") { const n = S.formations.filter((f) => etatFormation(f) === "encours").length; return S.pret.formations ? (n ? `${pluriel(n, "formation en cours", "formations en cours")}` : `${pluriel(S.formations.length, "formation", "formations")}`) : ""; }
+    if (id === "academie") return "24 cours · 10 modules Love School · accès sur validation";
     if (id === "portevoix") return S.pret.annonces ? pluriel(annoncesActives().length, "annonce active", "annonces actives") : "";
     if (id === "chambre") return S.pret.prieres ? pluriel(S.prieres.filter((p) => (p.statut || "En prière") === "En prière").length, "requête en prière", "requêtes en prière") : "";
     if (id === "assistant") return S.sample ? "Questions, textes et synthèses" : "Réservé aux responsables";
@@ -8148,7 +8148,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   document.addEventListener("click", (ev) => {
     const t = ev.target.closest("[data-act],[data-vue]");
     if (!t || t.disabled) return;
-    if (t.dataset.vue && !t.dataset.act) { if ($("#sheet").contains(t)) fermer(); allerA(t.dataset.vue); return; }
+    if (t.dataset.vue && !t.dataset.act) { if (t.dataset.vue === "academie") { window.location.assign("/mon-espace/academy"); return; } if ($("#sheet").contains(t)) fermer(); allerA(t.dataset.vue); return; }
     const h = A[t.dataset.act];
     if (h) h(t, ev);
   });
