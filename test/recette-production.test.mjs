@@ -159,3 +159,34 @@ test('Recette Academy : studio et publication des supports, version effective du
  const ref=await recetteProduction({fetcher:ancien.fetcher,domaines:[DOMAINES[0]],controles:CONTROLES.filter(c=>c.type==='academy-script'),essais:1});
  assert.equal(ref.ok,false,'Un ancien script Academy en production ne doit pas être validé.');
 });
+
+
+test("RECETTE MOBILE EPHEMERE : catalogue et accès protégés sur les deux domaines SDE", {timeout:240000},async()=>{
+ const {recetteAcademyProduction}=await import("../scripts/recette-academy-production.mjs");
+ const bilan=await recetteAcademyProduction({essais:3,timeoutMs:12000,rapport:r=>{
+   console.log("MOBILE-ACADEMY",r.ok?"OK":"ECHEC",r.domaine+r.path,r.erreur||"");
+ }});
+ console.log("MOBILE-ACADEMY BILAN",bilan.reussis+"/"+bilan.total);
+ assert.equal(bilan.total,18);
+ assert.equal(bilan.ok,true,JSON.stringify(bilan.resultats.filter(x=>!x.ok),null,2));
+ for(const origin of ["https://mouvement-sde.org","https://app.mouvement-sde.org"]){
+   const uri=origin+"/index.html?qa=academy-mobile-20261104";
+   const response=await fetch(uri,{redirect:"manual",signal:AbortSignal.timeout(12000),headers:{"cache-control":"no-cache"}});
+   const html=await response.text();
+   const inspectable=response.ok&&html.includes("SDE")&&html.includes("data-vue");
+   if(inspectable){
+     const marker=html.includes("nav-academy-direct")&&html.includes('"/administration/academy"');
+     console.log("MOBILE-ACADEMY INDEX",origin,"HTTP",response.status,"navigation adaptative:",marker?"OUI":"NON");
+     assert.ok(marker,origin+" sert une ancienne interface /index.html sans lien Academy direct");
+   }else{
+     console.log("MOBILE-ACADEMY INDEX",origin,"HTTP",response.status,"source privee non inspectable sans session");
+   }
+   for(const p of ["/mon-espace/academy","/administration/academy"]){
+     const auth=await fetch(origin+p,{redirect:"manual",signal:AbortSignal.timeout(12000),headers:{"cache-control":"no-cache"}});
+     const location=auth.headers.get("location")||"";
+     console.log("MOBILE-ACADEMY AUTH",origin+p,auth.status,location);
+     assert.equal(auth.status,302,"La route privée doit demander une authentification");
+     assert.ok(location.includes("/connexion")&&location.includes("retour="),"Le retour après connexion doit conserver le portail demandé");
+   }
+ }
+});
