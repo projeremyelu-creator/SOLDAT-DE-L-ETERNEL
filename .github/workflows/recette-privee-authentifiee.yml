@@ -2,6 +2,20 @@ name: Recette privée authentifiée SDE — comptes de test
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/recette-privee-authentifiee.yml'
+      - 'src/**'
+      - 'frontend/**'
+      - 'public/**'
+      - 'scripts/audit-prive-authentifie.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+
+concurrency:
+  group: recette-privee-authentifiee-production
+  cancel-in-progress: false
 
 permissions:
   contents: read
