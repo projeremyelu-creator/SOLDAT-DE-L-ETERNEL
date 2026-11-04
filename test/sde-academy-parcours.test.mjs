@@ -26,7 +26,7 @@ class FakeDB {
     async run(){
       const v=this.values;
       if(sql.startsWith("INSERT INTO academy_2027_submissions"))d.subs.set(v[0],{id:v[0],compte:v[1],cours:v[2],type:v[3],reponses:v[4],statut:"en_attente",score:null,commentaire:"",date_soumission:v[5]});
-      if(sql.startsWith("UPDATE academy_2027_submissions")){const a=d.subs.get(v[4]);if(a&&a.statut==="en_attente"){a.statut="note";a.score=v[0];a.commentaire=v[1];}}
+      if(sql.startsWith("UPDATE academy_2027_submissions")){const a=d.subs.get(v[4]);if(a&&a.statut==="en_attente"){a.statut="note";a.score=v[0];a.commentaire=v[1];return {success:true,meta:{changes:1}};}return {success:true,meta:{changes:0}};}
       if(sql.startsWith("INSERT INTO academy_2027_suivi"))d.att.set(v[0]+":"+v[1],{compte:v[0],cours:v[1],presence:v[2],participation:v[3]});
       if(sql.startsWith("INSERT OR IGNORE INTO academy_2027_attestations")){const k=v[0]+":"+v[1];if(!d.certs.has(k))d.certs.set(k,{compte:v[0],niveau:v[1],code:v[2],delivree_le:v[3]});}
       return {success:true};
@@ -34,7 +34,7 @@ class FakeDB {
     async first(){
       const v=this.values;
       if(sql.startsWith("SELECT id FROM academy_2027_submissions"))return [...d.subs.values()].find(s=>s.compte===v[0]&&s.cours===v[1]&&s.type===v[2]&&s.statut==="en_attente")||null;
-      if(sql.startsWith("SELECT id,compte,statut FROM academy_2027_submissions"))return d.subs.get(v[0])||null;
+      if(sql.startsWith("SELECT id,compte,cours,statut FROM academy_2027_submissions")||sql.startsWith("SELECT id,compte,statut FROM academy_2027_submissions"))return d.subs.get(v[0])||null;
       if(sql.startsWith("SELECT statut FROM academy_2027_acces"))return v[0]==="student-2027"&&d.autorisations.has(v[1])?{statut:"approuve"}:null;
       return null;
     },
