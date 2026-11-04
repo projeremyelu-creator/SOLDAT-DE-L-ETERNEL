@@ -184,7 +184,7 @@ test('RECETTE PRODUCTION TEMPORAIRE : les deux portails servent la nouvelle Acad
      "api('/api/soldiers-academy')","api('/api/soldiers-academy/love-school')",
      "Aucune formation liée à votre fiche.","/mon-espace/academy#love-school"
     ]){
-     assert.ok(marque!=="Aucune formation liée à votre fiche."?!texts[0].includes(marque):texts[0].includes(marque),domaine+' contenu '+marque);
+     assert.ok(marque==="Aucune formation liée à votre fiche."?!texts[0].includes(marque):texts[0].includes(marque),domaine+' contenu '+marque);
     }
     assert.ok(texts[0].includes('Autres formations et inscriptions historiques'));
     assert.ok(texts[1].includes('.sde-plus-academy-grid'));
