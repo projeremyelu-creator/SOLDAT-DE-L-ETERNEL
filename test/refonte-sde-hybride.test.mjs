@@ -52,8 +52,8 @@ test("Phase 2 : cinq accès publics mobiles, sans fuite des finances internes",(
  const js=read("public/vitrine/portail-unifie.js");
  const css=read("public/vitrine/sde-premium-public.css");
  for(const [name,href] of [
-  ["Accueil","/"],["Membres","/contact#rejoindre"],
-  ["Agenda","/programmes#agenda"],["Finances","/missions#soutenir"],
+  ["Accueil","/"],["Rejoindre","/contact#rejoindre"],
+  ["Agenda","/programmes#agenda"],["Soutenir","/missions#soutenir"],
   ["Plus","/rubriques"]
  ]){
   assert.ok(js.includes('href:"'+href+'",label:"'+name+'"'),name+" : destination publique attendue");

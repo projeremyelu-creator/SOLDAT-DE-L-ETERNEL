@@ -214,3 +214,33 @@ test('Accueil : présentation institutionnelle 2026 hébergée, légère, à la 
  assert.ok(lire('public/vitrine/sde-accueil-premium.css').includes('.ap-presentation-cadre'));
  assert.doesNotMatch(lire('public/sw-public.js').match(/PUBLIC_ASSETS\s*=\s*([^;]+);/)[1],/mp4/);
 });
+
+test('Pages publiques : aucun lien vers l’administration, une seule entrée « Mon Portail S.D.E »',()=>{
+ const publiques=['portail','rejoindre','mouvement','programmes','projets','prieres','soutenir','transparence','gouvernance','academy','ressources'];
+ for(const n of publiques){
+  const h=page(n);
+  assert.ok(!/href="\/administration/.test(h),n+' : pas de lien vers /administration');
+  assert.ok(!/Poste de commandement|Espace administrateur|Connexion responsable/.test(h),n+' : pas de mention du poste de commandement');
+ }
+ assert.ok(page('portail').includes('href="/portail" class="private-access-card private-login"'));
+ const js=lire('public/vitrine/portail-unifie.js');
+ assert.ok(!js.includes('"/administration"'),'le script public ne pointe plus vers /administration');
+ assert.ok(js.includes('label:"Soutenir"')&&js.includes('label:"Rejoindre"'),'barre mobile publique : destinations publiques nommées honnêtement');
+});
+
+test('Référencement : titres uniques et désambiguïsés, robots et sitemap cohérents',()=>{
+ const titres=new Map();
+ for(const n of ['portail','mouvement','programmes','projets','prieres','rejoindre','soutenir','transparence','gouvernance','academy','ressources']){
+  const t=page(n).match(/<title>([^<]*)<\/title>/)[1];
+  assert.ok(!titres.has(t),'titre en double : '+t);titres.set(t,n);
+  assert.match(t,/Soldats? de l['’]Éternel/,n+' : nom complet du mouvement dans le titre');
+ }
+ assert.equal(page('programmes').match(/<title>([^<]*)<\/title>/)[1],'Programmes, IN FIRE &amp; Soldiers Academy | Soldats de l\'Éternel (SDE)');
+ const robots=lire('public/robots.txt'),map=lire('public/sitemap.xml');
+ for(const r of ['/portail','/connexion','/mon-espace','/administration','/api/'])assert.ok(robots.includes('Disallow: '+r),r);
+ assert.ok(robots.includes('Sitemap: https://mouvement-sde.org/sitemap.xml'));
+ for(const loc of map.match(/<loc>[^<]+<\/loc>/g)){
+  const chemin=loc.replace(/<\/?loc>/g,'').replace('https://mouvement-sde.org','')||'/';
+  assert.ok(!/^\/(portail|connexion|mon-espace|administration|api|comptes-membres|courriels|formulaires)/.test(chemin),'sitemap : route privée '+chemin);
+ }
+});

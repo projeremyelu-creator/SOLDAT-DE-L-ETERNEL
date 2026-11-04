@@ -117,7 +117,7 @@ test("palettes proposées ; Ivoire · Treillis · Or est le choix initial partou
 });
 test("accueil réellement servi (portail.html) refait selon la maquette",()=>{
  const h=read("public/vitrine/portail.html");
- for(const t of ['class="ap-head"','Une génération enracinée en Jésus-Christ, prête à servir','Prochains programmes','Nos cinq pôles','Missions et impact','Prières et témoignages','Galerie IN FIRE','Espaces sécurisés','Nous rejoindre','accueil-maquette.css','id="ap-next-title"','id="ap-next-register"','class="private-access-card private-member"','class="private-access-card private-admin"'])assert.ok(h.includes(t),t);
+ for(const t of ['class="ap-head"','Une génération enracinée en Jésus-Christ, prête à servir','Prochains programmes','Nos cinq pôles','Missions et impact','Prières et témoignages','Galerie IN FIRE','Espaces sécurisés','Nous rejoindre','accueil-maquette.css','id="ap-next-title"','id="ap-next-register"','class="private-access-card private-member"','class="private-access-card private-login"'])assert.ok(h.includes(t),t);
  assert.equal((h.match(/class="site-access-top"/g)||[]).length,1);
  const js=read("public/vitrine/portail-unifie.js");assert.ok(js.includes("sde-rail")&&js.includes("--sde-rail-top"),"rail sur toutes les pages publiques");
 });

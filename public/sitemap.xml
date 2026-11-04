@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://mouvement-sde.org/</loc><lastmod>2026-10-27</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://mouvement-sde.org/mouvement</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mouvement-sde.org/programmes</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mouvement-sde.org/academy</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mouvement-sde.org/</loc><lastmod>2026-11-04</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://mouvement-sde.org/mouvement</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mouvement-sde.org/programmes</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mouvement-sde.org/academy</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mouvement-sde.org/academy-programme-24</loc><lastmod>2026-11-03</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mouvement-sde.org/enseignements</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mouvement-sde.org/missions</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mouvement-sde.org/priere</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mouvement-sde.org/contact</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mouvement-sde.org/enseignements</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mouvement-sde.org/missions</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mouvement-sde.org/priere</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mouvement-sde.org/contact</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mouvement-sde.org/temoignages</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mouvement-sde.org/soldiers-voice</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mouvement-sde.org/soldiers-award</loc><lastmod>2026-10-30</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -23,4 +23,11 @@
   <url><loc>https://mouvement-sde.org/pole-medias</loc><lastmod>2026-10-30</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>
   <url><loc>https://mouvement-sde.org/pole-formation</loc><lastmod>2026-10-30</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>
   <url><loc>https://mouvement-sde.org/plus</loc><lastmod>2026-11-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://mouvement-sde.org/soutenir</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mouvement-sde.org/transparence</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://mouvement-sde.org/gouvernance</loc><lastmod>2026-11-04</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://mouvement-sde.org/reseau</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://mouvement-sde.org/communaute</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://mouvement-sde.org/calendrier</loc><lastmod>2026-11-04</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mouvement-sde.org/newsletter</loc><lastmod>2026-11-04</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
 </urlset>

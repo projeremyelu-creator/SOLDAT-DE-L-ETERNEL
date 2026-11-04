@@ -61,9 +61,9 @@ body.sde-accueil-maquette{--m-nuit:#0a121b;--m-carte:#131e29;--m-carte-2:#0e1720
 .m-card-head{font:600 .82rem var(--m-titre);letter-spacing:.14em;text-transform:uppercase}.m-card-head small{display:block;font-size:.58rem;letter-spacing:.28em;opacity:.75}
 .m-card-label{margin-top:8px;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase}
 .m-card-gold strong{font:600 1.5rem var(--m-titre)}.m-card-gold>span:not(.m-card-head):not(.m-card-label){font-size:.84rem;line-height:1.5}.m-card-gold small{font-weight:700;text-decoration:underline}
-.private-admin{display:flex;gap:16px;align-items:flex-start;padding:22px;background:linear-gradient(180deg,var(--m-carte),var(--m-carte-2))}
-.private-admin svg{width:44px;height:44px;color:var(--m-or);flex:none}
-.private-admin strong{display:block;font:600 1.2rem var(--m-titre);color:var(--m-or-clair);margin-bottom:6px}.private-admin span span{display:block;color:#d6dbe1;line-height:1.55}.private-admin small{display:block;margin-top:10px;color:var(--m-or-clair);font-weight:700}
+.private-login{display:flex;gap:16px;align-items:flex-start;padding:22px;background:linear-gradient(180deg,var(--m-carte),var(--m-carte-2))}
+.private-login svg{width:44px;height:44px;color:var(--m-or);flex:none}
+.private-login strong{display:block;font:600 1.2rem var(--m-titre);color:var(--m-or-clair);margin-bottom:6px}.private-login span span{display:block;color:#d6dbe1;line-height:1.55}.private-login small{display:block;margin-top:10px;color:var(--m-or-clair);font-weight:700}
 .private-access-note{margin:12px 0 0;font-size:.82rem;color:#aab1b9}
 .m-amounts{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:4px 0 14px}.m-amounts li{padding:6px 12px;border:1px solid var(--m-or-fonce);border-radius:3px;color:var(--m-or-clair);font-weight:700}
 .home-faq h3{font:600 1rem var(--m-titre);letter-spacing:.08em;text-transform:uppercase;color:var(--m-or-clair)}
@@ -98,8 +98,8 @@ body.sde-accueil-maquette{--m-nuit:#0a121b;--m-carte:#131e29;--m-carte-2:#0e1720
   .sde-accueil-maquette .m-prog,.sde-accueil-maquette .m-pole{min-width:0}
   .sde-accueil-maquette .m-card-gold{max-width:72%;padding:14px}
   .sde-accueil-maquette .m-card-gold strong{font-size:1.13rem;overflow-wrap:anywhere}
-  .sde-accueil-maquette .private-admin{padding:16px;gap:10px}
-  .sde-accueil-maquette .private-admin svg{width:30px;height:30px}
+  .sde-accueil-maquette .private-login{padding:16px;gap:10px}
+  .sde-accueil-maquette .private-login svg{width:30px;height:30px}
 }
 @media(max-width:360px){
   .sde-accueil-maquette .m-kpi{display:grid;grid-template-columns:25px minmax(0,1fr);gap:6px}

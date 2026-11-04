@@ -17,9 +17,10 @@ test("Accueil SDE : portail unique visible et deux espaces conservés",()=>{
  assert.equal(liens[0].getAttribute("href"),"/portail");
  assert.equal(d.querySelectorAll(".private-access-card").length,2);
  assert.equal(d.querySelector(".private-member").getAttribute("href"),"/mon-espace");
- assert.equal(d.querySelector(".private-admin").getAttribute("href"),"/administration");
- assert.ok(d.querySelector(".private-admin").textContent.includes("membres"));
- assert.ok(d.querySelector(".private-admin").textContent.includes("finances"));
+ assert.equal(d.querySelector(".private-login").getAttribute("href"),"/portail");
+ assert.match(d.querySelector(".private-login").textContent,/Connexion — Mon Portail S.D.E/);
+ assert.ok(!/administration|commandement|finances/i.test(d.querySelector("#espaces-prives").textContent),"aucune mention de l'administration dans l'accueil public");
+ assert.ok(!accueil.includes('href="/administration"'));
  assert.match(dynamique,/site-access-top/);
  assert.match(dynamique,/Mon Portail S.D.E/);
 });

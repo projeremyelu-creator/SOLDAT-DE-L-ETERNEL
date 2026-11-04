@@ -4,7 +4,7 @@
   const routes = [
     ["/","Accueil"],["/mouvement","Le Mouvement"],["/programmes","Programmes"],
     ["/academy","Academy"],["/enseignements","Enseignements"],["/missions","Missions"],
-    ["/priere","Prière"],["/mon-espace","Espace membre"],["/administration","Espace administrateur"]
+    ["/priere","Prière"],["/portail","Mon Portail S.D.E"]
   ];
   function navigation() {
     if (!document.querySelector(".site-header")) {
@@ -35,8 +35,8 @@
       const footer=document.querySelector("footer");
       if(footer && !footer.classList.contains("site-footer")) {
         const link=document.createElement("a");
-        link.href="/administration";
-        link.textContent="Administration";
+        link.href="/portail";
+        link.textContent="Mon Portail S.D.E";
         link.style.margin="0 12px";
         footer.append(link);
       }
@@ -138,7 +138,7 @@
     for(const a of document.querySelectorAll('a[href*="app.mouvement-sde.org"]')){
       let old;try{old=new URL(a.href)}catch(_){continue}
       const hash=old.hash.replace("#","");
-      a.href=hash==="finances"||hash==="admin"?"/administration":"/mon-espace";
+      a.href="/portail";
     }
   }
   async function agenda() {
@@ -337,9 +337,9 @@
     if(document.querySelector(".sde-global-nav,.nav-mobile,.sde-bottom-nav"))return;
     const links=[
       {href:"/",label:"Accueil",slug:"accueil",path:"M3 10 12 3l9 7v11h-6v-7H9v7H3z"},
-      {href:"/contact#rejoindre",label:"Membres",slug:"membres",path:"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"},
+      {href:"/contact#rejoindre",label:"Rejoindre",slug:"membres",path:"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"},
       {href:"/programmes#agenda",label:"Agenda",slug:"agenda",path:"M3 5h18v16H3zM7 3v4M17 3v4M3 10h18"},
-      {href:"/missions#soutenir",label:"Finances",slug:"finances",path:"M3 6h18v15H3zM3 10h18M7 16h4"},
+      {href:"/missions#soutenir",label:"Soutenir",slug:"finances",path:"M3 6h18v15H3zM3 10h18M7 16h4"},
       {href:"/rubriques",label:"Plus",slug:"plus",path:"M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"}
     ];
     const active={"/":"accueil","/contact":"membres","/programmes":"agenda",
