@@ -5,7 +5,7 @@
 <title>Contact et adhésion | Soldats de l'Éternel (SDE)</title>
 <meta name="description" content="Contactez le mouvement Soldats de l’Éternel : formulaire, téléphone, WhatsApp, e-mail. Rejoindre, poser une question ou accéder à votre espace membre.">
 <meta name="theme-color" content="#11182a">
-<meta property="og:type" content="website"><meta property="og:title" content="Contact et adhésion | Soldats de l'Éternel (SDE)"><meta property="og:description" content="Contactez le mouvement Soldats de l’Éternel : formulaire, téléphone, WhatsApp, e-mail."><meta property="og:image" content="https://mouvement-sde.org/og-sde.jpg">
+<meta property="og:type" content="website"><meta property="og:title" content="Contact et adhésion | Soldats de l'Éternel (SDE)"><meta property="og:description" content="Contactez le mouvement Soldats de l’Éternel : formulaire, téléphone, WhatsApp, e-mail. Rejoindre, poser une question ou accéder à votre espace membre."><meta property="og:image" content="https://mouvement-sde.org/og-sde.jpg">
 <link rel="canonical" href="https://mouvement-sde.org/contact">
 <link rel="icon" href="/vitrine/logo-96.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="/vitrine/portail-unifie.css?v=19fa73fcaa6a">
 <link rel="stylesheet" href="/vitrine/portail-subpage.css?v=19fa73fcaa6a">
 <link rel="stylesheet" href="/vitrine/sde-experience.css?v=19fa73fcaa6a">
-<script defer src="/vitrine/sde-experience.js?v=19fa73fcaa6a"></script>
+<script defer src="/vitrine/sde-public-ui-lite.js?v=19fa73fcaa6a"></script>
 <link rel="stylesheet" href="/vitrine/sde-maquette.css?v=19fa73fcaa6a">
 <link rel="stylesheet" href="/vitrine/ivoire-accueil.css?v=19fa73fcaa6a">
 <link rel="stylesheet" href="/vitrine/ivoire-pages.css?v=19fa73fcaa6a">
@@ -26,6 +26,12 @@
 
 <link rel="stylesheet" href="/vitrine/sde-pages-premium.css?v=19fa73fcaa6a">
 <link rel="stylesheet" href="/vitrine/sde-fusion.css?v=19fa73fcaa6a">
+<meta property="og:url" content="https://mouvement-sde.org/contact">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contact et adhésion | Soldats de l'Éternel (SDE)">
+<meta name="twitter:description" content="Contactez le mouvement Soldats de l’Éternel : formulaire, téléphone, WhatsApp, e-mail. Rejoindre, poser une question ou accéder à votre espace membre.">
+<meta name="twitter:image" content="https://mouvement-sde.org/og-sde.jpg">
+<script id="sde-webpage-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://mouvement-sde.org/contact#page","url":"https://mouvement-sde.org/contact","name":"Contact et adhésion | Soldats de l'Éternel (SDE)","description":"Contactez le mouvement Soldats de l’Éternel : formulaire, téléphone, WhatsApp, e-mail. Rejoindre, poser une question ou accéder à votre espace membre.","inLanguage":"fr-CI","isPartOf":{"@id":"https://mouvement-sde.org/#website"},"about":{"@id":"https://mouvement-sde.org/#organisation"},"publisher":{"@id":"https://mouvement-sde.org/#organisation"}}</script>
 </head><body class="sde-unifie sde-subpage sde-ivoire sde-pages-premium" data-fam="cmd" data-sde-page="rejoindre">
 <a class="skip" href="#contenu">Accéder au contenu</a>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
@@ -84,7 +90,7 @@
             <li><span>3</span><span><b>Vous pouvez ensuite créer votre compte</b><small>La demande de contact ne crée pas de compte. Choisissez « Créer mon compte » ci-dessous pour recevoir immédiatement un matricule provisoire.</small></span></li>
           </ol>
         </div>
-        <form class="formulaire" id="form-rejoindre" novalidate>
+        <form method="post" class="formulaire" id="form-rejoindre" novalidate>
           <p class="legende">Les champs marqués <span class="oblig">obligatoire</span> sont nécessaires pour vous recontacter.</p>
           <div class="champs">
             <div class="champ"><label for="f-nom">Nom et prénoms <span class="oblig">obligatoire</span></label><input id="f-nom" name="nom" autocomplete="name" autocapitalize="words" maxlength="120" required aria-required="true"></div>
@@ -103,7 +109,7 @@
           <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label for="f-piege">Ne pas remplir</label><input id="f-piege" name="site_web" type="text" tabindex="-1" autocomplete="off"></div>
           <label class="accord" for="f-accord"><input id="f-accord" name="accord" type="checkbox" required><span>J'accepte que ces informations soient enregistrées par le secrétariat du mouvement SDE (infosoldat@gmail.com) pour me recontacter. Le mouvement ne vend ni ne cède ces informations à d'autres organisations. <span class="oblig">obligatoire</span></span></label>
           <p class="erreur" id="f-erreur" role="alert" hidden></p>
-          <button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-fleche"/></svg>Envoyer ma demande</button>
+          <p class="sde-privacy-note">Vos informations sont utilisées uniquement pour traiter cette demande. Consultez la <a href="/confidentialite">politique de confidentialité</a>.</p><button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-fleche"/></svg>Envoyer ma demande</button>
           <div class="envoi" id="envoi" hidden>
             <b id="envoi-titre">Merci pour votre démarche.</b>
             <p id="envoi-msg" style="color:var(--gris);font-size:.95rem">Votre demande a bien été transmise à l’équipe du Mouvement SDE.</p>
@@ -122,10 +128,10 @@
 <section class="pg-wrap" id="suivi" aria-labelledby="titre-suivi"><div class="pg-block">
 <h2 id="titre-suivi">Suivre ma demande</h2>
 <p>Saisissez la référence reçue à l’envoi (par exemple SDE-12) et les 4 derniers chiffres du téléphone, ou l’adresse e-mail, indiqués dans votre demande. Seul l’état général s’affiche : aucune donnée personnelle n’est montrée.</p>
-<div class="pg-suivi"><form id="form-suivi" novalidate>
+<div class="pg-suivi"><form method="post" id="form-suivi" novalidate>
 <label>Référence<input id="s-ref" name="ref" placeholder="SDE-12" maxlength="14" autocomplete="off" required></label>
 <label>4 derniers chiffres du téléphone ou e-mail<input id="s-contact" name="contact" maxlength="160" autocomplete="off" required></label>
-<button class="pg-btn plein" type="submit">Voir l’état de ma demande</button></form>
+<p class="sde-privacy-note">Vos informations sont utilisées uniquement pour traiter cette demande. Consultez la <a href="/confidentialite">politique de confidentialité</a>.</p><button class="pg-btn plein" type="submit">Voir l’état de ma demande</button></form>
 <div class="pg-suivi-res" id="suivi-res" role="status" aria-live="polite"></div></div>
 </div></section>
 <section class="section" id="membres" aria-labelledby="titre-membres">

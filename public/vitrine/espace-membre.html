@@ -210,7 +210,7 @@ tr:hover td{background:rgba(255,255,255,.03)}
 <div class="modal-overlay" id="modal-profil">
 <div class="modal">
 <h2>Modifier mon profil</h2>
-<form id="form-profil">
+<form method="post" id="form-profil">
 <label>Téléphone principal<input name="telephone" type="tel"></label>
 <label>Téléphone secondaire<input name="telephone2" type="tel"></label>
 <label>Quartier / Ville<input name="quartier"></label>
@@ -226,7 +226,7 @@ tr:hover td{background:rgba(255,255,255,.03)}
 <div class="modal-overlay" id="modal-mdp">
 <div class="modal">
 <h2>Changer mon mot de passe</h2>
-<form id="form-mdp">
+<form method="post" id="form-mdp">
 <label>Mot de passe actuel<input required name="ancien" type="password" autocomplete="current-password"></label>
 <label>Nouveau mot de passe (8 caractères min.)<input required name="nouveau" type="password" autocomplete="new-password" minlength="8"></label>
 <div class="feedback" id="mdp-feedback"></div>
@@ -237,7 +237,7 @@ tr:hover td{background:rgba(255,255,255,.03)}
 <div class="modal-overlay" id="modal-priere">
 <div class="modal">
 <h2>Déposer un sujet de prière</h2>
-<form id="form-priere">
+<form method="post" id="form-priere">
 <label>Votre sujet<textarea name="sujet" rows="4" style="width:100%;padding:10px;border:1px solid rgba(255,255,255,.15);border-radius:10px;background:var(--navy);color:#fff;font-size:15px;resize:vertical" maxlength="2000" required></textarea></label>
 <label style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="checkbox" name="confidentiel" value="true"> Confidentiel (visible uniquement par les responsables)</label>
 <div class="feedback" id="priere-feedback"></div>
@@ -248,7 +248,7 @@ tr:hover td{background:rgba(255,255,255,.03)}
 <div class="modal-overlay" id="modal-absence">
 <div class="modal">
 <h2>Signaler une absence</h2>
-<form id="form-absence">
+<form method="post" id="form-absence">
 <label>Date de début<input required name="dateDebut" type="date"></label>
 <label>Date de fin (facultatif)<input name="dateFin" type="date"></label>
 <label>Motif<textarea name="motif" rows="3" style="width:100%;padding:10px;border:1px solid rgba(255,255,255,.15);border-radius:10px;background:var(--navy);color:#fff;font-size:15px;resize:vertical" maxlength="500" required></textarea></label>

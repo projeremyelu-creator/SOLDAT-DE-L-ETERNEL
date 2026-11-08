@@ -1679,3 +1679,24 @@ body.sde-unifie.sde-ivoire [id="galerie"]{
 .site-footer .sde-social{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:12px 0 0}
 .site-footer .sde-social span{font-weight:700;opacity:.85}
 .site-footer .sde-social a{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;font-weight:700;text-decoration:underline;text-underline-offset:4px}
+
+/* Audit 2026-11 — notice directement au point de collecte. */
+.sde-privacy-note{
+ display:block;box-sizing:border-box;width:100%;margin:8px 0 12px;padding:11px 13px;
+ border:1px solid rgba(232,202,135,.55);border-radius:10px;
+ background:#281549;color:#f5f0e4!important;-webkit-text-fill-color:#f5f0e4!important;
+ font:500 .88rem/1.5 "Atkinson Hyperlegible",system-ui,sans-serif;
+}
+.sde-privacy-note a{color:#ffe2a0!important;-webkit-text-fill-color:#ffe2a0!important;font-weight:800;text-underline-offset:3px}
+.sde-privacy-note a:focus-visible{outline:3px solid #fff0c8;outline-offset:3px}
+
+/* Zones tactiles : 44 px sur les commandes et navigations, sans transformer
+   les liens éditoriaux placés au milieu d'un paragraphe. */
+@media (max-width:390px){
+ body.sde-unifie :is(button,input:not([type="checkbox"]):not([type="radio"]),select,.ap-btn,.hub-btn,.site-menu a,.site-footer a,.hub-footer a,.sde-standalone-bottom a,.sde-form-submit){
+  box-sizing:border-box;min-height:44px;min-block-size:44px;
+ }
+ body.sde-unifie :is(.site-menu a,.site-footer a,.hub-footer a){display:inline-flex;align-items:center}
+ body.sde-unifie :is(.wrap,.enveloppe,.hub-main,.ap-main){max-width:100%}
+ body.sde-unifie .sde-privacy-note{font-size:.9rem;padding:12px}
+}

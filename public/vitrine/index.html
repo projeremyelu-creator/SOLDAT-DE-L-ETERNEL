@@ -1240,7 +1240,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
           </a>
           <h3>Confirmer ma venue</h3>
           <p>Accueil et installation dès 08 h 00 · conférence annoncée à 08 h 30. Votre confirmation sera enregistrée par le secrétariat.</p>
-          <form id="f-venue" novalidate>
+          <form method="post" id="f-venue" novalidate>
             <label for="v-nom">Votre nom</label>
             <input id="v-nom" name="nom" autocomplete="name" required placeholder="Nom et prénoms">
             <label for="v-tel">Téléphone ou WhatsApp</label>
@@ -1249,7 +1249,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
             <select id="v-nb" name="nb"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6 ou plus</option></select>
             <label for="v-accord"><input id="v-accord" name="accord" type="checkbox" required> J’accepte que le secrétariat SDE enregistre ces informations pour confirmer ma venue et me recontacter.</label>
             <p class="v-erreur" id="v-err" hidden></p>
-            <button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-msg"/></svg>Confirmer ma venue</button>
+            <p class="sde-privacy-note">Vos informations sont utilisées uniquement pour traiter cette demande. Consultez la <a href="/confidentialite">politique de confidentialité</a>.</p><button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-msg"/></svg>Confirmer ma venue</button>
           </form>
           <div class="if-faq">
             <details><summary>L'entrée est-elle payante ?</summary><p>Non. IN FIRE est une conférence ouverte et gratuite pour tous.</p></details>
@@ -1871,7 +1871,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
             <li><span>3</span><span><b>Vous pouvez ensuite créer votre compte</b><small>La demande de contact ne crée pas de compte. Choisissez « Créer mon compte » ci-dessous pour recevoir immédiatement un matricule provisoire.</small></span></li>
           </ol>
         </div>
-        <form class="formulaire" id="form-rejoindre" novalidate>
+        <form method="post" class="formulaire" id="form-rejoindre" novalidate>
           <p class="legende">Les champs marqués <span class="oblig">obligatoire</span> sont nécessaires pour vous recontacter.</p>
           <div class="champs">
             <div class="champ"><label for="f-nom">Nom et prénoms <span class="oblig">obligatoire</span></label><input id="f-nom" name="nom" autocomplete="name" autocapitalize="words" maxlength="120" required aria-required="true"></div>
@@ -1890,7 +1890,7 @@ html.anim .kpi-chiffre[data-compte] { font-variant-numeric: tabular-nums; }
           <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label for="f-piege">Ne pas remplir</label><input id="f-piege" name="site_web" type="text" tabindex="-1" autocomplete="off"></div>
           <label class="accord" for="f-accord"><input id="f-accord" name="accord" type="checkbox" required><span>J'accepte que ces informations soient enregistrées par le secrétariat du mouvement SDE (infosoldat@gmail.com) pour me recontacter. Le mouvement ne vend ni ne cède ces informations à d'autres organisations. <span class="oblig">obligatoire</span></span></label>
           <p class="erreur" id="f-erreur" role="alert" hidden></p>
-          <button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-fleche"/></svg>Envoyer ma demande</button>
+          <p class="sde-privacy-note">Vos informations sont utilisées uniquement pour traiter cette demande. Consultez la <a href="/confidentialite">politique de confidentialité</a>.</p><button class="bouton b-or" type="submit"><svg aria-hidden="true"><use href="#i-fleche"/></svg>Envoyer ma demande</button>
           <div class="envoi" id="envoi" hidden>
             <b id="envoi-titre">Merci pour votre démarche.</b>
             <p id="envoi-msg" style="color:var(--gris);font-size:.95rem">Votre demande a bien été transmise à l’équipe du Mouvement SDE.</p>

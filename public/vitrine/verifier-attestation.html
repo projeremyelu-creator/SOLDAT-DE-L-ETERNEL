@@ -16,7 +16,7 @@ form{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}input{flex:1;min-width:2
 <header><div class="inner"><a class="id" href="/"><img alt="" src="/vitrine/logo-96.png">S.D.E. · SOLDIERS ACADEMY</a><a href="/academy-programme-24">Programme</a></div></header>
 <main id="main"><div class="eyebrow">Vérification publique</div><h1>Vérifier une attestation</h1>
 <p class="lead">Saisissez le numéro inscrit sur l'attestation ou le certificat (ou scannez son QR code). La vérification indique seulement si le document est authentique, son intitulé et sa date : jamais le nom ni les notes de la personne.</p>
-<form id="verif" novalidate><label class="muted" for="code" hidden>Numéro d'attestation</label><input id="code" name="code" inputmode="text" autocomplete="off" maxlength="40" placeholder="SDE-ACA-2027-N1-XXXXXXXX" required><button type="submit">Vérifier</button></form>
+<form method="post" id="verif" novalidate><label class="muted" for="code" hidden>Numéro d'attestation</label><input id="code" name="code" inputmode="text" autocomplete="off" maxlength="40" placeholder="SDE-ACA-2027-N1-XXXXXXXX" required><button type="submit">Vérifier</button></form>
 <div id="resultat" role="status" aria-live="polite" hidden></div>
 <p class="muted">Formation interne au Mouvement SDE — sans équivalence académique officielle.</p></main>
 <script src="/vitrine/sde-verifier-attestation.js" defer></script></body></html>

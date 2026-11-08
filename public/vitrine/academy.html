@@ -202,6 +202,10 @@ h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.1
 <link rel="stylesheet" href="/vitrine/sde-sitewide-2026.css?v=19fa73fcaa6a">
 <style>/* Dernier thème actif, sans changer l’ordre historique des CSS */ @import url("/vitrine/sde-premium-public.css?v=19fa73fcaa6a");</style>
 <link rel="stylesheet" href="/vitrine/sde-fusion.css?v=19fa73fcaa6a">
+<meta name="twitter:title" content="Soldiers Academy · Préinscription | Soldats de l'Éternel (SDE)">
+<meta name="twitter:description" content="Préinscrivez-vous à la Soldiers Academy du Mouvement Prophético-Apostolique Soldats de l'Éternel. Parcours de formation pour disciples et leaders.">
+<meta name="twitter:image" content="https://mouvement-sde.org/vitrine/fire-generation-1080.jpg">
+<script id="sde-webpage-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://mouvement-sde.org/academy#page","url":"https://mouvement-sde.org/academy","name":"Soldiers Academy · Préinscription | Soldats de l'Éternel (SDE)","description":"Préinscrivez-vous à la Soldiers Academy du Mouvement Prophético-Apostolique Soldats de l'Éternel. Parcours de formation pour disciples et leaders.","inLanguage":"fr-CI","isPartOf":{"@id":"https://mouvement-sde.org/#website"},"about":{"@id":"https://mouvement-sde.org/#organisation"},"publisher":{"@id":"https://mouvement-sde.org/#organisation"}}</script>
 </head>
 <body class="sde-unifie sde-subpage sde-ivoire" data-sde-page="academy" data-cosmique>
 <a class="skip" href="#contenu">Accéder au contenu</a>
@@ -366,7 +370,7 @@ h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.1
     <div id="inscription-cours" style="margin:0 0 36px">
       <h2 style="font-size: 1.3rem; color: var(--or); text-align: center; margin-bottom: 8px;">Suivre les cours dès maintenant</h2>
       <p style="text-align:center;color:var(--texte-2);max-width:640px;margin:0 auto 20px">Ouvert à toute personne, membre du mouvement ou non. Créez votre compte apprenant : il donne accès à vos cours, vos évaluations et vos attestations, sans accès aux autres espaces du mouvement.</p>
-      <form id="form-inscription-cours" novalidate>
+      <form method="post" id="form-inscription-cours" novalidate>
         <div class="form-carte">
           <div class="grille">
             <div class="champ"><label for="ic-prenoms">Prénoms <span class="req">*</span></label><input id="ic-prenoms" name="prenoms" autocomplete="given-name" autocapitalize="words" maxlength="80" required></div>
@@ -379,7 +383,7 @@ h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.1
             <div class="champ plein"><label style="display:flex;gap:10px;align-items:flex-start;font-weight:500"><input type="checkbox" name="consentement" required style="width:auto;margin-top:4px"> <span>J'accepte que mes données (identité, coordonnées, résultats) soient utilisées par le Mouvement SDE pour le suivi de ma formation. Les attestations sont internes au mouvement.</span></label></div>
           </div>
           <p id="ic-message" role="status" aria-live="polite" style="min-height:1.4em;margin:10px 0"></p>
-          <button class="bouton-envoyer" type="submit" id="ic-envoyer">Créer mon compte et ouvrir mes cours</button>
+          <p class="sde-privacy-note">Vos informations sont utilisées uniquement pour traiter cette demande. Consultez la <a href="/confidentialite">politique de confidentialité</a>.</p><button class="bouton-envoyer" type="submit" id="ic-envoyer">Créer mon compte et ouvrir mes cours</button>
           <p style="text-align:center;margin-top:12px"><a href="/connexion?retour=%2Fmon-espace%2Facademy">J'ai déjà un compte — me connecter</a></p>
         </div>
       </form>
@@ -389,7 +393,7 @@ h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.1
     <div id="zoneFormulaire">
       <h2 style="font-size: 1.3rem; color: var(--or); text-align: center; margin-bottom: 24px;">Formulaire de préinscription</h2>
 
-      <form id="formulaire" novalidate>
+      <form method="post" id="formulaire" novalidate>
         <div class="form-carte">
           <div class="form-section">
             <h2 class="form-section-titre">
@@ -472,7 +476,7 @@ h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.1
             </label>
           </div>
 
-          <button class="bouton-envoyer ripple-host" type="submit" id="btnEnvoyer">
+          <p class="sde-privacy-note">Vos informations sont utilisées uniquement pour traiter cette demande. Consultez la <a href="/confidentialite">politique de confidentialité</a>.</p><button class="bouton-envoyer ripple-host" type="submit" id="btnEnvoyer">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
             Envoyer ma préinscription
           </button>

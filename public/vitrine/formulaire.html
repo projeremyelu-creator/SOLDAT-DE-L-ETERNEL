@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Formulaire Bilan 2026 & Projets 2027 · Soldats de l'Éternel</title>
-<meta name="description" content="Formulaire de collecte d'informations et sondage : bilan des activités SDE 2026 et propositions de projets pour 2027."><meta property="og:type" content="website"><meta property="og:title" content="Formulaire Bilan 2026 & Projets 2027 · Soldats de l'Éternel"><meta property="og:description" content="Formulaire de collecte d'informations et sondage : bilan des activités SDE 2026 et propositions de projets pour 2027."><meta property="og:image" content="https://mouvement-sde.org/vitrine/fire-generation-1080.jpg"><meta property="og:url" content="https://mouvement-sde.org/formulaire"><meta name="twitter:card" content="summary_large_image"><link rel="canonical" href="https://mouvement-sde.org/formulaire">
+<title>Formulaire Bilan 2026 &amp; Projets 2027 · Soldats de l'Éternel</title>
+<meta name="description" content="Formulaire de collecte d'informations et sondage : bilan des activités SDE 2026 et propositions de projets pour 2027."><meta property="og:type" content="website"><meta property="og:title" content="Formulaire Bilan 2026 &amp; Projets 2027 · Soldats de l'Éternel"><meta property="og:description" content="Formulaire de collecte d'informations et sondage : bilan des activités SDE 2026 et propositions de projets pour 2027."><meta property="og:image" content="https://mouvement-sde.org/vitrine/fire-generation-1080.jpg"><meta property="og:url" content="https://mouvement-sde.org/formulaire"><meta name="twitter:card" content="summary_large_image"><link rel="canonical" href="https://mouvement-sde.org/formulaire">
 <meta name="theme-color" content="#11182a">
 <link rel="icon" href="/vitrine/logo-96.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -194,11 +194,15 @@ h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.1
 <link rel="stylesheet" href="/vitrine/portail-unifie.css?v=19fa73fcaa6a">
 <link rel="stylesheet" href="/vitrine/portail-subpage.css?v=19fa73fcaa6a">
 <link rel="stylesheet" href="/vitrine/sde-experience.css?v=19fa73fcaa6a">
-<script defer src="/vitrine/sde-experience.js?v=19fa73fcaa6a"></script>
+<script defer src="/vitrine/sde-public-ui-lite.js?v=19fa73fcaa6a"></script>
 <link rel="stylesheet" href="/vitrine/sde-maquette.css?v=19fa73fcaa6a">
 <link rel="stylesheet" href="/vitrine/sde-sitewide-2026.css?v=19fa73fcaa6a">
 <style>/* Dernier thème actif, sans changer l’ordre historique des CSS */ @import url("/vitrine/sde-premium-public.css?v=19fa73fcaa6a");</style>
 <link rel="stylesheet" href="/vitrine/sde-fusion.css?v=19fa73fcaa6a">
+<meta name="twitter:title" content="Formulaire Bilan 2026 &amp; Projets 2027 · Soldats de l'Éternel">
+<meta name="twitter:description" content="Formulaire de collecte d'informations et sondage : bilan des activités SDE 2026 et propositions de projets pour 2027.">
+<meta name="twitter:image" content="https://mouvement-sde.org/vitrine/fire-generation-1080.jpg">
+<script id="sde-webpage-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://mouvement-sde.org/formulaire#page","url":"https://mouvement-sde.org/formulaire","name":"Formulaire Bilan 2026 & Projets 2027 · Soldats de l'Éternel","description":"Formulaire de collecte d'informations et sondage : bilan des activités SDE 2026 et propositions de projets pour 2027.","inLanguage":"fr-CI","isPartOf":{"@id":"https://mouvement-sde.org/#website"},"about":{"@id":"https://mouvement-sde.org/#organisation"},"publisher":{"@id":"https://mouvement-sde.org/#organisation"}}</script>
 </head>
 <body class="sde-unifie sde-subpage" data-sde-page="formulaire" data-cosmique>
 <a class="skip" href="#contenu">Accéder au contenu</a>
@@ -240,7 +244,7 @@ h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.1
       <div class="etape" data-etape="3"><span class="etape-num">3</span><span class="etape-label">Envoi</span></div>
     </div>
 
-    <form id="formulaire" enctype="multipart/form-data" novalidate>
+    <form method="post" id="formulaire" enctype="multipart/form-data" novalidate>
 
       <!-- ═══ ÉTAPE 1 : Identité ═══ -->
       <div class="form-carte" id="etape1">
@@ -381,7 +385,7 @@ h1, h2, h3, h4 { font-family: var(--f-titre); font-weight: 700; line-height: 1.1
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
             Precedent
           </button>
-          <button type="submit" class="bouton-envoyer" id="btnEnvoyer" style="flex:1;min-width:200px">
+          <p class="sde-privacy-note">Vos informations sont utilisées uniquement pour traiter cette demande. Consultez la <a href="/confidentialite">politique de confidentialité</a>.</p><button type="submit" class="bouton-envoyer" id="btnEnvoyer" style="flex:1;min-width:200px">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             Envoyer le formulaire
           </button>
