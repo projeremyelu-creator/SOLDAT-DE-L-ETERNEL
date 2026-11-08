@@ -258,3 +258,21 @@ body.sde-shell-mounted .sde-shell-directory{padding-block:clamp(26px,4vw,52px)}
  color:#191d30!important;background:#efd199;outline-offset:2px}
 @media(max-width:990px){.sde-shell-directory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:570px){.sde-shell-directory-grid{grid-template-columns:1fr}}
+
+.sde-shell-newsletter{display:grid;gap:9px;margin-top:9px}
+.sde-shell-newsletter>label:first-child{font:800 .87rem/1.4 system-ui,sans-serif;color:#ffe4ae}
+.sde-shell-newsletter input[type=email]{box-sizing:border-box;width:100%;min-height:44px;
+ padding:10px;border:1px solid #d4b57a;border-radius:9px;color:#fff;
+ background:#24314b;font:500 16px system-ui,sans-serif}
+.sde-shell-newsletter input::placeholder{color:#ccd1dd}
+.sde-shell-newsletter .sde-shell-consent{display:flex;gap:8px;align-items:flex-start;
+ color:#ecedf2;font:500 .75rem/1.45 system-ui,sans-serif}
+.sde-shell-newsletter input[type=checkbox]{flex:none;min-width:18px;min-height:18px;
+ accent-color:#eacb88}
+.sde-shell-newsletter .sde-privacy-note{font-size:.7rem!important;margin:0!important}
+.sde-shell-newsletter button{min-height:44px;box-sizing:border-box;width:100%;padding:10px 12px;
+ border:1px solid #ffdea1;border-radius:9px;background:#efd092;
+ color:#20182d;font:800 .83rem/1.3 system-ui,sans-serif;cursor:pointer}
+.sde-shell-newsletter button:disabled{opacity:.6}
+.sde-shell-newsletter-state{min-height:0;color:#e6e9ee;font-size:.78rem!important;margin:0!important}
+.sde-shell-newsletter :is(input,button):focus-visible{outline:3px solid #fff0bb;outline-offset:3px}
