@@ -1788,6 +1788,10 @@ async function traiter(req, env, ctx) {
       // sans rediriger les routes privées authentifiées.
       if (p === "/nous-rejoindre" && (req.method === "GET" || req.method === "HEAD"))
         return new Response(null, {status:301,headers:{location:url.origin+"/contact#rejoindre", "cache-control":"public, max-age=300"}});
+      // Ancien lien public d’adhésion : formulaire de contact canonique.
+      // Ne pas altérer /mon-espace ni /administration (routes protégées).
+      if (p === "/nous-rejoindre" && (req.method === "GET" || req.method === "HEAD"))
+        return new Response(null, {status:301,headers:{location:url.origin+"/contact#rejoindre", "cache-control":"public, max-age=300"}});
       // Alias lisible pour l'onglet « Plus » : une adresse canonique unique.
       if (p === "/plus" && (req.method === "GET" || req.method === "HEAD"))
         return new Response(null, {status:301, headers:{location:url.origin+"/rubriques"+url.search, "cache-control":"public, max-age=300"}});
