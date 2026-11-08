@@ -5,12 +5,12 @@ import {JSDOM} from "jsdom";
 
 const read=p=>readFileSync(p,"utf8");
 
-test("Accueil : image TPA préchargée et versets présents avant l'exécution de JavaScript",()=>{
+test("Accueil : TPA compacte sans image préchargée et versets présents avant l'exécution de JavaScript",()=>{
  const s=read("public/vitrine/portail.html");
  const dom=new JSDOM(s),doc=dom.window.document;
  const preload=doc.querySelector('link[rel="preload"][as="image"]');
- assert.equal(preload?.getAttribute("href"),"/vitrine/illus/tpa-2026.webp");
- assert.equal(preload?.getAttribute("fetchpriority"),"high");
+ assert.equal(preload,null,"le programme compact ne précharge pas une grande affiche invisible");
+
  const placeholder=doc.querySelector(".sde-versets-slot");
  assert.ok(placeholder);
  assert.equal(placeholder.getAttribute("aria-label"),"Verset du jour");
