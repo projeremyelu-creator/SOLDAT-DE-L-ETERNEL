@@ -1,3 +1,16 @@
+:root{
+ --bg-obsidian:#07080C;--bg-surface:#0F111A;
+ --bg-glass:rgba(18,21,33,.72);--bg-glass-hover:rgba(28,33,50,.85);
+ --gold-primary:#D4AF37;--gold-light:#F3E5AB;--gold-dark:#997A15;
+ --gold-gradient:linear-gradient(135deg,#F3E5AB 0%,#D4AF37 50%,#997A15 100%);
+ --gold-border:rgba(212,175,55,.28);
+ --pillar-spirit:#6D28D9;--pillar-spirit-glow:rgba(109,40,217,.18);
+ --pillar-command:#1E3A8A;--pillar-command-glow:rgba(30,58,138,.22);
+ --pillar-mission:#15803D;--pillar-mission-glow:rgba(21,128,61,.18);
+ --text-main:#F8FAFC;--text-muted:#94A3B8;--text-subtle:#64748B;
+ --blur-glass:blur(16px);--radius-card:16px;--radius-pill:9999px;
+ --shadow-gold:0 10px 30px -10px rgba(212,175,55,.25)
+}
 /* Structure publique SDE 2026 : un seul en-tête, menu et pied de page. */
 body.sde-shell-mounted .sde-rail{display:none!important}
 body.sde-shell-mounted .sde-shell-header{
@@ -152,3 +165,78 @@ body.sde-shell-mounted .sde-donation-overview #formulaire{position:sticky;top:11
 }
 @media(max-width:520px){.sde-shell-footer-grid{grid-template-columns:1fr;gap:24px}}
 @media(prefers-reduced-motion:reduce){.sde-shell-overlay *,.sde-shell-header *{transition:none!important;animation:none!important}}
+
+/* Direction Dark Royal / Or impérial – uniquement la coquille publique. */
+body.sde-shell-mounted .sde-shell-header{
+ background:rgba(7,8,12,.88)!important;
+ border-color:var(--gold-border)!important;
+ backdrop-filter:var(--blur-glass)!important;
+}
+body.sde-shell-mounted .sde-shell-brand-title b{
+ color:var(--text-main)!important;
+ letter-spacing:.07em;
+}
+body.sde-shell-mounted .sde-shell-brand-title small{color:var(--gold-primary)!important}
+body.sde-shell-mounted .sde-shell-portal,
+body.sde-shell-mounted .sde-shell-donate,
+body.sde-shell-mounted .sde-shell-bottom-item[aria-current="page"]{
+ background:var(--gold-gradient)!important;color:#07080C!important;
+ border-color:var(--gold-border)!important;box-shadow:var(--shadow-gold)
+}
+body.sde-shell-mounted .sde-shell-portal svg{color:#07080C}
+body.sde-shell-mounted .sde-shell-mega .sde-shell-submenu,
+body.sde-shell-mounted .sde-shell-drawer{
+ background:rgba(15,17,26,.98)!important;border-color:var(--gold-border)!important
+}
+body.sde-shell-mounted .sde-shell-footer{background:var(--bg-obsidian)!important}
+body.sde-shell-mounted .sde-shell-bottom{background:rgba(7,8,12,.96)!important}
+body.sde-premium-home .ap-hero{
+ background:
+ radial-gradient(ellipse at 50% 0%,rgba(212,175,55,.11),transparent 48%),
+ var(--bg-obsidian)!important;
+ color:var(--text-main)!important;
+}
+body.sde-premium-home .ap-hero .ap-hero-inner{
+ display:flex!important;flex-direction:column;align-items:center;justify-content:center;
+ width:min(900px,calc(100% - 32px))!important;
+ padding:clamp(38px,7vw,74px) 0!important;text-align:center;
+}
+body.sde-premium-home .ap-hero .ap-hero-copy{width:100%!important;max-width:850px;margin-inline:auto}
+body.sde-premium-home .ap-hero .ap-hero-copy h1{min-height:0!important;max-width:100%;
+ font-size:clamp(2rem,2.5vw + 1rem,3.9rem)!important;line-height:1.12!important}
+body.sde-premium-home .ap-hero .ap-hero-copy .ap-lead{min-height:0!important;margin-inline:auto;max-width:680px}
+body.sde-premium-home .ap-hero .ap-hero-copy .ap-actions{justify-content:center}
+body.sde-premium-home .ap-hero .ap-hero-copy .ap-verset{max-width:570px;margin-inline:auto}
+body.sde-premium-home .ap-hero .ap-logo{width:76px!important;height:76px!important}
+body.sde-premium-home .ap-hero .ap-poster{display:none!important}
+body.sde-premium-home .sde-premium-pillars{
+ background:var(--bg-obsidian)!important;color:var(--text-main)!important
+}
+body.sde-premium-home .sde-premium-pillar{
+ background:linear-gradient(165deg,rgba(15,17,26,.92),rgba(7,8,12,.98))!important;
+ border-radius:var(--radius-card)!important;border:1px solid var(--gold-border)!important;
+ transition:border-color .2s,transform .2s
+}
+body.sde-premium-home .sde-premium-pillar:hover{border-color:rgba(212,175,55,.65)!important;transform:translateY(-2px)}
+body.sde-premium-home .sde-premium-spiritualite{box-shadow:inset 0 4px var(--pillar-spirit),0 0 28px var(--pillar-spirit-glow)}
+body.sde-premium-home .sde-premium-commandement{box-shadow:inset 0 4px var(--pillar-command),0 0 28px var(--pillar-command-glow)}
+body.sde-premium-home .sde-premium-missions{box-shadow:inset 0 4px var(--pillar-mission),0 0 28px var(--pillar-mission-glow)}
+/* Bandeau TPA compact au-dessus de la section d'accueil. L'affiche détaillée
+   reste sur /programmes#tpa-2026 et aucun faux décompte n'est généré. */
+.sde-shell-event{box-sizing:border-box;background:linear-gradient(90deg,#0F111A,#1a1528,#0F111A);
+ border-bottom:1px solid var(--gold-border);color:#e7eaf2}
+.sde-shell-event-inner{box-sizing:border-box;width:min(1240px,calc(100% - 30px));margin:0 auto;
+ min-height:42px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+ font:500 .79rem/1.4 system-ui,sans-serif}
+.sde-shell-event-message{display:inline-flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
+.sde-shell-event-dot{width:8px;height:8px;border-radius:50%;background:var(--gold-primary);flex:none}
+.sde-shell-event strong{color:var(--gold-light)}
+.sde-shell-event a{flex:none;color:var(--gold-primary);font-weight:750;min-height:44px;
+ display:inline-flex;align-items:center;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:680px){
+ .sde-shell-event-inner{font-size:.7rem;min-height:50px}
+ .sde-shell-event-message{gap:4px}
+ .sde-shell-event a{font-size:.75rem}
+ body.sde-premium-home .ap-hero .ap-hero-inner{padding:38px 0!important}
+}
+@media(prefers-reduced-motion:reduce){body.sde-premium-home .sde-premium-pillar{transition:none!important;transform:none!important}}
