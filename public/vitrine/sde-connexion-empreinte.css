@@ -5,3 +5,17 @@
 .access-empreinte small{color:inherit;opacity:.85}
 :root[data-theme="light"] .access-empreinte-bouton{border-color:#85650f;color:#6b4f0a}
 :root[data-theme="light"] .access-empreinte-bouton:hover,:root[data-theme="light"] .access-empreinte-bouton:focus-visible{background:#6b4f0a;color:#fff}
+
+
+/* La règle mobile en ligne de la page de connexion fixait min-height:36px!important.
+   Donner une surface de pression réelle de 44px aux commandes d'accès. */
+@media (max-width:390px){
+ html body.sde-unifie.sde-reference-login :is(.access-password-toggle,.access-forgot){
+  box-sizing:border-box!important;
+  min-height:44px!important;
+  height:44px!important;
+  min-block-size:44px!important;
+  padding:9px 6px!important;
+  align-items:center!important;
+ }
+}

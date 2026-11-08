@@ -1700,3 +1700,25 @@ body.sde-unifie.sde-ivoire [id="galerie"]{
  body.sde-unifie :is(.wrap,.enveloppe,.hub-main,.ap-main){max-width:100%}
  body.sde-unifie .sde-privacy-note{font-size:.9rem;padding:12px}
 }
+
+
+/* Audit navigateur 08/11/2026 — les anciennes règles 42px!important
+   de l'en-tête primaient sur le correctif général (cibles >=44px). */
+@media (min-width:356px) and (max-width:390px){
+ html body.sde-unifie .site-header .site-header-inner,
+ html body.sde-unifie.sde-premium-home .site-header .site-header-inner{
+  grid-template-columns:minmax(0,1fr) repeat(3,44px)!important;
+ }
+ html body.sde-unifie .site-header .site-header-inner > :is(.site-burger,.site-theme-toggle,.sde-motion-slot),
+ html body.sde-unifie.sde-premium-home .site-header .site-header-inner > :is(.site-burger,.site-theme-toggle,.sde-motion-slot){
+  box-sizing:border-box!important;
+  width:44px!important;min-width:44px!important;min-inline-size:44px!important;
+  height:44px!important;min-height:44px!important;min-block-size:44px!important;
+  flex-basis:44px!important;
+ }
+ html body.sde-unifie .site-header .site-header-inner > .sde-motion-slot > .sde-motion-button,
+ html body.sde-unifie.sde-premium-home .site-header .site-header-inner > .sde-motion-slot > .sde-motion-button{
+  box-sizing:border-box!important;width:44px!important;min-width:44px!important;
+  min-inline-size:44px!important;height:44px!important;min-height:44px!important;
+ }
+}
