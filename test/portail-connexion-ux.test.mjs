@@ -118,3 +118,29 @@ test('Inscription membre : requête sans confirmation du secret et création de 
   assert.match(c.d.getElementById('access-message').textContent,/compte membre est créé/);
  }finally{c.dom.window.close()}
 });
+
+test('Navigation portail : les cinq entrées mobile et le menu Plus restent utilisables',()=>{
+ const c=ui();try{
+  const nav=c.d.querySelector('.sde-auth-nav');
+  assert.ok(nav);
+  assert.equal(nav.querySelectorAll('.sde-auth-nav-links > *').length,5);
+  assert.deepEqual([...nav.querySelectorAll('.sde-auth-nav-links > a')].map(a=>a.getAttribute('href')),['/','/programmes','/academy']);
+  const more=nav.querySelector('details.sde-auth-nav-more');
+  more.open=true;
+  const signup=more.querySelector('[data-goto="inscription"]');
+  signup.click();
+  assert.equal(more.open,false);
+  assert.equal(c.d.getElementById('panel-inscription').hidden,false);
+  assert.equal(signup.getAttribute('aria-current'),'page');
+  nav.querySelector('[data-goto="connexion"]').click();
+  assert.equal(c.d.getElementById('panel-connexion').hidden,false);
+ }finally{c.dom.window.close()}
+});
+test('Navigation portail : styles mobiles et menu déroulant ont une version clavier accessible',()=>{
+ const css=readFileSync('public/vitrine/sde-connexion-empreinte.css','utf8');
+ assert.match(css,/\.sde-auth-nav-more-panel/);
+ assert.match(css,/@media\(max-width:760px\)/);
+ assert.match(css,/position:fixed/);
+ assert.match(css,/env\(safe-area-inset-bottom\)/);
+ assert.match(css,/:focus-visible/);
+});
