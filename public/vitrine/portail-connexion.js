@@ -42,9 +42,33 @@
   for(const btn of document.querySelectorAll("[data-goto]")){
    btn.addEventListener("click",()=>{afficher(btn.dataset.goto);tabs.find(t=>t.dataset.mode===btn.dataset.goto)?.focus()});
   }
+  const inscription=document.getElementById("form-inscription");
+  const mdpInscription=inscription?.elements.motDePasse;
+  const confirmationMdp=inscription?.elements.confirmationMotDePasse;
+  const aideMdp=document.getElementById("access-password-guidance");
+  const actualiserMdp=()=>{
+   if(!mdpInscription||!aideMdp)return;
+   const valeur=mdpInscription.value;
+   aideMdp.textContent=!valeur?"Utilisez au moins 8 caractères et choisissez un mot de passe unique.":
+     valeur.length<8?"Encore "+(8-valeur.length)+" caractère(s) pour atteindre le minimum.":
+     "Longueur minimale atteinte. Un mot de passe long et unique est recommandé.";
+   if(confirmationMdp?.value)confirmationMdp.setCustomValidity(confirmationMdp.value===valeur?"":"Les mots de passe ne correspondent pas.");
+  };
+  mdpInscription?.addEventListener("input",actualiserMdp);
+  confirmationMdp?.addEventListener("input",actualiserMdp);
   async function envoyer(form,endpoint){
+   if(endpoint==="/api/inscription"){
+    actualiserMdp();
+    if(confirmationMdp?.value!==mdpInscription?.value){
+     confirmationMdp?.setCustomValidity("Les mots de passe ne correspondent pas.");
+     status.dataset.state="";status.textContent="Veuillez saisir le même mot de passe dans les deux champs.";
+     confirmationMdp?.focus();return;
+    }
+    confirmationMdp?.setCustomValidity("");
+   }
    if(!form.reportValidity())return;
    const b=Object.fromEntries(new FormData(form).entries());
+   delete b.confirmationMotDePasse;
    const button=form.querySelector("button[type=submit]");button.disabled=true;
    status.dataset.state=""; status.textContent="Vérification en cours…";
    try {
@@ -54,11 +78,13 @@
     if(endpoint==="/api/recuperation"){
      status.dataset.state="success";status.textContent=result.message||"Votre demande a été enregistrée auprès du secrétariat.";return;
     }
-    status.dataset.state="success";status.textContent="Connexion établie. Ouverture de votre espace…";
+    const nouveauMembre=endpoint==="/api/inscription";
+    status.dataset.state="success";
+    status.textContent=nouveauMembre?"Votre compte membre est créé"+(result.matricule?" (matricule : "+result.matricule+")":"")+". Ouverture de votre espace…":"Connexion établie. Ouverture de votre espace…";
     const confirmation=await fetch("/api/moi",{credentials:"same-origin",cache:"no-store"});
     const me=await confirmation.json();
     if(!confirmation.ok||me.connecte!==true){status.dataset.state="";status.textContent="Votre session n'a pas pu être confirmée. Réessayez de vous connecter.";return}
-    const destination=retour();
+    const destination=nouveauMembre?"/mon-espace":retour();
     if(destination.startsWith("/administration")&&me.niveau<1){
      status.replaceChildren(document.createTextNode("Votre compte est connecté, mais l'administration est réservée aux responsables habilités. "));
      const lien=document.createElement("a");lien.href="/mon-espace";lien.textContent="Ouvrir mon espace membre";status.append(lien);return;

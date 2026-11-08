@@ -19,3 +19,154 @@
   align-items:center!important;
  }
 }
+
+
+/* Parcours membre 2026 — inspiration UX bibliothèque/communauté biblique :
+   deux actions principales, formulaires aérés et aides secondaires visibles.
+   Règles chargées après le style de secours pour ne pas casser le portail. */
+html body.sde-reference-login .access-content{
+ width:min(100%,540px)!important;
+}
+html body.sde-reference-login .access-card{
+ padding:clamp(20px,4vw,32px)!important;
+ border-radius:23px!important;
+ background:linear-gradient(155deg,rgba(33,25,65,.97),rgba(15,28,47,.97) 78%,rgba(19,54,47,.96))!important;
+ box-shadow:0 23px 65px rgba(2,8,24,.52),inset 0 1px rgba(255,238,190,.17)!important;
+}
+html body.sde-reference-login .ref-access-targets{
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ margin-bottom:18px!important;
+}
+html body.sde-reference-login .ref-access-targets button{
+ min-height:48px!important;
+ border-radius:13px!important;
+ font-size:clamp(.78rem,2.4vw,.89rem)!important;
+}
+html body.sde-reference-login .access-tabs{
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:9px!important;
+ margin-bottom:20px!important;
+}
+html body.sde-reference-login .access-tabs [role="tab"]{
+ min-height:44px!important;
+ font-size:.82rem!important;
+ border-radius:12px!important;
+}
+html body.sde-reference-login .access-tabs [data-mode="connexion"],
+html body.sde-reference-login .access-tabs [data-mode="inscription"]{
+ min-height:52px!important;
+ font-size:.94rem!important;
+}
+html body.sde-reference-login .access-tabs [data-mode="activation"],
+html body.sde-reference-login .access-tabs [data-mode="recuperation"]{
+ background:rgba(14,20,40,.16)!important;
+ color:#e9d9e4!important;
+ border-style:dashed!important;
+ font-size:.78rem!important;
+}
+html body.sde-reference-login .access-tabs [aria-selected="true"]{
+ background:#e5bf7a!important;
+ border-color:#ffe2a2!important;
+ color:#1c1730!important;
+ box-shadow:none!important;
+}
+html body.sde-reference-login .access-panel h2{
+ font-size:clamp(1.35rem,3vw,1.7rem)!important;
+ line-height:1.2!important;
+ letter-spacing:.02em!important;
+}
+html body.sde-reference-login #panel-connexion>p{
+ display:block!important;
+ margin:0 0 18px!important;
+}
+html body.sde-reference-login .access-panel form{gap:13px!important}
+html body.sde-reference-login .access-panel label{font-size:.86rem!important}
+html body.sde-reference-login .access-panel input:not([type="checkbox"]){
+ min-height:49px!important;
+ border-radius:12px!important;
+}
+html body.sde-reference-login .access-panel input::placeholder{
+ color:#b6b9cd;opacity:1;
+}
+html body.sde-reference-login .access-submit{
+ display:block;width:100%;
+ min-height:52px!important;
+ border-radius:13px!important;
+ font-size:1rem!important;
+}
+html body.sde-reference-login .access-first{
+ padding-top:13px;
+ border-top:1px solid rgba(231,197,139,.26);
+}
+html body.sde-reference-login .access-signup-steps{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:7px;margin:18px 0 24px;
+}
+html body.sde-reference-login .access-signup-steps span{
+ display:flex;align-items:center;gap:7px;
+ min-width:0;color:#f7e8cf;
+ font-size:clamp(.68rem,1.8vw,.78rem);
+ line-height:1.35;
+}
+html body.sde-reference-login .access-signup-steps b{
+ display:grid;place-items:center;flex:none;
+ width:24px;height:24px;border:1px solid rgba(240,204,144,.65);
+ border-radius:50%;color:#22172f;background:#edd097;
+ font-weight:800;
+}
+html body.sde-reference-login .access-panel .access-password-guidance{
+ margin:-7px 0 2px!important;
+ color:#cfdeed!important;font-size:.77rem!important;
+}
+html body.sde-reference-login .access-panel label.access-consent{
+ display:flex!important;flex-direction:row!important;
+ align-items:flex-start!important;gap:12px!important;
+ padding:13px;border-radius:12px;
+ background:rgba(244,232,201,.07);
+ border:1px solid rgba(244,232,201,.19);
+ line-height:1.5!important;
+ font-weight:500!important;
+}
+html body.sde-reference-login .access-consent input[type="checkbox"]{
+ appearance:auto!important;
+ display:block!important;
+ flex:0 0 21px!important;
+ width:21px!important;min-width:21px!important;
+ height:21px!important;min-height:21px!important;
+ padding:0!important;margin:2px 0 0!important;
+ accent-color:#e8c17b;
+ background:transparent!important;
+}
+html body.sde-reference-login .access-consent a,
+html body.sde-reference-login .access-signup-login button{
+ color:#ffe4aa!important;text-decoration:underline;
+ text-underline-offset:3px;
+}
+html body.sde-reference-login .access-panel .access-signup-login{
+ display:flex;align-items:center;justify-content:center;
+ gap:7px;flex-wrap:wrap;margin:20px 0 0;
+}
+html body.sde-reference-login .access-signup-login button{
+ min-height:44px;padding:8px 10px;
+ background:transparent;border:0;
+ cursor:pointer;font-size:.87rem;font-weight:800;
+}
+html body.sde-reference-login .access-signup-login button:focus-visible,
+html body.sde-reference-login .access-consent a:focus-visible{
+ outline:3px solid #ffe5ad;outline-offset:3px;border-radius:4px;
+}
+@media(max-width:680px){
+ html body.sde-reference-login .access-content{width:min(100%,500px)!important}
+ html body.sde-reference-login .access-card{padding:19px 16px!important}
+ html body.sde-reference-login .access-tabs [role="tab"]{font-size:.75rem!important}
+ html body.sde-reference-login .access-tabs [data-mode="connexion"],
+ html body.sde-reference-login .access-tabs [data-mode="inscription"]{font-size:.86rem!important}
+}
+@media(max-width:360px){
+ html body.sde-reference-login .access-signup-steps{gap:5px}
+ html body.sde-reference-login .access-signup-steps span{font-size:.64rem}
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-reference-login :is(.access-card,.access-submit,.access-tabs button){transition:none!important}
+}

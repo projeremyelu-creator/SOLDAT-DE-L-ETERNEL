@@ -9,7 +9,7 @@ const css=read('public/vitrine/sde-poste-commandement-v2.css');
 const app=read('public/index.html');
 
 async function simulated(mode,niveau){
- const sections=['accueil','synthese','membres','chambre','agenda','academie','arsenal','espace','finances','scanner','mur','preferences'];
+ const sections=['accueil','synthese','membres','garnisons','chambre','agenda','academie','arsenal','espace','finances','scanner','mur','preferences'];
  const html='<html><body><button id="btn-reglages"></button><button id="btn-compte"></button><div class="shell"><nav id="nav">'+
   sections.map(id=>'<button type="button" data-vue="'+id+'"'+(id==='accueil'?' class="on" aria-current="page"':'')+'>'+id+'</button>').join('')+
   '</nav><main id="main" tabindex="-1"><h1 class="sec-title">Espace</h1></main></div></body></html>';
@@ -19,6 +19,7 @@ async function simulated(mode,niveau){
  w.matchMedia=()=>({matches:true});
  w.HTMLElement.prototype.scrollIntoView=function(){this.dataset.scrolled='true'};
  w.eval(js);
+ if(mode==='administration')w.eval(read('public/vitrine/sde-command-v4.js'));
  w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
  for(let i=0;i<10&&!w.SDEPortal;i++)await new Promise(resolve=>setTimeout(resolve,10));
  assert.ok(w.SDEPortal,'Le portail doit confirmer la session de test');
@@ -65,4 +66,72 @@ test('Le CSS du vrai portail est chargé et ne touche pas aux routes serveur',()
  assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length);
  const worker=read('src/worker.js');
  assert.ok(worker.includes('p.startsWith("/administration") && u.niveau < 1'));
+});
+
+
+test('Barre de menu mobile : cinq choix lisibles, icônes et Plus ouvre les rubriques',async()=>{
+ const dom=await simulated('mon-espace',0),w=dom.window,d=w.document;
+ try{
+  const nav=d.getElementById('sde-direct-bottom-nav');
+  assert.ok(nav,'barre basse montée sur le portail membre');
+  assert.equal(nav.hidden,false,'affichée seulement après vérification du compte');
+  const actions=[...nav.querySelectorAll('button')];
+  assert.deepEqual(actions.map(x=>x.textContent),['Accueil','Prière','Academy','Agenda','Plus']);
+  assert.equal(actions.length,5);
+  assert.ok(actions.every(x=>x.querySelector('svg[aria-hidden=true]')),'chaque action possède son pictogramme');
+  const plus=nav.querySelector('[data-bottom-more]');
+  assert.equal(plus.getAttribute('aria-expanded'),'false');
+  plus.click();
+  assert.equal(plus.getAttribute('aria-expanded'),'true');
+  assert.equal(d.getElementById('sde-direct-menu-toggle').getAttribute('aria-expanded'),'true');
+  assert.ok(d.getElementById('sde-direct-tabs').classList.contains('sde-direct-tabs-open'));
+  plus.click();
+  assert.equal(plus.getAttribute('aria-expanded'),'false');
+  assert.equal(d.getElementById('sde-direct-tabs').classList.contains('sde-direct-tabs-open'),false);
+ }finally{w.close()}
+});
+
+test('Barre membre : prière active et aucun module direction exposé',async()=>{
+ const dom=await simulated('mon-espace',0),w=dom.window,d=w.document;
+ try{
+  const nav=d.getElementById('sde-direct-bottom-nav');
+  assert.ok(!nav.textContent.includes('Finances'));
+  assert.equal(nav.querySelector('[data-module="membres"]'),null);
+  nav.querySelector('[data-module="priere"]').click();
+  assert.equal(d.getElementById('sde-priere-panel').hidden,false);
+  assert.equal(nav.querySelector('[data-module="priere"]').getAttribute('aria-current'),'page');
+ }finally{w.close()}
+});
+
+test('Barre administrateur : la barre de commandement préexistante est la seule à l’écran',async()=>{
+ const admin=await simulated('administration',2);
+ const responsable=await simulated('administration',1);
+ try{
+  const d=admin.window.document;
+  assert.equal(d.getElementById('sde-direct-bottom-nav').hidden,true,'aucune barre doublon ne doit chevaucher les boutons');
+  const nav=d.querySelector('.sde-command-v4-bottom');
+  assert.ok(nav,'barre administrative existante conservée');
+  assert.deepEqual([...nav.querySelectorAll('button')].map(x=>x.textContent),['Accueil','Membres','Agenda','Finances','Plus']);
+  assert.deepEqual([...responsable.window.document.querySelectorAll('.sde-command-v4-bottom button')].map(x=>x.textContent),
+    ['Accueil','Membres','Agenda','Pôles','Plus']);
+  assert.equal(nav.querySelectorAll('button svg[aria-hidden=true]').length,5);
+  const plus=nav.querySelector('[data-module=plus]');
+  plus.click();
+  assert.equal(plus.getAttribute('aria-expanded'),'true');
+  assert.equal(d.getElementById('sde-direct-menu-toggle').getAttribute('aria-expanded'),'true');
+  plus.click();
+  assert.equal(plus.getAttribute('aria-expanded'),'false');
+  const membres=nav.querySelector('[data-module=membres]');
+  membres.click();
+  assert.equal(membres.getAttribute('aria-current'),'page');
+ }finally{admin.window.close();responsable.window.close()}
+});
+
+test('La barre de navigation mobile est contrôlée par CSS et respecte les zones sûres',()=>{
+ const styles=read('public/vitrine/sde-poste-commandement-v2.css');
+ assert.match(styles,/sde-direct-bottom-nav/);
+ assert.match(styles,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
+ assert.match(styles,/env\(safe-area-inset-bottom\)/);
+ assert.match(styles,/sde-direct-bottom-nav\[hidden\]/);
+ assert.match(styles,/@media\(max-width:760px\)/);
 });
