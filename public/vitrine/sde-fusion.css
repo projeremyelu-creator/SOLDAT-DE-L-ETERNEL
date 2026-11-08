@@ -283,3 +283,27 @@ html body.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-ca
   color:#281549!important;
   -webkit-text-fill-color:#281549!important;
 }
+
+
+/* Recette mobile du 08/11/2026 — cibles tactiles accessibles sur les gabarits publics.
+   Les liens éditoriaux ordinaires hors formulaires et navigation restent en ligne. */
+@media (max-width:390px){
+ body :is(button,[role="button"]){
+  box-sizing:border-box;min-inline-size:44px!important;min-block-size:44px!important;
+ }
+ body nav a{
+  box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
+  min-inline-size:44px!important;min-block-size:44px!important;
+ }
+ body .hub-bottom-nav a{display:grid}
+ body form :is(a,button,select,textarea){
+  box-sizing:border-box;min-block-size:44px!important;
+ }
+ body form a{display:inline-flex;align-items:center}
+ body form label:has(input[type="checkbox"]),body form label:has(input[type="radio"]){
+  min-block-size:44px;align-items:center;
+ }
+ body form input[type="checkbox"],body form input[type="radio"]{
+  inline-size:24px;block-size:24px;min-inline-size:24px;flex-shrink:0;
+ }
+}
