@@ -42,6 +42,28 @@
   for(const btn of document.querySelectorAll("[data-goto]")){
    btn.addEventListener("click",()=>{afficher(btn.dataset.goto);tabs.find(t=>t.dataset.mode===btn.dataset.goto)?.focus()});
   }
+  // Navigation native : chaque bouton d'accès sélectionne le formulaire sans recharger.
+  const nav=document.querySelector(".sde-auth-nav");
+  const navMore=nav?.querySelector(".sde-auth-nav-more");
+  const navButtons=[...(nav?.querySelectorAll("[data-goto]")||[])];
+  const majNav=nom=>{
+   for(const button of navButtons){
+    if(button.dataset.goto===nom)button.setAttribute("aria-current","page");
+    else button.removeAttribute("aria-current");
+   }
+  };
+  const afficherInitial=afficher;
+  // Un clic sur une rubrique ferme le menu Plus, garde le formulaire visible et
+  // met à jour le repère actif (y compris pour les utilisateurs au clavier).
+  for(const button of navButtons){
+   button.addEventListener("click",()=>{
+    navMore?.removeAttribute("open");
+    majNav(button.dataset.goto);
+    document.getElementById("connexion-principale")?.scrollIntoView?.({behavior:"smooth",block:"start"});
+   });
+  }
+  for(const tab of tabs)tab.addEventListener("click",()=>majNav(tab.dataset.mode));
+  majNav(mode());
   const inscription=document.getElementById("form-inscription");
   const mdpInscription=inscription?.elements.motDePasse;
   const confirmationMdp=inscription?.elements.confirmationMotDePasse;
