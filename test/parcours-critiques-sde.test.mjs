@@ -72,7 +72,7 @@ test('Inscription et connexion par matricule : persistance SQLite, session et es
     const password='MotDePasse-Test-2026!';
     const created=await f.request('/api/inscription',null,'POST',{
       nom:'TEST',prenoms:'Awa',email:'awa.parcours@example.org',motDePasse:password,
-      telephone:'+2250700000000'
+      telephone:'+2250700000000',consentement:'oui'
     });
     assert.equal(created.status,200,await created.clone().text());
     const data=await created.json();
