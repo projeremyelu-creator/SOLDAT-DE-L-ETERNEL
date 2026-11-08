@@ -1512,7 +1512,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const [mm, jj] = (m.anniv || "").split("-");
     const jours = Array.from({ length: 31 }, (_, i) => [String(i + 1), String(i + 1)]);
     const mois = MOIS_NOMS.map((n, i) => [String(i + 1), cap(n)]);
-    const html = `<form class="form" id="f-membre" novalidate>
+    const html = `<form method="post" class="form" id="f-membre" novalidate>
       <fieldset class="fs"><legend>Identité</legend>
         <div class="f2">${champ("m-nom", "Nom", inp("m-nom", "nom", m.nom, 'autocomplete="off" autocapitalize="characters" required autofocus'), { req: true })}${champ("m-prenoms", "Prénoms", inp("m-prenoms", "prenoms", m.prenoms, 'autocomplete="off" autocapitalize="words"'))}</div>
         <div class="f2">${champ("m-mat", "Matricule", inp("m-mat", "matricule", id ? m.matricule : prochainMatricule(), 'autocomplete="off" autocapitalize="characters"'), { hint: id ? "" : "Proposé automatiquement, modifiable." })}${champ("m-sexe", "Sexe", sel("m-sexe", "sexe", [["H", "Homme"], ["F", "Femme"]], m.sexe, "—"))}</div>
@@ -1585,7 +1585,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     if (o && o.membreId && !mbs.some(([v]) => v === o.membreId)) { const mm = membre(o.membreId); if (mm) mbs.push([mm.id, nomComplet(mm) + " (archivé)"]); }
     const evs = S.evenements.filter((e) => e.date >= ajoutJours(aujourdhui(), -150) && e.date <= ajoutJours(aujourdhui(), 90)).sort((a, b) => cmpFr(b.date, a.date)).map((e) => [e.id, `${fmtCourt(e.date)} · ${e.titre || "Rassemblement"}`]);
     if (o && o.evenementId && !evs.some(([v]) => v === o.evenementId)) { const ee = evt(o.evenementId); if (ee) evs.push([ee.id, `${fmtCourt(ee.date)} · ${ee.titre}`]); }
-    const html = `<form class="form" id="f-op" novalidate>
+    const html = `<form method="post" class="form" id="f-op" novalidate>
       <div class="seg" role="radiogroup" aria-label="Sens de l’opération"><input type="radio" class="in" name="sens" id="o-e" value="E"${sens === "E" ? " checked" : ""}><label for="o-e">${I("i-in")}Entrée</label><input type="radio" class="out" name="sens" id="o-s" value="S"${sens === "S" ? " checked" : ""}><label for="o-s">${I("i-out")}Sortie</label></div>
       <div class="f2">${champ("o-montant", "Montant (FCFA)", inp("o-montant", "montant", o ? nb(o.montant) : "", 'class="inp big" inputmode="numeric" autocomplete="off" placeholder="0" required autofocus'), { req: true })}${champ("o-date", "Date", inp("o-date", "date", o ? o.date : dDefaut, 'type="date" required'), { req: true })}</div>
       <div class="f2">${champ("o-cat", "Catégorie", sel("o-cat", "categorie", categoriesDe(sens), o ? o.categorie : "", null))}${champ("o-moyen", "Moyen de paiement", sel("o-moyen", "moyen", c.moyens, o ? o.moyen : c.moyens[0], null))}</div>
@@ -1670,7 +1670,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     if (!o) return;
     ouvrir({
       titre: "Annuler l’opération",
-      html: `<form class="form" novalidate><p>${o.sens === "E" ? "Entrée" : "Sortie"} de <b>${esc(fcfa(o.montant))}</b> du ${esc(fmtJour(o.date))}${o.libelle ? ` · ${esc(o.libelle)}` : ""}.</p><p class="hint">L’opération reste visible, barrée, avec le motif et le nom de la personne qui l’a annulée. Elle ne compte plus dans les totaux. Vous pourrez la rétablir.</p>${champ("a-motif", "Motif de l’annulation", zone("a-motif", "motif", "", 'rows="3" required autofocus placeholder="Erreur de saisie, doublon, remboursement…"'), { req: true })}${pied("Confirmer l’annulation")}</form>`,
+      html: `<form method="post" class="form" novalidate><p>${o.sens === "E" ? "Entrée" : "Sortie"} de <b>${esc(fcfa(o.montant))}</b> du ${esc(fmtJour(o.date))}${o.libelle ? ` · ${esc(o.libelle)}` : ""}.</p><p class="hint">L’opération reste visible, barrée, avec le motif et le nom de la personne qui l’a annulée. Elle ne compte plus dans les totaux. Vous pourrez la rétablir.</p>${champ("a-motif", "Motif de l’annulation", zone("a-motif", "motif", "", 'rows="3" required autofocus placeholder="Erreur de saisie, doublon, remboursement…"'), { req: true })}${pied("Confirmer l’annulation")}</form>`,
       onSubmit: async (fd, form) => {
         const motif = String(fd.get("motif") || "").trim();
         if (!motif) { erreurForm("Indiquez le motif de l’annulation."); return; }
@@ -1747,7 +1747,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     if (!id && e.garnisonId && garnison(e.garnisonId) && !e.titre) e.titre = `${e.type || "Réunion"} · ${garnison(e.garnisonId).nom}`;
     if (!id && e.garnisonId && garnison(e.garnisonId) && !e.lieu) { const g0 = garnison(e.garnisonId); e.lieu = g0.lieuReunion || ""; e.heure = g0.heure || ""; }
     if (id && !e) return;
-    const html = `<form class="form" id="f-evt" novalidate>
+    const html = `<form method="post" class="form" id="f-evt" novalidate>
       ${champ("e-titre", "Intitulé", inp("e-titre", "titre", e.titre, 'autocomplete="off" required autofocus placeholder="Culte d’adoration, réunion des responsables…"'), { req: true })}
       <div class="f2">${champ("e-type", "Type", sel("e-type", "type", c.typesEvenement, e.type || c.typesEvenement[0], null))}${champ("e-date", "Date", inp("e-date", "date", e.date || aujourdhui(), 'type="date" required'), { req: true })}</div>
       <div class="f2">${champ("e-heure", "Heure de début", inp("e-heure", "heure", e.heure, 'type="time"'))}${champ("e-fin", "Heure de fin", inp("e-fin", "fin", e.fin, 'type="time"'))}</div>
@@ -1855,7 +1855,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const c = cfg();
     const d = id ? decision(id) : {};
     if (id && !d) return;
-    const html = `<form class="form" id="f-dec" novalidate>
+    const html = `<form method="post" class="form" id="f-dec" novalidate>
       <div class="f2">${champ("d-date", "Date de la décision", inp("d-date", "date", d.date || aujourdhui(), 'type="date" required'), { req: true })}${champ("d-inst", "Instance", sel("d-inst", "instance", c.instances, d.instance || c.instances[0], null))}</div>
       ${champ("d-int", "Décision", zone("d-int", "intitule", d.intitule, 'rows="2" required autofocus placeholder="Ce qui a été décidé, en une ou deux phrases"'), { req: true })}
       ${champ("d-action", "Action à mener", zone("d-action", "action", d.action, 'rows="2" placeholder="Ce qu’il faut faire concrètement"'))}
@@ -1910,7 +1910,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const [siA, siM] = si.mois ? si.mois.split("-") : ["", ""];
     const [cdA, cdM] = c.cotisationDebut ? String(c.cotisationDebut).split("-") : ["", ""];
     const annees = []; for (let y = new Date().getFullYear(); y >= 2015; y -= 1) annees.push([String(y), String(y)]);
-    const html = `<form class="form" id="f-reglages" novalidate>
+    const html = `<form method="post" class="form" id="f-reglages" novalidate>
       <fieldset class="fs"><legend>Votre accès</legend>
         <p><span class="chip info">${esc(niveauLibelle())}</span></p>
         <ul class="hint" style="margin:0;padding-left:18px;display:grid;gap:4px">
@@ -2226,7 +2226,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const curY = new Date().getFullYear();
     const an = annee || S.annee;
     const mbs = membresActifs().map((m) => [m.id, nomComplet(m) + (m.matricule ? ` · ${m.matricule}` : "")]);
-    const html = `<form class="form" id="f-cotis" novalidate>
+    const html = `<form method="post" class="form" id="f-cotis" novalidate>
       ${champ("c-membre", "Membre", sel("c-membre", "membreId", mbs, mid || "", "Choisir un membre", "required"), { req: true })}
       <div class="f2">${champ("c-annee", "Année des mois réglés", sel("c-annee", "annee", [curY - 1, curY, curY + 1].map((y) => [String(y), String(y)]), String(an), null))}${champ("c-date", "Date du versement", inp("c-date", "date", aujourdhui(), 'type="date" required'), { req: true })}</div>
       <div class="field"><span class="lab" id="lab-cm">Mois réglés</span><div class="mois-choix" id="c-mois" role="group" aria-labelledby="lab-cm"></div><p class="hint" id="c-mois-hint">Choisissez d’abord le membre.</p></div>
@@ -2380,7 +2380,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const d = id ? S.discipline.find((x) => x.id === id) : {};
     if (id && !d) return;
     const mbs = S.membres.slice().sort(parNom).map((m) => [m.id, nomComplet(m) + (m.actif === false ? " (archivé)" : "")]);
-    const html = `<form class="form" id="f-disc" novalidate>
+    const html = `<form method="post" class="form" id="f-disc" novalidate>
       ${champ("di-membre", "Membre", sel("di-membre", "membreId", mbs, d.membreId || mid || "", "Choisir un membre", "required"), { req: true })}
       <div class="f2">${champ("di-date", "Date", inp("di-date", "date", d.date || aujourdhui(), 'type="date" required'), { req: true })}${champ("di-motif", "Motif", sel("di-motif", "motif", MOTIFS_DISC, d.motif || motif || MOTIFS_DISC[0], null))}</div>
       <div class="f2">${champ("di-mesure", "Mesure", sel("di-mesure", "mesure", MESURES_DISC, d.mesure || MESURES_DISC[0], null))}${champ("di-ech", "Jusqu’au", inp("di-ech", "echeance", d.echeance, 'type="date"'), { hint: "Facultatif : fin prévue de la mesure." })}</div>
@@ -2802,7 +2802,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     if (id && !g) return;
     const exclus = id ? descendantsG(id) : null;
     const mbs = membresActifs().map((m) => [m.id, nomComplet(m)]);
-    const html = `<form class="form" id="f-garnison" novalidate>
+    const html = `<form method="post" class="form" id="f-garnison" novalidate>
       ${champ("g-nom", "Nom", inp("g-nom", "nom", g.nom, 'autocomplete="off" required autofocus placeholder="Siège, Antenne Italie, Cellule de Yopougon…"'), { req: true })}
       <div class="f2">${champ("g-type", "Type", sel("g-type", "type", c.typesGarnison, g.type || c.typesGarnison[0], null))}${champ("g-parent", "Rattachée à", sel("g-parent", "parentId", optionsGarnisons(exclus), g.parentId, "Aucune (niveau principal)"))}</div>
       <div class="f2">${champ("g-statut", "Statut", sel("g-statut", "statut", STATUTS_G, g.statut || "Active", null))}${champ("g-pays", "Pays", inp("g-pays", "pays", g.pays, 'autocomplete="off" list="dl-pays"') + `<datalist id="dl-pays">${PAYS_SDE.concat(PAYS_GEO.map((p) => p[1]).filter((n) => !PAYS_SDE.includes(n)).sort(cmpFr)).map((n) => `<option value="${esc(n)}"></option>`).join("")}</datalist>`, { hint: "Place le point sur la carte." })}</div>
@@ -3103,7 +3103,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const c = cfg();
     const f = id ? formation(id) : { programme: c.programmes[0], mode: "Présentiel" };
     if (id && !f) return;
-    const html = `<form class="form" id="f-formation" novalidate>
+    const html = `<form method="post" class="form" id="f-formation" novalidate>
       ${champ("f-titre", "Intitulé", inp("f-titre", "titre", f.titre, 'autocomplete="off" required autofocus placeholder="Soldier’s Academy · Promotion 2026"'), { req: true })}
       <div class="f2">${champ("f-programme", "Programme", sel("f-programme", "programme", c.programmes, f.programme, null))}${champ("f-parcours", "Parcours ou niveau", inp("f-parcours", "parcours", f.parcours, 'autocomplete="off" placeholder="Fondations, Niveau 1…"'))}</div>
       <div class="f2">${champ("f-debut", "Début", inp("f-debut", "dateDebut", f.dateDebut, 'type="date"'))}${champ("f-fin", "Fin", inp("f-fin", "dateFin", f.dateFin, 'type="date"'))}</div>
@@ -3192,7 +3192,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const pr = progressionP(f, p);
     ouvrir({
       titre: "Certifier",
-      html: `<form class="form" novalidate><p><b>${esc(nomUsuel(m))}</b> · ${esc(f.titre)}</p>${pr.total && pr.faits < pr.total ? `<p class="note warn">${pr.faits} module${pr.faits > 1 ? "s" : ""} suivi${pr.faits > 1 ? "s" : ""} sur ${pr.total}. Vous pouvez certifier quand même si les absences ont été rattrapées.</p>` : ""}
+      html: `<form method="post" class="form" novalidate><p><b>${esc(nomUsuel(m))}</b> · ${esc(f.titre)}</p>${pr.total && pr.faits < pr.total ? `<p class="note warn">${pr.faits} module${pr.faits > 1 ? "s" : ""} suivi${pr.faits > 1 ? "s" : ""} sur ${pr.total}. Vous pouvez certifier quand même si les absences ont été rattrapées.</p>` : ""}
         <div class="f2">${champ("ce-date", "Date de certification", inp("ce-date", "date", f.dateFin && f.dateFin <= aujourdhui() ? f.dateFin : aujourdhui(), 'type="date" required'), { req: true })}${champ("ce-mention", "Mention", sel("ce-mention", "mention", MENTIONS, "Sans mention", null))}</div>
         ${pied("Certifier")}</form>`,
       onSubmit: async (fd, form) => {
@@ -3336,13 +3336,13 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const a = id ? S.annonces.find((x) => x.id === id) : {};
     if (id && !a) return;
     const estTem = type === "temoignage" || (a && a.type === "temoignage");
-    const html = estTem ? `<form class="form" id="f-annonce" novalidate>
+    const html = estTem ? `<form method="post" class="form" id="f-annonce" novalidate>
       <input type="hidden" name="type" value="temoignage">
       ${champ("an-titre", "Votre prénom ou initiales", inp("an-titre", "auteur", a.auteur || (S.me.name || "").split(/\s+/)[0] || "", 'autocomplete="off" required autofocus maxlength="60"'), { req: true })}
       ${champ("an-texte", "Votre témoignage", zone("an-texte", "contenu", a.contenu || a.texte || "", 'rows="6" required placeholder="Ce que Dieu a fait pour vous…"'), { req: true })}
       <p class="hint">Votre témoignage sera visible par tous les membres sur l’accueil de l’application.</p>
       ${pied(id ? "Enregistrer" : "Publier mon témoignage")}
-    </form>` : `<form class="form" id="f-annonce" novalidate>
+    </form>` : `<form method="post" class="form" id="f-annonce" novalidate>
       ${champ("an-titre", "Titre", inp("an-titre", "titre", a.titre, 'autocomplete="off" required autofocus maxlength="120"'), { req: true })}
       ${champ("an-texte", "Texte", zone("an-texte", "texte", a.texte, 'rows="6" required'), { req: true })}
       <div class="f2">${champ("an-exp", "Visible jusqu’au", inp("an-exp", "expireLe", a.expireLe, 'type="date"'), { hint: "Facultatif : l’annonce disparaît de l’accueil après cette date." })}<div class="field"><span class="lab">Mise en avant</span><label class="check"><input type="checkbox" name="epingle" value="1"${a.epingle ? " checked" : ""}> Épingler en tête</label></div></div>
@@ -3433,7 +3433,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const fms = S.formations.map((f) => [f.id, f.titre]);
     const modeles = MODELES.filter(([k]) => k !== "cotis" || accesDirection());
     const aud = preset.aud || "tous";
-    const html = `<form class="form" id="f-diff" novalidate>
+    const html = `<form method="post" class="form" id="f-diff" novalidate>
       ${champ("d-titre", "Titre", inp("d-titre", "titre", preset.titre || "", 'autocomplete="off" placeholder="Pour retrouver ce message dans l’historique"'))}
       <div class="f2">${champ("d-modele", "Modèle", sel("d-modele", "modele", modeles, preset.modele || "libre", null))}<div class="field" id="d-evt-w" hidden><label for="d-evt">Rassemblement</label>${sel("d-evt", "evtId", evts, preset.evtId || "", evts.length ? null : "Aucun rassemblement à venir")}</div><div class="field" id="d-fo-w" hidden><label for="d-fo">Formation</label>${sel("d-fo", "formationId", fms, preset.formationId || (preset.aud === "formation" ? preset.val : "") || "", fms.length ? null : "Aucune formation")}</div></div>
       <div class="f2">${champ("d-aud", "Destinataires", sel("d-aud", "aud", auds, aud, null))}<div class="field" id="d-val-w" hidden><label for="d-val">Précisez</label><select class="inp" id="d-val" name="val"></select></div></div>
@@ -3652,7 +3652,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const p = id ? priere(id, conf) : { date: aujourdhui(), categorie: CATEGORIES_PRIERE[0] };
     if (id && !p) return;
     const mbs = membresActifs().map((m) => [m.id, nomComplet(m)]);
-    const html = `<form class="form" id="f-priere" novalidate>
+    const html = `<form method="post" class="form" id="f-priere" novalidate>
       ${champ("p-sujet", "Sujet", inp("p-sujet", "sujet", p.sujet, 'autocomplete="off" required autofocus maxlength="140" placeholder="Guérison de maman, examen de fin d’année…"'), { req: true })}
       ${champ("p-det", "Détails", zone("p-det", "details", p.details, 'rows="4"'))}
       <div class="f2">${champ("p-cat", "Catégorie", sel("p-cat", "categorie", CATEGORIES_PRIERE, p.categorie, null))}${champ("p-date", "Date", inp("p-date", "date", p.date, 'type="date"'))}</div>
@@ -3704,7 +3704,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     if (!p) return;
     ouvrir({
       titre: "Requête exaucée",
-      html: `<form class="form" novalidate><p><b>${esc(p.sujet)}</b></p>${champ("ex-date", "Exaucée le", inp("ex-date", "date", aujourdhui(), 'type="date"'))}${champ("ex-tem", "Témoignage", zone("ex-tem", "temoignage", p.temoignage, 'rows="5" autofocus placeholder="Ce que le Seigneur a fait…"'))}${pied("Rendre gloire")}</form>`,
+      html: `<form method="post" class="form" novalidate><p><b>${esc(p.sujet)}</b></p>${champ("ex-date", "Exaucée le", inp("ex-date", "date", aujourdhui(), 'type="date"'))}${champ("ex-tem", "Témoignage", zone("ex-tem", "temoignage", p.temoignage, 'rows="5" autofocus placeholder="Ce que le Seigneur a fait…"'))}${pied("Rendre gloire")}</form>`,
       onSubmit: async (fd, form) => {
         form.querySelector("[type=submit]").disabled = true;
         const ok = await ecrire(() => S.db.doc(`${conf ? "prieres_conf" : "prieres"}/${id}`).update({ statut: "Exaucée", exauceeLe: String(fd.get("date") || aujourdhui()), temoignage: String(fd.get("temoignage") || "").trim(), ...tampon() }), "Gloire à Dieu ! Requête exaucée");
@@ -3716,7 +3716,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const ch = chaine();
     ouvrir({
       titre: "Sujet de la semaine",
-      html: `<form class="form" novalidate>${champ("su-t", "Sujet de prière", zone("su-t", "sujet", ch.sujetSemaine, 'rows="3" autofocus placeholder="IN FIRE 2026 : que le feu du réveil embrase les nations"'))}${champ("su-v", "Verset d’appui", inp("su-v", "verset", ch.versetSemaine, 'autocomplete="off" placeholder="Car là où deux ou trois sont assemblés en mon nom… (Matthieu 18.20)"'))}${pied("Enregistrer")}</form>`,
+      html: `<form method="post" class="form" novalidate>${champ("su-t", "Sujet de prière", zone("su-t", "sujet", ch.sujetSemaine, 'rows="3" autofocus placeholder="IN FIRE 2026 : que le feu du réveil embrase les nations"'))}${champ("su-v", "Verset d’appui", inp("su-v", "verset", ch.versetSemaine, 'autocomplete="off" placeholder="Car là où deux ou trois sont assemblés en mon nom… (Matthieu 18.20)"'))}${pied("Enregistrer")}</form>`,
       onSubmit: async (fd, form) => {
         form.querySelector("[type=submit]").disabled = true;
         if (await ecrire(() => upsert("chaine/semaine", { sujetSemaine: String(fd.get("sujet") || "").trim(), versetSemaine: String(fd.get("verset") || "").trim() }), "Sujet de la semaine enregistré")) fermer();
@@ -3728,7 +3728,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const ch = chaine();
     ouvrir({
       titre: "Créneaux de prière",
-      html: `<form class="form" novalidate>${champ("cr-l", "Heures des créneaux", zone("cr-l", "creneaux", ch.creneaux.join("\n"), 'rows="6" autofocus'), { hint: "Une heure par ligne, au format 05:00. Les intercesseurs déjà affectés à une heure conservée restent en place." })}${pied("Enregistrer")}</form>`,
+      html: `<form method="post" class="form" novalidate>${champ("cr-l", "Heures des créneaux", zone("cr-l", "creneaux", ch.creneaux.join("\n"), 'rows="6" autofocus'), { hint: "Une heure par ligne, au format 05:00. Les intercesseurs déjà affectés à une heure conservée restent en place." })}${pied("Enregistrer")}</form>`,
       onSubmit: async (fd, form) => {
         const lignes = [...new Set(String(fd.get("creneaux") || "").split(/\r?\n/).map((l) => l.trim()).filter(Boolean))];
         const mal = lignes.filter((l) => !/^([01]\d|2[0-3]):[0-5]\d$/.test(l));
@@ -3835,7 +3835,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const r = id ? ressource(id) : { type: "livre" };
     if (id && !r) return;
     const peutFichier = !!S.assets && peutAdmin();
-    const html = `<form class="form" id="f-ressource" novalidate>
+    const html = `<form method="post" class="form" id="f-ressource" novalidate>
       ${champ("r-titre", "Titre", inp("r-titre", "titre", r.titre, 'autocomplete="off" required autofocus'), { req: true })}
       <div class="f2">${champ("r-type", "Type", sel("r-type", "type", TYPES_R.map(([k, l]) => [k, l]), r.type, null))}${champ("r-auteur", "Auteur ou orateur", inp("r-auteur", "auteur", r.auteur, 'autocomplete="off"'))}</div>
       <div class="f2">${champ("r-annee", "Année", inp("r-annee", "annee", r.annee, 'inputmode="numeric" maxlength="4" autocomplete="off"'))}${champ("r-theme", "Thème", inp("r-theme", "theme", r.theme, 'autocomplete="off" placeholder="Combat spirituel, Prière, Famille…" list="themes-l"'))}<datalist id="themes-l">${[...new Set(S.ressources.map((x) => x.theme).filter(Boolean))].map((x) => `<option value="${esc(x)}">`).join("")}</datalist></div>
@@ -3892,7 +3892,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const mbs = membresActifs().map((m) => [m.id, nomComplet(m)]);
     ouvrir({
       titre: "Prêter un exemplaire",
-      html: `<form class="form" novalidate><p><b>${esc(r.titre)}</b> · ${pluriel(Math.max(0, disponibles(r)), "exemplaire disponible", "exemplaires disponibles")}</p>
+      html: `<form method="post" class="form" novalidate><p><b>${esc(r.titre)}</b> · ${pluriel(Math.max(0, disponibles(r)), "exemplaire disponible", "exemplaires disponibles")}</p>
         ${champ("pr-m", "Emprunteur", sel("pr-m", "membreId", mbs, "", "Choisir un membre", "required autofocus"), { req: true })}
         <div class="f2">${champ("pr-d", "Date du prêt", inp("pr-d", "date", aujourdhui(), 'type="date"'))}${champ("pr-r", "Retour prévu", inp("pr-r", "retourPrevu", ajoutJours(aujourdhui(), 21), 'type="date"'))}</div>${pied("Enregistrer le prêt")}</form>`,
       onSubmit: async (fd, form) => {
@@ -4324,7 +4324,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
       return `<fieldset class="fs eval" id="ev-${k}"><legend>${esc(l)}</legend>${options(k, NIV_SANTE, cur, null, 0)}
         ${inp("e-" + k, k + "Note", (s[k] || {}).note || "", `autocomplete="off" placeholder="Observation (facultatif)" aria-label="Observation : ${esc(l)}"`)}</fieldset>`;
     };
-    const html = `<form class="form" id="f-eval" novalidate>
+    const html = `<form method="post" class="form" id="f-eval" novalidate>
       <div class="ident">${avatar(m)}<div><h3>${esc(nomUsuel(m))}</h3><p>${esc([m.matricule, m.fonction].filter(Boolean).join(" · "))}</p></div></div>
       <p class="note">${I("i-lock")} Visible uniquement par le propriétaire et les éditeurs. « Automatique » laisse l’application calculer le voyant ; choisissez un niveau pour l’ajuster selon votre connaissance du soldat.</p>
       <fieldset class="fs eval" id="ev-global"><legend>État général</legend>${options("f_global", ETAT_GLOBAL, fg ? fg.n : 0, ETAT_GLOBAL[v.globalCalcule], v.globalCalcule)}
@@ -4414,7 +4414,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
   function ficheDimsVeille() {
     const c = cfg().veilleDims;
     const l = Array.isArray(c) && c.length ? c : DIM_VEILLE_DEFAUT.map(([k, x]) => ({ k, l: x, actif: true }));
-    return `<form class="form" id="f-dims-veille" novalidate><p class="hint" style="margin-top:0">Ces dimensions apparaissent dans la fiche de chaque membre et dans le tableau de veille. Une dimension masquée garde son historique.</p>
+    return `<form method="post" class="form" id="f-dims-veille" novalidate><p class="hint" style="margin-top:0">Ces dimensions apparaissent dans la fiche de chaque membre et dans le tableau de veille. Une dimension masquée garde son historique.</p>
       <div class="list">${l.map((d, i) => `<div class="row nolead dv-row"><label class="check"><input type="checkbox" name="actif_${i}"${d.actif !== false ? " checked" : ""}> <span class="sr">Suivre</span></label><input type="hidden" name="k_${i}" value="${esc(d.k)}"><label class="sr" for="dv-${i}">Nom de la dimension</label><input class="inp" id="dv-${i}" name="l_${i}" value="${esc(d.l)}" maxlength="60" required></div>`).join("")}</div>
       ${champ("dv-nouv", "Ajouter une dimension", inp("dv-nouv", "nouvelle", "", 'maxlength="60" placeholder="Par exemple : Logement, Santé mentale, Ministère…"'))}
       <input type="hidden" name="n" value="${l.length}">${pied("Enregistrer les dimensions")}</form>`;
@@ -4927,7 +4927,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const c = cfg();
     const cibleVal = sp.cible && sp.cible.type === "garnison" ? "g:" + sp.cible.valeur : sp.cible && sp.cible.type === "pole" ? "p:" + sp.cible.valeur : "tous";
     const opts = `<option value="tous"${cibleVal === "tous" ? " selected" : ""}>Tous les membres actifs</option>${S.garnisons.length ? `<optgroup label="Une garnison ou un point SDE">${optionsGarnisons().map(([v, l]) => `<option value="g:${esc(v)}"${cibleVal === "g:" + v ? " selected" : ""}>${esc(l)}</option>`).join("")}</optgroup>` : ""}<optgroup label="Un pôle">${c.poles.map((p) => `<option value="p:${esc(p)}"${cibleVal === "p:" + p ? " selected" : ""}>${esc(p)}</option>`).join("")}</optgroup>`;
-    const html = `<form class="form" id="f-sp" novalidate>
+    const html = `<form method="post" class="form" id="f-sp" novalidate>
       ${champ("sp-titre", "Intitulé", inp("sp-titre", "titre", sp.titre, 'autocomplete="off" required autofocus placeholder="IN FIRE 2026, Mission Tunisie, Construction…"'), { req: true })}
       ${champ("sp-desc", "Objet", zone("sp-desc", "description", sp.description, 'rows="3" placeholder="À quoi servira cette collecte"'))}
       ${champ("sp-cible", "Membres concernés", `<select class="inp" id="sp-cible" name="cible">${opts}</select>`)}
@@ -4963,7 +4963,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const groupe = (titre, liste) => liste.length ? `<optgroup label="${esc(titre)}">${liste.map((m) => `<option value="${esc(m.id)}"${m.id === mid ? " selected" : ""}>${esc(lib(m))}</option>`).join("")}</optgroup>` : "";
     const concernes = b.cible.liste.slice().sort(parNom), autres = membresActifs().filter((m) => !ids.has(m.id));
     const reste = (m) => (m && b.mt ? Math.max(0, b.mt - (b.parM[m.id] || 0)) : 0);
-    const html = `<form class="form" id="f-vsp" novalidate>
+    const html = `<form method="post" class="form" id="f-vsp" novalidate>
       <p class="hint" style="margin-top:0">Cotisation spéciale <b>${esc(sp.titre)}</b>${b.mt ? ` · ${esc(fcfa(b.mt))} par membre` : ""}</p>
       ${champ("v-membre", "Membre", `<select class="inp" id="v-membre" name="membreId" required><option value="">Choisir un membre</option>${groupe("Membres concernés", concernes)}${groupe("Autres membres", autres)}</select>`, { req: true })}
       <div class="f2">${champ("v-mt", "Montant versé (FCFA)", inp("v-mt", "montant", mid && reste(membre(mid)) ? nb(reste(membre(mid))) : "", 'class="inp big" inputmode="numeric" autocomplete="off" required placeholder="0"'), { req: true })}${champ("v-date", "Date du versement", inp("v-date", "date", aujourdhui(), 'type="date" required'), { req: true })}</div>
@@ -5069,7 +5069,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const mbs = membresActifs().map((m) => [m.id, nomComplet(m) + (m.matricule ? ` · ${m.matricule}` : "")]);
     const evts = S.evenements.filter((e) => e.date <= aujourdhui()).sort((a, b) => cmpFr(b.date, a.date)).slice(0, 40).map((e) => [e.id, `${fmtCourt(e.date)} · ${e.titre}`]);
     const don = preset.membreId ? "membre" : "collecte";
-    const html = `<form class="form" id="f-off" novalidate>
+    const html = `<form method="post" class="form" id="f-off" novalidate>
       ${champ("o-type", "Nature", sel("o-type", "type", TYPES_OFFRANDE.map(([t]) => t), preset.type || "Offrande", null))}
       <div class="field"><span class="lab" id="lab-don">Donateur</span><div class="seg s4" role="radiogroup" aria-labelledby="lab-don">${DONATEURS.map(([v, l]) => `<input type="radio" name="donateur" id="o-d-${v}" value="${v}"${v === don ? " checked" : ""}><label for="o-d-${v}">${esc(l)}</label>`).join("")}</div></div>
       <div id="o-membre-w"${don === "membre" ? "" : " hidden"}>${champ("o-membre", "Membre", sel("o-membre", "membreId", mbs, preset.membreId || "", "Choisir un membre"))}</div>
@@ -5371,7 +5371,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
   }
   function sectionJournal(p, ecr) {
     const notes = notesP(p);
-    let out = ecr ? `<form class="form" id="f-note-projet" novalidate style="margin:4px 0 14px">${champ("pn-texte", "Nouvelle information", zone("pn-texte", "texte", "", 'rows="3" placeholder="Avancée des travaux, décision, difficulté, remerciement…"'))}<div class="btn-row">${btn("note-projet", "Publier dans le journal", { ico: "i-plus", cls: "btn-primary", sm: true, data: `data-id="${esc(p.id)}"` })}</div></form>` : "";
+    let out = ecr ? `<form method="post" class="form" id="f-note-projet" novalidate style="margin:4px 0 14px">${champ("pn-texte", "Nouvelle information", zone("pn-texte", "texte", "", 'rows="3" placeholder="Avancée des travaux, décision, difficulté, remerciement…"'))}<div class="btn-row">${btn("note-projet", "Publier dans le journal", { ico: "i-plus", cls: "btn-primary", sm: true, data: `data-id="${esc(p.id)}"` })}</div></form>` : "";
     if (!notes.length) return out + `<p class="hint">Le journal du projet est vide.</p>`;
     return out + `<ul class="journal">${notes.map((n) => `<li><p class="j-m">${esc(fmtStamp(n.le))}${n.par ? ` · ${esc(nomDe(n.par))}` : ""}</p><p style="white-space:pre-wrap;margin:0">${esc(n.texte)}</p></li>`).join("")}</ul>`;
   }
@@ -5396,7 +5396,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const mbs = membresActifs().map((m) => [m.id, nomComplet(m)]);
     const lignes = id ? lignesP(p).map((l) => `${l.libelle} : ${nb(l.montant)}`).join("\n") : "";
     const jalons = id ? jalonsP(p).map((j) => `${j.date ? j.date.split("-").reverse().join("/") + " " : ""}${j.titre}`).join("\n") : "";
-    const html = `<form class="form" id="f-projet" novalidate>
+    const html = `<form method="post" class="form" id="f-projet" novalidate>
       ${champ("p-titre", "Intitulé du projet", inp("p-titre", "titre", p.titre, 'autocomplete="off" required autofocus placeholder="Construction du siège, Mission Tunisie 2027…"'), { req: true })}
       <div class="f2">${champ("p-cat", "Catégorie", sel("p-cat", "categorie", CATEGORIES_PROJET, p.categorie, null))}${champ("p-statut", "Statut", sel("p-statut", "statut", STATUTS_PROJET, statutP(p), null))}</div>
       <div class="f2">${champ("p-prio", "Priorité", sel("p-prio", "priorite", PRIORITES, p.priorite || "Normale", null))}${champ("p-resp", "Responsable", sel("p-resp", "responsableId", mbs, p.responsableId, "Non désigné"))}</div>
@@ -5455,7 +5455,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const eqIds = new Set([...(p.equipe || []), p.responsableId].filter(Boolean));
     const eq = membresActifs().filter((m) => eqIds.has(m.id)), autres = membresActifs().filter((m) => !eqIds.has(m.id));
     const grp = (titre, l) => (l.length ? `<optgroup label="${esc(titre)}">${l.map((m) => `<option value="${esc(m.id)}"${m.id === t.responsableId ? " selected" : ""}>${esc(nomComplet(m))}</option>`).join("")}</optgroup>` : "");
-    const html = `<form class="form" id="f-tache" novalidate>
+    const html = `<form method="post" class="form" id="f-tache" novalidate>
       <p class="hint" style="margin-top:0">Projet <b>${esc(p.titre)}</b></p>
       ${champ("t-titre", "Tâche", inp("t-titre", "titre", t.titre, 'autocomplete="off" required autofocus placeholder="Obtenir trois devis, réserver la salle…"'), { req: true })}
       <div class="f2">${champ("t-resp", "Responsable", `<select class="inp" id="t-resp" name="responsableId"><option value="">Non désigné</option>${grp("Équipe du projet", eq)}${grp("Autres membres", autres)}</select>`)}${champ("t-ech", "Échéance", inp("t-ech", "echeance", t.echeance, 'type="date"'))}</div>
@@ -5493,7 +5493,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const c = cfg();
     const cv = f.cible ? (f.cible.type === "garnison" ? "g:" + f.cible.valeur : f.cible.type === "pole" ? "p:" + f.cible.valeur : f.cible.type) : "equipe";
     const opts = `<option value="equipe"${cv === "equipe" ? " selected" : ""}>L’équipe du projet</option><option value="tous"${cv === "tous" ? " selected" : ""}>Tous les membres actifs</option>${S.garnisons.length ? `<optgroup label="Une garnison ou un point SDE">${optionsGarnisons().map(([v, l]) => `<option value="g:${esc(v)}"${cv === "g:" + v ? " selected" : ""}>${esc(l)}</option>`).join("")}</optgroup>` : ""}<optgroup label="Un pôle">${c.poles.map((x) => `<option value="p:${esc(x)}"${cv === "p:" + x ? " selected" : ""}>${esc(x)}</option>`).join("")}</optgroup>`;
-    const html = `<form class="form" id="f-collecte" novalidate>
+    const html = `<form method="post" class="form" id="f-collecte" novalidate>
       <p class="hint" style="margin-top:0">Projet <b>${esc(p.titre)}</b>${budgetP(p) ? ` · budget prévu ${esc(fcfa(budgetP(p)))}` : ""}</p>
       ${champ("cl-cible", "Membres sollicités", `<select class="inp" id="cl-cible" name="cible">${opts}</select>`)}
       <div class="f2">${champ("cl-mt", "Cotisation attendue par membre (FCFA)", inp("cl-mt", "montantParMembre", f.montantParMembre ? nb(f.montantParMembre) : "", 'inputmode="numeric" autocomplete="off" placeholder="Libre"'))}${champ("cl-obj", "Objectif de collecte (FCFA)", inp("cl-obj", "objectifCollecte", f.objectifCollecte ? nb(f.objectifCollecte) : "", 'inputmode="numeric" autocomplete="off" placeholder="Par défaut : le budget prévu"'))}</div>
@@ -5523,7 +5523,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const b = bilanFinP(p);
     const c = cfg();
     const reste = (x) => (x ? Math.max(0, attenduMembreP(b, x) - (b.parM[x] || 0)) : 0);
-    const html = `<form class="form" id="f-cp" novalidate>
+    const html = `<form method="post" class="form" id="f-cp" novalidate>
       <p class="hint" style="margin-top:0">Projet <b>${esc(p.titre)}</b>${b.mt ? ` · ${esc(fcfa(b.mt))} attendus par membre` : ""}</p>
       <div class="field"><span class="lab" id="lab-pcd">Donateur</span><div class="seg" role="radiogroup" aria-labelledby="lab-pcd" style="grid-template-columns:repeat(3,minmax(0,1fr))">${[["membre", "Un membre"], ["anonyme", "Anonyme"], ["autre", "Autre personne"]].map(([v, l]) => `<input type="radio" name="donateur" id="pc-d-${v}" value="${v}"${v === "membre" ? " checked" : ""}><label for="pc-d-${v}">${esc(l)}</label>`).join("")}</div></div>
       <div id="pc-m-w">${champ("pc-membre", "Membre", selectMembresProjet(b, mid))}</div>
@@ -5572,7 +5572,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const p = projet(id);
     if (!p) return;
     const b = bilanFinP(p);
-    const html = `<form class="form" id="f-prom" novalidate>
+    const html = `<form method="post" class="form" id="f-prom" novalidate>
       <p class="hint" style="margin-top:0">Une promesse n’entre pas en caisse : elle sert à suivre ce que chacun s’est engagé à donner.</p>
       ${champ("pc-membre", "Membre", selectMembresProjet(b, mid))}
       <div class="f2">${champ("pr-mt", "Montant promis (FCFA)", inp("pr-mt", "montant", mid && b.promesses[mid] ? nb(b.promesses[mid].montant) : "", 'class="inp big" inputmode="numeric" autocomplete="off" placeholder="0"'), { hint: "0 pour retirer la promesse." })}${champ("pr-date", "Date de la promesse", inp("pr-date", "date", aujourdhui(), 'type="date"'))}</div>
@@ -5593,7 +5593,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     if (!p) return;
     const c = cfg();
     const lignes = lignesP(p).map((l) => [l.id, `${l.libelle} (${nb(l.montant)})`]);
-    const html = `<form class="form" id="f-dp" novalidate>
+    const html = `<form method="post" class="form" id="f-dp" novalidate>
       <p class="hint" style="margin-top:0">Projet <b>${esc(p.titre)}</b></p>
       ${champ("dp-lib", "Objet de la dépense", inp("dp-lib", "libelle", "", 'autocomplete="off" required autofocus placeholder="50 sacs de ciment, location du car…"'), { req: true })}
       <div class="f2">${champ("dp-ligne", "Poste du budget", sel("dp-ligne", "ligneId", lignes, "", "Hors budget"))}${champ("dp-cat", "Catégorie en caisse", sel("dp-cat", "categorie", c.categoriesSortie, c.categoriesSortie.find((x) => /logistique|mat/i.test(x)) || c.categoriesSortie[0], null))}</div>
@@ -5829,7 +5829,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const evts = S.evenements.slice().sort((x1, x2) => cmpFr(x2.date, x1.date)).slice(0, 60).map((e) => [e.id, `${fmtCourt(e.date)} · ${e.titre}`]);
     const html = `<div class="aff-ed">
       <div class="aff-prev"><canvas id="aff-cv" class="aff-cv" role="img" aria-label="Aperçu de l’affiche"></canvas><p class="hint" id="aff-etat" aria-live="polite"></p></div>
-      <form class="form aff-form" id="f-aff" novalidate>
+      <form method="post" class="form aff-form" id="f-aff" novalidate>
         <div class="f2">${champ("af-modele", "Modèle", sel("af-modele", "modele", MODELES_AFF, a.modele, null))}${champ("af-format", "Format", sel("af-format", "format", Object.entries(FORMATS_AFF).map(([k, v]) => [k, `${v.lib} · ${v.d}`]), a.format, null))}</div>
         <div class="field"><span class="lab" id="lab-th">Couleurs</span><div class="aff-th" role="radiogroup" aria-labelledby="lab-th">${Object.entries(THEMES_AFF).map(([k, t]) => `<label class="aff-sw" title="${esc(t.lib)}"><input type="radio" name="theme" value="${k}"${a.theme === k ? " checked" : ""}><span style="background:linear-gradient(135deg,${t.fond[0]},${t.fond[1]});--acc:${t.acc}"><i></i></span><small>${esc(t.lib)}</small></label>`).join("")}</div></div>
         <div id="af-w-evt" class="aff-opt" data-modeles="evenement">${champ("af-evt", "Rassemblement de l’agenda", sel("af-evt", "evenementId", evts, a.evenementId, "Aucun (saisie libre)"))}</div>
@@ -6167,7 +6167,7 @@ Aujourd’hui : ${dateFr(aujourdhui())}. Personne qui écrit : ${S.me.name || "u
     const accueil = !IA.tours.length && !IA.enCours ? `<div class="ia-accueil"><p>Bonjour${S.me.name ? " " + esc(S.me.name.split(/\s+/)[0]) : ""}. Je consulte les données de l’application (membres, agenda, projets${accesDirection() ? ", finances" : ""}…) et je rédige pour vous annonces, messages, vœux, exhortations ou thèmes de conférence.</p><div class="ia-sugg">${SUGGESTIONS_IA().map(([l, q]) => `<button class="chip-btn" type="button" data-act="ia-suggestion" data-q="${esc(q)}">${esc(l)}</button>`).join("")}</div></div>` : "";
     out += `<div class="ia"><div class="ia-fil" id="ia-fil" aria-live="polite">${accueil}${fil}${enCours}</div>
       ${IA.erreur ? `<p class="note danger" role="alert" style="margin:10px 0 0">${esc(IA.erreur)}</p>` : ""}
-      <form class="ia-saisie" id="ia-form" novalidate><label class="sr" for="ia-q">Votre demande à Éliézer</label><textarea class="inp" id="ia-q" rows="2" placeholder="Demandez à Éliézer…"${IA.enCours ? " disabled" : ""}>${esc(IA.brouillon)}</textarea>${IA.enCours ? btn("ia-stop", "Arrêter", { ico: "i-x" }) : `<button class="btn btn-primary" type="submit">${I("i-right")}Envoyer</button>`}</form>
+      <form method="post" class="ia-saisie" id="ia-form" novalidate><label class="sr" for="ia-q">Votre demande à Éliézer</label><textarea class="inp" id="ia-q" rows="2" placeholder="Demandez à Éliézer…"${IA.enCours ? " disabled" : ""}>${esc(IA.brouillon)}</textarea>${IA.enCours ? btn("ia-stop", "Arrêter", { ico: "i-x" }) : `<button class="btn btn-primary" type="submit">${I("i-right")}Envoyer</button>`}</form>
       <p class="hint" style="margin-top:6px">Éliézer peut se tromper : vérifiez les chiffres importants. Les conversations ne sont pas enregistrées.</p></div>`;
     return out;
   };
@@ -6194,7 +6194,7 @@ Aujourd’hui : ${dateFr(aujourdhui())}. Personne qui écrit : ${S.me.name || "u
   function ouvrirMatricule(mid) {
     const m = membre(mid);
     if (!m) return;
-    const html = `<form class="form" id="f-mat" novalidate>
+    const html = `<form method="post" class="form" id="f-mat" novalidate>
       <div class="ident">${avatar(m)}<div><h3>${esc(nomUsuel(m))}</h3><p>${esc(m.matricule ? `Matricule actuel : ${m.matricule}` : "Pas encore de matricule")}</p></div></div>
       ${champ("mt-val", "Nouveau matricule", inp("mt-val", "matricule", m.matricule || prochainMatricule(), 'autocomplete="off" autocapitalize="characters" required autofocus'), { req: true, hint: `Prochain numéro libre : ${esc(prochainMatricule())}.` })}
       <p class="note">La carte de membre et les attestations porteront le nouveau matricule. Les documents déjà imprimés restent vérifiables avec l’ancien.</p>
@@ -6256,7 +6256,7 @@ Aujourd’hui : ${dateFr(aujourdhui())}. Personne qui écrit : ${S.me.name || "u
       const o = MT.opts || (MT.opts = OPTS_MAT());
       const r = planRenum(o);
       const exemple = r.plan[0] ? r.plan[0].nouveau : "";
-      out += `<form class="form" id="f-renum" novalidate>
+      out += `<form method="post" class="form" id="f-renum" novalidate>
         <div class="f2">${champ("rn-pre", "Préfixe", inp("rn-pre", "prefixe", o.prefixe, 'autocomplete="off" autocapitalize="characters" maxlength="12"'))}${champ("rn-sep", "Séparateur", sel("rn-sep", "sep", [["-", "Tiret ( - )"], ["/", "Barre ( / )"], [".", "Point ( . )"], ["", "Aucun"]], o.sep, null))}</div>
         <div class="f2">${champ("rn-chif", "Nombre de chiffres", sel("rn-chif", "chiffres", [["3", "3 (001)"], ["4", "4 (0001)"], ["5", "5 (00001)"]], String(o.chiffres), null))}${champ("rn-dep", "Premier numéro", inp("rn-dep", "depart", String(o.depart), 'inputmode="numeric" autocomplete="off"'))}</div>
         ${champ("rn-ordre", "Ordre de numérotation", sel("rn-ordre", "ordre", [["matricule", "Ordre des matricules actuels"], ["adhesion", "Date d’adhésion (les plus anciens d’abord)"], ["nom", "Ordre alphabétique"]], o.ordre, null))}
@@ -7035,7 +7035,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   function formCode() {
     const tel = telContact();
     return `<section class="card esp-entree"><div class="esp-entree-i" aria-hidden="true">${I("i-card")}</div><h2 class="h3">Ouvrir mon espace</h2><p class="hint">Saisissez le code personnel reçu du secrétariat. Votre espace s’ouvrira ensuite directement sur cet appareil.</p>
-      <form class="form esp-form" id="f-esp" novalidate><label class="sr" for="esp-code">Code personnel</label><input class="inp esp-inp" id="esp-code" name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="K7PM-Q2XD" maxlength="14" inputmode="text"><button class="btn btn-primary" type="submit">${I("i-right")}Ouvrir</button></form>
+      <form method="post" class="form esp-form" id="f-esp" novalidate><label class="sr" for="esp-code">Code personnel</label><input class="inp esp-inp" id="esp-code" name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="K7PM-Q2XD" maxlength="14" inputmode="text"><button class="btn btn-primary" type="submit">${I("i-right")}Ouvrir</button></form>
       ${ESP.err ? `<p class="note danger" role="alert">${esc(ESP.err)}</p>` : ""}
       ${tel ? `<p class="hint" style="margin-top:12px">Pas encore de code ? <a class="link" href="${esc(lienWa(tel, "Shalom ! Je souhaite recevoir mon code d’accès à l’Espace soldat MPA SDE. Nom et prénoms : "))}" target="_blank" rel="noopener">Le demander par WhatsApp</a></p>` : ""}</section>`;
   }
@@ -7076,7 +7076,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     out += `<div class="esp-groupe"><p class="esp-groupe-t">${I("i-flame")} Ma vie spirituelle</p>`;
     out += `<div class="grid g3 esp-grid">`;
     out += `<section class="card" id="sde-personal-presences" tabindex="-1" aria-label="Mes présences" style="--d:0"><p class="eyebrow">Mes présences</p><p class="esp-big">${tauxPc == null ? "—" : tauxPc + " %"}</p><p class="hint" style="margin-top:0">${pr.taux == null ? "Pas encore de rassemblement pointé ces trois derniers mois." : `d’assiduité sur trois mois · ${pluriel((pr.p || 0) + (pr.r || 0), "présence", "présences")}`}</p>${(pr.liste || []).length ? `<ul class="esp-l">${pr.liste.slice(0, 8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul>${pr.liste.length > 8 ? `<details class="esp-plus"><summary class="link">Voir les ${pr.liste.length} présences</summary><ul class="esp-l">${pr.liste.slice(8).map((x) => `<li><span><b>${esc(x.titre)}</b><small>${esc(fmtCourt(x.date))}</small></span><span class="chip ${ETAT_PRES[x.etat][1]}">${ETAT_PRES[x.etat][0]}</span></li>`).join("")}</ul></details>` : ""}` : ""}</section>`;
-    out += `<section class="card" style="--d:1"><p class="eyebrow">Requête de prière</p><form class="form" id="f-esp-priere" novalidate>${champ("esp-sujet", "Pour quoi souhaitez-vous que l’on prie ?", `<textarea class="inp" id="esp-sujet" name="sujet" rows="4" maxlength="800" placeholder="Votre sujet de prière…"></textarea>`)}<label class="check"><input type="checkbox" name="conf" value="1"> Confidentielle : seule la direction la lira</label><button class="btn btn-primary" type="submit"${ESP.envoi ? " disabled" : ""}>${I("i-flame")}Déposer ma requête</button></form><p class="hint" style="margin-top:8px">${peutEcrire() && accesRegistre() ? "Votre requête rejoint la Chambre Haute. Les requêtes confidentielles partent par WhatsApp vers la direction." : (moiH().membreId ? "Votre requête rejoint la Chambre Haute, où les intercesseurs prient pour vous. Confidentielle, elle part par WhatsApp vers la direction." : "Votre requête part par WhatsApp vers la direction, qui la confie aux intercesseurs.")}</p></section>`;
+    out += `<section class="card" style="--d:1"><p class="eyebrow">Requête de prière</p><form method="post" class="form" id="f-esp-priere" novalidate>${champ("esp-sujet", "Pour quoi souhaitez-vous que l’on prie ?", `<textarea class="inp" id="esp-sujet" name="sujet" rows="4" maxlength="800" placeholder="Votre sujet de prière…"></textarea>`)}<label class="check"><input type="checkbox" name="conf" value="1"> Confidentielle : seule la direction la lira</label><button class="btn btn-primary" type="submit"${ESP.envoi ? " disabled" : ""}>${I("i-flame")}Déposer ma requête</button></form><p class="hint" style="margin-top:8px">${peutEcrire() && accesRegistre() ? "Votre requête rejoint la Chambre Haute. Les requêtes confidentielles partent par WhatsApp vers la direction." : (moiH().membreId ? "Votre requête rejoint la Chambre Haute, où les intercesseurs prient pour vous. Confidentielle, elle part par WhatsApp vers la direction." : "Votre requête part par WhatsApp vers la direction, qui la confie aux intercesseurs.")}</p></section>`;
     out += `${badgesSoldat(m, pr, c)}`;
     out += `</div>`;
     out += heatmapPresences(pr);
@@ -7159,7 +7159,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
 
   /* ── Formulaire de demande d'absence ── */
   function formAbsence() {
-    return `<section class="card"><p class="eyebrow">Demander une absence</p><form class="form" id="f-absence" novalidate>
+    return `<section class="card"><p class="eyebrow">Demander une absence</p><form method="post" class="form" id="f-absence" novalidate>
       <div class="g2">${champ("abs-debut", "Du", '<input class="inp" id="abs-debut" name="dateDebut" type="date" required>')}${champ("abs-fin", "Au", '<input class="inp" id="abs-fin" name="dateFin" type="date">')}</div>
       ${champ("abs-motif", "Motif", '<textarea class="inp" id="abs-motif" name="motif" rows="2" maxlength="500" placeholder="Voyage, maladie, empêchement…" required></textarea>')}
       <button class="btn btn-sm btn-primary" type="submit">${I("i-cal")}Envoyer la demande</button></form></section>`;
@@ -7181,7 +7181,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   function formProfil(m) {
     const h = moiH();
     if (!h.connecte || !h.membreId) return "";
-    return `<section class="card"><p class="eyebrow">Modifier mes coordonnées</p><form class="form" id="f-profil" novalidate>
+    return `<section class="card"><p class="eyebrow">Modifier mes coordonnées</p><form method="post" class="form" id="f-profil" novalidate>
       <div class="g2">${champ("prof-tel", "Téléphone", `<input class="inp" id="prof-tel" name="telephone" type="tel" maxlength="30" value="${esc(m.telephone || "")}">`)}${champ("prof-quartier", "Quartier", `<input class="inp" id="prof-quartier" name="quartier" type="text" maxlength="100" value="${esc(m.quartier || "")}">`)}</div>
       <div class="g2">${champ("prof-email", "E-mail de contact", `<input class="inp" id="prof-email" name="email" type="email" maxlength="200" value="${esc(m.email || "")}">`)}${champ("prof-situation", "Situation", `<select class="inp" id="prof-situation" name="situation"><option value="">—</option>${["Célibataire", "Marié(e)", "Veuf/veuve", "Autre"].map((s) => `<option${m.situation === s ? " selected" : ""}>${s}</option>`).join("")}</select>`)}</div>
       <button class="btn btn-sm btn-primary" type="submit">${I("i-check")}Enregistrer</button></form></section>`;
@@ -8230,7 +8230,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     else corps = `<p class="hint" style="margin-top:0">Le secrétariat vous a remis un code d’activation (par exemple K7PM-Q2XD) pour ouvrir votre compte ou choisir un nouveau mot de passe.</p>${email}
       ${champ("ca-code", "Code d’activation", inp("ca-code", "code", "", 'autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="12" required placeholder="K7PM-Q2XD"'), { req: true })}
       ${champMdp("ca-mdp", "Nouveau mot de passe", "new-password", "Au moins 8 caractères.")}${champMdp("ca-mdp2", "Confirmez le mot de passe", "new-password")}${voirMdp}${pied("Activer et me connecter")}`;
-    return `<div class="cnx-onglets" role="group" aria-label="Choix">${onglets}</div><form class="form cnx-form" id="f-cnx" data-mode="${m}" novalidate>${corps}</form>`;
+    return `<div class="cnx-onglets" role="group" aria-label="Choix">${onglets}</div><form method="post" class="form cnx-form" id="f-cnx" data-mode="${m}" novalidate>${corps}</form>`;
   }
   function ouvrirConnexion(mode) {
     if (mode) CNX.mode = mode;
@@ -8271,7 +8271,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
 
   /* — Changer son mot de passe — */
   function ouvrirMotDePasse() {
-    ouvrir({ titre: "Changer mon mot de passe", html: `<form class="form" id="f-mdp" novalidate>${champ("cm-ancien", "Mot de passe actuel", '<input class="inp" id="cm-ancien" name="ancien" type="password" autocomplete="current-password" required autofocus>', { req: true })}${champ("cm-nouveau", "Nouveau mot de passe", '<input class="inp" id="cm-nouveau" name="nouveau" type="password" autocomplete="new-password" minlength="8" required>', { req: true, hint: "Au moins 8 caractères." })}${champ("cm-nouveau2", "Confirmez le nouveau mot de passe", '<input class="inp" id="cm-nouveau2" name="nouveau2" type="password" autocomplete="new-password" required>', { req: true })}${voirMdp}${pied("Enregistrer")}</form>`,
+    ouvrir({ titre: "Changer mon mot de passe", html: `<form method="post" class="form" id="f-mdp" novalidate>${champ("cm-ancien", "Mot de passe actuel", '<input class="inp" id="cm-ancien" name="ancien" type="password" autocomplete="current-password" required autofocus>', { req: true })}${champ("cm-nouveau", "Nouveau mot de passe", '<input class="inp" id="cm-nouveau" name="nouveau" type="password" autocomplete="new-password" minlength="8" required>', { req: true, hint: "Au moins 8 caractères." })}${champ("cm-nouveau2", "Confirmez le nouveau mot de passe", '<input class="inp" id="cm-nouveau2" name="nouveau2" type="password" autocomplete="new-password" required>', { req: true })}${voirMdp}${pied("Enregistrer")}</form>`,
       onSubmit: async (fd, form) => {
         const n = String(fd.get("nouveau") || "");
         if (n.length < 8) { erreurForm("Le nouveau mot de passe doit compter au moins 8 caractères."); return; }
@@ -8284,7 +8284,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   /* — Préférences de notification — */
   function ouvrirPrefsNotif() {
     const p = prefsNotif();
-    const html = `<form class="form" id="f-prefs-notif" novalidate>
+    const html = `<form method="post" class="form" id="f-prefs-notif" novalidate>
       <p class="hint">Choisissez les catégories pour lesquelles un indicateur apparaît dans la navigation lorsqu'il y a du nouveau.</p>
       <label class="check"><input type="checkbox" name="annonces" value="1"${p.annonces ? " checked" : ""}> Nouvelles annonces (Porte-Voix)</label>
       <label class="check"><input type="checkbox" name="diffusions" value="1"${p.diffusions ? " checked" : ""}> Nouveaux messages ciblés</label>
@@ -8417,7 +8417,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
     const sauv = CPT.sauv ? `<details class="imp-h"><summary>Sauvegardes automatiques</summary><p class="hint">Toute la base (membres, agenda, caisse, comptes sans mots de passe) est sauvegardée chaque nuit à 2 h et gardée 35 jours. Pour restaurer, le propriétaire utilise « Transférer des données » avec le fichier téléchargé.</p><div class="btn-row">${btn("sauv-maintenant", "Sauvegarder maintenant", { ico: "i-down", sm: true })}</div>${CPT.sauv.length ? `<ul class="esp-l">${CPT.sauv.map((x) => `<li><span><b>${esc(fmtLong(x.jour))}</b><small>${esc(nb(x.documents || 0))} documents · ${esc(tailleKo(x.taille))}</small></span><a class="btn btn-sm" href="/api/sauvegardes/${esc(x.jour)}" download>${I("i-down")}Télécharger</a></li>`).join("")}</ul>` : `<p class="hint">Aucune sauvegarde pour l’instant : la première sera faite cette nuit.</p>`}</details>` : "";
     const etat = (c) => c.actif ? (c.derniere ? "dernière connexion " + fmtStamp(c.derniere) : "actif") : c.aActiver ? "en attente d’activation" : "sans mot de passe";
     return imp + sauv + code + `<p class="hint" style="margin-top:0">Les soldats créent eux-mêmes leur compte et reçoivent un matricule à 6 chiffres. Pour un responsable, ajoutez son adresse avec son rôle : un code d’activation s’affiche, à lui transmettre pour qu’il choisisse son mot de passe.</p>
-      <form class="form compte-aj" id="f-compte" novalidate><div class="f2">${champ("cp-email", "Adresse e-mail", inp("cp-email", "email", "", 'type="email" autocomplete="off" placeholder="prenom.nom@gmail.com" required'))}${champ("cp-nom", "Nom", inp("cp-nom", "nom", "", 'autocomplete="off"'))}</div>${champ("cp-role", "Rôle", `<select class="inp" id="cp-role" name="role">${opts("contributeur")}</select>`)}<button class="btn btn-primary btn-sm" type="submit">${I("i-plus")}Ajouter ou mettre à jour</button></form>
+      <form method="post" class="form compte-aj" id="f-compte" novalidate><div class="f2">${champ("cp-email", "Adresse e-mail", inp("cp-email", "email", "", 'type="email" autocomplete="off" placeholder="prenom.nom@gmail.com" required'))}${champ("cp-nom", "Nom", inp("cp-nom", "nom", "", 'autocomplete="off"'))}</div>${champ("cp-role", "Rôle", `<select class="inp" id="cp-role" name="role">${opts("contributeur")}</select>`)}<button class="btn btn-primary btn-sm" type="submit">${I("i-plus")}Ajouter ou mettre à jour</button></form>
       <div class="list" style="margin-top:14px">${CPT.liste.map((c) => {
         const proprio = c.role === "proprietaire";
         const peutLier = !proprio || (c.email === m.email && !c.membreId);
@@ -8571,7 +8571,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
   function ficheAjoutMedia() {
     const e = MED.espace;
     const cats = [...new Set(CATS_MED.concat((MED.liste || []).map((m) => m.categorie).filter(Boolean)))];
-    return `<form class="form" id="f-med" novalidate>
+    return `<form method="post" class="form" id="f-med" novalidate>
       <label class="med-depot" for="med-fichiers">${I("i-up")}<b>Choisir les fichiers</b><span class="hint">Vidéos MP4, audios MP3, photos, PDF, Word, PowerPoint, Excel${e ? ` · ${esc(octets(e.fichierMax))} au maximum par fichier` : ""}. Plusieurs fichiers à la fois.</span></label>
       <input type="file" id="med-fichiers" name="fichiers" multiple accept="${esc(ACCEPT_MED)}" hidden>
       <div id="med-choix" class="med-choix"></div>
@@ -8658,7 +8658,7 @@ ${mbs.length ? `<h2>Annuaire des soldats (${mbs.length})</h2><input type="search
 
   /* — Modifier — */
   function ficheModifMedia(m) {
-    return `<form class="form" id="f-med-modif" data-id="${esc(m.id)}" novalidate>${champ("mm-t", "Titre", inp("mm-t", "titre", m.titre, 'maxlength="160" required'), { req: true })}
+    return `<form method="post" class="form" id="f-med-modif" data-id="${esc(m.id)}" novalidate>${champ("mm-t", "Titre", inp("mm-t", "titre", m.titre, 'maxlength="160" required'), { req: true })}
       <div class="f2">${champ("mm-c", "Catégorie", `<input class="inp" id="mm-c" name="categorie" value="${esc(m.categorie || "")}" list="dl-mm-c" autocomplete="off"><datalist id="dl-mm-c">${CATS_MED.map((c) => `<option value="${esc(c)}"></option>`).join("")}</datalist>`)}${champ("mm-v", "Qui peut voir ?", `<select class="inp" id="mm-v" name="visibilite">${VIS_MED.map(([k, l]) => `<option value="${k}"${k === m.visibilite ? " selected" : ""}>${esc(l)}</option>`).join("")}</select>`)}</div>
       ${champ("mm-d", "Description", `<textarea class="inp" id="mm-d" name="description" rows="4" maxlength="2000">${esc(m.description || "")}</textarea>`)}${pied("Enregistrer")}</form>`;
   }

@@ -24,7 +24,7 @@
 <button type="button" role="tab" id="tab-equipe" aria-controls="pane-equipe" aria-selected="false" tabindex="-1" hidden>Équipe pédagogique</button>
 </div>
 <div class="pane" role="tabpanel" id="pane-publier" aria-labelledby="tab-publier">
-<form class="panel" id="formRessource" novalidate>
+<form method="post" class="panel" id="formRessource" novalidate>
 <h2 id="titreForm">Nouvelle ressource</h2>
 <label class="field">Où la publier ?<select name="portee" id="champPortee" required></select></label>
 <label class="field">Type de ressource<select name="type" id="champType" required>
@@ -72,7 +72,7 @@
 <div class="actions"><button type="button" class="button" id="dynStudioRefresh">Actualiser les activités</button></div>
 <p class="status" id="dynStudioStatus" role="status" aria-live="polite">Chargement de vos cours confiés…</p>
 <div class="academy-dyn-studio-grid">
-<form id="dynFormQuiz" class="academy-dyn-form">
+<form method="post" id="dynFormQuiz" class="academy-dyn-form">
 <h3>Créer un quiz interactif</h3>
 <label class="field">Cours confié <select name="cours" id="dynQuizCourse" required></select></label>
 <label class="field">Question pédagogique <textarea name="question" rows="2" required minlength="10" maxlength="240"></textarea></label>
@@ -86,7 +86,7 @@
 <button class="button primary" type="submit">Publier cette activité</button>
 <p class="status" id="dynQuizStatus" role="status" aria-live="polite"></p>
 </form>
-<form id="dynFormMeet" class="academy-dyn-form">
+<form method="post" id="dynFormMeet" class="academy-dyn-form">
 <h3>Programmer une classe virtuelle</h3>
 <label class="field">Cours confié <select name="cours" id="dynMeetCourse" required></select></label>
 <label class="field">Titre de la séance <input name="titre" minlength="5" maxlength="120" required placeholder="Ex. Étude biblique interactive"></label>
@@ -107,7 +107,7 @@
 </section>
 </div>
 <div class="pane" role="tabpanel" id="pane-equipe" aria-labelledby="tab-equipe" hidden>
-<form class="panel" id="formFormateur">
+<form method="post" class="panel" id="formFormateur">
 <h2>Nommer un enseignant ou un coach</h2>
 <p class="muted">La personne doit déjà avoir un compte. Elle ne pourra publier que dans les cours que vous lui confiez ; aucun autre droit n'est modifié.</p>
 <label class="field">Adresse e-mail du compte<input type="email" name="compte" required maxlength="190"></label>

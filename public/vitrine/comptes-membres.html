@@ -13,7 +13,7 @@
 <p><label class="cm-case"><input type="checkbox" id="cm-sans-email" checked> Créer aussi les comptes des membres <strong>sans adresse e-mail</strong> : ils se connectent avec leur seul matricule, et seule l’administration pourra leur redonner un mot de passe.</label></p>
 <p><button type="button" class="hub-btn" id="cm-apercu">Aperçu (ne crée rien)</button></p>
 <div id="cm-resume" hidden></div>
-<form id="cm-creer" class="hub-form" hidden><label class="cm-case"><input type="checkbox" id="cm-ok" required> Je comprends que les mots de passe ne seront affichés qu’une fois et que je dois les remettre en privé.</label><button type="submit" class="hub-btn" id="cm-lancer">Créer les comptes</button></form>
+<form method="post" id="cm-creer" class="hub-form" hidden><label class="cm-case"><input type="checkbox" id="cm-ok" required> Je comprends que les mots de passe ne seront affichés qu’une fois et que je dois les remettre en privé.</label><button type="submit" class="hub-btn" id="cm-lancer">Créer les comptes</button></form>
 <div id="cm-resultat" hidden><h2>Comptes créés</h2><p id="cm-compte"></p><p><button type="button" class="hub-btn" id="cm-csv">Télécharger la liste (CSV)</button> <button type="button" class="sq-lien" id="cm-imprimer">Imprimer</button></p><div class="cm-table-zone"><table class="cm-table"><thead><tr><th>Nom</th><th>Matricule</th><th>E-mail</th><th>Mot de passe temporaire</th></tr></thead><tbody id="cm-lignes"></tbody></table></div></div>
 <div id="cm-ignores" hidden><h2>Fiches ignorées</h2><ul id="cm-ignores-liste" class="em-points"></ul></div>
 </section>

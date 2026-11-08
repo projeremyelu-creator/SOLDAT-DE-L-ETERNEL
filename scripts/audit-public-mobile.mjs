@@ -6,6 +6,7 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 
 const domain='https://mouvement-sde.org';
+const mobileViewports=[360,390];
 const out='audit-mobile-sde';
 mkdirSync(out,{recursive:true});
 const cases=[
@@ -135,6 +136,9 @@ try{
      documentWidth:document.documentElement.scrollWidth,
      overflowX:Math.max(0,document.documentElement.scrollWidth-innerWidth,document.body.scrollWidth-innerWidth),
      overflowElements,
+     touchTargets:innerWidth<=Math.max(...mobileViewports)?[...document.querySelectorAll('button,[role="button"],nav a,form input:not([type="hidden"]),form select,form textarea,form a')]
+      .filter(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0&&(r.width<44||r.height<44)})
+      .slice(0,20).map(el=>{const r=el.getBoundingClientRect();return {tag:el.tagName.toLowerCase(),id:el.id||'',label:(el.textContent||el.getAttribute('aria-label')||el.getAttribute('name')||'').trim().slice(0,55),width:Math.round(r.width),height:Math.round(r.height)}}):[],
      logoPresent:!!(logo&&logo.width>10),
      brandPortalOverlap:intersects(brand,portal),
      brandBurgerOverlap:intersects(brand,burger),
@@ -500,6 +504,8 @@ try{
     issue(c.name,'hauteur du nouvel accueil premium insuffisante : '+row.premiumHeroHeight+' px',true);
    if(row.status!==200)issue(c.name,'HTTP '+row.status,true);
    if(row.overflowX>16)issue(c.name,'débordement horizontal de '+row.overflowX+' px',true);
+   if(mobileViewports.includes(c.width)&&row.touchTargets?.length)
+    issue(c.name,'zones tactiles inférieures à 44 px : '+JSON.stringify(row.touchTargets.slice(0,6)),true);
    if(row.labMetrics?.cls>0.10)
     issue(c.name,'décalage de mise en page CLS de laboratoire '+row.labMetrics.cls+' (cible 0,10)');
    if(c.width<700&&row.brandPortalOverlap)issue(c.name,'le nom chevauche le bouton du portail',true);

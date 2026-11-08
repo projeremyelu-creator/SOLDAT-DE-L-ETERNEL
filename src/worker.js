@@ -1631,6 +1631,41 @@ async function syncEspacesMembres(env) {
 }
 
 /* ───────── en-têtes de sécurité ───────── */
+const CSP_CRITIQUE = "object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'";
+const CSP_PUBLIQUE = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "img-src 'self' data: blob:",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "connect-src 'self' https://cloudflareinsights.com",
+  "media-src 'self' blob:",
+  "frame-src https://www.youtube-nocookie.com https://player.vimeo.com",
+  "worker-src 'self' blob:",
+  "manifest-src 'self'",
+  CSP_CRITIQUE,
+  "upgrade-insecure-requests"
+].join("; ");
+// Étape progressive : observer d'abord le retrait de l'inline avant de le
+// rendre bloquant. L'en-tête principal reste immédiatement protecteur.
+const CSP_OBSERVATION = [
+  "default-src 'self'",
+  "script-src 'self' https://static.cloudflareinsights.com",
+  "style-src 'self' https://fonts.googleapis.com",
+  "img-src 'self' data: blob:",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "connect-src 'self' https://cloudflareinsights.com",
+  "media-src 'self' blob:",
+  "frame-src https://www.youtube-nocookie.com https://player.vimeo.com",
+  "worker-src 'self' blob:",
+  "manifest-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "frame-ancestors 'none'",
+  "form-action 'self'",
+  "upgrade-insecure-requests",
+  "report-to csp-endpoint"
+].join("; ");
 function securiser(r) {
   const n = new Response(r.body, r);
   n.headers.set("x-content-type-options", "nosniff");
@@ -1639,8 +1674,9 @@ function securiser(r) {
   n.headers.set("strict-transport-security", "max-age=63072000; includeSubDomains; preload");
   n.headers.set("permissions-policy", "geolocation=(self), camera=(self), microphone=(), payment=(), usb=()");
   n.headers.set("x-xss-protection", "1; mode=block");
-  // Socle CSP sans script-src : n'empêche aucun script existant, mais interdit objets, <base> détourné, cadres et envois de formulaires hors site.
-  if (!n.headers.has("content-security-policy")) n.headers.set("content-security-policy", "object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
+  if (!n.headers.has("content-security-policy")) n.headers.set("content-security-policy", CSP_PUBLIQUE);
+  n.headers.set("content-security-policy-report-only", CSP_OBSERVATION);
+  n.headers.set("reporting-endpoints", 'csp-endpoint="/api/csp-report"');
   return n;
 }
 
@@ -1898,6 +1934,10 @@ async function traiter(req, env, ctx) {
         }
       }
       if (p === "/api/public") return apiPublic(env);
+      // Réception minimale des rapports CSP : aucun corps n'est conservé et
+      // aucune donnée de navigation n'est renvoyée au client.
+      if (p === "/api/csp-report" && req.method === "POST")
+        return new Response(null, {status:204, headers:{"cache-control":"no-store"}});
       if (p === "/api/impact" && req.method === "GET") return apiImpact(env);
       if (p === "/api/agenda-public.ics" && (req.method === "GET" || req.method === "HEAD")) {
         const agenda = await apiAgendaPublic(env);
@@ -1916,6 +1956,14 @@ async function traiter(req, env, ctx) {
           return new Response(r404.body, { status: 404, headers: r404.headers });
         }
         const r = await env.ASSETS.fetch(req);
+        if (r.ok && /^\/vitrine\/.+\.(?:css|js)$/.test(p)) {
+          const n = new Response(r.body, r);
+          // Les pages publiées utilisent /_v/<révision>/ (un an, immutable).
+          // Ce court cache protège seulement les anciennes URL non versionnées.
+          n.headers.set("cache-control", "public, max-age=300, must-revalidate");
+          n.headers.set("x-content-type-options", "nosniff");
+          return n;
+        }
         if (r.ok && /^\/vitrine\/.+\.(jpe?g|png|webp|svg)$/.test(p)) {
           const n = new Response(r.body, r);
           n.headers.set("cache-control", "public, max-age=604800");
