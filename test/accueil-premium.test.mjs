@@ -137,3 +137,16 @@ test('Stabilité de la vitrine à 1024 px : colonnes ancrées pendant le chargem
  assert.match(anchor,/\.ap-hero \.ap-hero-copy,\s*\.ap-hero \.ap-poster\{\s*align-self:start;/);
  assert.match(anchor,/\.ap-hero \.ap-hero-copy \.ap-lead\{\s*min-height:calc\(1\.65em \* 4\)/);
 });
+
+test('Accueil premium : 960 et 1100 px gardent les colonnes ancrées et la TPA sans saut de compteur',()=>{
+ const css=lire('public/vitrine/sde-accueil-premium.css');
+ const tablette=css.slice(css.indexOf('Recette Chromium 08/11'));
+ assert.ok(tablette.startsWith('Recette Chromium 08/11'));
+ assert.match(tablette,/@media \(min-width:861px\) and \(max-width:1199px\)/);
+ assert.match(tablette,/\.ap-hero \.ap-hero-inner\{align-items:start;/);
+ assert.match(tablette,/\.ap-hero \.ap-hero-copy,\s*\.ap-hero \.ap-poster\{align-self:start;/);
+ assert.match(tablette,/@media \(min-width:861px\) and \(max-width:999px\)/);
+ assert.match(tablette,/\.ap-hero \.ap-hero-copy h1\{min-height:3\.15em;/);
+ assert.match(css,/\.ap-countdown\{[^}]*min-height:1\.5em;line-height:1\.5/);
+ assert.match(html,/id="ap-countdown"/);
+});

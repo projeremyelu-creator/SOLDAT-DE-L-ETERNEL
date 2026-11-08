@@ -26,7 +26,7 @@ body.sde-premium-home .ap-main{display:block;margin:0;padding:0;max-width:none}
 .ap-poster-tag{display:inline-block;margin:2px 4px 10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ap-gold2);font-weight:700}
 .ap-poster-media{display:block;border-radius:16px;overflow:hidden}.ap-poster-media img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
 .ap-poster-body{padding:14px 6px 4px}.ap-poster-body h2{margin:0 0 6px;font-size:1.2rem;line-height:1.25;color:#fff}.ap-poster-body h2 span{color:var(--ap-gold2)}
-.ap-poster-body p{margin:2px 0;color:var(--ap-muted)}.ap-countdown{font-weight:700;color:var(--ap-gold2)!important}
+.ap-poster-body p{margin:2px 0;color:var(--ap-muted)}.ap-countdown{font-weight:700;color:var(--ap-gold2)!important;min-height:1.5em;line-height:1.5}
 .ap-section{padding:clamp(48px,7vw,88px) 0}
 .ap-light{background:var(--ap-lav);color:var(--ap-cardink)}
 .ap-dark{background:linear-gradient(160deg,#1f0d45,#12062b);color:var(--ap-ink)}
@@ -149,6 +149,22 @@ body.sde-premium-home{--ap-navy0:#07122b;--ap-navy1:#0d1f4a;--ap-navy2:#142c63;-
  .ap-hero .ap-hero-copy .ap-lead{
   min-height:calc(1.65em * 4);
  }
+}
+
+
+/* Recette Chromium 08/11 : de 861 à 1199 px, ne plus centrer le bloc TPA
+   sur une colonne qui change de hauteur quand Cinzel / le compte à rebours
+   se chargent. Le haut des deux colonnes reste à la même position. */
+@media (min-width:861px) and (max-width:1199px){
+ .ap-hero .ap-hero-inner{align-items:start;}
+ .ap-hero .ap-hero-copy,
+ .ap-hero .ap-poster{align-self:start;}
+}
+/* À 960 px, le titre peut passer de deux à trois lignes après chargement
+   des polices : réserver ces trois lignes dès le premier rendu. */
+@media (min-width:861px) and (max-width:999px){
+ .ap-hero .ap-hero-copy h1{min-height:3.15em;}
+ .ap-hero .ap-hero-copy .ap-lead{min-height:calc(1.65em * 4);}
 }
 
 .ap-film{margin:16px 0 0}
