@@ -1722,3 +1722,17 @@ body.sde-unifie.sde-ivoire [id="galerie"]{
   min-inline-size:44px!important;height:44px!important;min-height:44px!important;
  }
 }
+
+
+/* Dernier point de recette Academy : le contrôle des animations est parfois
+   directement dans la barre, sans élément .sde-motion-slot intermédiaire. */
+@media (min-width:356px) and (max-width:390px){
+ html body.sde-unifie .site-header .site-header-inner > .sde-motion-button,
+ html body.sde-unifie .site-header .site-header-inner > .sde-motion-slot .sde-motion-button{
+  box-sizing:border-box!important;
+  inline-size:44px!important;width:44px!important;
+  min-inline-size:44px!important;min-width:44px!important;
+  block-size:44px!important;height:44px!important;min-block-size:44px!important;min-height:44px!important;
+  flex-basis:44px!important;
+ }
+}
