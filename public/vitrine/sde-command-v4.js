@@ -71,14 +71,38 @@
     else button.removeAttribute('aria-current');
    }
   }
+  // Les mêmes cinq actions, désormais identifiables par leur icône et leur
+  // libellé, sans créer une seconde barre ni contourner les droits serveur.
+  const symboles={
+   accueil:['M3 10 12 3l9 7','M5 9v12h5v-7h4v7h5V9'],
+   membres:['M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2','M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8','M22 21v-2a4 4 0 0 0-3-3.87'],
+   agenda:['M4 5h16v16H4z','M4 10h16','M8 3v4','M16 3v4'],
+   finances:['M3 6h18v14H3z','M3 10h18','M7 16h4'],
+   garnisons:['M3 7h18v14H3z','M9 7V4h6v3','M3 13h18'],
+   plus:['M4 4h6v6H4z','M14 4h6v6h-6z','M4 14h6v6H4z','M14 14h6v6h-6z']
+  };
+  function icone(id){
+   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+   for(const [key,value] of Object.entries({viewBox:'0 0 24 24',fill:'none',stroke:'currentColor','stroke-width':'1.8','stroke-linecap':'round','stroke-linejoin':'round','aria-hidden':'true'}))svg.setAttribute(key,value);
+   for(const d of symboles[id]||symboles.plus){
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',d);svg.append(path);
+   }
+   return svg;
+  }
   function bottomItem(id,label){
-   const button=el('button','sde-command-v4-bottom-item',label);
-   button.type='button';
-   button.dataset.module=id;
+   const button=el('button','sde-command-v4-bottom-item');
+   button.type='button';button.dataset.module=id;
+   button.setAttribute('aria-label',id==='plus'?'Afficher toutes les rubriques':'Ouvrir '+label);
+   button.append(icone(id),el('span','sde-command-v4-bottom-label',label));
    if(id==='plus'){
     button.setAttribute('aria-controls',toggle.id);
+    button.setAttribute('aria-expanded',toggle.getAttribute('aria-expanded')||'false');
+    const update=()=>button.setAttribute('aria-expanded',toggle.getAttribute('aria-expanded')||'false');
+    toggle.addEventListener('click',update);
     button.addEventListener('click',()=>{
      toggle.click();
+     update();
      if(toggle.getAttribute('aria-expanded')==='true')toggle.scrollIntoView?.({block:'nearest'});
     });
    }else button.addEventListener('click',()=>choose(id));
