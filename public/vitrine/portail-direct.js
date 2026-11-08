@@ -89,6 +89,78 @@
       tabs.classList.toggle("sde-direct-tabs-open",ouvert);
       mobileMenu.setAttribute("aria-expanded",String(ouvert));
       mobileMenu.textContent=ouvert?"Masquer les rubriques":"Afficher les rubriques";
+      barreMobile.querySelector('[data-bottom-more]')?.setAttribute("aria-expanded",String(ouvert));
+    };
+    // Barre de menu mobile : cinq accès directs, construits seulement après
+    // confirmation du rôle serveur. Les liens ne remplacent pas l'habilitation.
+    const barreMobile=element("nav","sde-direct-bottom-nav");
+    barreMobile.id="sde-direct-bottom-nav";
+    barreMobile.hidden=true;
+    barreMobile.setAttribute("aria-label","Navigation rapide de mon espace SDE");
+    const pictos={
+      accueil:["M3 10 12 3l9 7","M5 9v12h5v-7h4v7h5V9"],
+      coeur:["M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"],
+      academy:["M2 10 12 4l10 6-10 6L2 10Z","M6 13v5c4 3 8 3 12 0v-5","M22 10v8"],
+      agenda:["M4 5h16v16H4z","M4 10h16","M8 3v4","M16 3v4"],
+      membres:["M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2","M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8","M22 21v-2a4 4 0 0 0-3-3.87","M16 3.13a4 4 0 0 1 0 7.75"],
+      finances:["M3 6h18v14H3z","M3 10h18","M7 16h4"],
+      missions:["M3 7h18v14H3z","M9 7V4h6v3","M3 13h18"],
+      plus:["M4 4h6v6H4z","M14 4h6v6h-6z","M4 14h6v6H4z","M14 14h6v6h-6z"]
+    };
+    const dessinerPicto=(cle)=>{
+      const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+      svg.setAttribute("viewBox","0 0 24 24");
+      svg.setAttribute("aria-hidden","true");
+      svg.setAttribute("fill","none");svg.setAttribute("stroke","currentColor");
+      svg.setAttribute("stroke-width","1.8");
+      svg.setAttribute("stroke-linecap","round");svg.setAttribute("stroke-linejoin","round");
+      for(const d of pictos[cle]||pictos.plus){
+        const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+        path.setAttribute("d",d);svg.append(path);
+      }
+      return svg;
+    };
+    const synchroniserBarreMobile=(nom)=>{
+      const courant=mode==="membre"&&["espace-soldat","centre-membre"].includes(nom)?"synthese":
+        mode==="direction"&&["synthese","pilotage","centre-command"].includes(nom)?"accueil":nom;
+      for(const action of barreMobile.querySelectorAll("button[data-module]")){
+        if(action.dataset.module===courant)action.setAttribute("aria-current","page");
+        else action.removeAttribute("aria-current");
+      }
+    };
+    const construireBarreMobile=()=>{
+      const items=mode==="membre"?[
+        ["synthese","Accueil","accueil"],["priere","Prière","coeur"],
+        ["academie","Academy","academy"],["agenda","Agenda","agenda"]
+      ]:[
+        ["accueil","Accueil","accueil"],["membres","Membres","membres"],
+        ["agenda","Agenda","agenda"],compte?.niveau>=2?
+          ["finances","Finances","finances"]:["projets","Missions","missions"]
+      ];
+      barreMobile.replaceChildren();
+      for(const [nom,libelle,picto] of items){
+        if(!allowed(nom))continue;
+        const action=element("button","sde-direct-bottom-action");
+        action.type="button";action.dataset.module=nom;
+        action.setAttribute("aria-label","Ouvrir "+libelle);
+        action.append(dessinerPicto(picto),element("span","",libelle));
+        action.addEventListener("click",()=>selectionner(nom,{userInitiated:true}));
+        barreMobile.append(action);
+      }
+      const plus=element("button","sde-direct-bottom-action sde-direct-bottom-more");
+      plus.type="button";plus.dataset.bottomMore="true";
+      plus.setAttribute("aria-controls",tabs.id);
+      plus.setAttribute("aria-expanded","false");
+      plus.setAttribute("aria-label","Afficher toutes les rubriques");
+      plus.append(dessinerPicto("plus"),element("span","","Plus"));
+      plus.addEventListener("click",()=>{
+        const ouvert=mobileMenu.getAttribute("aria-expanded")!=="true";
+        afficherMenu(ouvert);
+        if(ouvert)tabs.scrollIntoView?.({block:"start",behavior:"auto"});
+      });
+      barreMobile.append(plus);
+      barreMobile.hidden=false;
+      synchroniserBarreMobile(navCourant||souhait);
     };
     mobileMenu.addEventListener("click",event=>{
       const ouvert=mobileMenu.getAttribute("aria-expanded")!=="true";
@@ -128,6 +200,7 @@
     intro.append(actions,etat);
     header.append(intro);
     body.insertBefore(header,body.firstChild);
+    body.append(barreMobile);
     const main=document.getElementById("main");
     let panneau=null,histoire=null,messagePriere=null,champPriere=null,envoiPriere=null;
     if(mode==="membre"&&main?.parentElement){
@@ -227,6 +300,7 @@
         else b.removeAttribute("aria-current");
       }
       navCourant=nom;
+      synchroniserBarreMobile(nom);
       // Après un choix sur smartphone, afficher directement le module choisi.
       if(window.matchMedia?.("(max-width: 760px)")?.matches){
         afficherMenu(false);
@@ -301,6 +375,7 @@
           else b.removeAttribute("aria-current");
         }
       }
+      synchroniserBarreMobile(courant||souhait);
       if(!initial){
         const cible=disponibles.find(b=>b.dataset.vue===souhait);
         const moduleExterne=["carteqr","bibliotheque","scanner","pilotage","annuaire","finance-direction","site-public","espace-soldat","adhesions","anniversaires","suivi-poles","academy-direction","mur","priere","synthese","engagements","contributions","parcours","preferences","gestion"].includes(souhait);
@@ -320,6 +395,7 @@
         compte=user;
         role.textContent=user.libRole||user.role||(mode==="membre"?"Membre":"Direction");
         direction.hidden=user.niveau<1;
+        construireBarreMobile();
         sync();
         window.SDEPortal={compte:user,selectionner};
         document.dispatchEvent(new CustomEvent("sde:ready",{detail:window.SDEPortal}));
