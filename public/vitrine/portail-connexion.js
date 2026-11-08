@@ -10,6 +10,9 @@
    input.id=input.id||"access-password-"+i;
    const toggle=document.createElement("button");toggle.type="button";
    toggle.className="access-password-toggle";toggle.textContent="Afficher le mot de passe";
+   // Surface tactile accessible, même si une ancienne règle CSS est en cache.
+   toggle.style.setProperty("min-height","44px","important");
+   toggle.style.setProperty("height","44px","important");
    toggle.setAttribute("aria-controls",input.id);toggle.setAttribute("aria-pressed","false");
    toggle.addEventListener("click",()=>{const visible=input.type==="password";input.type=visible?"text":"password";toggle.setAttribute("aria-pressed",String(visible));toggle.textContent=visible?"Masquer le mot de passe":"Afficher le mot de passe";});
    input.parentElement.insertAdjacentElement("afterend",toggle);
