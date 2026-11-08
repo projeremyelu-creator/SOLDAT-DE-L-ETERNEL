@@ -395,7 +395,8 @@
         compte=user;
         role.textContent=user.libRole||user.role||(mode==="membre"?"Membre":"Direction");
         direction.hidden=user.niveau<1;
-        construireBarreMobile();
+        // La direction dispose déjà de sa barre SDE Command 4.0 : ne pas la doubler.
+        if(mode==="membre")construireBarreMobile();
         sync();
         window.SDEPortal={compte:user,selectionner};
         document.dispatchEvent(new CustomEvent("sde:ready",{detail:window.SDEPortal}));
