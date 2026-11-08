@@ -9,7 +9,7 @@ const css=read('public/vitrine/sde-poste-commandement-v2.css');
 const app=read('public/index.html');
 
 async function simulated(mode,niveau){
- const sections=['accueil','synthese','membres','chambre','agenda','academie','arsenal','espace','finances','scanner','mur','preferences'];
+ const sections=['accueil','synthese','membres','garnisons','chambre','agenda','academie','arsenal','espace','finances','scanner','mur','preferences'];
  const html='<html><body><button id="btn-reglages"></button><button id="btn-compte"></button><div class="shell"><nav id="nav">'+
   sections.map(id=>'<button type="button" data-vue="'+id+'"'+(id==='accueil'?' class="on" aria-current="page"':'')+'>'+id+'</button>').join('')+
   '</nav><main id="main" tabindex="-1"><h1 class="sec-title">Espace</h1></main></div></body></html>';
@@ -19,6 +19,7 @@ async function simulated(mode,niveau){
  w.matchMedia=()=>({matches:true});
  w.HTMLElement.prototype.scrollIntoView=function(){this.dataset.scrolled='true'};
  w.eval(js);
+ if(mode==='administration')w.eval(read('public/vitrine/sde-command-v4.js'));
  w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
  for(let i=0;i<10&&!w.SDEPortal;i++)await new Promise(resolve=>setTimeout(resolve,10));
  assert.ok(w.SDEPortal,'Le portail doit confirmer la session de test');
@@ -102,19 +103,27 @@ test('Barre membre : prière active et aucun module direction exposé',async()=>
  }finally{w.close()}
 });
 
-test('Barre administrateur : accès Finances autorisé, Missions pour les responsables sans droit Finance',async()=>{
+test('Barre administrateur : la barre de commandement préexistante est la seule à l’écran',async()=>{
  const admin=await simulated('administration',2);
  const responsable=await simulated('administration',1);
  try{
-  assert.deepEqual([...admin.window.document.querySelectorAll('#sde-direct-bottom-nav button')].map(b=>b.textContent),
-    ['Accueil','Membres','Agenda','Finances','Plus']);
-  assert.deepEqual([...responsable.window.document.querySelectorAll('#sde-direct-bottom-nav button')].map(b=>b.textContent),
-    ['Accueil','Membres','Agenda','Missions','Plus']);
-  const nav=admin.window.document.getElementById('sde-direct-bottom-nav');
-  const membres=nav.querySelector('[data-module="membres"]');
+  const d=admin.window.document;
+  assert.equal(d.getElementById('sde-direct-bottom-nav').hidden,true,'aucune barre doublon ne doit chevaucher les boutons');
+  const nav=d.querySelector('.sde-command-v4-bottom');
+  assert.ok(nav,'barre administrative existante conservée');
+  assert.deepEqual([...nav.querySelectorAll('button')].map(x=>x.textContent),['Accueil','Membres','Agenda','Finances','Plus']);
+  assert.deepEqual([...responsable.window.document.querySelectorAll('.sde-command-v4-bottom button')].map(x=>x.textContent),
+    ['Accueil','Membres','Agenda','Pôles','Plus']);
+  assert.equal(nav.querySelectorAll('button svg[aria-hidden=true]').length,5);
+  const plus=nav.querySelector('[data-module=plus]');
+  plus.click();
+  assert.equal(plus.getAttribute('aria-expanded'),'true');
+  assert.equal(d.getElementById('sde-direct-menu-toggle').getAttribute('aria-expanded'),'true');
+  plus.click();
+  assert.equal(plus.getAttribute('aria-expanded'),'false');
+  const membres=nav.querySelector('[data-module=membres]');
   membres.click();
   assert.equal(membres.getAttribute('aria-current'),'page');
-  assert.equal(admin.window.document.getElementById('sde-direct-menu-toggle').getAttribute('aria-expanded'),'false');
  }finally{admin.window.close();responsable.window.close()}
 });
 
