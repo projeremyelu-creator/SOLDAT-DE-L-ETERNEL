@@ -65,3 +65,56 @@ test('Connexion dégradée : quatre onglets restent accessibles même sans la fe
   assert.ok(scripts.some(x=>x.src.includes('/vitrine/portail-connexion.js')),'L'+'authentification existante est conservée');
  }finally{dom.window.close()}
 });
+
+
+test('Inscription membre : deux mots de passe identiques et consentement explicite sont demandés',()=>{
+ const c=ui();try{
+  const form=c.d.getElementById('form-inscription');
+  assert.ok(form.querySelector('[name="confirmationMotDePasse"][required]'));
+  assert.ok(form.querySelector('[name="consentement"][type="checkbox"][required]'));
+  const tabs=[...c.d.querySelectorAll('.access-tabs [role="tab"]')];
+  assert.equal(tabs.length,4,'Les fonctions d’activation et de récupération restent accessibles');
+  assert.equal(c.d.querySelector('[data-access-target="/mon-espace"]').getAttribute('aria-pressed'),'false');
+  c.d.querySelector('[data-access-target="/mon-espace"]').click();
+  assert.equal(c.d.querySelector('[data-access-target="/mon-espace"]').getAttribute('aria-pressed'),'true');
+  c.d.querySelector('[data-goto="inscription"]').click();
+  assert.equal(c.d.getElementById('panel-inscription').hidden,false);
+ }finally{c.dom.window.close()}
+});
+
+test('Inscription membre : mots de passe différents = aucune requête API',async()=>{
+ const c=ui();try{
+  const form=c.d.getElementById('form-inscription');
+  form.elements.nom.value='Nouveau';form.elements.prenoms.value='Soldat';
+  form.elements.email.value='nouveau@example.org';
+  form.elements.motDePasse.value='unMotDePasseLong123';
+  form.elements.confirmationMotDePasse.value='unMotDePasseDifferent123';
+  form.elements.consentement.checked=true;
+  form.dispatchEvent(new c.w.Event('submit',{bubbles:true,cancelable:true}));
+  await pause();
+  assert.equal(c.calls.length,0);
+  assert.match(c.d.getElementById('access-message').textContent,/même mot de passe/);
+ }finally{c.dom.window.close()}
+});
+
+test('Inscription membre : requête sans confirmation du secret et création de session contrôlée',async()=>{
+ const c=ui(path=>({ok:true,json:async()=>path==='/api/moi'?{connecte:true,niveau:0}:{ok:true,matricule:'123456'}}));try{
+  const form=c.d.getElementById('form-inscription');
+  form.elements.nom.value='Nouveau';form.elements.prenoms.value='Soldat';
+  form.elements.email.value='nouveau@example.org';
+  form.elements.motDePasse.value='unMotDePasseLong123';
+  form.elements.confirmationMotDePasse.value='unMotDePasseLong123';
+  form.elements.consentement.checked=true;
+  form.dispatchEvent(new c.w.Event('submit',{bubbles:true,cancelable:true}));
+  await pause();
+  assert.equal(c.calls[0].path,'/api/inscription');
+  assert.equal(c.calls[0].opts.method,'POST');
+  assert.equal(c.calls[0].opts.credentials,'same-origin');
+  const payload=JSON.parse(c.calls[0].opts.body);
+  assert.equal(payload.confirmationMotDePasse,undefined);
+  assert.equal(payload.motDePasse,'unMotDePasseLong123');
+  assert.equal(payload.consentement,'oui');
+  assert.equal(c.calls[1].path,'/api/moi');
+  assert.match(c.d.getElementById('access-message').textContent,/compte membre est créé/);
+ }finally{c.dom.window.close()}
+});
