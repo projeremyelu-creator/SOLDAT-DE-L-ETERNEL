@@ -150,10 +150,10 @@
  }
  function start(){
   if(document.body.classList.contains("sde-reference-login")||/^\/(mon-espace|administration)(\/|$)/.test(location.pathname))return;
-  const old=document.querySelector("header.site-header,header.sde-hub-head");
+  const old=document.querySelector("header.site-header,header.sde-hub-head") || (location.pathname==="/album-infire"?document.querySelector("body > header"):null);
   if(!old||document.querySelector(".sde-shell-header"))return;
   old.replaceWith(header());
-  const oldFoot=document.querySelector("footer.site-footer,footer.hub-footer");
+  const oldFoot=document.querySelector("footer.site-footer,footer.hub-footer") || (location.pathname==="/album-infire"?document.querySelector("body > footer"):null);
   if(oldFoot)oldFoot.replaceWith(footer());
   const bottom=drawer();
   document.querySelectorAll(".sde-global-nav,.sde-public-bottom-nav,.sde-standalone-bottom,.nav-mobile,.sde-bottom-nav,.sde-rail").forEach(el=>el.remove());
