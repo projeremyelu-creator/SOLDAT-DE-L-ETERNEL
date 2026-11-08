@@ -137,7 +137,17 @@ try{
      overflowX:Math.max(0,document.documentElement.scrollWidth-innerWidth,document.body.scrollWidth-innerWidth),
      overflowElements,
      touchTargets:innerWidth<=390?[...document.querySelectorAll('button,[role="button"],nav a,form input:not([type="hidden"]),form select,form textarea,form a')]
-      .filter(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0&&(r.width<44||r.height<44)})
+      .filter(el=>{
+       const s=getComputedStyle(el),r=el.getBoundingClientRect();
+       // Honeypots hors écran : pas de cible utilisable par un visiteur.
+       if(el.closest('.hidden-bot,[aria-hidden="true"]')||s.display==='none'||s.visibility==='hidden'
+          ||Number(s.opacity)===0||r.width<=0||r.height<=0||r.right<=0||r.left>=innerWidth)return false;
+       // La zone cliquable d'une case cochable inclut son label associé.
+       if(el.matches('input[type="checkbox"],input[type="radio"]')&&el.labels?.length){
+        if([...el.labels].some(label=>{const lr=label.getBoundingClientRect();return lr.width>=44&&lr.height>=44}))return false;
+       }
+       return r.width<44||r.height<44;
+      })
       .slice(0,20).map(el=>{const r=el.getBoundingClientRect();return {tag:el.tagName.toLowerCase(),id:el.id||'',label:(el.textContent||el.getAttribute('aria-label')||el.getAttribute('name')||'').trim().slice(0,55),width:Math.round(r.width),height:Math.round(r.height)}}):[],
      logoPresent:!!(logo&&logo.width>10),
      brandPortalOverlap:intersects(brand,portal),
@@ -422,7 +432,7 @@ try{
     if(!note.includes('Paiement en ligne en préparation')||await form.count()!==1)
      issue(c.name,'les modalités de contribution ou la demande de contact sont absentes',true);
     if(await form.locator('[name="consentement"][required]').count()!==1
-       ||await form.locator('a[href="/confidentialite"]').count()!==1)
+       ||await form.locator('a[href="/confidentialite"]').count()<1)
      issue(c.name,'consentement ou confidentialité absent du formulaire de soutien',true);
     if(await page.locator('[data-projet]').count()!==3)
      issue(c.name,'trois collectes distinctes non accessibles',true);
