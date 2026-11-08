@@ -276,3 +276,8 @@ body.sde-shell-mounted .sde-shell-directory{padding-block:clamp(26px,4vw,52px)}
 .sde-shell-newsletter button:disabled{opacity:.6}
 .sde-shell-newsletter-state{min-height:0;color:#e6e9ee;font-size:.78rem!important;margin:0!important}
 .sde-shell-newsletter :is(input,button):focus-visible{outline:3px solid #fff0bb;outline-offset:3px}
+
+/* La galerie IN FIRE reste prioritaire au-dessus du header et du menu mobile. */
+body.sde-infire-album .modal.open{z-index:300!important}
+body.sde-infire-album .sde-shell-header{position:sticky!important;z-index:120!important}
+body.sde-shell-mounted .sde-shell-footer-grid nav{width:auto!important}
