@@ -286,7 +286,13 @@ const propre = (t, n) => String(t || "").replace(/\s+/g, " ").trim().slice(0, n)
 async function apiInscription(req, env, ctx) {
   const ip = ipDe(req);
   if (await bloque(env, "insc:" + ip, 12)) return erreur("rate_limited", "Trop d’inscriptions depuis ce réseau : réessayez dans un quart d’heure.", 429);
-  const b = await req.json();
+  let b;
+  try { b = await req.json(); } catch { return erreur("invalid_argument", "Données d’inscription invalides."); }
+  if (!b || typeof b !== "object" || Array.isArray(b)) return erreur("invalid_argument", "Données d’inscription invalides.");
+  // Le consentement est contrôlé côté serveur : un appel direct à l'API ne peut
+  // contourner la case obligatoire affichée sur le formulaire membre.
+  if (b.consentement !== "oui" && b.consentement !== true)
+    return erreur("consentement_requis", "Veuillez accepter la politique de confidentialité pour créer votre compte.");
   const email = normEmail(b.email), prenoms = propre(b.prenoms, 80), nom = propre(b.nom, 80).toUpperCase(), telephone = propre(b.telephone, 30);
   if (!EMAIL_OK.test(email)) return erreur("invalid_argument", "Adresse e-mail invalide.");
   if (!prenoms || !nom) return erreur("invalid_argument", "Indiquez votre nom et vos prénoms.");
@@ -296,7 +302,7 @@ async function apiInscription(req, env, ctx) {
   if (existe || proprietaires(env).includes(email)) return erreur("existe", "Un compte existe déjà avec cette adresse. Connectez-vous, ou utilisez le code d’activation reçu du secrétariat.", 409);
   await compter(env, "insc:" + ip);
   const id = await idDeEmail(email), t = Date.now(), membreId = idDoc(), matricule = await nouveauMatricule(env);
-  const fiche = { nom, prenoms, telephone, telephone2: "", email, matricule, statut: "Nouveau venu", actif: true, adhesion: new Date(t).toISOString().slice(0, 10), source: "inscription", compteId: id, creeLe: t, creePar: id, modifieLe: t, modifiePar: id };
+  const fiche = { nom, prenoms, telephone, telephone2: "", email, matricule, statut: "Nouveau venu", actif: true, adhesion: new Date(t).toISOString().slice(0, 10), source: "inscription", consentementConfidentialiteLe: new Date(t).toISOString(), compteId: id, creeLe: t, creePar: id, modifieLe: t, modifiePar: id };
   try {
     await env.DB.batch([
       env.DB.prepare("INSERT INTO comptes (email, id, nom, role, cree, derniere, mdp, membreId, matricule) VALUES (?, ?, ?, 'soldat', ?, ?, ?, ?, ?)").bind(email, id, prenoms + " " + nom, t, t, await empreinteMdp(b.motDePasse), membreId, matricule),
