@@ -14,12 +14,11 @@ test("Accueil : TPA compacte sans image préchargée et versets présents avant 
  const placeholder=doc.querySelector(".sde-versets-slot");
  assert.ok(placeholder);
  assert.equal(placeholder.getAttribute("aria-label"),"Verset du jour");
- assert.equal(placeholder.previousElementSibling?.tagName,"HEADER");
+ assert.equal(placeholder.previousElementSibling?.classList.contains("sde-shell-event"),true,"bandeau compact sous le header");
  assert.equal(placeholder.nextElementSibling?.id,"contenu");
- assert.equal(doc.querySelectorAll("img[src='/vitrine/illus/tpa-2026.webp']").length,1,"une seule affiche du programme phare");
- const poster=doc.querySelector(".ap-poster img[src='/vitrine/illus/tpa-2026.webp']");
- assert.ok(poster,"l'affiche est dans le bloc programme phare");
- assert.ok(poster.getAttribute("width")&&poster.getAttribute("height"),"dimensions réservées : pas de décalage de mise en page");
+ assert.equal(doc.querySelectorAll("img[src='/vitrine/illus/tpa-2026.webp']").length,0,"pas de doublon visuel de l’affiche");
+ assert.equal(doc.querySelectorAll(".sde-shell-event").length,1,"un seul bandeau compact TPA");
+ assert.ok(doc.querySelector("#programmes-accueil #prochain-rendez-vous"),"la fiche détaillée est dans l’agenda");
  assert.doesNotMatch(s,/rel="preload" as="image" href="\/vitrine\/illus\/infire-banniere\.webp"/);
  dom.window.close();
 });
@@ -40,7 +39,7 @@ test("Le script de versets remplace l'emplacement réservé sans ajouter une sec
  doc.dispatchEvent(new w.Event("DOMContentLoaded"));
  const band=doc.querySelector(".sde-versets");
  assert.ok(band);
- assert.equal(band.previousElementSibling?.tagName,"HEADER");
+ assert.equal(band.previousElementSibling?.classList.contains("sde-shell-event"),true);
  assert.strictEqual(band.nextElementSibling,neighbor);
  assert.equal(doc.querySelectorAll(".sde-versets").length,1);
  assert.equal(doc.querySelector(".sde-versets-slot"),null);
