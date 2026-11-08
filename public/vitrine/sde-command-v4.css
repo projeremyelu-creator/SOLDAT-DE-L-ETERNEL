@@ -152,3 +152,32 @@ body.sde-direct-admin .sde-command-v4-bottom{display:none}
   transition:none;transform:none!important;
  }
 }
+
+
+/* Navigation basse existante : pictogrammes et état Plus accessibles.
+   Ne jamais superposer une deuxième barre à celle du commandement. */
+@media(max-width:760px){
+ body.sde-direct-admin .sde-command-v4-bottom-item{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:3px;
+  min-height:55px;
+  border-radius:12px;
+  font-weight:750;
+ }
+ body.sde-direct-admin .sde-command-v4-bottom-item svg{
+  display:block;flex:none;width:21px;height:21px;
+ }
+ body.sde-direct-admin .sde-command-v4-bottom-label{
+  display:block;font-size:clamp(.59rem,2.2vw,.73rem);line-height:1.2;
+ }
+ body.sde-direct-admin .sde-command-v4-bottom-item[aria-expanded=true]{
+  color:#17233a;background:#efd194;border-color:#ffe5ae;
+ }
+}
+@media(max-width:355px){
+ body.sde-direct-admin .sde-command-v4-bottom-item{
+  padding:4px 1px;min-height:52px;
+ }
+ body.sde-direct-admin .sde-command-v4-bottom-item svg{width:20px;height:20px}
+}
