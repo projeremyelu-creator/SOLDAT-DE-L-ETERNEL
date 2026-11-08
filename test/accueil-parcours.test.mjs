@@ -110,11 +110,12 @@ test('Accueil : indicateurs vérifiés, valeurs nulles masquées, aucun chiffre 
   assert.match(texte(d,'ap-ind-note'),/Aucun nom ni aucune coordonnée/);
  }finally{dom.window.close()}
 });
-test('Accueil : indicateurs indisponibles, message d’attente sans chiffre',async()=>{
+test('Accueil : indicateurs indisponibles, panneau entièrement masqué',async()=>{
  const dom=await page([]);
  try{
   const d=dom.window.document;
   assert.equal(d.querySelectorAll('#ap-indicateurs-liste li').length,0);
-  assert.match(texte(d,'ap-ind-note'),/seront affichés dès qu’ils seront renseignés/);
+  assert.equal(d.querySelector('.ap-indicateurs')?.hidden,true);
+  assert.equal(d.getElementById('ap-ind-note')?.hidden,true);
  }finally{dom.window.close()}
 });
