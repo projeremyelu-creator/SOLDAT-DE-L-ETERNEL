@@ -136,7 +136,7 @@ try{
      documentWidth:document.documentElement.scrollWidth,
      overflowX:Math.max(0,document.documentElement.scrollWidth-innerWidth,document.body.scrollWidth-innerWidth),
      overflowElements,
-     touchTargets:innerWidth<=Math.max(...mobileViewports)?[...document.querySelectorAll('button,[role="button"],nav a,form input:not([type="hidden"]),form select,form textarea,form a')]
+     touchTargets:innerWidth<=390?[...document.querySelectorAll('button,[role="button"],nav a,form input:not([type="hidden"]),form select,form textarea,form a')]
       .filter(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0&&(r.width<44||r.height<44)})
       .slice(0,20).map(el=>{const r=el.getBoundingClientRect();return {tag:el.tagName.toLowerCase(),id:el.id||'',label:(el.textContent||el.getAttribute('aria-label')||el.getAttribute('name')||'').trim().slice(0,55),width:Math.round(r.width),height:Math.round(r.height)}}):[],
      logoPresent:!!(logo&&logo.width>10),
