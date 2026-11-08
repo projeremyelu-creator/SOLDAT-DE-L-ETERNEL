@@ -11,7 +11,7 @@ test('Pages publiques : feuille premium chargée avant la charte Fusion, famille
   const iF=feuilles.findIndex(f=>f.includes('sde-fusion.css')),iP=feuilles.findIndex(f=>f.includes('sde-pages-premium.css'));
   assert.ok(iP>=0&&iP<iF,n+' : feuille premium avant la charte Fusion');
   const apres=feuilles.slice(iF+1);
-  assert.ok(apres.length===0||(n==='soutenir'&&apres.length===1&&apres[0].includes('sde-standalone-clarte.css')),n+' : Fusion en dernier (sauf clarté autonome de Soutenir)');
+  assert.ok(apres.every(f=>f.includes('sde-shell-public.css')||(n==='soutenir'&&f.includes('sde-standalone-clarte.css'))),n+' : seules la clarté Soutenir et la navigation commune suivent Fusion');
   assert.match(h,new RegExp(`<body[^>]*class="[^"]*sde-pages-premium[^"]*"[^>]*data-fam="${fam}"`),n+' : famille '+fam);
   assert.equal((h.match(/class="pg-tabs/g)||[]).length,1,n+' : une seule navigation interne');
   assert.equal((h.match(/<h1[\s>]/g)||[]).length,1,n+' : un seul h1');
@@ -150,9 +150,9 @@ test('Film de présentation : bouton sur l’accueil (hors des trois actions) et
  assert.ok(film.includes('id="film"'),'cible du lien');
  const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf('</section>',home.indexOf('class="ap-hero"')));
  const actions=hero.match(/<div class="ap-actions">[\s\S]*?<\/div>/)[0];
- assert.equal((actions.match(/<a /g)||[]).length,3,'les trois actions d’accueil restent trois');
- assert.ok(hero.includes('<a href="/mouvement#film" data-film-link>')&&hero.includes('Voir le film de présentation'));
- assert.ok(!actions.includes('#film'));
+ assert.equal((actions.match(/<a /g)||[]).length,2,'deux actions principales sur l’accueil');
+ assert.ok(actions.includes('href="/contact#rejoindre"')&&actions.includes('href="/mouvement#film"'), 'adhésion et présentation animée');
+ assert.match(actions,/présentation animée \(sans son\)/);
  assert.ok(contact.includes('id="film-contact"')&&contact.includes('href="/mouvement#film"'));
  assert.ok(contact.indexOf('id="film-contact"')<contact.indexOf('id="rejoindre" aria-labelledby'),'avant le formulaire, hors des sections de texte légal');
  assert.ok(lire('public/vitrine/sde-accueil-premium.css').includes('.ap-film'));
