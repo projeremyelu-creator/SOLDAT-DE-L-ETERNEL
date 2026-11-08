@@ -66,3 +66,63 @@ test('Le CSS du vrai portail est chargé et ne touche pas aux routes serveur',()
  const worker=read('src/worker.js');
  assert.ok(worker.includes('p.startsWith("/administration") && u.niveau < 1'));
 });
+
+
+test('Barre de menu mobile : cinq choix lisibles, icônes et Plus ouvre les rubriques',async()=>{
+ const dom=await simulated('mon-espace',0),w=dom.window,d=w.document;
+ try{
+  const nav=d.getElementById('sde-direct-bottom-nav');
+  assert.ok(nav,'barre basse montée sur le portail membre');
+  assert.equal(nav.hidden,false,'affichée seulement après vérification du compte');
+  const actions=[...nav.querySelectorAll('button')];
+  assert.deepEqual(actions.map(x=>x.textContent),['Accueil','Prière','Academy','Agenda','Plus']);
+  assert.equal(actions.length,5);
+  assert.ok(actions.every(x=>x.querySelector('svg[aria-hidden=true]')),'chaque action possède son pictogramme');
+  const plus=nav.querySelector('[data-bottom-more]');
+  assert.equal(plus.getAttribute('aria-expanded'),'false');
+  plus.click();
+  assert.equal(plus.getAttribute('aria-expanded'),'true');
+  assert.equal(d.getElementById('sde-direct-menu-toggle').getAttribute('aria-expanded'),'true');
+  assert.ok(d.getElementById('sde-direct-tabs').classList.contains('sde-direct-tabs-open'));
+  plus.click();
+  assert.equal(plus.getAttribute('aria-expanded'),'false');
+  assert.equal(d.getElementById('sde-direct-tabs').classList.contains('sde-direct-tabs-open'),false);
+ }finally{w.close()}
+});
+
+test('Barre membre : prière active et aucun module direction exposé',async()=>{
+ const dom=await simulated('mon-espace',0),w=dom.window,d=w.document;
+ try{
+  const nav=d.getElementById('sde-direct-bottom-nav');
+  assert.ok(!nav.textContent.includes('Finances'));
+  assert.equal(nav.querySelector('[data-module="membres"]'),null);
+  nav.querySelector('[data-module="priere"]').click();
+  assert.equal(d.getElementById('sde-priere-panel').hidden,false);
+  assert.equal(nav.querySelector('[data-module="priere"]').getAttribute('aria-current'),'page');
+ }finally{w.close()}
+});
+
+test('Barre administrateur : accès Finances autorisé, Missions pour les responsables sans droit Finance',async()=>{
+ const admin=await simulated('administration',2);
+ const responsable=await simulated('administration',1);
+ try{
+  assert.deepEqual([...admin.window.document.querySelectorAll('#sde-direct-bottom-nav button')].map(b=>b.textContent),
+    ['Accueil','Membres','Agenda','Finances','Plus']);
+  assert.deepEqual([...responsable.window.document.querySelectorAll('#sde-direct-bottom-nav button')].map(b=>b.textContent),
+    ['Accueil','Membres','Agenda','Missions','Plus']);
+  const nav=admin.window.document.getElementById('sde-direct-bottom-nav');
+  const membres=nav.querySelector('[data-module="membres"]');
+  membres.click();
+  assert.equal(membres.getAttribute('aria-current'),'page');
+  assert.equal(admin.window.document.getElementById('sde-direct-menu-toggle').getAttribute('aria-expanded'),'false');
+ }finally{admin.window.close();responsable.window.close()}
+});
+
+test('La barre de navigation mobile est contrôlée par CSS et respecte les zones sûres',()=>{
+ const styles=read('public/vitrine/sde-poste-commandement-v2.css');
+ assert.match(styles,/sde-direct-bottom-nav/);
+ assert.match(styles,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
+ assert.match(styles,/env\(safe-area-inset-bottom\)/);
+ assert.match(styles,/sde-direct-bottom-nav\[hidden\]/);
+ assert.match(styles,/@media\(max-width:760px\)/);
+});
