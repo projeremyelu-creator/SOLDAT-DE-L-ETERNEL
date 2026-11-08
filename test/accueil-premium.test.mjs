@@ -27,15 +27,15 @@ test('Accueil premium : en-tête avec logo, menu compact, recherche et connexion
  assert.match(header,/Mon Portail S\.D\.E/);
 });
 
-test('Accueil premium : hero institutionnel, trois boutons, une seule affiche de programme phare',()=>{
+test('Accueil premium : hero institutionnel, deux CTA et une seule annonce TPA compacte',()=>{
  const hero=html.slice(html.indexOf('class="ap-hero"'),html.indexOf('id="programmes-accueil"'));
  assert.match(hero,/<h1[^>]*>Le Réveil Spirituel des Nations<\/h1>/);
  assert.ok(hero.includes('Discipline · Unité · Impact'));
  assert.ok(hero.includes('logo-sde.webp'));
- assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,3,'trois boutons principaux');
- for(const libellé of ['Découvrir SDE','Rejoindre','Prochain programme'])assert.ok(hero.includes(libellé),libellé);
+ assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,2,'deux CTA principaux');
+ for(const libellé of ['Nous rejoindre','présentation animée (sans son)'])assert.ok(hero.includes(libellé),libellé);
  assert.equal((html.match(/<img[^>]+tpa-2026\.webp/g)||[]).length,1,'affiche unique, sans répétition');
- assert.equal((html.match(/<link rel="preload" as="image" href="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1);
+ assert.equal((html.match(/<link rel="preload" as="image" href="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,0,'plus de préchargement de l’affiche cachée');
  assert.ok(!html.includes('infire-takeover'),'plus de bandeau doublon');
  assert.ok(!html.includes('sde-event-root'),'plus de second bloc TPA à l’accueil');
 });
