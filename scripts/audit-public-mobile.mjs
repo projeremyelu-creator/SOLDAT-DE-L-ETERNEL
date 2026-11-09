@@ -298,7 +298,7 @@ try{
      }
     }catch(e){issue(c.name,'parcours préinscription inopérant : '+String(e.message||e).slice(0,240),true)}
    }
-   // Navigation mobile réelle : tiroir, quatre accordéons, recherche, fermeture clavier.
+   // Navigation mobile réelle : tiroir, cinq accordéons, recherche, fermeture clavier.
    if(c.name==='accueil-390'){
     try{
      const open=page.locator('.sde-shell-open'),overlay=page.locator('#sde-shell-overlay');
@@ -308,7 +308,10 @@ try{
       if((await open.getAttribute('aria-expanded'))!=='true'||!(await overlay.isVisible()))
        issue(c.name,'tiroir SDE ne s’ouvre pas',true);
       const groups=page.locator('.sde-shell-drawer-group');
-      if(await groups.count()!==4)issue(c.name,'le tiroir ne propose pas quatre catégories',true);
+      if(await groups.count()!==5)issue(c.name,'le tiroir ne propose pas cinq catégories',true);
+      const sections=await groups.locator(':scope > summary').allTextContents();
+      if(sections.map(x=>x.trim()).join('|')!==['Le Mouvement','Programmes & Agenda','Missions & Impact','Médias & Ressources','S’engager'].join('|'))
+       issue(c.name,'titres des cinq rubriques mobiles incohérents : '+sections.join(' | '),true);
       await overlay.locator('.sde-shell-filter').fill('formation',{timeout:4000});
       const found=await overlay.locator('.sde-shell-submenu a:not([hidden])').count();
       if(found===0)issue(c.name,'recherche de rubriques inopérante',true);
@@ -385,20 +388,23 @@ try{
      report.notes.push({test:'connexion-sans-distraction',url:page.url(),...visible});
     }catch(e){issue(c.name,'sélection membre/administrateur indisponible : '+String(e.message||e).slice(0,220),true);}
    }
-   // Sur ordinateur : quatre méga-menus accessibles, CTA Soutenir et Portail directs.
+   // Sur ordinateur : cinq méga-menus accessibles, Soutenir dans S’engager et Portail direct.
    if(c.name==='accueil-1024'){
     try{
      const header=page.locator('.sde-shell-header'),groups=header.locator('.sde-shell-mega-group');
-     if(await groups.count()!==4)issue(c.name,'le menu desktop n’a pas quatre catégories',true);
+     if(await groups.count()!==5)issue(c.name,'le menu desktop n’a pas cinq catégories',true);
+     const rubriques=await groups.locator(':scope > summary').allTextContents();
+     if(rubriques.map(x=>x.trim()).join('|')!==['Le Mouvement','Programmes & Agenda','Missions & Impact','Médias & Ressources','S’engager'].join('|'))
+      issue(c.name,'titres du méga-menu incohérents : '+rubriques.join(' | '),true);
      const first=groups.first().locator('summary');
      await first.click({timeout:4000});
      if(!(await groups.first().evaluate(el=>el.open)))
       issue(c.name,'le méga-menu Le Mouvement ne s’ouvre pas',true);
      await page.setViewportSize({width:1280,height:900});
      await page.waitForTimeout(150);
-     if(await groups.count()!==4)issue(c.name,'les quatre menus disparaissent après redimensionnement',true);
-     if(await header.locator('.sde-shell-donate[href="/soutenir"]').count()!==1)
-      issue(c.name,'bouton Soutenir absent du premier niveau',true);
+     if(await groups.count()!==5)issue(c.name,'les cinq menus disparaissent après redimensionnement',true);
+     if(await groups.last().locator('a[href="/soutenir"]').count()!==1)
+      issue(c.name,'lien Soutenir absent du menu S’engager',true);
      if(await header.locator('.sde-shell-portal[href="/portail"]').count()!==1)
       issue(c.name,'entrée portail absente du header',true);
      report.notes.push({test:'mega-menu-desktop',menus:await groups.count(),visible:await header.isVisible()});

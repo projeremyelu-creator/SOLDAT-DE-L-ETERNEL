@@ -25,7 +25,7 @@ test('Le thème est découvert directement, sans @import en cascade après les a
  const premium=link.findIndex(x=>x.includes('/vitrine/sde-premium-public.css'));
  const accueil=link.findIndex(x=>x.includes('/vitrine/sde-accueil-premium.css'));
  assert.ok(premium>=0&&premium<accueil);
- assert.ok(link.at(-1).includes('sde-shell-public.css'));
+ assert.ok(link.at(-2).includes('sde-shell-public.css')&&link.at(-1).includes('sde-maquette-hero.css'),'la navigation commune précède la surcouche Hero ciblée');
  assert.doesNotMatch(html,/<style>[^<]*@import[^<]*sde-premium-public\.css/i);
 });
 

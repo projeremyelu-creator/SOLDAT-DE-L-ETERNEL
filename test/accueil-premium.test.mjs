@@ -99,7 +99,7 @@ test('Accueil premium : charte Fusion chargée en dernier, scripts sans inline, 
  const feuilles=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
  const fusionIndex=feuilles.findIndex(f=>f.includes('sde-fusion.css'));
  assert.ok(fusionIndex>=0,'charte Fusion toujours présente');
- assert.ok(feuilles.at(-1).includes('sde-shell-public.css'),'navigation commune chargée après Fusion');
+ assert.ok(feuilles.at(-2).includes('sde-shell-public.css')&&feuilles.at(-1).includes('sde-maquette-hero.css'),'navigation commune puis surcouche Hero spécifique chargées après Fusion');
  assert.ok(fusionIndex<feuilles.length-1,'la charte Fusion reste la base de la couche responsive');
  assert.ok(feuilles.some(f=>f.includes('sde-accueil-premium.css')));
  assert.ok(html.includes('sde-accueil-premium.js'));

@@ -117,14 +117,14 @@ test('Priorité 01 : accueil sans double affiche TPA, vision et trois actions ma
  const home=file('public/vitrine/portail.html');
  const sitecss=file('public/vitrine/sde-sitewide-2026.css');
  assert.match(home,/class="ap-hero"/);
- assert.match(home,/class="sde-shell-event"/);
+ assert.match(home,/class="sde-shell-event sde-tpa-hero-card"/);
  assert.ok(!home.includes('sde-community-band'),'plus de second bandeau');
  assert.equal((home.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,0);
  for(const href of ['/contact#rejoindre','/mouvement#film']){
   const bloc=home.slice(home.indexOf('class="ap-hero"'),home.indexOf('id="programmes-accueil"'));
   assert.ok(bloc.includes('href="'+href+'"'),href);
  }
- assert.ok(home.includes('class="sde-shell-event"')&&home.includes('href="/programmes#tpa-2026"'));
+ assert.ok(home.includes('class="sde-shell-event sde-tpa-hero-card"')&&home.includes('href="/programmes#tpa-2026"'));
  assert.ok(sitecss.includes('Refonte structurée 03/11/2026'));
  assert.ok(sitecss.includes('.sde-rail{'));
  assert.ok(sitecss.includes('display:none!important'));

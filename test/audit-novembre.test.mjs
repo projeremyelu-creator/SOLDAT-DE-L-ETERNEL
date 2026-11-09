@@ -177,9 +177,9 @@ test("Corrections UX : aucun indicateur ni compteur vide, contact avec un seul g
  const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf("</section>",home.indexOf('class="ap-hero"')));
  const buttons=hero.match(/<div class="ap-actions">[\s\S]*?<\/div>/)?.[0]||"";
  assert.equal((buttons.match(/<a /g)||[]).length,2);
- assert.match(home,/01 · VIE SPIRITUELLE/);
- assert.match(home,/02 · ORGANISATION &amp; PORTAIL/);
- assert.match(home,/03 · TERRAIN &amp; IMPACT/);
+ assert.match(home,/01 · VIE DE L’ESPRIT/);
+ assert.match(home,/02 · GOUVERNANCE &amp; ORDRE/);
+ assert.match(home,/03 · TERRAIN &amp; COMPASSION/);
  assert.match(home,/class="ap-indicateurs"[^>]+hidden/);
  const counters=lire("public/vitrine/sde-versets.js");
  assert.match(counters,/Number\.isSafeInteger/);
