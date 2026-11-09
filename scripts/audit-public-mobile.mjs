@@ -385,27 +385,24 @@ try{
      report.notes.push({test:'connexion-sans-distraction',url:page.url(),...visible});
     }catch(e){issue(c.name,'sélection membre/administrateur indisponible : '+String(e.message||e).slice(0,220),true);}
    }
-   // Vérification réelle du menu compact sur écran intermédiaire et de l'accès aux rubriques.
+   // Sur ordinateur : quatre méga-menus accessibles, CTA Soutenir et Portail directs.
    if(c.name==='accueil-1024'){
     try{
-     const burger=page.locator('.site-header .site-burger');
-     await burger.click({timeout:4000});
-     const beforeResize=await burger.getAttribute('aria-expanded');
+     const header=page.locator('.sde-shell-header'),groups=header.locator('.sde-shell-mega-group');
+     if(await groups.count()!==4)issue(c.name,'le menu desktop n’a pas quatre catégories',true);
+     const first=groups.first().locator('summary');
+     await first.click({timeout:4000});
+     if(!(await groups.first().evaluate(el=>el.open)))
+      issue(c.name,'le méga-menu Le Mouvement ne s’ouvre pas',true);
      await page.setViewportSize({width:1280,height:900});
      await page.waitForTimeout(150);
-     const afterResize=await burger.getAttribute('aria-expanded');
-     const rubriques=page.locator('.site-header .site-menu a[href="/rubriques"]');
-     if(beforeResize!=='true'||afterResize!=='true')
-      issue(c.name,'le menu compact se referme entre 1024 et 1280 px',true);
-     if(await rubriques.count()!==1)issue(c.name,'entrée Toutes les rubriques absente',true);
-     else{
-      await rubriques.click({timeout:4000});
-      await page.waitForURL(url=>url.pathname==='/rubriques',{timeout:10000});
-      report.notes.push({test:'rubriques-menu-compact',beforeResize,afterResize,finalUrl:page.url()});
-     }
-    }catch(error){
-     issue(c.name,'navigation Rubriques sur ordinateur compact indisponible : '+String(error.message||error).slice(0,300),true);
-    }
+     if(await groups.count()!==4)issue(c.name,'les quatre menus disparaissent après redimensionnement',true);
+     if(await header.locator('.sde-shell-donate[href="/soutenir"]').count()!==1)
+      issue(c.name,'bouton Soutenir absent du premier niveau',true);
+     if(await header.locator('.sde-shell-portal[href="/portail"]').count()!==1)
+      issue(c.name,'entrée portail absente du header',true);
+     report.notes.push({test:'mega-menu-desktop',menus:await groups.count(),visible:await header.isVisible()});
+    }catch(error){issue(c.name,'navigation desktop indisponible : '+String(error.message||error).slice(0,300),true);}
    }
    if(c.name==='plus-390'&&new URL(page.url()).pathname!=='/rubriques')
     issue(c.name,'/plus doit rediriger vers /rubriques',true);
