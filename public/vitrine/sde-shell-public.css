@@ -281,3 +281,12 @@ body.sde-shell-mounted .sde-shell-directory{padding-block:clamp(26px,4vw,52px)}
 body.sde-infire-album .modal.open{z-index:300!important}
 body.sde-infire-album .sde-shell-header{position:sticky!important;z-index:120!important}
 body.sde-shell-mounted .sde-shell-footer-grid nav{width:auto!important}
+
+/* Commande de thème accessible, déplacée dans le tiroir sur mobile. */
+.sde-shell-theme-control{display:inline-flex;align-items:center;justify-content:center;
+ box-sizing:border-box;min-height:44px;padding:8px 10px;border:1px solid #b89a69;
+ border-radius:10px;background:transparent;color:#f7dbab;cursor:pointer;
+ font:750 .76rem/1.3 system-ui,sans-serif;white-space:nowrap}
+.sde-shell-theme-drawer{width:100%;min-height:45px;font-size:.88rem}
+.sde-shell-theme-control:focus-visible{outline:3px solid #ffe1a0;outline-offset:3px}
+@media(max-width:1180px){.sde-shell-theme-top{display:none!important}}
