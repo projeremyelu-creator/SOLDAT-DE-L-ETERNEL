@@ -17,7 +17,9 @@ test("Les versets méditatifs se fondent sans défilement horizontal",()=>{
  assert.match(css,/transition:opacity \.35s/);
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
  assert.doesNotMatch(css,/animation:sde-versets/);
- assert.match(js,/setInterval\(avancer,7000\)/);
+ assert.match(js,/PERIODE = 6500/);
+ assert.match(js,/setTimeout\(\(\)=>avancer\(false\),restant\)/);
+ assert.match(js,/suivant\.addEventListener\("click"/);
  assert.match(js,/verset\.classList/);
  assert.doesNotMatch(js,/cloneNode\(/);
 });
