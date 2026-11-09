@@ -99,3 +99,15 @@ test('Maquette SDE : titre et texte du Hero réservés à 1 100 px sans figer le
  assert.match(stable,/min-height:calc\(1\.65em \* 4\)!important/);
  assert.doesNotMatch(css.slice(css.indexOf('@media(max-width:960px)')),/min-height:2\.4em!important/,'le petit écran garde un titre à hauteur naturelle');
 });
+
+test('Trois chemins de l accueil : liens réels vers vision, programmes et portail',()=>{
+ const d=new JSDOM(home).window.document;
+ const panel=d.querySelector('section.sde-master-access');
+ assert.ok(panel);
+ const links=[...panel.querySelectorAll('a.sde-master-path')];
+ assert.deepEqual(links.map(a=>a.getAttribute('href')),['/mouvement','/programmes','/portail']);
+ assert.ok(links.every(a=>a.querySelector('strong')&&a.querySelector('b')));
+ const css=read('public/vitrine/sde-shell-public.css');
+ assert.match(css,/sde-master-access-grid/);
+ assert.match(css,/@media\(max-width:860px\)/);
+});

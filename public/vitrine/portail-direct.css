@@ -125,3 +125,102 @@ body.sde-direct{--sde-direct-night:#11182a;--sde-direct-gold:#c8a451}
   #sde-direct-menu-toggle:focus-visible{outline:3px solid #edd089;outline-offset:3px}
   body.sde-direct #sde-direct-tabs:not(.sde-direct-tabs-open){display:none!important}
 }
+
+/* SDE : signatures visuelles des deux interfaces privées authentifiées.
+   Les modules et leur visibilité sont contrôlés par la session serveur. */
+body.sde-direct{--sde-master-gold:#e0be78;--sde-master-night:#111d36}
+body.sde-direct #sde-direct-top .sde-direct-header{
+ background:linear-gradient(106deg,#0d1a31,#1b2843)!important;
+ border-bottom:1px solid rgba(237,202,131,.25);
+}
+body.sde-direct #sde-direct-top .sde-direct-intro{
+ max-width:none!important;
+ background:radial-gradient(ellipse at 94% 5%,rgba(164,128,195,.17),transparent 52%),linear-gradient(112deg,#14203a,#22283f 75%,#172f32)!important;
+ border-bottom:1px solid rgba(230,198,130,.32);
+ padding:clamp(19px,2.5vw,31px) clamp(18px,3vw,44px)!important;
+}
+body.sde-direct-admin #sde-direct-top .sde-direct-intro{
+ background:radial-gradient(ellipse at 96% 4%,rgba(116,156,129,.18),transparent 48%),linear-gradient(112deg,#10263a,#1d2a40 74%,#23372f)!important;
+}
+body.sde-direct #sde-direct-top .sde-direct-title{
+ color:#fffaed!important;font:750 clamp(1.92rem,2.8vw,3rem)/1.19 'Cinzel',Georgia,serif!important;
+}
+body.sde-direct #sde-direct-top .sde-direct-description{
+ color:#e6eaf2!important;line-height:1.64;max-width:830px;
+}
+body.sde-direct #sde-direct-tabs{
+ background:linear-gradient(180deg,#15233e,#172942)!important;
+ border-right:1px solid #987c4e!important;
+}
+body.sde-direct #sde-direct-tabs .sde-direct-group{color:#f0d39b}
+body.sde-direct #sde-direct-tabs button{border-radius:11px;min-height:46px}
+body.sde-direct #sde-direct-tabs button[aria-current=page]{
+ color:#111d32!important;background:#e2c280!important;border-color:#e2c280!important;
+}
+body.sde-direct .main{background:#faf8f3;color:#1d2a3c}
+body.sde-direct-admin .main{background:#f5f7f4}
+body.sde-direct #sde-priere-panel{border-top:4px solid #977ac3;box-shadow:0 16px 39px rgba(15,24,46,.12)}
+body.sde-direct :is(#sde-direct-top,#sde-direct-tabs,.main) :is(a,button,input,textarea,select):focus-visible{
+ outline:3px solid #e4b55d!important;outline-offset:2px;
+}
+/* Véritable accueil membre, sans copies de comptes ni progression fictive. */
+body.sde-direct-member .sde-master-member{
+ border:1px solid rgba(239,215,161,.4);border-top:3px solid #e5c178;
+ background:linear-gradient(128deg,#24314c,#292445);
+ border-radius:20px;color:#fbf8ed;margin:17px 0 0;
+ padding:clamp(16px,2vw,25px);box-shadow:0 16px 37px rgba(4,12,26,.23);
+}
+body.sde-direct-member .sde-master-member-title{
+ margin:0 0 13px;color:#fffaf0;
+ font:750 clamp(1.12rem,1.8vw,1.47rem)/1.24 'Cinzel',Georgia,serif;
+}
+body.sde-direct-member .sde-master-member-grid{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;
+}
+body.sde-direct-member .sde-master-member-action{
+ display:flex;flex-direction:column;align-items:start;gap:9px;
+ text-align:left;min-height:112px;padding:15px 13px;
+ border:1px solid rgba(227,212,175,.29);border-top:3px solid #e8c77d;
+ border-radius:15px;background:#293b58;color:#fff;cursor:pointer;
+ font:inherit;transition:background .16s ease,transform .16s ease;
+}
+body.sde-direct-member .sde-master-member-action[data-family=spiritualite]{
+ border-top-color:#baa2ed;background:#322d53;
+}
+body.sde-direct-member .sde-master-member-action[data-family=missions]{
+ border-top-color:#a4d0b5;background:#234141;
+}
+body.sde-direct-member .sde-master-member-action small{
+ color:#f1d393;font-size:.64rem;letter-spacing:.12em;font-weight:850;
+}
+body.sde-direct-member .sde-master-member-action strong{
+ color:#fff;font-size:.94rem;line-height:1.3;
+}
+body.sde-direct-member .sde-master-member-action span{
+ color:#dce4f0;font-size:.73rem;line-height:1.48;
+}
+body.sde-direct-member .sde-master-member-action[aria-current=page]{
+ border-color:#f3d79b;box-shadow:inset 0 0 0 1px #f3d79b;
+}
+body.sde-direct-member .sde-master-member-action:hover{
+ background:#3a4a67;transform:translateY(-2px);
+}
+body.sde-direct-member .sde-master-member-note{
+ margin:13px 0 0;font-size:.75rem;color:#d5e0ef;line-height:1.5;
+}
+@media(max-width:1080px){
+ body.sde-direct-member .sde-master-member-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ body.sde-direct #sde-direct-top .sde-direct-intro{padding:16px!important}
+ body.sde-direct #sde-direct-top .sde-direct-title{font-size:1.74rem!important}
+ body.sde-direct-member .sde-master-member-action{min-height:96px;padding:11px}
+}
+@media(max-width:360px){
+ body.sde-direct-member .sde-master-member-grid{gap:7px}
+ body.sde-direct-member .sde-master-member-action strong{font-size:.8rem}
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-direct-member .sde-master-member-action{transition:none}
+ body.sde-direct-member .sde-master-member-action:hover{transform:none}
+}

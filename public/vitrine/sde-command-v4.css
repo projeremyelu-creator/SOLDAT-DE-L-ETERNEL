@@ -181,3 +181,30 @@ body.sde-direct-admin .sde-command-v4-bottom{display:none}
  }
  body.sde-direct-admin .sde-command-v4-bottom-item svg{width:20px;height:20px}
 }
+
+/* Commandement : KPI accessibles uniquement après validation du rôle. */
+body.sde-direct-admin #sde-direct-top .sde-command-v4{
+ border-radius:20px;border-top:3px solid #e4bf76;
+ background:linear-gradient(112deg,#172c43,#202e46 65%,#243939);
+ padding:clamp(16px,2vw,25px);
+}
+body.sde-direct-admin .sde-command-v4-insights{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 16px;
+}
+body.sde-direct-admin .sde-command-v4-insights[hidden]{display:none!important}
+body.sde-direct-admin .sde-command-v4-insight{
+ display:flex;flex-direction:column;gap:7px;min-width:0;padding:15px;
+ border:1px solid rgba(235,204,141,.29);border-radius:13px;
+ background:rgba(12,23,38,.65);
+}
+body.sde-direct-admin .sde-command-v4-insight span{color:#e5e8f2;font-size:.73rem;line-height:1.35}
+body.sde-direct-admin .sde-command-v4-insight strong{color:#f2d89b;font:800 clamp(1.3rem,2vw,1.85rem)/1.2 'Cinzel',Georgia,serif}
+body.sde-direct-admin .sde-command-v4-insight small{font-size:.65rem;color:#d2e0e9;line-height:1.3}
+body.sde-direct-admin .sde-command-v4-item{border-radius:13px;min-height:80px}
+@media(max-width:1020px){
+ body.sde-direct-admin .sde-command-v4-insights{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ body.sde-direct-admin .sde-command-v4-insight{padding:11px}
+ body.sde-direct-admin .sde-command-v4-insight strong{font-size:1.3rem}
+}
