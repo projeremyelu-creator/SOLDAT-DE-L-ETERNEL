@@ -298,32 +298,28 @@ try{
      }
     }catch(e){issue(c.name,'parcours préinscription inopérant : '+String(e.message||e).slice(0,240),true)}
    }
-   // INTERACTIONS_NAVI : le menu et le changement de thème doivent fonctionner sur un vrai téléphone.
+   // Navigation mobile réelle : tiroir, quatre accordéons, recherche, fermeture clavier.
    if(c.name==='accueil-390'){
     try{
-     const burger=page.locator('.site-header .site-burger').first();
-     if(await burger.count()!==1)issue(c.name,'bouton du menu mobile absent',true);
+     const open=page.locator('.sde-shell-open'),overlay=page.locator('#sde-shell-overlay');
+     if(await open.count()!==1||!(await open.isVisible()))issue(c.name,'bouton du menu mobile SDE absent',true);
      else{
-      await burger.click({timeout:4000});
-      const opened=await burger.getAttribute('aria-expanded');
-      const menuOpen=await page.locator('.site-header .site-menu').first().getAttribute('data-open');
-      if(opened!=='true'||menuOpen!=='true')issue(c.name,'le menu ne s’ouvre pas correctement',true);
+      await open.click({timeout:4000});
+      if((await open.getAttribute('aria-expanded'))!=='true'||!(await overlay.isVisible()))
+       issue(c.name,'tiroir SDE ne s’ouvre pas',true);
+      const groups=page.locator('.sde-shell-drawer-group');
+      if(await groups.count()!==4)issue(c.name,'le tiroir ne propose pas quatre catégories',true);
+      await overlay.locator('.sde-shell-filter').fill('formation',{timeout:4000});
+      const found=await overlay.locator('.sde-shell-submenu a:not([hidden])').count();
+      if(found===0)issue(c.name,'recherche de rubriques inopérante',true);
       await page.keyboard.press('Escape');
-      const closed=await burger.getAttribute('aria-expanded');
-      const menuClosed=await page.locator('.site-header .site-menu').first().getAttribute('data-open');
-      if(closed!=='false'||menuClosed!=='false')issue(c.name,'le menu ne se ferme pas avec Échap',true);
-      report.notes.push({test:'menu-mobile',opened,menuOpen,closed,menuClosed});
+      if((await open.getAttribute('aria-expanded'))!=='false'||await overlay.isVisible())
+       issue(c.name,'Échap ne ferme pas le tiroir',true);
+      report.notes.push({test:'menu-mobile-unifie',families:await groups.count(),searchResults:found});
      }
-     const toggle=page.locator('.site-header .site-theme-toggle').first();
-     if(await toggle.count()!==1)issue(c.name,'commande de thème absente',true);
-     else{
-      const themeBefore=await page.locator('html').getAttribute('data-theme');
-      await toggle.click({timeout:4000});
-      const themeAfter=await page.locator('html').getAttribute('data-theme');
-      if(themeAfter===themeBefore || !['light','dark'].includes(themeAfter))issue(c.name,'bouton clair/sombre sans changement réel',true);
-      report.notes.push({test:'theme-mobile',before:themeBefore,after:themeAfter});
-     }
-    }catch(e){issue(c.name,'interaction mobile en échec : '+String(e.message||e).slice(0,240),true);}
+     if(await page.locator('.sde-shell-header .sde-shell-portal[href="/portail"]').count()!==1)
+      issue(c.name,'accès direct au Portail S.D.E absent',true);
+    }catch(error){issue(c.name,'navigation mobile en échec : '+String(error.message||error).slice(0,240),true);}
    }
    // Prière anonyme : simuler deux réponses sans aucune écriture vers la vraie API.
    // page.route intercepte la requête AVANT qu'elle quitte Chromium.
