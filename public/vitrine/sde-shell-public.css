@@ -762,6 +762,30 @@ body.sde-shell-mounted.sde-subpage .sde-intro{
   linear-gradient(135deg,var(--sde-2027-night),var(--sde-2027-night-soft))!important;
  border-bottom:3px solid var(--sde-2027-accent)!important;
 }
+html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>.sde-intro{
+ color:#fffaf0!important;
+ background:
+  radial-gradient(circle at 82% 15%,color-mix(in srgb,var(--sde-2027-accent) 34%,transparent),transparent 38%),
+  linear-gradient(135deg,var(--sde-2027-night),var(--sde-2027-night-soft))!important;
+ border-bottom:3px solid var(--sde-2027-accent)!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="programmes"] main#contenu>.sde-intro,
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="prieres"] main#contenu>.sde-intro,
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="temoignages"] main#contenu>.sde-intro,
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="pole-reveil"] main#contenu>.sde-intro{
+ background:
+  radial-gradient(circle at 82% 15%,rgba(105,64,151,.38),transparent 40%),
+  linear-gradient(135deg,var(--sde-2027-night),var(--sde-2027-violet-dark))!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="missions-humanitaires"] main#contenu>.sde-intro,
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="projets"] main#contenu>.sde-intro,
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="engagements"] main#contenu>.sde-intro,
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="pole-social"] main#contenu>.sde-intro,
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="pole-logistique"] main#contenu>.sde-intro{
+ background:
+  radial-gradient(circle at 82% 15%,rgba(47,104,79,.42),transparent 40%),
+  linear-gradient(135deg,var(--sde-2027-night),var(--sde-2027-green-dark))!important;
+}
 body.sde-shell-mounted.sde-subpage .sde-intro :is(h1,p,.sde-kicker,.sde-crumbs,.sde-crumbs a){
  color:#fffaf0!important;
 }
@@ -771,6 +795,14 @@ body.sde-shell-mounted.sde-subpage .sde-intro .sde-kicker{
 }
 body.sde-shell-mounted.sde-subpage :is(.section,.pg-wrap){
  background:var(--sde-2027-ivory)!important;color:var(--sde-2027-ink)!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>section.section,
+html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>section.section:nth-of-type(2n){
+ background:var(--sde-2027-ivory)!important;
+ color:var(--sde-2027-ink)!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>section.section :is(p,li,dd,figcaption){
+ color:var(--sde-2027-muted)!important;
 }
 body.sde-shell-mounted.sde-subpage :is(.tete-section,.pg-block)>:is(h2,h3),
 body.sde-shell-mounted.sde-subpage :is(.section,.pg-wrap)>:is(h2,h3){
