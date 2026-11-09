@@ -90,3 +90,63 @@ test("Soldier Quest desktop : hauteur réservée à l'intro avant chargement des
  const css=read("public/vitrine/sde-digital-universe.css");
  assert.match(css,/@media\(min-width:1051px\)\s*\{\s*body\.sdu-quest-page \.sdu-quest-content>\.sdu-intro-band\s*\{[^}]*height:170px;min-height:170px/s);
 });
+
+test("Pôles, millésime et date TPA : les écrans suivent les références officielles",()=>{
+ const doc=new JSDOM(home).window.document;
+ const poles=[...doc.querySelectorAll("#poles-accueil .sde-pole-officiel h3")].map(x=>x.textContent.trim());
+ assert.deepEqual(poles,["Réveil et Évangélisation","Impact Social et Humanitaire","Logistique et Organisation","Communication, Médias et Relations Extérieures","Formation, Développement et Entrepreneuriat"]);
+ assert.match(home,/Vendredi 18 décembre 2026/);
+ assert.match(home,/2026-12-18T20:00:00\+00:00/);
+ assert.match(home,/© 2026–2027/);
+ for(const filename of ["public/vitrine/soldier-quest.html","public/vitrine/soldiers-tv.html","public/vitrine/sde-academy-parcours.html"]){
+  assert.doesNotMatch(read(filename),/Conimencer|05 au 09 mai|08 MAI|20 sept\. 2026|contact@sde-mouvement\.org|07 00 00 00 00/);
+ }
+ const shell=read("public/vitrine/sde-shell-public.js");
+ for(const denomination of poles)assert.ok(shell.includes(denomination),"Libellé manquant dans le menu : "+denomination);
+});
+test("Soutenir SDE : Wave en premier et aucun paiement non vérifié",()=>{
+ const doc=new JSDOM(home).window.document;
+ const methods=[...doc.querySelectorAll("#sde-don-canal option")].map(x=>x.textContent.trim());
+ assert.deepEqual(methods.slice(0,4),["Wave","Orange Money","MTN MoMo","Moov Money"]);
+ const support=read("public/vitrine/soutenir.html");
+ assert.match(support,/Les modalités Wave, Orange Money, MTN MoMo, Moov Money/);
+ assert.match(support,/data-canal="Wave">Non activé/);
+});
+test("Une navigation de portail 2027 partagée relie Quest, Campus, membre et cinq accès PWA",()=>{
+ const pages={quest,academy:read("public/vitrine/sde-academy-parcours.html"),membre:read("public/vitrine/tableau-membre.html")};
+ for(const [kind,source] of Object.entries(pages)){
+  const d=new JSDOM(source,{url:"https://mouvement-sde.org/"+kind,runScripts:"outside-only"});
+  d.window.eval(read("public/vitrine/sde-universe-navigation.js"));
+  d.window.document.dispatchEvent(new d.window.Event("DOMContentLoaded"));
+  assert.equal(d.window.document.querySelectorAll("[data-sdu-universe-nav] .sdu-cross-nav-group").length,4,kind);
+  assert.ok(d.window.document.querySelector('[data-sdu-universe-nav] a[href="/mon-espace/academy"]'),kind);
+  assert.ok(d.window.document.querySelector('[data-sdu-universe-nav] a[href="/soldiers-tv"]'),kind);
+  if(kind==="academy")assert.equal(d.window.document.querySelectorAll(".sdu-private-bottom a").length,5);
+  else assert.equal(d.window.document.querySelectorAll(".sdu-private-bottom a").length,0);
+  d.window.close();
+ }
+});
+test("Soldiers TV : retour au site et sous-navigation, agenda exportable sans direct fictif",()=>{
+ const doc=new JSDOM(tv).window.document;
+ const nav=doc.querySelector(".sdu-tv-subnav");
+ assert.ok(nav);
+ assert.ok(nav.querySelector('a[href="/"]'));
+ assert.ok(nav.querySelector('a[href="/soldiers-voice"]'));
+ assert.ok(nav.querySelector('a[href="#podcasts"]'));
+ assert.ok(nav.querySelector('a[href="#rubriques"]'));
+ assert.ok(doc.querySelector('a[href="/api/calendrier.ics"]'));
+ assert.ok(read("src/worker.js").includes('p === "/api/calendrier.ics"'));
+ assert.match(tv,/Aucun direct ni spectateur n.est simulé/);
+});
+test("Responsive PWA 2027 : carrousels tactiles, retour clavier, données Academy réelles",()=>{
+ const css=read("public/vitrine/sde-digital-universe.css");
+ assert.match(css,/grid-auto-flow:column/);
+ assert.match(css,/scroll-snap-type:x mandatory/);
+ assert.match(css,/body\.sdu-quest-page \.sdu-quest-sidebar\{display:none!important\}/);
+ assert.match(css,/\.sdu-tv-subnav a/);
+ assert.match(css,/\.sdu-private-bottom/);
+ assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
+ const progress=read("public/vitrine/sde-academy-parcours.js");
+ assert.match(progress,/const v=snapshot\.progress/);
+ assert.match(progress,/text\("statPercent",v\.percentage/);
+});
