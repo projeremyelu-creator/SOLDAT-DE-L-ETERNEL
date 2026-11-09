@@ -1,21 +1,47 @@
-/* Bande des versets quotidiens et compteur de visites — Ivoire • Treillis • Or */
-.sde-versets{position:relative;z-index:5;display:flex;align-items:center;gap:0;min-height:46px;background:linear-gradient(90deg,#2f3b25,#25301e);border-bottom:2px solid #b8923a;color:#f4ecd8;overflow:hidden}
-.sde-versets-tag{flex:none;align-self:stretch;display:grid;place-items:center;padding:0 16px;background:linear-gradient(180deg,#c9a24a,#a8822f);color:#fff;font:700 .78rem/1 "Saira Condensed","Arial Narrow",sans-serif;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
-.sde-versets-fenetre{flex:1;min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
-.sde-versets-piste{display:flex;width:max-content;animation:sde-versets var(--duree,90s) linear infinite}
-.sde-versets-groupe{display:flex;flex:none}
-.sde-verset{display:inline-flex;align-items:baseline;gap:10px;padding:0 34px;white-space:nowrap;font:italic 400 1rem/46px "Libre Caslon Text","Cormorant Garamond",Georgia,serif;color:#f4ecd8}
-.sde-verset::after{content:"✦";margin-left:34px;color:#d8b766;font-style:normal}
-.sde-verset q{quotes:"« " " »"}
-.sde-verset cite{font:600 .74rem "Saira Condensed",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#d8b766;font-style:normal}
-.sde-verset.jour q{color:#fff}
-.sde-versets:hover .sde-versets-piste,.sde-versets:focus-within .sde-versets-piste,.sde-versets.en-pause .sde-versets-piste{animation-play-state:paused}
-.sde-versets-pause{flex:none;align-self:stretch;width:46px;border:0;border-left:1px solid #4b5a37;background:#25301e;color:#d8b766;font-size:.8rem;cursor:pointer}
-.sde-versets-pause:focus-visible{outline:2px solid #d8b766;outline-offset:-3px}
-@keyframes sde-versets{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media(prefers-reduced-motion:reduce){.sde-versets-piste{animation:none}.sde-versets-fenetre{overflow-x:auto}}
-body[data-motion=paused] .sde-versets-piste{animation-play-state:paused}
-@media(max-width:600px){.sde-versets-tag{padding:0 10px;font-size:.66rem}.sde-verset{font-size:.92rem;padding:0 22px}}
+/* SDE — Méditation quotidienne sans défilement (Or impérial / Obsidienne). */
+.sde-versets{position:relative;z-index:5;box-sizing:border-box;width:100%;min-height:88px;
+ display:grid;grid-template-columns:minmax(112px,150px) minmax(0,1fr) 52px;
+ align-items:center;gap:4px;padding:0 8px 0 0;
+ background:radial-gradient(ellipse at 50% -100%,rgba(109,40,217,.16),transparent 80%),
+ linear-gradient(90deg,#0F111A,#07080C 56%,#0F111A);
+ border-bottom:1px solid rgba(212,175,55,.42);color:#F8FAFC;isolation:isolate}
+.sde-versets-tag{display:grid;place-items:center;align-self:stretch;min-width:0;padding:8px 10px;
+ border-right:1px solid rgba(212,175,55,.24);background:rgba(212,175,55,.055);
+ color:#F3E5AB;font:800 .72rem/1.3 "Atkinson Hyperlegible",system-ui,sans-serif;
+ letter-spacing:.14em;text-transform:uppercase;text-align:center}
+.sde-versets-fenetre{min-width:0;width:100%;min-height:82px;display:grid;place-items:center;
+ overflow:hidden;contain:layout paint;padding:9px 14px;box-sizing:border-box}
+.sde-verset{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;
+ width:100%;margin:auto;color:#F8FAFC;text-align:center;
+ opacity:1;transform:translateY(0);
+ transition:opacity .35s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.sde-verset-sortie{opacity:0;transform:translateY(-6px)}
+.sde-verset q{quotes:"« " " »";font:italic 500 clamp(.82rem,.55rem + .7vw,.99rem)/1.4
+ "Libre Caslon Text","Cormorant Garamond",Georgia,serif;max-width:78ch;
+ text-wrap:balance;overflow-wrap:break-word}
+.sde-verset cite{font:750 .69rem/1.35 "Atkinson Hyperlegible",system-ui,sans-serif;
+ letter-spacing:.12em;text-transform:uppercase;font-style:normal;color:#E2C777}
+.sde-versets-pause{flex:none;display:grid;place-items:center;width:44px;height:44px;
+ padding:0;border:1px solid rgba(212,175,55,.38);border-radius:12px;
+ background:#1c2030;color:#F3E5AB;cursor:pointer}
+.sde-versets-pause svg{width:20px;height:20px}
+.sde-versets-pause:hover{background:#29283b}
+.sde-versets-pause:focus-visible{outline:3px solid #F3E5AB;outline-offset:2px}
+body[data-motion="paused"] .sde-verset{transition:none}
+@media(max-width:680px){
+ .sde-versets{min-height:125px;grid-template-columns:minmax(0,1fr) 48px;
+  grid-template-rows:25px minmax(0,1fr);column-gap:0;padding:0 8px}
+ .sde-versets-tag{grid-column:1/3;grid-row:1;min-height:24px;padding:0 8px;
+  font-size:.64rem;letter-spacing:.19em;border:0;border-bottom:1px solid rgba(212,175,55,.15)}
+ .sde-versets-fenetre{grid-column:1;grid-row:2;min-height:98px;padding:7px 9px}
+ .sde-versets-pause{grid-column:2;grid-row:2}
+ .sde-verset q{font-size:.86rem;line-height:1.34}
+ .sde-verset cite{font-size:.62rem}
+}
+@media(prefers-reduced-motion:reduce){
+ .sde-verset{transition:none!important;transform:none!important}
+ .sde-verset-sortie{opacity:1!important}
+}
 .sde-compteur{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px 22px;padding:12px 16px;margin:0 0 10px;border-bottom:1px solid #e6dcc6;font:400 .92rem "Saira Condensed","Arial Narrow",sans-serif;color:#3c4033}
 .sde-compteur b{font:700 1.15rem "Libre Caslon Text",Georgia,serif;color:#8a6a22;margin-right:4px}
 .sde-compteur-point{width:10px;height:10px;border-radius:50%;background:#3e9b4f;box-shadow:0 0 0 0 #3e9b4f88;animation:sde-pouls 2s ease-out infinite}
@@ -24,50 +50,21 @@ body[data-motion=paused] .sde-versets-piste{animation-play-state:paused}
 html:not([data-theme="light"]) body:not(.sde-ivoire) .sde-compteur{color:#d6dbe1;border-color:#ffffff1a}
 html:not([data-theme="light"]) body:not(.sde-ivoire) .sde-compteur b{color:#e4c477}
 
-/* Le carrousel animé est large par conception ; empêcher son contenu de
-   créer une largeur de document horizontale sur les grands écrans. */
-html{overflow-x:clip}
-body.sde-unifie .sde-versets{max-width:100%;overflow:clip!important;contain:paint}
-body.sde-unifie .sde-versets-fenetre{min-width:0;max-width:100%;overflow:clip!important}
-@media(prefers-reduced-motion:reduce){body.sde-unifie .sde-versets-fenetre{overflow-x:auto!important}}
 
-
-/* Correction bureau 1600 px : confiner la piste très longue dans sa fenêtre.
-   L'effet de défilement reste utilisable sans agrandir le document. */
-body.sde-unifie .sde-versets{
-  width:100%;max-width:100vw;min-width:0;
-  contain:layout paint;isolation:isolate;
-}
-body.sde-unifie .sde-versets-fenetre{
-  flex:1 1 0;min-width:0;width:0;max-width:100%;
-  overflow:hidden!important;contain:layout paint;
-}
-body.sde-unifie .sde-versets-piste{
-  max-width:none;will-change:transform;
-}
-@media(prefers-reduced-motion:reduce){
-  body.sde-unifie .sde-versets-fenetre{overflow-x:auto!important}
-}
-
-/* Accueil : réserver exactement la hauteur du bandeau avant l'exécution du script,
-   sans figer le contenu ni désactiver la fonction pause/reprise. */
+/* La réserve statique protège le CLS : même hauteur avant/après chargement. */
 body.sde-accueil-maquette .sde-versets-slot,
-body.sde-accueil-maquette .sde-versets {
-  height:48px;
-  min-height:48px;
-  max-height:48px;
-  box-sizing:border-box;
+body.sde-accueil-maquette .sde-versets{
+ height:88px;min-height:88px;max-height:88px;box-sizing:border-box
 }
-body.sde-accueil-maquette .sde-versets-slot {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  white-space:nowrap;
-  text-overflow:ellipsis;
-  padding:0 16px;
-  color:#f4ecd8;
-  background:linear-gradient(90deg,#2f3b25,#25301e);
-  border-bottom:2px solid #b8923a;
-  font:600 .9rem/1.5 "Atkinson Hyperlegible",system-ui,sans-serif;
+body.sde-accueil-maquette .sde-versets-slot{
+ display:grid;place-items:center;text-align:center;padding:9px 18px;
+ background:linear-gradient(90deg,#0F111A,#07080C 56%,#0F111A);
+ border-bottom:1px solid rgba(212,175,55,.42);color:#F3E5AB;
+ font:italic 500 .91rem/1.4 "Libre Caslon Text",Georgia,serif
+}
+@media(max-width:680px){
+ body.sde-accueil-maquette .sde-versets-slot,
+ body.sde-accueil-maquette .sde-versets{
+  height:125px;min-height:125px;max-height:125px
+ }
 }

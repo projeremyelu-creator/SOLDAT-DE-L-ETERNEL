@@ -1,4 +1,4 @@
-/* Bande défilante des versets quotidiens (Louis Segond 1910) et compteur de visites en temps réel. */
+/* Méditation biblique en fondu doux, contrôlable et compteur de visites vérifiées. */
 (() => {
   "use strict";
   const VERSETS = [
@@ -43,33 +43,90 @@
     const debut = j % VERSETS.length;
     return Array.from({ length: 6 }, (_, i) => VERSETS[(debut + i) % VERSETS.length]);
   }
+  /* Méditation discrète : un seul verset à la fois, sans piste défilante ni DOM dupliqué.
+     Les versets courts sont montrés en entier, un nouveau toutes les 7 secondes. */
   function installerBande() {
     if (document.querySelector(".sde-versets") || /^\/(mon-espace|administration|connexion)/.test(location.pathname)) return;
     const ancre = document.querySelector(".site-header") || document.querySelector("header.entete");
     if (!ancre) return;
-    const liste = versetsDuJour();
-    const bande = el("section", "sde-versets");
-    bande.setAttribute("aria-label", "Versets du jour");
+    const courts = VERSETS.filter(([texte]) => texte.length <= 115);
+    const jour = Math.floor(Date.now() / 86400000);
+    const liste = Array.from({ length: 6 }, (_, i) => courts[(jour + i) % courts.length]);
+    const bande = el("section", "sde-versets sde-versets-fondu");
+    bande.setAttribute("aria-label", "Méditation biblique du jour");
     const tag = el("span", "sde-versets-tag", "Verset du jour");
     const fenetre = el("div", "sde-versets-fenetre");
-    const piste = el("div", "sde-versets-piste");
-    const item = ([t, r], i) => { const s = el("span", "sde-verset" + (i === 0 ? " jour" : "")); s.append(el("q", "", t), el("cite", "", r)); return s; };
-    const groupe = el("div", "sde-versets-groupe"); liste.forEach((v, i) => groupe.append(item(v, i)));
-    const copie = groupe.cloneNode(true); copie.setAttribute("aria-hidden", "true");
-    piste.append(groupe, copie);
-    fenetre.append(piste);
-    const pause = el("button", "sde-versets-pause"); pause.type = "button";
-    const majPause = () => { const p = bande.classList.contains("en-pause"); pause.setAttribute("aria-pressed", String(p)); pause.setAttribute("aria-label", p ? "Reprendre le défilement des versets" : "Mettre en pause le défilement des versets"); pause.textContent = p ? "▶" : "❚❚"; };
-    pause.addEventListener("click", () => { bande.classList.toggle("en-pause"); majPause(); });
-    if (calme()) bande.classList.add("en-pause");
-    majPause();
-    bande.append(tag, fenetre, pause);
-    // La page d’accueil réserve cet espace dans le HTML pour ne pas déplacer le contenu après chargement.
-    const reserve = document.querySelector(".sde-versets-slot");
+    const verset = el("div", "sde-verset jour");
+    const phrase = el("q", "sde-verset-phrase");
+    const reference = el("cite", "sde-verset-reference");
+    verset.append(phrase,reference);
+    fenetre.append(verset);
+    let index = 0, arrete = calme(), transition = null;
+    const afficher = () => {
+      phrase.textContent = liste[index][0];
+      reference.textContent = liste[index][1];
+    };
+    afficher();
+    const pause = el("button", "sde-versets-pause");
+    pause.type = "button";
+    const icone = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    icone.setAttribute("viewBox","0 0 24 24");
+    icone.setAttribute("fill","none");
+    icone.setAttribute("stroke","currentColor");
+    icone.setAttribute("stroke-width","1.75");
+    icone.setAttribute("stroke-linecap","round");
+    icone.setAttribute("aria-hidden","true");
+    const dessiner = () => {
+      icone.replaceChildren();
+      if (arrete) {
+        const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+        path.setAttribute("d","M8 5v14l11-7z");icone.append(path);
+      } else {
+        for (const x of [7,15]) {
+          const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+          rect.setAttribute("x",String(x));rect.setAttribute("y","5");
+          rect.setAttribute("width","3");rect.setAttribute("height","14");rect.setAttribute("rx","1");
+          icone.append(rect);
+        }
+      }
+      pause.setAttribute("aria-pressed",String(arrete));
+      pause.setAttribute("aria-label",arrete?"Reprendre les versets":"Mettre en pause les versets");
+      pause.setAttribute("title",arrete?"Reprendre les versets":"Mettre en pause les versets");
+    };
+    pause.append(icone);
+    dessiner();
+    pause.addEventListener("click",() => {
+      arrete = !arrete;
+      if (transition !== null) {
+        clearTimeout(transition);transition=null;
+        verset.classList.remove("sde-verset-sortie");
+      }
+      dessiner();
+    });
+    bande.append(tag,fenetre,pause);
+    const reserve=document.querySelector(".sde-versets-slot");
     if (reserve) reserve.replaceWith(bande);
-    else ancre.insertAdjacentElement("afterend", bande);
-    const vitesse = () => { const w = groupe.scrollWidth; piste.style.setProperty("--duree", Math.max(40, Math.round(w / 45)) + "s"); };
-    vitesse(); addEventListener("resize", vitesse);
+    else ancre.insertAdjacentElement("afterend",bande);
+    const avancer = () => {
+      if (!bande.isConnected || arrete || calme() || document.hidden || transition !== null) return;
+      verset.classList.add("sde-verset-sortie");
+      transition = setTimeout(() => {
+        index = (index + 1) % liste.length;
+        afficher();
+        verset.classList.remove("sde-verset-sortie");
+        transition=null;
+      }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 350);
+    };
+    const minuteur = setInterval(avancer,7000);
+    // Les tests et les applications monopages peuvent retirer le bandeau :
+    // éviter alors de conserver un intervalle sans élément visible.
+    document.addEventListener("visibilitychange",() => {
+      if (document.hidden && transition !== null) {
+        clearTimeout(transition);transition=null;
+        verset.classList.remove("sde-verset-sortie");
+      }
+      if (!bande.isConnected) clearInterval(minuteur);
+    });
   }
 
   /* Compteur de visites en temps réel */
