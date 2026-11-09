@@ -236,3 +236,41 @@ body.sde-tableau .sdu-member-grid span{font-size:1.65rem;color:#f4d18a}
 body.sde-premium-home .sde-universe .sdu-card-copy .sdu-title{font-size:clamp(1.05rem,1.6vw,1.42rem);line-height:1.3}
 @media(max-width:850px){body.sde-tableau .sdu-member-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:420px){body.sde-tableau .sdu-member-grid{gap:8px}body.sde-tableau .sdu-member-grid a{padding:15px 6px}}
+
+
+/* Correctifs de recette mobile : chaque cible actionable atteint 44 px. */
+body.sde-universe-page .sdu-filterbar button{min-height:46px!important}
+body.sde-universe-page .sdu-quest-sidebar nav a{min-height:46px!important}
+body.sde-universe-page .sde-shell-footer nav a{
+ display:flex!important;align-items:center!important;min-height:44px!important;
+ padding-block:8px!important
+}
+body.sde-universe-page .sdu-panel a:not(.sdu-button){min-height:44px}
+body.sde-universe-page .sdu-feature>a{display:inline-flex;align-items:center}
+/* L'en-tête initial est remplacé par la navigation commune au DOMContentLoaded :
+   réserver exactement son espace évite le déplacement du hero et de la page. */
+body.sde-universe-page>header.site-header:not(.sde-shell-header){
+ display:block!important;height:76px!important;min-height:76px!important;
+ border-bottom:1px solid #d4af3766;background:#0b142a;overflow:hidden
+}
+body.sde-universe-page>header.site-header:not(.sde-shell-header)>a{
+ display:block;visibility:hidden;height:100%
+}
+/* La hauteur de la fiche Quest est réservée avant le changement de métrique
+   des polices : plus de saut de colonne ou de carte au chargement. */
+@media(min-width:1051px){
+ body.sdu-quest-page .sdu-hero-inner{
+  height:460px;min-height:460px;grid-template-columns:minmax(0,1fr) 350px;
+  align-items:center;padding-block:38px
+ }
+ body.sdu-quest-page .sdu-hero-aside{
+  height:326px;min-height:326px;align-self:center;overflow:hidden
+ }
+ body.sdu-quest-page .sdu-hero-inner>div:first-child>p{min-height:4.9em}
+ body.sdu-quest-page .sdu-hero h1{min-height:1.16em;line-height:1.16}
+}
+@media(max-width:700px){
+ body.sde-universe-page>header.site-header:not(.sde-shell-header){
+  height:64px!important;min-height:64px!important
+ }
+}
