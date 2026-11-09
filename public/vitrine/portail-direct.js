@@ -423,6 +423,12 @@
         bouton.addEventListener("click",()=>selectionner(nom,{userInitiated:true}));
         grid.append(bouton);
       }
+      // Un lien direct peut avoir sélectionné sa rubrique avant la création de
+      // la maquette : refléter l'état déjà validé dès son premier affichage.
+      const courantInitial=navCourant||new URL(location.href).searchParams.get("module")||"";
+      for(const btn of grid.querySelectorAll("button[data-module]")){
+        if(btn.dataset.module===courantInitial)btn.setAttribute("aria-current","page");
+      }
       panel.append(head,grid);
       actions.after(panel);
       body.classList.add("sde-master-member-ready");
