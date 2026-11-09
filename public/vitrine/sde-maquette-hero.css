@@ -1,0 +1,142 @@
+/* Accueil SDE — adaptation de la maquette fournie, sans Tailwind CDN ni dépendances externes. */
+body.sde-premium-home .ap-hero{background:#070913!important;color:#f8fafc!important;isolation:isolate}
+body.sde-premium-home .ap-hero-bg{
+ display:block!important;opacity:1!important;position:absolute;inset:0;z-index:-1;
+ background-image:
+ radial-gradient(circle at 50% 35%,rgba(7,9,19,.44) 0%,rgba(7,9,19,.84) 78%,#070913 100%),
+ linear-gradient(to bottom,rgba(15,23,42,.65) 0%,rgba(7,9,19,.32) 55%,#070913 100%),
+ url('/vitrine/photos/hero-sde-1280.webp')!important;
+ background-size:cover!important;background-position:center bottom!important;background-repeat:no-repeat!important
+}
+body.sde-premium-home .ap-hero::after{display:none!important}
+body.sde-premium-home .ap-hero .ap-hero-inner{
+ display:grid!important;grid-template-columns:minmax(0,1.12fr) minmax(340px,.88fr)!important;
+ width:min(1240px,calc(100% - 40px))!important;
+ min-height:min(690px,86vh);column-gap:clamp(24px,4vw,64px);
+ align-items:center!important;text-align:left!important;padding:54px 0!important
+}
+body.sde-premium-home .ap-hero .ap-hero-copy{width:100%!important;max-width:680px!important;margin:0!important;text-align:left!important}
+body.sde-premium-home .ap-hero h1{font-family:'Cinzel',Georgia,serif!important;font-weight:800!important;letter-spacing:-.025em!important;font-size:clamp(2.05rem,4vw,3.65rem)!important;line-height:1.17!important;text-wrap:balance}
+body.sde-premium-home .ap-hero .ap-lead{margin-left:0!important;margin-right:0!important;max-width:610px!important}
+body.sde-premium-home .ap-hero .ap-verset{margin-left:0!important;margin-right:0!important}
+body.sde-premium-home .ap-hero .ap-actions{justify-content:flex-start!important}
+/* Une seule fiche TPA visible : la carte est intégrée dans le Hero. */
+body.sde-premium-home .ap-hero .sde-tpa-hero-card{
+ box-sizing:border-box;width:100%;position:relative;overflow:hidden;
+ background:rgba(15,23,42,.78)!important;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+ color:#f8fafc;border:1px solid rgba(212,175,55,.48);border-radius:20px;
+ box-shadow:0 25px 55px rgba(0,0,0,.37);padding:clamp(20px,3vw,32px)
+}
+body.sde-premium-home .sde-tpa-hero-card[hidden]{display:none!important}
+body.sde-premium-home .ap-hero .sde-tpa-hero-card::before{
+ content:'✦ PROGRAMME PHARE';position:absolute;right:0;top:0;padding:6px 14px;
+ font-size:.6rem;font-weight:800;letter-spacing:.075em;color:#17101d;
+ background:linear-gradient(110deg,#f3e5ab,#d4af37);border-radius:0 0 0 12px
+}
+body.sde-premium-home .sde-tpa-hero-card .sde-shell-event-inner{
+ display:block!important;width:100%!important;min-height:0!important;margin:0!important;
+ padding:0!important;font:inherit!important
+}
+body.sde-premium-home .sde-tpa-hero-card .sde-shell-event-message{display:block!important;width:100%!important}
+body.sde-premium-home .sde-tpa-kicker{display:flex;align-items:center;gap:8px;color:#f3e5ab;
+ margin:18px 0 12px;font-size:.7rem;letter-spacing:.095em;font-weight:800;text-transform:uppercase}
+body.sde-premium-home .sde-tpa-hero-card h2{
+ color:#fff;font-family:'Cinzel',Georgia,serif;font-size:clamp(1.2rem,1.7vw,1.62rem);
+ line-height:1.3;font-weight:700;margin:0 0 12px;text-wrap:balance
+}
+body.sde-premium-home .sde-tpa-hero-card p{font-size:.88rem;line-height:1.65;color:#e0e7ef;margin:0 0 16px}
+body.sde-premium-home .sde-tpa-facts{
+ display:grid;gap:10px;padding:14px;margin:0 0 17px;border-radius:12px;
+ border:1px solid rgba(255,255,255,.17);background:rgba(5,8,19,.58)
+}
+body.sde-premium-home .sde-tpa-facts>div{display:flex;gap:13px;align-items:flex-start;font-size:.81rem}
+body.sde-premium-home .sde-tpa-facts dt{color:#f3e5ab;font-weight:800;min-width:48px}
+body.sde-premium-home .sde-tpa-facts dd{color:#f8fafc;margin:0}
+body.sde-premium-home .sde-tpa-hero-card .sde-shell-event-countdown{
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;
+ position:relative;min-height:78px;width:100%;margin:0 0 17px;white-space:normal!important
+}
+body.sde-premium-home .sde-tpa-hero-card .sde-countdown-prefix{
+ position:absolute!important;width:1px!important;height:1px!important;padding:0!important;
+ overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important
+}
+body.sde-premium-home .sde-tpa-hero-card .sde-countdown-unit{
+ display:flex!important;flex-direction:column;align-items:center;justify-content:center;
+ min-width:0;min-height:68px;box-sizing:border-box;gap:2px;padding:7px 3px;
+ border-radius:10px;border:1px solid rgba(212,175,55,.4);background:rgba(7,12,27,.76)
+}
+body.sde-premium-home .sde-tpa-hero-card .sde-countdown-unit strong{
+ color:#f3d77a;font:800 clamp(1rem,2vw,1.5rem)/1.2 'Cinzel',Georgia,serif
+}
+body.sde-premium-home .sde-tpa-hero-card .sde-countdown-unit small{
+ font-size:.64rem!important;letter-spacing:.03em;text-transform:uppercase;color:#d8dfec
+}
+body.sde-premium-home .sde-tpa-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:5px 0}
+body.sde-premium-home .sde-tpa-actions a{
+ display:flex;align-items:center;justify-content:center;text-align:center;min-height:45px;
+ padding:10px 9px;box-sizing:border-box;border-radius:12px;line-height:1.25;
+ font:800 .8rem system-ui,sans-serif;text-decoration:none!important
+}
+body.sde-premium-home .sde-tpa-actions .sde-shell-event-register{
+ color:#0b1424!important;background:#d4af37!important
+}
+body.sde-premium-home #sde-tpa-calendar{color:#fff!important;border:1px solid #9fa7b9;background:rgba(255,255,255,.08)}
+body.sde-premium-home .sde-tpa-detail{display:inline-flex;align-items:center;color:#f3e5ab!important;
+ font-size:.78rem;margin-top:5px;line-height:1.35;text-underline-offset:3px}
+body.sde-premium-home .sde-tpa-hero-card a:focus-visible{outline:3px solid #f3e5ab;outline-offset:3px}
+/* Nuances spirituelles, gouvernance et terrain ; les noms techniques des teintes restent invisibles. */
+body.sde-premium-home .sde-premium-pillar{
+ background:rgba(15,23,42,.72)!important;backdrop-filter:blur(12px);
+ -webkit-backdrop-filter:blur(12px);border:1px solid rgba(212,175,55,.24)!important
+}
+body.sde-premium-home .sde-premium-spiritualite{box-shadow:inset 0 3px #6d28d9,0 14px 32px #6d28d920!important}
+body.sde-premium-home .sde-premium-commandement{box-shadow:inset 0 3px #1e3a8a,0 14px 32px #1e3a8a20!important}
+body.sde-premium-home .sde-premium-missions{box-shadow:inset 0 3px #15803d,0 14px 32px #15803d20!important}
+body.sde-premium-home .sde-pole-talents{display:block;padding:10px 0 7px;font-size:.75rem;line-height:1.5;color:inherit}
+body.sde-premium-home .sde-pole-talents strong{color:#ab7b26}
+/* Sélection d'une intention de don, sans faux paiement ni promesse de versement. */
+body.sde-premium-home .sde-don-preview{border-color:rgba(212,175,55,.45)}
+.sde-don-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:13px 0}
+.sde-don-choices button{min-height:44px;padding:9px 5px;border-radius:10px;border:1px solid #bf9b49;
+ font:800 .76rem system-ui,sans-serif;color:#f3e5ab;background:#172541;cursor:pointer}
+.sde-don-choices button[aria-pressed=true]{background:#d4af37;color:#101c31;border-color:#d4af37}
+.sde-don-choices label{grid-column:1/-1;font-weight:700;font-size:.79rem;display:grid;gap:7px}
+.sde-don-choices input,.sde-don-select select{box-sizing:border-box;min-height:44px;width:100%;
+ background:#fff;color:#13233b;border:1px solid #9aa5b2;border-radius:10px;padding:9px;font:600 .9rem system-ui,sans-serif}
+.sde-don-select{font-size:.79rem;font-weight:700;display:grid;gap:7px;margin:10px 0}
+#sde-don-resume{font-weight:700;color:inherit}
+.sde-don-disclaimer{font-size:.79rem;line-height:1.5;opacity:.94}
+.sde-don-choices button:focus-visible,.sde-don-choices input:focus-visible,.sde-don-select select:focus-visible{
+ outline:3px solid #d4af37;outline-offset:2px}
+.sde-member-demo{display:flex;align-items:center;justify-content:space-between;gap:14px;
+ margin:14px 0 18px;border-radius:16px;border:1px solid rgba(212,175,55,.42);
+ background:linear-gradient(120deg,#101b31,#251542);padding:16px;color:#f8fafc}
+.sde-member-demo>div{display:grid;gap:6px;min-width:0}
+.sde-member-demo small{font-size:.68rem;color:#f3e5ab;letter-spacing:.05em;text-transform:uppercase}
+.sde-member-demo strong{font:700 .98rem 'Cinzel',Georgia,serif;letter-spacing:.02em}
+.sde-member-demo span{font-size:.8rem;line-height:1.5;color:#e3e8f1}
+.sde-member-demo em{font-size:.68rem;color:#f3e5ab}
+.sde-member-demo svg{flex:none}
+.sde-contribution-resume{border-left:4px solid #d4af37;background:#fff7dc;padding:14px;
+ color:#182342;font-weight:700;line-height:1.5;margin:12px 0;border-radius:8px}
+@media(max-width:960px){
+ body.sde-premium-home .ap-hero .ap-hero-inner{grid-template-columns:minmax(0,1fr)!important;
+ width:min(740px,calc(100% - 32px))!important;min-height:0!important;row-gap:30px;
+ padding:45px 0!important;text-align:center!important}
+ body.sde-premium-home .ap-hero .ap-hero-copy{margin-inline:auto!important;text-align:center!important}
+ body.sde-premium-home .ap-hero .ap-lead,
+ body.sde-premium-home .ap-hero .ap-verset{margin-inline:auto!important}
+ body.sde-premium-home .ap-hero .ap-actions{justify-content:center!important}
+}
+@media(max-width:860px){
+ body.sde-premium-home .ap-hero-bg{background-image:none!important;background:#070913!important}
+ body.sde-premium-home .ap-hero .sde-tpa-hero-card{max-width:620px;margin-inline:auto}
+}
+@media(max-width:420px){
+ body.sde-premium-home .sde-tpa-actions{grid-template-columns:1fr}
+ body.sde-premium-home .sde-tpa-hero-card .sde-shell-event-countdown{gap:4px}
+ body.sde-premium-home .sde-tpa-hero-card .sde-countdown-unit strong{font-size:1rem}
+ .sde-don-choices{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sde-don-choices label{grid-column:1/-1}
+}
+@media(prefers-reduced-motion:reduce){body.sde-premium-home .sde-premium-pillar{transition:none!important;transform:none!important}}
