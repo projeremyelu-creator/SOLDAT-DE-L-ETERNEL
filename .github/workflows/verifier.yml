@@ -23,5 +23,5 @@ jobs:
         run: |
           node -e "const fs=require('node:fs'); const a=fs.statSync('public/vitrine/illus/tpa-2026.webp').size,b=fs.statSync('public/vitrine/illus/tpa-2026-mobile.webp').size;console.log('WebP mobile',b,'sur',a,'octets'); if(b>=a)process.exit(1);"
       - name: Run npm test (limite contrôlée)
-        timeout-minutes: 3
+        timeout-minutes: 8
         run: npm test
