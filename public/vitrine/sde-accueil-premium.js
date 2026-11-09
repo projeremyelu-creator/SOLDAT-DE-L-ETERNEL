@@ -76,6 +76,10 @@
     }
     liste.sort(function (a, b) { return a.tri < b.tri ? -1 : a.tri > b.tri ? 1 : 0; });
     var prochain = liste[0];
+    var carte = $("prochain-rendez-vous");
+    var estPhare = function(e){return !!(phare && e && e.debut === phare.debut && e.titre === phare.titre);};
+    // Le bandeau supérieur présente déjà la TPA : la carte centrale ne la répète pas.
+    if(carte)carte.hidden = !prochain || estPhare(prochain);
     if (prochain) remplirCarte(prochain);
     else if (phare && $("ap-next-title")) {
       $("ap-next-title").textContent = "Prochain rendez-vous à annoncer";
@@ -84,9 +88,11 @@
       $("ap-next-text").textContent = "Les prochaines dates seront publiées dans l’agenda. Vous pouvez aussi contacter le secrétariat.";
       $("ap-next-register").setAttribute("href", "/contact#rejoindre"); $("ap-next-more").setAttribute("href", "/programmes");
     }
-    var suite = liste.slice(1, 4), ul = $("ap-upcoming-list");
-    if (!ul || !suite.length) return;
+    var autres = liste.filter(function(e){return !estPhare(e);});
+    var suite = (estPhare(prochain) ? autres : autres.slice(1)).slice(0, 3), ul = $("ap-upcoming-list");
+    if (!ul) return;
     ul.textContent = "";
+    if (!suite.length) { var empty=document.createElement("li");empty.className="ap-muted";empty.textContent="Aucun autre rendez-vous daté n’est annoncé. Consultez le calendrier pour les nouveautés.";ul.append(empty);return; }
     suite.forEach(function (e) {
       var li = document.createElement("li"), dt = document.createElement("span"), b = document.createElement("b"), sm = document.createElement("small"), txt = document.createElement("span"), a = document.createElement("a"), meta = document.createElement("small");
       dt.className = "ap-date"; b.textContent = fmtJour.format(jourIso(e.date)); sm.textContent = fmtMois.format(jourIso(e.date)).toUpperCase(); dt.append(b, sm);

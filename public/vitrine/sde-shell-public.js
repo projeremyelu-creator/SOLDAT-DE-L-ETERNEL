@@ -16,11 +16,13 @@
    ["/pole-social","ISH — Impact social"],["/pole-logistique","LO — Logistique"],
    ["/pole-medias","CMR — Communication & médias"],["/pole-formation","FDE — Formation"],
    ["/missions","Projets du mouvement"]]},
-  {title:"Ressources & Vie",links:[
+  {title:"Médias & Ressources",links:[
    ["/enseignements","Enseignements & messages"],["/soldiers-voice","Soldiers Voice"],
-   ["/priere","Prières & intercession"],["/temoignages","Témoignages"],
    ["/album-infire","Galerie & médias"],["/newsletter","Newsletter"],
-   ["/communaute","Communauté"]]}
+   ["/communaute","Communauté"]]},
+  {title:"S’engager",links:[
+   ["/contact#rejoindre","Rejoindre le mouvement"],["/soutenir","Soutenir SDE"],
+   ["/priere","Confier une prière"],["/temoignages","Témoignages"]]}
  ];
  const make=(tag,cls,txt)=>{
   const e=document.createElement(tag);if(cls)e.className=cls;
@@ -51,12 +53,10 @@
   const title=make("span","sde-shell-brand-title");title.append(make("b","", "S.D.E"),make("small","","Soldats de l’Éternel"));brand.append(img,title);
   const nav=make("nav","sde-shell-mega");nav.setAttribute("aria-label","Navigation principale");
   for(const group of groups)nav.append(menuGroup(group,"sde-shell-mega-group"));
-  const donation=link("/soutenir","Soutenir","sde-shell-donate");nav.append(donation);
   const actions=make("div","sde-shell-head-actions");
   const search=link("/rechercher","","sde-shell-search");search.setAttribute("aria-label","Rechercher");search.append(icon("recherche"));
-  const join=link("/contact#rejoindre","Nous rejoindre","sde-shell-join");
   const portal=link("/portail","Mon Portail S.D.E","sde-shell-portal");portal.prepend(icon("portail"));
-  actions.append(search,join,portal);row.append(brand,nav,actions);h.append(row);
+  actions.append(search,portal);row.append(brand,nav,actions);h.append(row);
   const details=[...nav.querySelectorAll("details")];
   details.forEach(d=>d.addEventListener("toggle",()=>{if(d.open)details.forEach(x=>{if(x!==d)x.open=false;});}));
   document.addEventListener("pointerdown",e=>{if(!nav.contains(e.target))details.forEach(x=>x.open=false);});

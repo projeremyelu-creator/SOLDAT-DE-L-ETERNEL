@@ -199,17 +199,18 @@ test('Fiche TPA unique : le tableau de bord lit evenement-phare.json et garde un
  assert.ok(lire('public/vitrine/sde-fiche-phare.js').includes('/vitrine/evenement-phare.json'),'même source côté pages publiques');
 });
 
-test('Accueil : présentation institutionnelle 2026 hébergée, légère, à la demande et décrite',()=>{
+test('Accueil : présentation institutionnelle 2026 silencieuse, contrôlable et décrite',()=>{
  const h=page('portail'),mp4='public/vitrine/sde-presentation-2026.mp4',affiche='public/vitrine/sde-presentation-2026-affiche.jpg';
  assert.ok(existsSync(mp4)&&existsSync(affiche));
  assert.ok(statSync(mp4).size<25*1024*1024,'limite Cloudflare de 25 Mo par fichier');
  assert.equal(readFileSync(mp4).subarray(4,8).toString(),'ftyp','conteneur MP4 valide');
  const sec=h.slice(h.indexOf('id="presentation-2026"'),h.indexOf('id="programmes-accueil"'));
  const video=sec.match(/<video[^>]*>/)[0];
- assert.match(video,/\bcontrols\b/);assert.match(video,/preload="none"/);assert.doesNotMatch(video,/autoplay/);
+ assert.match(video,/\bcontrols\b/);assert.match(video,/preload="metadata"/);assert.match(video,/autoplay muted loop/);
  assert.match(video,/poster="\/vitrine\/sde-presentation-2026-affiche\.jpg"/);
  assert.ok(sec.includes('<source src="/vitrine/sde-presentation-2026.mp4" type="video/mp4">'));
  assert.ok(video.includes('aria-describedby="presentation-2026-description"')&&sec.includes('id="presentation-2026-description"'));
+ assert.match(sec,/<summary>Lire la transcription visuelle<\/summary>/);
  assert.ok(h.indexOf('id="presentation-2026"')>h.indexOf('id="sde-piliers-titre"'),'placée après le héros et les piliers');
  assert.ok(lire('public/vitrine/sde-accueil-premium.css').includes('.ap-presentation-cadre'));
  assert.doesNotMatch(lire('public/sw-public.js').match(/PUBLIC_ASSETS\s*=\s*([^;]+);/)[1],/mp4/);

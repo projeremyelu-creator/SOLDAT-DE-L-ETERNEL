@@ -39,6 +39,8 @@
 <link rel="stylesheet" href="/vitrine/sde-fusion.css?v=19fa73fcaa6a">
 <link rel="stylesheet" href="/vitrine/sde-mobile-correctifs-20261103.css?v=19fa73fcaa6a">
 <script defer src="/vitrine/sde-accueil-premium.js?v=19fa73fcaa6a"></script>
+<link rel="stylesheet" href="/vitrine/sde-accueil-engagement.css?v=19fa73fcaa6a">
+<script defer src="/vitrine/sde-accueil-engagement.js?v=19fa73fcaa6a"></script>
 <link rel="stylesheet" href="/vitrine/sde-roadmap.css?v=20261109">
 <script defer src="/vitrine/sde-roadmap.js?v=20261109"></script>
 <script id="sde-webpage-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://mouvement-sde.org/#page","url":"https://mouvement-sde.org/","name":"SDE — Soldats de l'Éternel, mouvement à Abidjan","description":"Découvrez le Mouvement Prophético-Apostolique Soldats de l'Éternel : vision, programmes, Soldiers Academy, enseignements, missions et espaces membres.","inLanguage":"fr-CI","isPartOf":{"@id":"https://mouvement-sde.org/#website"},"about":{"@id":"https://mouvement-sde.org/#organisation"},"publisher":{"@id":"https://mouvement-sde.org/#organisation"}}</script>
@@ -58,7 +60,7 @@
     <button class="site-burger" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Ouvrir la navigation"><span></span><span></span><span></span></button>
   </div>
 </header>
-<aside class="sde-shell-event" aria-label="Prochain rendez-vous public"><div class="sde-shell-event-inner"><div class="sde-shell-event-message"><span class="sde-shell-event-dot" aria-hidden="true"></span><strong>TPA 2026 :</strong><span>Traversée Prophétique Annuelle · Ven. 18 déc. à 20h · Google Meet</span><span id="ap-countdown" class="sde-shell-event-countdown" aria-live="off"></span></div><a href="/programmes#tpa-2026">Détails et inscription →</a></div></aside>
+<aside class="sde-shell-event" aria-label="Prochain rendez-vous public"><div class="sde-shell-event-inner"><div class="sde-shell-event-message"><span class="sde-shell-event-dot" aria-hidden="true"></span><strong>TPA 2026 :</strong><span>Traversée Prophétique Annuelle · Ven. 18 déc. à 20h · Google Meet</span><span id="ap-countdown" class="sde-shell-event-countdown" aria-live="off"></span><a class="sde-shell-event-register" href="/contact?objet=Travers%C3%A9e%20Proph%C3%A9tique%20Annuelle%20%E2%80%94%20TPA%202026#rejoindre">M’inscrire →</a></div><a href="/programmes#tpa-2026">Détails →</a></div></aside>
 <div class="sde-versets-slot" role="note" aria-label="Verset du jour">« Je puis tout par celui qui me fortifie. » · Philippiens 4.13</div>
 <main id="contenu" class="ap-main">
 
@@ -115,11 +117,12 @@
     </header>
     <figure class="ap-presentation-cadre">
       <span class="sde-video-label" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75"><path d="m8 5 11 7-11 7z"/></svg> Présentation visuelle · 1 min 13 · sans son</span>
-      <video controls preload="none" playsinline poster="/vitrine/sde-presentation-2026-affiche.jpg" width="1280" height="720" aria-describedby="presentation-2026-description">
+      <video controls autoplay muted loop preload="metadata" playsinline poster="/vitrine/sde-presentation-2026-affiche.jpg" width="1280" height="720" aria-describedby="presentation-2026-description">
         <source src="/vitrine/sde-presentation-2026.mp4" type="video/mp4">
         Votre navigateur ne lit pas cette vidéo. <a href="/vitrine/sde-presentation-2026.mp4">Télécharger la présentation (MP4)</a>.
       </video>
-      <figcaption id="presentation-2026-description">Vidéo muette (sans son) de 1 min 13, avec des textes à l’écran : couverture « Soldat De l’Éternel · Le Réveil Spirituel des Nations » ; mot du leader sur l’onction et la rigueur ; cinq verbes (réveiller, restaurer, former, équiper, envoyer) ; douze valeurs fondamentales ; cinq pôles d’action ; gouvernance et leadership ; feuille de route 2026–2028 ; manifeste du soldat « Nous sommes SDE ». La vidéo démarre uniquement à votre demande.</figcaption>
+      <button type="button" id="sde-video-ambience" class="sde-video-ambience" aria-pressed="false">Activer une ambiance instrumentale</button>
+      <figcaption id="presentation-2026-description"><details class="sde-video-transcript"><summary>Lire la transcription visuelle</summary><p>Vidéo muette (sans son) de 1 min 13, avec des textes à l’écran : couverture « Soldat De l’Éternel · Le Réveil Spirituel des Nations » ; mot du leader sur l’onction et la rigueur ; cinq verbes (réveiller, restaurer, former, équiper, envoyer) ; douze valeurs fondamentales ; cinq pôles d’action ; gouvernance et leadership ; feuille de route 2026–2028 ; manifeste du soldat « Nous sommes SDE ».</p></details></figcaption>
     </figure>
     <p class="ap-presentation-liens"><a href="/vitrine/sde-presentation-2026.mp4" download>Télécharger la vidéo (5 Mo)</a> · <a href="/mouvement">Découvrir le mouvement</a> · <a href="/contact#rejoindre">Rejoindre</a></p>
   </div>
@@ -160,9 +163,14 @@
   </div>
 </section>
 
+<section class="sde-visionnaires" aria-labelledby="visionnaires-title">
+  <div class="ap-wrap sde-visionnaires-inner"><div class="sde-visionnaires-portraits"><img src="/vitrine/photos/jeremy-glazai.jpg" alt="Portrait de Jérémy Octave GLAZAÏ" width="112" height="112" loading="lazy"><img src="/vitrine/photos/amy-glazai.jpg" alt="Portrait d’Amy Berté GLAZAÏ" width="112" height="112" loading="lazy"></div>
+  <div><span class="ap-eyebrow">Le mot des visionnaires</span><h2 id="visionnaires-title">Une vision qui se vit ensemble</h2><p>Jérémy Octave et Amy Berté GLAZAÏ conduisent le Mouvement SDE autour de la prière, de la formation et du service. Découvrez leur parcours et l’organisation qui porte cette vision.</p><a href="/mouvement#responsables">Rencontrer le couple leader →</a></div></div>
+</section>
+
 <section class="ap-section ap-light ap-cmd" id="programmes-accueil" aria-labelledby="titre-programmes">
   <div class="ap-wrap">
-    <header class="ap-head"><span class="ap-num">03</span><div><h2 id="titre-programmes">Prochains programmes</h2><p>Prier · Se former · Servir : retrouvez le prochain rendez-vous et explorez nos programmes.</p></div></header>
+    <header class="ap-head"><div><h2 id="titre-programmes">Prochains programmes</h2><p>Prier · Se former · Servir : les prochaines dates annoncées par le mouvement.</p></div></header>
     <div class="ap-agenda">
       <article class="ap-next" id="prochain-rendez-vous" aria-labelledby="ap-next-title" data-evenement="tpa-2026">
         <span class="ap-tag">Prochain rendez-vous</span>
@@ -171,7 +179,7 @@
         <p id="ap-next-text">Un temps de prière, de consécration et de communion pour terminer l’année dans la foi.</p>
         <div class="ap-next-actions"><a class="ap-btn ap-btn-gold" id="ap-next-register" href="/contact?objet=Travers%C3%A9e%20Proph%C3%A9tique%20Annuelle%20%E2%80%94%20TPA%202026#rejoindre">M’inscrire</a><a class="ap-link" id="ap-next-more" href="/programmes#tpa-2026">Informations pratiques →</a></div>
       </article>
-      <div class="ap-upcoming" aria-labelledby="ap-upcoming-title"><h3 id="ap-upcoming-title">Ensuite à l’agenda</h3><ul id="ap-upcoming-list" aria-live="polite"><li class="ap-muted">Les prochaines dates sont publiées dans <a href="/programmes#agenda">l’agenda</a>.</li></ul><a class="ap-link" href="/calendrier">Voir tout le calendrier →</a></div>
+      <div class="ap-upcoming" aria-labelledby="ap-upcoming-title"><h3 id="ap-upcoming-title">Autres rendez-vous annoncés</h3><ul id="ap-upcoming-list" aria-live="polite"><li class="ap-muted">Les prochaines dates sont publiées dans <a href="/programmes#agenda">l’agenda</a>.</li></ul><a class="ap-link" href="/calendrier">Voir tout le calendrier →</a></div>
     </div>
     <div class="ap-cards" role="list" aria-label="Explorer les programmes">
       <details class="ap-card" role="listitem"><summary><img src="/vitrine/illus/prog-infire.svg" alt="" width="44" height="44" loading="lazy"><span><strong>IN FIRE</strong><small>Réveil et activation</small></span></summary><p>La conférence internationale annuelle pour le réveil spirituel des nations.</p><a class="ap-link" href="/programmes#infire">Voir le programme →</a></details>
@@ -186,14 +194,14 @@
 
 <section class="ap-section ap-navy" id="poles-accueil" aria-labelledby="titre-poles">
   <div class="ap-wrap">
-    <header class="ap-head"><span class="ap-num">04</span><div><h2 id="titre-poles">Nos cinq pôles</h2><p>Piloter · Organiser · Faire grandir</p></div></header>
+    <header class="ap-head"><div><h2 id="titre-poles">Nos cinq pôles</h2><p>Piloter · Organiser · Faire grandir</p></div></header>
     <div class="m-poles ap-poles"><article class="m-pole sde-pole-officiel"><a class="sde-pole-officiel-lien" href="/pole-reveil" aria-label="Découvrir le pôle REV — Réveil et Évangélisation"><img src="/vitrine/illus/pole-1.webp" width="160" height="160" loading="lazy" decoding="async" alt="Emblème officiel du pôle REV"><span class="m-pole-num">Pôle 1 · REV</span><h3>Réveil et Évangélisation</h3><p>Prière, intercession, annonce de l’Évangile et missions.</p><span class="sde-pole-decouvrir">Découvrir ce pôle →</span></a></article><article class="m-pole sde-pole-officiel"><a class="sde-pole-officiel-lien" href="/pole-social" aria-label="Découvrir le pôle ISH — Impact Social et Humanitaire"><img src="/vitrine/illus/pole-2.webp" width="160" height="160" loading="lazy" decoding="async" alt="Emblème officiel du pôle ISH"><span class="m-pole-num">Pôle 2 · ISH</span><h3>Impact Social et Humanitaire</h3><p>Actions de solidarité et accompagnement des personnes en situation de vulnérabilité.</p><span class="sde-pole-decouvrir">Découvrir ce pôle →</span></a></article><article class="m-pole sde-pole-officiel"><a class="sde-pole-officiel-lien" href="/pole-logistique" aria-label="Découvrir le pôle LO — Logistique et Organisation"><img src="/vitrine/illus/pole-3.webp" width="160" height="160" loading="lazy" decoding="async" alt="Emblème officiel du pôle LO"><span class="m-pole-num">Pôle 3 · LO</span><h3>Logistique et Organisation</h3><p>Préparation des activités, coordination des équipes et accueil des participants.</p><span class="sde-pole-decouvrir">Découvrir ce pôle →</span></a></article><article class="m-pole sde-pole-officiel"><a class="sde-pole-officiel-lien" href="/pole-medias" aria-label="Découvrir le pôle CMR — Communication, Médias et Relations Extérieures"><img src="/vitrine/illus/pole-4.webp" width="160" height="160" loading="lazy" decoding="async" alt="Emblème officiel du pôle CMR"><span class="m-pole-num">Pôle 4 · CMR</span><h3>Communication, Médias et Relations Extérieures</h3><p>Création et diffusion des supports, communication du mouvement et outils numériques.</p><span class="sde-pole-decouvrir">Découvrir ce pôle →</span></a></article><article class="m-pole sde-pole-officiel"><a class="sde-pole-officiel-lien" href="/pole-formation" aria-label="Découvrir le pôle FDE — Formation, Développement et Entrepreneuriat"><img src="/vitrine/illus/pole-5.webp" width="160" height="160" loading="lazy" decoding="async" alt="Emblème officiel du pôle FDE"><span class="m-pole-num">Pôle 5 · FDE</span><h3>Formation, Développement et Entrepreneuriat</h3><p>Formation biblique, développement des compétences et préparation au service.</p><span class="sde-pole-decouvrir">Découvrir ce pôle →</span></a></article></div>
   </div>
 </section>
 
 <section class="ap-section ap-mil" id="impact-accueil" aria-labelledby="titre-impact">
   <div class="ap-wrap">
-    <header class="ap-head"><span class="ap-num">05</span><div><h2 id="titre-impact">Missions et impact</h2><p>Des actions concrètes et des indicateurs vérifiés, pas des chiffres décoratifs.</p></div></header>
+    <header class="ap-head"><div><h2 id="titre-impact">Missions et impact</h2><p>Des actions concrètes et des indicateurs vérifiés, pas des chiffres décoratifs.</p></div></header>
     <div class="ap-impact">
       <div class="ap-missions">
         <a class="ap-mission" href="/missions-humanitaires"><strong>Impact social</strong><span>Actions de solidarité et accompagnement des personnes en situation de vulnérabilité.</span><em>Découvrir →</em></a>
@@ -212,17 +220,18 @@
 
 <section class="ap-section ap-dark" id="priere-temoignages" aria-labelledby="titre-priere">
   <div class="ap-wrap">
-    <header class="ap-head"><span class="ap-num">06</span><div><h2 id="titre-priere">Prières et témoignages</h2><p>Confier un sujet, partager ce que Dieu a fait.</p></div></header>
+    <header class="ap-head"><div><h2 id="titre-priere">Prières et témoignages</h2><p>Confier un sujet, partager ce que Dieu a fait.</p></div></header>
     <div class="ap-duo">
-      <article class="ap-panel"><h3>Confier un sujet de prière</h3><p>Votre demande est reçue avec attention et traitée avec discrétion par l’équipe d’intercession.</p><blockquote><p>« Persévérez dans la prière, veillez-y avec actions de grâce. »</p><cite>Colossiens 4.2</cite></blockquote><a class="ap-btn ap-btn-gold" href="/priere">Déposer une requête</a></article>
-      <article class="ap-panel"><h3>Témoignages</h3><p>Lisez les témoignages publiés et proposez le vôtre : chaque témoignage est relu et validé avant sa publication.</p><a class="ap-btn" href="/temoignages">Lire et proposer un témoignage</a></article>
+      <article class="ap-panel"><h3>Confier un sujet de prière</h3><p>Votre demande est reçue avec attention et traitée avec discrétion par l’équipe d’intercession.</p><blockquote><p>« Persévérez dans la prière, veillez-y avec actions de grâce. »</p><cite>Colossiens 4:2</cite></blockquote><button class="ap-btn ap-btn-gold" type="button" id="sde-prayer-open">Confier une prière</button><p><a href="/priere">Découvrir l’espace prière →</a></p></article>
+      <article class="ap-panel"><h3>Témoignages</h3><p>Lisez les témoignages publiés et proposez le vôtre : chaque témoignage est relu et validé avant sa publication.</p><div id="sde-home-testimonials" class="sde-home-testimonials" aria-live="polite" hidden></div><a class="ap-btn" href="/temoignages">Lire et proposer un témoignage</a></article>
     </div>
   </div>
 </section>
+<dialog id="sde-prayer-dialog" class="sde-prayer-dialog" aria-labelledby="sde-prayer-title"><form id="sde-home-prayer" method="post"><div class="sde-prayer-dialog-head"><h2 id="sde-prayer-title">Confier une intention de prière</h2><button type="button" id="sde-prayer-close" aria-label="Fermer">×</button></div><p>Votre sujet sera transmis à l’équipe d’intercession. Votre prénom reste sur cet écran et n’est pas envoyé.</p><label>Prénom (facultatif)<input name="prenom" maxlength="60" autocomplete="given-name"></label><label>Sujet de prière<textarea name="sujet" maxlength="600" rows="4" required></textarea></label><input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="sde-prayer-trap"><label class="sde-prayer-consent"><input name="accord" type="checkbox" required> Je consens à transmettre cette intention à l’équipe SDE.</label><p>Pour une demande confidentielle détaillée, utilisez la <a href="/priere">page Prière</a>. <a href="/confidentialite">Confidentialité</a>.</p><button class="ap-btn ap-btn-gold" type="submit">Envoyer mon sujet</button><p id="sde-prayer-feedback" role="status" aria-live="polite"></p></form></dialog>
 
 <section class="ap-section ap-light" id="galerie-accueil" aria-labelledby="titre-galerie">
   <div class="ap-wrap">
-    <header class="ap-head"><span class="ap-num">07</span><div><h2 id="titre-galerie">Galerie IN FIRE et Soldiers Voice</h2><p>La vie du mouvement en images.</p></div></header>
+    <header class="ap-head"><div><h2 id="titre-galerie">Galerie IN FIRE et Soldiers Voice</h2><p>La vie du mouvement en images.</p></div></header>
     <ul class="ap-galerie">
       <li><a href="/album-infire"><img src="/vitrine/photos/fire-generation-vignette.webp" alt="Rassemblement IN FIRE : une génération en flamme" width="420" height="300" loading="lazy" decoding="async"><span>IN FIRE</span></a></li>
       <li><a href="/album-infire"><img src="/vitrine/photos/communion-vignette.webp" alt="Temps de communion fraternelle" width="420" height="300" loading="lazy" decoding="async"><span>Communion</span></a></li>
@@ -237,7 +246,7 @@
 
 <section class="ap-section ap-final ap-navy" id="rejoindre-accueil" aria-labelledby="titre-rejoindre">
   <div class="ap-wrap">
-    <header class="ap-head"><span class="ap-num">08</span><div><h2 id="titre-rejoindre">Soutenir le mouvement · Nous rejoindre</h2><p>Bâtissons ensemble pour un plus grand impact.</p></div></header>
+    <header class="ap-head"><div><h2 id="titre-rejoindre">Soutenir le mouvement · Nous rejoindre</h2><p>Bâtissons ensemble pour un plus grand impact.</p></div></header>
     <div class="ap-duo">
       <article class="ap-panel"><h3>Nous rejoindre</h3><p>Vous souhaitez découvrir le mouvement, participer à ses programmes ou servir au sein d’un pôle ? Remplissez le formulaire : l’équipe SDE vous contactera.</p><a class="ap-btn ap-btn-gold" href="/contact#rejoindre">Demander mon adhésion</a></article>
       <article class="ap-panel"><h3>Soutenir le mouvement</h3><p>Votre contribution soutient les programmes, les formations et les actions solidaires. Les moyens de paiement et l’usage des fonds sont détaillés sur la page dédiée.</p><a class="ap-btn" href="/soutenir">Contribuer à la mission</a></article>

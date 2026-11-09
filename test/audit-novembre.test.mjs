@@ -139,7 +139,7 @@ test("Portail React : les modules du menu portent leur famille de couleur", () =
 });
 
 
-test("Navigation publique SDE : même header, footer et tiroir à quatre catégories",()=>{
+test("Navigation publique SDE : même header, footer et tiroir à cinq catégories",()=>{
  const html=lire("public/vitrine/portail.html");
  const dom=new JSDOM(html,{url:"https://mouvement-sde.org/",runScripts:"outside-only"});
  try{
@@ -150,10 +150,10 @@ test("Navigation publique SDE : même header, footer et tiroir à quatre catégo
   assert.ok(header,"header unique monté");
   assert.equal(d.querySelectorAll("header.site-header").length,1);
   assert.equal(d.querySelectorAll("footer.site-footer").length,1);
-  assert.equal(header.querySelectorAll(".sde-shell-mega-group").length,4);
+  assert.equal(header.querySelectorAll(".sde-shell-mega-group").length,5);
   const headings=[...header.querySelectorAll(".sde-shell-mega-group>summary")].map(x=>x.textContent);
-  assert.deepEqual(headings,["Le Mouvement","Programmes & Agenda","Missions & Impact","Ressources & Vie"]);
-  assert.ok(header.querySelector('.sde-shell-donate[href="/soutenir"]'));
+  assert.deepEqual(headings,["Le Mouvement","Programmes & Agenda","Missions & Impact","Médias & Ressources","S’engager"]);
+  assert.ok(header.querySelector('.sde-shell-mega-group a[href="/soutenir"]'));
   assert.ok(header.querySelector('.sde-shell-portal[href="/portail"]'));
   const nav=d.querySelector(".sde-shell-bottom");
   assert.equal(nav.children.length,5);
@@ -163,7 +163,7 @@ test("Navigation publique SDE : même header, footer et tiroir à quatre catégo
   toggle.click();
   assert.equal(overlay.hidden,false);
   assert.equal(toggle.getAttribute("aria-expanded"),"true");
-  assert.equal(overlay.querySelectorAll(".sde-shell-drawer-group").length,4);
+  assert.equal(overlay.querySelectorAll(".sde-shell-drawer-group").length,5);
   const search=overlay.querySelector('input[type="search"]');
   search.value="formation";search.dispatchEvent(new w.Event("input",{bubbles:true}));
   assert.ok([...overlay.querySelectorAll(".sde-shell-drawer-group a")].some(x=>!x.hidden&&/Formation/.test(x.textContent)));

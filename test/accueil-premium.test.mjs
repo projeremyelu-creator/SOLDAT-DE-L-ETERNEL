@@ -1,10 +1,28 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync} from 'node:fs';
+import {JSDOM} from 'jsdom';
 const lire=f=>readFileSync(f,'utf8');
 const html=lire('public/vitrine/portail.html');
 const worker=lire('src/worker.js');
 const phare=JSON.parse(lire('public/vitrine/evenement-phare.json'));
+
+test('Accueil : témoignages publics réels et prière rapide sans publication automatique',async()=>{
+ const dom=new JSDOM(html,{url:'https://mouvement-sde.org/',runScripts:'outside-only'}),w=dom.window,d=w.document;
+ w.fetch=async url=>String(url).includes('temoignages-publics')?{ok:true,json:async()=>({temoignages:[{auteur:'Soldat A',texte:'Un parcours approuvé'},{auteur:'Soldat B',texte:'Autre témoignage'}]})}:{ok:false};
+ w.eval(lire('public/vitrine/sde-accueil-engagement.js'));
+ d.dispatchEvent(new w.Event('DOMContentLoaded'));
+ await new Promise(r=>setTimeout(r,20));
+ assert.deepEqual([...d.querySelectorAll('.sde-home-testimonial p')].map(p=>p.textContent),['Un parcours approuvé','Autre témoignage']);
+ assert.equal(d.getElementById('sde-home-testimonials').hidden,false);
+ assert.equal(d.querySelectorAll('.sde-home-testimonial-controls button').length,2);
+ assert.ok(d.querySelector('#sde-prayer-dialog form[method=post] textarea[name=sujet][required]'));
+ assert.ok(d.querySelector('#sde-prayer-dialog a[href="/confidentialite"]'));
+ assert.ok(d.querySelector('#sde-video-ambience[aria-pressed="false"]'));
+ assert.ok(d.querySelector('.sde-visionnaires img[src="/vitrine/photos/jeremy-glazai.jpg"]'));
+ assert.ok(d.querySelector('.sde-visionnaires img[src="/vitrine/photos/amy-glazai.jpg"]'));
+ dom.window.close();
+});
 
 test('Accueil premium : sections 01 à 08 dans l’ordre demandé',()=>{
  const repères=[
@@ -18,7 +36,7 @@ test('Accueil premium : sections 01 à 08 dans l’ordre demandé',()=>{
   assert.ok(position>précédent,`${nom} absent ou hors ordre`);
   précédent=position;
  }
- for(const n of ['03','04','05','06','07','08'])assert.ok(html.includes(`<span class="ap-num">${n}</span>`),'numéro '+n);
+ assert.doesNotMatch(html,/<span class="ap-num">\d+<\/span>/,'les grandes sections ne reprennent pas la numérotation des trois expressions');
 });
 
 test('Accueil premium : en-tête avec logo, menu compact, recherche et connexion',()=>{

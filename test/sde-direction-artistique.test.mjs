@@ -40,7 +40,7 @@ test("Grille Bento des cinq pôles, médaillon pour les emblèmes et galerie lis
 test("Vidéo sans son, menus SVG, micro-interactions et réduction du mouvement",()=>{
  const doc=new JSDOM(read("public/vitrine/portail.html")).window.document;
  const css=read("public/vitrine/sde-shell-public.css");
- assert.ok(doc.querySelector(".ap-presentation-cadre video[preload='none'][controls]"));
+ assert.ok(doc.querySelector(".ap-presentation-cadre video[preload='metadata'][autoplay][muted][loop][controls]"));
  assert.ok(doc.querySelector(".sde-video-label svg"));
  assert.match(doc.querySelector(".sde-video-label").textContent,/1 min 13 · sans son/);
  assert.match(css,/sde-art-pop/);
