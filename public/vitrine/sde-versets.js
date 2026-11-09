@@ -52,81 +52,121 @@
     const courts = VERSETS.filter(([texte]) => texte.length <= 115);
     const jour = Math.floor(Date.now() / 86400000);
     const liste = Array.from({ length: 6 }, (_, i) => courts[(jour + i) % courts.length]);
+    const PERIODE = 6500, SORTIE = 260;
     const bande = el("section", "sde-versets sde-versets-fondu");
     bande.setAttribute("aria-label", "Méditation biblique du jour");
-    const tag = el("span", "sde-versets-tag", "Verset du jour");
+    const tag = el("span", "sde-versets-tag", "Parole de Vie");
     const fenetre = el("div", "sde-versets-fenetre");
+    fenetre.setAttribute("aria-live","off");
     const verset = el("div", "sde-verset jour");
     const phrase = el("q", "sde-verset-phrase");
     const reference = el("cite", "sde-verset-reference");
-    verset.append(phrase,reference);
-    fenetre.append(verset);
-    let index = 0, arrete = calme(), transition = null;
-    const afficher = () => {
+    const annonce = el("span", "sde-versets-annonce");
+    annonce.setAttribute("aria-live","polite");
+    verset.append(phrase,reference);fenetre.append(verset);
+    let index = 0, paused = calme(), timer = null, transition = null;
+    let depart = Date.now(), restant = PERIODE, closed = false;
+    const afficher = (manuel) => {
       phrase.textContent = liste[index][0];
       reference.textContent = liste[index][1];
+      if (manuel) annonce.textContent = liste[index][0] + " — " + liste[index][1];
     };
-    afficher();
-    const pause = el("button", "sde-versets-pause");
-    pause.type = "button";
-    const icone = document.createElementNS("http://www.w3.org/2000/svg","svg");
-    icone.setAttribute("viewBox","0 0 24 24");
-    icone.setAttribute("fill","none");
-    icone.setAttribute("stroke","currentColor");
-    icone.setAttribute("stroke-width","1.75");
-    icone.setAttribute("stroke-linecap","round");
-    icone.setAttribute("aria-hidden","true");
-    const dessiner = () => {
-      icone.replaceChildren();
-      if (arrete) {
-        const path=document.createElementNS("http://www.w3.org/2000/svg","path");
-        path.setAttribute("d","M8 5v14l11-7z");icone.append(path);
-      } else {
-        for (const x of [7,15]) {
-          const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
-          rect.setAttribute("x",String(x));rect.setAttribute("y","5");
-          rect.setAttribute("width","3");rect.setAttribute("height","14");rect.setAttribute("rx","1");
-          icone.append(rect);
-        }
-      }
-      pause.setAttribute("aria-pressed",String(arrete));
-      pause.setAttribute("aria-label",arrete?"Reprendre les versets":"Mettre en pause les versets");
-      pause.setAttribute("title",arrete?"Reprendre les versets":"Mettre en pause les versets");
+    afficher(false);
+    const svg = (d) => {
+      const root=document.createElementNS("http://www.w3.org/2000/svg","svg");
+      root.setAttribute("viewBox","0 0 24 24");
+      root.setAttribute("fill","none");
+      root.setAttribute("stroke","currentColor");
+      root.setAttribute("stroke-width","1.75");
+      root.setAttribute("stroke-linecap","round");
+      root.setAttribute("stroke-linejoin","round");
+      root.setAttribute("aria-hidden","true");
+      const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+      path.setAttribute("d",d);root.append(path);return root;
     };
-    pause.append(icone);
-    dessiner();
-    pause.addEventListener("click",() => {
-      arrete = !arrete;
-      if (transition !== null) {
-        clearTimeout(transition);transition=null;
+    const controls = el("div","sde-versets-controls");
+    const pause=el("button","sde-versets-pause");pause.type="button";
+    const suivant=el("button","sde-versets-next");suivant.type="button";
+    suivant.setAttribute("aria-label","Verset suivant");
+    suivant.setAttribute("title","Verset suivant");
+    suivant.append(svg("M5 12h14m-6-6 6 6-6 6"));
+    controls.append(pause,suivant);
+    const progres=el("div","sde-versets-progress");
+    progres.setAttribute("aria-hidden","true");
+    const resetProgres=() => {
+      const jauge=el("span","sde-versets-progress-bar");
+      jauge.style.animationDuration=PERIODE+"ms";
+      progres.replaceChildren(jauge);
+    };
+    resetProgres();
+    const suspendue=() => paused || calme() || document.hidden;
+    const ui=() => {
+      const stop=suspendue();
+      bande.classList.toggle("en-pause",stop);
+      pause.setAttribute("aria-pressed",String(paused));
+      pause.setAttribute("aria-label",paused?"Reprendre les versets":"Mettre en pause les versets");
+      pause.setAttribute("title",paused?"Reprendre les versets":"Mettre en pause les versets");
+      pause.replaceChildren(svg(paused?"M8 5v14l11-7z":"M8 5v14m8-14v14"));
+      pause.disabled=calme()&&!paused;
+    };
+    const stopper=() => {
+      if(timer!==null){clearTimeout(timer);timer=null;}
+      if(transition!==null){clearTimeout(transition);transition=null;verset.classList.remove("sde-verset-sortie");}
+    };
+    const planifier=() => {
+      ui();
+      if (closed || !bande.isConnected || suspendue()) return;
+      depart=Date.now();
+      timer=setTimeout(()=>avancer(false),restant);
+    };
+    function avancer(manuel) {
+      stopper();
+      if (closed || !bande.isConnected) return;
+      restant=PERIODE;
+      const changer=()=>{
+        index=(index+1)%liste.length;
+        afficher(manuel);
         verset.classList.remove("sde-verset-sortie");
-      }
-      dessiner();
+        transition=null;
+        resetProgres();
+        planifier();
+      };
+      if (calme()) { changer(); return; }
+      verset.classList.add("sde-verset-sortie");
+      transition=setTimeout(changer,SORTIE);
+    }
+    pause.addEventListener("click",()=>{
+      if (calme() && paused) return;
+      if (!paused && timer!==null) restant=Math.max(0,restant-(Date.now()-depart));
+      stopper();paused=!paused;
+      if(!paused && restant<=0) restant=PERIODE;
+      planifier();
     });
-    bande.append(tag,fenetre,pause);
+    suivant.addEventListener("click",()=>avancer(true));
+    bande.append(tag,fenetre,controls,progres,annonce);
     const reserve=document.querySelector(".sde-versets-slot");
     if (reserve) reserve.replaceWith(bande);
     else ancre.insertAdjacentElement("afterend",bande);
-    const avancer = () => {
-      if (!bande.isConnected || arrete || calme() || document.hidden || transition !== null) return;
-      verset.classList.add("sde-verset-sortie");
-      transition = setTimeout(() => {
-        index = (index + 1) % liste.length;
-        afficher();
-        verset.classList.remove("sde-verset-sortie");
-        transition=null;
-      }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 350);
+    const visibilite=()=>{
+      if(document.hidden){
+        if(timer!==null)restant=Math.max(0,restant-(Date.now()-depart));
+        stopper();ui();
+      }else planifier();
     };
-    const minuteur = setInterval(avancer,7000);
-    // Les tests et les applications monopages peuvent retirer le bandeau :
-    // éviter alors de conserver un intervalle sans élément visible.
-    document.addEventListener("visibilitychange",() => {
-      if (document.hidden && transition !== null) {
-        clearTimeout(transition);transition=null;
-        verset.classList.remove("sde-verset-sortie");
-      }
-      if (!bande.isConnected) clearInterval(minuteur);
-    });
+    document.addEventListener("visibilitychange",visibilite);
+    if(typeof MutationObserver!=="undefined"){
+      const observateur=new MutationObserver(()=>{
+        if(calme()||paused){
+          if(timer!==null)restant=Math.max(0,restant-(Date.now()-depart));
+          stopper();
+        }
+        planifier();
+      });
+      observateur.observe(document.body,{attributes:true,attributeFilter:["data-motion"]});
+    }
+    // La rotation est facultative : les versets restent lisibles sans JavaScript
+    // et la préférence « mouvements réduits » désactive l'avancement automatique.
+    planifier();
   }
 
   /* Compteur de visites en temps réel */
