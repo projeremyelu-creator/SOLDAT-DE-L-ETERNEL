@@ -19,7 +19,7 @@ const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
 const report=[];
 try{
  for(const account of accounts){
-  const context=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true,locale:'fr-CI'});
+  const context=await browser.newContext({viewport:{width:360,height:800},deviceScaleFactor:1,isMobile:true,hasTouch:true,locale:'fr-CI'});
   const page=await context.newPage();
   const blocked=[];
   // Rien ne doit être transmis vers un autre domaine depuis une session QA.
@@ -46,8 +46,8 @@ try{
    ]);
    await page.locator('main#main').waitFor({state:'attached',timeout:20000});
    await page.locator('#sde-direct-top').waitFor({state:'attached',timeout:20000});
-   for(const width of [390,1280]){
-    await page.setViewportSize({width,height:width===390?844:900});
+   for(const width of [360,390,1280]){
+    await page.setViewportSize({width,height:width===360?800:width===390?844:900});
     await page.waitForTimeout(450);
     const data=await page.evaluate(()=>{
       const rect=el=>{if(!el)return null;const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
@@ -70,7 +70,7 @@ try{
     if(!data.headingPresent||!data.toolbarPresent)throw Error('Interface '+account.type+' incomplète ('+width+'px)');
     if(data.bodyWidth>width+3||data.documentWidth>width+3)throw Error('Débordement '+account.type+' ('+width+'px)');
     if(data.headerOverlaps.length)throw Error('Chevauchement en-tête '+account.type+' ('+width+'px)');
-    if(width===390&&data.menuVisible){
+    if(width<=390&&data.menuVisible){
      await page.locator('#sde-direct-menu-toggle').click();
      if(await page.locator('#sde-direct-menu-toggle').getAttribute('aria-expanded')!=='true')
       throw Error('Rubriques privées inaccessibles pour '+account.type);
@@ -88,9 +88,9 @@ try{
     throw Error('Le compte membre a reçu un statut inattendu sur Administration : '+forbidden.status());
    if(account.type==='administrateur'&&forbidden.status()!==200)
     throw Error('Administration inaccessible pour le compte de recette : '+forbidden.status());
-   console.log('RECETTE_AUTH '+JSON.stringify({role:account.type,viewports:[390,1280],writesBlocked:blocked.length}));
+   console.log('RECETTE_AUTH '+JSON.stringify({role:account.type,viewports:[360,390,1280],writesBlocked:blocked.length}));
   }finally{await context.close();}
  }
 }finally{await browser.close();}
-if(report.length!==4)throw Error('Recette authentifiée incomplète');
+if(report.length!==6)throw Error('Recette authentifiée incomplète');
 console.log('BILAN_RECETTE_AUTH '+JSON.stringify({parcours:report.length,erreurs:0,details:report}));

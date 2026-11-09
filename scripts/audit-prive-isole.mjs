@@ -29,7 +29,9 @@ const cases=[
   {mode:'membre',niveau:0,width:390,height:844},
   {mode:'membre',niveau:0,width:768,height:1024},
   {mode:'membre',niveau:0,width:1440,height:900},
+  {mode:'administration',niveau:1,width:360,height:800},
   {mode:'administration',niveau:1,width:390,height:844},
+  {mode:'administration',niveau:2,width:360,height:800},
   {mode:'administration',niveau:2,width:390,height:844},
   {mode:'administration',niveau:3,width:768,height:1024},
   {mode:'administration',niveau:2,width:1440,height:900}
