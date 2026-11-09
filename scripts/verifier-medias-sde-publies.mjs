@@ -19,7 +19,7 @@ const photos=[
 "reunion-priere-01","reunion-priere-02","reunion-fraternelle",
 "action-humanitaire","tenues-sde-portees",
 "polos-sde-vert-blanc","polos-sde-or-blanc"
-].map(name=>"/vitrine/media/archives-2027/"+name+".webp");
+].map(name=>"/vitrine/media/archives-2027/"+name+(name==="polos-sde-vert-blanc"?".png":".jpg"));
 const videos=["identite-sde-expansion","livre-pouvoir-femme","archives-rassemblement"]
 .map(name=>"/vitrine/media/videos-2027/"+name+".mp4");
 const paths=[...photos,...videos];
