@@ -696,10 +696,16 @@ body.sde-shell-mounted[data-sde-page="pole-logistique"]{
 }
 
 /* Une seule coque bleu nuit sur toutes les pages publiques. */
-body.sde-shell-mounted .sde-shell-header{
+html body.sde-unifie.sde-shell-mounted .site-header.sde-shell-header{
  background:rgba(11,23,48,.97)!important;
  border-bottom:1px solid rgba(239,212,135,.48)!important;
  box-shadow:0 8px 30px rgba(3,9,22,.24)!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-premium-home{
+ background:
+  radial-gradient(circle at 90% 12%,rgba(47,104,79,.16),transparent 28%),
+  radial-gradient(circle at 12% 4%,rgba(212,175,55,.08),transparent 30%),
+  var(--sde-2027-night)!important;
 }
 body.sde-shell-mounted .sde-shell-head-inner{min-height:72px}
 body.sde-shell-mounted .sde-shell-brand-title b{
