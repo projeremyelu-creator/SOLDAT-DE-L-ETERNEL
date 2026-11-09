@@ -32,7 +32,7 @@ test("Routes, charte et menu partages sans remplacer le Worker prive",()=>{
 test("Soldier Quest : engagement et roles reels, aucun badge attribue arbitrairement",()=>{
  const doc=new JSDOM(quest).window.document;
  assert.equal(doc.querySelectorAll("#quest-cards [data-sdu-category]").length,6);
- assert.ok(doc.querySelector('a[href="/mon-espace/academy"]'));
+ assert.match(read("public/vitrine/sde-portal-nav.js"),/\/mon-espace\/academy/);
  assert.ok(doc.querySelector('a[href="/pole-reveil"]'));
  assert.ok(doc.querySelector('a[href="/missions-humanitaires"]'));
  assert.match(quest,/aucun indicateur personnel|Aucun indicateur personnel/i);
@@ -89,4 +89,42 @@ test("Zones tactiles Quest et TV : consentement newsletter dans un label d’au 
 test("Soldier Quest desktop : hauteur réservée à l'intro avant chargement des polices",()=>{
  const css=read("public/vitrine/sde-digital-universe.css");
  assert.match(css,/@media\(min-width:1051px\)\s*\{\s*body\.sdu-quest-page \.sdu-quest-content>\.sdu-intro-band\s*\{[^}]*height:170px;min-height:170px/s);
+});
+
+test("Menu unique Quest et Soldiers Campus : mêmes 10 destinations",()=>{
+ const code=read("public/vitrine/sde-portal-nav.js");
+ const output=[];
+ for(const [html,url] of [[quest,"https://mouvement-sde.org/soldier-quest"],[read("public/vitrine/sde-academy-parcours.html"),"https://mouvement-sde.org/mon-espace/academy"]]){
+  const dom=new JSDOM(html,{url,runScripts:"outside-only"});
+  dom.window.eval(code);
+  dom.window.document.dispatchEvent(new dom.window.Event("DOMContentLoaded"));
+  const links=[...dom.window.document.querySelectorAll("[data-sdu-portal-nav] a:not(#campusCoachLink)")].map(a=>a.getAttribute("href"));
+  assert.equal(links.length,10);
+  output.push(links);
+  if(url.includes("/mon-espace/academy"))assert.equal(dom.window.document.querySelectorAll(".sdu-campus-mobile-bar a").length,5);
+  dom.window.close();
+ }
+ assert.deepEqual(output[0],output[1]);
+ assert.ok(output[0].includes("/mon-espace/academy#love-school"));
+});
+test("Soldiers TV : sous-menu média et calendrier réel TPA",()=>{
+ const doc=new JSDOM(tv).window.document;
+ assert.equal(doc.querySelectorAll(".sdu-media-subnav a").length,4);
+ assert.ok(doc.querySelector('a[href="/vitrine/tpa-2026.ics"]'));
+ const ics=read("public/vitrine/tpa-2026.ics");
+ assert.match(ics,/DTSTART:20261218T200000Z/);
+ assert.match(ics,/TRIGGER:-P1D/);
+ assert.match(ics,/TRIGGER:-PT1H/);
+ assert.doesNotMatch(tv,/08 MAI|05 au 09 mai|20 sept\. 2026/);
+});
+test("Pages officielles 2027 : Wave en premier, footer et aucune donnée simulée",()=>{
+ const soutenir=read("public/vitrine/soutenir.html"),shell=read("public/vitrine/sde-shell-public.js"),css=read("public/vitrine/sde-digital-universe.css");
+ const home=read("public/vitrine/portail.html");
+ assert.ok(soutenir.indexOf('data-canal="Wave"')<soutenir.indexOf('data-canal="Orange Money"'));
+ assert.match(shell,/contact@mouvement-sde\.org/);
+ assert.match(shell,/© 2026–2027/);
+ assert.match(home,/2026-12-18T20:00:00\+00:00/);
+ assert.match(css,/scroll-snap-type:x mandatory/);
+ assert.match(css,/sdu-campus-mobile-bar/);
+ for(const body of [home,quest,tv])assert.doesNotMatch(body,/Conimencer|sde-mouvement\.org|07 00 00 00 00/);
 });
