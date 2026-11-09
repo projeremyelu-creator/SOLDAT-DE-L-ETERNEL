@@ -31,7 +31,7 @@
         cellule.append(nombreEl,libelle); return cellule;
       };
       el.hidden = false;
-      el.replaceChildren(prefix,unite(jours,"jours"),unite(heures,"h"),unite(minutes,"min"),unite(secondes,"s"));
+      el.replaceChildren(prefix,unite(jours,"jours"),document.createTextNode(" "),unite(heures,"h"),document.createTextNode(" "),unite(minutes,"min"),document.createTextNode(" "),unite(secondes,"s"));
       el.setAttribute("aria-label","Dans "+jours+" jour(s), "+heures+" heure(s), "+minutes+" minute(s) et "+secondes+" seconde(s)");
     }
     tick(); setInterval(tick,1000);
