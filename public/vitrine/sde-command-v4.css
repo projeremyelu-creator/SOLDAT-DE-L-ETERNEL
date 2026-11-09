@@ -181,3 +181,21 @@ body.sde-direct-admin .sde-command-v4-bottom{display:none}
  }
  body.sde-direct-admin .sde-command-v4-bottom-item svg{width:20px;height:20px}
 }
+
+
+/* Maquette maître Poste de Commandement : le même moteur, des repères de gouvernance. */
+body.sde-direct-admin #sde-direct-top{background:linear-gradient(112deg,#0a172a,#172a45 65%,#182d32)!important;border-bottom:2px solid #d9b46d!important}
+body.sde-direct-admin #sde-direct-top .sde-direct-header{background:rgba(4,11,23,.23)}
+body.sde-direct-admin #sde-direct-top .sde-direct-intro{background:radial-gradient(ellipse 60% 100% at 95% 0%,rgba(212,171,89,.14),transparent 75%),linear-gradient(115deg,#11213a,#1b2541)!important}
+body.sde-direct-admin #sde-direct-top .sde-direct-title{font-family:"Cinzel",Georgia,serif!important;color:#ffebc0!important;font-size:clamp(1.65rem,3vw,2.6rem)!important;line-height:1.2!important;letter-spacing:-.02em;text-wrap:balance}
+body.sde-direct-admin #sde-direct-top .sde-direct-description{color:#dbe6f1!important;max-width:76ch}
+body.sde-direct-admin .sde-command-v4{padding:clamp(17px,2.6vw,28px)!important;border-radius:22px!important;background:linear-gradient(132deg,rgba(18,36,61,.98),rgba(29,29,59,.98))!important;box-shadow:0 22px 55px rgba(2,9,26,.3)!important}
+body.sde-direct-admin .sde-command-v4-title{font-family:"Cinzel",Georgia,serif!important;letter-spacing:.005em;font-size:clamp(1.16rem,1.8vw,1.5rem)!important}
+body.sde-direct-admin .sde-command-v4-grid{gap:12px}
+body.sde-direct-admin .sde-command-v4-item{min-height:105px;border-radius:14px!important;padding:16px!important;box-shadow:0 11px 23px rgba(1,11,30,.17);border-top:1px solid rgba(234,226,202,.2)}
+body.sde-direct-admin .sde-command-v4-label{font-size:clamp(.83rem,1.1vw,.98rem)!important}
+body.sde-direct-admin .sde-command-v4-category{font-size:.71rem!important;letter-spacing:.03em}
+body.sde-direct-admin #sde-direct-tabs{background:linear-gradient(180deg,#14253f,#102035)!important}
+body.sde-direct-admin .main :is(.card,.tile,.stat){border-radius:16px;box-shadow:0 12px 29px rgba(15,25,47,.08)}
+@media(max-width:760px){body.sde-direct-admin #sde-direct-top .sde-direct-title{font-family:"Saira Condensed",system-ui,sans-serif!important;font-size:1.65rem!important}body.sde-direct-admin .sde-command-v4{padding:12px!important;border-radius:14px!important}body.sde-direct-admin .sde-command-v4-grid{gap:8px}body.sde-direct-admin .sde-command-v4-item{min-height:70px!important;padding:10px!important}body.sde-direct-admin .sde-command-v4-category{font-size:.61rem!important}body.sde-direct-admin .sde-command-v4-label{font-size:.78rem!important}}
+@media(prefers-reduced-motion:reduce){body.sde-direct-admin .sde-command-v4-item{transform:none!important}}

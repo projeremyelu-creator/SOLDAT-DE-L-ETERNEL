@@ -99,3 +99,41 @@ test('Maquette SDE : titre et texte du Hero réservés à 1 100 px sans figer le
  assert.match(stable,/min-height:calc\(1\.65em \* 4\)!important/);
  assert.doesNotMatch(css.slice(css.indexOf('@media(max-width:960px)')),/min-height:2\.4em!important/,'le petit écran garde un titre à hauteur naturelle');
 });
+
+
+test('Trois maquettes maîtresses : parcours publics reliés aux véritables rubriques',()=>{
+ const doc=new JSDOM(home).window.document;
+ const rail=doc.querySelector('nav.sde-master-journeys');
+ assert.ok(rail&&rail.querySelectorAll('a.sde-master-journey').length===3);
+ for(const link of rail.querySelectorAll('a[href^="#"]'))assert.ok(doc.querySelector(link.getAttribute('href')),'cible présente: '+link.href);
+ const css=read('public/vitrine/sde-maquette-hero.css');
+ assert.match(css,/sde-master-journeys-grid/);
+ assert.match(css,/@media\(max-width:760px\)/);
+});
+
+test('Maquette membre : accès seulement après session et par le routeur sécurisé',()=>{
+ const script=read('public/vitrine/portail-direct.js');
+ const css=read('public/vitrine/portail-direct.css');
+ assert.match(script,/function creerAccueilMembre\(\)/);
+ assert.match(script,/mode!==["']membre["']\|\|!compte\?\.connecte/);
+ assert.match(script,/creerAccueilMembre\(\);/);
+ assert.match(script,/selectionner\(nom,\{userInitiated:true\}\)/);
+ assert.match(script,/data-module/);
+ for(const module of ['priere','academie','carteqr','agenda'])assert.ok(script.includes('["'+module+'",'));
+ assert.match(css,/sde-member-master-grid/);
+ assert.match(css,/prefers-reduced-motion:reduce/);
+});
+
+test('Maquette commandement : permissions natives et cinq onglets maintenus',()=>{
+ const js=read('public/vitrine/sde-command-v4.js');
+ const css=read('public/vitrine/sde-command-v4.css');
+ assert.match(js,/portal\?\.compte\?\.connecte/);
+ assert.match(js,/level<1/);
+ assert.match(js,/SHORTCUTS\.filter\(s=>allowed\(s,level\)/);
+ assert.match(js,/\['plus','Plus'\]/);
+ assert.match(css,/Maquette maître Poste de Commandement/);
+ const publicCss=read('public/vitrine/sde-shell-public.css');
+ for(const page of ['mouvement','prieres','programmes','academy','ressources','missions-humanitaires'])
+  assert.ok(publicCss.includes('data-sde-page="'+page+'"'),'variante '+page);
+ assert.match(publicCss,/data-sde-page\^="pole-"/);
+});

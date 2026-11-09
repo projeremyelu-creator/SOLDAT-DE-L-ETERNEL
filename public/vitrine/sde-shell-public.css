@@ -549,3 +549,30 @@ body.sde-premium-home .private-access-card.private-member:is(:hover,:focus-visib
   opacity:0!important;animation:none!important
  }
 }
+
+
+/* Système commun dérivé des trois maquettes maîtresses : pages publiques
+   existantes (aucune route, permission, validation ou chiffre métier modifié). */
+body.sde-subpage[data-sde-page]{--sde-master-accent:#c3a164;--sde-master-deep:#152740;--sde-master-soft:#f8f4e9}
+body.sde-subpage[data-sde-page="mouvement"],body.sde-subpage[data-sde-page="prieres"],body.sde-subpage[data-sde-page="temoignages"],body.sde-subpage[data-sde-page="soldiers-voice"]{--sde-master-accent:#b998eb;--sde-master-deep:#251b46;--sde-master-soft:#f7f2fd}
+body.sde-subpage[data-sde-page="programmes"],body.sde-subpage[data-sde-page="academy"],body.sde-subpage[data-sde-page="ressources"]{--sde-master-accent:#dfbf7b;--sde-master-deep:#172a47;--sde-master-soft:#f9f5eb}
+body.sde-subpage[data-sde-page^="pole-"],body.sde-subpage[data-sde-page="missions-humanitaires"]{--sde-master-accent:#9accae;--sde-master-deep:#17382f;--sde-master-soft:#f1f7ef}
+body.sde-subpage[data-sde-page] .sde-intro{position:relative;isolation:isolate;background:radial-gradient(ellipse 75% 95% at 88% 18%,color-mix(in srgb,var(--sde-master-accent) 16%,transparent),transparent 72%),linear-gradient(125deg,#0f1b2d,var(--sde-master-deep))!important;border-bottom:2px solid var(--sde-master-accent);color:#fbf9f3!important}
+body.sde-subpage[data-sde-page] .sde-intro :is(h1,h2,.chapo){color:#fffaf1!important;-webkit-text-fill-color:currentColor}
+body.sde-subpage[data-sde-page] .sde-intro :is(p,.sde-kicker,.sde-crumbs){color:#e6e6f0!important;-webkit-text-fill-color:currentColor}
+body.sde-subpage[data-sde-page] .sde-intro .sde-kicker{color:var(--sde-master-accent)!important;text-transform:uppercase;letter-spacing:.13em;font-weight:900}
+body.sde-subpage[data-sde-page] .sde-intro a:not(.sde-page-actions a){color:#fbe3a7!important}
+body.sde-subpage[data-sde-page] .sde-intro .sde-page-actions a{border-radius:12px}
+body.sde-subpage[data-sde-page] :is(.sde-initiative-card,.sde-initiative-linkcard,.pg-steps li,.pole){border-radius:17px;border:1px solid #d9dce3;box-shadow:0 11px 30px rgba(16,27,44,.08);overflow-wrap:anywhere}
+body.sde-subpage[data-sde-page] :is(.sde-initiative-card,.pg-steps li){border-top:3px solid var(--sde-master-accent)}
+body.sde-subpage[data-sde-page] .sde-initiative-section h2,body.sde-subpage[data-sde-page] .pg-block h2{color:var(--sde-master-deep)!important}
+body.sde-subpage[data-sde-page] :is(.sde-section-jumps,.pg-tabs){border-color:var(--sde-master-accent)}
+body.sde-subpage[data-sde-page] :is(a,button,input,textarea,select):focus-visible{outline:3px solid #b28a3c;outline-offset:3px}
+body.sde-subpage[data-sde-page="academy"] .hero-acad{border-bottom:3px solid #d5b16f;box-shadow:0 22px 50px rgba(17,27,47,.15)}
+body.sde-subpage[data-sde-page="academy"] .grille>*{border-radius:18px;box-shadow:0 10px 26px rgba(17,27,47,.08)}
+body.pg-tabs-static .hub-hero{border:1px solid rgba(211,180,111,.3);border-radius:22px;background:radial-gradient(ellipse 70% 110% at 100% 0%,rgba(194,147,67,.17),transparent 70%),linear-gradient(130deg,#101e36,#27213e)!important;color:#fffaf0!important;box-shadow:0 20px 50px rgba(12,23,46,.17)}
+body.pg-tabs-static .hub-hero :is(h1,.hub-lead,.hub-kicker){color:#f9efdd!important;-webkit-text-fill-color:currentColor}
+body.pg-tabs-static .hub-hero .hub-kicker{color:#f1d18c!important}
+body.pg-tabs-static :is(.hub-card,.hub-note){border-radius:16px}
+@media(max-width:760px){body.sde-subpage[data-sde-page] .sde-intro{border-bottom-width:2px}body.pg-tabs-static .hub-hero{border-radius:14px}}
+@media(prefers-reduced-motion:reduce){body.sde-subpage[data-sde-page] :is(.sde-initiative-card,.pg-steps li){transition:none;transform:none}}

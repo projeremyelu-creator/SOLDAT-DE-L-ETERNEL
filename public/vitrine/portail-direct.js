@@ -386,6 +386,54 @@
         }
       }
     };
+
+    /* Maquette maître Membre : aucun contenu personnel ajouté avant /api/moi.
+       Les boutons sollicitent le même routeur, qui valide les droits côté serveur. */
+    function creerAccueilMembre(){
+      if(mode!=="membre"||!compte?.connecte||document.getElementById("sde-master-membre"))return;
+      const panel=element("section","sde-member-master");
+      panel.id="sde-master-membre";
+      panel.setAttribute("aria-labelledby","sde-master-membre-titre");
+      const head=element("div","sde-member-master-heading");
+      const heading=element("div","");
+      const eyebrow=element("p","sde-member-master-overline","VOTRE PARCOURS · SOLDIERS CONNECT");
+      const title=element("h2","", "Grandir, servir, avancer ensemble");
+      title.id="sde-master-membre-titre";
+      const subtitle=element("p","sde-member-master-subtitle","Vos outils essentiels réunis dans un espace personnel sécurisé.");
+      heading.append(eyebrow,title,subtitle);
+      const verified=element("span","sde-member-master-verified","Session vérifiée");
+      head.append(heading,verified);
+      const grid=element("div","sde-member-master-grid");
+      const options=[
+        ["priere","Prière & intercession","Exprimer une intention et suivre mes prières","spirit"],
+        ["academie","Soldiers Academy","Accéder aux parcours et enseignements","academy"],
+        ["carteqr","Ma carte membre","Ouvrir mon badge et mes accès","identity"],
+        ["agenda","Agenda SDE","Retrouver les prochains rendez-vous","event"]
+      ];
+      for(const [nom,label,description,famille] of options){
+        if(!allowed(nom))continue;
+        const bouton=element("button","sde-member-master-action");
+        bouton.type="button";bouton.dataset.module=nom;bouton.dataset.family=famille;
+        bouton.setAttribute("aria-label","Ouvrir "+label);
+        const type=element("span","sde-member-master-category",famille==="spirit"?"SPIRITUALITÉ":famille==="academy"?"FORMATION":famille==="identity"?"IDENTITÉ":"COMMUNAUTÉ");
+        const strong=element("strong","",label);
+        const small=element("small","",description);
+        const arrow=element("span","sde-member-master-arrow","↗");arrow.setAttribute("aria-hidden","true");
+        bouton.append(type,strong,small,arrow);
+        bouton.addEventListener("click",()=>selectionner(nom,{userInitiated:true}));
+        grid.append(bouton);
+      }
+      panel.append(head,grid);
+      actions.after(panel);
+      body.classList.add("sde-master-member-ready");
+      document.addEventListener("sde:navigate",event=>{
+        for(const btn of grid.querySelectorAll("button[data-module]")){
+          if(btn.dataset.module===event.detail?.module)btn.setAttribute("aria-current","page");
+          else btn.removeAttribute("aria-current");
+        }
+      });
+    }
+
     const monitor=new MutationObserver(sync);
     monitor.observe(original,{childList:true,subtree:true,attributes:true,attributeFilter:["aria-current","class"]});
     fetch("/api/moi",{credentials:"same-origin",cache:"no-store"})
@@ -398,6 +446,7 @@
         // La direction dispose déjà de sa barre SDE Command 4.0 : ne pas la doubler.
         if(mode==="membre")construireBarreMobile();
         sync();
+        creerAccueilMembre();
         window.SDEPortal={compte:user,selectionner};
         document.dispatchEvent(new CustomEvent("sde:ready",{detail:window.SDEPortal}));
       })
