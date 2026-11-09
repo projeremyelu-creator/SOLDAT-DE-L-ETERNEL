@@ -294,3 +294,53 @@ body.sde-universe-page .sde-shell-newsletter label.sde-shell-consent input[type=
   box-sizing:border-box;height:170px;min-height:170px
  }
 }
+
+
+/* Audit d'intégration 2027 : menus de parcours partagés, médias et responsive. */
+.sdu-portal-nav a[aria-current="page"]{background:#e5bf6a!important;color:#11182a!important;border-color:#e5bf6a!important}
+body.sdu-quest-page .sdu-quest-sidebar .sdu-portal-nav{display:grid;gap:6px}
+body.sdu-quest-page .sdu-quest-sidebar .sdu-portal-nav a{display:flex;align-items:center;min-height:45px}
+body.sde-campus-student .sdu-student-links.sdu-portal-nav{
+ display:flex;flex-wrap:wrap;gap:8px;margin:15px 0 25px;align-items:center
+}
+body.sde-campus-student .sdu-student-links.sdu-portal-nav a{display:inline-flex;align-items:center;min-height:44px}
+.sdu-media-subnav{display:flex;align-items:center;gap:10px;padding-block:12px;flex-wrap:wrap}
+.sdu-media-subnav a,.sdu-media-subnav span{
+ min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+ padding:9px 15px;text-decoration:none;border:1px solid #dfc17c74;border-radius:999px;
+ color:#ffdf9d;font-size:.86rem;font-weight:800;background:#0c1d35
+}
+.sdu-media-subnav a:hover,.sdu-media-subnav a:focus-visible{background:#e0ba65;color:#081627}
+.sdu-media-subnav [aria-current="page"]{background:#e0ba65;color:#081627}
+.sdu-media-subnav span{color:#bbc7d8;border-color:#7180937a;cursor:default}
+.sdu-campus-mobile-bar{display:none}
+@media(max-width:700px){
+ body.sdu-quest-page .sdu-quest-sidebar{display:none}
+ .sdu-media-subnav{flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:thin}
+ .sdu-media-subnav>*{flex:none;scroll-snap-align:start}
+ /* Les cartes deviennent des carrousels tactiles, sans overflow horizontal de page. */
+ body.sdu-quest-page .sdu-quest-grid,body.sdu-tv-page .sdu-media-tiles,
+ body.sde-campus-public .sdu-campus-strip .sdu-steps,
+ body.sde-premium-home .sde-universe .sdu-grid{
+  display:grid!important;grid-auto-flow:column;grid-auto-columns:minmax(230px,82%);
+  grid-template-columns:none!important;gap:12px;overflow-x:auto;overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+  scroll-padding-inline:2px;padding:5px 2px 18px;
+ }
+ body.sdu-quest-page .sdu-quest-grid>*,
+ body.sdu-tv-page .sdu-media-tiles>*,
+ body.sde-campus-public .sdu-campus-strip .sdu-steps>*,
+ body.sde-premium-home .sde-universe .sdu-grid>*{scroll-snap-align:start;min-width:0}
+ body.sde-campus-student .sdu-student-links.sdu-portal-nav{display:none!important}
+ body.sde-campus-student{padding-bottom:calc(83px + env(safe-area-inset-bottom))}
+ .sdu-campus-mobile-bar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;
+  z-index:1200;padding:5px 6px calc(5px + env(safe-area-inset-bottom));gap:3px;
+  background:linear-gradient(115deg,#131f3a,#2d2251 65%,#17402f);
+  border-top:2px solid #dcbc67;box-shadow:0 -8px 24px #0106149e}
+ .sdu-campus-mobile-bar a{display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center;
+  min-width:0;min-height:54px;padding:5px 2px;color:#fae6b9!important;
+  font-size:clamp(.61rem,2.5vw,.75rem);font-weight:800;text-decoration:none;text-align:center;border-radius:11px}
+ .sdu-campus-mobile-bar a[aria-current="page"]{background:#dcbc6733}
+ .sdu-campus-mobile-bar svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+}
+@media(prefers-reduced-motion:reduce){.sdu-media-subnav{scroll-behavior:auto}}
