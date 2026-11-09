@@ -34,6 +34,8 @@
 <script id="sde-webpage-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://mouvement-sde.org/contact#page","url":"https://mouvement-sde.org/contact","name":"Contact et adhésion | Soldats de l'Éternel (SDE)","description":"Contactez le mouvement Soldats de l’Éternel : formulaire, téléphone, WhatsApp, e-mail. Rejoindre, poser une question ou accéder à votre espace membre.","inLanguage":"fr-CI","isPartOf":{"@id":"https://mouvement-sde.org/#website"},"about":{"@id":"https://mouvement-sde.org/#organisation"},"publisher":{"@id":"https://mouvement-sde.org/#organisation"}}</script>
 <link rel="stylesheet" href="/vitrine/sde-shell-public.css?v=20261108menu">
 <script defer src="/vitrine/sde-shell-public.js?v=20261108menu"></script>
+<link rel="stylesheet" href="/vitrine/animations-sde.css?v=20261109motion">
+<script defer src="/vitrine/sde-interactions.js?v=20261109motion"></script>
 </head><body class="sde-unifie sde-subpage sde-ivoire sde-pages-premium" data-fam="cmd" data-sde-page="rejoindre">
 <a class="skip" href="#contenu">Accéder au contenu</a>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
@@ -77,10 +79,10 @@
         <p class="chapo">Vous souhaitez découvrir le mouvement, participer à ses programmes ou servir au sein d’un pôle ? Ce formulaire est une prise de contact avec le secrétariat : il ne crée pas de compte. Pour obtenir immédiatement votre matricule provisoire, choisissez « Créer mon compte membre » plus bas.</p>
       </div>
       <div class="parcours-rejoindre">
-        <a class="etape-carte revele" href="#f-rejoindre" style="--d:0s"><div class="ec-num">1</div><h3>Découvrir</h3><p>Je veux en savoir plus sur le mouvement et ses activités.</p></a>
-        <a class="etape-carte revele" href="#f-rejoindre" style="--d:.08s"><div class="ec-num">2</div><h3>Participer</h3><p>Je veux assister à une rencontre, une prière ou un événement.</p></a>
-        <a class="etape-carte revele" href="#f-rejoindre" style="--d:.16s"><div class="ec-num">3</div><h3>Servir</h3><p>Je veux m'engager dans un pôle et mettre mes dons au service.</p></a>
-        <a class="etape-carte revele" href="/academy" style="--d:.24s"><div class="ec-num">4</div><h3>Se former</h3><p>Je veux rejoindre la Soldiers Academy ou une autre formation.</p></a>
+        <a class="etape-carte revele sde-intent-card" href="#f-rejoindre" data-sde-intent="decouvrir" style="--d:0s"><div class="ec-num">1</div><h3>Découvrir</h3><p>Je veux en savoir plus sur le mouvement et ses activités.</p></a>
+        <a class="etape-carte revele sde-intent-card" href="#f-rejoindre" data-sde-intent="participer" style="--d:.08s"><div class="ec-num">2</div><h3>Participer</h3><p>Je veux assister à une rencontre, une prière ou un événement.</p></a>
+        <a class="etape-carte revele sde-intent-card" href="#f-rejoindre" data-sde-intent="servir" style="--d:.16s"><div class="ec-num">3</div><h3>Servir</h3><p>Je veux m'engager dans un pôle et mettre mes dons au service.</p></a>
+        <a class="etape-carte revele sde-intent-card" href="#f-rejoindre" data-sde-intent="former" style="--d:.24s"><div class="ec-num">4</div><h3>Se former</h3><p>Je veux rejoindre la Soldiers Academy ou une autre formation.</p></a>
       </div>
       <div class="rejoindre" id="f-rejoindre">
         <div>
