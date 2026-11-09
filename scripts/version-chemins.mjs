@@ -9,6 +9,19 @@ const rev=(process.env.GITHUB_SHA||execFileSync('git',['rev-parse','--short=12',
 writeFileSync('src/build-revision.js',
   '// Généré automatiquement pendant le déploiement.' + String.fromCharCode(10) +
   'export const ASSET_REVISION = ' + JSON.stringify(rev) + ';' + String.fromCharCode(10));
+/* La révision du Worker doit être intégrée directement dans le module d'entrée.
+   L'import depuis un fichier local de développement a déjà été observé à
+   'development' sur les domaines publics après un déploiement pourtant réussi. */
+const workerPath='src/worker.js';
+const workerSource=readFileSync(workerPath,'utf8');
+const revisionImport='import {ASSET_REVISION} from "./build-revision.js";';
+if(!workerSource.includes(revisionImport))
+ throw Error('Import de révision du Worker introuvable : déploiement interrompu.');
+writeFileSync(workerPath,workerSource.replace(
+ revisionImport,'const ASSET_REVISION = '+JSON.stringify(rev)+';'
+));
+console.log('Révision directement intégrée au Worker : '+rev);
+
 const motif=/((?:src|href)=["'])\/(?!\/|_v\/)([^"'?#\s]+\.(?:js|css))\?v=[^"'\s>]*/g;
 let fichiers=0,liens=0;
 (function parcourir(d){for(const e of readdirSync(d,{withFileTypes:true})){const c=d+'/'+e.name;if(e.isDirectory())parcourir(c);else if(e.name.endsWith('.html')){const h=readFileSync(c,'utf8');let n=0;const h2=h.replace(motif,(m,a,p)=>{n++;return `${a}/_v/${rev}/${p}`});if(n){writeFileSync(c,h2);fichiers++;liens+=n}}}})('public');
