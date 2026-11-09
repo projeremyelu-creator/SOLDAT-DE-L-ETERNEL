@@ -59,7 +59,11 @@ test("refonte : accueil, textes du document de référence",()=>{
 });
 test("refonte étape 4 : Rejoindre, Soutenir et pied de page selon le document",()=>{
  const home=read("public/vitrine/index.html"),rej=read("public/vitrine/rejoindre.html"),proj=read("public/vitrine/projets.html"),sub=read("public/vitrine/subpage.js");
- for(const h of [home,rej]){for(const t of ["Votre parcours peut commencer ici","Commune ou ville","Pôle d’intérêt prioritaire","Programme souhaité","Envoyer ma demande","Merci pour votre démarche.","Votre demande a bien été transmise à l’équipe du Mouvement SDE."])assert.ok(h.includes(t),t);assert.ok(h.includes('name="pole"'));}
+ for(const h of [home,rej]){for(const t of ["Commune ou ville","Pôle d’intérêt prioritaire","Programme souhaité","Envoyer ma demande","Merci pour votre démarche.","Votre demande a bien été transmise à l’équipe du Mouvement SDE."])assert.ok(h.includes(t),t);assert.ok(h.includes('name="pole"'));}
+ assert.ok(home.includes("Votre parcours peut commencer ici"));
+ assert.ok(rej.includes("Nous écrire ou rejoindre le Mouvement SDE"));
+ assert.ok(rej.includes("Contacter le secrétariat"));
+ assert.ok(rej.includes("Créer son compte est indépendant"));
  for(const h of [home,proj])for(const t of ["Contribuer à la mission","5 000 FCFA","10 000 FCFA","25 000 FCFA","Autre montant","Choisir mon mode de contribution"])assert.ok(h.includes(t),t);
  assert.ok(sub.includes('pole:g("pole")'),"le pôle est transmis à l'API");
  assert.ok(home.includes("Politique de confidentialité")&&home.includes("Mentions légales"));
