@@ -54,20 +54,24 @@ test('Les entrées de consultation des dossiers privés restent des routes authe
 });
 
 
-test('Accueil premium : hero immersif, affiche unique et trois accès directs',()=>{
+test('Accueil premium : hero lisible, deux CTA et une alerte TPA compacte',()=>{
  const html=file('public/vitrine/portail.html');
- const css=file('public/vitrine/sde-accueil-premium.css');
+ const css=file('public/vitrine/sde-shell-public.css');
  const hero=html.slice(html.indexOf('class="ap-hero"'),html.indexOf('id="programmes-accueil"'));
- assert.ok(hero.length>500,'Le hero précède l’agenda');
- assert.equal((html.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1,'une seule affiche du programme phare');
+ assert.ok(hero.length>400,'le hero précède l’agenda détaillé');
+ assert.equal((html.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,0,'aucune grande affiche en double');
+ assert.equal((html.match(/class="sde-shell-event"/g)||[]).length,1,'un seul bandeau TPA');
  assert.ok(html.includes('href="/programmes#tpa-2026"'));
  assert.ok(html.includes('datetime="2026-12-18T20:00:00+00:00"'));
- assert.ok(hero.includes('class="ap-actions"'));
- for(const link of ['/mouvement','/contact#rejoindre','/programmes#tpa-2026'])assert.ok(hero.includes('href="'+link+'"'),'Accès direct manquant '+link);
- assert.match(css,/\.ap-hero-inner\{[^}]*grid-template-columns:minmax\(0,1\.25fr\) minmax\(280px,\.75fr\)/);
- assert.match(css,/@media\(max-width:860px\)/);
+ const actions=hero.match(/<div class="ap-actions">[\s\S]*?<\/div>/)?.[0]||"";
+ assert.equal((actions.match(/<a /g)||[]).length,2,'deux CTA');
+ for(const link of ['/mouvement#film','/contact#rejoindre'])
+   assert.ok(actions.includes('href="'+link+'"'),'Accès direct manquant '+link);
+ assert.match(css,/\.sde-shell-event/);
+ assert.match(css,/@media\(max-width:800px\)/);
  assert.match(css,/prefers-reduced-motion/);
 });
+
 test('Tableaux SDE : données réelles pour les barres, formations, rendez-vous, sans contenu simulé',()=>{
  const jsx=file('frontend/business-mosaic.jsx'),css=file('frontend/business-mosaic.css');
  assert.ok(jsx.includes("data.frequentation"));
@@ -113,24 +117,25 @@ test('Terminal tactique : agrégats API, aucun GPS ni biométrie artificielle',(
 });
 
 
-test('Priorité 01 : accueil sans double affiche TPA, vision et trois actions maintenues',()=>{
+test('Priorité 01 : accueil sans affiche doublon et deux actions prioritaires',()=>{
  const home=file('public/vitrine/portail.html');
  const sitecss=file('public/vitrine/sde-sitewide-2026.css');
  assert.match(home,/class="ap-hero"/);
- assert.match(home,/class="ap-poster"/);
- assert.ok(!home.includes('sde-community-band'),'plus de second bandeau');
- const hero=home.slice(home.indexOf('class="ap-poster"'),home.indexOf('id="programmes-accueil"'));
- assert.equal((home.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1);
- assert.equal((hero.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1);
- for(const href of ['/mouvement','/contact#rejoindre','/programmes#tpa-2026']){
-  const bloc=home.slice(home.indexOf('class="ap-hero"'),home.indexOf('id="programmes-accueil"'));
-  assert.ok(bloc.includes('href="'+href+'"'),href);
- }
+ assert.match(home,/class="sde-shell-event"/);
+ assert.ok(!home.includes('sde-community-band'),'pas de second bandeau ancien');
+ assert.equal((home.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,0);
+ const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf('id="programmes-accueil"'));
+ const actions=hero.match(/<div class="ap-actions">[\s\S]*?<\/div>/)?.[0]||"";
+ assert.equal((actions.match(/<a /g)||[]).length,2);
+ for(const href of ['/mouvement#film','/contact#rejoindre'])
+   assert.ok(actions.includes('href="'+href+'"'),href);
+ assert.ok(home.includes('id="prochain-rendez-vous"'),'fiche détaillée dans l’agenda');
  assert.ok(sitecss.includes('Refonte structurée 03/11/2026'));
  assert.ok(sitecss.includes('.sde-rail{'));
  assert.ok(sitecss.includes('display:none!important'));
  assert.ok(sitecss.includes('site-mega-panel'));
 });
+
 test('Priorité 02 : onglets privés cohérents et registres accessibles sur mobile',()=>{
  const nav=file('frontend/reference-shell.jsx');
  const css=file('frontend/reference.css');
