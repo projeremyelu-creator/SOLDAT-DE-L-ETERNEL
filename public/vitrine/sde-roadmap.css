@@ -1,0 +1,34 @@
+.sde-roadmap{background:#07080c;color:#e9e9ed;border-top:1px solid rgba(255,255,255,.08);padding:clamp(3.5rem,7vw,5.5rem) 1rem}
+.sde-roadmap *{box-sizing:border-box}
+.sde-roadmap-wrap{max-width:1120px;margin:auto}
+.sde-roadmap-heading{text-align:center;max-width:680px;margin:0 auto 2.5rem}
+.sde-roadmap-eyebrow{color:#e8c85f;font-size:.75rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+.sde-roadmap-heading h2{color:#fff;font-size:clamp(1.8rem,4vw,2.65rem);line-height:1.17;margin:.7rem 0}
+.sde-roadmap-heading p{color:#c1c5ce;line-height:1.65;margin:0}
+.sde-roadmap-timeline{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;max-width:850px;margin:0 auto 2rem}
+.sde-roadmap-axis{position:absolute;left:16.6667%;width:66.6667%;top:25px;height:12px;overflow:visible;pointer-events:none}
+.sde-roadmap-track{stroke:rgba(255,255,255,.25);stroke-width:3;stroke-linecap:round}
+.sde-roadmap-progress{stroke:url(#sde-roadmap-gold);stroke-width:4;stroke-linecap:round;transition:x2 .5s ease-out}
+.sde-roadmap-year{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:.65rem;justify-self:stretch;border:0;background:transparent;color:#c8cbd3;cursor:pointer;font:inherit;min-height:90px;padding:0 .2rem}
+.sde-roadmap-circle{display:grid;place-items:center;width:62px;height:62px;border-radius:18px;border:1px solid #7f8390;background:#0f111a;color:#e9e9ed;box-shadow:0 0 0 5px #07080c;font-weight:800;transition:background .25s,color .25s,box-shadow .25s,transform .25s}
+.sde-roadmap-year-label{font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;text-align:center}
+.sde-roadmap-year:hover .sde-roadmap-circle{border-color:#d4af37}
+.sde-roadmap-year.is-active{color:#f3e5ab}
+.sde-roadmap-year.is-active .sde-roadmap-circle{color:#07080c;background:#d4af37;border-color:#d4af37;box-shadow:0 0 0 5px #07080c,0 0 22px rgba(212,175,55,.5);transform:scale(1.05)}
+.sde-roadmap-year:focus-visible{outline:3px solid #f3e5ab;outline-offset:4px;border-radius:14px}
+.sde-roadmap-card{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:2rem;align-items:center;background:#0f111a;border:1px solid rgba(212,175,55,.42);border-radius:26px;padding:clamp(1.25rem,3.5vw,2.5rem);box-shadow:0 22px 48px rgba(0,0,0,.28)}
+.sde-roadmap-vision{border-right:1px solid rgba(255,255,255,.16);padding-right:2rem}
+.sde-roadmap-status{display:inline-block;color:#f3e5ab;border:1px solid rgba(212,175,55,.5);background:rgba(212,175,55,.12);border-radius:999px;padding:.4rem .8rem;font-size:.75rem;font-weight:700}
+.sde-roadmap-vision h3{font-size:clamp(1.35rem,3vw,2rem);line-height:1.25;color:#fff;margin:1rem 0}
+.sde-roadmap-vision p{color:#d5d8df;line-height:1.65;margin:0 0 1.25rem}
+.sde-roadmap-verbs-label{display:block;color:#c1c5ce;font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem}
+#rm-verbs{color:#e8c85f;font-size:.9rem}
+.sde-roadmap-milestones{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}
+.sde-roadmap-milestones article{min-width:0;min-height:180px;padding:1rem;background:#07080c;border:1px solid rgba(255,255,255,.18);border-radius:16px}
+.sde-roadmap-milestones article span{color:#e8c85f;font-size:.75rem;font-weight:800;text-transform:uppercase}
+.sde-roadmap-milestones h4{color:#fff;font-size:.95rem;line-height:1.3;margin:.7rem 0}
+.sde-roadmap-milestones p{color:#c1c5ce;font-size:.82rem;line-height:1.55;margin:0;overflow-wrap:anywhere}
+.sde-roadmap-note{color:#c1c5ce;text-align:center;font-size:.78rem;line-height:1.5;margin:1.5rem auto 0}
+@media(max-width:850px){.sde-roadmap-card{grid-template-columns:1fr}.sde-roadmap-vision{border-right:0;border-bottom:1px solid rgba(255,255,255,.16);padding:0 0 1.5rem}}
+@media(max-width:600px){.sde-roadmap{padding:3rem 1rem}.sde-roadmap-heading{margin-bottom:2rem}.sde-roadmap-year-label{font-size:.68rem}.sde-roadmap-milestones{grid-template-columns:1fr}.sde-roadmap-milestones article{min-height:0}.sde-roadmap-card{gap:1.4rem;border-radius:20px}.sde-roadmap-circle{width:56px;height:56px;border-radius:15px}.sde-roadmap-axis{top:22px}}
+@media(prefers-reduced-motion:reduce){.sde-roadmap-progress,.sde-roadmap-circle{transition:none}}
