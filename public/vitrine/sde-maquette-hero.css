@@ -119,6 +119,19 @@ body.sde-premium-home .sde-don-preview{border-color:rgba(212,175,55,.45)}
 .sde-member-demo svg{flex:none}
 .sde-contribution-resume{border-left:4px solid #d4af37;background:#fff7dc;padding:14px;
  color:#182342;font-weight:700;line-height:1.5;margin:12px 0;border-radius:8px}
+/* À 1 100 px, le changement de métriques des polices pouvait provoquer
+   une ligne supplémentaire dans le titre ou la présentation : réserver
+   leur espace avant téléchargement évite le saut de la citation et des CTA. */
+@media(min-width:1051px) and (max-width:1199px){
+ body.sde-premium-home .ap-hero .ap-hero-copy h1{
+  font-size:clamp(2.625rem,4.2vw,3rem)!important;
+  line-height:1.2!important;
+  min-height:2.4em!important
+ }
+ body.sde-premium-home .ap-hero .ap-hero-copy .ap-lead{
+  min-height:calc(1.65em * 4)!important
+ }
+}
 @media(max-width:960px){
  body.sde-premium-home .ap-hero .ap-hero-inner{grid-template-columns:minmax(0,1fr)!important;
  width:min(740px,calc(100% - 32px))!important;min-height:0!important;row-gap:30px;
