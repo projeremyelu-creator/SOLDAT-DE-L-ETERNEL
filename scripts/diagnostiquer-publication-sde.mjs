@@ -10,7 +10,12 @@ export const urls = [
  'https://mouvement-sde.org/soldiers-tv?controle=revision-149d9548dce4',
  'https://mouvement-sde.org/vitrine/soldier-quest.html',
  'https://mouvement-sde.org/_v/149d9548dce4/vitrine/sde-digital-universe.css',
- 'https://app.mouvement-sde.org/api/sante'
+ 'https://app.mouvement-sde.org/api/sante',
+ 'https://app.mouvement-sde.org/api/sante?controle=revision-149d9548dce4',
+ 'https://app.mouvement-sde.org/soldier-quest',
+ 'https://app.mouvement-sde.org/soldiers-tv',
+ 'https://www.mouvement-sde.org/api/sante',
+ 'https://app.mouvement-sde.org/_v/149d9548dce4/vitrine/sde-digital-universe.css'
 ];
 export async function probe(url,fetcher=fetch){
  try {
@@ -25,7 +30,7 @@ export async function probe(url,fetcher=fetch){
   }
   return {url,status:response.status,revision,location:response.headers.get('location'),
    cache:response.headers.get('cf-cache-status'),age:response.headers.get('age'),
-   contentType:response.headers.get('content-type'),cdnRay:response.headers.get('cf-ray')?.slice(0,16),
+   contentType:response.headers.get('content-type'),cacheControl:response.headers.get('cache-control'),cdnRay:response.headers.get('cf-ray')?.slice(0,16),
    title:(body.match(/<title[^>]*>([^<]*)/i)||[])[1]||'',length:body.length};
  }catch(error){return{url,error:String(error?.message||error).slice(0,150)}}
 }
