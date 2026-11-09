@@ -46,8 +46,8 @@ jobs:
       - name: Vérifier les pages publiques et la protection anonyme
         if: steps.revision.outputs.verifier == 'true'
         run: node scripts/audit-public-mobile.mjs
-      - name: Conserver captures mobiles et rapport technique
-        if: steps.revision.outputs.verifier == 'true'
+      - name: Conserver captures mobiles et rapport technique, même si le contrôle échoue
+        if: ${{ always() && steps.revision.outputs.verifier == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: audit-mobile-public-sde
