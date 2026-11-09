@@ -13,13 +13,14 @@ jobs:
         with:
           node-version: '22.23.4'
       - run: npm ci --ignore-scripts
-      - name: Installer les médias SDE 2027 depuis une archive unique vérifiée
-        run: python3 scripts/installer-medias-sde.py
-      - name: Installer l'encodeur WebP pour l'affiche mobile
+      - name: Installer ImageMagick et FFmpeg pour les archives SDE
         run: |
           sudo apt-get update -qq
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq imagemagick
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq imagemagick ffmpeg
           convert -version | head -1
+          ffmpeg -version | head -1
+      - name: Identifier et optimiser les dix médias officiels du dépôt
+        run: python3 scripts/installer-medias-sde.py
       - run: npm run build:experience
       - name: Garantir une affiche mobile réellement plus légère
         run: |
@@ -41,13 +42,14 @@ jobs:
         with:
           node-version: '22.23.4'
       - run: npm ci --ignore-scripts
-      - name: Installer les médias SDE 2027 depuis une archive unique vérifiée
-        run: python3 scripts/installer-medias-sde.py
-      - name: Installer l'encodeur WebP pour l'affiche mobile
+      - name: Installer ImageMagick et FFmpeg pour les archives SDE
         run: |
           sudo apt-get update -qq
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq imagemagick
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq imagemagick ffmpeg
           convert -version | head -1
+          ffmpeg -version | head -1
+      - name: Identifier et optimiser les dix médias officiels du dépôt
+        run: python3 scripts/installer-medias-sde.py
       - run: npm run build:experience
       - name: Garantir une affiche mobile réellement plus légère
         run: |
