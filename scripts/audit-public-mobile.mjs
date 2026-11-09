@@ -104,10 +104,10 @@ try{
      return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height};
     };
     const intersects=(a,b)=>!!(a&&b&&a.left<b.right-2&&a.right>b.left+2&&a.top<b.bottom-2&&a.bottom>b.top+2);
-    const brand=toRect(document.querySelector('.site-brand'));
-    const portal=toRect(document.querySelector('.site-access-top'));
-    const burger=toRect(document.querySelector('.site-burger'));
-    const logo=toRect(document.querySelector('.site-logo'));
+    const brand=toRect(document.querySelector('.sde-shell-brand,.site-brand'));
+    const portal=toRect(document.querySelector('.sde-shell-portal,.site-access-top'));
+    const burger=toRect(document.querySelector('.sde-shell-open,.site-burger'));
+    const logo=toRect(document.querySelector('.sde-shell-brand img,.site-logo'));
     const quote=document.querySelector('.ap-verset p, .m-verset p');
     const quoteBg=document.querySelector('.ap-verset, .m-verset');
     const cssColor=quote?getComputedStyle(quote).color:null;
@@ -180,6 +180,8 @@ try{
      })(),
      poleLinks:poleLinks.length,
      brokenPoleImages:poleLinks.filter(a=>{let i=a.querySelector('img');return !i||!i.complete||i.naturalWidth===0}).length,
+     tpaBannerPresent:!!document.querySelector('.sde-shell-event a[href="/programmes#tpa-2026"]'),
+     tpaAgendaPresent:!!document.querySelector('#programmes-accueil #prochain-rendez-vous'),
      tpaPosters:posters.length,
      tpaPosterLoaded:posters.every(i=>i.complete&&i.naturalWidth>0),
      publicPoleForm:(()=>{const f=document.querySelector('form[data-pole-engager]');return f?{
@@ -528,12 +530,13 @@ try{
      issue(c.name,'contraste des cartes de l’accueil inférieur à 4,5:1 : '+JSON.stringify(insuffisants.slice(0,4)),true);
     if(c.width<=860&&row.heroBgMobile!=='none')
      issue(c.name,'photo de fond décorative encore téléchargée sur mobile : '+row.heroBgMobile,true);
-    if(c.width<=860&&!String(row.posterImageSource).includes('tpa-2026-mobile.webp'))
+    if(c.width<=860&&row.posterImageSource&&!String(row.posterImageSource).includes('tpa-2026-mobile.webp'))
      issue(c.name,'version optimisée de l’affiche TPA non sélectionnée sur mobile : '+row.posterImageSource,true);
     report.notes.push({test:'pagespeed-cards',page:c.name,count:ratios.length,minRatio:Math.min(...ratios.map(x=>x.ratio||0)),poster:row.posterImageSource,heroBackground:row.heroBgMobile});
    }
    if(c.path==='/'&&(row.poleLinks!==5||row.brokenPoleImages>0))issue(c.name,'cartes/emblèmes pôles manquants ou images indisponibles',true);
-   if(c.path==='/'&&(!row.tpaPosters||!row.tpaPosterLoaded))issue(c.name,'affiche TPA absente ou non chargée',true);
+   if(c.path==='/'&&(!row.tpaBannerPresent||!row.tpaAgendaPresent))issue(c.name,'annonce TPA ou fiche de l’agenda absente',true);
+   if(c.path==='/'&&row.tpaPosters>0&&!row.tpaPosterLoaded)issue(c.name,'affiche TPA présente mais non chargée',true);
    if(row.pageErrors.length)issue(c.name,row.pageErrors.slice(0,3).join(' | '),c.name==='academy-390');
    console.log('AUDIT '+c.name+' '+JSON.stringify(row));
   } catch(error){
