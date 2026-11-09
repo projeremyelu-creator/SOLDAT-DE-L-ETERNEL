@@ -274,3 +274,23 @@ body.sde-universe-page>header.site-header:not(.sde-shell-header)>a{
   height:64px!important;min-height:64px!important
  }
 }
+
+
+/* Recette 2026-11-09 : respecter la surface activable réelle du label
+   newsletter. Une case de 18 px demeure visible, mais sa zone de clic
+   (le label HTML associé) mesure au moins 44 px, au clavier et au toucher. */
+body.sde-universe-page .sde-shell-newsletter label.sde-shell-consent{
+ box-sizing:border-box;min-height:48px;padding:10px 2px;
+ align-items:center;cursor:pointer
+}
+body.sde-universe-page .sde-shell-newsletter label.sde-shell-consent input[type=checkbox]{
+ width:20px;height:20px;flex:0 0 20px
+}
+/* Le bandeau de progression Quest perdait environ 60px lors du changement
+   de métriques de fonte avant le premier rendu stable sous Chromium.
+   Réserver sa hauteur à desktop fixe l'origine de Missions et filtres. */
+@media(min-width:1051px){
+ body.sdu-quest-page .sdu-quest-content>.sdu-intro-band{
+  box-sizing:border-box;height:170px;min-height:170px
+ }
+}
