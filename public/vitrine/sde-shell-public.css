@@ -811,20 +811,20 @@ html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>section.section 
 html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>section.section :is(.surtitre,.etiquette,.rythme,.premium-kicker){
  color:var(--sde-2027-accent-dark,var(--sde-2027-accent))!important;
 }
-html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="projets"] main#contenu .tete-section,
-html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="missions-humanitaires"] main#contenu .tete-section,
-html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="engagements"] main#contenu .tete-section,
-html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="pole-social"] main#contenu .tete-section,
-html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="pole-logistique"] main#contenu .tete-section{
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="projets"] main#contenu>section.section .tete-section,
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="missions-humanitaires"] main#contenu>section.section .tete-section,
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="engagements"] main#contenu>section.section .tete-section,
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="pole-social"] main#contenu>section.section .tete-section,
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="pole-logistique"] main#contenu>section.section .tete-section{
  background:linear-gradient(135deg,#eef5ef,#e1eee7)!important;
  border:1px solid rgba(47,104,79,.30)!important;
  border-left:4px solid var(--sde-2027-green)!important;
 }
-html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="projets"] main#contenu .tete-section :is(h2,h3,p),
-html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="missions-humanitaires"] main#contenu .tete-section :is(h2,h3,p),
-html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="engagements"] main#contenu .tete-section :is(h2,h3,p),
-html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="pole-social"] main#contenu .tete-section :is(h2,h3,p),
-html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="pole-logistique"] main#contenu .tete-section :is(h2,h3,p){
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="projets"] main#contenu>section.section .tete-section :is(h2,h3,p),
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="missions-humanitaires"] main#contenu>section.section .tete-section :is(h2,h3,p),
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="engagements"] main#contenu>section.section .tete-section :is(h2,h3,p),
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="pole-social"] main#contenu>section.section .tete-section :is(h2,h3,p),
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="pole-logistique"] main#contenu>section.section .tete-section :is(h2,h3,p){
  color:var(--sde-2027-ink)!important;
 }
 html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="projets"] main#contenu .sde-further,
