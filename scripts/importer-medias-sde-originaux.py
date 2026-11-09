@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from itertools import permutations
 from pathlib import Path
+import base64
 import math
 import shutil
 import subprocess
@@ -85,14 +86,24 @@ def match_photos(converter):
     choices = min(permutations(range(7)), key=lambda combo:
                   sum(costs[i][j][0] for i,j in enumerate(combo)))
     assignment={}
+    douteuses=[]
     for i,j in enumerate(choices):
         value,distance,color=costs[i][j]
         label=labels[j]
         print(f"IDENTIFICATION_PHOTO {files[i].name} -> {label} "
               f"dHash={distance}/64 couleur={color:.1f}",flush=True)
         if distance > 19 or color > 105:
-            raise ValueError("Photo non reconnue avec fiabilité : "+files[i].name)
+            douteuses.append(files[i])
         assignment[label]=files[i]
+    if douteuses:
+        for file in douteuses:
+            thumb=run([converter,str(file)+"[0]","-auto-orient","-thumbnail",
+                       "240x240>","-strip","-quality","55","JPEG:-"],
+                      stdout=subprocess.PIPE).stdout
+            print("SDE_VIGNETTE_DIAGNOSTIC",file.name,
+                  base64.b64encode(thumb).decode("ascii"),flush=True)
+        raise ValueError("Photos non reconnues avec fiabilité: "+
+                         ", ".join(f.name for f in douteuses))
     return assignment
 
 def match_videos():
