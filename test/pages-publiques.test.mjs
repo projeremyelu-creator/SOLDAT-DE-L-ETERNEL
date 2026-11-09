@@ -52,7 +52,7 @@ test('Programmes & Agenda : synchronisation publique, calendrier mensuel et fich
 test('Soutenir : paiements affichés selon l’état réel du serveur, reçus et transparence, aucun chiffre inventé',()=>{
  const h=page('soutenir'),js=lire('public/vitrine/sde-soutenir-statut.js');
  for(const canal of ['Orange Money','MTN Mobile Money','Moov Money','Virement bancaire','Visa / Mastercard'])assert.ok(h.includes(`data-canal="${canal}">Non activé`),canal);
- assert.ok(js.includes('/api/sde-demarches/statut')&&js.includes('paiementsActifs === true'));
+ assert.ok(js.includes('/api/sde-demarches/statut')&&/paiementsActifs\s*===\s*true/.test(js));
  for(const id of ['missions','etapes','reglements','recus','formulaire'])assert.ok(h.includes(`id="${id}"`),id);
  assert.match(h,/Aucun reçu n’est émis tant qu’un don n’est pas confirmé/);
  assert.ok(h.includes('href="/transparence"'));
@@ -152,7 +152,7 @@ test('Film de présentation : bouton sur l’accueil (hors des trois actions) et
  const actions=hero.match(/<div class="ap-actions">[\s\S]*?<\/div>/)[0];
  assert.equal((actions.match(/<a /g)||[]).length,2,'deux actions principales sur l’accueil');
  assert.ok(actions.includes('href="/contact#rejoindre"')&&actions.includes('href="/mouvement#film"'), 'adhésion et présentation animée');
- assert.match(actions,/présentation animée \(sans son\)/);
+ assert.match(actions,/Voir la présentation \(73 s · sans son\)/);
  assert.ok(contact.includes('id="film-contact"')&&contact.includes('href="/mouvement#film"'));
  assert.ok(contact.indexOf('id="film-contact"')<contact.indexOf('id="rejoindre" aria-labelledby'),'avant le formulaire, hors des sections de texte légal');
  assert.ok(lire('public/vitrine/sde-accueil-premium.css').includes('.ap-film'));
