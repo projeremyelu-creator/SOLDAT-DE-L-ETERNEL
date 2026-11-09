@@ -64,12 +64,18 @@
      ['Intentions en prière',i.intercessions,'Requêtes non clôturées'],
      ['Événements enregistrés',data?.total?.evenements,'Agenda du mouvement']
     ];
-    // Un zéro de la base est réel ; une valeur manquante n'est jamais inventée.
-    if(!cards.every(entry=>Number.isFinite(entry[1])))return;
+    // Un zéro issu de la base est réel. Une absence de taux de présence
+    // n'efface pas les autres indicateurs : afficher « — » sans inventer 0 %.
+    if(!cards.some(entry=>Number.isFinite(entry[1])))return;
     insights.replaceChildren();
     for(const [libelle,valeur,detail,suffixe=''] of cards){
       const card=el('article','sde-command-v4-insight');
-      card.append(el('span','',libelle),el('strong','',String(valeur)+suffixe),el('small','',detail));
+      const disponible=Number.isFinite(valeur);
+      card.append(
+       el('span','',libelle),
+       el('strong','',disponible?String(valeur)+suffixe:'—'),
+       el('small','',disponible?detail:'Donnée non renseignée')
+      );
       insights.append(card);
     }
     insights.hidden=false;
