@@ -1,0 +1,195 @@
+/* SDE Digital Universe 2027 — charte partagee Citadelle · Campus · Quest · TV.
+   Adaptation originale des quatre maquettes de reference. Pas de fausses donnees. */
+:root{
+ --sdu-night:#071225;--sdu-deep:#060d1d;--sdu-panel:#12213b;--sdu-glass:rgba(16,28,53,.88);
+ --sdu-gold:#e2c26a;--sdu-gold-light:#fff0b6;--sdu-gold-dark:#ae872d;
+ --sdu-ink:#f8f5ed;--sdu-muted:#d3dcf0;--sdu-violet:#7853b6;--sdu-forest:#234c35;
+ --sdu-line:rgba(226,194,106,.34);--sdu-radius:19px;
+ --sdu-serif:"Cinzel","Libre Caslon Text",Georgia,serif;
+ --sdu-sans:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif
+}
+html{scroll-padding-top:90px}
+body.sde-universe-page{margin:0;background:var(--sdu-deep);color:var(--sdu-ink);font-family:var(--sdu-sans);overflow-x:clip}
+body.sde-universe-page *,body.sde-premium-home .sde-universe *{box-sizing:border-box}
+body.sde-universe-page a{color:inherit}
+body.sde-universe-page :is(a,button,summary):focus-visible,
+body.sde-premium-home .sde-universe a:focus-visible{outline:3px solid var(--sdu-gold-light)!important;outline-offset:4px}
+body.sde-universe-page .sde-shell-portal,body.sde-premium-home .sde-shell-portal{
+ background:linear-gradient(130deg,#f8e3a0,#d5a746)!important;color:#17182b!important;
+ border:1px solid #ffe8a9!important;box-shadow:0 6px 26px #d4af3733;
+}
+.sdu-container{width:min(1370px,calc(100% - 44px));margin-inline:auto}
+.sdu-heading{text-align:center;max-width:850px;margin:0 auto 29px}
+.sdu-eyebrow{display:inline-block;color:var(--sdu-gold);font-weight:800;letter-spacing:.15em;font-size:.76rem;text-transform:uppercase}
+.sdu-heading h2,.sdu-title{font-family:var(--sdu-serif);font-weight:700;color:var(--sdu-gold-light);line-height:1.19;text-wrap:balance;letter-spacing:-.025em}
+.sdu-heading h2{font-size:clamp(1.55rem,3.5vw,2.8rem);margin:8px 0}
+.sdu-heading p{color:var(--sdu-muted);line-height:1.65;margin:0}
+.sdu-button{display:inline-flex;align-items:center;justify-content:center;text-align:center;gap:9px;min-height:46px;
+ border:1px solid #d7b65d;border-radius:11px;padding:10px 19px;font-weight:800;font-family:var(--sdu-sans);line-height:1.25;
+ background:linear-gradient(135deg,#fff0b6,#e2c26a 57%,#c89436);color:#111a2e!important;
+ text-decoration:none!important;box-shadow:0 8px 22px #0005;transition:transform .2s,box-shadow .2s,filter .2s}
+.sdu-button:is(:hover,:focus-visible){transform:translateY(-2px);box-shadow:0 13px 26px #0006;filter:brightness(1.06)}
+.sdu-button--ghost{background:#0c1933bd!important;color:#ffe6a5!important}
+.sdu-section{position:relative;padding:clamp(35px,5vw,72px) 0}
+.sdu-section--layer{background:linear-gradient(135deg,#0b1630,#151536 53%,#081b27)}
+.sdu-panel{background:linear-gradient(155deg,rgba(33,43,77,.92),rgba(8,19,39,.97));border:1px solid var(--sdu-line);
+ border-radius:var(--sdu-radius);box-shadow:inset 0 1px #ffffff18,0 14px 35px #0003;overflow:hidden}
+.sdu-panel h3{font-family:var(--sdu-serif);color:var(--sdu-gold-light);font-size:clamp(1.15rem,2vw,1.65rem);line-height:1.3;margin:0 0 9px}
+.sdu-panel p{color:var(--sdu-muted);line-height:1.6}
+.sdu-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,1.6vw,22px)}
+.sdu-card{display:flex;flex-direction:column;min-width:0;text-decoration:none!important;transition:transform .24s,border-color .24s,box-shadow .24s}
+.sdu-card:is(:hover,:focus-visible){transform:translateY(-5px);border-color:#f8d98f;box-shadow:0 15px 35px #0006,0 0 19px #d4af3722}
+.sdu-art{display:block;height:145px;background-size:cover;background-position:center;position:relative;overflow:hidden}
+.sdu-art:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#0d162d,transparent 80%)}
+.sdu-art--citadel{background-image:linear-gradient(160deg,#19265044,#070e24aa),url('/vitrine/photos/hero-sde-1280.webp')}
+.sdu-art--campus{background-image:linear-gradient(160deg,#25133944,#08152baa),url('/vitrine/illus/livre-academy.webp')}
+.sdu-art--quest{background-image:linear-gradient(160deg,#3f382444,#071b30bb),url('/vitrine/photos/fire-generation-vignette.webp')}
+.sdu-art--tv{background-image:linear-gradient(160deg,#44154c44,#080f2a99),url('/vitrine/illus/infire-banniere.webp')}
+.sdu-card-copy{padding:17px 18px 20px;display:flex;flex:1;flex-direction:column}
+.sdu-card-copy p{font-size:.91rem;margin:0 0 16px;flex:1}
+.sdu-card-link{font-size:.86rem;color:var(--sdu-gold-light);font-weight:800}
+.sdu-card-symbol{font-size:1.35rem;margin-bottom:5px;color:var(--sdu-gold-light)}
+/* Accueil : ajout d'un espace visuellement coherent avec les quatre ecrans. */
+body.sde-premium-home .sde-universe{background:radial-gradient(ellipse at 50% 0,#293057 0,transparent 48%),linear-gradient(165deg,#071225,#11182d 55%,#071225);color:var(--sdu-ink)}
+body.sde-premium-home .sde-universe .sdu-heading p{color:#d9e1f0}
+body.sde-premium-home .ap-hero{border-bottom:1px solid #d9b9645c}
+body.sde-premium-home .ap-hero .ap-hero-copy .ap-eyebrow{color:#ffdd94!important;letter-spacing:.12em}
+body.sde-premium-home .ap-hero .ap-actions .ap-btn-gold{background:linear-gradient(120deg,#f6dfa1,#d6a742)!important;color:#151a2c!important;box-shadow:0 7px 23px #bd8f3b38}
+body.sde-premium-home .ap-hero .sde-tpa-hero-card{box-shadow:0 18px 56px #000a,0 0 25px #e2c26a22!important}
+body.sde-premium-home .sde-premium-pillars{background:linear-gradient(180deg,#070f22,#151431)!important}
+body.sde-premium-home .sde-premium-pillars-title h2,
+body.sde-premium-home #poles-accueil .ap-head h2{font-family:var(--sdu-serif)!important;color:#f3d995!important}
+body.sde-premium-home .sde-premium-pillar{box-shadow:0 12px 31px #0005}
+body.sde-premium-home .sde-universe .sdu-container{width:min(1250px,calc(100% - 40px))}
+body.sde-premium-home .sde-universe .sdu-art{height:158px}
+body.sde-premium-home .sde-universe .sdu-panel{background:linear-gradient(160deg,#15223b,#0b152d)}
+body.sde-premium-home .sde-universe .sdu-panel:nth-child(2){border-color:#916bd477}
+body.sde-premium-home .sde-universe .sdu-panel:nth-child(3){border-color:#7a925e77}
+body.sde-premium-home .sde-universe .sdu-panel:nth-child(4){border-color:#974fa377}
+/* Pages immersives : Citadelle en hero, et sous-univers en cartes lisibles. */
+.sdu-hero{position:relative;isolation:isolate;overflow:hidden;
+ background:linear-gradient(90deg,#06101ff5 0,#0b1631d0 55%,#0a1321a3),url('/vitrine/photos/hero-sde-1280.webp') center 47%/cover no-repeat}
+.sdu-hero:after{content:"";pointer-events:none;position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 85% 25%,#ddab4740,transparent 60%)}
+.sdu-hero-inner{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(285px,.7fr);align-items:center;gap:30px;
+ min-height:415px;padding-block:clamp(42px,7vw,88px)}
+.sdu-hero h1{font-family:var(--sdu-serif);font-size:clamp(2.1rem,5vw,4.65rem);line-height:1.1;margin:12px 0 18px;color:#fff0bd;text-shadow:0 6px 25px #000b}
+.sdu-hero p{font-size:clamp(1rem,1.5vw,1.15rem);line-height:1.66;color:#f3ecdd;max-width:640px;margin:0 0 21px}
+.sdu-hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.sdu-hero-aside{padding:25px;background:#0b1435dc;backdrop-filter:blur(13px);border:1px solid #d4af3788}
+.sdu-hero-aside>span{font-size:2.1rem}
+.sdu-hero-aside ul{padding-left:21px;margin:12px 0 18px;color:#f2e9de;line-height:1.8}
+.sdu-hero-aside li::marker{color:#edcc76}
+.sdu-intro-band{display:flex;align-items:center;justify-content:space-between;gap:17px;flex-wrap:wrap;padding:18px 22px;
+ background:#0c1932;border:1px solid #e2c26a55;border-radius:15px}
+.sdu-intro-band p{color:#d5dcf0;margin:5px 0 0}
+.sdu-intro-band strong{color:#ffe5a0}
+.sdu-feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.sdu-feature{padding:23px}
+.sdu-feature .sdu-icon{font-size:1.7rem;color:#edd18d;margin-bottom:12px;display:block}
+.sdu-feature ul{padding-left:18px;line-height:1.8;color:#dce3f2;margin:0}
+.sdu-feature a{color:#ffdda0;font-weight:800}
+.sdu-feature--violet{background:linear-gradient(140deg,#352347,#151a32)}
+.sdu-feature--green{background:linear-gradient(140deg,#1d3d35,#121c30)}
+.sdu-feature--gold{background:linear-gradient(140deg,#413124,#10182f)}
+.sdu-page-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:19px}
+.sdu-notice{padding:16px 20px;background:#10253d;border:1px solid #8da0b04d;border-radius:14px;color:#deebf7;font-size:.94rem;line-height:1.6}
+.sdu-mini{font-size:.8rem;color:#acb8cf}
+.sdu-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;counter-reset:sdu-step}
+.sdu-step{padding:21px;counter-increment:sdu-step}
+.sdu-step:before{content:counter(sdu-step,decimal-leading-zero);display:block;font:800 1.9rem/1 var(--sdu-serif);color:var(--sdu-gold);margin-bottom:15px}
+.sdu-step h3{font-size:1.13rem}
+.sdu-step p{font-size:.92rem;margin:0}
+.sdu-checklist{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.sdu-checklist li{padding:10px 14px;border-radius:10px;border:1px solid #d4af3744;background:#08172dbd;color:#f0e9de}
+.sdu-checklist li:before{content:"✓";font-weight:900;margin-right:10px;color:#a8d9a5}
+.sdu-filterbar{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:14px 0 24px}
+.sdu-filterbar button{font:700 .85rem var(--sdu-sans);border:1px solid #b99b6077;background:#0b1b34;color:#fff2d7;
+ min-height:43px;border-radius:999px;padding:9px 15px;cursor:pointer}
+.sdu-filterbar button[aria-pressed="true"]{background:linear-gradient(110deg,#edd18b,#caa248);color:#10182b}
+.sdu-quest-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.sdu-quest{padding:24px;display:flex;flex-direction:column;gap:10px}
+.sdu-quest h3{margin:0}
+.sdu-quest p{margin:0;flex:1}
+.sdu-quest .sdu-quest-tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:#ffdd9d;font-weight:800}
+.sdu-quest .sdu-button{margin-top:10px;align-self:flex-start}
+.sdu-quest[hidden],.sdu-media-tile[hidden]{display:none!important}
+.sdu-media-layout{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(245px,.75fr);gap:19px}
+.sdu-player{padding:0}
+.sdu-player video{display:block;width:100%;aspect-ratio:16/9;background:#010816;object-fit:contain}
+.sdu-player figcaption{padding:17px 20px;color:#dfebfc;line-height:1.55}
+.sdu-player figcaption strong{color:#ffe2a4}
+.sdu-watch-aside{padding:24px}
+.sdu-watch-aside p{color:#e1e4ef}
+.sdu-media-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.sdu-media-tile{padding-bottom:16px;display:flex;flex-direction:column}
+.sdu-media-tile img{display:block;aspect-ratio:16/9;object-fit:cover;width:100%}
+.sdu-media-tile .sdu-media-body{padding:14px 17px;display:grid;gap:7px;flex:1}
+.sdu-media-tile h3{font-size:1.1rem}
+.sdu-media-tile p{font-size:.85rem;margin:0}
+.sdu-media-tile .sdu-button{font-size:.8rem;min-height:42px}
+.sdu-no-results{color:#f5dba3;font-size:.95rem}
+.sdu-no-results[hidden]{display:none}
+.sdu-cta{text-align:center;padding:clamp(24px,4vw,42px);border:1px solid #d4af3766;
+ border-radius:var(--sdu-radius);background:linear-gradient(125deg,#253352,#1a1939 55%,#152b2d)}
+.sdu-cta h2{font:700 clamp(1.4rem,3vw,2.1rem) var(--sdu-serif);color:#ffe2a0;margin:0 0 12px}
+.sdu-cta p{color:#e4e8f1;margin:0 auto 18px;max-width:720px;line-height:1.6}
+/* Soldiers Campus : amelioration visuelle de la page publique et du tableau authentifie. */
+body.sde-campus-public .hero-acad{position:relative;border:1px solid #e2c26a7a;border-radius:24px;overflow:hidden;
+ background:linear-gradient(90deg,#071225ea,#15182bc9),url('/vitrine/illus/livre-academy.webp') right 36%/cover no-repeat!important;
+ padding:clamp(32px,6vw,66px)!important;box-shadow:0 24px 44px #0006}
+body.sde-campus-public .hero-acad h1{font-family:var(--sdu-serif)!important;color:#ffe6ab!important;text-shadow:0 5px 22px #000b}
+body.sde-campus-public .hero-acad .sous-titre{color:#f0ebde!important;max-width:800px!important}
+body.sde-campus-public .sdu-campus-strip{margin:21px 0 29px}
+body.sde-campus-public .sdu-campus-strip .sdu-steps{grid-template-columns:repeat(3,minmax(0,1fr))}
+body.sde-campus-public .sdu-campus-strip .sdu-step{padding:17px 20px}
+body.sde-campus-public .sdu-campus-strip p{font-size:.91rem}
+body.sde-campus-public .sdu-campus-strip a{color:#ffe1a4!important;font-weight:800}
+body.sde-campus-student{--sa-nuit:#081428}
+body.sde-campus-student .hero{background:linear-gradient(90deg,#07152ce8,#1c1b3dbb),url('/vitrine/illus/livre-academy.webp') center/cover no-repeat;
+ border:1px solid #d3b26791;border-left:4px solid var(--sdu-gold);border-radius:19px;padding:clamp(20px,4vw,36px);margin-block:16px 25px}
+body.sde-campus-student .hero h1{font-family:var(--sdu-serif);color:#ffe2a2;font-size:clamp(1.8rem,4vw,2.9rem)}
+body.sde-campus-student .hero .lead{max-width:800px;color:#f5e9d4}
+body.sde-campus-student .metrics .metric{border:1px solid #d9b8617a;background:linear-gradient(155deg,#1c2b4b,#0b192f);border-radius:15px}
+body.sde-campus-student #academyDynDashboard{border:1px solid #d4af3780;border-radius:17px}
+body.sde-campus-student .tabs{border-color:#d4af3760}
+body.sde-campus-student .tabs button[aria-selected="true"]{color:#ffe4a4;border-bottom-color:var(--sdu-gold)}
+body.sde-campus-student #catalogue :is(article,.course,.card){border-radius:14px}
+body.sde-campus-student .sdu-student-links{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:21px}
+body.sde-campus-student .sdu-student-links a{background:#192a46;border:1px solid #c59b4588;
+ border-radius:11px;padding:10px 15px;color:#ffe3a6;text-decoration:none;font-weight:800}
+/* Partage d'une entree TV avec media du mouvement et portail */
+body.sde-premium-home #poles-accueil{background:linear-gradient(145deg,#0b1a34,#10172b)!important}
+body.sde-premium-home #poles-accueil .m-pole{border:1px solid #d4af3766}
+body.sde-premium-home #poles-accueil :is(h3,.m-pole-num){color:#f6d594!important}
+/* Animations sobres uniquement pour les effets decoratifs et le focus actif. */
+@keyframes sdu-rise{from{opacity:.65;transform:translateY(11px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sdu-gleam{0%,100%{box-shadow:0 0 13px #d4af3725}50%{box-shadow:0 0 27px #d4af3744}}
+.sdu-motion .sdu-card,.sdu-motion .sdu-feature,.sdu-motion .sdu-quest{animation:sdu-rise .48s both}
+.sdu-motion .sdu-hero-aside{animation:sdu-gleam 5s ease-in-out infinite}
+@media(max-width:1050px){
+ .sdu-grid,.sdu-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sdu-quest-grid,.sdu-media-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sdu-hero-inner{grid-template-columns:1fr;gap:22px;min-height:0}
+ .sdu-hero-aside{max-width:650px}
+ .sdu-media-layout{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+ .sdu-container,body.sde-premium-home .sde-universe .sdu-container{width:min(100% - 28px,1370px)}
+ .sdu-hero-inner{padding:35px 0}
+ .sdu-hero h1{font-size:clamp(1.85rem,9vw,3rem)}
+ .sdu-grid,.sdu-feature-grid,.sdu-steps,.sdu-quest-grid,.sdu-media-tiles,
+ body.sde-campus-public .sdu-campus-strip .sdu-steps{grid-template-columns:1fr}
+ .sdu-art{height:175px}
+ .sdu-intro-band{align-items:stretch}
+ .sdu-intro-band .sdu-button{width:100%}
+ .sdu-hero-actions .sdu-button{flex:1 1 180px}
+ .sdu-feature{padding:19px}
+ .sdu-section{padding:33px 0}
+ .sdu-player video{aspect-ratio:16/9}
+ body.sde-campus-public .hero-acad{padding:28px 18px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .sdu-motion .sdu-card,.sdu-motion .sdu-feature,.sdu-motion .sdu-quest,.sdu-motion .sdu-hero-aside{animation:none!important}
+ .sdu-card,.sdu-button{transition:none!important}
+ .sdu-card:is(:hover,:focus-visible),.sdu-button:is(:hover,:focus-visible){transform:none!important}
+}
