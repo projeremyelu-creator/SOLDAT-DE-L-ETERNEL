@@ -26,9 +26,10 @@ const texte=(d,id)=>d.getElementById(id).textContent;
 test('Accueil : la fiche centrale du programme phare est cohérente avec l’affiche et le JSON-LD',()=>{
  const d=new JSDOM(html).window.document;
  assert.equal(phareReel.affiche,'/vitrine/illus/tpa-2026.webp');
- assert.equal(d.querySelectorAll(`img[src="${phareReel.affiche}"]`).length,1);
+ assert.equal(d.querySelectorAll(`img[src="${phareReel.affiche}"]`).length,0,'affiche complète réservée à la page Programmes');
  assert.equal(d.getElementById('ap-next-title').textContent,phareReel.titre);
- assert.equal(d.querySelector('#programme-phare time').getAttribute('datetime'),phareReel.debut);
+ assert.equal(d.getElementById('ap-next-date').getAttribute('datetime'),phareReel.debut);
+ assert.equal(d.querySelectorAll('.sde-shell-event').length,1);
  assert.equal(d.getElementById('ap-next-register').getAttribute('href'),phareReel.inscription);
  assert.equal(d.getElementById('ap-next-more').getAttribute('href'),phareReel.fiche);
  assert.match(html,new RegExp('"startDate":"'+phareReel.debut.replace(/[+]/g,'\\+')+'"'));
