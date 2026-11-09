@@ -42,7 +42,10 @@ test("Le script de versets remplace l'emplacement réservé sans ajouter une sec
  assert.strictEqual(band.nextElementSibling,neighbor);
  assert.equal(doc.querySelectorAll(".sde-versets").length,1);
  assert.equal(doc.querySelector(".sde-versets-slot"),null);
- assert.equal(band.querySelectorAll(".sde-verset").length,12);
+ assert.equal(band.querySelectorAll(".sde-verset").length,1,"un seul verset visible, sans copie DOM");
+ assert.equal(band.querySelectorAll(".sde-versets-piste").length,0);
+ assert.ok(band.querySelector(".sde-verset q"));
+ assert.ok(band.querySelector(".sde-verset cite"));
  const pause=band.querySelector(".sde-versets-pause");
  assert.ok(pause);
  pause.click();
@@ -52,5 +55,5 @@ test("Le script de versets remplace l'emplacement réservé sans ajouter une sec
 
 test("Les styles conservent exactement la même hauteur avant et après insertion",()=>{
  const s=read("public/vitrine/sde-versets.css");
- assert.match(s,/body\.sde-accueil-maquette \.sde-versets-slot,\s*body\.sde-accueil-maquette \.sde-versets\s*\{[\s\S]*?height:48px;[\s\S]*?min-height:48px;[\s\S]*?max-height:48px;/);
+ assert.match(s,/body\.sde-accueil-maquette \.sde-versets-slot,\s*body\.sde-accueil-maquette \.sde-versets\s*\{[\s\S]*?height:88px;[\s\S]*?min-height:88px;[\s\S]*?max-height:88px;/);
 });
