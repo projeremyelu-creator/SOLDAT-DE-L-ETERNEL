@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Mouvement SDE//TPA 2026//FR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:tpa-2026-20261218-2000@mouvement-sde.org
+DTSTAMP:20261109T000000Z
+DTSTART:20261218T200000Z
+DTEND:20261218T210000Z
+SUMMARY:Traversée Prophétique Annuelle — TPA 2026
+DESCRIPTION:Programme de prière en ligne. Le lien Google Meet sera communiqué par les organisateurs. Horaire de fin indicatif\; à adapter selon le programme officiel. Informations : https://mouvement-sde.org/programmes#tpa-2026
+LOCATION:En ligne — Google Meet (accès communiqué séparément)
+URL:https://mouvement-sde.org/programmes#tpa-2026
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:TPA 2026 commence dans 30 minutes
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+END:VCALENDAR
