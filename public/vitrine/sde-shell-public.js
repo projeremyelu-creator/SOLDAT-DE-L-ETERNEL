@@ -42,6 +42,28 @@
   const d=make("details",cls),sum=make("summary","",g.title),panel=make("div","sde-shell-submenu");
   d.append(sum);for(const [href,label] of g.links)panel.append(link(href,label));d.append(panel);return d;
  }
+ function themeButton(cls){
+  const button=make("button",cls+" sde-shell-theme-control");
+  button.type="button";
+  const update=()=>{
+   const dark=document.documentElement.getAttribute("data-theme")!=="light";
+   button.textContent=dark?"☀ Mode clair":"☾ Mode sombre";
+   button.setAttribute("aria-label",dark?"Activer le mode clair":"Activer le mode sombre");
+  };
+  button.addEventListener("click",()=>{
+   const next=document.documentElement.getAttribute("data-theme")==="light"?"dark":"light";
+   document.documentElement.setAttribute("data-theme",next);
+   document.querySelector('meta[name="theme-color"]')?.setAttribute("content",next==="dark"?"#11182a":"#eef0f5");
+   try{localStorage.setItem("sde-theme",next)}catch(_){}
+   document.querySelectorAll(".sde-shell-theme-control").forEach(el=>{
+    const isDark=next!=="light";
+    el.textContent=isDark?"☀ Mode clair":"☾ Mode sombre";
+    el.setAttribute("aria-label",isDark?"Activer le mode clair":"Activer le mode sombre");
+   });
+  });
+  update();
+  return button;
+ }
  function header(){
   const h=make("header","site-header sde-shell-header");
   h.setAttribute("role","banner");
@@ -56,7 +78,7 @@
   const search=link("/rechercher","","sde-shell-search");search.setAttribute("aria-label","Rechercher");search.append(icon("recherche"));
   const join=link("/contact#rejoindre","Nous rejoindre","sde-shell-join");
   const portal=link("/portail","Mon Portail S.D.E","sde-shell-portal");portal.prepend(icon("portail"));
-  actions.append(search,join,portal);row.append(brand,nav,actions);h.append(row);
+  actions.append(search,themeButton("sde-shell-theme-top"),join,portal);row.append(brand,nav,actions);h.append(row);
   const details=[...nav.querySelectorAll("details")];
   details.forEach(d=>d.addEventListener("toggle",()=>{if(d.open)details.forEach(x=>{if(x!==d)x.open=false;});}));
   document.addEventListener("pointerdown",e=>{if(!nav.contains(e.target))details.forEach(x=>x.open=false);});
@@ -100,6 +122,7 @@
   const search=make("input","sde-shell-filter");search.type="search";search.placeholder="Chercher une rubrique…";search.setAttribute("aria-label","Chercher une rubrique");
   const quick=make("div","sde-shell-quick");
   quick.append(link("/portail","Connexion — Mon Portail S.D.E","sde-shell-quick-portal"),link("/priere","Confier un sujet de prière","sde-shell-quick-prayer"));
+  quick.append(themeButton("sde-shell-theme-drawer"));
   const content=make("div","sde-shell-drawer-groups");
   for(const group of groups)content.append(menuGroup(group,"sde-shell-drawer-group"));
   const noResult=make("p","sde-shell-no-results","Aucune rubrique trouvée.");noResult.hidden=true;
