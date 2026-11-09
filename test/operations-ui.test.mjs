@@ -1,4 +1,33 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {buildSync} from 'esbuild';import {JSDOM} from 'jsdom';import {fixture} from './helpers/d1.mjs';
+
+test('Le membre et l’administrateur chargent leur photo dans leur tableau de bord',async()=>{
+ for(const [path,role] of [['/mon-espace','soldat'],['/administration','admin']]){
+  const c=await page(path,role);
+  try{
+   const input=c.d.querySelector('.ops-profile-photo input[type="file"]');
+   assert.ok(input,path+' propose le choix de photo');
+   const original=c.w.fetch;
+   let uploads=0;
+   c.w.fetch=async(url,options)=>{
+    if(url==='/api/ma-photo'){
+     uploads++;assert.equal(options.method,'POST');assert.equal(options.credentials,'same-origin');
+     assert.equal(options.headers['content-type'],'image/png');
+     return {ok:true,json:async()=>({ok:true,url:'/_blob/photo-fictive-123456',photoId:'photo-fictive-123456'})};
+    }
+    return original(url,options);
+   };
+   const file=new c.w.File([Uint8Array.from([137,80,78,71])],'portrait.png',{type:'image/png'});
+   Object.defineProperty(input,'files',{configurable:true,value:[file]});
+   input.dispatchEvent(new c.w.Event('change',{bubbles:true}));
+   await waitFor(()=>c.d.querySelector('.ops-profile-photo [role="status"]')?.textContent.includes('enregistrée'));
+   assert.equal(uploads,1);
+   assert.equal(c.w.SDEPortal.compte.photo,'/_blob/photo-fictive-123456');
+   assert.equal(c.d.querySelector('.ops-profile-avatar img')?.getAttribute('src'),'/_blob/photo-fictive-123456');
+   if(role==='admin')assert.equal(c.d.querySelector('.ref-account .ref-avatar img')?.getAttribute('src'),'/_blob/photo-fictive-123456');
+   assert.deepEqual(c.errors,[]);
+  }finally{c.close()}
+ }
+});
 const bundle=buildSync({entryPoints:['frontend/operations-entry.jsx'],bundle:true,format:'iife',write:false,define:{'process.env.NODE_ENV':'"production"'}}).outputFiles[0].text;
 const tick=()=>new Promise(r=>setTimeout(r,70));const waitFor=async f=>{const deadline=Date.now()+2200;while(!f()&&Date.now()<deadline)await tick();assert.ok(f(),'État UI attendu non atteint')};
 async function page(path='/administration',role='admin'){

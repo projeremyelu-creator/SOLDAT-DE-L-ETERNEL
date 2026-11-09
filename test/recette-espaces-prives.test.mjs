@@ -56,6 +56,34 @@ test('Recette 2.2 : profil du membre enregistré, relu et isolé de celui des au
   }finally{f.close()}
 });
 
+test('Photo de profil : membre et administrateur téléchargent chacun la leur',async()=>{
+  const f=contexte(),files=new Map();
+  f.env.FICHIERS={
+    put:async(id,value,{metadata})=>files.set(id,{value,metadata}),
+    getWithMetadata:async id=>files.get(id)||null
+  };
+  const png=Uint8Array.from(Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL/nwAAAABJRU5ErkJggg==','base64'));
+  const send=async(id,bytes=png,type='image/png')=>worker.fetch(new Request('https://mouvement-sde.org/api/ma-photo',{
+    method:'POST',headers:{cookie:'sde_s='+id,'content-type':type,origin:'https://mouvement-sde.org'},body:bytes
+  }),f.env,{waitUntil(){}});
+  try{
+    const membre=await send('alice');assert.equal(membre.status,200);
+    const a=await membre.json();assert.match(a.url,/^\/_blob\/[A-Za-z0-9_-]+$/);
+    assert.equal((await f.call('/api/mon-espace','alice')).body.membre.photoId,a.photoId);
+    assert.equal((await f.call('/api/moi','alice')).body.photo,a.url);
+    assert.equal((await f.call('/api/mon-espace','bob')).body.membre.photoId,'');
+    f.sql.prepare('UPDATE comptes SET membreId = NULL WHERE email = ?').run('admin@example.org');
+    const admin=await send('admin');assert.equal(admin.status,200);
+    const b=await admin.json();assert.notEqual(b.photoId,a.photoId);
+    assert.equal((await f.call('/api/moi','admin')).body.photo,b.url);
+    assert.equal((await f.call('/api/mon-profil','alice','PATCH',{photoId:b.photoId})).status,400);
+    assert.equal((await send('bob',new TextEncoder().encode('<svg></svg>'),'image/svg+xml')).status,400);
+    assert.equal((await send('bob',new TextEncoder().encode('not a png'))).status,400);
+    assert.equal((await send('bob',new Uint8Array(5*1024*1024+1))).status,413);
+    assert.equal((await send('unknown')).status,403);
+  }finally{f.close()}
+});
+
 test('Recette 2.3 : création admin d’un événement et inscription réelle du membre',async()=>{
   const f=contexte();
   try{
