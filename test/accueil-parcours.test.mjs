@@ -59,7 +59,7 @@ test('Accueil : sans rendez-vous plus proche, la carte affiche le programme phar
   assert.equal(d.getElementById('ap-next-register').getAttribute('href'),phare.inscription);
   assert.equal(d.getElementById('ap-next-more').getAttribute('href'),'/programmes#tpa-2026');
   assert.equal(d.getElementById('prochain-rendez-vous').hidden,true,'le bandeau TPA suffit pour ce rendez-vous');
-  assert.match(texte(d,'ap-countdown'),/^Dans \\d+ jours \\d+ h \\d+ min \\d+ s$/);
+  assert.match(texte(d,'ap-countdown'),/^Dans \d+ jours \d+ h \d+ min \d+ s$/);
  }finally{dom.window.close()}
 });
 // Dates passées, impossibles, absentes, entrées invalides, panne réseau : la fiche statique reste utile.
