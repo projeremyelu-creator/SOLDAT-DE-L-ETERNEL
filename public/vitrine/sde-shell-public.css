@@ -644,3 +644,240 @@ body.sde-pages-premium.pg-tabs-static .hub-card{
  .sde-master-access .sde-master-path{transition:none}
  .sde-master-access .sde-master-path:hover{transform:none}
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CHARTE PUBLIQUE SDE 2027
+   Bleu nuit = structure · Ivoire = lecture · Or = actions
+   Violet = spiritualité · Vert = missions
+   Ce bloc reste volontairement en fin de cascade : il harmonise les anciennes
+   pages sans modifier leurs contenus ni leurs parcours fonctionnels.
+   ═══════════════════════════════════════════════════════════════════════════ */
+body.sde-shell-mounted{
+ --sde-2027-night:#0b1730;
+ --sde-2027-night-soft:#142544;
+ --sde-2027-ivory:#f7f2e8;
+ --sde-2027-paper:#fffdf8;
+ --sde-2027-ink:#202b43;
+ --sde-2027-muted:#566077;
+ --sde-2027-gold:#d4af37;
+ --sde-2027-gold-light:#efd487;
+ --sde-2027-gold-dark:#735918;
+ --sde-2027-violet:#694097;
+ --sde-2027-violet-dark:#3c245d;
+ --sde-2027-green:#2f684f;
+ --sde-2027-green-dark:#173e35;
+ --sde-2027-line:#d8cdb8;
+ --sde-2027-accent:#284b7b;
+ --sde-2027-heading:"Libre Caslon Text",Georgia,serif;
+ --sde-2027-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+ font-family:var(--sde-2027-body);
+ color:var(--sde-2027-ink);
+ background:var(--sde-2027-ivory);
+}
+
+/* Sections spirituelles */
+body.sde-shell-mounted[data-sde-page="prieres"],
+body.sde-shell-mounted[data-sde-page="temoignages"],
+body.sde-shell-mounted[data-sde-page="academy"],
+body.sde-shell-mounted[data-sde-page="pole-reveil"],
+body.sde-shell-mounted[data-sde-page="programmes"]{
+ --sde-2027-accent:var(--sde-2027-violet);
+ --sde-2027-accent-dark:var(--sde-2027-violet-dark);
+}
+
+/* Missions, terrain et impact social */
+body.sde-shell-mounted[data-sde-page="missions-humanitaires"],
+body.sde-shell-mounted[data-sde-page="projets"],
+body.sde-shell-mounted[data-sde-page="engagements"],
+body.sde-shell-mounted[data-sde-page="pole-social"],
+body.sde-shell-mounted[data-sde-page="pole-logistique"]{
+ --sde-2027-accent:var(--sde-2027-green);
+ --sde-2027-accent-dark:var(--sde-2027-green-dark);
+}
+
+/* Une seule coque bleu nuit sur toutes les pages publiques. */
+body.sde-shell-mounted .sde-shell-header{
+ background:rgba(11,23,48,.97)!important;
+ border-bottom:1px solid rgba(239,212,135,.48)!important;
+ box-shadow:0 8px 30px rgba(3,9,22,.24)!important;
+}
+body.sde-shell-mounted .sde-shell-head-inner{min-height:72px}
+body.sde-shell-mounted .sde-shell-brand-title b{
+ color:#fffaf0!important;font-family:var(--sde-2027-body);font-weight:800;
+}
+body.sde-shell-mounted .sde-shell-brand-title small{color:var(--sde-2027-gold-light)!important}
+body.sde-shell-mounted .sde-shell-mega-group>summary{
+ color:#f8f1e4;font-family:var(--sde-2027-body);font-weight:700;
+}
+body.sde-shell-mounted .sde-shell-mega-group[open]>summary,
+body.sde-shell-mounted .sde-shell-mega-group>summary:hover{
+ color:#fff4d4;background:rgba(212,175,55,.13);
+}
+body.sde-shell-mounted .sde-shell-mega .sde-shell-submenu,
+body.sde-shell-mounted .sde-shell-drawer{
+ background:#101e38!important;border-color:rgba(239,212,135,.42)!important;
+}
+body.sde-shell-mounted .sde-shell-submenu a{color:#f8f1e4}
+body.sde-shell-mounted .sde-shell-submenu a:hover,
+body.sde-shell-mounted .sde-shell-submenu a:focus-visible{
+ background:var(--sde-2027-gold-light);color:var(--sde-2027-night)!important;
+}
+body.sde-shell-mounted .sde-shell-search{color:var(--sde-2027-gold-light)!important}
+body.sde-shell-mounted .sde-shell-portal,
+body.sde-shell-mounted .sde-shell-donate,
+body.sde-shell-mounted .sde-shell-newsletter button{
+ color:var(--sde-2027-night)!important;
+ background:linear-gradient(135deg,var(--sde-2027-gold-light),var(--sde-2027-gold))!important;
+ border-color:#f2dc9b!important;
+ box-shadow:0 9px 24px rgba(120,87,15,.24);
+}
+
+/* Lecture sur ivoire : contraste stable, y compris pendant le chargement. */
+body.sde-shell-mounted.sde-subpage,
+body.sde-shell-mounted.sde-subpage main{
+ background:var(--sde-2027-ivory)!important;color:var(--sde-2027-ink)!important;
+}
+body.sde-shell-mounted.sde-subpage main :is(p,li,dd,figcaption){
+ color:var(--sde-2027-muted);
+}
+body.sde-shell-mounted.sde-subpage main :is(h1,h2){
+ font-family:var(--sde-2027-heading)!important;
+ font-style:normal!important;font-weight:400!important;letter-spacing:-.012em!important;
+ text-transform:none!important;text-wrap:balance;
+}
+body.sde-shell-mounted.sde-subpage main :is(h3,h4,h5,h6){
+ font-family:var(--sde-2027-body)!important;
+ font-style:normal!important;font-weight:800!important;letter-spacing:-.01em;
+}
+body.sde-shell-mounted.sde-subpage .sde-intro{
+ color:#fffaf0!important;
+ background:
+  radial-gradient(circle at 82% 15%,color-mix(in srgb,var(--sde-2027-accent) 38%,transparent),transparent 38%),
+  linear-gradient(135deg,var(--sde-2027-night),var(--sde-2027-night-soft))!important;
+ border-bottom:3px solid var(--sde-2027-accent)!important;
+}
+body.sde-shell-mounted.sde-subpage .sde-intro :is(h1,p,.sde-kicker,.sde-crumbs,.sde-crumbs a){
+ color:#fffaf0!important;
+}
+body.sde-shell-mounted.sde-subpage .sde-intro .sde-kicker{
+ color:var(--sde-2027-gold-light)!important;font-family:var(--sde-2027-body)!important;
+ font-weight:800;letter-spacing:.16em;
+}
+body.sde-shell-mounted.sde-subpage :is(.section,.pg-wrap){
+ background:var(--sde-2027-ivory)!important;color:var(--sde-2027-ink)!important;
+}
+body.sde-shell-mounted.sde-subpage :is(.tete-section,.pg-block)>:is(h2,h3),
+body.sde-shell-mounted.sde-subpage :is(.section,.pg-wrap)>:is(h2,h3){
+ color:var(--sde-2027-ink)!important;
+}
+body.sde-shell-mounted.sde-subpage :is(.surtitre,.etiquette,.rythme,.premium-kicker){
+ color:var(--sde-2027-accent-dark,var(--sde-2027-accent))!important;
+ font-family:var(--sde-2027-body)!important;font-weight:850!important;
+}
+
+/* Cartes de lecture et onglets : papier clair, encre sombre, accent thématique. */
+body.sde-shell-mounted.sde-subpage :is(
+ .vmi-carte,.programme,.rdv,.hub-card,.pg-block,.sde-initiative-card,
+ .form-carte,.niveau-carte,.parcours,.wall-form,.wall-notices
+ ){
+ color:var(--sde-2027-ink)!important;background:var(--sde-2027-paper)!important;
+ border-color:var(--sde-2027-line)!important;
+ box-shadow:0 12px 32px rgba(11,23,48,.08)!important;
+}
+body.sde-shell-mounted.sde-subpage :is(
+ .vmi-carte,.programme,.rdv,.hub-card,.pg-block,.sde-initiative-card
+ ){border-top:3px solid var(--sde-2027-accent)!important}
+body.sde-shell-mounted.sde-subpage :is(
+ .vmi-carte,.programme,.rdv,.hub-card,.pg-block,.sde-initiative-card,
+ .form-carte,.niveau-carte,.parcours
+ ) :is(h2,h3,h4,strong){color:var(--sde-2027-ink)!important}
+body.sde-shell-mounted.sde-subpage :is(.pg-tabs,.sde-section-jumps){
+ background:var(--sde-2027-paper)!important;
+ border-color:var(--sde-2027-line)!important;
+}
+body.sde-shell-mounted.sde-subpage :is(.pg-tabs,.sde-section-jumps) a{
+ color:var(--sde-2027-ink)!important;background:#fff!important;
+ border-color:color-mix(in srgb,var(--sde-2027-accent) 52%,#d8cdb8)!important;
+ font-family:var(--sde-2027-body);font-weight:750;
+}
+body.sde-shell-mounted.sde-subpage :is(.pg-tabs,.sde-section-jumps) a:hover,
+body.sde-shell-mounted.sde-subpage :is(.pg-tabs,.sde-section-jumps) a:focus-visible{
+ color:#fff!important;background:var(--sde-2027-accent)!important;
+}
+
+/* L’or sert aux actions principales et garde toujours une encre bleu nuit. */
+body.sde-shell-mounted.sde-subpage :is(
+ .sde-page-actions a:first-child,.bouton.b-or,.pg-btn.plein,
+ .hero-acad .btn-primary,.cta-primary,.sde-tpa-inscription
+ ){
+ color:var(--sde-2027-night)!important;
+ background:linear-gradient(135deg,var(--sde-2027-gold-light),var(--sde-2027-gold))!important;
+ border-color:var(--sde-2027-gold-dark)!important;
+ font-family:var(--sde-2027-body)!important;font-weight:850!important;
+ text-shadow:none!important;
+}
+body.sde-shell-mounted.sde-subpage .sde-page-actions .sde-secondary{
+ color:#fffaf0!important;background:transparent!important;border-color:var(--sde-2027-gold-light)!important;
+}
+body.sde-shell-mounted.sde-subpage main a:not([class]){
+ color:color-mix(in srgb,var(--sde-2027-accent) 82%,#07152e);
+ text-underline-offset:3px;
+}
+
+/* Les contenus thématiques conservent un halo discret, jamais un fond saturé. */
+body.sde-shell-mounted[data-sde-page="prieres"] main,
+body.sde-shell-mounted[data-sde-page="temoignages"] main,
+body.sde-shell-mounted[data-sde-page="academy"] main,
+body.sde-shell-mounted[data-sde-page="pole-reveil"] main,
+body.sde-shell-mounted[data-sde-page="programmes"] main{
+ background:
+  radial-gradient(circle at 92% 6%,rgba(105,64,151,.10),transparent 29%),
+  var(--sde-2027-ivory)!important;
+}
+body.sde-shell-mounted[data-sde-page="missions-humanitaires"] main,
+body.sde-shell-mounted[data-sde-page="projets"] main,
+body.sde-shell-mounted[data-sde-page="engagements"] main,
+body.sde-shell-mounted[data-sde-page="pole-social"] main,
+body.sde-shell-mounted[data-sde-page="pole-logistique"] main{
+ background:
+  radial-gradient(circle at 92% 6%,rgba(47,104,79,.11),transparent 29%),
+  var(--sde-2027-ivory)!important;
+}
+
+/* Animations lisibles : le contenu reste visible avant l’activation JavaScript. */
+html.anim body.sde-shell-mounted .revele{
+ opacity:1!important;transform:translateY(9px);
+ transition:transform .38s cubic-bezier(.22,1,.36,1),box-shadow .22s ease!important;
+ transition-delay:min(var(--d,0s),.12s)!important;
+}
+html.anim body.sde-shell-mounted .revele.vu{opacity:1!important;transform:none}
+body[data-motion="paused"].sde-shell-mounted .revele,
+html[data-motion="reduced"] body.sde-shell-mounted .revele{
+ opacity:1!important;transform:none!important;transition:none!important;animation:none!important;
+}
+
+/* Responsive : les mêmes règles sur 360, 390 et grand écran. */
+@media(max-width:900px){
+ body.sde-shell-mounted .sde-shell-head-inner{min-height:62px;width:calc(100% - 20px)}
+ body.sde-shell-mounted .sde-shell-brand-title b{font-size:.92rem}
+ body.sde-shell-mounted .sde-shell-bottom{background:rgba(11,23,48,.98)!important}
+ body.sde-shell-mounted .sde-shell-bottom-item{color:#f7edda!important}
+ body.sde-shell-mounted .sde-shell-bottom-item[aria-current="page"],
+ body.sde-shell-mounted .sde-shell-bottom-item[aria-expanded="true"]{
+  color:var(--sde-2027-night)!important;background:var(--sde-2027-gold-light)!important;
+ }
+ body.sde-shell-mounted.sde-subpage .sde-intro{padding-inline:18px!important}
+ body.sde-shell-mounted.sde-subpage :is(.pg-tabs,.sde-section-jumps){overflow-x:auto;scrollbar-width:thin}
+}
+@media(max-width:420px){
+ body.sde-shell-mounted .sde-shell-portal{font-size:.68rem!important;padding-inline:8px!important}
+ body.sde-shell-mounted.sde-subpage .sde-intro h1{font-size:clamp(2rem,11vw,2.8rem)!important}
+ body.sde-shell-mounted.sde-subpage :is(.section,.pg-wrap){padding-inline:0!important}
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-shell-mounted *,body.sde-shell-mounted *::before,body.sde-shell-mounted *::after{
+  scroll-behavior:auto!important;animation-duration:.001ms!important;
+  animation-iteration-count:1!important;transition-duration:.001ms!important;
+ }
+ html.anim body.sde-shell-mounted .revele{opacity:1!important;transform:none!important}
+}
