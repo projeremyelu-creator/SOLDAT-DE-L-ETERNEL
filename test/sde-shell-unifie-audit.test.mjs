@@ -47,7 +47,7 @@ test("Accueil : deux CTA, intitulés métiers, TPA compact et états vides cach�
   assert.match(c.doc.querySelector(".sde-premium-pillars").textContent,/ORGANISATION & PORTAIL/);
   assert.match(c.doc.querySelector(".sde-premium-pillars").textContent,/TERRAIN & IMPACT/);
   assert.ok(c.doc.querySelector(".ap-indicateurs").hidden);
-  assert.ok(c.doc.querySelector(".ap-poster a[href='/programmes#tpa-2026']"));
+  assert.ok(c.doc.querySelector(".sde-shell-event a[href='/programmes#tpa-2026']"));
  }finally{c.dom.window.close();}
 });
 test("Soutenir : formulaire immédiatement accessible, aucun canal supposé activé",()=>{

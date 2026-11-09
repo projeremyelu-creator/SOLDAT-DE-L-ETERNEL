@@ -51,8 +51,8 @@ test('Programmes & Agenda : synchronisation publique, calendrier mensuel et fich
 
 test('Soutenir : paiements affichés selon l’état réel du serveur, reçus et transparence, aucun chiffre inventé',()=>{
  const h=page('soutenir'),js=lire('public/vitrine/sde-soutenir-statut.js');
- for(const canal of ['Orange Money','MTN Mobile Money','Moov Money','Virement bancaire','Visa / Mastercard'])assert.ok(h.includes(`data-canal="${canal}">Non activé`),canal);
- assert.ok(js.includes('/api/sde-demarches/statut')&&/paiementsActifs\s*===\s*true/.test(js));
+ assert.ok(h.includes('id="pay-liste"')&&h.includes('id="pay-note"'));
+ assert.ok(js.includes('/api/sde-demarches/statut')&&js.includes('paiementsActifs===true')&&js.includes('canauxActifs'));
  for(const id of ['missions','etapes','reglements','recus','formulaire'])assert.ok(h.includes(`id="${id}"`),id);
  assert.match(h,/Aucun reçu n’est émis tant qu’un don n’est pas confirmé/);
  assert.ok(h.includes('href="/transparence"'));

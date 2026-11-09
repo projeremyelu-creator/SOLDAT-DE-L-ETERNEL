@@ -15,11 +15,9 @@ test("Accueil SDE : portail unique visible et deux espaces conservés",()=>{
  const liens=[...d.querySelectorAll(".site-access-top a")];
  assert.equal(liens.length,1);assert.match(liens[0].textContent,/Mon Portail S.D.E/);
  assert.equal(liens[0].getAttribute("href"),"/portail");
- assert.equal(d.querySelectorAll(".private-access-card").length,2);
- assert.equal(d.querySelector(".private-member").getAttribute("href"),"/portail","accès public unique, espace membre protégé conservé");
- assert.equal(d.querySelector(".private-login").getAttribute("href"),"/portail");
- assert.match(d.querySelector(".private-login").textContent,/Connexion — Mon Portail S.D.E/);
- assert.ok(!/administration|commandement|finances/i.test(d.querySelector("#espaces-prives").textContent),"aucune mention de l'administration dans l'accueil public");
+ assert.equal(d.querySelectorAll(".private-access-card").length,1,'un seul accès au portail en bas de page');
+ assert.ok(d.querySelector('.site-portal-cta[href="/portail"]'));
+ assert.ok(!/administration|commandement|finances/i.test(d.querySelector("#espaces-prives").textContent),"aucune mention de l'administration dans l'accès public");
  assert.ok(!accueil.includes('href="/administration"'));
  assert.match(dynamique,/site-access-top/);
  assert.match(dynamique,/Mon Portail S.D.E/);

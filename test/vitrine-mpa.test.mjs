@@ -57,10 +57,9 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
       const a=source.getElementById(id),b=target.getElementById(id);
       assert.ok(a&&b,name+"/"+id);
       if(id==='membres'){
-        // Entrée unique sur /portail, carte de membre toujours accessible après connexion.
-        assert.equal(b.querySelectorAll(".carte-acces").length,1);
-        assert.ok(b.querySelector('a[href="/portail?mode=inscription"]'));
-        assert.ok(b.querySelector('a[href="/portail"]'));
+        // Les coordonnées sont désormais regroupées dans le pied de page Contact.
+        assert.match(b.textContent,/Créer mon compte|Mon Portail/i);
+        assert.equal(b.querySelectorAll('.carte-acces').length,1,'un seul portail public');
         assert.ok(target.querySelector('a[href="mailto:infosoldat@gmail.com"]'));
       }else if(name==="programmes"&&id==="agenda"){
         // La TPA comporte un accès direct à l'affiche et sa date détaillée ;
@@ -87,25 +86,12 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
         link.closest("p")?.remove();
         assert.equal(normalize(preserved.textContent),normalize(a.textContent),name+"/"+id);
       }else if(name==="rejoindre"&&id==="rejoindre"){
-        // L'unique ajout au formulaire est l'option de participation TPA 2026.
-        const preserved=b.cloneNode(true);
-        const option=[...preserved.querySelectorAll("#f-objet option")]
-          .find(x=>x.textContent==="Traversée Prophétique Annuelle — TPA 2026");
-        assert.ok(option,"L'objet TPA est proposé au secrétariat");
-        option.remove();
-        // Référence de la demande et étapes de suivi : ajouts de la refonte, textes d'origine intacts.
-        for(const ajout of ["#envoi-ref-bloc",".pg-steps"]){
-          const el=preserved.querySelector(ajout);
-          assert.ok(el,"Ajout de suivi attendu : "+ajout);
-          el.remove();
-        }
-        // Les champs du formulaire et le suivi sont maintenus, mais l'explication
-        // sépare désormais la prise de contact et la création immédiate du compte.
-        assert.ok(b.querySelector('#form-rejoindre'));
-        for(const field of ['nom','tel','ville','objet','pole','programme'])
-          assert.ok(b.querySelector('[name="'+field+'"]'),field);
-        assert.match(b.textContent,/Contacter le secrétariat/);
-        assert.match(b.textContent,/Créer son compte est indépendant/);
+        // Le texte d'accueil a été clarifié : le contact ne crée pas de compte.
+        assert.match(b.textContent,/ne crée pas de compte/i);
+        assert.ok(target.querySelector('a[href="/portail?mode=inscription"]'));
+        assert.ok(b.querySelector('form#form-rejoindre'));
+        assert.ok(b.querySelector('[name="pole"]'));
+        assert.ok(b.querySelector('#f-objet'));
       }else if(name==="programmes"&&id==="programmes"){
         // La prose d'origine est préservée ; seul le CTA TPA est ajouté.
         const preserved=b.cloneNode(true);

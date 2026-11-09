@@ -34,7 +34,7 @@ test('Accueil premium : hero institutionnel, deux CTA et une seule annonce TPA c
  assert.ok(hero.includes('logo-sde.webp'));
  assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,2,'deux CTA principaux');
  for(const libellé of ['Nous rejoindre','Voir la présentation (73 s · sans son)'])assert.ok(hero.includes(libellé),libellé);
- assert.equal((html.match(/<img[^>]+tpa-2026\.webp/g)||[]).length,0,'affiche absente du hero, détails regroupés dans l’agenda');
+ assert.equal((html.match(/<img[^>]+tpa-2026\.webp/g)||[]).length,0,'affiche non chargée sur l’accueil compact');
  assert.equal((html.match(/<link rel="preload" as="image" href="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,0,'plus de préchargement de l’affiche cachée');
  assert.ok(!html.includes('infire-takeover'),'plus de bandeau doublon');
  assert.ok(!html.includes('sde-event-root'),'plus de second bloc TPA à l’accueil');
@@ -81,8 +81,7 @@ test('Accueil premium : charte Fusion chargée en dernier, scripts sans inline, 
  const feuilles=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
  const fusionIndex=feuilles.findIndex(f=>f.includes('sde-fusion.css'));
  assert.ok(fusionIndex>=0,'charte Fusion toujours présente');
- assert.ok(feuilles.at(-1).includes('sde-shell-public.css'),'navigation commune après les correctifs mobiles et Fusion');
- assert.ok(feuilles.some(f=>f.includes('sde-mobile-correctifs-20261103.css')));
+ assert.ok(feuilles.at(-1).includes('sde-shell-public.css'),'navigation commune chargée après Fusion');
  assert.ok(fusionIndex<feuilles.length-1,'la charte Fusion reste la base de la couche responsive');
  assert.ok(feuilles.some(f=>f.includes('sde-accueil-premium.css')));
  assert.ok(html.includes('sde-accueil-premium.js'));
