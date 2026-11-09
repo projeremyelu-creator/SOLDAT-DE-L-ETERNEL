@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import os
 from pathlib import Path
+import subprocess
 import sys
 import zipfile
 
@@ -43,7 +44,20 @@ EXPECTED = frozenset({
 
 def main() -> int:
     if not ARCHIVE.is_file():
-        print("MEDIAS_SDE_EN_ATTENTE: archive non téléversée dans le dépôt; aucune photo ou vidéo annoncée publiée.")
+        # Les originaux ont été directement envoyés à la racine GitHub.
+        # Les reconnaître et les convertir plutôt que réclamer à nouveau le ZIP.
+        sources = [
+            "IMG-20261002-WA0024(1).jpg", "IMG-20261104-WA0118.jpg",
+            "IMG-20261104-WA0121.jpg", "IMG-20261104-WA0122.jpg",
+            "IMG_20261031_100328_3.jpg", "IMG_20261031_122737_350.jpg",
+            "file_0000000034d881f489f1574d2a5bc2a1.png",
+            "VID-20260924-WA0061.mp4", "WA_1793824660474.mp4",
+            "gemini_generated_video_56be848c.mp4",
+        ]
+        if all((ROOT / name).is_file() for name in sources):
+            subprocess.run([sys.executable, str(ROOT / "scripts" / "importer-medias-sde-originaux.py")], check=True)
+            return 0
+        print("MEDIAS_SDE_EN_ATTENTE: archive et originaux non téléversés dans le dépôt; aucune photo ou vidéo annoncée publiée.")
         return 0
     if ARCHIVE.stat().st_size > 25 * 1024 * 1024:
         raise ValueError("L'archive dépasse 25 Mo.")
