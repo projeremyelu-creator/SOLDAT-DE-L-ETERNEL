@@ -85,3 +85,9 @@ jobs:
       - name: Vérifier l'Academy publiée sur les deux domaines (sans connexion ni écriture)
         if: steps.dernier.outputs.deployer == 'true'
         run: node scripts/recette-academy-production.mjs
+      - name: Confirmer les routes et la révision publiée sur les deux domaines SDE
+        if: steps.dernier.outputs.deployer == 'true'
+        timeout-minutes: 20
+        run: node scripts/attendre-publication-sde.mjs
+        env:
+          SDE_EXPECTED_REV: ${{ github.sha }}
