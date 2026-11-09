@@ -95,3 +95,7 @@ jobs:
         run: node scripts/attendre-publication-sde.mjs
         env:
           SDE_EXPECTED_REV: ${{ github.sha }}
+      - name: Vérifier les dix médias SDE 2027 sur les deux domaines après publication
+        if: steps.dernier.outputs.deployer == 'true'
+        timeout-minutes: 8
+        run: node scripts/verifier-medias-sde-publies.mjs
