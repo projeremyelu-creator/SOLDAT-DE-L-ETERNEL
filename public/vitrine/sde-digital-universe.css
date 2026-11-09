@@ -376,3 +376,18 @@ body.sde-universe-page .sde-shell-newsletter label.sde-shell-consent input[type=
   font-family:system-ui,-apple-system,"Segoe UI",sans-serif!important
  }
 }
+
+
+/* Le bandeau Quest se recomposait entre 1 et 2 lignes à 1280 px lorsque
+   les webfonts étaient chargées, faisant permuter le texte et le bouton.
+   Deux colonnes intrinsèquement stables évitent ce déplacement de 37 px. */
+@media(min-width:1051px){
+ body.sdu-quest-page .sdu-quest-content>.sdu-intro-band{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(235px,270px)!important;
+  align-items:center;column-gap:18px
+ }
+ body.sdu-quest-page .sdu-quest-content>.sdu-intro-band>.sdu-button{
+  width:100%;max-width:270px;min-width:0;justify-self:end
+ }
+}
