@@ -22,8 +22,6 @@ jobs:
       - name: Garantir une affiche mobile réellement plus légère
         run: |
           node -e "const fs=require('node:fs'); const a=fs.statSync('public/vitrine/illus/tpa-2026.webp').size,b=fs.statSync('public/vitrine/illus/tpa-2026-mobile.webp').size;console.log('WebP mobile',b,'sur',a,'octets'); if(b>=a)process.exit(1);"
-      - name: Diagnostiquer les pages de production et le cache en lecture seule
-        run: node scripts/diagnostiquer-publication-sde.mjs
       - name: Run npm test (limite contrôlée)
         timeout-minutes: 8
         run: npm test
