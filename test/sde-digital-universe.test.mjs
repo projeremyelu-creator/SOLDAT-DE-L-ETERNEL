@@ -76,3 +76,17 @@ test("Accessibilite : filtrage et reduction du mouvement",()=>{
  assert.match(css,/sdu-motion-paused/);
  dom.window.close();
 });
+
+
+test("Zones tactiles Quest et TV : consentement newsletter dans un label d’au moins 44 px",()=>{
+ const shell=read("public/vitrine/sde-shell-public.js");
+ const css=read("public/vitrine/sde-digital-universe.css");
+ assert.match(shell,/class="sde-shell-consent"/);
+ assert.match(shell,/name="consentement"/);
+ assert.match(css,/body\.sde-universe-page \.sde-shell-newsletter label\.sde-shell-consent\s*\{[^}]*min-height:48px/s);
+ assert.match(css,/body\.sde-universe-page \.sdu-filterbar button\s*\{min-height:46px!important\}/);
+});
+test("Soldier Quest desktop : hauteur réservée à l'intro avant chargement des polices",()=>{
+ const css=read("public/vitrine/sde-digital-universe.css");
+ assert.match(css,/@media\(min-width:1051px\)\s*\{\s*body\.sdu-quest-page \.sdu-quest-content>\.sdu-intro-band\s*\{[^}]*height:170px;min-height:170px/s);
+});
