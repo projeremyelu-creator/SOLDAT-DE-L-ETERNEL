@@ -65,7 +65,7 @@ test("recherche globale : filtrage accessible sans requête aux données privée
   assert.equal(dialog.querySelector('[role="status"]').textContent,"1 rubrique disponible");
   dialog.querySelector(".sde-search-close").click();
   assert.equal(dialog.hasAttribute("open"),false);
-  const directoryDom=open("plus");assert.ok(directoryDom.window.document.querySelector(".sde-directory-search input"),"annuaire filtrable conservé");directoryDom.window.close();
+  const directoryDom=open("plus");assert.ok(directoryDom.window.document.querySelector(".sde-shell-directory-grid"),"répertoire thématique conservé");assert.match(readFileSync("public/vitrine/sde-shell-public.js","utf8"),/sde-shell-filter/,"filtre disponible dans le tiroir mobile partagé");directoryDom.window.close();
   dom.window.close();
 });
 test("thème public : basculement sans toucher l'application privée",()=>{
