@@ -918,6 +918,9 @@ html.anim body.sde-shell-mounted .revele{
  transition:transform .38s cubic-bezier(.22,1,.36,1),box-shadow .22s ease!important;
  transition-delay:min(var(--d,0s),.12s)!important;
 }
+html.anim body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu .revele{
+ opacity:1!important;transform:none!important;animation:none!important;
+}
 html.anim body.sde-shell-mounted .revele.vu{opacity:1!important;transform:none}
 body[data-motion="paused"].sde-shell-mounted .revele,
 html[data-motion="reduced"] body.sde-shell-mounted .revele{
