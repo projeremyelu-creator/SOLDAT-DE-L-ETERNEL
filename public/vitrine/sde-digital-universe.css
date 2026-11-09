@@ -193,3 +193,30 @@ body.sde-premium-home #poles-accueil :is(h3,.m-pole-num){color:#f6d594!important
  .sdu-card,.sdu-button{transition:none!important}
  .sdu-card:is(:hover,:focus-visible),.sdu-button:is(:hover,:focus-visible){transform:none!important}
 }
+
+
+/* Poste de navigation lateral du parcours Quest */
+.sdu-quest-workspace{display:grid;grid-template-columns:235px minmax(0,1fr);align-items:start;gap:23px;padding-top:25px}
+.sdu-quest-sidebar{position:sticky;top:100px;padding:22px 14px}
+.sdu-quest-sidebar>strong{display:block;color:#f8dda0;font:800 .82rem var(--sdu-sans);letter-spacing:.1em;padding:3px 10px 15px}
+.sdu-quest-sidebar nav{display:grid;gap:5px}
+.sdu-quest-sidebar nav a{min-height:42px;display:flex;align-items:center;border-radius:9px;padding:10px 12px;
+ color:#f2eadd;text-decoration:none;font-weight:700;font-size:.85rem}
+.sdu-quest-sidebar nav a:hover,.sdu-quest-sidebar nav a:focus-visible{background:#dfb651;color:#111a2d}
+.sdu-quest-sidebar p{border-top:1px solid #d4af3755;margin-top:16px;padding:14px 8px 0;font-size:.77rem;color:#becde7;line-height:1.5}
+.sdu-quest-content{min-width:0}
+.sdu-quest-content .sdu-section--layer{border-radius:18px;padding:clamp(23px,4vw,35px)}
+.sdu-quest-content .sdu-section--layer .sdu-heading p{color:#e5e4f7}
+.sdu-tv-playlist{display:grid;gap:10px;margin-top:17px}
+.sdu-playlist-item{display:flex;align-items:center;gap:11px;width:100%;min-height:69px;padding:13px;
+ background:#121f39;color:#f7e9cc;border:1px solid #bba36165;border-radius:12px;text-align:left;cursor:pointer}
+.sdu-playlist-item[aria-pressed="true"]{background:#32304b;border-color:#f7d88f}
+.sdu-playlist-item>span:first-child{display:grid;place-items:center;flex:none;width:36px;height:36px;background:#d9b45a;color:#161927;border-radius:50%}
+.sdu-playlist-item>span:last-child{font-weight:800}
+.sdu-playlist-item small{display:block;color:#cbd5e8;font-weight:400;line-height:1.5;margin-top:3px}
+.sdu-skip{position:absolute;z-index:250;top:-120px;left:12px;padding:11px 15px;background:#ffdf92;color:#0b1529!important;border-radius:7px;font-weight:800}
+.sdu-skip:focus{top:10px}
+body.sdu-motion-paused .sdu-card,body.sdu-motion-paused .sdu-feature,body.sdu-motion-paused .sdu-quest,body.sdu-motion-paused .sdu-hero-aside{animation:none!important;transition:none!important}
+.sdu-motion-toggle{border:1px solid #e2c26a;color:#ffdfa3;background:#101b31;border-radius:10px;padding:9px 14px;min-height:44px;font-weight:700;cursor:pointer}
+@media(max-width:980px){.sdu-quest-workspace{grid-template-columns:1fr}.sdu-quest-sidebar{position:static}.sdu-quest-sidebar nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.sdu-quest-sidebar nav{grid-template-columns:repeat(2,minmax(0,1fr))}.sdu-quest-sidebar nav a{font-size:.77rem}}
