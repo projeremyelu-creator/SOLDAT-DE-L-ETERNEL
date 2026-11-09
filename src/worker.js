@@ -542,20 +542,27 @@ async function apiMonHistorique(req, env, u) {
   return json({ presences, prieres: prieres.slice(0, 50), totalPrieres: prieres.length, resume });
 }
 
-/* ───────── upload photo de profil par le membre ───────── */
+/* ───────── photo personnelle du compte connecté ───────── */
 async function apiMaPhoto(req, env, u) {
-  if (!u.connecte || !u.membreId) return erreur("refuse", "Aucune fiche reliée à ce compte.", 403);
+  if (!u.connecte) return erreur("refuse", "Connectez-vous pour modifier votre photo.", 403);
   if (req.method !== "POST") return erreur("invalid_argument", "Utilisez POST.");
-  const type = req.headers.get("content-type") || "";
-  if (!type.startsWith("image/")) return erreur("invalid_argument", "Envoyez une image (JPEG ou PNG).");
+  const type = (req.headers.get("content-type") || "").split(";")[0].trim().toLowerCase();
+  if (!["image/jpeg", "image/png", "image/webp"].includes(type)) return erreur("invalid_argument", "Choisissez une photo JPEG, PNG ou WebP.");
   const corps = await req.arrayBuffer();
+  if (!corps.byteLength) return erreur("invalid_argument", "La photo est vide.");
   if (corps.byteLength > 5 * 1024 * 1024) return erreur("too_large", "Photo trop lourde (5 Mo maximum).", 413);
+  const octets = new Uint8Array(corps);
+  const signature = type === "image/jpeg" ? octets[0] === 0xff && octets[1] === 0xd8 && octets[2] === 0xff
+    : type === "image/png" ? [137,80,78,71,13,10,26,10].every((n,i) => octets[i] === n)
+    : [82,73,70,70].every((n,i) => octets[i] === n) && [87,69,66,80].every((n,i) => octets[i+8] === n);
+  if (!signature) return erreur("invalid_argument", "Le fichier ne correspond pas à son format d’image.");
   if (await bloque(env, "photo:" + u.email, 10)) return erreur("rate_limited", "Trop d'envois de photos : patientez un quart d'heure.", 429);
   await compter(env, "photo:" + u.email);
   const nid = jetonAleatoire(16);
   await env.FICHIERS.put(nid, corps, { metadata: { type } });
   await env.DB.prepare("INSERT INTO fichiers (id, type, taille, par, cree) VALUES (?, ?, ?, ?, ?)").bind(nid, type, corps.byteLength, u.email, Date.now()).run();
-  await ecrireDoc(env, "merge", "membres/" + u.membreId, { photoId: nid, modifiePar: u.id, modifieLe: Date.now() });
+  await env.DB.prepare("UPDATE comptes SET photo = ? WHERE email = ?").bind("/_blob/" + nid, u.email).run();
+  if (u.membreId) await ecrireDoc(env, "merge", "membres/" + u.membreId, { photoId: nid, modifiePar: u.id, modifieLe: Date.now() });
   return json({ ok: true, photoId: nid, url: "/_blob/" + nid });
 }
 
@@ -571,7 +578,6 @@ async function apiMonProfil(req, env, u) {
   for (const k of CHAMPS_MODIFIABLES) {
     if (b[k] !== undefined) maj[k] = String(b[k]).trim().slice(0, 200);
   }
-  if (b.photoId && /^[A-Za-z0-9_-]{16,64}$/.test(b.photoId)) maj.photoId = b.photoId;
   if (!Object.keys(maj).length) return erreur("invalid_argument", "Rien à modifier.");
   maj.modifiePar = u.id;
   maj.modifieLe = Date.now();
