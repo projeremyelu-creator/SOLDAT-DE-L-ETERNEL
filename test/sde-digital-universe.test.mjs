@@ -173,3 +173,11 @@ test("TPA 2026 : fichier calendrier dédié et rappels 24 h et 1 h avant",()=>{
  assert.ok(source.includes('href="/vitrine/tpa-2026.ics"'));
  assert.ok(source.includes('href="/api/calendrier.ics"'),"agenda global conservé");
 });
+
+
+test("Quest desktop : texte et bouton du bandeau ne doivent jamais permuter",()=>{
+ const css=read("public/vitrine/sde-digital-universe.css");
+ assert.match(css,/body\.sdu-quest-page \.sdu-quest-content>\.sdu-intro-band\s*\{[^}]*display:grid!important/s);
+ assert.match(css,/grid-template-columns:minmax\(0,1fr\) minmax\(235px,270px\)!important/);
+ assert.match(css,/\.sdu-intro-band>\.sdu-button\s*\{[^}]*max-width:270px/s);
+});
