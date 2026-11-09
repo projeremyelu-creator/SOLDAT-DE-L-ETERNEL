@@ -395,26 +395,23 @@ try{
      report.notes.push({test:'connexion-choix-membre-admin',url:page.url(),tpa:await tpa.count()});
     }catch(e){issue(c.name,'sélection des deux espaces indisponible : '+String(e.message||e).slice(0,200),true);}
    }
-   // Vérification réelle du menu compact sur écran intermédiaire et de l'accès aux rubriques.
+   // À 1024px, le menu est un méga-menu desktop et non un ancien hamburger.
    if(c.name==='accueil-1024'){
     try{
-     const burger=page.locator('.site-header .site-burger');
-     await burger.click({timeout:4000});
-     const beforeResize=await burger.getAttribute('aria-expanded');
+     const menu=page.locator('.sde-shell-mega');
+     if(!await menu.isVisible())issue(c.name,'méga-menu desktop inaccessible',true);
+     const first=menu.locator('.sde-shell-mega-group').first();
+     await first.locator('summary').click({timeout:4000});
+     const vision=first.locator('.sde-shell-submenu a[href="/mouvement"]');
+     if(!await vision.isVisible())issue(c.name,'sous-menu Le Mouvement indisponible',true);
      await page.setViewportSize({width:1280,height:900});
      await page.waitForTimeout(150);
-     const afterResize=await burger.getAttribute('aria-expanded');
-     const rubriques=page.locator('.site-header .site-menu a[href="/rubriques"]');
-     if(beforeResize!=='true'||afterResize!=='true')
-      issue(c.name,'le menu compact se referme entre 1024 et 1280 px',true);
-     if(await rubriques.count()!==1)issue(c.name,'entrée Toutes les rubriques absente',true);
-     else{
-      await rubriques.click({timeout:4000});
-      await page.waitForURL(url=>url.pathname==='/rubriques',{timeout:10000});
-      report.notes.push({test:'rubriques-menu-compact',beforeResize,afterResize,finalUrl:page.url()});
-     }
+     if(!await vision.isVisible())issue(c.name,'le sous-menu disparaît entre 1024 et 1280 px',true);
+     await vision.click({timeout:4000});
+     await page.waitForURL(url=>url.pathname==='/mouvement',{timeout:10000});
+     report.notes.push({test:'mega-menu-desktop',finalUrl:page.url()});
     }catch(error){
-     issue(c.name,'navigation Rubriques sur ordinateur compact indisponible : '+String(error.message||error).slice(0,300),true);
+     issue(c.name,'méga-menu desktop indisponible : '+String(error.message||error).slice(0,300),true);
     }
    }
    if(c.name==='plus-390'&&new URL(page.url()).pathname!=='/rubriques')
