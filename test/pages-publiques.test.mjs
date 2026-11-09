@@ -11,7 +11,7 @@ test('Pages publiques : feuille premium chargée avant la charte Fusion, famille
   const iF=feuilles.findIndex(f=>f.includes('sde-fusion.css')),iP=feuilles.findIndex(f=>f.includes('sde-pages-premium.css'));
   assert.ok(iP>=0&&iP<iF,n+' : feuille premium avant la charte Fusion');
   const apres=feuilles.slice(iF+1);
-  assert.ok(apres.every(f=>f.includes('sde-shell-public.css')||(n==='soutenir'&&f.includes('sde-standalone-clarte.css'))),n+' : seules la clarté Soutenir et la navigation commune suivent Fusion');
+  assert.ok(apres.every(f=>f.includes('sde-shell-public.css')||(n==='soutenir'&&(f.includes('sde-standalone-clarte.css')||f.includes('sde-maquette-hero.css')))),n+' : seules navigation, clarté et surcouche Soutenir approuvées suivent Fusion');
   assert.match(h,new RegExp(`<body[^>]*class="[^"]*sde-pages-premium[^"]*"[^>]*data-fam="${fam}"`),n+' : famille '+fam);
   assert.equal((h.match(/class="pg-tabs/g)||[]).length,1,n+' : une seule navigation interne');
   assert.equal((h.match(/<h1[\s>]/g)||[]).length,1,n+' : un seul h1');
