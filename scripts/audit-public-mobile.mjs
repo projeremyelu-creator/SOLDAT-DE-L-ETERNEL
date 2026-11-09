@@ -456,51 +456,47 @@ try{
    }
    // Le portail doit rester dans le flux de la page, sans bouger ni
    // rebondir indépendamment de l'en-tête pendant le défilement.
+   // Le nouveau header est volontairement sticky : son bouton doit rester ancré,
+   // sans translation indépendante, plutôt que forcer le style statique historique.
    if(['accueil-390','connexion-390','accueil-desktop'].includes(c.name)){
     try{
-     const motion=await page.evaluate(async()=>{
-      const header=document.querySelector('.site-header');
-      const wrapper=document.querySelector('.site-access-top');
-      const cta=document.querySelector('.site-portal-cta');
-      if(!header||!wrapper||!cta)return {missing:true};
-      const headerStyle=getComputedStyle(header),wrapStyle=getComputedStyle(wrapper),ctaStyle=getComputedStyle(cta);
-      const initialHeader=header.getBoundingClientRect().top;
-      const initialCTA=cta.getBoundingClientRect().top;
-      document.documentElement.style.scrollBehavior='auto';
+     const measure=await page.evaluate(async()=>{
+      if(location.pathname==='/connexion'){
+       const form=document.querySelector('#form-connexion');
+       return {login:true,visible:!!form&&getComputedStyle(form).display!=='none'};
+      }
+      const header=document.querySelector('.sde-shell-header');
+      const portal=header?.querySelector('.sde-shell-portal');
+      if(!header||!portal)return {missing:true};
+      const hs=getComputedStyle(header),ps=getComputedStyle(portal);
+      const rect=portal.getBoundingClientRect();
+      const top=header.getBoundingClientRect().top;
       const amount=Math.min(360,Math.max(0,document.documentElement.scrollHeight-innerHeight-12));
-      window.scrollTo(0,amount);
+      scrollTo(0,amount);
       await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
       return {
-       position:headerStyle.position,
-       accessPosition:wrapStyle.position,
-       ctaPosition:ctaStyle.position,
-       animation:ctaStyle.animationName,
-       transform:ctaStyle.transform,
-       headerHidden:headerStyle.display==='none',
-       scrollY:Math.round(window.scrollY),
-       headerMoved:Math.round(header.getBoundingClientRect().top-initialHeader),
-       ctaMoved:Math.round(cta.getBoundingClientRect().top-initialCTA)
+       position:hs.position,portalPosition:ps.position,animation:ps.animationName,
+       portalWidth:rect.width,portalHeight:rect.height,
+       headerShift:header.getBoundingClientRect().top-top,
+       portalShift:portal.getBoundingClientRect().top-rect.top,
+       scrolled:window.scrollY
       };
      });
-     report.notes.push({test:'portail-stable',screen:c.name,...motion});
-     if(motion.missing)issue(c.name,'bouton Mon Portail S.D.E absent',true);
+     report.notes.push({test:'portail-stable-unifie',screen:c.name,...measure});
+     if(measure.login){
+      if(!measure.visible)issue(c.name,'formulaire de connexion masqué',true);
+     }else if(measure.missing)issue(c.name,'portail absent du header partagé',true);
      else{
-      if(['sticky','fixed'].includes(motion.position))issue(c.name,'en-tête encore flottant : '+motion.position,true);
-      if(motion.accessPosition!=='static'||motion.ctaPosition!=='static')issue(c.name,'bouton non ancré dans le flux normal',true);
-      if(motion.animation!=='none'||motion.transform!=='none')issue(c.name,'bouton encore animé ou transformé',true);
-      // Sur la page de connexion l'en-tête et le bouton sont masqués
-      // (display:none) : leur rectangle reste à zéro, il n'y a rien à mesurer.
-      if(!motion.headerHidden){
-       if(motion.scrollY>=90&&Math.abs(motion.headerMoved+motion.scrollY)>8)
-        issue(c.name,'l’en-tête se déplace indépendamment du document',true);
-       if(motion.scrollY>=90&&Math.abs(motion.headerMoved-motion.ctaMoved)>8)
-        issue(c.name,'le bouton ballotte par rapport à son en-tête',true);
-      }
+      if(measure.portalWidth<44||measure.portalHeight<40)
+       issue(c.name,'cible portail inférieure à 44 px',true);
+      if(measure.animation!=='none')issue(c.name,'bouton portail animé automatiquement',true);
+      if(Math.abs(measure.headerShift-measure.portalShift)>8)
+       issue(c.name,'bouton du portail déplacé indépendamment de l’en-tête',true);
+      if(measure.position==='sticky'&&Math.abs(measure.headerShift)>8)
+       issue(c.name,'en-tête sticky instable au défilement',true);
      }
      await page.evaluate(()=>scrollTo(0,0));
-    }catch(error){
-     issue(c.name,'vérification de stabilité indisponible : '+String(error.message||error).slice(0,240),true);
-    }
+    }catch(error){issue(c.name,'vérification stabilité indisponible : '+String(error.message||error).slice(0,240),true);}
    }
    if(c.path==='/'&&!row.premiumHome&&c.width>=960&&c.width<=1100&&row.heroIntroHeight!==300)
     issue(c.name,'hauteur de la réserve tablette : '+row.heroIntroHeight+' px au lieu de 300 px',true);
