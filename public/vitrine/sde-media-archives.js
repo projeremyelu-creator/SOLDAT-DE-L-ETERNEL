@@ -4,8 +4,8 @@
  */
 (()=>{"use strict";
 const root="/vitrine/media/";
-const photo=(id,title,alt,description)=>({type:"image",src:root+"archives-2027/"+id+".webp",title,alt,description});
-const clip=(id,title,description)=>({type:"video",src:root+"videos-2027/"+id+".mp4",poster:root+"videos-2027/"+id+".jpg",title,description});
+const photo=(id,title,alt,description)=>({type:"image",src:root+"archives-2027/"+id+(id==="polos-sde-vert-blanc"?".png":".jpg"),title,alt,description});
+const clip=(id,title,description)=>({type:"video",src:root+"videos-2027/"+id+".mp4",poster:"",title,description});
 const views={
  "/priere":{
   selector:".sde-initiative-lead",title:"Nos rencontres en images",label:"Prière et vie fraternelle",
