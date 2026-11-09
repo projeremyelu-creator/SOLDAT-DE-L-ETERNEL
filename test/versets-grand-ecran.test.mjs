@@ -10,9 +10,14 @@ test("Entre 901 et 1800 px : menu compact pour éviter le débordement",()=>{
  assert.match(compact,/\.site-header \.site-menu\s*\{[\s\S]*?display:none!important/);
  assert.match(compact,/\.site-header \.site-menu\[data-open="true"\]\s*\{[\s\S]*?display:flex!important/);
 });
-test("Le bandeau des versets conserve le défilement et la réduction du mouvement",()=>{
+test("Les versets méditatifs se fondent sans défilement horizontal",()=>{
  const css=read("public/vitrine/sde-versets.css");
- assert.match(css,/\.sde-versets-piste\s*\{[^}]*animation:sde-versets/);
+ const js=read("public/vitrine/sde-versets.js");
+ assert.match(css,/\.sde-verset-sortie\{opacity:0/);
+ assert.match(css,/transition:opacity \.35s/);
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
- assert.doesNotMatch(css,/Mode bureau large : la piste répétée/);
+ assert.doesNotMatch(css,/animation:sde-versets/);
+ assert.match(js,/setInterval\(avancer,7000\)/);
+ assert.match(js,/verset\.classList/);
+ assert.doesNotMatch(js,/cloneNode\(/);
 });
