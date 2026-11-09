@@ -362,3 +362,17 @@ body.sde-universe-page .sde-shell-newsletter label.sde-shell-consent input[type=
 @media(prefers-reduced-motion:reduce){
  .sdu-private-bottom a,.sdu-tv-subnav a{transition:none!important}
 }
+
+
+/* Stabilité des métriques dès la première image : la petite fiche Quest
+   garde ses polices système ; la typographie Cinzel reste réservée aux titres
+   principaux. Empêche le saut de la liste lorsque les webfonts arrivent. */
+@media(min-width:1051px){
+ body.sdu-quest-page .sdu-hero-aside .sdu-title{
+  font-family:Georgia,"Times New Roman",serif!important;
+  line-height:1.25;min-height:2.5em
+ }
+ body.sdu-quest-page .sdu-hero-aside :is(ul,.sdu-mini){
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif!important
+ }
+}
