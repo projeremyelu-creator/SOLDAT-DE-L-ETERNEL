@@ -43,9 +43,9 @@ test("Accueil : deux CTA, intitulés métiers, TPA compact et états vides cach�
  const c=render("portail","/");
  try{
   assert.equal(c.doc.querySelectorAll(".ap-hero .ap-actions a").length,2);
-  assert.match(c.doc.querySelector(".sde-premium-pillars").textContent,/VIE SPIRITUELLE/);
-  assert.match(c.doc.querySelector(".sde-premium-pillars").textContent,/ORGANISATION & PORTAIL/);
-  assert.match(c.doc.querySelector(".sde-premium-pillars").textContent,/TERRAIN & IMPACT/);
+  assert.match(c.doc.querySelector(".sde-premium-pillars").textContent,/VIE DE L’ESPRIT/);
+  assert.match(c.doc.querySelector(".sde-premium-pillars").textContent,/GOUVERNANCE & ORDRE/);
+  assert.match(c.doc.querySelector(".sde-premium-pillars").textContent,/TERRAIN & COMPASSION/);
   assert.ok(c.doc.querySelector(".ap-indicateurs").hidden);
   assert.ok(c.doc.querySelector(".sde-shell-event a[href='/programmes#tpa-2026']"));
  }finally{c.dom.window.close();}
