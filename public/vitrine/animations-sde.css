@@ -1,0 +1,116 @@
+/* SDE Motion Design — sobre, GPU-friendly, sans animation obligatoire.
+   Remarques : seule l'opacité et transform sont animés pour le scroll.
+   La mise en scène dépend de l'IntersectionObserver ; sans JavaScript,
+   les contenus restent pleinement visibles. */
+:root{
+ --ease-out-royal:cubic-bezier(.16,1,.3,1);
+ --ease-in-out-soft:cubic-bezier(.4,0,.2,1);
+}
+.btn-gold-shimmer{position:relative;overflow:hidden;isolation:isolate;
+ background:var(--sde-gradient-gold,linear-gradient(135deg,#F3E5AB,#D4AF37 50%,#997A15));
+ color:#07080C;transition:transform .3s var(--ease-out-royal),box-shadow .3s var(--ease-out-royal)}
+.btn-gold-shimmer:after{content:"";position:absolute;inset:-50% auto -50% -60%;width:40%;
+ background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+ transform:skewX(-25deg);pointer-events:none;transition:left .65s var(--ease-out-royal)}
+@media(hover:hover) and (pointer:fine){
+ .btn-gold-shimmer:hover{transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(212,175,55,.45)}
+ .btn-gold-shimmer:hover:after{left:130%}
+}
+.card-sde-interactive{position:relative;transition:transform .4s var(--ease-out-royal),
+ border-color .4s var(--ease-out-royal),box-shadow .4s var(--ease-out-royal)}
+@media(hover:hover) and (pointer:fine){
+ .card-sde-interactive:hover{transform:translateY(-5px);border-color:rgba(212,175,55,.55);
+ box-shadow:0 20px 40px -15px rgba(0,0,0,.7),0 0 25px -5px rgba(212,175,55,.15)}
+ .card-sde-interactive:hover .img-zoom-slow{transform:scale(1.04)}
+}
+.img-zoom-slow{transition:transform .7s var(--ease-out-royal)}
+/* La classe seule ne masque jamais : le JS active explicitement l'animation
+   pour les éléments visibles ou presque visibles seulement. */
+body.sde-reveal-ready .reveal-on-scroll.sde-reveal-pending{
+ opacity:0;transform:translateY(22px);
+ transition:opacity .7s var(--ease-out-royal),transform .7s var(--ease-out-royal)}
+body.sde-reveal-ready .reveal-on-scroll.is-visible{opacity:1;transform:none}
+.delay-100{transition-delay:.1s!important}
+.delay-200{transition-delay:.2s!important}
+.delay-300{transition-delay:.3s!important}
+.sde-shell-event-dot.dot-live-gold{animation:sde-pulse-gold 2.2s var(--ease-in-out-soft) infinite}
+@keyframes sde-pulse-gold{50%{transform:scale(1.06);opacity:.85}}
+/* Feedback immédiat tactile, pas de déplacement au repos. */
+@media(pointer:coarse){
+ body.sde-shell-mounted :is(.sde-shell-bottom-item,.sde-shell-donate,.sde-shell-portal,
+ .sde-shell-quick a,.ap-btn,.sde-pole-officiel-lien,.sde-intent-card,.sde-pole-tab,
+ .sde-quick-calendar a,.sde-quick-calendar button):active{transform:scale(.98)!important}
+}
+body.sde-shell-mounted :is(.sde-intent-card,.sde-pole-tab,
+ .sde-quick-calendar a,.sde-quick-calendar button):focus-visible{
+ outline:3px solid #F3E5AB;outline-offset:3px
+}
+/* Sélection d'intention — réutilise le formulaire de contact réellement relié à l'API. */
+.sde-intent-card{cursor:pointer;min-height:136px;text-align:left;box-sizing:border-box;
+ border-radius:16px;border:1px solid rgba(255,255,255,.18);padding:16px;background:#0F111A;
+ color:#CBD5E1;display:flex;flex-direction:column;gap:7px;
+ transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.sde-intent-card strong{color:#F8FAFC;font-weight:800}
+.sde-intent-card[aria-pressed="true"]{border:2px solid #D4AF37;background:
+ radial-gradient(circle at 88% 12%,rgba(212,175,55,.12),transparent 64%),#0F111A}
+.sde-intent-card[aria-pressed="true"] .ec-num{background:#D4AF37;color:#07080C}
+.sde-intent-card .ec-num{display:grid;place-items:center;width:32px;height:32px;
+ border-radius:50%;color:#F3E5AB;background:#222535;font-weight:800}
+.sde-intent-status{margin:0 0 12px;font-size:.8rem;color:#F3E5AB;letter-spacing:.05em}
+.sde-pole-extra{margin:10px 0 0;padding:14px;background:rgba(212,175,55,.055);
+ border-radius:12px;border:1px solid rgba(212,175,55,.28)}
+.sde-ref-help{display:block;font-size:.78rem;color:#94A3B8;margin-top:5px}
+.sde-suivi-steps{display:flex;gap:7px;flex-wrap:wrap;list-style:none;padding:0;margin:12px 0}
+.sde-suivi-steps li{flex:1 1 100px;border:1px solid rgba(212,175,55,.2);
+ border-radius:10px;padding:10px;color:#CBD5E1;background:#0F111A}
+.sde-suivi-steps li[aria-current="step"],.sde-suivi-steps li.sde-step-done{
+ border-color:#D4AF37;color:#F3E5AB}
+.sde-ref-format-ok{border-color:#86EFAC!important}
+/* Aperçu de pôle : dans la même page, sans navigation forcée. */
+.sde-pole-explorer{margin-top:24px;padding:clamp(16px,2.5vw,30px);
+ border:1px solid rgba(212,175,55,.3);border-radius:20px;
+ background:radial-gradient(circle at 8% 4%,var(--sde-pole-glow,rgba(109,40,217,.18)),transparent 68%),#0F111A;
+ color:#F8FAFC}
+.sde-pole-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.sde-pole-tab{min-height:44px;padding:9px 16px;border-radius:10px;
+ border:1px solid rgba(255,255,255,.2);color:#CBD5E1;background:#171b29;
+ cursor:pointer;font-weight:750}
+.sde-pole-tab[aria-selected="true"]{color:#07080C;background:var(--sde-gradient-gold);
+ border-color:#D4AF37}
+.sde-pole-preview{display:grid;grid-template-columns:minmax(0,2fr) minmax(230px,1fr);
+ gap:22px;align-items:start}
+.sde-pole-preview h3{margin:6px 0 10px;color:#F8FAFC!important;
+ font:800 clamp(1.3rem,2vw,1.9rem)/1.2 "Atkinson Hyperlegible",system-ui,sans-serif}
+.sde-pole-preview p{color:#CBD5E1;line-height:1.6}
+.sde-pole-preview .sde-pole-preview-code{color:var(--sde-pole-badge,#D8B4FE);
+ font-size:.77rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.sde-pole-preview-list{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0}
+.sde-pole-preview-list li{color:#CBD5E1;background:rgba(7,8,12,.7);
+ border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 11px;font-size:.84rem}
+.sde-pole-preview-actions{display:grid;gap:10px;padding:16px;border-radius:16px;
+ background:rgba(7,8,12,.65);border:1px solid rgba(255,255,255,.1)}
+.sde-pole-preview-actions a{display:grid;place-items:center;min-height:44px;
+ border-radius:10px;padding:10px 14px;text-align:center;text-decoration:none;
+ border:1px solid rgba(212,175,55,.35);color:#F3E5AB;font-weight:750}
+.sde-pole-preview-actions a:first-child{background:var(--sde-gradient-gold);
+ color:#07080C;border-color:#D4AF37}
+/* TPA : outils de calendrier sans inventer de lien de réunion privée. */
+.sde-quick-calendar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.sde-quick-calendar a,.sde-quick-calendar button{display:inline-flex;align-items:center;
+ justify-content:center;min-height:44px;padding:10px 14px;border-radius:10px;
+ border:1px solid rgba(212,175,55,.38);background:#0F111A;color:#F3E5AB;
+ font-weight:750;text-decoration:none;font-size:.83rem;cursor:pointer}
+.sde-quick-calendar-note{font-size:.76rem;color:#94A3B8}
+@media(max-width:700px){
+ .sde-pole-preview{grid-template-columns:1fr}
+ .sde-pole-preview-actions{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){.sde-pole-preview-actions{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){
+ body.sde-reveal-ready .reveal-on-scroll.sde-reveal-pending{opacity:1!important;transform:none!important}
+ .dot-live-gold{animation:none!important}
+ .btn-gold-shimmer,.btn-gold-shimmer:after,.card-sde-interactive,.img-zoom-slow,
+ .sde-intent-card,.sde-pole-tab{transition:none!important;animation:none!important}
+ .btn-gold-shimmer:hover,.card-sde-interactive:hover,
+ .card-sde-interactive:hover .img-zoom-slow{transform:none!important}
+}
