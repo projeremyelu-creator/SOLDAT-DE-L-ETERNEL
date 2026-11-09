@@ -294,3 +294,71 @@ body.sde-universe-page .sde-shell-newsletter label.sde-shell-consent input[type=
   box-sizing:border-box;height:170px;min-height:170px
  }
 }
+
+
+/* SDE 2027 — référentiel visuel commun de navigation Quest / Campus / membre. */
+.sdu-cross-nav{display:grid;gap:16px}
+.sdu-cross-nav-group{min-width:0}
+.sdu-cross-nav-group h3{font:800 .83rem/1.4 var(--sdu-sans);letter-spacing:.06em;color:#ffe4a9!important;margin:0 0 8px!important}
+.sdu-cross-nav-links{display:grid;gap:4px}
+.sdu-cross-nav-links a{display:flex;align-items:center;min-height:46px;border-radius:9px;
+ text-decoration:none!important;padding:8px 10px;color:#f5e9d4!important;font-size:.86rem;line-height:1.4}
+.sdu-cross-nav-links a:is(:hover,:focus-visible),.sdu-cross-nav-links a[aria-current="page"]{
+ background:#dbc078;color:#111a2e!important}
+.sdu-campus-directory{max-width:1240px;margin:10px auto 20px;border:1px solid #d4af3788;
+ border-radius:13px;background:#101e36;color:#f6eddb;padding:12px 17px}
+.sdu-campus-directory>summary,.sdu-member-directory>summary{cursor:pointer;min-height:44px;
+ display:flex;align-items:center;color:#ffe2a0;font-weight:800}
+.sdu-campus-directory .sdu-cross-nav{grid-template-columns:repeat(4,minmax(0,1fr));padding-top:14px}
+.sdu-member-directory{margin:18px 0 0;border-top:1px solid #d4af3766;padding-top:8px}
+.sdu-member-directory .sdu-cross-nav{padding:14px 0;grid-template-columns:repeat(2,minmax(0,1fr))}
+.sdu-member-directory .sdu-cross-nav-links a{color:#e4ebf7!important}
+.sdu-quest-sidebar .sdu-cross-nav-links a{font-size:.8rem}
+.sdu-private-bottom{display:none}
+.sdu-tv-subnav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+ padding:11px max(16px,calc((100% - 1370px)/2));background:#091529;border-bottom:1px solid #bb994760}
+.sdu-tv-subnav a{display:inline-flex;align-items:center;min-height:44px;padding:9px 13px;
+ color:#f5dc9e;text-decoration:none;border:1px solid #cfad6844;border-radius:10px;font-weight:700;font-size:.88rem}
+.sdu-tv-subnav a:is(:hover,:focus-visible),.sdu-tv-subnav a[aria-current="page"]{
+ background:#cba859;color:#121626}
+.sdu-media-reminder{display:inline-flex;min-height:44px;align-items:center;color:#ffe8b3!important;
+ text-decoration:underline;text-underline-offset:3px}
+@media(max-width:880px){
+ .sdu-campus-directory .sdu-cross-nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
+ /* La barre PWA publique remplace la longue navigation latérale de Quest. */
+ body.sdu-quest-page .sdu-quest-sidebar{display:none!important}
+ body.sde-universe-page :is(.sdu-quest-grid,.sdu-media-tiles){
+  display:grid!important;grid-template-columns:none!important;grid-auto-flow:column;
+  grid-auto-columns:minmax(255px,82vw);overflow-x:auto;overscroll-behavior-inline:contain;
+  scroll-snap-type:x mandatory;scroll-padding-inline:4px;gap:13px;
+  padding:2px 5px 18px;scrollbar-width:thin
+ }
+ body.sde-universe-page :is(.sdu-quest-grid>.sdu-quest,.sdu-media-tiles>.sdu-media-tile){
+  scroll-snap-align:start;min-width:0
+ }
+ .sdu-campus-directory .sdu-cross-nav,.sdu-member-directory .sdu-cross-nav{grid-template-columns:1fr}
+ body.sde-campus-student{padding-bottom:82px}
+ body.sde-campus-student .sdu-private-bottom{
+  position:fixed;z-index:130;bottom:0;left:0;right:0;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  padding:6px max(6px,env(safe-area-inset-left)) calc(7px + env(safe-area-inset-bottom));
+  background:#08152af5;border-top:1px solid #d4af3790;box-shadow:0 -4px 24px #0007
+ }
+ body.sde-campus-student .sdu-private-bottom a{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1px;min-height:49px;padding:4px 2px;color:#fff0c7;
+  text-decoration:none;font:750 .68rem/1.2 var(--sdu-sans);border-radius:10px
+ }
+ body.sde-campus-student .sdu-private-bottom a>span:first-child{font-size:1.35rem}
+ body.sde-campus-student .sdu-private-bottom a[aria-current="page"]{
+  background:#c49c4b;color:#11172b
+ }
+ .sdu-tv-subnav{flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;
+  scrollbar-width:thin;white-space:nowrap}
+ .sdu-tv-subnav a{scroll-snap-align:start}
+}
+@media(prefers-reduced-motion:reduce){
+ .sdu-private-bottom a,.sdu-tv-subnav a{transition:none!important}
+}
