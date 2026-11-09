@@ -33,8 +33,8 @@ test('Accueil premium : hero institutionnel, deux CTA et une seule annonce TPA c
  assert.ok(hero.includes('Discipline · Unité · Impact'));
  assert.ok(hero.includes('logo-sde.webp'));
  assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,2,'deux CTA principaux');
- for(const libellé of ['Nous rejoindre','présentation animée (sans son)'])assert.ok(hero.includes(libellé),libellé);
- assert.equal((html.match(/<img[^>]+tpa-2026\.webp/g)||[]).length,1,'affiche unique, sans répétition');
+ for(const libellé of ['Nous rejoindre','Voir la présentation (73 s · sans son)'])assert.ok(hero.includes(libellé),libellé);
+ assert.equal((html.match(/<img[^>]+tpa-2026\.webp/g)||[]).length,0,'affiche absente du hero, détails regroupés dans l’agenda');
  assert.equal((html.match(/<link rel="preload" as="image" href="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,0,'plus de préchargement de l’affiche cachée');
  assert.ok(!html.includes('infire-takeover'),'plus de bandeau doublon');
  assert.ok(!html.includes('sde-event-root'),'plus de second bloc TPA à l’accueil');
