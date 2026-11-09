@@ -15,33 +15,31 @@
 
   function compteARebours(debut) {
     var el = $("ap-countdown"); if (!el || !debut) return;
+    el.setAttribute("aria-live", "off");
+    var intervalle=null;
     function tick() {
-      var ms = Date.parse(debut) - Date.now();
-      if (!(ms > 0)) { el.hidden = true; el.replaceChildren(); return; }
-      var j = Math.floor(ms / 86400000), h = Math.floor(ms % 86400000 / 3600000);
-      el.hidden = false;
-      var prefix = document.createElement("span");
-      prefix.className = "sde-countdown-prefix"; prefix.textContent = "Dans ";
-      var unite = function (nombre, texte) {
-        var conteneur = document.createElement("span");
-        conteneur.className = "sde-countdown-unit";
-        var chiffre = document.createElement("strong"), libelle = document.createElement("small");
-        chiffre.textContent = String(nombre) + " ";
-        libelle.textContent = texte;
-        conteneur.append(chiffre, libelle);
-        return conteneur;
-      };
-      el.replaceChildren(prefix);
-      if (j > 0) {
-        el.append(unite(j, j > 1 ? "jours" : "jour"));
-        el.append(document.createTextNode(" et "));
+      var ms=Math.max(0,Date.parse(debut)-Date.now());
+      if (!(ms > 0)) {
+        el.hidden=true;el.replaceChildren();
+        if(intervalle!==null)clearInterval(intervalle);
+        return;
       }
-      el.append(unite(h, "h"));
-      el.setAttribute("aria-label", j > 0
-        ? "Dans " + j + " jour" + (j > 1 ? "s" : "") + " et " + h + " heures"
-        : "Dans " + h + " heures");
+      var j=Math.floor(ms/86400000),
+          h=Math.floor(ms%86400000/3600000),
+          m=Math.floor(ms%3600000/60000),
+          sec=Math.floor(ms%60000/1000);
+      el.hidden=false;
+      var unite=function(n,label){
+        var box=document.createElement("span");box.className="sde-countdown-unit";
+        var value=document.createElement("strong"),caption=document.createElement("small");
+        value.textContent=String(n).padStart(2,"0");caption.textContent=label;
+        box.append(value,caption);return box;
+      };
+      el.replaceChildren(unite(j,"jours"),unite(h,"heures"),unite(m,"min"),unite(sec,"sec"));
+      el.setAttribute("aria-label","TPA 2026 : dans "+j+" jours, "+h+" heures, "+m+" minutes et "+sec+" secondes");
     }
-    tick(); setInterval(tick, 60000);
+    tick();intervalle=setInterval(function(){if(!document.hidden)tick();},1000);
+    document.addEventListener("visibilitychange",function(){if(!document.hidden)tick();});
   }
 
   function evenementsPublics(data) {
