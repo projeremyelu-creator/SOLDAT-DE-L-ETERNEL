@@ -81,8 +81,8 @@ test("Accessibilite : filtrage et reduction du mouvement",()=>{
 test("Zones tactiles Quest et TV : consentement newsletter dans un label d’au moins 44 px",()=>{
  const shell=read("public/vitrine/sde-shell-public.js");
  const css=read("public/vitrine/sde-digital-universe.css");
- assert.match(shell,/class=\\"sde-shell-consent\\"/);
- assert.match(shell,/name=\\"consentement\\"/);
+ assert.match(shell,/class="sde-shell-consent"/);
+ assert.match(shell,/name="consentement"/);
  assert.match(css,/body\.sde-universe-page \.sde-shell-newsletter label\.sde-shell-consent\s*\{[^}]*min-height:48px/s);
  assert.match(css,/body\.sde-universe-page \.sdu-filterbar button\s*\{min-height:46px!important\}/);
 });
