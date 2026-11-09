@@ -44,6 +44,18 @@ EXPECTED = frozenset({
 
 def main() -> int:
     if not ARCHIVE.is_file():
+        # Les dix objets Git originaux sont déjà placés dans public par leurs SHA ;
+        # ne pas reconvertir ces fichiers ou réclamer une archive qui n'a jamais été envoyée.
+        images = ["reunion-priere-01.jpg","reunion-priere-02.jpg","reunion-fraternelle.jpg",
+                  "action-humanitaire.jpg","tenues-sde-portees.jpg",
+                  "polos-sde-or-blanc.jpg","polos-sde-vert-blanc.png"]
+        videos = ["livre-pouvoir-femme.mp4","archives-rassemblement.mp4",
+                  "identite-sde-expansion.mp4"]
+        photo_path = ROOT / "public" / "vitrine" / "media" / "archives-2027"
+        video_path = ROOT / "public" / "vitrine" / "media" / "videos-2027"
+        if all((photo_path / name).is_file() for name in images) and all((video_path / name).is_file() for name in videos):
+            print("MEDIAS_SDE_INSTALLES_DIRECTS: 7 images et 3 vidéos déjà présentes dans les ressources publiques Cloudflare.")
+            return 0
         # Les originaux ont été directement envoyés à la racine GitHub.
         # Les reconnaître et les convertir plutôt que réclamer à nouveau le ZIP.
         sources = [
