@@ -18,30 +18,36 @@
     function tick() {
       var ms = Date.parse(debut) - Date.now();
       if (!(ms > 0)) { el.hidden = true; el.replaceChildren(); return; }
-      var j = Math.floor(ms / 86400000), h = Math.floor(ms % 86400000 / 3600000);
-      el.hidden = false;
+      var jours = Math.floor(ms / 86400000);
+      var heures = Math.floor((ms % 86400000) / 3600000);
+      var minutes = Math.floor((ms % 3600000) / 60000);
+      var secondes = Math.floor((ms % 60000) / 1000);
       var prefix = document.createElement("span");
       prefix.className = "sde-countdown-prefix"; prefix.textContent = "Dans ";
-      var unite = function (nombre, texte) {
-        var conteneur = document.createElement("span");
-        conteneur.className = "sde-countdown-unit";
-        var chiffre = document.createElement("strong"), libelle = document.createElement("small");
-        chiffre.textContent = String(nombre) + " ";
-        libelle.textContent = texte;
-        conteneur.append(chiffre, libelle);
-        return conteneur;
+      var unite = function(nombre,texte) {
+        var cellule = document.createElement("span"); cellule.className = "sde-countdown-unit";
+        var nombreEl = document.createElement("strong"), libelle = document.createElement("small");
+        nombreEl.textContent = String(nombre) + " "; libelle.textContent = texte;
+        cellule.append(nombreEl,libelle); return cellule;
       };
-      el.replaceChildren(prefix);
-      if (j > 0) {
-        el.append(unite(j, j > 1 ? "jours" : "jour"));
-        el.append(document.createTextNode(" et "));
-      }
-      el.append(unite(h, "h"));
-      el.setAttribute("aria-label", j > 0
-        ? "Dans " + j + " jour" + (j > 1 ? "s" : "") + " et " + h + " heures"
-        : "Dans " + h + " heures");
+      el.hidden = false;
+      el.replaceChildren(prefix,unite(jours,"jours"),unite(heures,"h"),unite(minutes,"min"),unite(secondes,"s"));
+      el.setAttribute("aria-label","Dans "+jours+" jour(s), "+heures+" heure(s), "+minutes+" minute(s) et "+secondes+" seconde(s)");
     }
-    tick(); setInterval(tick, 60000);
+    tick(); setInterval(tick,1000);
+  }
+  function preparerCalendrier(phare) {
+    var el = $("sde-tpa-calendar");
+    if(!el || !phare || !phare.debut)return;
+    var date = new Date(phare.debut),fin = phare.fin ? new Date(phare.fin) : new Date(date.getTime()+3*3600000);
+    if(!Number.isFinite(date.getTime()) || !Number.isFinite(fin.getTime()) || fin<=date)return;
+    var format = function(d){return d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");};
+    var p = new URLSearchParams();
+    p.set("action","TEMPLATE");
+    p.set("text",phare.titre||"Traversée Prophétique Annuelle — TPA 2026");
+    p.set("dates",format(date)+"/"+format(fin));
+    p.set("details",(phare.lieu||"En ligne")+". La fin de ce créneau est indicative, à confirmer par l'organisateur.");
+    el.href="https://calendar.google.com/calendar/render?"+p.toString();
   }
 
   function evenementsPublics(data) {
@@ -116,7 +122,7 @@
   }
 
   json("/vitrine/evenement-phare.json").then(function (phare) {
-    if (phare) compteARebours(phare.debut);
+    if (phare) { compteARebours(phare.debut); preparerCalendrier(phare); if (Date.parse(phare.debut) <= Date.now()) { var carteHero = document.querySelector(".sde-tpa-hero-card"); if (carteHero) carteHero.hidden = true; } }
     return Promise.all([Promise.resolve(phare), json("/api/public")]);
   }).then(function (r) { agenda(r[0], evenementsPublics(r[1])); });
   json("/api/impact").then(indicateurs);
