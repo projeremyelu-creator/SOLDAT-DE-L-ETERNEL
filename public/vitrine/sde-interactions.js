@@ -12,7 +12,7 @@ const poles=[
  {key:"FDE",name:"Formation, Développement et Entrepreneuriat",desc:"Soldiers Academy, formation et développement des compétences pour servir.",acts:["Formation biblique","Leadership","Entrepreneuriat"],url:"/pole-formation",color:"#67E8F9",x:62,y:155,short:"ACADEMY"}
 ];
 const years={
- "2026":{title:"2026 · Structurer, réveiller et digitaliser",status:"Phase de fondation · bilan en cours",desc:"Structuration des cinq pôles, développement du portail numérique et organisation des rassemblements. Les réalisations sont suivies dans les bilans officiels.",verbs:"Réveiller · Restaurer · Organiser",progress:0,cards:[
+ "2026":{title:"2026 · Structurer, réveiller et digitaliser",status:"Phase de fondation · bilan en cours",desc:"Structuration des cinq pôles, développement du portail numérique et organisation des rassemblements. Les réalisations sont suivies dans les bilans officiels.",verbs:"Réveiller · Restaurer · Organiser",progress:.12,cards:[
   ["Rassemblements","IN FIRE & TPA 2026","Conférence IN FIRE et Traversée Prophétique Annuelle du 18 décembre 2026."],
   ["Gouvernance","Portail & cinq pôles","Déploiement des outils d’adhésion et organisation des responsabilités."],
   ["Réseau","Six pays mentionnés","Relations et contacts internationaux : implantations locales à confirmer individuellement."]]},
@@ -233,6 +233,6 @@ function reveal(){
  for(const n of nodes)if(n.getBoundingClientRect().top>innerHeight+80)n.classList.add("sde-reveal-pending");
  document.body.classList.add("sde-reveal-ready");
 }
-function start(){contact();compass();network();roadmap();calendar();reveal();}
+function start(){window.setTimeout(contact,0);compass();network();roadmap();calendar();reveal();}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
