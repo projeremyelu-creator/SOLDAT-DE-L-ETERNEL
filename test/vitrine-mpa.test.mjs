@@ -57,8 +57,10 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
       const a=source.getElementById(id),b=target.getElementById(id);
       assert.ok(a&&b,name+"/"+id);
       if(id==='membres'){
-        // Les coordonnées sont désormais regroupées dans le pied de page Contact.
-        assert.ok(normalize(a.textContent).startsWith(normalize(b.textContent)));
+        // Entrée unique sur /portail, carte de membre toujours accessible après connexion.
+        assert.equal(b.querySelectorAll(".carte-acces").length,1);
+        assert.ok(b.querySelector('a[href="/portail?mode=inscription"]'));
+        assert.ok(b.querySelector('a[href="/portail"]'));
         assert.ok(target.querySelector('a[href="mailto:infosoldat@gmail.com"]'));
       }else if(name==="programmes"&&id==="agenda"){
         // La TPA comporte un accès direct à l'affiche et sa date détaillée ;
@@ -97,7 +99,13 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
           assert.ok(el,"Ajout de suivi attendu : "+ajout);
           el.remove();
         }
-        assert.equal(normalize(preserved.textContent),normalize(a.textContent),name+"/"+id);
+        // Les champs du formulaire et le suivi sont maintenus, mais l'explication
+        // sépare désormais la prise de contact et la création immédiate du compte.
+        assert.ok(b.querySelector('#form-rejoindre'));
+        for(const field of ['nom','tel','ville','objet','pole','programme'])
+          assert.ok(b.querySelector('[name="'+field+'"]'),field);
+        assert.match(b.textContent,/Contacter le secrétariat/);
+        assert.match(b.textContent,/Créer son compte est indépendant/);
       }else if(name==="programmes"&&id==="programmes"){
         // La prose d'origine est préservée ; seul le CTA TPA est ajouté.
         const preserved=b.cloneNode(true);
