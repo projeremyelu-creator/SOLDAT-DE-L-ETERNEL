@@ -17,9 +17,26 @@
     var el = $("ap-countdown"); if (!el || !debut) return;
     function tick() {
       var ms = Date.parse(debut) - Date.now();
-      if (!(ms > 0)) { el.textContent = ""; return; }
+      if (!(ms > 0)) { el.hidden = true; el.replaceChildren(); return; }
       var j = Math.floor(ms / 86400000), h = Math.floor(ms % 86400000 / 3600000);
-      el.textContent = j > 0 ? "Dans " + j + " jour" + (j > 1 ? "s" : "") + " et " + h + " h" : "Dans " + h + " h";
+      el.hidden = false;
+      var prefix = document.createElement("span");
+      prefix.className = "sde-countdown-prefix"; prefix.textContent = "Dans";
+      var unite = function (nombre, texte) {
+        var conteneur = document.createElement("span");
+        conteneur.className = "sde-countdown-unit";
+        var chiffre = document.createElement("strong"), libelle = document.createElement("small");
+        chiffre.textContent = String(nombre);
+        libelle.textContent = texte;
+        conteneur.append(chiffre, libelle);
+        return conteneur;
+      };
+      el.replaceChildren(prefix);
+      if (j > 0) el.append(unite(j, j > 1 ? "jours" : "jour"));
+      el.append(unite(h, "h"));
+      el.setAttribute("aria-label", j > 0
+        ? "Dans " + j + " jour" + (j > 1 ? "s" : "") + " et " + h + " heures"
+        : "Dans " + h + " heures");
     }
     tick(); setInterval(tick, 60000);
   }
