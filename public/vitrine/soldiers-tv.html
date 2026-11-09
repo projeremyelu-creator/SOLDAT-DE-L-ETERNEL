@@ -20,6 +20,13 @@
 <body class="sde-universe-page sdu-tv-page">
 <a class="sdu-skip" href="#contenu">Aller au contenu</a><header class="site-header"><a href="/">SDE · Accueil</a></header>
 <main id="contenu">
+<nav class="sdu-tv-subnav" aria-label="Sous-navigation de Soldiers TV">
+ <a href="/" class="sdu-tv-back">← Retour au site SDE</a>
+ <a href="/soldiers-tv" aria-current="page">Soldiers TV</a>
+ <a href="/soldiers-voice">Soldiers Voice</a>
+ <a href="#podcasts">Podcasts</a>
+ <a href="#rubriques">Médiathèque</a>
+</nav>
  <section class="sdu-hero" aria-labelledby="tv-title"><div class="sdu-container sdu-hero-inner">
   <div><span class="sdu-eyebrow">SDE Digital Universe 2027 · Médias</span><h1 id="tv-title">Soldiers TV</h1>
    <p>La médiathèque audiovisuelle du Mouvement Prophético-Apostolique Soldat De l'Éternel : vision, enseignements, programmes, louange et témoignages.</p>
@@ -46,7 +53,7 @@
      <button type="button" class="sdu-playlist-item" data-sdu-video-src="/vitrine/media/infire-teaser.mp4" data-sdu-video-poster="/vitrine/illus/infire-banniere.webp" data-sdu-video-title="IN FIRE — bande-annonce" data-sdu-video-desc="Vidéo de présentation du programme IN FIRE."><span aria-hidden="true">▶</span><span>IN FIRE · Bande-annonce<small>Événements et rassemblements</small></span></button>
     </div>
     <p class="sdu-mini">La lecture commence uniquement sur votre action. Aucun direct ni spectateur n'est simulé.</p>
-    <div class="sdu-page-actions"><a class="sdu-button sdu-button--ghost" href="/programmes#agenda">Voir le calendrier</a></div>
+    <div class="sdu-page-actions"><a class="sdu-button sdu-button--ghost" href="/programmes#agenda">Voir le calendrier</a><a class="sdu-media-reminder" href="/api/calendrier.ics" title="Importer les événements publiés dans votre calendrier">Ajouter le calendrier SDE à mon agenda (.ics)</a></div>
    </aside>
   </div>
  </div></section>
@@ -65,7 +72,13 @@
    <article class="sdu-panel sdu-media-tile" data-sdu-category="enseignement"><img src="/vitrine/media/presentation-sde-affiche.webp" alt="Présentation du mouvement SDE" width="640" height="360" loading="lazy"><div class="sdu-media-body"><h3>Présentation du Mouvement</h3><p>Vision, organisation et cinq pôles d'impact en vidéo.</p><a class="sdu-button" href="#a-la-une">Regarder →</a></div></article>
   </div>
  </div></section>
- <section class="sdu-section"><div class="sdu-container"><div class="sdu-feature-grid">
+ <section class="sdu-section" id="podcasts" aria-labelledby="sdu-podcasts-title">
+ <div class="sdu-container"><div class="sdu-intro-band">
+ <div><span class="sdu-eyebrow">Audio & podcasts</span><h2 class="sdu-title" id="sdu-podcasts-title">Des ressources à écouter</h2>
+ <p>Les podcasts seront ajoutés après publication de leurs épisodes officiels. Retrouvez déjà les enseignements et Soldiers Voice.</p></div>
+ <a class="sdu-button" href="/soldiers-voice">Soldiers Voice →</a></div></div>
+</section>
+<section class="sdu-section"><div class="sdu-container"><div class="sdu-feature-grid">
   <article class="sdu-panel sdu-feature sdu-feature--violet"><span class="sdu-icon" aria-hidden="true">♫</span><h3>Soldiers Voice</h3><p>La louange et les activités du groupe musical.</p><a href="/soldiers-voice">Découvrir le groupe →</a></article>
   <article class="sdu-panel sdu-feature"><span class="sdu-icon" aria-hidden="true">▣</span><h3>Bibliothèque SDE</h3><p>Études, supports et enseignements bibliques publiés.</p><a href="/enseignements">Explorer les ressources →</a></article>
   <article class="sdu-panel sdu-feature sdu-feature--green"><span class="sdu-icon" aria-hidden="true">◷</span><h3>Agenda des diffusions</h3><p>Retrouvez les événements confirmés et leurs modalités.</p><a href="/programmes#agenda">Voir l'agenda →</a></article>
