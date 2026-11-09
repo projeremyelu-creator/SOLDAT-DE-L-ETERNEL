@@ -1822,6 +1822,8 @@ async function traiter(req, env, ctx) {
   "/comptes-membres": "/vitrine/comptes-membres.html",
         "/empreinte": "/vitrine/empreinte.html",
         "/soldiers-voice": "/vitrine/soldiers-voice.html",
+        "/soldier-quest": "/vitrine/soldier-quest.html",
+        "/soldiers-tv": "/vitrine/soldiers-tv.html",
         "/soldiers-award": "/vitrine/soldiers-award.html",
         "/pole-reveil": "/vitrine/pole-reveil.html",
         "/pole-social": "/vitrine/pole-social.html",
