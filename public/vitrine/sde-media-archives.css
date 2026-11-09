@@ -1,0 +1,24 @@
+/* Archives SDE : grille adaptative et accessible, harmonisée bleu nuit / or. */
+.sde-archive-gallery{box-sizing:border-box;margin:36px 0;padding:clamp(32px,5vw,65px) 0;background:linear-gradient(140deg,#08162c,#171d37 62%,#101e2b);color:#f8f4e7}
+.sde-archive-gallery .sde-archive-inner{width:min(1180px,calc(100% - 32px));margin:0 auto}
+.sde-archive-gallery h2{font-family:Georgia,serif;font-size:clamp(1.5rem,3vw,2.35rem);line-height:1.2;color:#f8da92;margin:8px 0 14px}
+.sde-archive-eyebrow{color:#e5c16d!important;font-size:.82rem!important;letter-spacing:.12em;text-transform:uppercase;font-weight:800;margin:0}
+.sde-archive-intro{color:#ebebf1!important;max-width:780px;font-size:1rem;line-height:1.6;margin:0 0 25px}
+.sde-archive-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.sde-archive-card{margin:0;min-width:0;overflow:hidden;background:#172741;border:1px solid #e1b75f70;border-radius:17px;box-shadow:0 12px 24px #0003}
+.sde-archive-card>a{display:block}
+.sde-archive-card img,.sde-archive-card video{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#0a1425}
+.sde-archive-card video{object-fit:contain;aspect-ratio:16/9}
+.sde-archive-card figcaption{display:grid;gap:7px;padding:16px 18px 19px;color:#e6e8f1}
+.sde-archive-card figcaption strong{font-size:1rem;font-weight:800;color:#ffe2a4;line-height:1.4}
+.sde-archive-card figcaption span{font-size:.88rem;color:#dce1eb;line-height:1.55}
+.sde-archive-note{color:#d4dae5;margin-top:22px;font-size:.9rem}
+.sde-archive-gallery :is(a,video):focus-visible{outline:3px solid #fbe19d;outline-offset:3px}
+@media(max-width:850px){.sde-archive-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){
+ .sde-archive-grid{display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(250px,86%);overflow-x:auto;
+ gap:14px;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;padding:2px 2px 18px}
+ .sde-archive-card{scroll-snap-align:start}
+ .sde-archive-gallery{margin:22px 0}
+}
+@media(prefers-reduced-motion:reduce){.sde-archive-grid{scroll-behavior:auto}}
