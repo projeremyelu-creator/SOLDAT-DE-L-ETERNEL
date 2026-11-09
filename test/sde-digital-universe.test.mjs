@@ -161,3 +161,15 @@ test("Quest desktop : notice stable avant injection du menu, polices locales dan
  assert.match(css,/font-family:Georgia,"Times New Roman",serif!important/);
  assert.match(css,/body\.sdu-quest-page \.sdu-hero-aside :is\(ul,\.sdu-mini\)/);
 });
+
+test("TPA 2026 : fichier calendrier dédié et rappels 24 h et 1 h avant",()=>{
+ const calendar=read("public/vitrine/tpa-2026.ics");
+ const source=read("public/vitrine/soldiers-tv.html");
+ assert.match(calendar,/BEGIN:VCALENDAR/);
+ assert.match(calendar,/DTSTART:20261218T200000Z/);
+ assert.match(calendar,/TRIGGER:-P1D/);
+ assert.match(calendar,/TRIGGER:-PT1H/);
+ assert.match(calendar,/END:VCALENDAR/);
+ assert.ok(source.includes('href="/vitrine/tpa-2026.ics"'));
+ assert.ok(source.includes('href="/api/calendrier.ics"'),"agenda global conservé");
+});
