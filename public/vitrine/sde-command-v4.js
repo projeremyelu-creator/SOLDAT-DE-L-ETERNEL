@@ -44,7 +44,38 @@
   titleRow.append(titles,summary);
   const shortcuts=el('div','sde-command-v4-grid');
   shortcuts.setAttribute('role','group');shortcuts.setAttribute('aria-label','Ouvrir un module administratif');
-  panel.append(titleRow,shortcuts);
+  const insights=el('section','sde-command-v4-insights');
+  insights.setAttribute('aria-label','Indicateurs de direction issus du serveur');
+  insights.hidden=true;
+  panel.append(titleRow,insights,shortcuts);
+  // Pas de chiffres décoratifs : les agrégats sont chargés uniquement pour
+  // un compte autorisé, depuis l'API sécurisée du même domaine.
+  const chargerIndicateurs=async()=>{
+   try{
+    const response=await fetch('/api/tableau-de-bord',{
+     credentials:'same-origin',cache:'no-store',headers:{accept:'application/json'}
+    });
+    if(!response.ok)return;
+    const data=await response.json();
+    const i=data?.indicateurs||{};
+    const cards=[
+     ['Membres actifs',i.membresActifs,'Comptes du registre'],
+     ['Taux de présence',i.presence?.taux,'Sur les présences renseignées','%'],
+     ['Intentions en prière',i.intercessions,'Requêtes non clôturées'],
+     ['Événements enregistrés',data?.total?.evenements,'Agenda du mouvement']
+    ];
+    // Un zéro de la base est réel ; une valeur manquante n'est jamais inventée.
+    if(!cards.every(entry=>Number.isFinite(entry[1])))return;
+    insights.replaceChildren();
+    for(const [libelle,valeur,detail,suffixe=''] of cards){
+      const card=el('article','sde-command-v4-insight');
+      card.append(el('span','',libelle),el('strong','',String(valeur)+suffixe),el('small','',detail));
+      insights.append(card);
+    }
+    insights.hidden=false;
+   }catch(_){/* Les modules restent utilisables si l'API de métriques est indisponible. */}
+  };
+  void chargerIndicateurs();
   const introActions=intro.querySelector('.sde-spirit-actions');
   if(introActions)introActions.after(panel);else intro.append(panel);
 

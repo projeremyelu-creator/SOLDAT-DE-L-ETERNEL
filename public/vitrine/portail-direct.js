@@ -198,6 +198,42 @@
       actions.append(b);
     }
     intro.append(actions,etat);
+    // Maquette membre : boutons réels vers le routeur existant, sans accès
+    // à des données avant confirmation de la session par /api/moi.
+    let maquetteMembre=null;
+    if(mode==="membre"){
+      maquetteMembre=element("section","sde-master-member");
+      maquetteMembre.hidden=true;
+      maquetteMembre.setAttribute("aria-labelledby","sde-master-member-title");
+      const heading=element("h2","sde-master-member-title","Mon parcours SDE");
+      heading.id="sde-master-member-title";
+      const cards=element("div","sde-master-member-grid");
+      const raccourcis=[
+        ["priere","Prière et intercession","SPIRITUALITÉ","Déposer une requête et retrouver mes prières","spiritualite"],
+        ["academie","Soldiers Academy","FORMATION","Suivre mes cours et enseignements","spiritualite"],
+        ["agenda","Mes rendez-vous","COMMUNAUTÉ","Consulter les rencontres du mouvement","missions"],
+        ["carteqr","Ma carte de membre","IDENTITÉ","Afficher les services de ma carte QR","commandement"]
+      ];
+      for(const [nom,titre,etiquette,description,famille] of raccourcis){
+        if(!allowed(nom))continue;
+        const btn=element("button","sde-master-member-action");
+        btn.type="button";btn.dataset.module=nom;btn.dataset.family=famille;
+        btn.setAttribute("aria-label","Ouvrir "+titre);
+        btn.append(element("small","",etiquette),element("strong","",titre),element("span","",description));
+        btn.addEventListener("click",()=>selectionner(nom,{userInitiated:true}));
+        cards.append(btn);
+      }
+      const note=element("p","sde-master-member-note","Vos informations restent privées. Les données de votre compte ne sont jamais affichées sur le site public.");
+      maquetteMembre.append(heading,cards,note);
+      intro.append(maquetteMembre);
+      document.addEventListener("sde:navigate",event=>{
+        const courant=event.detail?.module;
+        for(const b of cards.querySelectorAll("button[data-module]")){
+          if(b.dataset.module===courant)b.setAttribute("aria-current","page");
+          else b.removeAttribute("aria-current");
+        }
+      });
+    }
     header.append(intro);
     body.insertBefore(header,body.firstChild);
     body.append(barreMobile);
@@ -396,7 +432,7 @@
         role.textContent=user.libRole||user.role||(mode==="membre"?"Membre":"Direction");
         direction.hidden=user.niveau<1;
         // La direction dispose déjà de sa barre SDE Command 4.0 : ne pas la doubler.
-        if(mode==="membre")construireBarreMobile();
+        if(mode==="membre"){construireBarreMobile();if(maquetteMembre)maquetteMembre.hidden=false;}
         sync();
         window.SDEPortal={compte:user,selectionner};
         document.dispatchEvent(new CustomEvent("sde:ready",{detail:window.SDEPortal}));

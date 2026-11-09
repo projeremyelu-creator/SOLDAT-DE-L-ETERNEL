@@ -549,3 +549,98 @@ body.sde-premium-home .private-access-card.private-member:is(:hover,:focus-visib
   opacity:0!important;animation:none!important
  }
 }
+
+/* SDE · TROIS MAQUETTES MAÎTRESSES, édition 2026.
+   Le vocabulaire commun est centralisé ici ; les pages conservent leurs familles. */
+:root{
+ --sde-master-night:#111c32;--sde-master-ivory:#fcf9f1;
+ --sde-master-gold:#d8b45f;--sde-master-violet:#7450a6;
+ --sde-master-green:#356952;--sde-master-radius:18px;
+ --sde-master-shadow:0 14px 38px rgba(15,30,53,.1);
+}
+body.sde-premium-home .sde-master-access{
+ background:linear-gradient(115deg,#101c31,#19243e 60%,#1b2635);
+ color:#f9f5e9;padding:clamp(27px,4vw,55px) 18px;
+ border-block:1px solid rgba(231,198,120,.35);
+}
+.sde-master-access-inner{width:min(1220px,100%);margin:0 auto}
+.sde-master-access-heading{
+ display:flex;align-items:end;justify-content:space-between;
+ flex-wrap:wrap;gap:12px 28px;margin-bottom:23px;
+}
+.sde-master-access-heading .sde-master-small{
+ color:#e9c67e;letter-spacing:.135em;font-size:.69rem;font-weight:850;
+}
+.sde-master-access-heading h2{
+ font:750 clamp(1.5rem,2.65vw,2.5rem)/1.22 'Cinzel',Georgia,serif;
+ color:#fffaf0!important;margin:9px 0 0;
+}
+.sde-master-access-heading p{color:#dbe2ee;max-width:380px;line-height:1.6;margin:0}
+.sde-master-access-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.sde-master-access .sde-master-path{
+ display:flex;flex-direction:column;align-items:start;gap:11px;
+ background:linear-gradient(140deg,#22324d,#1b2841);
+ border:1px solid rgba(233,205,147,.35);border-top:3px solid #e4bb6b;
+ box-shadow:0 14px 28px rgba(0,0,0,.17);
+ border-radius:var(--sde-master-radius);padding:clamp(18px,2.25vw,27px);
+ color:#faf8f1;text-decoration:none!important;min-width:0;min-height:202px;
+ transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.sde-master-access .sde-master-path[data-family=spiritualite]{
+ border-top-color:#ba9be8;background:linear-gradient(140deg,#30284c,#22283e);
+}
+.sde-master-access .sde-master-path[data-family=missions]{
+ border-top-color:#9dccad;background:linear-gradient(140deg,#233e3d,#1d3040);
+}
+.sde-master-path-number{color:#f3d58c;letter-spacing:.11em;font-weight:850;font-size:.68rem}
+.sde-master-path strong{color:#fff;font:750 clamp(1.13rem,1.85vw,1.48rem)/1.2 'Cinzel',Georgia,serif}
+.sde-master-path>span:not(.sde-master-path-number){font-size:.87rem;line-height:1.55;color:#e1e5ef}
+.sde-master-path b{margin-top:auto;color:#f5d78d;font-size:.82rem}
+.sde-master-access .sde-master-path:hover{
+ transform:translateY(-3px);border-color:#f2d390;box-shadow:0 21px 40px rgba(0,0,0,.28);
+}
+.sde-master-access .sde-master-path:focus-visible{outline:3px solid #f1d08a;outline-offset:3px}
+/* Identité déclinée dans les rubriques publiques sans modifier leur contenu. */
+body.sde-subpage[data-sde-page]{--sde-master-page-accent:#24477b}
+body.sde-subpage[data-sde-page=mouvement],
+body.sde-subpage[data-sde-page=academy],
+body.sde-subpage[data-sde-page=prieres],
+body.sde-subpage[data-sde-page=temoignages]{
+ --sde-master-page-accent:#7750a0;
+}
+body.sde-subpage[data-sde-page=missions-humanitaires],
+body.sde-subpage[data-sde-page=programmes],
+body.sde-subpage[data-sde-page^=pole-]{
+ --sde-master-page-accent:#315e49;
+}
+body.sde-subpage[data-sde-page=ressources],
+body.sde-subpage[data-sde-page=soldiers-voice]{
+ --sde-master-page-accent:#2c5288;
+}
+body.sde-subpage[data-sde-page] :is(.sde-initiative-card,.sde-pole-hero,.pg-steps li,.pg-film-cadre){
+ border-radius:var(--sde-master-radius);
+ box-shadow:var(--sde-master-shadow);
+}
+body.sde-subpage[data-sde-page] .sde-initiative-card{
+ border-top:3px solid var(--sde-master-page-accent);
+}
+body.sde-subpage[data-sde-page] :is(.sde-intro,.sde-initiative-lead,.hero-acad){
+ border-bottom:2px solid var(--sde-master-page-accent);
+}
+body.sde-subpage[data-sde-page] :is(.sde-section-jumps a,.sde-page-actions a,.sde-pole-cta){
+ min-height:44px;border-radius:12px;
+}
+body.sde-subpage[data-sde-page] main :is(a,button,input,textarea,select):focus-visible{
+ outline:3px solid #c39d4a;outline-offset:3px;
+}
+body.sde-pages-premium.pg-tabs-static .hub-card{
+ border-radius:18px;box-shadow:var(--sde-master-shadow);
+}
+@media(max-width:860px){
+ .sde-master-access-grid{grid-template-columns:1fr;gap:12px}
+ .sde-master-access .sde-master-path{min-height:0;gap:7px;padding:19px}
+}
+@media(prefers-reduced-motion:reduce){
+ .sde-master-access .sde-master-path{transition:none}
+ .sde-master-access .sde-master-path:hover{transform:none}
+}
