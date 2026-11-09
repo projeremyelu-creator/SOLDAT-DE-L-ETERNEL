@@ -104,10 +104,10 @@ try{
      return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height};
     };
     const intersects=(a,b)=>!!(a&&b&&a.left<b.right-2&&a.right>b.left+2&&a.top<b.bottom-2&&a.bottom>b.top+2);
-    const brand=toRect(document.querySelector('.site-brand'));
-    const portal=toRect(document.querySelector('.site-access-top'));
-    const burger=toRect(document.querySelector('.site-burger'));
-    const logo=toRect(document.querySelector('.site-logo'));
+    const brand=toRect(document.querySelector('.sde-shell-brand,.site-brand'));
+    const portal=toRect(document.querySelector('.sde-shell-portal,.site-access-top'));
+    const burger=toRect(document.querySelector('.sde-shell-open,.site-burger'));
+    const logo=toRect(document.querySelector('.sde-shell-brand img,.site-logo'));
     const quote=document.querySelector('.ap-verset p, .m-verset p');
     const quoteBg=document.querySelector('.ap-verset, .m-verset');
     const cssColor=quote?getComputedStyle(quote).color:null;
@@ -181,6 +181,8 @@ try{
      poleLinks:poleLinks.length,
      brokenPoleImages:poleLinks.filter(a=>{let i=a.querySelector('img');return !i||!i.complete||i.naturalWidth===0}).length,
      tpaPosters:posters.length,
+     tpaCompact:!!(document.querySelector('.sde-shell-event a[href="/programmes#tpa-2026"]')&&document.querySelector('#prochain-rendez-vous[data-evenement="tpa-2026"]')),
+     tpaCompactVisible:!!document.querySelector('.sde-shell-event')&&getComputedStyle(document.querySelector('.sde-shell-event')).display!=='none',
      tpaPosterLoaded:posters.every(i=>i.complete&&i.naturalWidth>0),
      publicPoleForm:(()=>{const f=document.querySelector('form[data-pole-engager]');return f?{
        reference:f.dataset.poleReference||'',
@@ -296,32 +298,28 @@ try{
      }
     }catch(e){issue(c.name,'parcours préinscription inopérant : '+String(e.message||e).slice(0,240),true)}
    }
-   // INTERACTIONS_NAVI : le menu et le changement de thème doivent fonctionner sur un vrai téléphone.
+   // Navigation mobile réelle : tiroir, quatre accordéons, recherche, fermeture clavier.
    if(c.name==='accueil-390'){
     try{
-     const burger=page.locator('.site-header .site-burger').first();
-     if(await burger.count()!==1)issue(c.name,'bouton du menu mobile absent',true);
+     const open=page.locator('.sde-shell-open'),overlay=page.locator('#sde-shell-overlay');
+     if(await open.count()!==1||!(await open.isVisible()))issue(c.name,'bouton du menu mobile SDE absent',true);
      else{
-      await burger.click({timeout:4000});
-      const opened=await burger.getAttribute('aria-expanded');
-      const menuOpen=await page.locator('.site-header .site-menu').first().getAttribute('data-open');
-      if(opened!=='true'||menuOpen!=='true')issue(c.name,'le menu ne s’ouvre pas correctement',true);
+      await open.click({timeout:4000});
+      if((await open.getAttribute('aria-expanded'))!=='true'||!(await overlay.isVisible()))
+       issue(c.name,'tiroir SDE ne s’ouvre pas',true);
+      const groups=page.locator('.sde-shell-drawer-group');
+      if(await groups.count()!==4)issue(c.name,'le tiroir ne propose pas quatre catégories',true);
+      await overlay.locator('.sde-shell-filter').fill('formation',{timeout:4000});
+      const found=await overlay.locator('.sde-shell-submenu a:not([hidden])').count();
+      if(found===0)issue(c.name,'recherche de rubriques inopérante',true);
       await page.keyboard.press('Escape');
-      const closed=await burger.getAttribute('aria-expanded');
-      const menuClosed=await page.locator('.site-header .site-menu').first().getAttribute('data-open');
-      if(closed!=='false'||menuClosed!=='false')issue(c.name,'le menu ne se ferme pas avec Échap',true);
-      report.notes.push({test:'menu-mobile',opened,menuOpen,closed,menuClosed});
+      if((await open.getAttribute('aria-expanded'))!=='false'||await overlay.isVisible())
+       issue(c.name,'Échap ne ferme pas le tiroir',true);
+      report.notes.push({test:'menu-mobile-unifie',families:await groups.count(),searchResults:found});
      }
-     const toggle=page.locator('.site-header .site-theme-toggle').first();
-     if(await toggle.count()!==1)issue(c.name,'commande de thème absente',true);
-     else{
-      const themeBefore=await page.locator('html').getAttribute('data-theme');
-      await toggle.click({timeout:4000});
-      const themeAfter=await page.locator('html').getAttribute('data-theme');
-      if(themeAfter===themeBefore || !['light','dark'].includes(themeAfter))issue(c.name,'bouton clair/sombre sans changement réel',true);
-      report.notes.push({test:'theme-mobile',before:themeBefore,after:themeAfter});
-     }
-    }catch(e){issue(c.name,'interaction mobile en échec : '+String(e.message||e).slice(0,240),true);}
+     if(await page.locator('.sde-shell-header .sde-shell-portal[href="/portail"]').count()!==1)
+      issue(c.name,'accès direct au Portail S.D.E absent',true);
+    }catch(error){issue(c.name,'navigation mobile en échec : '+String(error.message||error).slice(0,240),true);}
    }
    // Prière anonyme : simuler deux réponses sans aucune écriture vers la vraie API.
    // page.route intercepte la requête AVANT qu'elle quitte Chromium.
@@ -362,17 +360,18 @@ try{
      }
     }catch(e){issue(c.name,'parcours anonyme simulé échoué : '+String(e.message||e).slice(0,240),true);}
    }
-   // Parcours d'authentification en lecture seule : sélection du bon espace,
-   // sans identifier d'utilisateur ni soumettre aucun formulaire.
+   // Connexion sans distractions : formulaire visible, accès membre et administration préservés.
    if(c.name==='connexion-390'){
     try{
-     const tpa=page.locator('#sde-event-root a[href="/programmes#tpa-2026"]');
-     if(await tpa.count()<1){
-      const detail=await page.evaluate(()=>({bodyClass:document.body.className,
-       banner:document.getElementById('sde-event-root')?.outerHTML.slice(0,850)||'élément absent',
-       scriptReact:!!document.querySelector('script[src*="sde-experience.js"]')}));
-      issue(c.name,'bannière TPA 2026 absente sur la connexion : '+JSON.stringify(detail).slice(0,950),true);
-     }
+     const visible=await page.evaluate(()=>{
+      const h=document.querySelector('.site-header'),ref=document.querySelector('.ref-login-art');
+      return {header:h?getComputedStyle(h).display:null,
+       reference:ref?getComputedStyle(ref).display:null};
+     });
+     if(visible.header!=='none'||visible.reference!=='none')
+      issue(c.name,'barre publique ou image de maquette visible pendant la connexion',true);
+     if(await page.locator('.access-back[href="/"]').count()!==1)
+      issue(c.name,'lien de retour au site absent',true);
      const member=page.locator('[data-access-target="/mon-espace"]');
      const admin=page.locator('[data-access-target="/administration"]');
      if(await member.getAttribute('aria-pressed')!=='true'||await admin.getAttribute('aria-pressed')!=='false')
@@ -383,30 +382,27 @@ try{
      await member.click({timeout:5000});
      if(new URL(page.url()).searchParams.get('retour')!=='/mon-espace'||await member.getAttribute('aria-pressed')!=='true')
       issue(c.name,'lien d’accès membre ne sélectionne pas le bon retour',true);
-     report.notes.push({test:'connexion-choix-membre-admin',url:page.url(),tpa:await tpa.count()});
-    }catch(e){issue(c.name,'sélection des deux espaces indisponible : '+String(e.message||e).slice(0,200),true);}
+     report.notes.push({test:'connexion-sans-distraction',url:page.url(),...visible});
+    }catch(e){issue(c.name,'sélection membre/administrateur indisponible : '+String(e.message||e).slice(0,220),true);}
    }
-   // Vérification réelle du menu compact sur écran intermédiaire et de l'accès aux rubriques.
+   // Sur ordinateur : quatre méga-menus accessibles, CTA Soutenir et Portail directs.
    if(c.name==='accueil-1024'){
     try{
-     const burger=page.locator('.site-header .site-burger');
-     await burger.click({timeout:4000});
-     const beforeResize=await burger.getAttribute('aria-expanded');
+     const header=page.locator('.sde-shell-header'),groups=header.locator('.sde-shell-mega-group');
+     if(await groups.count()!==4)issue(c.name,'le menu desktop n’a pas quatre catégories',true);
+     const first=groups.first().locator('summary');
+     await first.click({timeout:4000});
+     if(!(await groups.first().evaluate(el=>el.open)))
+      issue(c.name,'le méga-menu Le Mouvement ne s’ouvre pas',true);
      await page.setViewportSize({width:1280,height:900});
      await page.waitForTimeout(150);
-     const afterResize=await burger.getAttribute('aria-expanded');
-     const rubriques=page.locator('.site-header .site-menu a[href="/rubriques"]');
-     if(beforeResize!=='true'||afterResize!=='true')
-      issue(c.name,'le menu compact se referme entre 1024 et 1280 px',true);
-     if(await rubriques.count()!==1)issue(c.name,'entrée Toutes les rubriques absente',true);
-     else{
-      await rubriques.click({timeout:4000});
-      await page.waitForURL(url=>url.pathname==='/rubriques',{timeout:10000});
-      report.notes.push({test:'rubriques-menu-compact',beforeResize,afterResize,finalUrl:page.url()});
-     }
-    }catch(error){
-     issue(c.name,'navigation Rubriques sur ordinateur compact indisponible : '+String(error.message||error).slice(0,300),true);
-    }
+     if(await groups.count()!==4)issue(c.name,'les quatre menus disparaissent après redimensionnement',true);
+     if(await header.locator('.sde-shell-donate[href="/soutenir"]').count()!==1)
+      issue(c.name,'bouton Soutenir absent du premier niveau',true);
+     if(await header.locator('.sde-shell-portal[href="/portail"]').count()!==1)
+      issue(c.name,'entrée portail absente du header',true);
+     report.notes.push({test:'mega-menu-desktop',menus:await groups.count(),visible:await header.isVisible()});
+    }catch(error){issue(c.name,'navigation desktop indisponible : '+String(error.message||error).slice(0,300),true);}
    }
    if(c.name==='plus-390'&&new URL(page.url()).pathname!=='/rubriques')
     issue(c.name,'/plus doit rediriger vers /rubriques',true);
@@ -460,51 +456,47 @@ try{
    }
    // Le portail doit rester dans le flux de la page, sans bouger ni
    // rebondir indépendamment de l'en-tête pendant le défilement.
+   // Le nouveau header est volontairement sticky : son bouton doit rester ancré,
+   // sans translation indépendante, plutôt que forcer le style statique historique.
    if(['accueil-390','connexion-390','accueil-desktop'].includes(c.name)){
     try{
-     const motion=await page.evaluate(async()=>{
-      const header=document.querySelector('.site-header');
-      const wrapper=document.querySelector('.site-access-top');
-      const cta=document.querySelector('.site-portal-cta');
-      if(!header||!wrapper||!cta)return {missing:true};
-      const headerStyle=getComputedStyle(header),wrapStyle=getComputedStyle(wrapper),ctaStyle=getComputedStyle(cta);
-      const initialHeader=header.getBoundingClientRect().top;
-      const initialCTA=cta.getBoundingClientRect().top;
-      document.documentElement.style.scrollBehavior='auto';
+     const measure=await page.evaluate(async()=>{
+      if(location.pathname==='/connexion'){
+       const form=document.querySelector('#form-connexion');
+       return {login:true,visible:!!form&&getComputedStyle(form).display!=='none'};
+      }
+      const header=document.querySelector('.sde-shell-header');
+      const portal=header?.querySelector('.sde-shell-portal');
+      if(!header||!portal)return {missing:true};
+      const hs=getComputedStyle(header),ps=getComputedStyle(portal);
+      const rect=portal.getBoundingClientRect();
+      const top=header.getBoundingClientRect().top;
       const amount=Math.min(360,Math.max(0,document.documentElement.scrollHeight-innerHeight-12));
-      window.scrollTo(0,amount);
+      scrollTo(0,amount);
       await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
       return {
-       position:headerStyle.position,
-       accessPosition:wrapStyle.position,
-       ctaPosition:ctaStyle.position,
-       animation:ctaStyle.animationName,
-       transform:ctaStyle.transform,
-       headerHidden:headerStyle.display==='none',
-       scrollY:Math.round(window.scrollY),
-       headerMoved:Math.round(header.getBoundingClientRect().top-initialHeader),
-       ctaMoved:Math.round(cta.getBoundingClientRect().top-initialCTA)
+       position:hs.position,portalPosition:ps.position,animation:ps.animationName,
+       portalWidth:rect.width,portalHeight:rect.height,
+       headerShift:header.getBoundingClientRect().top-top,
+       portalShift:portal.getBoundingClientRect().top-rect.top,
+       scrolled:window.scrollY
       };
      });
-     report.notes.push({test:'portail-stable',screen:c.name,...motion});
-     if(motion.missing)issue(c.name,'bouton Mon Portail S.D.E absent',true);
+     report.notes.push({test:'portail-stable-unifie',screen:c.name,...measure});
+     if(measure.login){
+      if(!measure.visible)issue(c.name,'formulaire de connexion masqué',true);
+     }else if(measure.missing)issue(c.name,'portail absent du header partagé',true);
      else{
-      if(['sticky','fixed'].includes(motion.position))issue(c.name,'en-tête encore flottant : '+motion.position,true);
-      if(motion.accessPosition!=='static'||motion.ctaPosition!=='static')issue(c.name,'bouton non ancré dans le flux normal',true);
-      if(motion.animation!=='none'||motion.transform!=='none')issue(c.name,'bouton encore animé ou transformé',true);
-      // Sur la page de connexion l'en-tête et le bouton sont masqués
-      // (display:none) : leur rectangle reste à zéro, il n'y a rien à mesurer.
-      if(!motion.headerHidden){
-       if(motion.scrollY>=90&&Math.abs(motion.headerMoved+motion.scrollY)>8)
-        issue(c.name,'l’en-tête se déplace indépendamment du document',true);
-       if(motion.scrollY>=90&&Math.abs(motion.headerMoved-motion.ctaMoved)>8)
-        issue(c.name,'le bouton ballotte par rapport à son en-tête',true);
-      }
+      if(measure.portalWidth<44||measure.portalHeight<40)
+       issue(c.name,'cible portail inférieure à 44 px',true);
+      if(measure.animation!=='none')issue(c.name,'bouton portail animé automatiquement',true);
+      if(Math.abs(measure.headerShift-measure.portalShift)>8)
+       issue(c.name,'bouton du portail déplacé indépendamment de l’en-tête',true);
+      if(measure.position==='sticky'&&Math.abs(measure.headerShift)>8)
+       issue(c.name,'en-tête sticky instable au défilement',true);
      }
      await page.evaluate(()=>scrollTo(0,0));
-    }catch(error){
-     issue(c.name,'vérification de stabilité indisponible : '+String(error.message||error).slice(0,240),true);
-    }
+    }catch(error){issue(c.name,'vérification stabilité indisponible : '+String(error.message||error).slice(0,240),true);}
    }
    if(c.path==='/'&&!row.premiumHome&&c.width>=960&&c.width<=1100&&row.heroIntroHeight!==300)
     issue(c.name,'hauteur de la réserve tablette : '+row.heroIntroHeight+' px au lieu de 300 px',true);
@@ -528,12 +520,12 @@ try{
      issue(c.name,'contraste des cartes de l’accueil inférieur à 4,5:1 : '+JSON.stringify(insuffisants.slice(0,4)),true);
     if(c.width<=860&&row.heroBgMobile!=='none')
      issue(c.name,'photo de fond décorative encore téléchargée sur mobile : '+row.heroBgMobile,true);
-    if(c.width<=860&&!String(row.posterImageSource).includes('tpa-2026-mobile.webp'))
-     issue(c.name,'version optimisée de l’affiche TPA non sélectionnée sur mobile : '+row.posterImageSource,true);
+    if(c.width<=860&&row.posterImageSource!==null)
+     issue(c.name,'l’accueil mobile charge inutilement une grande affiche TPA',true);
     report.notes.push({test:'pagespeed-cards',page:c.name,count:ratios.length,minRatio:Math.min(...ratios.map(x=>x.ratio||0)),poster:row.posterImageSource,heroBackground:row.heroBgMobile});
    }
    if(c.path==='/'&&(row.poleLinks!==5||row.brokenPoleImages>0))issue(c.name,'cartes/emblèmes pôles manquants ou images indisponibles',true);
-   if(c.path==='/'&&(!row.tpaPosters||!row.tpaPosterLoaded))issue(c.name,'affiche TPA absente ou non chargée',true);
+   if(c.path==='/'&&(!row.tpaCompact||!row.tpaCompactVisible||row.tpaPosters!==0))issue(c.name,'bandeau TPA compact absent, caché ou doublé par une affiche',true);
    if(row.pageErrors.length)issue(c.name,row.pageErrors.slice(0,3).join(' | '),c.name==='academy-390');
    console.log('AUDIT '+c.name+' '+JSON.stringify(row));
   } catch(error){
