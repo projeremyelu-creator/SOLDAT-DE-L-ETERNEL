@@ -1,0 +1,120 @@
+/* S.D.E. — Charte chromatique officielle Dark Royal & Or | 2026-11-09
+ * Fondations obscures ~80 %, or ~10 %, teintes opérationnelles en halos ~10 %.
+ * Les couleurs ne remplacent jamais un libellé textuel et ne doivent pas être
+ * le seul indice d'une catégorie ou d'un état.
+ * Contrastes WCAG 2 (texte normal) : Obsidienne / Or #D4AF37 9.52:1 ;
+ * Obsidienne / Bronze #997A15 4.91:1 ; Obsidienne / Perle #CBD5E1 13.48:1.
+ */
+:root{
+  /* Fondations */
+  --sde-bg-main:#07080C;
+  --sde-bg-card:#0F111A;
+  --sde-bg-elevated:#161926;
+  --sde-bg-glass:rgba(22,25,38,.75);
+  --sde-border-subtle:rgba(255,255,255,.08);
+  /* Métaux */
+  --sde-gold-100:#FBF5D9;
+  --sde-gold-300:#F3E5AB;
+  --sde-gold-500:#D4AF37;
+  --sde-gold-700:#997A15;
+  --sde-gradient-gold:linear-gradient(135deg,#F3E5AB 0%,#D4AF37 50%,#997A15 100%);
+  /* Les trois expressions */
+  --sde-spirit-bg:rgba(76,29,149,.20);
+  --sde-spirit-border:rgba(124,58,237,.30);
+  --sde-spirit-text:#C4B5FD;
+  --sde-command-bg:rgba(30,58,138,.20);
+  --sde-command-border:rgba(37,99,235,.30);
+  --sde-command-text:#93C5FD;
+  --sde-mission-bg:rgba(20,83,45,.20);
+  --sde-mission-border:rgba(22,163,74,.30);
+  --sde-mission-text:#86EFAC;
+  /* Les cinq pôles ; RV = REV, LO = commandement, ISH = missions. */
+  --sde-rev-strong:#9333EA;
+  --sde-rev-bg:rgba(109,40,217,.16);
+  --sde-rev-border:rgba(139,92,246,.35);
+  --sde-rev-text:#D8B4FE;
+  --sde-ish-strong:#15803D;
+  --sde-ish-bg:rgba(20,83,45,.22);
+  --sde-ish-border:rgba(34,197,94,.35);
+  --sde-ish-text:#86EFAC;
+  --sde-lo-strong:#1D4ED8;
+  --sde-lo-bg:rgba(30,58,138,.22);
+  --sde-lo-border:rgba(59,130,246,.35);
+  --sde-lo-text:#93C5FD;
+  --sde-cmr-strong:#D97706;
+  --sde-cmr-bg:rgba(180,83,9,.18);
+  --sde-cmr-border:rgba(245,158,11,.35);
+  --sde-cmr-text:#FDE68A;
+  --sde-fde-strong:#0E7490;
+  --sde-fde-bg:rgba(14,116,144,.20);
+  --sde-fde-border:rgba(6,182,212,.35);
+  --sde-fde-text:#67E8F9;
+  /* Hiérarchie */
+  --sde-text-heading:#F8FAFC;
+  --sde-text-body:#CBD5E1;
+  --sde-text-muted:#94A3B8;
+  --sde-text-gold:#F3E5AB;
+  --sde-text-on-gold:#07080C;
+}
+/* Les cartes utilisent le halo à faible opacité. Aucun bloc saturé plein. */
+.card-spirit{
+  --sde-card-glow:var(--sde-spirit-bg);
+  --sde-card-border:var(--sde-spirit-border);
+  --sde-card-accent:var(--sde-spirit-text);
+}
+.card-command{
+  --sde-card-glow:var(--sde-command-bg);
+  --sde-card-border:var(--sde-command-border);
+  --sde-card-accent:var(--sde-command-text);
+}
+.card-mission{
+  --sde-card-glow:var(--sde-mission-bg);
+  --sde-card-border:var(--sde-mission-border);
+  --sde-card-accent:var(--sde-mission-text);
+}
+.card-spirit,.card-command,.card-mission{
+  color:var(--sde-text-heading);
+  background:radial-gradient(circle at top right,var(--sde-card-glow),var(--sde-bg-card) 70%);
+  border:1px solid var(--sde-card-border);
+}
+.sde-pole-rev{
+  --sde-pole-glow:var(--sde-rev-bg);
+  --sde-pole-border:var(--sde-rev-border);
+  --sde-pole-badge:var(--sde-rev-text);
+}
+.sde-pole-ish{
+  --sde-pole-glow:var(--sde-ish-bg);
+  --sde-pole-border:var(--sde-ish-border);
+  --sde-pole-badge:var(--sde-ish-text);
+}
+.sde-pole-lo{
+  --sde-pole-glow:var(--sde-lo-bg);
+  --sde-pole-border:var(--sde-lo-border);
+  --sde-pole-badge:var(--sde-lo-text);
+}
+.sde-pole-cmr{
+  --sde-pole-glow:var(--sde-cmr-bg);
+  --sde-pole-border:var(--sde-cmr-border);
+  --sde-pole-badge:var(--sde-cmr-text);
+}
+.sde-pole-fde{
+  --sde-pole-glow:var(--sde-fde-bg);
+  --sde-pole-border:var(--sde-fde-border);
+  --sde-pole-badge:var(--sde-fde-text);
+}
+.sde-color-pole{
+  color:var(--sde-text-heading);
+  background:radial-gradient(circle at top right,var(--sde-pole-glow),var(--sde-bg-card) 75%);
+  border:1px solid var(--sde-pole-border);
+}
+.sde-pole-badge{color:var(--sde-pole-badge);font-weight:800;letter-spacing:.12em}
+.sde-text-heading{color:var(--sde-text-heading)}
+.sde-text-body{color:var(--sde-text-body)}
+.sde-text-muted{color:var(--sde-text-muted)}
+.sde-text-gold{color:var(--sde-text-gold)}
+.sde-btn-royal{
+  color:var(--sde-text-on-gold);
+  background:var(--sde-gradient-gold);
+  border:1px solid var(--sde-gold-500);
+}
+.sde-tabular{font-variant-numeric:tabular-nums}
