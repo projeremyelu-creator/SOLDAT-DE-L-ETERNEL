@@ -1,0 +1,26 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Mouvement SDE//Traversée Prophétique Annuelle 2026//FR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:TPA SDE 2026
+BEGIN:VEVENT
+UID:tpa-2026-12-18@mouvement-sde.org
+DTSTAMP:20261109T171500Z
+DTSTART:20261218T200000Z
+SUMMARY:TPA 2026 - Traversée Prophétique Annuelle
+DESCRIPTION:Traversée Prophétique Annuelle du Mouvement SDE. Vendredi 18 décembre 2026 à 20 h GMT. Voir les modalités officielles sur mouvement-sde.org.
+LOCATION:Google Meet (lien transmis par le Mouvement SDE)
+URL:https://mouvement-sde.org/programmes#tpa-2026
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-P1D
+DESCRIPTION:TPA SDE 2026 demain à 20 h GMT
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER:-PT1H
+DESCRIPTION:TPA SDE 2026 dans une heure
+END:VALARM
+END:VEVENT
+END:VCALENDAR
