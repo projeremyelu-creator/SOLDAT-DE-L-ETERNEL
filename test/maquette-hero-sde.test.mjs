@@ -86,3 +86,16 @@ test('Maquette SDE : calendrier Google synchronisé avec le fichier événement 
  assert.match(d.querySelector('#ap-countdown').textContent,/jours \d+ h \d+ min \d+ s/);
  dom.window.close();
 });
+
+test('Maquette SDE : titre et texte du Hero réservés à 1 100 px sans figer le mobile',()=>{
+ const css=read('public/vitrine/sde-maquette-hero.css');
+ const beginning=css.indexOf('@media(min-width:1051px) and (max-width:1199px)');
+ assert.ok(beginning>=0,'réservation tablette/grand écran présente');
+ const stable=css.slice(beginning,css.indexOf('@media(max-width:960px)',beginning));
+ assert.match(stable,/\.ap-hero \.ap-hero-copy h1\{/);
+ assert.match(stable,/font-size:clamp\(2\.625rem,4\.2vw,3rem\)!important/);
+ assert.match(stable,/min-height:2\.4em!important/);
+ assert.match(stable,/\.ap-hero-copy \.ap-lead\{/);
+ assert.match(stable,/min-height:calc\(1\.65em \* 4\)!important/);
+ assert.doesNotMatch(css.slice(css.indexOf('@media(max-width:960px)')),/min-height:2\.4em!important/,'le petit écran garde un titre à hauteur naturelle');
+});
