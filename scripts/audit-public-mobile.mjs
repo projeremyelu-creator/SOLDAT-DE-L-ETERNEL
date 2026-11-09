@@ -360,17 +360,18 @@ try{
      }
     }catch(e){issue(c.name,'parcours anonyme simulé échoué : '+String(e.message||e).slice(0,240),true);}
    }
-   // Parcours d'authentification en lecture seule : sélection du bon espace,
-   // sans identifier d'utilisateur ni soumettre aucun formulaire.
+   // Connexion sans distractions : formulaire visible, accès membre et administration préservés.
    if(c.name==='connexion-390'){
     try{
-     const tpa=page.locator('#sde-event-root a[href="/programmes#tpa-2026"]');
-     if(await tpa.count()<1){
-      const detail=await page.evaluate(()=>({bodyClass:document.body.className,
-       banner:document.getElementById('sde-event-root')?.outerHTML.slice(0,850)||'élément absent',
-       scriptReact:!!document.querySelector('script[src*="sde-experience.js"]')}));
-      issue(c.name,'bannière TPA 2026 absente sur la connexion : '+JSON.stringify(detail).slice(0,950),true);
-     }
+     const visible=await page.evaluate(()=>{
+      const h=document.querySelector('.site-header'),ref=document.querySelector('.ref-login-art');
+      return {header:h?getComputedStyle(h).display:null,
+       reference:ref?getComputedStyle(ref).display:null};
+     });
+     if(visible.header!=='none'||visible.reference!=='none')
+      issue(c.name,'barre publique ou image de maquette visible pendant la connexion',true);
+     if(await page.locator('.access-back[href="/"]').count()!==1)
+      issue(c.name,'lien de retour au site absent',true);
      const member=page.locator('[data-access-target="/mon-espace"]');
      const admin=page.locator('[data-access-target="/administration"]');
      if(await member.getAttribute('aria-pressed')!=='true'||await admin.getAttribute('aria-pressed')!=='false')
@@ -381,8 +382,8 @@ try{
      await member.click({timeout:5000});
      if(new URL(page.url()).searchParams.get('retour')!=='/mon-espace'||await member.getAttribute('aria-pressed')!=='true')
       issue(c.name,'lien d’accès membre ne sélectionne pas le bon retour',true);
-     report.notes.push({test:'connexion-choix-membre-admin',url:page.url(),tpa:await tpa.count()});
-    }catch(e){issue(c.name,'sélection des deux espaces indisponible : '+String(e.message||e).slice(0,200),true);}
+     report.notes.push({test:'connexion-sans-distraction',url:page.url(),...visible});
+    }catch(e){issue(c.name,'sélection membre/administrateur indisponible : '+String(e.message||e).slice(0,220),true);}
    }
    // Vérification réelle du menu compact sur écran intermédiaire et de l'accès aux rubriques.
    if(c.name==='accueil-1024'){
