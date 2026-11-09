@@ -298,30 +298,37 @@ try{
      }
     }catch(e){issue(c.name,'parcours préinscription inopérant : '+String(e.message||e).slice(0,240),true)}
    }
-   // INTERACTIONS_NAVI : le menu et le changement de thème doivent fonctionner sur un vrai téléphone.
+   // INTERACTIONS_NAVI : barre mobile à cinq onglets + tiroir accessible.
    if(c.name==='accueil-390'){
     try{
-     const burger=page.locator('.site-header .site-burger').first();
-     if(await burger.count()!==1)issue(c.name,'bouton du menu mobile absent',true);
+     const toggle=page.locator('.sde-shell-bottom .sde-shell-open');
+     if(await toggle.count()!==1)issue(c.name,'bouton Menu de la navigation mobile absent',true);
      else{
-      await burger.click({timeout:4000});
-      const opened=await burger.getAttribute('aria-expanded');
-      const menuOpen=await page.locator('.site-header .site-menu').first().getAttribute('data-open');
-      if(opened!=='true'||menuOpen!=='true')issue(c.name,'le menu ne s’ouvre pas correctement',true);
-      await page.keyboard.press('Escape');
-      const closed=await burger.getAttribute('aria-expanded');
-      const menuClosed=await page.locator('.site-header .site-menu').first().getAttribute('data-open');
-      if(closed!=='false'||menuClosed!=='false')issue(c.name,'le menu ne se ferme pas avec Échap',true);
-      report.notes.push({test:'menu-mobile',opened,menuOpen,closed,menuClosed});
-     }
-     const toggle=page.locator('.site-header .site-theme-toggle').first();
-     if(await toggle.count()!==1)issue(c.name,'commande de thème absente',true);
-     else{
-      const themeBefore=await page.locator('html').getAttribute('data-theme');
       await toggle.click({timeout:4000});
-      const themeAfter=await page.locator('html').getAttribute('data-theme');
-      if(themeAfter===themeBefore || !['light','dark'].includes(themeAfter))issue(c.name,'bouton clair/sombre sans changement réel',true);
-      report.notes.push({test:'theme-mobile',before:themeBefore,after:themeAfter});
+      const opened=await toggle.getAttribute('aria-expanded');
+      const dialog=page.locator('#sde-shell-overlay');
+      if(opened!=='true'||!await dialog.isVisible())issue(c.name,'tiroir mobile ne s’ouvre pas',true);
+      const groups=await dialog.locator('.sde-shell-drawer-group').count();
+      if(groups!==4)issue(c.name,'les quatre catégories du tiroir sont absentes',true);
+      const search=dialog.locator('.sde-shell-filter');
+      await search.fill('formations');
+      if(await dialog.locator('a[href="/academy"]').count()<1)
+       issue(c.name,'recherche des rubriques indisponible',true);
+      await search.fill('');
+      const theme=dialog.locator('.sde-shell-theme-control');
+      if(await theme.count()!==1)issue(c.name,'bascule clair/sombre absente du tiroir',true);
+      else{
+       const before=await page.locator('html').getAttribute('data-theme');
+       await theme.click({timeout:4000});
+       const after=await page.locator('html').getAttribute('data-theme');
+       if(before===after||!['light','dark'].includes(after))
+        issue(c.name,'bascule clair/sombre inactive',true);
+       report.notes.push({test:'theme-mobile',before,after});
+      }
+      await page.keyboard.press('Escape');
+      const closed=await toggle.getAttribute('aria-expanded');
+      if(closed!=='false'||await dialog.isVisible())issue(c.name,'tiroir mobile ne se ferme pas avec Échap',true);
+      report.notes.push({test:'menu-mobile',opened,closed,groups});
      }
     }catch(e){issue(c.name,'interaction mobile en échec : '+String(e.message||e).slice(0,240),true);}
    }
