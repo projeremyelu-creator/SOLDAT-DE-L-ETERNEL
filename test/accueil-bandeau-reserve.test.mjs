@@ -14,7 +14,7 @@ test("Accueil : TPA compacte sans image préchargée et versets présents avant 
  const placeholder=doc.querySelector(".sde-versets-slot");
  assert.ok(placeholder);
  assert.equal(placeholder.getAttribute("aria-label"),"Verset du jour");
- assert.ok(placeholder.previousElementSibling?.matches('.sde-shell-event'),"le bandeau TPA précède les versets");
+ assert.ok(doc.querySelector('.ap-hero .sde-tpa-hero-card'),"la fiche TPA est intégrée dans le Hero");
  assert.equal(placeholder.nextElementSibling?.id,"contenu");
  assert.ok(doc.querySelector('.sde-shell-event a[href="/programmes#tpa-2026"]'),"le bandeau mène à la fiche TPA");
  assert.ok(doc.querySelector('.ap-next[data-evenement="tpa-2026"]'),"le programme phare est conservé dans l'agenda");
@@ -38,7 +38,8 @@ test("Le script de versets remplace l'emplacement réservé sans ajouter une sec
  doc.dispatchEvent(new w.Event("DOMContentLoaded"));
  const band=doc.querySelector(".sde-versets");
  assert.ok(band);
- assert.ok(band.previousElementSibling?.matches('.sde-shell-event'));
+ assert.ok(doc.querySelector('.ap-hero .sde-tpa-hero-card'));
+ assert.ok(!band.previousElementSibling?.matches('.sde-shell-event'));
  assert.strictEqual(band.nextElementSibling,neighbor);
  assert.equal(doc.querySelectorAll(".sde-versets").length,1);
  assert.equal(doc.querySelector(".sde-versets-slot"),null);
