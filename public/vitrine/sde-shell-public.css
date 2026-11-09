@@ -530,3 +530,22 @@ body.sde-premium-home .ap-presentation-cadre figcaption{color:#D6DCE8!important}
   transform:none!important
  }
 }
+
+
+/* Carte d'accès membre publique : reflet noble uniquement en interaction. */
+body.sde-premium-home .private-access-card.private-member{
+ position:relative;overflow:hidden;isolation:isolate
+}
+body.sde-premium-home .private-access-card.private-member:after{
+ content:"";position:absolute;inset:-65% auto -65% -75%;width:35%;
+ background:linear-gradient(110deg,transparent,rgba(243,229,171,.33),transparent);
+ transform:skewX(-20deg);pointer-events:none;opacity:0
+}
+body.sde-premium-home .private-access-card.private-member:is(:hover,:focus-visible):after{
+ opacity:1;animation:sde-art-shimmer .5s ease-out both
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-premium-home .private-access-card.private-member:is(:hover,:focus-visible):after{
+  opacity:0!important;animation:none!important
+ }
+}
