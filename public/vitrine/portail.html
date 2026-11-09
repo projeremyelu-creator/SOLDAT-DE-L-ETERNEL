@@ -42,6 +42,8 @@
 <script id="sde-webpage-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://mouvement-sde.org/#page","url":"https://mouvement-sde.org/","name":"SDE — Soldats de l'Éternel, mouvement à Abidjan","description":"Découvrez le Mouvement Prophético-Apostolique Soldats de l'Éternel : vision, programmes, Soldiers Academy, enseignements, missions et espaces membres.","inLanguage":"fr-CI","isPartOf":{"@id":"https://mouvement-sde.org/#website"},"about":{"@id":"https://mouvement-sde.org/#organisation"},"publisher":{"@id":"https://mouvement-sde.org/#organisation"}}</script>
 <link rel="stylesheet" href="/vitrine/sde-shell-public.css?v=20261108menu">
 <script defer src="/vitrine/sde-shell-public.js?v=20261108menu"></script>
+<link rel="stylesheet" href="/vitrine/animations-sde.css?v=20261109motion">
+<script defer src="/vitrine/sde-interactions.js?v=20261109motion"></script>
 </head>
 <body class="sde-unifie sde-accueil-maquette sde-ivoire sde-premium-home">
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -121,6 +123,42 @@
     </figure>
     <p class="ap-presentation-liens"><a href="/vitrine/sde-presentation-2026.mp4" download>Télécharger la vidéo (5 Mo)</a> · <a href="/mouvement">Découvrir le mouvement</a> · <a href="/contact#rejoindre">Rejoindre</a></p>
   </div>
+</section>
+
+<section id="roadmap-sde" class="sde-roadmap-section" aria-labelledby="sde-roadmap-title">
+ <div class="ap-wrap">
+  <header class="sde-roadmap-intro">
+   <span class="ap-eyebrow">Vision stratégique et prophétique</span>
+   <h2 id="sde-roadmap-title">Feuille de route 2026–2028</h2>
+   <p>Réveiller · Restaurer · Former · Équiper · Envoyer. Explorez les orientations du mouvement : les projets 2027 et 2028 sont des objectifs, non des résultats déjà atteints.</p>
+  </header>
+  <div class="sde-roadmap-nav" aria-label="Choisir une année">
+   <svg class="sde-roadmap-track" viewBox="0 0 600 12" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="sde-roadmap-gold" x1="0%" y1="0%" x2="100%" y2="0%">
+     <stop offset="0%" stop-color="#F3E5AB"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#997A15"/>
+    </linearGradient></defs>
+    <line x1="0" y1="6" x2="600" y2="6" stroke="rgba(255,255,255,.18)" stroke-width="3" stroke-linecap="round"/>
+    <line id="sde-roadmap-progress" x1="0" y1="6" x2="600" y2="6" stroke="url(#sde-roadmap-gold)" stroke-width="4" stroke-linecap="round"/>
+   </svg>
+   <button type="button" data-sde-year="2026" aria-pressed="true"><strong>2026</strong><span>Fondations</span></button>
+   <button type="button" data-sde-year="2027" aria-pressed="false"><strong>2027</strong><span>Formation</span></button>
+   <button type="button" data-sde-year="2028" aria-pressed="false"><strong>2028</strong><span>Envoi global</span></button>
+  </div>
+  <div class="sde-roadmap-card">
+   <div class="sde-roadmap-story">
+    <span id="rm-status" class="sde-roadmap-status">Phase de fondation · bilan en cours</span>
+    <h3 id="rm-title">2026 · Structurer, réveiller et digitaliser</h3>
+    <p id="rm-desc">Structuration des cinq pôles, développement du portail numérique et organisation des rassemblements. Les réalisations sont suivies dans les bilans officiels.</p>
+    <small>Verbes directeurs</small><strong id="rm-verbs">Réveiller · Restaurer · Organiser</strong>
+   </div>
+   <div id="rm-milestones" class="sde-roadmap-milestones">
+    <article class="sde-roadmap-milestone"><span>Rassemblements</span><h4>IN FIRE &amp; TPA 2026</h4><p>Conférence IN FIRE et Traversée Prophétique Annuelle du 18 décembre 2026.</p></article>
+    <article class="sde-roadmap-milestone"><span>Gouvernance</span><h4>Portail &amp; cinq pôles</h4><p>Déploiement des outils d’adhésion et organisation des responsabilités.</p></article>
+    <article class="sde-roadmap-milestone"><span>Réseau</span><h4>Six pays mentionnés</h4><p>Relations et contacts internationaux : implantations locales à confirmer individuellement.</p></article>
+   </div>
+  </div>
+  <p class="sde-roadmap-disclaimer">Cette feuille de route présente des orientations stratégiques. Elle ne remplace pas les rapports d’activités ni les indicateurs vérifiés.</p>
+ </div>
 </section>
 
 <section class="ap-section ap-light ap-cmd" id="programmes-accueil" aria-labelledby="titre-programmes">
