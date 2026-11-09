@@ -150,3 +150,14 @@ test("Responsive PWA 2027 : carrousels tactiles, retour clavier, données Academ
  assert.match(progress,/const v=snapshot\.progress/);
  assert.match(progress,/text\("statPercent",v\.percentage/);
 });
+
+test("Quest desktop : notice stable avant injection du menu, polices locales dans la fiche",()=>{
+ const quest=read("public/vitrine/soldier-quest.html");
+ const note=quest.indexOf("Les validations, badges et données personnelles");
+ const insertion=quest.indexOf('data-sdu-universe-nav data-context="quest"');
+ assert.ok(note>=0&&insertion>=0&&note<insertion,"notice avant menu pour supprimer le saut au rendu");
+ const css=read("public/vitrine/sde-digital-universe.css");
+ assert.match(css,/body\.sdu-quest-page \.sdu-hero-aside \.sdu-title/);
+ assert.match(css,/font-family:Georgia,"Times New Roman",serif!important/);
+ assert.match(css,/body\.sdu-quest-page \.sdu-hero-aside :is\(ul,\.sdu-mini\)/);
+});
