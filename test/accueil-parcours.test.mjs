@@ -44,10 +44,9 @@ test('Accueil : un rendez-vous public plus proche passe avant le programme phare
   assert.equal(texte(d,'ap-next-place'),'Abidjan');
   assert.match(d.getElementById('ap-next-register').getAttribute('href'),/^\/contact\?objet=Rencontre%20SDE#rejoindre$/);
   const suite=[...d.querySelectorAll('#ap-upcoming-list li')].map(li=>li.textContent);
-  assert.equal(suite.length,2,'Plus tard + programme phare, la copie publique de la TPA est écartée');
+  assert.equal(suite.length,1,'la grille reprend seulement les autres rendez-vous datés');
   assert.ok(suite.some(t=>t.includes('Plus tard')));
-  assert.ok(suite.some(t=>t.includes('Traversée Prophétique Annuelle')));
-  assert.equal(suite.filter(t=>/TPA 2026/.test(t)).length,1);
+  assert.equal(suite.filter(t=>/TPA 2026/.test(t)).length,0);
  }finally{dom.window.close()}
 });
 test('Accueil : sans rendez-vous plus proche, la carte affiche le programme phare avec son inscription',async()=>{
@@ -59,6 +58,7 @@ test('Accueil : sans rendez-vous plus proche, la carte affiche le programme phar
   assert.equal(texte(d,'ap-next-time'),'20h00');
   assert.equal(d.getElementById('ap-next-register').getAttribute('href'),phare.inscription);
   assert.equal(d.getElementById('ap-next-more').getAttribute('href'),'/programmes#tpa-2026');
+  assert.equal(d.getElementById('prochain-rendez-vous').hidden,true,'le bandeau TPA suffit pour ce rendez-vous');
   assert.match(texte(d,'ap-countdown'),/^Dans \d+ jours? et \d+ h$/);
  }finally{dom.window.close()}
 });
