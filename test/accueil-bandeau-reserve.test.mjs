@@ -5,21 +5,19 @@ import {JSDOM} from "jsdom";
 
 const read=p=>readFileSync(p,"utf8");
 
-test("Accueil : image TPA préchargée et versets présents avant l'exécution de JavaScript",()=>{
+test("Accueil : TPA compacte sans image préchargée et versets présents avant l'exécution de JavaScript",()=>{
  const s=read("public/vitrine/portail.html");
  const dom=new JSDOM(s),doc=dom.window.document;
  const preload=doc.querySelector('link[rel="preload"][as="image"]');
- assert.equal(preload?.getAttribute("href"),"/vitrine/illus/tpa-2026.webp");
- assert.equal(preload?.getAttribute("fetchpriority"),"high");
+ assert.equal(preload,null,"le programme compact ne précharge pas une grande affiche invisible");
+
  const placeholder=doc.querySelector(".sde-versets-slot");
  assert.ok(placeholder);
  assert.equal(placeholder.getAttribute("aria-label"),"Verset du jour");
- assert.equal(placeholder.previousElementSibling?.tagName,"HEADER");
+ assert.ok(placeholder.previousElementSibling?.matches('.sde-shell-event'),"le bandeau TPA précède les versets");
  assert.equal(placeholder.nextElementSibling?.id,"contenu");
- assert.equal(doc.querySelectorAll("img[src='/vitrine/illus/tpa-2026.webp']").length,1,"une seule affiche du programme phare");
- const poster=doc.querySelector(".ap-poster img[src='/vitrine/illus/tpa-2026.webp']");
- assert.ok(poster,"l'affiche est dans le bloc programme phare");
- assert.ok(poster.getAttribute("width")&&poster.getAttribute("height"),"dimensions réservées : pas de décalage de mise en page");
+ assert.ok(doc.querySelector('.sde-shell-event a[href="/programmes#tpa-2026"]'),"le bandeau mène à la fiche TPA");
+ assert.ok(doc.querySelector('.ap-next[data-evenement="tpa-2026"]'),"le programme phare est conservé dans l'agenda");
  assert.doesNotMatch(s,/rel="preload" as="image" href="\/vitrine\/illus\/infire-banniere\.webp"/);
  dom.window.close();
 });
@@ -40,7 +38,7 @@ test("Le script de versets remplace l'emplacement réservé sans ajouter une sec
  doc.dispatchEvent(new w.Event("DOMContentLoaded"));
  const band=doc.querySelector(".sde-versets");
  assert.ok(band);
- assert.equal(band.previousElementSibling?.tagName,"HEADER");
+ assert.ok(band.previousElementSibling?.matches('.sde-shell-event'));
  assert.strictEqual(band.nextElementSibling,neighbor);
  assert.equal(doc.querySelectorAll(".sde-versets").length,1);
  assert.equal(doc.querySelector(".sde-versets-slot"),null);

@@ -19,7 +19,8 @@ test('Cinq pôles : une même carte ivoire et une correction de contraste ciblé
   assert.ok(doc.querySelector('#vision .sde-initiative-card p'),name);
   assert.equal(doc.querySelectorAll('#vision .sde-initiative-card').length,2,name);
   const links=[...doc.querySelectorAll('head link[rel=stylesheet]')].map(x=>x.getAttribute('href'));
-  assert.ok(links.at(-1).includes('sde-fusion.css'),name+' : correctif chargé dans la dernière feuille');
+  assert.ok(links.findIndex(x=>x.includes('sde-fusion.css'))>=0,name+' : correctif Fusion chargé');
+  assert.ok(links.at(-1).includes('sde-shell-public.css'),name+' : navigation commune chargée ensuite');
  }
 });
 

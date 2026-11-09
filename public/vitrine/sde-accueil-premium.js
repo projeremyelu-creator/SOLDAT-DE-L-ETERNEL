@@ -81,10 +81,12 @@
     var ul = $("ap-indicateurs-liste"), note = $("ap-ind-note");
     if (!ul) return;
     var tuiles = d && d.ok ? [["membresActifs", "membres actifs"], ["pays", "pays où le mouvement est présent"], ["missionsEnCours", "missions en cours"], ["formations", "formations enregistrées"], ["rendezVousAVenir", "rendez-vous publics à venir"]].filter(function (t) { return Number(d[t[0]]) > 0; }) : [];
-    if (!tuiles.length) { if (note) note.textContent = "Les indicateurs seront affichés dès qu’ils seront renseignés dans la base du mouvement."; return; }
+    var panneau = ul.closest(".ap-indicateurs");
+    if (!tuiles.length) { if (panneau) panneau.hidden = true; if (note) note.hidden = true; return; }
+    if (panneau) panneau.hidden = false;
     ul.textContent = "";
     tuiles.forEach(function (t) { var li = document.createElement("li"), s = document.createElement("strong"), l = document.createElement("span"); s.textContent = nb.format(Number(d[t[0]])); l.textContent = t[1]; li.append(s, l); ul.append(li); });
-    if (note) note.textContent = "Chiffres issus des fiches du mouvement, actualisés à chaque affichage (délai maximal : 5 minutes). Aucun nom ni aucune coordonnée n’est publié.";
+    if (note) { note.hidden = false; note.textContent = "Chiffres issus des fiches du mouvement, actualisés à chaque affichage (délai maximal : 5 minutes). Aucun nom ni aucune coordonnée n’est publié."; }
   }
 
   json("/vitrine/evenement-phare.json").then(function (phare) {

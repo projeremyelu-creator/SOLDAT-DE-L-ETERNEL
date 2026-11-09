@@ -82,10 +82,20 @@
     const bloc = el("div", "sde-compteur");
     bloc.setAttribute("role", "status"); bloc.setAttribute("aria-live", "off");
     bloc.innerHTML = '<span class="sde-compteur-point" aria-hidden="true"></span><span><b data-k="enLigne">—</b> en ligne maintenant</span><span><b data-k="aujourdhui">—</b> visites aujourd’hui</span><span><b data-k="total">—</b> visites au total</span>';
-    const pied = document.querySelector(".site-footer, footer.pied, footer");
-    (pied || document.body).insertAdjacentElement(pied ? "afterbegin" : "beforeend", bloc);
+    // Ne jamais afficher de tirets en production : insertion seulement lorsque
+    // l'API renvoie trois mesures réelles et cohérentes.
     const fmt = new Intl.NumberFormat("fr-FR");
-    const afficher = (d) => { for (const k of ["enLigne", "aujourdhui", "total"]) { const b = bloc.querySelector('[data-k="' + k + '"]'); if (b && Number.isFinite(d[k])) b.textContent = fmt.format(d[k]); } };
+    const afficher = (d) => {
+      if (!d || !["enLigne","aujourdhui","total"].every(k => Number.isSafeInteger(d[k]) && d[k] >= 0)) return;
+      if (!bloc.isConnected) {
+        const pied=document.querySelector(".site-footer, footer.pied, footer");
+        (pied||document.body).insertAdjacentElement(pied?"afterbegin":"beforeend",bloc);
+      }
+      for(const k of ["enLigne","aujourdhui","total"]){
+        const valeur=bloc.querySelector('[data-k="'+k+'"]');
+        if(valeur)valeur.textContent=fmt.format(d[k]);
+      }
+    };
     const signal = async () => {
       if (document.hidden) return;
       try {

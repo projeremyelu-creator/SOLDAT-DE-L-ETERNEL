@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, existsSync } from "node:fs";
+import { JSDOM } from "jsdom";
 const lire = (f) => readFileSync(new URL("../" + f, import.meta.url), "utf8");
 
 test("Hachage : 100 000 itérations et recalcul des anciens hachages à la connexion", () => {
@@ -135,4 +136,64 @@ test("Portail React : les modules du menu portent leur famille de couleur", () =
   assert.match(shell, /const FAM=\{[^}]*'rendezvous':'mis'[^}]*'academy-direction':'spi'[^}]*\};const famOf=/);
   assert.equal((shell.match(/data-fam=\{famOf\(module\)\}/g) || []).length, 2, "menu latéral et menu mobile");
   for (const k of ["--fam-cmd:#1b2f6b", "--fam-spi:#5b21b6", "--fam-mis:#3f6b34", 'button[data-fam="mis"]']) assert.ok(css.includes(k), k);
+});
+
+
+test("Navigation publique SDE : même header, footer et tiroir à quatre catégories",()=>{
+ const html=lire("public/vitrine/portail.html");
+ const dom=new JSDOM(html,{url:"https://mouvement-sde.org/",runScripts:"outside-only"});
+ try{
+  const w=dom.window,d=w.document;
+  w.eval(lire("public/vitrine/sde-shell-public.js"));
+  d.dispatchEvent(new w.Event("DOMContentLoaded"));
+  const header=d.querySelector(".sde-shell-header");
+  assert.ok(header,"header unique monté");
+  assert.equal(d.querySelectorAll("header.site-header").length,1);
+  assert.equal(d.querySelectorAll("footer.site-footer").length,1);
+  assert.equal(header.querySelectorAll(".sde-shell-mega-group").length,4);
+  const headings=[...header.querySelectorAll(".sde-shell-mega-group>summary")].map(x=>x.textContent);
+  assert.deepEqual(headings,["Le Mouvement","Programmes & Agenda","Missions & Impact","Ressources & Vie"]);
+  assert.ok(header.querySelector('.sde-shell-donate[href="/soutenir"]'));
+  assert.ok(header.querySelector('.sde-shell-portal[href="/portail"]'));
+  const nav=d.querySelector(".sde-shell-bottom");
+  assert.equal(nav.children.length,5);
+  assert.deepEqual([...nav.querySelectorAll("a")].map(a=>a.getAttribute("href")),
+    ["/","/programmes#agenda","/contact#rejoindre","/soutenir"]);
+  const toggle=nav.querySelector(".sde-shell-open"),overlay=d.querySelector(".sde-shell-overlay");
+  toggle.click();
+  assert.equal(overlay.hidden,false);
+  assert.equal(toggle.getAttribute("aria-expanded"),"true");
+  assert.equal(overlay.querySelectorAll(".sde-shell-drawer-group").length,4);
+  const search=overlay.querySelector('input[type="search"]');
+  search.value="formation";search.dispatchEvent(new w.Event("input",{bubbles:true}));
+  assert.ok([...overlay.querySelectorAll(".sde-shell-drawer-group a")].some(x=>!x.hidden&&/Formation/.test(x.textContent)));
+  overlay.querySelector(".sde-shell-close").click();
+  assert.equal(overlay.hidden,true);
+ }finally{dom.window.close();}
+});
+
+test("Corrections UX : aucun indicateur ni compteur vide, contact avec un seul guichet, dons sûrs",()=>{
+ const home=lire("public/vitrine/portail.html");
+ const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf("</section>",home.indexOf('class="ap-hero"')));
+ const buttons=hero.match(/<div class="ap-actions">[\s\S]*?<\/div>/)?.[0]||"";
+ assert.equal((buttons.match(/<a /g)||[]).length,2);
+ assert.match(home,/01 · VIE SPIRITUELLE/);
+ assert.match(home,/02 · ORGANISATION &amp; PORTAIL/);
+ assert.match(home,/03 · TERRAIN &amp; IMPACT/);
+ assert.match(home,/class="ap-indicateurs"[^>]+hidden/);
+ const counters=lire("public/vitrine/sde-versets.js");
+ assert.match(counters,/Number\.isSafeInteger/);
+ assert.match(counters,/if \(!bloc\.isConnected\)/);
+ const form=lire("public/vitrine/rejoindre.html");
+ assert.match(form,/href="\/portail\?mode=inscription"/);
+ assert.doesNotMatch(form,/href="\/mon-espace\?mode=inscription"/);
+ const soutien=lire("public/vitrine/soutenir.html");
+ assert.match(soutien,/class="sde-donation-overview"/);
+ assert.match(soutien,/id="pay-liste" hidden/);
+ assert.match(soutien,/id="formulaire"/);
+ const login=lire("public/vitrine/connexion-unifiee.html");
+ assert.doesNotMatch(login,/reference-portail\.jpg/);
+ assert.doesNotMatch(login,/id="sde-splash"/);
+ const css=lire("public/vitrine/sde-connexion-empreinte.css");
+ assert.match(css,/\.site-header,\.infire-takeover,\.sde-auth-nav/);
 });

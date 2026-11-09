@@ -26,9 +26,9 @@ const texte=(d,id)=>d.getElementById(id).textContent;
 test('Accueil : la fiche centrale du programme phare est cohérente avec l’affiche et le JSON-LD',()=>{
  const d=new JSDOM(html).window.document;
  assert.equal(phareReel.affiche,'/vitrine/illus/tpa-2026.webp');
- assert.equal(d.querySelectorAll(`img[src="${phareReel.affiche}"]`).length,1);
+ assert.equal(d.querySelectorAll(`img[src="${phareReel.affiche}"]`).length,0,'l’affiche lourde est accessible depuis la fiche, sans préchargement sur l’accueil');
  assert.equal(d.getElementById('ap-next-title').textContent,phareReel.titre);
- assert.equal(d.querySelector('#programme-phare time').getAttribute('datetime'),phareReel.debut);
+ assert.equal(d.querySelector('#prochain-rendez-vous time').getAttribute('datetime'),phareReel.debut);
  assert.equal(d.getElementById('ap-next-register').getAttribute('href'),phareReel.inscription);
  assert.equal(d.getElementById('ap-next-more').getAttribute('href'),phareReel.fiche);
  assert.match(html,new RegExp('"startDate":"'+phareReel.debut.replace(/[+]/g,'\\+')+'"'));
@@ -110,11 +110,12 @@ test('Accueil : indicateurs vérifiés, valeurs nulles masquées, aucun chiffre 
   assert.match(texte(d,'ap-ind-note'),/Aucun nom ni aucune coordonnée/);
  }finally{dom.window.close()}
 });
-test('Accueil : indicateurs indisponibles, message d’attente sans chiffre',async()=>{
+test('Accueil : indicateurs indisponibles, panneau entièrement masqué',async()=>{
  const dom=await page([]);
  try{
   const d=dom.window.document;
   assert.equal(d.querySelectorAll('#ap-indicateurs-liste li').length,0);
-  assert.match(texte(d,'ap-ind-note'),/seront affichés dès qu’ils seront renseignés/);
+  assert.equal(d.querySelector('.ap-indicateurs')?.hidden,true);
+  assert.equal(d.getElementById('ap-ind-note')?.hidden,true);
  }finally{dom.window.close()}
 });

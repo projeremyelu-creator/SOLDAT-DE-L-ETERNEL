@@ -59,7 +59,9 @@ test("refonte : accueil, textes du document de référence",()=>{
 });
 test("refonte étape 4 : Rejoindre, Soutenir et pied de page selon le document",()=>{
  const home=read("public/vitrine/index.html"),rej=read("public/vitrine/rejoindre.html"),proj=read("public/vitrine/projets.html"),sub=read("public/vitrine/subpage.js");
- for(const h of [home,rej]){for(const t of ["Votre parcours peut commencer ici","Commune ou ville","Pôle d’intérêt prioritaire","Programme souhaité","Envoyer ma demande","Merci pour votre démarche.","Votre demande a bien été transmise à l’équipe du Mouvement SDE."])assert.ok(h.includes(t),t);assert.ok(h.includes('name="pole"'));}
+ for(const t of ["Votre parcours peut commencer ici","Commune ou ville","Pôle d’intérêt prioritaire","Programme souhaité","Envoyer ma demande","Merci pour votre démarche.","Votre demande a bien été transmise à l’équipe du Mouvement SDE."])assert.ok(home.includes(t),t);
+ for(const t of ["Commune ou ville","Pôle d’intérêt prioritaire","Programme souhaité","Envoyer ma demande","Merci pour votre démarche.","Votre demande a bien été transmise à l’équipe du Mouvement SDE."])assert.ok(rej.includes(t),t);
+ assert.ok(home.includes('name="pole"')&&rej.includes('name="pole"'));
  for(const h of [home,proj])for(const t of ["Contribuer à la mission","5 000 FCFA","10 000 FCFA","25 000 FCFA","Autre montant","Choisir mon mode de contribution"])assert.ok(h.includes(t),t);
  assert.ok(sub.includes('pole:g("pole")'),"le pôle est transmis à l'API");
  assert.ok(home.includes("Politique de confidentialité")&&home.includes("Mentions légales"));
@@ -117,7 +119,8 @@ test("palettes proposées ; Ivoire · Treillis · Or est le choix initial partou
 });
 test("accueil réellement servi (portail.html) refait selon la maquette",()=>{
  const h=read("public/vitrine/portail.html");
- for(const t of ['class="ap-head"','Une génération enracinée en Jésus-Christ, prête à servir','Prochains programmes','Nos cinq pôles','Missions et impact','Prières et témoignages','Galerie IN FIRE','Espaces sécurisés','Nous rejoindre','accueil-maquette.css','id="ap-next-title"','id="ap-next-register"','class="private-access-card private-member"','class="private-access-card private-login"'])assert.ok(h.includes(t),t);
+ for(const t of ['class="ap-head"','Une génération enracinée en Jésus-Christ, prête à servir','Prochains programmes','Nos cinq pôles','Missions et impact','Prières et témoignages','Galerie IN FIRE','Espaces sécurisés','Nous rejoindre','accueil-maquette.css','id="ap-next-title"','id="ap-next-register"','class="private-access-card private-login"'])assert.ok(h.includes(t),t);
+ assert.equal((h.match(/class="private-access-card/g)||[]).length,1,'une seule carte de connexion');
  assert.equal((h.match(/class="site-access-top"/g)||[]).length,1);
  const js=read("public/vitrine/portail-unifie.js");assert.ok(js.includes("sde-rail")&&js.includes("--sde-rail-top"),"rail sur toutes les pages publiques");
 });

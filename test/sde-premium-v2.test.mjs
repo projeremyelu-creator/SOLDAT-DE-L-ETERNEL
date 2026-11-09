@@ -26,9 +26,9 @@ test('Accueil premium : trois univers reliés aux vraies rubriques publiques',()
  assert.ok(doc.querySelector('.ap-agenda'),"Agenda dynamique préservé");
  assert.ok(doc.querySelector('.ap-indicateurs'),"Indicateurs vérifiés préservés");
   const actions=doc.querySelector('.ap-hero .ap-actions');
-  assert.ok(actions,'Trois actions d’accueil présentes');
-  assert.equal(actions.querySelectorAll('a').length,3);
-  assert.ok(doc.querySelector('.ap-poster img[src="/vitrine/illus/tpa-2026.webp"]'));
+  assert.ok(actions,'Actions d’accueil présentes');
+  assert.equal(actions.querySelectorAll('a').length,2);
+  assert.ok(doc.querySelector('.sde-shell-event a[href="/programmes#tpa-2026"]'));
   assert.equal(doc.querySelectorAll('.sde-premium-pillars img[src="/vitrine/illus/tpa-2026.webp"]').length,0);
  }finally{dom.window.close()}
 });

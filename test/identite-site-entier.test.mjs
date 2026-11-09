@@ -16,11 +16,11 @@ test('Identité SDE : les 16 pages publiques utilisent toutes le même thème fi
     const links=[...doc.querySelectorAll('head link[rel=stylesheet]')].map(el=>el.getAttribute('href'));
     assert.equal(links.filter(x=>x.includes('sde-sitewide-2026.css')).length,1,page);
     if(page==='portail') {
-      assert.ok(links.at(-1).includes('sde-mobile-correctifs-20261103.css'),'accueil : correctifs mobiles chargés après Fusion');
+      assert.ok(links.at(-1).includes('sde-shell-public.css'),'accueil : navigation commune chargée après Fusion');
       assert.ok(links.findIndex(x=>x.includes('sde-fusion.css')) < links.length-1,'accueil : Fusion précède les correctifs');
       assert.equal(links.filter(x=>x.includes('sde-mobile-correctifs-20261103.css')).length,1);
     } else {
-      assert.ok(links.at(-1).includes('sde-fusion.css'),page+' : charte Fusion chargée en dernier');
+      assert.ok(links.at(-1).includes(source.includes('sde-shell-public.css')?'sde-shell-public.css':'sde-fusion.css'),page+' : dernière feuille attendue');
     }
     assert.equal(links.filter(x=>x.includes('sde-fusion.css')).length,1,page);
     assert.match(source,/<body\b/,page+' : contenu existant présent');

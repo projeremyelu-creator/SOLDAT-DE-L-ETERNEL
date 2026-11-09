@@ -9,20 +9,15 @@ const css=readFileSync('public/vitrine/sde-mobile-correctifs-20261103.css','utf8
 const audit=readFileSync('scripts/audit-public-mobile.mjs','utf8');
 
 test("PageSpeed : afficher une affiche TPA compacte sur mobile sans casser l'affiche officielle",()=>{
- const poster=doc.querySelector('#programme-phare picture');
- assert.ok(poster,'L’affiche dispose d’un élément responsive');
- assert.equal(poster.querySelector('source')?.getAttribute('srcset'),'/vitrine/illus/tpa-2026-mobile.webp');
- assert.equal(poster.querySelector('source')?.getAttribute('media'),'(max-width:860px)');
- assert.equal(poster.querySelector('img')?.getAttribute('src'),'/vitrine/illus/tpa-2026.webp');
- assert.equal(poster.querySelector('img')?.getAttribute('loading'),'lazy');
+ assert.ok(doc.querySelector('.sde-shell-event a[href="/programmes#tpa-2026"]'),'bandeau compact vers la fiche officielle');
+ assert.equal(doc.querySelectorAll('img[src="/vitrine/illus/tpa-2026.webp"]').length,0,'l’affiche lourde est évitée sur l’accueil');
  const preload=doc.querySelector('link[rel="preload"][as="image"]');
- assert.equal(preload?.getAttribute('media'),'(min-width:861px)');
- assert.equal(preload?.getAttribute('fetchpriority'),'high');
+ assert.equal(preload,null);
  const old='public/vitrine/illus/tpa-2026.webp';
  assert.ok(existsSync(old));
  const mobile='public/vitrine/illus/tpa-2026-mobile.webp';
  if(existsSync(mobile))assert.ok(statSync(mobile).size<=statSync(old).size);
- assert.equal(doc.querySelectorAll('#programme-phare picture').length,1);
+ assert.ok(doc.querySelector('#prochain-rendez-vous time[datetime]'));
 });
 
 test('Le thème est découvert directement, sans @import en cascade après les autres CSS',()=>{
@@ -30,7 +25,7 @@ test('Le thème est découvert directement, sans @import en cascade après les a
  const premium=link.findIndex(x=>x.includes('/vitrine/sde-premium-public.css'));
  const accueil=link.findIndex(x=>x.includes('/vitrine/sde-accueil-premium.css'));
  assert.ok(premium>=0&&premium<accueil);
- assert.ok(link.at(-1).includes('sde-mobile-correctifs-20261103.css'));
+ assert.ok(link.at(-1).includes('sde-shell-public.css'));
  assert.doesNotMatch(html,/<style>[^<]*@import[^<]*sde-premium-public\.css/i);
 });
 

@@ -84,7 +84,7 @@ test("portail : page d'accueil légère distincte du tableau de bord privé",asy
  const res=await get("/");
  assert.equal(res.status,200);
  assert.equal(await res.text(),"/vitrine/portail.html");
- assert.match(repoFile("public/vitrine/portail.html"),/href="\/mon-espace"/);
+ assert.match(repoFile("public/vitrine/portail.html"),/href="\/portail"/);
  assert.match(repoFile("public/vitrine/portail.html"),/href="\/programmes"/);
  const old=await get("/vitrine/");
  assert.equal(old.status,301);

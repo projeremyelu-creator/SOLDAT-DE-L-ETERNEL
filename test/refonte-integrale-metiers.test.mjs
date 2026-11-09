@@ -54,17 +54,17 @@ test('Les entrées de consultation des dossiers privés restent des routes authe
 });
 
 
-test('Accueil premium : hero immersif, affiche unique et trois accès directs',()=>{
+test('Accueil premium : hero immersif, deux actions et bandeau TPA compact',()=>{
  const html=file('public/vitrine/portail.html');
  const css=file('public/vitrine/sde-accueil-premium.css');
  const hero=html.slice(html.indexOf('class="ap-hero"'),html.indexOf('id="programmes-accueil"'));
  assert.ok(hero.length>500,'Le hero précède l’agenda');
- assert.equal((html.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1,'une seule affiche du programme phare');
+ assert.equal((html.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,0,'pas de grande affiche dans l’accueil compact');
  assert.ok(html.includes('href="/programmes#tpa-2026"'));
  assert.ok(html.includes('datetime="2026-12-18T20:00:00+00:00"'));
  assert.ok(hero.includes('class="ap-actions"'));
- for(const link of ['/mouvement','/contact#rejoindre','/programmes#tpa-2026'])assert.ok(hero.includes('href="'+link+'"'),'Accès direct manquant '+link);
- assert.match(css,/\.ap-hero-inner\{[^}]*grid-template-columns:minmax\(0,1\.25fr\) minmax\(280px,\.75fr\)/);
+ for(const link of ['/contact#rejoindre','/mouvement#film'])assert.ok(hero.includes('href="'+link+'"'),'Action manquante '+link);
+ assert.match(css,/\.ap-hero-inner\{[^}]*grid-template-columns:minmax\(0,1fr\)/);
  assert.match(css,/@media\(max-width:860px\)/);
  assert.match(css,/prefers-reduced-motion/);
 });
@@ -117,15 +117,14 @@ test('Priorité 01 : accueil sans double affiche TPA, vision et trois actions ma
  const home=file('public/vitrine/portail.html');
  const sitecss=file('public/vitrine/sde-sitewide-2026.css');
  assert.match(home,/class="ap-hero"/);
- assert.match(home,/class="ap-poster"/);
+ assert.match(home,/class="sde-shell-event"/);
  assert.ok(!home.includes('sde-community-band'),'plus de second bandeau');
- const hero=home.slice(home.indexOf('class="ap-poster"'),home.indexOf('id="programmes-accueil"'));
- assert.equal((home.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1);
- assert.equal((hero.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,1);
- for(const href of ['/mouvement','/contact#rejoindre','/programmes#tpa-2026']){
+ assert.equal((home.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,0);
+ for(const href of ['/contact#rejoindre','/mouvement#film']){
   const bloc=home.slice(home.indexOf('class="ap-hero"'),home.indexOf('id="programmes-accueil"'));
   assert.ok(bloc.includes('href="'+href+'"'),href);
  }
+ assert.ok(home.includes('class="sde-shell-event"')&&home.includes('href="/programmes#tpa-2026"'));
  assert.ok(sitecss.includes('Refonte structurée 03/11/2026'));
  assert.ok(sitecss.includes('.sde-rail{'));
  assert.ok(sitecss.includes('display:none!important'));
