@@ -19,8 +19,9 @@ test("Premier affichage : la structure TPA précède React sur la page Programme
     dom.window.close();
   }
   const accueil=new JSDOM(read("public/vitrine/portail.html")).window.document;
-  assert.ok(accueil.querySelector("#programme-phare time[datetime='2026-12-18T20:00:00+00:00']"),"accueil : fiche TPA statique avant JavaScript");
-  assert.ok(accueil.querySelector('#programme-phare a[href="/programmes#tpa-2026"]'));
+  assert.ok(accueil.querySelector("#prochain-rendez-vous time[datetime='2026-12-18T20:00:00+00:00']"),"accueil : fiche TPA statique dans l’agenda avant JavaScript");
+  assert.ok(accueil.querySelector('.sde-shell-event a[href="/programmes#tpa-2026"]'));
+  assert.ok(accueil.querySelector('#prochain-rendez-vous a[href="/programmes#tpa-2026"]'));
   assert.doesNotMatch(accueil.querySelector("main").textContent,/IN FIRE 2026/);
   const js=read("public/vitrine/portail-unifie.js");
   assert.match(js,/if\(bandeau\.querySelector\("\.event-bar-inner"\)\)return/);
