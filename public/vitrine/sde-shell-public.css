@@ -800,9 +800,16 @@ html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>section.section,
 html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>section.section:nth-of-type(2n){
  background:var(--sde-2027-ivory)!important;
  color:var(--sde-2027-ink)!important;
+ opacity:1!important;transform:none!important;animation:none!important;
 }
 html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>section.section :is(p,li,dd,figcaption){
  color:var(--sde-2027-muted)!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>section.section :is(h2,h3,h4,h5,h6){
+ color:var(--sde-2027-ink)!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>section.section :is(.surtitre,.etiquette,.rythme,.premium-kicker){
+ color:var(--sde-2027-accent-dark,var(--sde-2027-accent))!important;
 }
 body.sde-shell-mounted.sde-subpage :is(.tete-section,.pg-block)>:is(h2,h3),
 body.sde-shell-mounted.sde-subpage :is(.section,.pg-wrap)>:is(h2,h3){
