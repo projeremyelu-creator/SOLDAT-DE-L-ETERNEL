@@ -1,4 +1,4 @@
-/* Contrôle réel des 20 actifs média SDE 2027, uniquement si ZIP présent.
+/* Contrôle réel des médias SDE 2027 depuis le ZIP ou dix originaux GitHub.
  * Protège l'annonce de publication: aucune réussite sur une vidéo 404.
  */
 import {existsSync} from "node:fs";
@@ -7,6 +7,13 @@ import {resolve,dirname} from "node:path";
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),"..");
 const zip=resolve(root,"Medias_SDE_2027_prets_pour_site.zip");
+const originaux=[
+ "IMG-20261002-WA0024(1).jpg","IMG-20261104-WA0118.jpg",
+ "IMG-20261104-WA0121.jpg","IMG-20261104-WA0122.jpg",
+ "IMG_20261031_100328_3.jpg","IMG_20261031_122737_350.jpg",
+ "file_0000000034d881f489f1574d2a5bc2a1.png",
+ "VID-20260924-WA0061.mp4","WA_1793824660474.mp4","gemini_generated_video_56be848c.mp4"
+];
 const domains=["https://mouvement-sde.org","https://app.mouvement-sde.org"];
 const photos=[
 "reunion-priere-01","reunion-priere-02","reunion-fraternelle",
@@ -18,8 +25,8 @@ const videos=["identite-sde-expansion","livre-pouvoir-femme","archives-rassemble
 const paths=[...photos,...videos];
 
 export async function verifier({fetcher=fetch,domaines=domains,delai=ms=>new Promise(r=>setTimeout(r,ms)),attempts=4}={}){
- if(!existsSync(zip)){
-  console.log("MEDIAS_SDE_EN_ATTENTE: le ZIP n'est pas présent dans main : aucun média public n'est annoncé.");
+ if(!existsSync(zip)&&!originaux.every(name=>existsSync(resolve(root,name)))){
+  console.log("MEDIAS_SDE_EN_ATTENTE: ni archive ni dix originaux présents : aucun média public annoncé.");
   return {ok:true,installed:false};
  }
  let last=[];
