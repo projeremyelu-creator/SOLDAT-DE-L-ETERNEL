@@ -220,3 +220,19 @@ body.sdu-motion-paused .sdu-card,body.sdu-motion-paused .sdu-feature,body.sdu-mo
 .sdu-motion-toggle{border:1px solid #e2c26a;color:#ffdfa3;background:#101b31;border-radius:10px;padding:9px 14px;min-height:44px;font-weight:700;cursor:pointer}
 @media(max-width:980px){.sdu-quest-workspace{grid-template-columns:1fr}.sdu-quest-sidebar{position:static}.sdu-quest-sidebar nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:600px){.sdu-quest-sidebar nav{grid-template-columns:repeat(2,minmax(0,1fr))}.sdu-quest-sidebar nav a{font-size:.77rem}}
+
+/* Pont visuel dans le tableau membre authentifie, aucune donnee simulee. */
+body.sde-tableau .sdu-member-universe{margin:20px 0 25px;padding:clamp(16px,3vw,26px);border-radius:19px;
+ background:linear-gradient(115deg,#0d1a35,#22203b 65%,#172b34);border:1px solid #d4af3777;box-shadow:0 12px 32px #0004}
+body.sde-tableau .sdu-member-universe h2{font:700 clamp(1.25rem,2vw,1.9rem) var(--sdu-serif);color:#ffe3a2;margin:5px 0 9px}
+body.sde-tableau .sdu-member-universe p{color:#d5deef;line-height:1.5;margin:0 0 20px}
+body.sde-tableau .sdu-member-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+body.sde-tableau .sdu-member-grid a{display:grid;gap:6px;justify-items:center;text-align:center;padding:20px 10px;
+ border-radius:14px;background:#09162add;border:1px solid #d4af3769;color:#fff0c8;text-decoration:none;transition:transform .2s,border-color .2s}
+body.sde-tableau .sdu-member-grid a:hover{transform:translateY(-3px);border-color:#f1d283}
+body.sde-tableau .sdu-member-grid strong{font:700 clamp(.9rem,1.3vw,1.12rem) var(--sdu-serif);color:#ffdf95}
+body.sde-tableau .sdu-member-grid small{color:#d8e2f0}
+body.sde-tableau .sdu-member-grid span{font-size:1.65rem;color:#f4d18a}
+body.sde-premium-home .sde-universe .sdu-card-copy .sdu-title{font-size:clamp(1.05rem,1.6vw,1.42rem);line-height:1.3}
+@media(max-width:850px){body.sde-tableau .sdu-member-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){body.sde-tableau .sdu-member-grid{gap:8px}body.sde-tableau .sdu-member-grid a{padding:15px 6px}}
