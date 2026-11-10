@@ -19,6 +19,7 @@
   {title:"Médias & Ressources",links:[
    ["/","La Citadelle SDE · Accueil"],["/academy","Soldiers Campus · Formations"],
    ["/soldier-quest","Soldier Quest · Engagement"],["/soldiers-tv","Soldiers TV · Vidéos"],
+   ["/mediatheque","Médiathèque · Toutes les publications"],
    ["/enseignements","Enseignements & messages"],["/soldiers-voice","Soldiers Voice"],
    ["/album-infire","Galerie & médias"],["/newsletter","Newsletter"],
    ["/communaute","Communauté"]]},
