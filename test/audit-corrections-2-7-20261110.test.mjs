@@ -87,3 +87,17 @@ test("7. Recette : nouvelle vérification WebP et pages complémentaires sur les
  assert.match(read("scripts/audit-public-mobile.mjs"),/c\.name==='mediatheque-390'/);
  assert.match(read("scripts/verifier-archives-sde-publiees.mjs"),/originaux/);
 });
+
+test("CLS final : verset réservé sur la page Mouvement et en-têtes stables sur tablette",()=>{
+ const page=read("public/vitrine/mouvement.html");
+ const doc=new JSDOM(page).window.document;
+ assert.ok(doc.querySelector("header.site-header + .sde-versets-slot"),"réserve immédiatement après l'en-tête");
+ const styles=read("public/vitrine/sde-six-maquettes-2027.css");
+ assert.ok(styles.includes('data-sde-page="mouvement"] .sde-versets-slot'));
+ assert.ok(styles.includes("max-width:860px"));
+ assert.ok(styles.includes("height:63px!important"));
+ assert.ok(styles.includes("height:72px!important"));
+ const audit=read("scripts/audit-public-mobile.mjs");
+ assert.ok(audit.includes("c.name==='accueil-tablette'"));
+ assert.ok(audit.includes("c.name==='mouvement-desktop'"));
+});
