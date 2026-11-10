@@ -1,0 +1,527 @@
+/* SDE 2027 — NOUVELLE MAQUETTE OFFICIELLE (remplacement visuel complet).
+ * Références : accueil Réveil spirituel, Atlas missions, Soldiers Academy,
+ * smartphone premium. Les données et autorisations existantes sont préservées.
+ * Les anciens éléments techniques nécessaires à la compatibilité ne définissent
+ * plus la direction artistique. */
+:root{--sde-v5-navy:#0b152b;--sde-v5-night:#101e37;--sde-v5-panel:#192840;--sde-v5-gold:#efd087;--sde-v5-cream:#fff4dc;--sde-v5-muted:#dbe3ef;--sde-v5-line:#bda16e}
+html body.sde-v5-home{background:#0b152b!important;color:#f7f1e7}
+html body.sde-v5-home .ap-hero{
+ background:#0b152b!important;
+ min-height:720px!important;position:relative!important;overflow:hidden;
+ isolation:isolate;border-bottom:1px solid #efcd8770;
+}
+html body.sde-v5-home .ap-hero .ap-hero-bg{
+ display:block!important;position:absolute;inset:0;z-index:-1;opacity:1!important;
+ background:linear-gradient(180deg,#08132ce9 0%,#0d19325b 25%,#0b1428a6 47%,#0a1427cb 70%,#080e1bf7 100%),
+ radial-gradient(ellipse at 50% 39%,#b9843980,transparent 54%),
+ url("/vitrine/photos/hero-sde-1280.webp") center 57%/cover no-repeat!important;
+}
+html body.sde-v5-home .ap-hero::before{
+ content:"";display:block!important;position:absolute;pointer-events:none;inset:10px;z-index:0;
+ border:1px solid #d4ad698c;clip-path:polygon(0 0,18% 0,18% 2px,82% 2px,82% 0,100% 0,100% 100%,82% 100%,82% calc(100% - 2px),18% calc(100% - 2px),18% 100%,0 100%);
+}
+html body.sde-v5-home .ap-hero .ap-hero-inner{
+ width:min(1120px,calc(100% - 42px))!important;max-width:1120px!important;
+ min-height:720px!important;margin:0 auto!important;
+ display:flex!important;flex-direction:column!important;align-items:center!important;
+ justify-content:center!important;gap:22px!important;
+ padding:88px 0 38px!important;position:relative;z-index:1;
+}
+html body.sde-v5-home .ap-hero .ap-hero-copy{
+ width:100%!important;max-width:970px!important;min-height:0!important;
+ padding:0!important;margin:0 auto!important;text-align:center!important;
+ display:flex!important;flex-direction:column;align-items:center;
+}
+html body.sde-v5-home .ap-hero .ap-logo{width:56px!important;height:56px!important;object-fit:contain;margin:0 auto 11px!important;
+ filter:drop-shadow(0 0 14px #f3cd7977)}
+html body.sde-v5-home .ap-hero .ap-eyebrow{
+ font-size:clamp(.68rem,1.1vw,.83rem)!important;line-height:1.5!important;
+ color:#ffdf9a!important;-webkit-text-fill-color:#ffdf9a!important;
+ letter-spacing:.2em!important;font-weight:900!important;opacity:1!important;
+}
+html body.sde-v5-home .ap-hero h1{
+ max-width:960px!important;min-height:0!important;
+ font:800 clamp(2.45rem,6.5vw,6rem)/1.09 "Cinzel",Georgia,serif!important;
+ color:#ffde9a!important;-webkit-text-fill-color:#ffde9a!important;
+ letter-spacing:-.015em!important;text-align:center!important;margin:18px auto 15px!important;
+ text-shadow:0 1px 2px #120c0b,0 5px 15px #080b13,0 0 33px #d7a64a95!important;
+ text-wrap:balance!important;text-transform:uppercase!important;
+}
+html body.sde-v5-home .ap-hero h1 span{
+ color:#ffe3a4!important;-webkit-text-fill-color:#ffe3a4!important;display:block;
+}
+html body.sde-v5-home .ap-hero :is(.ap-devise,.ap-lead){
+ max-width:800px!important;margin:4px auto 0!important;
+ color:#fff5e3!important;-webkit-text-fill-color:#fff5e3!important;
+ font-size:clamp(.85rem,1.35vw,1.06rem)!important;font-weight:780!important;
+ line-height:1.6!important;text-align:center!important;opacity:1!important;
+}
+html body.sde-v5-home .ap-hero .ap-lead{color:#fbe2ad!important;-webkit-text-fill-color:#fbe2ad!important}
+html body.sde-v5-home .ap-hero .sde-citadel-verse{
+ max-width:660px!important;margin:16px auto 0!important;background:#0e1b32b9!important;
+ border:1px solid #f0cf8b6b!important;border-radius:13px!important;
+ padding:12px 17px!important;text-align:center!important;
+}
+html body.sde-v5-home .ap-hero .sde-citadel-verse p{
+ color:#fff5e1!important;-webkit-text-fill-color:#fff5e1!important;
+ font:500 clamp(.9rem,1.2vw,1.06rem)/1.55 Georgia,serif!important;margin:0!important;
+}
+html body.sde-v5-home .ap-hero .sde-citadel-verse cite{
+ display:block;margin-top:6px!important;font-size:.76rem!important;
+ color:#efcf88!important;-webkit-text-fill-color:#efcf88!important;
+}
+html body.sde-v5-home .ap-hero .sde-citadel-actions{
+ justify-content:center!important;display:flex!important;gap:12px!important;margin:21px 0 0!important;
+ flex-wrap:wrap!important;align-items:center!important;max-width:100%!important;
+}
+html body.sde-v5-home .ap-hero .sde-citadel-actions a{
+ min-height:48px!important;min-width:178px!important;box-sizing:border-box!important;
+ padding:12px 20px!important;display:inline-flex!important;justify-content:center!important;
+ align-items:center!important;gap:9px!important;border-radius:11px!important;
+ font:800 .93rem/1.45 "Atkinson Hyperlegible",system-ui,sans-serif!important;
+ backdrop-filter:blur(10px);text-decoration:none!important;white-space:normal;
+}
+html body.sde-v5-home .ap-hero .ap-btn-gold{
+ background:linear-gradient(135deg,#d9b169,#fff0ba)!important;
+ color:#17223b!important;-webkit-text-fill-color:#17223b!important;
+ border:1px solid #f5d995!important;box-shadow:0 7px 20px #ad773f38;
+}
+html body.sde-v5-home .ap-hero .ap-btn-ghost{
+ background:#15223fc9!important;
+ color:#fff6e3!important;-webkit-text-fill-color:#fff6e3!important;
+ border:1px solid #ebcf93!important;
+}
+html body.sde-v5-home .ap-hero .sde-citadel-film{
+ font-size:.87rem!important;line-height:1.55!important;text-align:center!important;
+ margin:12px auto 0!important;opacity:1!important;
+}
+html body.sde-v5-home .ap-hero .sde-citadel-film a{
+ color:#fff0c4!important;-webkit-text-fill-color:#fff0c4!important;
+ min-height:44px;display:inline-flex;align-items:center;font-weight:700;text-decoration:underline;text-underline-offset:3px;
+}
+html body.sde-v5-home .ap-hero .sde-citadel-founder{
+ color:#e6ded2!important;-webkit-text-fill-color:#e6ded2!important;font-size:.78rem!important;
+ text-align:center!important;line-height:1.6!important;opacity:1!important;margin:3px auto 0!important;
+}
+html body.sde-v5-home .ap-hero .sde-tpa-hero-card{
+ width:min(960px,100%)!important;max-width:960px!important;min-height:0!important;margin:14px auto 0!important;
+ border:1px solid #c6ab70a8!important;border-radius:17px!important;
+ background:linear-gradient(135deg,#11213cdf,#142743e8)!important;
+ box-shadow:0 15px 32px #0006!important;backdrop-filter:blur(15px);
+ padding:10px 18px!important;
+}
+html body.sde-v5-home .ap-hero .sde-shell-event-inner{padding:0!important;min-height:0!important}
+html body.sde-v5-home .ap-hero .sde-shell-event-message{max-width:none!important;text-align:center!important}
+html body.sde-v5-home .ap-hero .sde-shell-event-message h2{
+ color:#ffe2a4!important;-webkit-text-fill-color:#ffe2a4!important;
+ font:800 clamp(.99rem,1.55vw,1.23rem)/1.35 "Cinzel",Georgia,serif!important;
+ margin:7px 0!important;opacity:1!important;
+}
+html body.sde-v5-home .ap-hero .sde-shell-event-message :is(p,dd,dt,time,span){
+ color:#f0edf0!important;-webkit-text-fill-color:#f0edf0!important;opacity:1!important;line-height:1.5!important;
+}
+html body.sde-v5-home .ap-hero .sde-tpa-kicker{
+ color:#f4d18d!important;-webkit-text-fill-color:#f4d18d!important;font-size:.72rem!important;
+}
+html body.sde-v5-home .ap-hero .sde-tpa-facts{
+ display:flex!important;gap:10px 18px!important;justify-content:center!important;flex-wrap:wrap!important;
+ margin:10px auto!important;
+}
+html body.sde-v5-home .ap-hero .sde-tpa-facts>div{width:auto!important;max-width:100%!important}
+html body.sde-v5-home .ap-hero .sde-tpa-actions{
+ display:flex!important;justify-content:center!important;gap:9px!important;flex-wrap:wrap!important;
+}
+html body.sde-v5-home .ap-hero .sde-tpa-actions a{
+ min-height:44px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ font-size:.8rem!important;line-height:1.5!important;padding:8px 13px!important;
+}
+html body.sde-v5-home .ap-hero .sde-tpa-detail{
+ display:inline-flex!important;align-items:center!important;min-height:44px!important;margin:4px auto 0!important;
+ color:#f0d696!important;-webkit-text-fill-color:#f0d696!important;font-size:.83rem!important;
+}
+html body.sde-v5-home .sde-rv{
+ background:#0a1529!important; padding-top:32px!important; border-color:#c6a67155!important;
+}
+html body.sde-v5-home .sde-rv .sde-rv-layout{grid-template-columns:minmax(185px,.88fr) minmax(0,2.55fr) minmax(185px,.93fr)!important;align-items:start!important}
+html body.sde-v5-home .sde-rv .sde-rv-screen{border:1px solid #bc9e64!important;border-radius:14px!important;background:#0e192f!important}
+html body.sde-v5-home .sde-rv .sde-v5-map-stage{
+ min-height:410px!important;padding:20px 17px 15px!important;display:flex!important;
+ flex-direction:column!important;justify-content:space-between!important;align-items:stretch!important;
+ background:radial-gradient(circle at 50% 46%,#32405b,#101c32 67%,#0c152b 100%)!important;
+ color:#fff5df!important;-webkit-text-fill-color:#fff5df!important;text-align:left!important;
+}
+html body.sde-v5-home .sde-rv .sde-v5-map-stage::before,
+html body.sde-v5-home .sde-rv .sde-v5-map-stage::after{content:none!important}
+html body.sde-v5-home .sde-v5-map-header{
+ display:flex;justify-content:space-between;align-items:flex-start;gap:13px;flex-wrap:wrap;
+ position:relative;z-index:1;
+}
+html body.sde-v5-home .sde-v5-map-header>div{flex:1 1 280px;min-width:0}
+html body.sde-v5-home .sde-v5-map-header h2{
+ margin:6px 0!important;color:#fff4d8!important;-webkit-text-fill-color:#fff4d8!important;
+ font:800 clamp(1.18rem,2.2vw,1.75rem)/1.2 "Cinzel",Georgia,serif!important;opacity:1!important;
+}
+html body.sde-v5-home .sde-v5-map-subtitle{
+ font-size:.86rem!important;color:#e4e8ef!important;-webkit-text-fill-color:#e4e8ef!important;
+ line-height:1.55!important;margin:6px 0!important;opacity:1!important;
+}
+html body.sde-v5-home .sde-v5-map-label{
+ display:inline-flex;align-items:center;padding:7px 9px;border:1px solid #9f85576e;border-radius:30px;
+ background:#0c172ce0;color:#f6d791!important;-webkit-text-fill-color:#f6d791!important;
+ font-size:.62rem!important;font-weight:850!important;letter-spacing:.05em;
+}
+html body.sde-v5-home .sde-v5-map-canvas{
+ position:relative;width:100%;margin:12px auto 0;
+ border:1px solid #b59a5c47;border-radius:9px;background:#071225b5;
+ overflow:hidden;box-shadow:inset 0 0 40px #050a17b5;
+}
+html body.sde-v5-home .sde-v5-map-canvas svg{
+ display:block;width:100%;height:auto;max-height:410px;min-width:0;
+ filter:drop-shadow(0 0 6px #dfbc6a38);
+}
+html body.sde-v5-home .sde-v5-map-actions{display:flex;align-items:center;justify-content:center;gap:11px;flex-wrap:wrap;padding:9px 0}
+html body.sde-v5-home .sde-v5-map-actions a{
+ display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+ padding:10px 12px;border:1px solid #c9ac6a;border-radius:8px;background:#192a46;
+ color:#f5d98f!important;-webkit-text-fill-color:#f5d98f!important;font-weight:750!important;
+ font-size:.77rem!important;text-decoration:none!important;text-align:center!important;
+}
+html body.sde-v5-home .sde-v5-map-disclaimer{
+ color:#e5e7ee!important;-webkit-text-fill-color:#e5e7ee!important;
+ font-size:.69rem!important;line-height:1.55!important;opacity:1!important;text-align:center!important;
+ margin:4px 0 0!important;
+}
+html body.sde-v5-home .sde-v5-map-canvas .sde-v5-orbits{stroke-dasharray:5 8;animation:sde-v5-orbit 27s linear infinite}
+html body.sde-v5-home .sde-v5-map-canvas .sde-v5-light-points{animation:sde-v5-lights 4s ease-in-out infinite alternate}
+html body.sde-v5-home .sde-rv.sde-rv-motion-paused :is(.sde-v5-orbits,.sde-v5-light-points){animation:none!important}
+html body.sde-v5-home .sde-rv .sde-rv-phone{display:none!important}
+html body.sde-v5-home .sde-rv .sde-rv-academy .sde-rv-card-heading h3,
+html body.sde-v5-home .sde-rv .sde-rv-missions .sde-rv-card-heading h3{
+ color:#ffefc8!important;-webkit-text-fill-color:#ffefc8!important;
+}
+html body.sde-v5-home .sde-rv .sde-rv-card{background:linear-gradient(150deg,#1f2e48,#131e34)!important;border-color:#bca06c!important}
+html body.sde-v5-home .sde-rv .sde-rv-card :is(p,strong,span,a){opacity:1!important}
+html body.sde-v5-home .sde-rv .sde-rv-academy-panels{min-height:0!important}
+html body.sde-v5-home .sde-rv .sde-rv-academy-tabs button{min-width:0!important}
+html body.sde-v5-home .sde-rv .sde-rv-screen-footer{
+ background:#0c152a!important;padding:10px 14px!important;border-top:1px solid #a98e64!important;
+}
+html body.sde-v5-home .sde-rv .sde-rv-screen-footer .sde-rv-immersive-toggle{
+ min-height:44px!important;border-color:#dcb977!important;
+}
+html body.sde-v5-home .sde-rv-immersive .sde-v5-map-stage{min-height:550px!important}
+html body.sde-v5-home .sde-rv-immersive .sde-v5-map-canvas svg{max-height:520px}
+html body.sde-v5-home .sde-master-access,
+html body.sde-v5-home .sde-premium-pillars,
+html body.sde-v5-home .sde-universe,
+html body.sde-v5-home .sde-institutional-map{
+ background:#0d1a30!important;color:#f3eee6!important;border-color:#aa8d5773!important;
+}
+html body.sde-v5-home .sde-master-access .sde-master-path,
+html body.sde-v5-home .sde-premium-pillars .sde-premium-pillar,
+html body.sde-v5-home .sde-universe .sdu-card{
+ background:linear-gradient(150deg,#1e2d48,#142039)!important;
+ border:1px solid #b49b687d!important;border-radius:15px!important;
+ color:#f4eee5!important;-webkit-text-fill-color:#f4eee5!important;
+ box-shadow:0 10px 25px #04091448;
+}
+html body.sde-v5-home .sde-master-access :is(h2,h3,strong),
+html body.sde-v5-home .sde-premium-pillars :is(h2,h3,strong),
+html body.sde-v5-home .sde-universe :is(h2,h3,strong,.sdu-title){
+ color:#ffdf98!important;-webkit-text-fill-color:#ffdf98!important;opacity:1!important;
+}
+html body.sde-v5-home .sde-master-access :is(p,span),
+html body.sde-v5-home .sde-premium-pillars :is(p,span),
+html body.sde-v5-home .sde-universe :is(p,span){
+ color:#e6e8ed!important;-webkit-text-fill-color:#e6e8ed!important;opacity:1!important;
+}
+html body.sde-v5-home #poles-accueil .sde-pole-officiel-lien{
+ background:linear-gradient(145deg,#1c2943,#121d33)!important;
+ border-color:#bba06a!important;
+}
+/* SOLDIERS ACADEMY PUBLIC — un seul hero premium, plus de doublons */
+html body.sde-v5-academy-public .sa-premium-preview{
+ margin:10px 0 27px!important;
+ padding:13px!important;
+ background:#0b172d!important;
+ border:1px solid #ceb075!important;border-radius:20px!important;
+}
+html body.sde-v5-academy-public .sa-premium-preview .sa-premium-head{
+ min-height:370px!important;
+ background:linear-gradient(115deg,#0f1c33,#203555 48%,#111b32)!important;
+}
+html body.sde-v5-academy-public .sa-premium-preview .sa-premium-head::after{
+ content:"";pointer-events:none;position:absolute;inset:10px;
+ border:1px solid #e5ca8c50;border-radius:10px;
+}
+html body.sde-v5-academy-public .sa-premium-preview h1{
+ font:800 clamp(2.2rem,6vw,5rem)/1.12 "Cinzel",Georgia,serif!important;
+ color:#ffe2a5!important;-webkit-text-fill-color:#ffe2a5!important;
+ text-shadow:0 1px 1px #000b,0 0 23px #edc7769d!important;
+ text-transform:uppercase;max-width:900px;letter-spacing:.035em;
+ text-align:center;margin:12px auto!important;
+}
+html body.sde-v5-academy-public .sa-premium-preview .sa-premium-wave{
+ height:85%!important;top:3%!important;opacity:.75!important;
+ filter:drop-shadow(0 0 10px #dca64f7d);
+}
+html body.sde-v5-academy-public .sa-premium-preview .sa-premium-grid{
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:18px!important;margin-top:16px!important;
+}
+html body.sde-v5-academy-public .sa-premium-preview .sa-premium-card{
+ background:linear-gradient(155deg,#202d49,#0f1b35)!important;border-color:#c5a875!important;
+}
+html body.sde-v5-academy-public .sa-premium-preview .sa-premium-card summary{
+ min-height:195px!important;
+}
+html body.sde-v5-academy-public .sa-premium-preview .sa-premium-card summary :is(strong,span){
+ color:#f9e5b9!important;-webkit-text-fill-color:#f9e5b9!important;
+}
+html body.sde-v5-academy-public .sa-premium-preview .sa-premium-card p{
+ color:#e7ebf4!important;-webkit-text-fill-color:#e7ebf4!important;
+}
+/* SOLDIERS ACADEMY PRIVÉ — image principale, vrais compteurs et navigation */
+html body.sde-v5-campus-private{
+ background:radial-gradient(ellipse at 30% 0%,#273655,#0c172e 60%,#091123 100%)!important;
+ color:#f5efdd!important;
+}
+html body.sde-v5-campus-private>header{
+ background:linear-gradient(90deg,#0e1a30,#0b1529)!important;
+ border-bottom:1px solid #bda16a8a!important;
+ box-shadow:0 5px 21px #080d1a72!important;
+}
+html body.sde-v5-campus-private>header .identity strong{
+ font:750 clamp(.95rem,1.7vw,1.4rem)/1.4 "Cinzel",Georgia,serif!important;
+ color:#ffdf94!important;-webkit-text-fill-color:#ffdf94!important;
+}
+html body.sde-v5-campus-private>header .inner a{
+ color:#f6e4bb!important;-webkit-text-fill-color:#f6e4bb!important;
+}
+html body.sde-v5-campus-private #main{position:relative}
+html body.sde-v5-campus-private .sde-v5-academy-hero{
+ min-height:310px!important;position:relative;isolation:isolate;overflow:hidden;
+ display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+ text-align:center!important;padding:36px 30px!important;
+ background:radial-gradient(ellipse at 50% 7%,#3a4460,#16233e 55%,#0f192d 100%)!important;
+ border:1px solid #d2b374!important;border-radius:20px!important;
+ box-shadow:0 12px 30px #050d19aa!important;margin:16px 0 26px!important;
+}
+html body.sde-v5-campus-private .sde-v5-campus-wave{
+ z-index:-1;position:absolute;inset:0;pointer-events:none;opacity:.8;
+}
+html body.sde-v5-campus-private .sde-v5-campus-wave svg{
+ width:100%;height:100%;filter:drop-shadow(0 0 13px #e3ba6882);
+}
+html body.sde-v5-campus-private .sde-v5-academy-hero h1{
+ font:800 clamp(2.1rem,5vw,4.6rem)/1.12 "Cinzel",Georgia,serif!important;
+ color:#ffdf9c!important;-webkit-text-fill-color:#ffdf9c!important;
+ text-shadow:0 2px 17px #090d18,0 0 25px #d8ab5363!important;
+ margin:8px 0 15px!important;
+}
+html body.sde-v5-campus-private .sde-v5-academy-hero h1 em{
+ font-style:normal;color:#ffe4ae!important;-webkit-text-fill-color:#ffe4ae!important;
+}
+html body.sde-v5-campus-private .sde-v5-academy-hero .lead,
+html body.sde-v5-campus-private .sde-v5-campus-hero-note{
+ max-width:760px;color:#e6edf7!important;-webkit-text-fill-color:#e6edf7!important;
+ line-height:1.6!important;font-size:.94rem!important;text-align:center!important;margin:8px auto!important;
+ opacity:1!important;
+}
+html body.sde-v5-campus-private .sde-v5-academy-hero .actions{
+ display:flex!important;justify-content:center!important;gap:11px!important;flex-wrap:wrap!important;
+ margin:15px 0!important;
+}
+html body.sde-v5-campus-private .sde-v5-academy-hero .actions a{
+ min-height:44px;border:1px solid #e2c079!important;border-radius:10px!important;
+ display:inline-flex;align-items:center;justify-content:center;padding:10px 15px!important;
+ color:#f6e5bd!important;-webkit-text-fill-color:#f6e5bd!important;text-decoration:none!important;
+}
+html body.sde-v5-campus-private .sde-v5-academy-hero .actions .primary{
+ background:#edcf82!important;color:#182338!important;-webkit-text-fill-color:#182338!important;
+}
+html body.sde-v5-campus-private .metrics{
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ gap:13px!important;margin:20px 0!important;
+}
+html body.sde-v5-campus-private .metrics>.metric{
+ min-height:117px!important;border:1px solid #c2a46c!important;border-radius:14px!important;
+ background:linear-gradient(150deg,#21314e,#121d34)!important;
+ padding:19px 13px!important;display:flex!important;align-items:center!important;flex-direction:column!important;
+ justify-content:center!important;text-align:center!important;
+}
+html body.sde-v5-campus-private .metric strong{
+ font:750 clamp(1.45rem,2.2vw,2.2rem)/1.2 "Cinzel",Georgia,serif!important;
+ color:#f2d48d!important;-webkit-text-fill-color:#f2d48d!important;
+}
+html body.sde-v5-campus-private .metric span{
+ color:#ebedf5!important;-webkit-text-fill-color:#ebedf5!important;
+ font-size:.86rem!important;text-align:center!important;line-height:1.5!important;opacity:1!important;
+}
+html body.sde-v5-campus-private #academyDynDashboard{
+ background:linear-gradient(140deg,#19283f,#0e1b33)!important;
+ border:1px solid #bca069!important;border-radius:17px!important;
+ box-shadow:0 10px 23px #0206107d!important;
+}
+html body.sde-v5-campus-private .tabs{
+ background:#0c182e!important;border:1px solid #b5985f!important;
+ border-radius:13px!important;padding:7px!important;gap:6px!important;
+}
+html body.sde-v5-campus-private .tabs button{
+ min-height:44px!important;border-radius:8px!important;
+ color:#f2e8d7!important;-webkit-text-fill-color:#f2e8d7!important;
+}
+html body.sde-v5-campus-private .tabs button[aria-selected="true"]{
+ background:#eed08d!important;color:#131f36!important;-webkit-text-fill-color:#131f36!important;
+}
+html body.sde-v5-campus-private .sde-v5-campus-rail{
+ display:none;position:absolute;left:-92px;top:15px;
+ width:72px;background:linear-gradient(160deg,#182540,#0e192d);
+ border:1px solid #c6ab79;border-radius:16px;z-index:8;
+ padding:10px;flex-direction:column;gap:10px;
+}
+html body.sde-v5-campus-private .sde-v5-campus-rail :is(a,button){
+ background:#243452;border:1px solid #d6b77a66;color:#efd48d!important;-webkit-text-fill-color:#efd48d!important;
+ min-width:48px;min-height:48px;display:flex;align-items:center;justify-content:center;
+ border-radius:10px;font-size:25px;cursor:pointer;text-decoration:none;
+}
+html body.sde-v5-campus-private .sde-v5-campus-rail :is(a,button):focus-visible,
+html body.sde-v5-campus-private .sde-v5-academy-hero a:focus-visible{
+ outline:3px solid #ffe5a3!important;outline-offset:3px!important;
+}
+html body.sde-v5-campus-private .sde-v5-campus-rail button[aria-current="true"]{
+ background:#e9cc86!important;color:#142035!important;-webkit-text-fill-color:#142035!important;
+}
+@media(min-width:1450px){
+ html body.sde-v5-campus-private .sde-v5-campus-rail{display:flex}
+}
+@media(max-width:1150px){
+ html body.sde-v5-home .sde-rv .sde-rv-layout{grid-template-columns:minmax(0,1fr) minmax(0,2.2fr)!important}
+ html body.sde-v5-home .sde-rv .sde-rv-right{grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ html body.sde-v5-home .ap-hero .ap-hero-inner{min-height:700px!important}
+}
+@media(max-width:780px){
+ html body.sde-v5-home .ap-hero{min-height:0!important}
+ html body.sde-v5-home .ap-hero .ap-hero-inner{
+  min-height:0!important;width:calc(100% - 30px)!important;
+  padding:83px 0 36px!important;gap:15px!important;
+ }
+ html body.sde-v5-home .ap-hero .ap-hero-bg{
+  background:linear-gradient(180deg,#08132be0,#0b1a34b3 29%,#0c15248c 55%,#081022fa 100%),
+  url("/vitrine/photos/hero-sde-640.webp") center 50%/cover no-repeat!important;
+ }
+ html body.sde-v5-home .ap-hero h1{font-size:clamp(2.25rem,9vw,3.65rem)!important;min-height:0!important}
+ html body.sde-v5-home .ap-hero .sde-citadel-actions{max-width:480px!important;width:100%!important}
+ html body.sde-v5-home .ap-hero .sde-tpa-hero-card{padding:13px!important}
+ html body.sde-v5-home .sde-rv .sde-rv-layout{
+  display:flex!important;flex-direction:column!important;gap:13px!important;
+ }
+ html body.sde-v5-home .sde-rv .sde-rv-screen{order:0;width:100%!important}
+ html body.sde-v5-home .sde-rv .sde-rv-left{order:1;width:100%!important}
+ html body.sde-v5-home .sde-rv .sde-rv-right{
+  order:2;width:100%!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ }
+ html body.sde-v5-home .sde-rv .sde-v5-map-stage{min-height:0!important;padding:15px 12px!important}
+ html body.sde-v5-home .sde-rv .sde-v5-map-header h2{font-size:1.22rem!important}
+ html body.sde-v5-home .sde-rv .sde-v5-map-canvas svg{max-height:none!important}
+ html body.sde-v5-home .sde-premium-pillars .sde-premium-pillar{border-radius:14px!important}
+ html body.sde-v5-academy-public .sa-premium-preview .sa-premium-grid{grid-template-columns:1fr!important}
+ html body.sde-v5-campus-private .metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ html body.sde-v5-campus-private .sde-v5-academy-hero{min-height:0!important;padding:28px 16px!important}
+}
+@media(max-width:490px){
+ html body.sde-v5-home .ap-hero .ap-hero-inner{padding-top:60px!important}
+ html body.sde-v5-home .ap-hero h1{font-size:clamp(2rem,8.65vw,2.6rem)!important}
+ html body.sde-v5-home .ap-hero .sde-citadel-actions{flex-direction:column!important;align-items:stretch!important}
+ html body.sde-v5-home .ap-hero .sde-citadel-actions a{width:100%!important}
+ html body.sde-v5-home .ap-hero .sde-tpa-facts{flex-direction:column}
+ html body.sde-v5-home .sde-rv .sde-rv-right{grid-template-columns:1fr!important}
+ html body.sde-v5-home .sde-rv .sde-v5-map-label{font-size:.58rem!important}
+ html body.sde-v5-home .sde-rv .sde-v5-map-actions{flex-direction:column!important}
+ html body.sde-v5-home .sde-rv .sde-v5-map-actions a{width:100%!important}
+ html body.sde-v5-academy-public .sa-premium-preview h1{font-size:clamp(1.9rem,8.4vw,2.8rem)!important}
+ html body.sde-v5-campus-private .sde-v5-academy-hero h1{font-size:clamp(1.8rem,8.4vw,2.6rem)!important}
+ html body.sde-v5-campus-private .metrics{gap:8px!important}
+ html body.sde-v5-campus-private .metrics>.metric{min-height:109px!important;padding:13px 8px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-v5-home .sde-v5-orbits,
+ html body.sde-v5-home .sde-v5-light-points{animation:none!important}
+ html body.sde-v5-home .ap-hero *,
+ html body.sde-v5-campus-private .sde-v5-academy-hero *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
+@keyframes sde-v5-lights{to{opacity:.5;filter:brightness(.8)}}
+@keyframes sde-v5-orbit{to{stroke-dashoffset:-150}}
+
+
+/* MISSIONS — ATLAS PUBLIC RESPONSABLE ET DYNAMIQUE */
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-hero{
+ padding:28px 15px 32px;
+ background:linear-gradient(145deg,#0c172d,#18273f 50%,#091428)!important;
+ border-block:1px solid #b39764a6!important;
+ isolation:isolate;position:relative;overflow:hidden;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-inner{
+ width:min(1250px,100%);margin:0 auto;
+ display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);
+ gap:clamp(17px,3vw,42px);align-items:center;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-kicker{
+ font:800 .76rem/1.5 "Atkinson Hyperlegible",system-ui,sans-serif!important;
+ letter-spacing:.13em;color:#efd28f!important;-webkit-text-fill-color:#efd28f!important;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-copy h2{
+ font:800 clamp(1.7rem,3.3vw,3.1rem)/1.17 "Cinzel",Georgia,serif!important;
+ color:#fff1d1!important;-webkit-text-fill-color:#fff1d1!important;
+ margin:14px 0!important;text-shadow:0 2px 10px #000b;letter-spacing:.01em;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-copy p{
+ color:#e2e8f1!important;-webkit-text-fill-color:#e2e8f1!important;
+ font-size:1rem!important;line-height:1.65!important;max-width:60ch;opacity:1!important;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-actions{
+ display:flex;flex-wrap:wrap;gap:11px;margin-top:23px;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-actions a{
+ min-height:46px;display:inline-flex;align-items:center;justify-content:center;
+ font-size:.95rem;font-weight:800;
+ background:#e9ce8e;color:#18233b!important;-webkit-text-fill-color:#18233b!important;
+ border:1px solid #f4dca5;border-radius:10px;padding:10px 16px;text-decoration:none;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-actions a+a{
+ background:#182942;color:#f9e4b5!important;-webkit-text-fill-color:#f9e4b5!important;
+ border-color:#d9b879;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-art{
+ border:1px solid #c3a369;border-radius:16px;background:#071226;
+ padding:15px 13px 12px;overflow:hidden;
+ box-shadow:0 18px 35px #05091286;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-art svg{
+ display:block;width:100%;height:auto;max-height:400px;
+ background:radial-gradient(ellipse at center,#1b2941 10%,#0b1628 77%);
+ border-radius:9px;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-art span{
+ display:block;margin-top:10px;
+ color:#e5e8ee!important;-webkit-text-fill-color:#e5e8ee!important;
+ font-size:.71rem;font-weight:700;letter-spacing:.045em;line-height:1.5;text-align:center;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-hero a:focus-visible{
+ outline:3px solid #ffdf93;outline-offset:3px;
+}
+@media(max-width:850px){
+ html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-inner{
+  grid-template-columns:minmax(0,1fr);
+ }
+ html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-art{
+  order:1;
+ }
+}
+@media(max-width:490px){
+ html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-hero{padding:19px 12px 22px}
+ html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-actions{
+  flex-direction:column;
+ }
+ html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-actions a{width:100%}
+ html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-art{padding:9px}
+}

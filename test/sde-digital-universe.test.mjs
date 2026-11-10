@@ -50,7 +50,8 @@ test("Soldiers TV : deux vrais fichiers vidéo, sans faux direct",()=>{
 test("Soldiers Campus : sites public et apprenant relies aux cours securises",()=>{
  const academy=read("public/vitrine/academy.html");
  const apprenant=read("public/vitrine/sde-academy-parcours.html");
- assert.match(academy,/sdu-campus-strip/);
+ assert.match(academy,/sa-premium-preview/);
+ assert.doesNotMatch(academy,/sdu-campus-strip/,"l’ancien campus superposé a été remplacé");
  assert.match(academy,/24 cours/);
  assert.match(academy,/\/mon-espace\/academy/);
  assert.match(apprenant,/sde-campus-student/);

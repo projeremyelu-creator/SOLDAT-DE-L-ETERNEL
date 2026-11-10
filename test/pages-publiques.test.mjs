@@ -145,13 +145,13 @@ test('Notre Mouvement : film de présentation hébergé, sous la limite des ress
  assert.doesNotMatch(lire('public/sw-public.js').match(/PUBLIC_ASSETS\s*=\s*([^;]+);/)[1],/mp4/,'les vidéos ne passent pas par le cache du service worker');
 });
 
-test('Film de présentation : bouton sur l’accueil (hors des trois actions) et rappel sur Contact',()=>{
+test('Film de présentation : bouton sur l’accueil (hors des deux actions) et rappel sur Contact',()=>{
  const home=page('portail'),contact=page('rejoindre'),film=page('mouvement');
  assert.ok(film.includes('id="film"'),'cible du lien');
  const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf('</section>',home.indexOf('class="ap-hero"')));
  const actions=hero.match(/<div class="ap-actions[^"]*">[\s\S]*?<\/div>/)?.[0]||'';
- assert.equal((actions.match(/<a /g)||[]).length,3,'trois actions principales de la Citadelle');
- assert.ok(actions.includes('href="/contact#rejoindre"')&&actions.includes('href="/mouvement"')&&actions.includes('href="/programmes#agenda"'), 'découverte, adhésion et programmes');
+ assert.equal((actions.match(/<a /g)||[]).length,2,'deux actions principales du Réveil');
+ assert.ok(actions.includes('href="/contact#rejoindre"')&&actions.includes('href="/mouvement"'), 'découverte et adhésion');
  assert.ok(hero.includes('href="/mouvement#film"')&&hero.includes('data-film-link'),'film présent en lien secondaire distinct des CTA');
  assert.ok(contact.includes('id="film-contact"')&&contact.includes('href="/mouvement#film"'));
  assert.ok(contact.indexOf('id="film-contact"')<contact.indexOf('id="rejoindre" aria-labelledby'),'avant le formulaire, hors des sections de texte légal');
