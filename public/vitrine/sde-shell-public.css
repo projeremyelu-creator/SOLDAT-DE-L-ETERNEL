@@ -1495,10 +1495,7 @@ html body.sde-shell-mounted.sde-universe-page :is(.sdu-section,.sdu-panel){
 html body.sde-shell-mounted.sde-universe-page :is(.sdu-section,.sdu-panel) :is(p,li,small){
  opacity:1;color:#dce2ef;
 }
-/* Texte lisible sur les images : aucun filtre de luminosité appliqué aux médias. */
-html body.sde-shell-mounted :is(img,video,canvas){
- filter:none;
-}
+/* Les images et vidéos conservent volontairement leurs traitements d'origine. */
 /* Réduire l'incohérence entre les écrans de petite et grande taille. */
 @media(max-width:390px){
  html body.sde-shell-mounted.sde-subpage .sde-intro{
