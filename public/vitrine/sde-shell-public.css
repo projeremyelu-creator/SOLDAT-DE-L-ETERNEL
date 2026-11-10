@@ -1532,3 +1532,21 @@ html body.sde-shell-mounted.sde-pages-premium .hub-breadcrumb a{
 }
 /* Les sections Soutenir restent claires lorsqu'elles contiennent des cartes
    ivoire : ne pas imposer un fond nuit à toute .hub-section. */
+
+/* Bandeau méditation : texte lisible sans augmenter artificiellement l'éclat. */
+html body.sde-shell-mounted .sde-versets{
+ background:linear-gradient(105deg,#101b35,#0e1729 55%,#101b35)!important;
+ border-bottom:1px solid rgba(226,194,106,.52)!important;
+}
+html body.sde-shell-mounted .sde-verset q{
+ color:#f7f2e8!important;-webkit-text-fill-color:#f7f2e8!important;
+ font-size:clamp(.93rem,1.25vw,1.04rem);line-height:1.45;
+ text-shadow:none!important;
+}
+html body.sde-shell-mounted .sde-verset cite{
+ color:#e2c26a!important;-webkit-text-fill-color:#e2c26a!important;
+}
+@media(max-width:680px){
+ html body.sde-shell-mounted .sde-verset q{font-size:.94rem;line-height:1.42}
+ html body.sde-shell-mounted .sde-verset cite{font-size:.69rem}
+}
