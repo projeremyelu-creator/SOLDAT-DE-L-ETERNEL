@@ -87,3 +87,41 @@ test("Un seul composant de navigation chargé sur les principales pages publique
   assert.ok(html.includes("/vitrine/sde-shell-public.css"),p+" CSS");
  }
 });
+
+test("Plus mobile et Rubriques en en-tête pilotent un même menu, accessible au clavier",()=>{
+ const c=render("portail","/");
+ try{
+  const top=c.doc.querySelector(".sde-shell-rubriques");
+  const plus=c.doc.querySelector(".sde-shell-open");
+  const overlay=c.doc.getElementById("sde-shell-overlay");
+  assert.ok(top&&plus&&overlay);
+  assert.match(plus.textContent,/Plus/);
+  assert.equal(top.getAttribute("aria-controls"),overlay.id);
+  top.click();
+  assert.equal(overlay.hidden,false);
+  assert.equal(top.getAttribute("aria-expanded"),"true");
+  assert.equal(plus.getAttribute("aria-expanded"),"true");
+  const search=c.doc.querySelector(".sde-shell-filter");
+  search.value="aucune rubrique possible";
+  search.dispatchEvent(new c.win.Event("input",{bubbles:true}));
+  assert.equal(c.doc.querySelector(".sde-shell-no-results").hidden,false);
+  plus.click();
+  assert.equal(overlay.hidden,true);
+  plus.click();
+  assert.equal(overlay.hidden,false);
+  assert.equal(search.value,"","une nouvelle ouverture réinitialise le filtre");
+  assert.equal(c.doc.querySelector(".sde-shell-no-results").hidden,true);
+  overlay.dispatchEvent(new c.win.KeyboardEvent("keydown",{key:"Escape",bubbles:true}));
+  assert.equal(overlay.hidden,true);
+  assert.equal(plus.getAttribute("aria-expanded"),"false");
+ }finally{c.dom.window.close();}
+});
+test("Le pied de page commun est posé même si une page n'en possède pas",()=>{
+ const html=read("public/vitrine/plus.html").replace(/<footer\b[\s\S]*?<\/footer>/i,"");
+ const dom=new JSDOM(html,{url:"https://mouvement-sde.org/rubriques",runScripts:"outside-only",pretendToBeVisual:true});
+ try{
+  dom.window.eval(read("public/vitrine/sde-shell-public.js"));
+  dom.window.document.dispatchEvent(new dom.window.Event("DOMContentLoaded"));
+  assert.equal(dom.window.document.querySelectorAll(".sde-shell-footer").length,1);
+ }finally{dom.window.close();}
+});
