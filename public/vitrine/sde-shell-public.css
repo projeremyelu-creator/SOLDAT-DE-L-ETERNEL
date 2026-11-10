@@ -1294,3 +1294,11 @@ body.sde-shell-mounted[data-sde-page="projets"] main{--sde-section-accent:var(--
  body.sde-shell-mounted .sde-shell-rubriques{display:inline-flex}
  body.sde-shell-mounted .sde-shell-head-inner{justify-content:space-between}
 }
+
+/* Les accents secondaires se voient dans leurs univers et n'atteignent jamais l'en-tête. */
+body.sde-shell-mounted[data-sde-page="prieres"] main .sde-intro{border-bottom:3px solid #8655b0!important}
+body.sde-shell-mounted[data-sde-page="prieres"] main .sde-kicker{color:#dbc0f2!important}
+body.sde-shell-mounted[data-sde-page="missions-humanitaires"] main .sde-intro,
+body.sde-shell-mounted[data-sde-page="projets"] main .sde-intro{border-bottom:3px solid #487e59!important}
+body.sde-shell-mounted[data-sde-page="missions-humanitaires"] main .sde-kicker,
+body.sde-shell-mounted[data-sde-page="projets"] main .sde-kicker{color:#c0e6c9!important}
