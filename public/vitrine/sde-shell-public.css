@@ -1175,3 +1175,70 @@ body.sde-shell-mounted[data-sde-page="pole-logistique"] main :is(.pg-tabs,.sde-s
   transition-duration:0.01ms!important;
  }
 }
+
+
+/* Correctif captures mobiles 10/11/2026 : lisibilité effective.
+   Le doré clair sert aux textes sur fond sombre, le bleu nuit aux onglets
+   sur fond blanc ; les paragraphes de confidentialité restent ivoire. */
+body.sde-shell-mounted .sde-shell-drawer .sde-shell-drawer-group .sde-shell-submenu a{
+ color:#f7f0df!important;
+ -webkit-text-fill-color:#f7f0df!important;
+ opacity:1!important;
+ text-shadow:none!important;
+ font-weight:600;
+ line-height:1.45;
+ min-height:44px;
+ display:flex;
+ align-items:center;
+ padding:9px 12px;
+}
+body.sde-shell-mounted .sde-shell-drawer .sde-shell-drawer-group .sde-shell-submenu a:hover,
+body.sde-shell-mounted .sde-shell-drawer .sde-shell-drawer-group .sde-shell-submenu a:focus-visible,
+body.sde-shell-mounted .sde-shell-drawer .sde-shell-drawer-group .sde-shell-submenu a[aria-current="page"]{
+ color:#fff0b6!important;
+ -webkit-text-fill-color:#fff0b6!important;
+ background:rgba(255,255,255,.09);
+ border-radius:9px;
+}
+body.sde-shell-mounted.sde-subpage main .pg-tabs a,
+body.sde-shell-mounted.sde-subpage main .pg-tabs a:visited{
+ color:#142544!important;
+ -webkit-text-fill-color:#142544!important;
+ text-shadow:none!important;
+ opacity:1!important;
+ font-weight:800;
+}
+body.sde-shell-mounted.sde-subpage main .pg-tabs a[aria-current="page"],
+body.sde-shell-mounted.sde-subpage main .pg-tabs a[aria-selected="true"]{
+ color:#fffaf0!important;
+ -webkit-text-fill-color:#fffaf0!important;
+}
+body.sde-shell-mounted[data-sde-page="rejoindre"] main .confidentialite :is(p,li,small),
+body.sde-shell-mounted[data-sde-page="rejoindre"] main .confidentialite :is(p,li,small) *{
+ color:#f1eaf6!important;
+ -webkit-text-fill-color:#f1eaf6!important;
+ opacity:1!important;
+ text-shadow:none!important;
+}
+body.sde-shell-mounted[data-sde-page="rejoindre"] main .confidentialite :is(h2,h3,h4){
+ color:#fff9ed!important;
+ -webkit-text-fill-color:#fff9ed!important;
+ opacity:1!important;
+}
+body.sde-shell-mounted[data-sde-page="rejoindre"] main .confidentialite a{
+ color:#ffe3a0!important;
+ -webkit-text-fill-color:#ffe3a0!important;
+ text-decoration:underline;
+ text-underline-offset:3px;
+}
+@media(max-width:800px){
+ body.sde-shell-mounted .sde-shell-drawer{
+  padding-bottom:calc(95px + env(safe-area-inset-bottom));
+ }
+ body.sde-shell-mounted.sde-subpage main{
+  scroll-padding-bottom:calc(90px + env(safe-area-inset-bottom));
+ }
+ body.sde-shell-mounted.sde-subpage main :is(section,[id]){
+  scroll-margin-bottom:calc(90px + env(safe-area-inset-bottom));
+ }
+}
