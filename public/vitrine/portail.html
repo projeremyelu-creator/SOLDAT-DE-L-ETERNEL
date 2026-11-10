@@ -46,6 +46,8 @@
 <script defer src="/vitrine/sde-roadmap.js?v=20261109"></script>
 <script id="sde-webpage-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://mouvement-sde.org/#page","url":"https://mouvement-sde.org/","name":"SDE — Soldats de l'Éternel, mouvement à Abidjan","description":"Découvrez le Mouvement Prophético-Apostolique Soldats de l'Éternel : vision, programmes, Soldiers Academy, enseignements, missions et espaces membres.","inLanguage":"fr-CI","isPartOf":{"@id":"https://mouvement-sde.org/#website"},"about":{"@id":"https://mouvement-sde.org/#organisation"},"publisher":{"@id":"https://mouvement-sde.org/#organisation"}}</script>
 <link rel="stylesheet" href="/vitrine/sde-digital-universe.css?v=20261109u1">
+<link rel="stylesheet" href="/vitrine/sde-visuels-premium.css?v=20261110v1">
+<script defer src="/vitrine/sde-visuels-premium.js?v=20261110v1"></script>
 <link rel="stylesheet" href="/vitrine/sde-reveil-immersif.css?v=20261110r1">
 <script defer src="/vitrine/sde-reveil-immersif.js?v=20261110r1"></script>
 <link rel="stylesheet" href="/vitrine/sde-shell-public.css?v=20261108menu">
@@ -144,7 +146,7 @@
      <div class="sde-rv-screen-links"><a href="/mouvement">Présentation</a><a href="/academy">Soldiers Academy</a><a href="/programmes">Programmes</a><a href="/soldiers-tv">Médias</a></div>
      <a href="/portail" class="sde-rv-screen-login">Mon portail</a>
     </nav>
-    <div class="sde-rv-stage">
+    <div class="sde-rv-stage" id="sde-rv-immersive-stage">
      <div class="sde-rv-light" aria-hidden="true"></div>
      <div class="sde-rv-embers" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
      <div class="sde-rv-stage-copy">
@@ -157,6 +159,7 @@
     </div>
     <div class="sde-rv-screen-footer">
      <span>Discipline · Unité · Impact</span>
+     <button type="button" class="sde-rv-immersive-toggle" data-sde-rv-immersive aria-pressed="false" aria-controls="sde-rv-immersive-stage">Activer le mode immersion</button>
      <a href="/programmes#agenda">Voir le prochain rendez-vous <span aria-hidden="true">↗</span></a>
     </div>
    </div>
@@ -180,6 +183,16 @@
       <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg"><ellipse cx="120" cy="60" rx="106" ry="50" fill="none" stroke="#d8b974" opacity=".4"/><path d="M14 60h212M120 11v98M37 33h166M37 87h166" stroke="#d8b974" fill="none" opacity=".25"/><path d="M42 28l31-9 18 9 8 12-14 4-7 14-14 2-7-11-16-2-8-9zm49 40 23 2 15 21-9 22-13-5-4-16-12-13zm35-45 28-6 42 10 11 17-15 9-22-6-15 15-14-10-21-7zm19 49 17-6 10 12-9 21-8 12-9-18z" fill="#b99b62" opacity=".83"/><circle cx="112" cy="73" r="3.7" fill="#fff5d4" stroke="#273d61" stroke-width="2"/></svg>
      </div>
      <p>À partir d'Abidjan : servir, accompagner et porter des projets d'impact.</p>
+     <div class="sde-rv-mission-controls" role="group" aria-label="Explorer l'impact SDE">
+      <button type="button" data-sde-mission-view="carte" aria-pressed="true">Carte</button>
+      <button type="button" data-sde-mission-view="projets" aria-pressed="false">Projets</button>
+     </div>
+     <div class="sde-rv-mission-list" data-sde-mission-panel="projets" hidden>
+      <strong>Nos actions documentées</strong><p>Consultez les missions et les initiatives officiellement publiées par SDE.</p>
+      <a href="/missions-humanitaires">Missions humanitaires →</a>
+      <a href="/transparence">Rapports et engagements →</a>
+     </div>
+     <small class="sde-rv-map-disclaimer">Carte artistique. Aucun point ne représente une implantation vérifiée.</small>
      <a href="/missions-humanitaires">Découvrir nos actions →</a>
     </section>
     <section class="sde-rv-card sde-rv-impact" aria-labelledby="sde-rv-impact-title">
@@ -189,6 +202,7 @@
     </section>
    </aside>
   </div>
+  <p class="sde-rv-accessibility-note">Expérience visuelle inspirée de la maquette SDE 2027. Les informations sur les missions et les cours renvoient aux pages officielles.</p>
   <nav class="sde-rv-shortcuts" aria-label="Autres raccourcis SDE">
    <a href="/academy">✧ <span>Se former</span></a>
    <a href="/programmes#agenda">▦ <span>Agenda</span></a>
