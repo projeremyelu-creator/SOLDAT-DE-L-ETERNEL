@@ -37,6 +37,8 @@ const cases=[
  {path:'/rubriques',name:'rubriques-390',width:390,height:844},
  {path:'/plus',name:'plus-390',width:390,height:844},
  {path:'/contact',name:'contact-390',width:390,height:844},
+ {path:'/contact',name:'contact-desktop',width:1280,height:900},
+ {path:'/soutenir',name:'soutenir-desktop',width:1280,height:900},
  {path:'/pole-reveil',name:'pole-reveil-390',width:390,height:844},
  {path:'/pole-social',name:'pole-social-390',width:390,height:844},
  {path:'/pole-logistique',name:'pole-logistique-390',width:390,height:844},
@@ -217,6 +219,58 @@ try{
    report.checks.push(row);
    const screenshot=join(out,c.name+'.png');
    await page.screenshot({path:screenshot,fullPage:false,animations:'disabled'});
+   
+   // Contrôler dans le navigateur les couleurs calculées après cascade CSS
+   // sur les surfaces les plus sensibles, sans envoyer de formulaire réel.
+   if(['soutenir-390','soutenir-desktop','contact-390','contact-desktop'].includes(c.name)||c.width===390){
+    const contrasts=await page.evaluate(()=>{
+     const rgb=c=>{const m=String(c||'').match(/rgba?\(([^)]+)\)/);if(!m)return null;
+      const x=m[1].split(/[ ,/]+/).map(Number);return x.length>=3&&x.slice(0,3).every(Number.isFinite)?x.slice(0,3):null;};
+     const lum=x=>x.reduce((v,z,i)=>{let c=z/255;c=c<=.04045?c/12.92:((c+.055)/1.055)**2.4;
+      return v+c*[.2126,.7152,.0722][i];},0);
+     const ratio=(fg,bg)=>{const a=rgb(fg),b=rgb(bg);if(!a||!b)return null;
+      const x=lum(a),y=lum(b);return +((Math.max(x,y)+.05)/(Math.min(x,y)+.05)).toFixed(2);};
+     const check=(name,foreground,background,pseudo)=>{
+      const node=document.querySelector(foreground),surface=document.querySelector(background);
+      if(!node||!surface)return {name,missing:true};
+      const style=getComputedStyle(node,pseudo||null),fill=style.webkitTextFillColor;
+      const color=fill&&fill.toLowerCase()!=='currentcolor'?fill:style.color;
+      const bg=getComputedStyle(surface).backgroundColor;
+      return {name,color,bg,ratio:ratio(color,bg)};
+     };
+     const checks=[];
+     if(document.querySelector('main .sde-privacy-note')){
+      checks.push(check('notice-collecte','main .sde-privacy-note','main .sde-privacy-note'));
+      if(document.querySelector('main .sde-privacy-note a'))
+       checks.push(check('lien-notice','main .sde-privacy-note a','main .sde-privacy-note'));
+     }
+     if(location.pathname==='/soutenir'){
+      const form='.hub-main #formulaire .hub-form';
+      checks.push(
+       check('libelle-montant',form+' label:has(input[name="montant"])',form),
+       check('libelle-message',form+' label:has(textarea[name="message"])',form),
+       check('consentement',form+' label.check',form),
+       check('saisie-montant',form+' input[name="montant"]',form+' input[name="montant"]'),
+       check('indication-montant',form+' input[name="montant"]',form+' input[name="montant"]','::placeholder'),
+       check('indication-message',form+' textarea[name="message"]',form+' textarea[name="message"]','::placeholder')
+      );
+     }
+     if(location.pathname==='/contact'){
+      const section='#confidentialite',card=section+' .confidentialite';
+      checks.push(
+       check('titre-confidentialite',section+' .tete-section h2',section),
+       check('sous-titre-confidentialite',card+' h3',card),
+       check('paragraphe-confidentialite',card+' p',card),
+       check('lien-confidentialite',card+' p a',card)
+      );
+     }
+     return checks;
+    });
+    const failed=contrasts.filter(x=>x.missing||x.ratio===null||x.ratio<4.5);
+    report.notes.push({test:'lecture-surfaces',page:c.name,contrasts});
+    console.log('LISIBILITE_SDE '+c.name+' '+JSON.stringify({tested:contrasts.length,failed}));
+    if(failed.length)issue(c.name,'contraste inférieur à WCAG AA : '+JSON.stringify(failed.slice(0,5)),true);
+   }
    // Portail SDE : valider publiquement les parcours sans aucune connexion ni écriture.
    if(c.name==='connexion-390'){
     try{
