@@ -150,7 +150,7 @@ test("Lisibilité 2026 : chaque fond sombre ou ivoire a une encre WCAG AA",()=>{
  for(const token of [
   'main .sde-privacy-note','main #confidentialite .confidentialite',
   '.hub-main #formulaire .hub-form','::-placeholder',
-  'input[name="montant"]','textarea[name="message"]','background-image:none!important'
+  ':is(input:not([type="checkbox"]),select,textarea)','background-image:none!important'
  ]){
   if(token==='::-placeholder')assert.match(css,/::placeholder/);
   else assert.ok(css.includes(token),token);
@@ -159,5 +159,8 @@ test("Lisibilité 2026 : chaque fond sombre ou ivoire a une encre WCAG AA",()=>{
   const source=read("public/vitrine/"+name+".html");
   assert.match(source,/sde-shell-public\.css/);
  }
- assert.match(read("scripts/audit-public-mobile.mjs"),/LISIBILITE_SDE/);
+ const audit=read("scripts/audit-public-mobile.mjs");
+ assert.match(audit,/LISIBILITE_SDE/);
+ assert.ok(audit.includes('input[name="montant"]'));
+ assert.ok(audit.includes('textarea[name="message"]'));
 });
