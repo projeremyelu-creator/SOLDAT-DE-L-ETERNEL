@@ -952,3 +952,160 @@ html[data-motion="reduced"] body.sde-shell-mounted .revele{
  }
  html.anim body.sde-shell-mounted .revele{opacity:1!important;transform:none!important}
 }
+
+
+/* ══ Référence OFFICIELLE SDE 2027 · 10 novembre 2026 ══════════════════════
+ * Ordre : contraste > coque commune > composants > mobile > mouvement.
+ * L'or décoratif (#d4af37) ne sert jamais à écrire sur papier ivoire.
+ * Les anciennes couleurs de la charte sont conservées comme accents visuels ;
+ * pour les liens et labels en fond clair, utiliser la variante sombre.
+ * Cette feuille existante reste à son rang de cascade (tests de gabarits).
+ */
+body.sde-shell-mounted{
+ --sde-2027-gold-on-light:#68400e;
+ --sde-2027-violet-on-light:#3c245d;
+ --sde-2027-green-on-light:#173e35;
+ --sde-2027-focus:#735918;
+ --sde-2027-radius:16px;
+ --sde-2027-shadow:0 12px 34px rgba(11,23,48,.09);
+}
+body.sde-shell-mounted :is(.sde-initiative-section,.section,.pg-wrap,.hub-main) :is(input,textarea,select){
+ font-family:var(--sde-2027-body);
+ min-height:44px;max-width:100%;color:var(--sde-2027-ink);
+}
+body.sde-shell-mounted :is(.sde-initiative-section,.section,.pg-wrap,.hub-main) :is(input,textarea,select)::placeholder{
+ color:var(--sde-2027-muted);opacity:1;
+}
+body.sde-shell-mounted.sde-subpage main :is(
+ .sde-initiative-card,.form-carte,.niveau-carte,.parcours,.pg-block,.hub-card,.hub-form,
+ .vmi-carte,.programme,.rdv,.sde-initiative-form,.sde-initiative-split form
+ ){
+ border-radius:var(--sde-2027-radius)!important;
+ box-shadow:var(--sde-2027-shadow);
+}
+/* 1. Textes sur fond de lecture clair : la couleur or reste un accent, jamais
+ * une couleur de corps ni un lien peu contrasté. Les labels restent visibles. */
+html body.sde-shell-mounted.sde-subpage main :is(
+ .sde-initiative-section,.section,.pg-wrap,.hub-main
+ ) :is(.sde-kicker,.premium-kicker,.surtitre,.etiquette,.rythme){
+ color:var(--sde-2027-gold-on-light)!important;
+ -webkit-text-fill-color:var(--sde-2027-gold-on-light)!important;
+ text-shadow:none!important;opacity:1!important;
+}
+html body.sde-shell-mounted.sde-subpage main :is(
+ .sde-initiative-card,.form-carte,.niveau-carte,.parcours,.pg-block,.hub-card,.hub-form,
+ .vmi-carte,.programme,.rdv,.sde-initiative-form
+ ) :is(h2,h3,h4,strong,legend,label){
+ color:var(--sde-2027-ink)!important;
+ -webkit-text-fill-color:var(--sde-2027-ink)!important;
+ text-shadow:none!important;opacity:1!important;
+}
+html body.sde-shell-mounted.sde-subpage main :is(
+ .sde-initiative-card,.form-carte,.niveau-carte,.parcours,.pg-block,.hub-card,.hub-form,
+ .vmi-carte,.programme,.rdv,.sde-initiative-form
+ ) :is(p,li,small,dd,dt,figcaption){
+ color:var(--sde-2027-muted)!important;
+ -webkit-text-fill-color:var(--sde-2027-muted)!important;opacity:1!important;
+}
+html body.sde-shell-mounted.sde-subpage main :is(
+ .sde-initiative-card,.form-carte,.niveau-carte,.parcours,.pg-block,.hub-card,.hub-form,
+ .vmi-carte,.programme,.rdv,.sde-initiative-form
+ ) a:not(.sde-button):not(.action):not(.bouton):not(.pg-btn):not(.sde-page-actions a){
+ color:var(--sde-2027-gold-on-light)!important;
+ -webkit-text-fill-color:var(--sde-2027-gold-on-light)!important;
+ text-decoration:underline;text-underline-offset:3px;opacity:1!important;
+}
+/* Les sections à fond violet/vert/navy gardent une encre blanche explicite. */
+body.sde-shell-mounted.sde-subpage .sde-intro :is(h1,h2,h3,p,a,small),
+body.sde-shell-mounted .sde-shell-header :is(a,summary),
+body.sde-shell-mounted .sde-shell-footer :is(p,a,span){
+ -webkit-text-fill-color:currentColor;opacity:1;
+}
+/* 2. En-tête et pied de page : une seule signature bleu nuit, quelle que
+ * soit la rubrique publique ; le menu actuel conserve toutes ses routes. */
+html body.sde-shell-mounted .sde-shell-header{
+ background:var(--sde-2027-night)!important;color:#fffaf0!important;
+ border-bottom:1px solid var(--sde-2027-gold-light)!important;
+}
+html body.sde-shell-mounted .sde-shell-footer{
+ background:var(--sde-2027-night)!important;color:#fffaf0!important;
+}
+/* 3. Boutons, cartes, onglets, états actifs et typographies lisibles. */
+body.sde-shell-mounted :is(
+ .sde-page-actions a:first-child,.sde-shell-portal,.sde-shell-donate,
+ .sde-shell-newsletter button,.sde-initiative-form button[type="submit"],
+ .sde-initiative-next .action.gold
+ ){
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:44px;border-radius:12px;
+ background:var(--sde-2027-gold-light)!important;
+ color:var(--sde-2027-night)!important;
+ -webkit-text-fill-color:var(--sde-2027-night)!important;
+ border:1px solid var(--sde-2027-gold-dark)!important;
+ font-family:var(--sde-2027-body)!important;font-weight:800!important;
+ text-decoration:none;text-shadow:none!important;
+}
+body.sde-shell-mounted.sde-subpage :is(.pg-tabs,.sde-section-jumps) :is(a,[role="tab"]){
+ min-height:44px;border-radius:11px;
+ text-decoration:none;font-family:var(--sde-2027-body);font-weight:750;
+}
+body.sde-shell-mounted.sde-subpage :is(.pg-tabs,.sde-section-jumps)
+ :is(a[aria-current="page"],a[aria-selected="true"],a[aria-current="true"],[role="tab"][aria-selected="true"]){
+ background:var(--sde-2027-accent-dark,var(--sde-2027-night))!important;
+ color:#fffaf0!important;-webkit-text-fill-color:#fffaf0!important;
+ border-color:var(--sde-2027-accent-dark,var(--sde-2027-night))!important;
+}
+body.sde-shell-mounted :is(a,button,input,select,textarea,summary,[role="tab"]):focus-visible{
+ outline:3px solid var(--sde-2027-gold-dark)!important;outline-offset:3px;
+}
+body.sde-shell-mounted :is(.sde-shell-header,.sde-shell-footer,.sde-shell-drawer)
+ :is(a,button,summary,input):focus-visible{
+ outline-color:var(--sde-2027-gold-light)!important;
+}
+/* 4. Mobile 360 / 390 px : aucune colonne qui déborde ; 5 boutons fixes,
+ * sans modifier l'ordre du DOM et avec des zones tactiles >= 44 px. */
+@media(max-width:390px){
+ body.sde-shell-mounted{min-width:0;overflow-x:clip}
+ body.sde-shell-mounted .sde-shell-head-inner{
+  width:calc(100% - 20px);min-width:0;gap:6px;
+ }
+ body.sde-shell-mounted .sde-shell-head-actions{min-width:0;gap:4px}
+ body.sde-shell-mounted .sde-shell-brand{gap:6px;min-width:0}
+ body.sde-shell-mounted .sde-shell-brand-title b{font-size:.86rem}
+ body.sde-shell-mounted .sde-shell-bottom{
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  padding-inline:3px;
+ }
+ body.sde-shell-mounted .sde-shell-bottom-item{
+  min-width:0;min-height:55px;overflow-wrap:normal;
+  white-space:normal;line-height:1.25;
+ }
+ body.sde-shell-mounted.sde-subpage main :is(
+  .sde-initiative-card,.form-carte,.niveau-carte,.parcours,.pg-block,.hub-card,.hub-form
+ ){min-width:0;max-width:100%;overflow-wrap:break-word}
+ body.sde-shell-mounted.sde-subpage :is(.pg-tabs,.sde-section-jumps){
+  max-width:100%;overscroll-behavior-inline:contain;
+ }
+}
+@media(max-width:360px){
+ body.sde-shell-mounted .sde-shell-brand-title b{font-size:.79rem;letter-spacing:0}
+ body.sde-shell-mounted .sde-shell-portal{font-size:.68rem!important;padding:8px 6px!important}
+ body.sde-shell-mounted .sde-shell-bottom-item{font-size:.63rem;padding:5px 1px}
+}
+/* 5. Animation uniquement en amélioration progressive : le texte ne peut
+ * être caché par une transition, même quand JS ne charge pas. */
+body.sde-shell-mounted main :is(.revele,.scroll-reveal,[data-reveal]){
+ opacity:1!important;visibility:visible!important;
+}
+body.sde-shell-mounted main :is(.revele,.scroll-reveal,[data-reveal]) :is(
+ h1,h2,h3,h4,p,li,blockquote,label
+ ){opacity:1!important;visibility:visible!important}
+html[data-motion="reduced"] body.sde-shell-mounted :is(.revele,.scroll-reveal,[data-reveal]),
+body.sde-shell-mounted[data-motion="paused"] :is(.revele,.scroll-reveal,[data-reveal]){
+ transform:none!important;transition:none!important;animation:none!important;
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-shell-mounted :is(.revele,.scroll-reveal,[data-reveal]){
+  transform:none!important;animation:none!important;transition:none!important;
+ }
+}
