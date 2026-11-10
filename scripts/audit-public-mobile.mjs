@@ -43,6 +43,21 @@ const cases=[
  {path:'/pole-social',name:'pole-social-390',width:390,height:844},
  {path:'/pole-logistique',name:'pole-logistique-390',width:390,height:844},
  {path:'/pole-medias',name:'pole-medias-390',width:390,height:844},
+ {path:'/missions',name:'missions-390',width:390,height:844},
+ {path:'/missions-humanitaires',name:'missions-humanitaires-390',width:390,height:844},
+ {path:'/gouvernance',name:'gouvernance-390',width:390,height:844},
+ {path:'/reseau',name:'reseau-390',width:390,height:844},
+ {path:'/communaute',name:'communaute-390',width:390,height:844},
+ {path:'/newsletter',name:'newsletter-390',width:390,height:844},
+ {path:'/temoignages',name:'temoignages-390',width:390,height:844},
+ {path:'/enseignements',name:'enseignements-390',width:390,height:844},
+ {path:'/mediatheque',name:'mediatheque-390',width:390,height:844},
+ {path:'/formulaire',name:'formulaire-390',width:390,height:844},
+ {path:'/rechercher',name:'rechercher-390',width:390,height:844},
+ {path:'/soldiers-voice',name:'soldiers-voice-390',width:390,height:844},
+ {path:'/boutique',name:'boutique-390',width:390,height:844},
+ {path:'/confidentialite',name:'confidentialite-390',width:390,height:844},
+ {path:'/soldiers-award',name:'soldiers-award-390',width:390,height:844},
  {path:'/pole-formation',name:'pole-formation-390',width:390,height:844}
 ];
 const poleReferences={
