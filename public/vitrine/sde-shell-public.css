@@ -1505,3 +1505,12 @@ html body.sde-shell-mounted.sde-universe-page :is(.sdu-section,.sdu-panel) :is(p
   box-sizing:border-box;
  }
 }
+
+/* Page Formulaire : bandeau de saisie bleu nuit (ancienne règle violette). */
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="formulaire"] .hero-form{
+ background:linear-gradient(135deg,#101b35,#203657)!important;
+ border-color:#e2c26a!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="formulaire"] .hero-form :is(h1,h2,.sous-titre){
+ color:#fffaf0!important;-webkit-text-fill-color:#fffaf0!important;
+}
