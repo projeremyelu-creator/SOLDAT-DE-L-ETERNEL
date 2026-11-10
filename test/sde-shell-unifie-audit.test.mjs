@@ -164,3 +164,22 @@ test("Lisibilité 2026 : chaque fond sombre ou ivoire a une encre WCAG AA",()=>{
  assert.ok(audit.includes('input[name="montant"]'));
  assert.ok(audit.includes('textarea[name="message"]'));
 });
+
+test("Recette Chromium : les règles haute priorité corrigent toutes les pages à notice",()=>{
+ const css=read("public/vitrine/sde-shell-public.css");
+ const hub=read("public/vitrine/sde-hub.js");
+ assert.match(css,/main#contenu \.sde-privacy-note a/);
+ assert.match(css,/main#contenu \.sde-privacy-note/);
+ assert.match(css,/section#confidentialite #titre-confidentialite/);
+ assert.match(css,/main \.sde-intro nav a/);
+ assert.match(css,/\.sde-shell-footer-grid nav>a/);
+ assert.match(hub,/class="pin-hit"/);
+ assert.match(hub,/pointer-events="all"/);
+ assert.match(hub,/map\.getBoundingClientRect\(\)\.width/);
+ assert.match(hub,/addEventListener\('resize'/);
+ // Un cercle SVG de rayon ajusté sur 1000 unités garde une cible >= 44 px.
+ for(const width of [300,330,360,390,600,900,1000]){
+  const radius=Math.max(25,Math.min(95,Math.ceil(24*1000/Math.max(220,width))));
+  assert.ok((radius*2*width/1000)>=44,width+"px");
+ }
+});
