@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://mouvement-sde.org/</loc><lastmod>2026-11-04</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://mouvement-sde.org/</loc><lastmod>2026-11-10</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://mouvement-sde.org/mouvement</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mouvement-sde.org/programmes</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mouvement-sde.org/academy</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mouvement-sde.org/academy</loc><lastmod>2026-11-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mouvement-sde.org/academy-programme-24</loc><lastmod>2026-11-03</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mouvement-sde.org/enseignements</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mouvement-sde.org/missions</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -12,11 +12,11 @@
   <url><loc>https://mouvement-sde.org/temoignages</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mouvement-sde.org/soldiers-voice</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mouvement-sde.org/soldiers-award</loc><lastmod>2026-10-30</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mouvement-sde.org/missions-humanitaires</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mouvement-sde.org/missions-humanitaires</loc><lastmod>2026-11-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mouvement-sde.org/confidentialite</loc><lastmod>2026-11-01</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
   <url><loc>https://mouvement-sde.org/formulaire</loc><lastmod>2026-10-30</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mouvement-sde.org/rubriques</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mouvement-sde.org/boutique</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://mouvement-sde.org/boutique</loc><lastmod>2026-11-10</lastmod></url>
   <url><loc>https://mouvement-sde.org/pole-reveil</loc><lastmod>2026-10-30</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>
   <url><loc>https://mouvement-sde.org/pole-social</loc><lastmod>2026-10-30</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>
   <url><loc>https://mouvement-sde.org/pole-logistique</loc><lastmod>2026-10-30</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>
@@ -31,4 +31,7 @@
   <url><loc>https://mouvement-sde.org/calendrier</loc><lastmod>2026-11-04</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mouvement-sde.org/newsletter</loc><lastmod>2026-11-04</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
   <url><loc>https://mouvement-sde.org/rechercher</loc><lastmod>2026-11-04</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://mouvement-sde.org/mediatheque</loc><lastmod>2026-11-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mouvement-sde.org/soldiers-tv</loc><lastmod>2026-11-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mouvement-sde.org/soldier-quest</loc><lastmod>2026-11-10</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
 </urlset>
