@@ -1454,3 +1454,57 @@ html body.sde-unifie.sde-shell-mounted .sde-shell-footer{
   transition:none!important;animation:none!important;
  }
 }
+
+/* Pages publiques autonomes (Soutenir, Soldiers TV / Quest, album) :
+   appliquer la même luminosité sans toucher à la mise en page ni au lecteur. */
+html body.sde-shell-mounted:is(.sde-pages-premium,.sde-universe-page,.sde-infire-album){
+ --sde-night-balanced:#101b35;--sde-night-raised:#1d3152;
+ --sde-paper-balanced:#fffaf0;--sde-ink-balanced:#1b2942;
+ --sde-gold-balanced:#e2c26a;--sde-muted-balanced:#56647a;
+ background-color:#101b35!important;
+}
+html body.sde-shell-mounted.sde-pages-premium{
+ background:linear-gradient(180deg,#101b35,#1d3152 63%,#101b35)!important;color:#f7f2e8;
+}
+html body.sde-shell-mounted.sde-pages-premium :is(.hub-hero,.hub-section){
+ background-color:#101b35!important;color:#f7f2e8!important;
+}
+html body.sde-shell-mounted.sde-pages-premium :is(.hub-card,.hub-form,.pg-block){
+ background:#fffaf0!important;border-color:#c9bc9f!important;
+ color:#1b2942!important;box-shadow:0 9px 25px rgba(4,13,30,.12)!important;
+}
+html body.sde-shell-mounted.sde-pages-premium :is(.hub-card,.hub-form,.pg-block) :is(h2,h3,h4,p,li,small,strong,span,label){
+ color:#1b2942!important;-webkit-text-fill-color:#1b2942!important;opacity:1!important;
+}
+html body.sde-shell-mounted.sde-pages-premium main form :is(
+ input:not([type="checkbox"]):not([type="radio"]),textarea,select
+){
+ background:#fffdf8!important;color:#1b2942!important;
+ -webkit-text-fill-color:#1b2942!important;
+ border:1px solid #8895a6!important;
+}
+html body.sde-shell-mounted.sde-pages-premium main form :is(input,textarea)::placeholder{
+ color:#56647a!important;-webkit-text-fill-color:#56647a!important;opacity:1!important;
+}
+html body.sde-shell-mounted.sde-universe-page{
+ background:linear-gradient(145deg,#101b35,#182949)!important;color:#f7f2e8!important;
+}
+html body.sde-shell-mounted.sde-universe-page :is(.sdu-section,.sdu-panel){
+ color:#f7f2e8;
+}
+html body.sde-shell-mounted.sde-universe-page :is(.sdu-section,.sdu-panel) :is(p,li,small){
+ opacity:1;color:#dce2ef;
+}
+/* Texte lisible sur les images : aucun filtre de luminosité appliqué aux médias. */
+html body.sde-shell-mounted :is(img,video,canvas){
+ filter:none;
+}
+/* Réduire l'incohérence entre les écrans de petite et grande taille. */
+@media(max-width:390px){
+ html body.sde-shell-mounted.sde-subpage .sde-intro{
+  padding-inline:clamp(14px,4vw,22px);
+ }
+ html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>section.section .tete-section{
+  box-sizing:border-box;
+ }
+}
