@@ -175,8 +175,8 @@ test("Navigation publique SDE : même header, footer et tiroir à cinq catégori
 test("Corrections UX : aucun indicateur ni compteur vide, contact avec un seul guichet, dons sûrs",()=>{
  const home=lire("public/vitrine/portail.html");
  const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf("</section>",home.indexOf('class="ap-hero"')));
- const buttons=hero.match(/<div class="ap-actions">[\s\S]*?<\/div>/)?.[0]||"";
- assert.equal((buttons.match(/<a /g)||[]).length,2);
+ const buttons=hero.match(/<div class="ap-actions[^"]*">[\s\S]*?<\/div>/)?.[0]||"";
+ assert.equal((buttons.match(/<a /g)||[]).length,3,'trois accès Citadelle 2027');
  assert.match(home,/01 · VIE DE L’ESPRIT/);
  assert.match(home,/02 · GOUVERNANCE &amp; ORDRE/);
  assert.match(home,/03 · TERRAIN &amp; COMPASSION/);
