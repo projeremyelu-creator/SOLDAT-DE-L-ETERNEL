@@ -105,3 +105,7 @@ jobs:
         run: node scripts/recette-mediatheque-production.mjs
         env:
           SDE_EXPECTED_REV: ${{ github.sha }}
+      - name: Valider les quatre miniatures WebP publiées sur les deux domaines
+        if: steps.dernier.outputs.deployer == 'true'
+        timeout-minutes: 5
+        run: node scripts/verifier-archives-sde-publiees.mjs
