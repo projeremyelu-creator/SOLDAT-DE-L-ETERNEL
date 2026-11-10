@@ -194,3 +194,20 @@ test("Pied de page : cibles mobiles 44px et case consentement associée",()=>{
  assert.match(css,/label\.sde-shell-consent input\[type="checkbox"\]/);
  assert.match(js,/class="sde-shell-consent"/);
 });
+
+test("Le Bilan 2026 garde ses événements sans ancien bouton de thème",()=>{
+ const dom=new JSDOM(read("public/vitrine/formulaire.html"),{
+  url:"https://mouvement-sde.org/formulaire",runScripts:"outside-only",pretendToBeVisual:true
+ });
+ try{
+  const win=dom.window;
+  win.matchMedia=()=>({matches:true});
+  assert.equal(win.document.getElementById("btnTheme"),null,"bouton supprimé dans le thème unifié");
+  const inline=[...win.document.querySelectorAll("script:not([src])")]
+   .map(s=>s.textContent).find(s=>s.includes("PHOTO PREVIEW"));
+  assert.ok(inline,"script interactif du bilan présent");
+  assert.doesNotThrow(()=>win.eval(inline),"aucune erreur JS malgré btnTheme absent");
+  assert.equal(typeof win.allerEtape,"function","navigation des deux étapes installée");
+  assert.ok(win.document.querySelector("form#formulaire"),"le formulaire de bilan est conservé");
+ }finally{dom.window.close();}
+});
