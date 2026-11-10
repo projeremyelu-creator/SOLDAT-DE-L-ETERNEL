@@ -1302,3 +1302,251 @@ body.sde-shell-mounted[data-sde-page="missions-humanitaires"] main .sde-intro,
 body.sde-shell-mounted[data-sde-page="projets"] main .sde-intro{border-bottom:3px solid #487e59!important}
 body.sde-shell-mounted[data-sde-page="missions-humanitaires"] main .sde-kicker,
 body.sde-shell-mounted[data-sde-page="projets"] main .sde-kicker{color:#c0e6c9!important}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SDE · Contraste et luminosité harmonisés · 10 novembre 2026.
+   Correctif en DERNIÈRE feuille sur toutes les pages publiques : neutralise
+   les anciens dégradés violets globaux (Fusion / Sitewide) sans masquer les
+   couleurs sémantiques des espaces Prière et Missions.
+   Ne touche ni aux photos, ni aux contrôles de droits, ni aux API.
+   ═══════════════════════════════════════════════════════════════════════════ */
+html body.sde-unifie.sde-shell-mounted{
+ --sde-night-balanced:#101b35;
+ --sde-night-raised:#1d3152;
+ --sde-paper-balanced:#fffaf0;
+ --sde-ink-balanced:#1b2942;
+ --sde-muted-balanced:#56647a;
+ --sde-gold-balanced:#e2c26a;
+ --sde-gold-on-paper:#775312;
+ --sde-forest:#101b35;
+ --sde-forest-2:#213757;
+ --sde-forest-deep:#0e192f;
+ --sde-ink:#1b2942;
+ --fu-bg0:#101b35;
+ --fu-bg1:#182949;
+ --fu-bg2:#233956;
+ --fu-ink:#f7f2e8;
+ --fu-muted:#dce2ef;
+ --fu-card:#fffaf0;
+ --fu-card-ink:#1b2942;
+ --fu-gold-ink:#1b2942;
+ --fu-panel:rgba(25,43,74,.88);
+ --fu-panel-2:rgba(16,27,53,.95);
+ background:linear-gradient(180deg,#101b35 0%,#182949 58%,#101b35 100%)!important;
+ color:#f7f2e8!important;
+}
+/* La structure et les titres des sous-pages ne sont plus violets par défaut. */
+html body.sde-unifie.sde-shell-mounted.sde-subpage .sde-intro{
+ background:linear-gradient(132deg,#101b35 0%,#203657 65%,#12213b 100%)!important;
+ border-bottom:2px solid rgba(226,194,106,.55)!important;
+ color:#f7f2e8!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage .sde-intro :is(h1,h2,h3,p,small){
+ color:#f7f2e8!important;-webkit-text-fill-color:#f7f2e8!important;
+ opacity:1!important;text-shadow:none!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage .sde-intro .sde-kicker{
+ color:#f1d58f!important;-webkit-text-fill-color:#f1d58f!important;
+}
+/* Même structure sur toutes les sections — les variantes violet/vert
+   s'appliquent uniquement aux pages thématiques ci-dessous. */
+html body.sde-unifie.sde-shell-mounted.sde-subpage.sde-ivoire main#contenu>section.section,
+html body.sde-unifie.sde-shell-mounted.sde-subpage.sde-ivoire main#contenu>section.section:nth-of-type(odd){
+ background:linear-gradient(145deg,#111e36 0%,#203556 57%,#14233e 100%)!important;
+ color:#f7f2e8!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage.sde-ivoire main#contenu>section.section:nth-of-type(even){
+ background:linear-gradient(135deg,#182949 0%,#101b35 63%,#1b2e4d 100%)!important;
+ color:#f7f2e8!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage.sde-ivoire main#contenu>section.section .tete-section{
+ background:linear-gradient(125deg,#192a48,#243b5b 60%,#14253f)!important;
+ border-color:rgba(226,194,106,.60)!important;
+ box-shadow:0 12px 30px rgba(4,11,28,.19)!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage.sde-ivoire main#contenu>section.section .tete-section h2{
+ color:#fffaf0!important;-webkit-text-fill-color:#fffaf0!important;
+ text-shadow:none!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage.sde-ivoire main#contenu>section.section .tete-section .chapo{
+ color:#e2e8f1!important;-webkit-text-fill-color:#e2e8f1!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage.sde-ivoire main#contenu>section:is(.sde-initiative-section,.sde-initiative-lead){
+ background:linear-gradient(140deg,#111f39,#203657 58%,#12203b)!important;
+ color:#f7f2e8!important;
+}
+/* Surfaces de lecture : papier ivoire avec typographie sombre.
+   Les règles Fusion héritées forçaient du texte blanc sur des cartes claires. */
+html body.sde-unifie.sde-shell-mounted.sde-subpage main :is(
+ .sde-initiative-card,.programme,.rdv,.vmi-carte,.carte,.formulaire,
+ .hub-card,.hub-form,.pg-block,.ressource-carte,.sde-initiative-form
+){
+ background:#fffaf0!important;color:#1b2942!important;
+ border-color:#c9bc9f!important;box-shadow:0 10px 28px rgba(4,13,30,.13)!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage main :is(
+ .sde-initiative-card,.programme,.rdv,.vmi-carte,.carte,.formulaire,
+ .hub-card,.hub-form,.pg-block,.ressource-carte,.sde-initiative-form
+) :is(h2,h3,h4,strong,b,legend,label,p,li,small,dd,dt,time,figcaption,span){
+ color:#1b2942!important;-webkit-text-fill-color:#1b2942!important;
+ opacity:1!important;text-shadow:none!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage main :is(
+ .sde-initiative-card,.programme,.rdv,.vmi-carte,.carte,.formulaire,
+ .hub-card,.hub-form,.pg-block,.ressource-carte,.sde-initiative-form
+) a:not([class*="btn"]):not([class*="bouton"]):not([class*="action"]){
+ color:#775312!important;-webkit-text-fill-color:#775312!important;
+ text-decoration:underline;text-underline-offset:3px;
+}
+/* Champs : fond clair et texte sombre quel que soit l'ancien thème. */
+html body.sde-unifie.sde-shell-mounted main form :is(
+ input:not([type="checkbox"]):not([type="radio"]),select,textarea
+){
+ background:#fffdf8!important;color:#1b2942!important;
+ -webkit-text-fill-color:#1b2942!important;
+ border:1px solid #8895a6!important;border-radius:10px;
+ opacity:1!important;box-shadow:none;
+}
+html body.sde-unifie.sde-shell-mounted main form :is(input,textarea)::placeholder{
+ color:#56647a!important;-webkit-text-fill-color:#56647a!important;opacity:1!important;
+}
+html body.sde-unifie.sde-shell-mounted main :is(input,textarea,select,button,a,summary):focus-visible{
+ outline:3px solid #e2c26a!important;outline-offset:3px!important;
+}
+/* L'accueil conserve ses compositions graphiques et ses images,
+   mais les panneaux structurants ne reprennent pas le violet Fusion. */
+html body.sde-unifie.sde-shell-mounted.sde-premium-home .m-panel{
+ background:linear-gradient(150deg,#101b35,#243957 58%,#12213b)!important;
+ border-color:rgba(226,194,106,.43)!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-premium-home .m-panel .m-band{
+ background:linear-gradient(115deg,#18294a,#243858)!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-premium-home :is(.m-panel,.m-band) :is(h2,h3,p){
+ color:#f7f2e8!important;-webkit-text-fill-color:#f7f2e8!important;
+}
+/* Une teinte de rubrique n'est jamais une couleur de navigation globale. */
+html body.sde-unifie.sde-shell-mounted[data-sde-page="prieres"] .sde-intro,
+html body.sde-unifie.sde-shell-mounted[data-sde-page="temoignages"] .sde-intro{
+ background:linear-gradient(132deg,#101b35 0%,#412966 75%,#192c49 100%)!important;
+ border-bottom-color:#ad82d0!important;
+}
+html body.sde-unifie.sde-shell-mounted[data-sde-page="missions-humanitaires"] .sde-intro,
+html body.sde-unifie.sde-shell-mounted[data-sde-page="projets"] .sde-intro,
+html body.sde-unifie.sde-shell-mounted[data-sde-page="pole-social"] .sde-intro{
+ background:linear-gradient(132deg,#101b35 0%,#285640 75%,#192e48 100%)!important;
+ border-bottom-color:#81b494!important;
+}
+/* Le bandeau final et le pied de page suivent la même luminosité. */
+html body.sde-unifie.sde-shell-mounted.sde-subpage .sde-further,
+html body.sde-unifie.sde-shell-mounted.sde-subpage .sde-page-footer{
+ background:#101b35!important;color:#f7f2e8!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage .sde-further h2{
+ color:#f7f2e8!important;-webkit-text-fill-color:#f7f2e8!important;
+}
+html body.sde-unifie.sde-shell-mounted .sde-shell-footer{
+ background:#101b35!important;color:#f7f2e8!important;
+}
+/* Pas de luminosité aléatoire, de fade sur les textes, ni de mouvement imposé. */
+@media(prefers-reduced-motion:reduce){
+ html body.sde-unifie.sde-shell-mounted :is(.m-panel,.sde-intro,.tete-section){
+  transition:none!important;animation:none!important;
+ }
+}
+
+/* Pages publiques autonomes (Soutenir, Soldiers TV / Quest, album) :
+   appliquer la même luminosité sans toucher à la mise en page ni au lecteur. */
+html body.sde-shell-mounted:is(.sde-pages-premium,.sde-universe-page,.sde-infire-album){
+ --sde-night-balanced:#101b35;--sde-night-raised:#1d3152;
+ --sde-paper-balanced:#fffaf0;--sde-ink-balanced:#1b2942;
+ --sde-gold-balanced:#e2c26a;--sde-muted-balanced:#56647a;
+ background-color:#101b35!important;
+}
+html body.sde-shell-mounted.sde-pages-premium{
+ background:linear-gradient(180deg,#101b35,#1d3152 63%,#101b35)!important;color:#f7f2e8;
+}
+html body.sde-shell-mounted.sde-pages-premium .hub-hero{
+ background-color:#101b35!important;color:#f7f2e8!important;
+}
+html body.sde-shell-mounted.sde-pages-premium :is(.hub-card,.hub-form,.pg-block){
+ background:#fffaf0!important;border-color:#c9bc9f!important;
+ color:#1b2942!important;box-shadow:0 9px 25px rgba(4,13,30,.12)!important;
+}
+html body.sde-shell-mounted.sde-pages-premium :is(.hub-card,.hub-form,.pg-block) :is(h2,h3,h4,p,li,small,strong,span,label){
+ color:#1b2942!important;-webkit-text-fill-color:#1b2942!important;opacity:1!important;
+}
+html body.sde-shell-mounted.sde-pages-premium main form :is(
+ input:not([type="checkbox"]):not([type="radio"]),textarea,select
+){
+ background:#fffdf8!important;color:#1b2942!important;
+ -webkit-text-fill-color:#1b2942!important;
+ border:1px solid #8895a6!important;
+}
+html body.sde-shell-mounted.sde-pages-premium main form :is(input,textarea)::placeholder{
+ color:#56647a!important;-webkit-text-fill-color:#56647a!important;opacity:1!important;
+}
+html body.sde-shell-mounted.sde-universe-page{
+ background:linear-gradient(145deg,#101b35,#182949)!important;color:#f7f2e8!important;
+}
+html body.sde-shell-mounted.sde-universe-page :is(.sdu-section,.sdu-panel){
+ color:#f7f2e8;
+}
+html body.sde-shell-mounted.sde-universe-page :is(.sdu-section,.sdu-panel) :is(p,li,small){
+ opacity:1;color:#dce2ef;
+}
+/* Les images et vidéos conservent volontairement leurs traitements d'origine. */
+/* Réduire l'incohérence entre les écrans de petite et grande taille. */
+@media(max-width:390px){
+ html body.sde-shell-mounted.sde-subpage .sde-intro{
+  padding-inline:clamp(14px,4vw,22px);
+ }
+ html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu>section.section .tete-section{
+  box-sizing:border-box;
+ }
+}
+
+/* Page Formulaire : bandeau de saisie bleu nuit (ancienne règle violette). */
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="formulaire"] .hero-form{
+ background:linear-gradient(135deg,#101b35,#203657)!important;
+ border-color:#e2c26a!important;
+}
+html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="formulaire"] .hero-form :is(h1,h2,.sous-titre){
+ color:#fffaf0!important;-webkit-text-fill-color:#fffaf0!important;
+}
+
+/* Recette visuelle : /rubriques avait un titre blanc sur fond ivoire.
+   Corriger le titre et l'introduction sans changer les quatre catégories. */
+html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu .sde-shell-directory>.enveloppe>h2,
+html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu .sde-shell-directory>.enveloppe>p{
+ color:#f7f2e8!important;-webkit-text-fill-color:#f7f2e8!important;
+ opacity:1!important;text-shadow:none!important;
+}
+/* Recette visuelle : /soutenir avait un fil d'Ariane doré pâle sur ivoire. */
+html body.sde-shell-mounted.sde-pages-premium .hub-breadcrumb{
+ color:#56647a!important;-webkit-text-fill-color:#56647a!important;opacity:1!important;
+}
+html body.sde-shell-mounted.sde-pages-premium .hub-breadcrumb a{
+ color:#775312!important;-webkit-text-fill-color:#775312!important;
+ text-decoration:underline;text-underline-offset:3px;
+}
+/* Les sections Soutenir restent claires lorsqu'elles contiennent des cartes
+   ivoire : ne pas imposer un fond nuit à toute .hub-section. */
+
+/* Bandeau méditation : texte lisible sans augmenter artificiellement l'éclat. */
+html body.sde-shell-mounted .sde-versets{
+ background:linear-gradient(105deg,#101b35,#0e1729 55%,#101b35)!important;
+ border-bottom:1px solid rgba(226,194,106,.52)!important;
+}
+html body.sde-shell-mounted .sde-verset q{
+ color:#f7f2e8!important;-webkit-text-fill-color:#f7f2e8!important;
+ font-size:clamp(.93rem,1.25vw,1.04rem);line-height:1.45;
+ text-shadow:none!important;
+}
+html body.sde-shell-mounted .sde-verset cite{
+ color:#e2c26a!important;-webkit-text-fill-color:#e2c26a!important;
+}
+@media(max-width:680px){
+ html body.sde-shell-mounted .sde-verset q{font-size:.94rem;line-height:1.42}
+ html body.sde-shell-mounted .sde-verset cite{font-size:.69rem}
+}
