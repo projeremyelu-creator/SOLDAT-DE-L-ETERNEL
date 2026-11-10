@@ -42,10 +42,15 @@ jobs:
             echo "configured=true" >> "$GITHUB_OUTPUT"
           else
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::Recette privée non exécutée : ajoutez les quatre secrets SDE_QA_MEMBER_* et SDE_QA_ADMIN_*."
+            echo "::error::Recette privée obligatoire : configurez les quatre secrets SDE_QA_MEMBER_* et SDE_QA_ADMIN_*."
             echo "### Recette privée non exécutée" >> "$GITHUB_STEP_SUMMARY"
             echo "Les comptes de test dédiés ne sont pas encore configurés dans les secrets GitHub Actions." >> "$GITHUB_STEP_SUMMARY"
           fi
+      - name: Exiger les comptes de test pour la recette privée
+        if: steps.comptes.outputs.configured != 'true'
+        run: |
+          echo "::error::La recette authentifiée ne peut pas être considérée comme réussie sans comptes de test membre et administrateur."
+          exit 1
       - name: Vérifier le script de recette
         run: node --check scripts/audit-prive-authentifie.mjs
       - name: Installer Chromium sans toucher aux données
