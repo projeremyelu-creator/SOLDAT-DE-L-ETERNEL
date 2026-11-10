@@ -99,14 +99,14 @@ test("maquette fidèle : rail latéral, panneaux numérotés, logo monogramme",(
  assert.ok(css.includes('content:"03"')&&css.includes('content:"02"'),"bandeaux 02 et 03 de l'application");
 });
 
-test("palettes proposées ; Ivoire · Treillis · Or est le choix initial partout",()=>{
+test("Palette officielle SDE, accessible et persistante dans les espaces privés",()=>{
  const shell=read("frontend/reference-shell.jsx");
  const css=read("frontend/palette-themes.css");
  const entry=read("frontend/experience.css");
- for(const t of ["militaire","ivoire","violet","terracotta"])assert.ok(shell.includes("'"+t+"'"),t);
- assert.ok(shell.includes("return PALETTES.some(([id])=>id===p)?p:'fusion'")&&shell.includes("'fusion-04'"),"Fusion par défaut");
+ for(const t of ["tactique","contraste"])assert.ok(shell.includes("'"+t+"'"),t);
+ assert.ok(shell.includes("return PALETTES.some(([id])=>id===p)?p:'tactique'")&&shell.includes("'night-ivory-gold-01'"),"SDE officiel par défaut");
  assert.ok(shell.includes("localStorage.getItem('sde-private-palette')"),"préférence enregistrée");
- for(const t of ["militaire","ivoire","violet"])assert.ok(shell.includes("'"+t+"'"),t);
+ for(const t of ["tactique","contraste"])assert.ok(shell.includes("'"+t+"'"),t);
  assert.ok(shell.includes("localStorage.getItem('sde-private-palette')"),"préférence enregistrée");
  assert.ok(shell.includes("setAttribute('data-sde-palette',palette)"),"préférence appliquée à l'espace privé");
  assert.ok(shell.includes('aria-pressed={palette===id}')&&shell.includes('aria-label="Choisir la palette graphique"'),"sélecteur accessible");
@@ -188,7 +188,7 @@ test("maquette 02 Ivoire · Treillis · Or : vitrine, chargement, espaces privé
  for(const t of ["sde-ivoire","tpa-2026.webp","Bâtissons ensemble pour un plus grand impact","Connexion","SDE - Mouvement"])assert.ok(h.includes(t),t);
  const app=read("public/index.html");assert.ok(app.includes('id="sde-splash"')&&app.includes("La vision en marche")&&app.includes("Chargement de votre espace"),"écran de chargement");
  assert.ok(read("public/vitrine/sde-splash.css").includes("prefers-reduced-motion"),"mouvement réduit respecté");
- assert.ok(shell.includes("['ivoire','Ivoire · Treillis · Or']"),"palette Ivoire disponible");
+ assert.ok(shell.includes("['tactique','SDE officiel · Bleu nuit · Ivoire · Or']"),"palette officielle disponible");
  for(const t of ["Bonjour, {prenom}","Avançons ensemble, pour un plus grand impact.","Suivi, coordination et développement du mouvement.","Ajouter une prière"])assert.ok(ops.includes(t),t);
 });
 test("Ivoire · Treillis · Or sur tout le site public",()=>{
