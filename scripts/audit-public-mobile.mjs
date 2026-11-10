@@ -610,7 +610,7 @@ try{
    if(mobileViewports.includes(c.width)&&row.touchTargets?.length)
     issue(c.name,'zones tactiles inférieures à 44 px : '+JSON.stringify(row.touchTargets.slice(0,6)),true);
    if(row.labMetrics?.cls>0.10)
-    issue(c.name,'décalage de mise en page CLS de laboratoire '+row.labMetrics.cls+' (cible 0,10)',c.name==='mediatheque-390');
+    issue(c.name,'décalage de mise en page CLS de laboratoire '+row.labMetrics.cls+' (cible 0,10)',c.name==='mediatheque-390'||c.name==='accueil-tablette'||c.name==='mouvement-desktop');
    if(c.path==='/'&&c.width<=390&&row.premiumHeroHeight>1150)
     issue(c.name,'accueil trop haut sur smartphone : '+row.premiumHeroHeight+' px (objectif 1150 px)');
    if(c.width<700&&row.brandPortalOverlap)issue(c.name,'le nom chevauche le bouton du portail',true);
