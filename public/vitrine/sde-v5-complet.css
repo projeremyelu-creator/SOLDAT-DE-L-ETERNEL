@@ -451,3 +451,77 @@ html body.sde-v5-campus-private .sde-v5-campus-rail button[aria-current="true"]{
 }
 @keyframes sde-v5-lights{to{opacity:.5;filter:brightness(.8)}}
 @keyframes sde-v5-orbit{to{stroke-dashoffset:-150}}
+
+
+/* MISSIONS — ATLAS PUBLIC RESPONSABLE ET DYNAMIQUE */
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-hero{
+ padding:28px 15px 32px;
+ background:linear-gradient(145deg,#0c172d,#18273f 50%,#091428)!important;
+ border-block:1px solid #b39764a6!important;
+ isolation:isolate;position:relative;overflow:hidden;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-inner{
+ width:min(1250px,100%);margin:0 auto;
+ display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);
+ gap:clamp(17px,3vw,42px);align-items:center;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-kicker{
+ font:800 .76rem/1.5 "Atkinson Hyperlegible",system-ui,sans-serif!important;
+ letter-spacing:.13em;color:#efd28f!important;-webkit-text-fill-color:#efd28f!important;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-copy h2{
+ font:800 clamp(1.7rem,3.3vw,3.1rem)/1.17 "Cinzel",Georgia,serif!important;
+ color:#fff1d1!important;-webkit-text-fill-color:#fff1d1!important;
+ margin:14px 0!important;text-shadow:0 2px 10px #000b;letter-spacing:.01em;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-copy p{
+ color:#e2e8f1!important;-webkit-text-fill-color:#e2e8f1!important;
+ font-size:1rem!important;line-height:1.65!important;max-width:60ch;opacity:1!important;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-actions{
+ display:flex;flex-wrap:wrap;gap:11px;margin-top:23px;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-actions a{
+ min-height:46px;display:inline-flex;align-items:center;justify-content:center;
+ font-size:.95rem;font-weight:800;
+ background:#e9ce8e;color:#18233b!important;-webkit-text-fill-color:#18233b!important;
+ border:1px solid #f4dca5;border-radius:10px;padding:10px 16px;text-decoration:none;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-actions a+a{
+ background:#182942;color:#f9e4b5!important;-webkit-text-fill-color:#f9e4b5!important;
+ border-color:#d9b879;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-art{
+ border:1px solid #c3a369;border-radius:16px;background:#071226;
+ padding:15px 13px 12px;overflow:hidden;
+ box-shadow:0 18px 35px #05091286;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-art svg{
+ display:block;width:100%;height:auto;max-height:400px;
+ background:radial-gradient(ellipse at center,#1b2941 10%,#0b1628 77%);
+ border-radius:9px;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-art span{
+ display:block;margin-top:10px;
+ color:#e5e8ee!important;-webkit-text-fill-color:#e5e8ee!important;
+ font-size:.71rem;font-weight:700;letter-spacing:.045em;line-height:1.5;text-align:center;
+}
+html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-hero a:focus-visible{
+ outline:3px solid #ffdf93;outline-offset:3px;
+}
+@media(max-width:850px){
+ html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-inner{
+  grid-template-columns:minmax(0,1fr);
+ }
+ html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-art{
+  order:1;
+ }
+}
+@media(max-width:490px){
+ html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-hero{padding:19px 12px 22px}
+ html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-actions{
+  flex-direction:column;
+ }
+ html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-actions a{width:100%}
+ html body[data-sde-page="missions-humanitaires"] .sde-v5-missions-art{padding:9px}
+}
