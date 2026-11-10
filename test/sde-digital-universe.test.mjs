@@ -4,12 +4,12 @@ import {readFileSync,existsSync} from "node:fs";
 import {JSDOM} from "jsdom";
 const read=p=>readFileSync(p,"utf8");
 const home=read("public/vitrine/portail.html"),quest=read("public/vitrine/soldier-quest.html"),tv=read("public/vitrine/soldiers-tv.html");
-test("SDE Digital Universe: quatre destinations visibles depuis l'accueil",()=>{
+test("SDE Digital Universe: huit destinations visibles depuis l'accueil",()=>{
  const dom=new JSDOM(home),doc=dom.window.document;
  const section=doc.querySelector("#digital-universe");
  assert.ok(section,"section SDE Digital Universe absente");
- assert.equal(section.querySelectorAll(".sdu-card").length,4);
- assert.deepEqual(Array.from(section.querySelectorAll(".sdu-card")).map(a=>a.getAttribute("href")),["/mouvement","/academy","/soldier-quest","/soldiers-tv"]);
+ assert.equal(section.querySelectorAll(".sdu-card").length,8);
+ assert.deepEqual(Array.from(section.querySelectorAll(".sdu-card")).map(a=>a.getAttribute("href")),["/mouvement","/academy","/soldier-quest","/soldiers-tv","/mediatheque","/programmes#agenda","/missions-humanitaires","/priere"]);
  assert.ok(doc.querySelector('[data-sdu-motion-toggle]'),"animation desactivable");
  assert.ok(doc.querySelector(".ap-hero .sde-tpa-hero-card"),"TPA existante preservee");
  dom.window.close();
