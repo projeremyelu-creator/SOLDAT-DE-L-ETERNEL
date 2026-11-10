@@ -314,3 +314,211 @@ html body.sde-shell-mounted[data-sde-page="mouvement"] main .sde-institutional-i
  }
  html body.sde-shell-mounted[data-sde-page="mouvement"] main .pg-tabs li{flex:none}
 }
+
+
+/* SDE 2027 — correctif contraste des captures Android du 10-11-2026 */
+/* Anciennes règles ivoire/violet encore prioritaires sur les surfaces bleu nuit.
+   Corriger AUSSI -webkit-text-fill-color : Android peut conserver l'encre
+   ancienne même lorsque 'color' semble correct dans le CSS calculé. */
+html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .ap-poles>.m-pole{
+  min-width:0!important;
+  background:#17243b!important;
+  border:1px solid #af9565!important;
+  border-radius:16px!important;
+  overflow:hidden;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien{
+  box-sizing:border-box!important;
+  background:linear-gradient(145deg,#1c2941,#142037)!important;
+  border:1px solid rgba(241,211,141,.44)!important;
+  color:#f7f2e8!important;
+  -webkit-text-fill-color:#f7f2e8!important;
+  text-shadow:none!important;
+  opacity:1!important;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien h3{
+  color:#fff6e5!important;
+  -webkit-text-fill-color:#fff6e5!important;
+  font-size:clamp(1.12rem,2.2vw,1.37rem)!important;
+  font-weight:800!important;
+  line-height:1.35!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien p{
+  color:#e7ebf4!important;
+  -webkit-text-fill-color:#e7ebf4!important;
+  font-size:clamp(.96rem,1.4vw,1.05rem)!important;
+  line-height:1.6!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien .m-pole-num,
+html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien .sde-pole-decouvrir{
+  color:#f1d38d!important;
+  -webkit-text-fill-color:#f1d38d!important;
+  opacity:1!important;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien .sde-pole-talents,
+html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien .sde-pole-talents strong{
+  color:#e7ebf4!important;
+  -webkit-text-fill-color:#e7ebf4!important;
+  font-size:.94rem!important;
+  line-height:1.5!important;
+  opacity:1!important;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien:is(:hover,:focus-visible){
+  border-color:#f1d38d!important;
+}
+html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien:focus-visible{
+  outline:3px solid #f1d38d!important;
+  outline-offset:3px!important;
+}
+/* FAQ : textes des questions, des réponses et des liens toujours visibles
+   en état fermé, ouvert, au toucher et au clavier. */
+html body.sde-unifie.sde-premium-home .ap-faq h3{
+  color:#f1d38d!important;
+  -webkit-text-fill-color:#f1d38d!important;
+  opacity:1!important;
+  font-size:1.15rem!important;
+}
+html body.sde-unifie.sde-premium-home .ap-faq .home-faq-list details{
+  background:#17243b!important;
+  border:1px solid #9b8d70!important;
+  padding:10px 16px!important;
+  color:#f7f2e8!important;
+}
+html body.sde-unifie.sde-premium-home .ap-faq .home-faq-list summary{
+  display:flex!important;
+  align-items:center!important;
+  min-height:44px!important;
+  box-sizing:border-box!important;
+  cursor:pointer;
+  font-size:1rem!important;
+  line-height:1.5!important;
+  color:#fff6e5!important;
+  -webkit-text-fill-color:#fff6e5!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body.sde-unifie.sde-premium-home .ap-faq .home-faq-list details p{
+  color:#e7ebf4!important;
+  -webkit-text-fill-color:#e7ebf4!important;
+  font-size:.97rem!important;
+  line-height:1.65!important;
+  opacity:1!important;
+}
+html body.sde-unifie.sde-premium-home .ap-faq .home-faq-list details a{
+  color:#f1d38d!important;
+  -webkit-text-fill-color:#f1d38d!important;
+  text-decoration:underline!important;
+}
+html body.sde-unifie.sde-premium-home .ap-faq .home-faq-list summary:focus-visible{
+  outline:3px solid #f1d38d!important;
+  outline-offset:3px!important;
+  border-radius:6px;
+}
+/* Accès au portail : encre ivoire explicite y compris pour les sous-éléments
+   sur cartes bleu nuit ; aucune modification des droits ni des sessions. */
+html body.sde-unifie.sde-premium-home #espaces-prives{
+  background:#121c31!important;
+  border:1px solid #6e7486!important;
+}
+html body.sde-unifie.sde-premium-home #espaces-prives #ap-prive-titre{
+  color:#f1d38d!important;
+  -webkit-text-fill-color:#f1d38d!important;
+  opacity:1!important;
+}
+html body.sde-unifie.sde-premium-home #espaces-prives :is(.private-access-intro,.private-access-note){
+  color:#e7ebf4!important;
+  -webkit-text-fill-color:#e7ebf4!important;
+  opacity:1!important;
+  font-size:.96rem!important;
+  line-height:1.6!important;
+}
+html body.sde-unifie.sde-premium-home #espaces-prives .private-access-card.private-login{
+  min-height:130px!important;
+  background:linear-gradient(135deg,#1b2845,#293450)!important;
+  border:1px solid #bda66f!important;
+  color:#fff6e5!important;
+  -webkit-text-fill-color:#fff6e5!important;
+}
+html body.sde-unifie.sde-premium-home #espaces-prives .private-access-card.private-login :is(span,strong){
+  color:#fff6e5!important;
+  -webkit-text-fill-color:#fff6e5!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body.sde-unifie.sde-premium-home #espaces-prives .private-access-card.private-login>span>span{
+  font-size:.97rem!important;
+  line-height:1.55!important;
+}
+html body.sde-unifie.sde-premium-home #espaces-prives .private-access-card.private-login :is(small,svg){
+  color:#f1d38d!important;
+  -webkit-text-fill-color:#f1d38d!important;
+  opacity:1!important;
+}
+html body.sde-unifie.sde-premium-home #espaces-prives .private-access-card.private-login:focus-visible{
+  outline:3px solid #f1d38d!important;
+  outline-offset:4px!important;
+}
+/* Captures : deux demi-cartes étroites empêchaient une lecture décente.
+   Une seule colonne jusqu'à 760px, puis grille bento existante sur desktop. */
+@media(max-width:760px){
+  html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .ap-poles{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:14px!important;
+  }
+  html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .ap-poles>.m-pole,
+  html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .ap-poles>.m-pole:last-child{
+    grid-column:1/-1!important;
+    min-width:0!important;
+  }
+  html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien{
+    display:grid!important;
+    grid-template-columns:76px minmax(0,1fr)!important;
+    grid-template-rows:repeat(5,auto);
+    align-items:start!important;
+    justify-items:stretch!important;
+    text-align:left!important;
+    gap:6px 12px!important;
+    padding:16px!important;
+    height:auto!important;
+    min-height:0!important;
+  }
+  html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien img,
+  html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .ap-poles>.m-pole:nth-child(-n+2) img{
+    box-sizing:border-box!important;
+    grid-column:1!important;
+    grid-row:1 / span 5!important;
+    width:72px!important;
+    height:72px!important;
+    padding:7px!important;
+    max-width:100%!important;
+    align-self:start!important;
+    margin:0!important;
+  }
+  html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien :is(.m-pole-num,h3,p,.sde-pole-talents,.sde-pole-decouvrir){
+    grid-column:2!important;
+    min-width:0!important;
+    text-align:left!important;
+    margin:0!important;
+    overflow-wrap:break-word;
+  }
+  html body.sde-unifie.sde-premium-home #espaces-prives .private-access-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  html body.sde-unifie.sde-premium-home .ap-faq .home-faq-list details{
+    padding:9px 12px!important;
+  }
+}
+@media(max-width:360px){
+  html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien{
+    grid-template-columns:64px minmax(0,1fr)!important;
+    padding:13px!important;
+  }
+  html body.sde-unifie.sde-accueil-maquette.sde-premium-home #poles-accueil .sde-pole-officiel-lien img{
+    width:61px!important;height:61px!important;
+  }
+}
