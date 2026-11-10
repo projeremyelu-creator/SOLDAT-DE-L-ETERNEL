@@ -392,27 +392,49 @@ try{
      report.notes.push({test:'connexion-sans-distraction',url:page.url(),...visible});
     }catch(e){issue(c.name,'sélection membre/administrateur indisponible : '+String(e.message||e).slice(0,220),true);}
    }
-   // Sur ordinateur : cinq méga-menus accessibles, Soutenir dans S’engager et Portail direct.
+   // 801–1120px : la navigation principale s'ouvre via Rubriques.
+   // Au-delà de 1120px : les cinq catégories passent en méga-menu.
    if(c.name==='accueil-1024'){
     try{
-     const header=page.locator('.sde-shell-header'),groups=header.locator('.sde-shell-mega-group');
-     if(await groups.count()!==5)issue(c.name,'le menu desktop n’a pas cinq catégories',true);
-     const rubriques=await groups.locator(':scope > summary').allTextContents();
-     if(rubriques.map(x=>x.trim()).join('|')!==['Le Mouvement','Programmes & Agenda','Missions & Impact','Médias & Ressources','S’engager'].join('|'))
-      issue(c.name,'titres du méga-menu incohérents : '+rubriques.join(' | '),true);
-     const first=groups.first().locator('summary');
-     await first.click({timeout:4000});
-     if(!(await groups.first().evaluate(el=>el.open)))
-      issue(c.name,'le méga-menu Le Mouvement ne s’ouvre pas',true);
+     const header=page.locator('.sde-shell-header');
+     const groups=header.locator('.sde-shell-mega-group');
+     const compact=header.locator('.sde-shell-rubriques');
+     const overlay=page.locator('#sde-shell-overlay');
+     const expected=['Le Mouvement','Programmes & Agenda','Missions & Impact','Médias & Ressources','S’engager'];
+     if(await groups.count()!==5)issue(c.name,'le méga-menu ne contient plus cinq catégories',true);
+     if(!(await compact.isVisible()))issue(c.name,'bouton Rubriques masqué à 1024px',true);
+     else{
+      await compact.click({timeout:4000});
+      if(!(await overlay.isVisible())||(await compact.getAttribute('aria-expanded'))!=='true')
+       issue(c.name,'le bouton Rubriques ne déploie pas le tiroir',true);
+      const titles=await overlay.locator('.sde-shell-drawer-group > summary').allTextContents();
+      if(titles.map(x=>x.trim()).join('|')!==expected.join('|'))
+       issue(c.name,'catégories du tiroir compact incohérentes : '+titles.join(' | '),true);
+      await overlay.locator('.sde-shell-filter').fill('formation',{timeout:4000});
+      if(await overlay.locator('.sde-shell-submenu a:not([hidden])').count()===0)
+       issue(c.name,'recherche Rubriques inactive à 1024px',true);
+      await page.keyboard.press('Escape');
+      if(await overlay.isVisible()||(await compact.getAttribute('aria-expanded'))!=='false')
+       issue(c.name,'Échap ne ferme pas Rubriques à 1024px',true);
+     }
      await page.setViewportSize({width:1280,height:900});
      await page.waitForTimeout(150);
-     if(await groups.count()!==5)issue(c.name,'les cinq menus disparaissent après redimensionnement',true);
+     const first=groups.first().locator('summary');
+     if(!(await first.isVisible()))issue(c.name,'le méga-menu ne réapparaît pas à 1280px',true);
+     else{
+      const titles=await groups.locator(':scope > summary').allTextContents();
+      if(titles.map(x=>x.trim()).join('|')!==expected.join('|'))
+       issue(c.name,'titres du méga-menu desktop incohérents : '+titles.join(' | '),true);
+      await first.click({timeout:4000});
+      if(!(await groups.first().evaluate(el=>el.open)))
+       issue(c.name,'le méga-menu Le Mouvement ne s’ouvre pas',true);
+     }
      if(await groups.last().locator('a[href="/soutenir"]').count()!==1)
       issue(c.name,'lien Soutenir absent du menu S’engager',true);
      if(await header.locator('.sde-shell-portal[href="/portail"]').count()!==1)
       issue(c.name,'entrée portail absente du header',true);
-     report.notes.push({test:'mega-menu-desktop',menus:await groups.count(),visible:await header.isVisible()});
-    }catch(error){issue(c.name,'navigation desktop indisponible : '+String(error.message||error).slice(0,300),true);}
+     report.notes.push({test:'rubriques-compactes-et-mega-desktop',menus:await groups.count(),visible:await header.isVisible()});
+    }catch(error){issue(c.name,'navigation responsive indisponible : '+String(error.message||error).slice(0,300),true);}
    }
    if(c.name==='plus-390'&&new URL(page.url()).pathname!=='/rubriques')
     issue(c.name,'/plus doit rediriger vers /rubriques',true);
