@@ -1,0 +1,30 @@
+/* Identité officielle Soldiers TV (monogramme STV) — 10 novembre 2026.
+ * Fond ivoire volontaire : le bleu nuit du monogramme reste lisible même
+ * sur l'en-tête sombre, sans modifier le logo du Mouvement SDE. */
+body.sdu-tv-page .stv-hero-copy{min-width:0}
+body.sdu-tv-page .stv-brand-panel{
+ width:clamp(160px,23vw,240px);
+ height:clamp(160px,23vw,240px);
+ display:flex;align-items:center;justify-content:center;
+ margin:0 0 22px;padding:7px;
+ background:#fffdf8;
+ border:2px solid #d4af37;
+ border-radius:24px;
+ box-shadow:0 14px 36px rgba(0,0,0,.25),inset 0 0 0 3px #f7f2e8;
+}
+body.sdu-tv-page .stv-brand-panel img{
+ display:block;width:100%;height:100%;object-fit:contain;
+ opacity:1!important;visibility:visible!important;transform:none!important;
+}
+body.sdu-tv-page .stv-hero-copy .sdu-eyebrow{display:block}
+@media(max-width:390px){
+ body.sdu-tv-page .stv-brand-panel{
+  width:155px;height:155px;padding:5px;border-radius:18px;margin-bottom:15px;
+ }
+ body.sdu-tv-page .stv-hero-copy{max-width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ body.sdu-tv-page .stv-brand-panel,body.sdu-tv-page .stv-brand-panel img{
+  animation:none!important;transition:none!important;
+ }
+}
