@@ -1466,7 +1466,7 @@ html body.sde-shell-mounted:is(.sde-pages-premium,.sde-universe-page,.sde-infire
 html body.sde-shell-mounted.sde-pages-premium{
  background:linear-gradient(180deg,#101b35,#1d3152 63%,#101b35)!important;color:#f7f2e8;
 }
-html body.sde-shell-mounted.sde-pages-premium :is(.hub-hero,.hub-section){
+html body.sde-shell-mounted.sde-pages-premium .hub-hero{
  background-color:#101b35!important;color:#f7f2e8!important;
 }
 html body.sde-shell-mounted.sde-pages-premium :is(.hub-card,.hub-form,.pg-block){
@@ -1514,3 +1514,21 @@ html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="formulaire"] .
 html body.sde-unifie.sde-shell-mounted.sde-subpage[data-sde-page="formulaire"] .hero-form :is(h1,h2,.sous-titre){
  color:#fffaf0!important;-webkit-text-fill-color:#fffaf0!important;
 }
+
+/* Recette visuelle : /rubriques avait un titre blanc sur fond ivoire.
+   Corriger le titre et l'introduction sans changer les quatre catégories. */
+html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu .sde-shell-directory>.enveloppe>h2,
+html body.sde-unifie.sde-shell-mounted.sde-subpage main#contenu .sde-shell-directory>.enveloppe>p{
+ color:#f7f2e8!important;-webkit-text-fill-color:#f7f2e8!important;
+ opacity:1!important;text-shadow:none!important;
+}
+/* Recette visuelle : /soutenir avait un fil d'Ariane doré pâle sur ivoire. */
+html body.sde-shell-mounted.sde-pages-premium .hub-breadcrumb{
+ color:#56647a!important;-webkit-text-fill-color:#56647a!important;opacity:1!important;
+}
+html body.sde-shell-mounted.sde-pages-premium .hub-breadcrumb a{
+ color:#775312!important;-webkit-text-fill-color:#775312!important;
+ text-decoration:underline;text-underline-offset:3px;
+}
+/* Les sections Soutenir restent claires lorsqu'elles contiennent des cartes
+   ivoire : ne pas imposer un fond nuit à toute .hub-section. */
