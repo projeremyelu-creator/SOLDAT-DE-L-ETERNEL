@@ -1869,7 +1869,13 @@ async function traiter(req, env, ctx) {
             n.headers.set("x-frame-options", "DENY");
             n.headers.set("referrer-policy", "strict-origin-when-cross-origin");
             /* Pages HTML : toujours revalider, pour que chaque déploiement soit visible immédiatement (navigateurs, PWA, cache intermédiaire). */
-            if ((n.headers.get("content-type") || "").includes("text/html") && !/no-store/.test(n.headers.get("cache-control") || "")) n.headers.set("cache-control", "no-cache, must-revalidate");
+            if ((n.headers.get("content-type") || "").includes("text/html") && !/no-store/.test(n.headers.get("cache-control") || "")) {
+              n.headers.set("cache-control", "no-cache, must-revalidate");
+              // Sans dépendre d'une purge de zone, les pages HTML ne restent pas figées en cache CDN.
+              // Les images/CSS/JS continuent d'utiliser leurs URL versionnées.
+              n.headers.set("CDN-Cache-Control", "no-store");
+              n.headers.set("Cloudflare-CDN-Cache-Control", "no-store");
+            }
             return n;
           }
           const location = r.headers.get("location");
