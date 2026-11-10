@@ -99,3 +99,9 @@ jobs:
         if: steps.dernier.outputs.deployer == 'true'
         timeout-minutes: 8
         run: node scripts/verifier-medias-sde-publies.mjs
+      - name: Vérifier les nouvelles routes de médiathèque et la protection administrateur
+        if: steps.dernier.outputs.deployer == 'true'
+        timeout-minutes: 8
+        run: node scripts/recette-mediatheque-production.mjs
+        env:
+          SDE_EXPECTED_REV: ${{ github.sha }}
