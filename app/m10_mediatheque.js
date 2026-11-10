@@ -34,6 +34,7 @@
   }
   VUES.mediatheque = function () {
     let out = secHead("Médiathèque", { eyebrow: "Vidéos, audios, photos et documents", verset: ["Ta parole est une lampe à mes pieds, et une lumière sur mon sentier.", "Psaume 119.105"], actions: MED.peutAjouter ? btn("med-ajouter", "Ajouter des fichiers", { ico: "i-up", cls: "btn-primary" }) : "" });
+    if (S.estAdmin || S.estProprio) out += '<div class="btn-row"><a class="btn btn-primary" href="/administration/medias">Ouvrir le studio de publication · Téléphone ou ordinateur ↗</a></div>';
     if (!MED.liste && !MED.err) { if (!MED.charge) setTimeout(chargerMedias, 0); return out + chargement("Ouverture de la médiathèque…"); }
     if (MED.err) return out + `<p class="note danger">${esc(MED.err)}</p><div class="btn-row">${btn("med-recharger", "Réessayer", { ico: "i-undo" })}</div>`;
     const tous = MED.liste;
