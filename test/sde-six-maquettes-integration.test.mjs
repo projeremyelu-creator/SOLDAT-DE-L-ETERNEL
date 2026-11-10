@@ -7,15 +7,15 @@ const read=path=>readFileSync(path,"utf8");
 const homepage=()=>new JSDOM(read("public/vitrine/portail.html"),{
  url:"https://mouvement-sde.org/",runScripts:"outside-only",pretendToBeVisual:true
 });
-test("Public 01 · Citadelle : vision 2027, Exode 33:14 et trois CTA réels",()=>{
+test("Public 01 · Réveil Spirituel : vision 2027, Exode 33:14 et deux CTA réels",()=>{
  const dom=homepage(),doc=dom.window.document;
  try{
   const hero=doc.querySelector(".ap-hero");
   assert.ok(hero);
-  assert.match(hero.querySelector("h1")?.textContent||"",/présence de Dieu/i);
+  assert.match(hero.querySelector("h1")?.textContent||"",/LE RÉVEIL\s+SPIRITUEL\s+DES NATIONS/i);
   assert.match(hero.querySelector(".sde-citadel-verse")?.textContent||"",/Exode 33:14/);
   const actions=[...hero.querySelectorAll(".sde-citadel-actions a")];
-  assert.deepEqual(actions.map(a=>a.getAttribute("href")),["/mouvement","/contact#rejoindre","/programmes#agenda"]);
+  assert.deepEqual(actions.map(a=>a.getAttribute("href")),["/mouvement","/contact#rejoindre"]);
   assert.ok(hero.querySelector(".sde-tpa-hero-card"),"le rendez-vous TPA n'est pas supprimé");
   assert.match(read("public/vitrine/sde-six-maquettes-2027.css"),/prefers-reduced-motion/);
  }finally{dom.window.close();}
