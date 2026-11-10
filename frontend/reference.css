@@ -1565,3 +1565,160 @@ html[data-sde-palette="contraste"] body.sde-reference .ref-tabbar button[aria-cu
  body.sde-reference .ref-tabbar button{min-height:52px;color:#e2e8f1}
  body.sde-reference{padding-bottom:calc(77px + env(safe-area-inset-bottom,0px))}
 }
+
+/* SDE — Maquette 05 : Soldiers Campus & 06 : Command Center.
+ * Modules privés existants, données de leurs API, styles uniquement.
+ * Les habilitations restent définies par le Worker et la session connectée. */
+body.sde-reference .sde-campus-member{
+ display:grid!important;grid-template-columns:185px minmax(0,1fr);gap:24px;
+ align-items:center;padding:clamp(18px,3vw,26px)!important;
+ border:1px solid rgba(226,194,106,.58)!important;
+ border-radius:20px!important;
+ background:linear-gradient(120deg,#142641,#101b35 73%)!important;
+ color:#f7f2e8!important;
+ box-shadow:0 15px 36px rgba(2,11,28,.21);
+ overflow:hidden;
+}
+body.sde-reference .sde-campus-member .sde-campus-member-visual{
+ display:grid;place-items:center;min-height:165px;border-radius:16px;
+ background:radial-gradient(circle at 50% 25%,rgba(226,194,106,.26),transparent 65%),#0d192e;
+ border:1px solid rgba(226,194,106,.3);
+}
+body.sde-reference .sde-campus-member .sde-campus-member-visual img{
+ width:min(100%,165px);height:auto;max-height:165px;object-fit:contain;
+ filter:drop-shadow(0 13px 19px rgba(0,0,0,.22));
+}
+body.sde-reference .sde-campus-kicker,
+body.sde-reference-admin .sde-command-eyebrow{
+ display:block;font:800 .76rem/1.4 "Atkinson Hyperlegible",system-ui,sans-serif;
+ letter-spacing:.12em;color:#f0d586!important;
+ -webkit-text-fill-color:#f0d586!important;
+ margin-bottom:8px;
+}
+body.sde-reference .sde-campus-member h3,
+body.sde-reference .sde-campus-admin-hero h3{
+ font:750 clamp(1.3rem,2.4vw,2rem)/1.2 "Cinzel",Georgia,serif!important;
+ color:#fff7e7!important;-webkit-text-fill-color:#fff7e7!important;
+ letter-spacing:-.02em;margin:0 0 10px!important;
+}
+body.sde-reference .sde-campus-member p,
+body.sde-reference .sde-campus-admin-hero p{
+ font:500 .94rem/1.6 "Atkinson Hyperlegible",system-ui,sans-serif;
+ color:#e0e6ee!important;-webkit-text-fill-color:#e0e6ee!important;
+ margin:0 0 15px!important;
+}
+body.sde-reference .sde-campus-member .sde-campus-member-content{min-width:0}
+body.sde-reference .sde-campus-member-progress{
+ display:grid;gap:7px;margin-bottom:16px;max-width:680px;
+}
+body.sde-reference .sde-campus-member-progress>div{
+ display:flex;justify-content:space-between;flex-wrap:wrap;gap:5px;
+ color:#f7f2e8;font-size:.86rem;
+}
+body.sde-reference .sde-campus-member-progress>div span{color:#e4eaf3}
+body.sde-reference .sde-campus-member-progress progress{
+ display:block;appearance:none;-webkit-appearance:none;
+ height:11px;width:100%;background:#33445e;
+ border:1px solid #9c8c63;border-radius:99px;overflow:hidden;
+}
+body.sde-reference .sde-campus-member-progress progress::-webkit-progress-bar{background:#33445e}
+body.sde-reference .sde-campus-member-progress progress::-webkit-progress-value{
+ background:linear-gradient(90deg,#b88b35,#f0d586);border-radius:99px}
+body.sde-reference .sde-campus-member-progress progress::-moz-progress-bar{background:#e2c26a;border-radius:99px}
+body.sde-reference .sde-campus-paths{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 16px}
+body.sde-reference .sde-campus-paths span{
+ border:1px solid rgba(226,194,106,.43);border-radius:999px;
+ padding:6px 9px;background:rgba(226,194,106,.1);
+ font-weight:650;font-size:.74rem;line-height:1.25;color:#f3ebdb!important;
+}
+body.sde-reference .sde-campus-member :is(.ops-btn,button,[data-act]),
+body.sde-reference .sde-campus-admin-actions button{
+ display:inline-flex;align-items:center;justify-content:center;
+ padding:10px 15px;min-height:46px;border-radius:11px;
+ background:#e2c26a!important;color:#101b35!important;
+ border:1px solid #ffecae!important;
+ font-weight:800;cursor:pointer;text-align:center;
+}
+body.sde-reference .sde-campus-empty{
+ background:rgba(226,194,106,.12);padding:10px 12px;border-radius:9px
+}
+body.sde-reference .sde-campus-admin-hero{
+ display:grid;grid-template-columns:minmax(0,1fr) 125px;gap:25px;
+ align-items:center;padding:clamp(20px,3vw,32px);
+ margin:0 0 22px;border:1px solid rgba(226,194,106,.48);
+ border-radius:20px;background:
+ radial-gradient(circle at 87% 25%,rgba(226,194,106,.17),transparent 35%),
+ linear-gradient(125deg,#172a49,#0b1529 77%);
+ color:#f7f2e8;box-shadow:0 14px 32px rgba(4,10,22,.2);
+}
+body.sde-reference .sde-campus-admin-hero>div:first-child{min-width:0}
+body.sde-reference .sde-campus-admin-actions{display:flex;flex-wrap:wrap;gap:10px}
+body.sde-reference .sde-campus-admin-actions button:nth-child(2){
+ background:transparent!important;border-color:#e2c26a!important;color:#fff7e8!important
+}
+body.sde-reference .sde-campus-admin-emblem{
+ display:grid;place-items:center;width:112px;height:112px;border-radius:24px;
+ border:1px solid rgba(240,213,134,.45);
+ background:linear-gradient(150deg,#213859,#0a182c);
+ color:#f0d586;
+}
+body.sde-reference .sde-campus-admin-emblem svg{width:75px;height:75px;stroke-width:1.15}
+body.sde-reference-admin .sde-command-center .sv-hello-admin{
+ background:linear-gradient(110deg,#101b35,#1c3050 60%,#101b35)!important;
+ border:1px solid rgba(226,194,106,.5)!important;
+ border-radius:19px;padding:clamp(18px,2.6vw,29px)!important;
+ box-shadow:0 15px 36px rgba(3,10,22,.19);
+}
+body.sde-reference-admin .sde-command-center .sv-hello-admin h1{
+ font:750 clamp(1.65rem,3.2vw,2.45rem)/1.16 "Cinzel",Georgia,serif!important;
+ color:#fff7e9!important;-webkit-text-fill-color:#fff7e9!important;
+ margin:0 0 8px;
+}
+body.sde-reference-admin .sde-command-center .sv-hello-admin p{
+ color:#e6eaf2!important;-webkit-text-fill-color:#e6eaf2!important;
+ line-height:1.6;margin:0 0 11px;
+}
+body.sde-reference-admin .sde-command-capabilities{
+ display:flex;gap:7px;flex-wrap:wrap;
+}
+body.sde-reference-admin .sde-command-capabilities span{
+ padding:6px 9px;border:1px solid rgba(226,194,106,.45);
+ border-radius:9px;color:#f4e5bd;background:rgba(226,194,106,.08);
+ font-size:.75rem;font-weight:700;line-height:1.2;
+}
+body.sde-reference-admin .sde-command-center .ref-command-livebar{
+ border:1px solid rgba(226,194,106,.3);border-radius:13px;
+ padding:10px 13px;background:#13243e;
+}
+body.sde-reference-admin .sde-command-center :is(.ref-command-focus,.sde-tactical-command){
+ border-radius:19px!important;border-color:rgba(226,194,106,.37)!important;
+}
+body.sde-reference-admin .sde-command-center :is(.ref-priority button,.ref-command-refresh):focus-visible,
+body.sde-reference :is(.sde-campus-member button,.sde-campus-admin-actions button):focus-visible{
+ outline:3px solid #f0d586!important;outline-offset:3px!important;
+}
+body.sde-reference-admin .sde-command-center .ref-kpis-live .ref-kpi{
+ border-radius:14px!important;min-width:0;
+}
+@media(max-width:760px){
+ body.sde-reference .sde-campus-member{grid-template-columns:1fr!important;gap:14px}
+ body.sde-reference .sde-campus-member .sde-campus-member-visual{min-height:100px}
+ body.sde-reference .sde-campus-member .sde-campus-member-visual img{max-height:115px}
+ body.sde-reference .sde-campus-admin-hero{grid-template-columns:minmax(0,1fr) 75px;padding:18px}
+ body.sde-reference .sde-campus-admin-emblem{width:70px;height:70px;border-radius:15px}
+ body.sde-reference .sde-campus-admin-emblem svg{width:46px;height:46px}
+ body.sde-reference-admin .sde-command-capabilities{gap:5px}
+ body.sde-reference-admin .sde-command-capabilities span{font-size:.67rem}
+ body.sde-reference-admin .sde-command-center .ref-command-livebar{display:flex;flex-wrap:wrap;gap:9px}
+}
+@media(max-width:390px){
+ body.sde-reference .sde-campus-admin-hero{grid-template-columns:1fr}
+ body.sde-reference .sde-campus-admin-emblem{display:none}
+ body.sde-reference .sde-campus-admin-actions button{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-reference :is(.sde-campus-member,.sde-campus-admin-hero,.sde-command-center) *,
+ body.sde-reference-admin .sde-command-center *{
+  animation:none!important;transition:none!important;scroll-behavior:auto!important;
+ }
+}
