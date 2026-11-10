@@ -1,0 +1,156 @@
+/* SDE 2027 — Réveil des Nations, expérience d'accueil inspirée du visuel fourni.
+   Décoration progressive : pas de média externe, pas de chiffres fictifs. */
+html body.sde-premium-home .sde-rv{
+ --rv-night:#0b162b;--rv-card:#17243b;--rv-gold:#efd18b;--rv-ivory:#fff7e6;--rv-body:#dce4ef;
+ position:relative;isolation:isolate;overflow:hidden;
+ padding:clamp(24px,4vw,54px) 14px clamp(22px,3vw,40px);
+ background:radial-gradient(circle at 52% 12%,#283a57,#101d34 44%,#081328 100%)!important;
+ border-block:1px solid rgba(239,209,139,.36);
+ color:var(--rv-body)!important;-webkit-text-fill-color:var(--rv-body)!important;
+ font-family:"Atkinson Hyperlegible",system-ui,sans-serif!important
+}
+html body.sde-premium-home .sde-rv *,html body.sde-premium-home .sde-rv *::before,html body.sde-premium-home .sde-rv *::after{box-sizing:border-box}
+html body.sde-premium-home .sde-rv::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;opacity:.25;
+ background-image:radial-gradient(circle at 10% 12%,#f1d490 1px,transparent 1.5px),radial-gradient(circle at 74% 48%,#f1d490 1px,transparent 1.6px);
+ background-size:114px 128px,173px 150px}
+html body.sde-premium-home .sde-rv-container{width:min(1400px,100%);margin-inline:auto}
+html body.sde-premium-home .sde-rv-intro{display:flex;justify-content:space-between;align-items:center;gap:12px 22px;flex-wrap:wrap;margin-bottom:17px}
+html body.sde-premium-home .sde-rv-intro p{font-size:.91rem!important;color:#e4e9f4!important;-webkit-text-fill-color:#e4e9f4!important;margin:5px 0!important;line-height:1.6!important;opacity:1!important}
+html body.sde-premium-home .sde-rv-kicker{color:var(--rv-gold)!important;-webkit-text-fill-color:var(--rv-gold)!important;font-size:.76rem!important;font-weight:800!important;letter-spacing:.14em!important}
+html body.sde-premium-home .sde-rv-motion{min-height:44px;padding:10px 15px;border-radius:10px;border:1px solid #c9a96e;background:#1b2943;color:#fff3d7!important;-webkit-text-fill-color:#fff3d7!important;cursor:pointer;font:700 .83rem/1.35 system-ui,sans-serif}
+html body.sde-premium-home .sde-rv-motion:is(:hover,:focus-visible){background:#2d3c56;border-color:#f7e1aa}
+html body.sde-premium-home .sde-rv-layout{display:grid;grid-template-columns:minmax(185px,.85fr) minmax(0,2.55fr) minmax(190px,.88fr);align-items:center;gap:13px}
+html body.sde-premium-home .sde-rv-layout>*{min-width:0}
+html body.sde-premium-home :is(.sde-rv-left,.sde-rv-right){display:grid;gap:13px;align-content:center;min-width:0}
+html body.sde-premium-home .sde-rv-card{border-radius:16px;padding:17px 14px;border:1px solid rgba(229,206,151,.53);
+ background:linear-gradient(145deg,rgba(39,52,77,.97),rgba(21,34,57,.99))!important;
+ box-shadow:0 15px 30px rgba(0,0,0,.2);color:#f0edf0!important;-webkit-text-fill-color:#f0edf0!important}
+html body.sde-premium-home .sde-rv-card-heading{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+html body.sde-premium-home .sde-rv-card-icon{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:9px;background:#364761;
+ color:#f1d48c!important;-webkit-text-fill-color:#f1d48c!important;font-size:19px}
+html body.sde-premium-home .sde-rv :is(.sde-rv-card h3,.sde-rv-card strong){color:#fff3d9!important;-webkit-text-fill-color:#fff3d9!important;opacity:1!important;text-shadow:none!important}
+html body.sde-premium-home .sde-rv-card h3{font:750 .93rem/1.4 "Atkinson Hyperlegible",system-ui,sans-serif!important;margin:0!important}
+html body.sde-premium-home .sde-rv-card p{font-size:.83rem!important;line-height:1.62!important;color:#e2e8f2!important;-webkit-text-fill-color:#e2e8f2!important;opacity:1!important;margin:8px 0!important}
+html body.sde-premium-home .sde-rv-card a{display:inline-flex;align-items:center;min-height:44px;padding:8px 0;color:#f5d98d!important;-webkit-text-fill-color:#f5d98d!important;
+ font-size:.83rem!important;font-weight:800!important;line-height:1.4!important;text-decoration:underline;text-underline-offset:3px}
+html body.sde-premium-home .sde-rv-academy-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+html body.sde-premium-home .sde-rv-academy-tabs button{min-height:66px;border-radius:9px;border:1px solid #73819b;background:#1b2a46;color:#f8f0e1!important;-webkit-text-fill-color:#f8f0e1!important;
+ padding:6px 2px;font:750 .69rem/1.25 system-ui,sans-serif;cursor:pointer;overflow-wrap:anywhere}
+html body.sde-premium-home .sde-rv-academy-tabs button span{display:block;font-size:21px;color:#f1d48c!important;-webkit-text-fill-color:#f1d48c!important;margin-bottom:5px}
+html body.sde-premium-home .sde-rv-academy-tabs button[aria-selected="true"]{background:#34415a!important;border-color:#f1d48c!important;box-shadow:inset 0 0 0 1px #f1d48c66}
+html body.sde-premium-home .sde-rv-academy-panels{min-height:142px}
+html body.sde-premium-home .sde-rv-academy-panels [role="tabpanel"]{padding-top:12px}
+html body.sde-premium-home .sde-rv-academy-panels [role="tabpanel"][hidden]{display:none!important}
+html body.sde-premium-home .sde-rv-academy-panels strong{font-size:.86rem!important;display:block}
+html body.sde-premium-home .sde-rv-phone{border:4px solid #5e6270;border-radius:25px;overflow:hidden;background:#0e182d;box-shadow:0 18px 28px rgba(0,0,0,.35);transform:rotate(-2deg);max-width:235px;width:96%;margin:4px auto}
+html body.sde-premium-home .sde-rv-phone-head{padding:10px;display:flex;align-items:center;gap:7px;color:#f4d78e!important;-webkit-text-fill-color:#f4d78e!important;font-weight:850;font-size:.78rem}
+html body.sde-premium-home .sde-rv-phone-head small{display:block;font-size:.57rem;letter-spacing:.07em}
+html body.sde-premium-home .sde-rv-phone-head>span:last-child{margin-left:auto}
+html body.sde-premium-home .sde-rv-phone-scene{min-height:195px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px 12px;gap:10px;
+ background:linear-gradient(180deg,#091328aa,#09132833 50%,#0b152cf5),url("/vitrine/photos/hero-sde-640.webp") center/cover}
+html body.sde-premium-home .sde-rv-phone-scene>span{color:#ffe2a1!important;-webkit-text-fill-color:#ffe2a1!important;font-size:.63rem;font-weight:800}
+html body.sde-premium-home .sde-rv-phone-scene strong{font:750 1.14rem/1.2 "Cinzel",Georgia,serif;color:#fff5d9!important;-webkit-text-fill-color:#fff5d9!important}
+html body.sde-premium-home .sde-rv-phone-scene small{font-size:.67rem;color:#fff3e5!important;-webkit-text-fill-color:#fff3e5!important;line-height:1.5}
+html body.sde-premium-home .sde-rv-phone-scene a{display:inline-flex;align-items:center;min-height:44px;border-radius:999px;padding:11px 13px;background:#edcc80;
+ color:#211c22!important;-webkit-text-fill-color:#211c22!important;font-size:.72rem;font-weight:850;text-decoration:none}
+html body.sde-premium-home .sde-rv-phone-bottom{padding:12px 5px;text-align:center;letter-spacing:9px;color:#f0d78b!important;-webkit-text-fill-color:#f0d78b!important}
+html body.sde-premium-home .sde-rv-screen{overflow:hidden;min-width:0;border:5px solid #131820;border-radius:16px;background:#0c1428;
+ box-shadow:0 20px 60px #0009,0 0 0 1px #d6b67666;position:relative}
+html body.sde-premium-home .sde-rv-screen-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:54px;padding:8px 15px;background:#101c33;border-bottom:1px solid #e3c68066}
+html body.sde-premium-home .sde-rv-screen-brand{display:flex;align-items:center;gap:5px;white-space:nowrap;color:#f4d78b!important;-webkit-text-fill-color:#f4d78b!important;font:800 1.05rem/1 Georgia,serif;text-decoration:none}
+html body.sde-premium-home .sde-rv-screen-brand small{display:block;font:600 .53rem/1.35 system-ui,sans-serif;color:#e6e6df!important;-webkit-text-fill-color:#e6e6df!important}
+html body.sde-premium-home .sde-rv-screen-links{display:flex;align-items:center;justify-content:center;gap:clamp(5px,1vw,13px)}
+html body.sde-premium-home .sde-rv-screen-nav a:not(.sde-rv-screen-brand){display:inline-flex;align-items:center;justify-content:center;min-height:44px;white-space:nowrap;
+ font-size:clamp(.61rem,.8vw,.75rem)!important;font-weight:800!important;color:#f6f1e3!important;-webkit-text-fill-color:#f6f1e3!important;text-decoration:none}
+html body.sde-premium-home .sde-rv-screen-nav .sde-rv-screen-login{background:#e8c57b;border-radius:999px;padding:0 11px;
+ color:#211e27!important;-webkit-text-fill-color:#211e27!important;min-height:40px}
+html body.sde-premium-home .sde-rv-stage{position:relative;isolation:isolate;min-height:clamp(360px,35vw,525px);display:flex;align-items:center;justify-content:center;
+ padding:42px clamp(13px,3vw,35px);text-align:center;
+ background:linear-gradient(180deg,#0a1026da 0%,#1020394b 38%,#070d1ce5 100%),url("/vitrine/photos/hero-sde-1280.webp") center 62%/cover no-repeat}
+html body.sde-premium-home .sde-rv-light{position:absolute;z-index:-1;pointer-events:none;top:-30%;left:9%;right:9%;height:90%;
+ background:radial-gradient(ellipse at center,#ffe2a96c,transparent 68%);filter:blur(13px);animation:sde-rv-light 7s ease-in-out infinite alternate}
+html body.sde-premium-home .sde-rv-embers{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:-1}
+html body.sde-premium-home .sde-rv-embers span{position:absolute;bottom:8%;left:var(--x,20%);width:4px;height:4px;border-radius:50%;background:#f9c76b;
+ box-shadow:0 0 9px 2px #f5c16a88;animation:sde-rv-rise 5s linear infinite;animation-delay:var(--delay,0s)}
+html body.sde-premium-home .sde-rv-embers span:nth-child(2){--x:43%;--delay:-2s}
+html body.sde-premium-home .sde-rv-embers span:nth-child(3){--x:73%;--delay:-3.5s}
+html body.sde-premium-home .sde-rv-embers span:nth-child(4){--x:90%;--delay:-1s}
+html body.sde-premium-home .sde-rv-embers span:nth-child(5){--x:11%;--delay:-4s}
+html body.sde-premium-home .sde-rv-stage-copy{position:relative;z-index:1;width:100%}
+html body.sde-premium-home .sde-rv-stage-eyebrow{color:#ffe3a2!important;-webkit-text-fill-color:#ffe3a2!important;font-weight:900!important;
+ font-size:clamp(.65rem,.8vw,.87rem)!important;letter-spacing:.1em!important;line-height:1.55!important;margin-bottom:10px!important}
+html body.sde-premium-home .sde-rv-stage h2{font:800 clamp(1.7rem,3.05vw,3.55rem)/1.13 "Cinzel",Georgia,serif!important;color:#fff5dc!important;
+ -webkit-text-fill-color:#fff5dc!important;margin:0 0 16px!important;text-shadow:0 3px 15px #000a,0 0 21px #caa95b88!important;text-transform:uppercase}
+html body.sde-premium-home .sde-rv-stage h2 span{display:block;color:#f6d389!important;-webkit-text-fill-color:#f6d389!important}
+html body.sde-premium-home .sde-rv-stage-lead{color:#fff6e6!important;-webkit-text-fill-color:#fff6e6!important;
+ font-size:clamp(.82rem,1.3vw,1rem)!important;font-weight:800!important;line-height:1.5!important;margin:8px 0!important}
+html body.sde-premium-home .sde-rv-stage-verse{color:#ffe9b6!important;-webkit-text-fill-color:#ffe9b6!important;
+ font-size:clamp(.69rem,.92vw,.83rem)!important;line-height:1.65!important;margin:13px 0!important}
+html body.sde-premium-home .sde-rv-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:19px}
+html body.sde-premium-home .sde-rv-actions a{min-height:44px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;
+ padding:11px 15px;font-size:.79rem!important;font-weight:850!important;text-decoration:none}
+html body.sde-premium-home .sde-rv-primary{background:#efd18b;color:#211e27!important;-webkit-text-fill-color:#211e27!important}
+html body.sde-premium-home .sde-rv-secondary{background:#122038b8;border:1px solid #efd18b;color:#fff5dc!important;-webkit-text-fill-color:#fff5dc!important}
+html body.sde-premium-home .sde-rv-screen-footer{padding:11px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;
+ font-size:.76rem;color:#f2dcab!important;-webkit-text-fill-color:#f2dcab!important}
+html body.sde-premium-home .sde-rv-screen-footer a{color:#efd18b!important;-webkit-text-fill-color:#efd18b!important;display:inline-flex;align-items:center;min-height:44px;font-size:.76rem}
+html body.sde-premium-home .sde-rv-agenda-tag{color:#f4d895!important;-webkit-text-fill-color:#f4d895!important;font-size:.68rem;font-weight:850;letter-spacing:.09em}
+html body.sde-premium-home .sde-rv-agenda>strong{display:block;font:750 1rem/1.4 "Cinzel",Georgia,serif!important;margin-top:8px}
+html body.sde-premium-home .sde-rv-media .sde-rv-wave{display:flex;align-items:center;justify-content:center;gap:4px;height:55px;margin:3px auto 12px;
+ border-radius:10px;background:#0c1930a8}
+html body.sde-premium-home .sde-rv-wave i{width:4px;height:var(--h,20px);border-radius:10px;background:#d7ba7c;animation:sde-rv-wave 1.3s ease-in-out infinite alternate;animation-delay:var(--d,0s)}
+html body.sde-premium-home .sde-rv-wave i:nth-child(2),html body.sde-premium-home .sde-rv-wave i:nth-child(10){--h:28px;--d:-.7s}
+html body.sde-premium-home .sde-rv-wave i:nth-child(3),html body.sde-premium-home .sde-rv-wave i:nth-child(9){--h:38px;--d:-.3s}
+html body.sde-premium-home .sde-rv-wave i:nth-child(4),html body.sde-premium-home .sde-rv-wave i:nth-child(8){--h:17px;--d:-1s}
+html body.sde-premium-home .sde-rv-wave i:nth-child(5),html body.sde-premium-home .sde-rv-wave i:nth-child(7){--h:31px;--d:-.45s}
+html body.sde-premium-home .sde-rv-wave i:nth-child(6){--h:43px;--d:-.9s}
+html body.sde-premium-home .sde-rv-play{width:100%;min-height:44px;padding:10px 11px;background:#e8c980;color:#1e2230!important;-webkit-text-fill-color:#1e2230!important;
+ font:800 .76rem/1.4 system-ui,sans-serif;border:0;border-radius:10px;cursor:pointer}
+html body.sde-premium-home .sde-rv-media [hidden]{display:none!important}
+html body.sde-premium-home .sde-rv-media video{display:block;width:100%;height:auto;max-height:240px;margin:13px 0 8px;background:#080e20;border-radius:10px}
+html body.sde-premium-home .sde-rv-globe svg{display:block;width:100%;max-height:115px}
+html body.sde-premium-home .sde-rv-shortcuts{margin:17px auto 0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+html body.sde-premium-home .sde-rv-shortcuts a{min-height:50px;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;
+ padding:9px;border:1px solid #c6a66e;border-radius:12px;background:#1a2943;color:#fff0ca!important;-webkit-text-fill-color:#fff0ca!important;
+ font-weight:750!important;font-size:.83rem!important;text-align:center}
+html body.sde-premium-home .sde-rv :is(a,button):focus-visible{outline:3px solid #f9d792!important;outline-offset:3px!important}
+html body.sde-premium-home .sde-rv-shortcuts a:hover{background:#2a3c5a}
+@media(max-width:1150px){
+ html body.sde-premium-home .sde-rv-layout{grid-template-columns:minmax(0,1fr) minmax(0,2.35fr);align-items:start}
+ html body.sde-premium-home .sde-rv-right{grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr))}
+ html body.sde-premium-home .sde-rv-phone{max-width:240px}
+ html body.sde-premium-home .sde-rv-screen-links{display:none}
+}
+@media(max-width:760px){
+ html body.sde-premium-home .sde-rv{padding-inline:13px}
+ html body.sde-premium-home .sde-rv-layout{display:flex;flex-direction:column;align-items:stretch}
+ html body.sde-premium-home .sde-rv-screen{order:0;width:100%}
+ html body.sde-premium-home .sde-rv-left{order:1;grid-template-columns:1fr;gap:12px}
+ html body.sde-premium-home .sde-rv-right{order:2;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ html body.sde-premium-home .sde-rv-stage{min-height:345px;padding:39px 16px}
+ html body.sde-premium-home .sde-rv-stage h2{font-size:clamp(1.8rem,7vw,2.7rem)!important}
+ html body.sde-premium-home .sde-rv-phone{display:none}
+ html body.sde-premium-home .sde-rv-academy-panels{min-height:0}
+ html body.sde-premium-home .sde-rv-shortcuts{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+ html body.sde-premium-home .sde-rv-shortcuts a{font-size:.71rem!important;gap:0;flex-direction:column;padding:9px 3px}
+}
+@media(max-width:490px){
+ html body.sde-premium-home .sde-rv-right{grid-template-columns:minmax(0,1fr)}
+ html body.sde-premium-home .sde-rv-stage{min-height:365px}
+ html body.sde-premium-home .sde-rv-screen-nav{padding:6px 12px}
+ html body.sde-premium-home .sde-rv-screen-footer{font-size:.71rem}
+ html body.sde-premium-home .sde-rv-actions{flex-direction:column;align-items:stretch}
+ html body.sde-premium-home .sde-rv-stage-eyebrow{font-size:.63rem!important}
+ html body.sde-premium-home .sde-rv-shortcuts a span{font-size:.68rem}
+}
+@media(max-width:350px){
+ html body.sde-premium-home .sde-rv-shortcuts a{font-size:.68rem!important;overflow-wrap:anywhere}
+}
+@keyframes sde-rv-light{to{opacity:.42;transform:scale(1.12) translateY(7px)}}
+@keyframes sde-rv-rise{to{transform:translateY(-220px);opacity:0}}
+@keyframes sde-rv-wave{to{transform:scaleY(.55);opacity:.65}}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-premium-home .sde-rv :is(.sde-rv-light,.sde-rv-embers span,.sde-rv-wave i){animation:none!important}
+ html body.sde-premium-home .sde-rv *{scroll-behavior:auto!important;transition:none!important}
+}
+html body.sde-premium-home .sde-rv.sde-rv-motion-paused :is(.sde-rv-light,.sde-rv-embers span,.sde-rv-wave i){animation:none!important}
