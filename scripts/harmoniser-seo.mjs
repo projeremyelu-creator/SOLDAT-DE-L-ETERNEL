@@ -31,7 +31,11 @@ function upsert(html,pattern,replacement){return pattern.test(html)?html.replace
 for(const [route,file] of Object.entries(pages)){
  let html=readFileSync(file,'utf8')
   .replaceAll('Mouvement Prophético-Apostolique Soldat de l’Éternel','Mouvement Prophético-Apostolique Soldats de l’Éternel')
-  .replaceAll("Mouvement Prophético-Apostolique Soldat de l'Éternel","Mouvement Prophético-Apostolique Soldats de l'Éternel");
+  .replaceAll("Mouvement Prophético-Apostolique Soldat de l'Éternel","Mouvement Prophético-Apostolique Soldats de l'Éternel")
+  // Supprimer l'import CSS inline ancien (bloquant et signalé dans les journaux
+  // JSDOM) tout en préservant exactement la position de la feuille premium.
+  .replace(/<style>\s*\/\*\s*Dernier thème actif,[\s\S]*?\*\/\s*@import url\(["']([^"']+)["']\);\s*<\/style>/gi,
+    (_match,url)=>'<link rel="stylesheet" href="'+url+'">');
  const parsed=new JSDOM(html).window.document;
  let title=parsed.title.trim()||'Mouvement SDE — Soldats de l’Éternel';
  if(route==='/')title="SDE — Le Réveil Spirituel des Nations | Soldats de l'Éternel";
