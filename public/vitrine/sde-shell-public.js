@@ -64,7 +64,7 @@
   rubriques.setAttribute("aria-expanded","false");rubriques.prepend(icon("menu"));
   actions.append(search,rubriques,portal);row.append(brand,nav,actions);h.append(row);
   // Repère visuel et accessible de la rubrique active, sans modifier les URL.
-  const here=location.pathname.replace(/\\/$/,"")||"/";
+  const here=location.pathname.replace(/\/$/,"")||"/";
   for(const group of nav.querySelectorAll("details")){
    const active=[...group.querySelectorAll("a[href]")].some(a=>{
     const target=new URL(a.href,location.href);
