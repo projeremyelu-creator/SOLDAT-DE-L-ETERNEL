@@ -1500,7 +1500,7 @@ async function servirMedia(req, env, u, id) {
     "content-type": m.mime, "content-length": String(fin - debut + 1), "accept-ranges": "bytes",
     "x-content-type-options": "nosniff", "referrer-policy": "no-referrer",
     "content-disposition": `${enLigne ? "inline" : "attachment"}; filename*=UTF-8''${encodeURIComponent(m.nom)}`,
-    "cache-control": (accesLove.restreint || accesAcademy.restreint) ? "private, no-store" : (m.visibilite === "public" ? "public, max-age=86400" : "private, max-age=3600"),
+    "cache-control": "private, no-store", // retrait des droits public immédiat, aucune copie cache d’un média révoqué
   };
   if (m.genre !== "pdf") h["content-security-policy"] = "default-src 'none'; img-src 'self'; media-src 'self'; style-src 'unsafe-inline'; sandbox";
   if (partiel) h["content-range"] = `bytes ${debut}-${fin}/${m.taille}`;
