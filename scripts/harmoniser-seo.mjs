@@ -21,7 +21,8 @@ const pages={
  '/pole-formation':'public/vitrine/pole-formation.html','/album-infire':'public/vitrine/album-infire.html','/soutenir':'public/vitrine/soutenir.html',
  '/transparence':'public/vitrine/transparence.html','/gouvernance':'public/vitrine/gouvernance.html','/reseau':'public/vitrine/reseau.html',
  '/communaute':'public/vitrine/communaute.html','/calendrier':'public/vitrine/calendrier.html','/newsletter':'public/vitrine/newsletter.html',
- '/rechercher':'public/vitrine/rechercher.html'
+ '/rechercher':'public/vitrine/rechercher.html',
+ '/mediatheque':'public/vitrine/mediatheque-publique.html','/soldiers-tv':'public/vitrine/soldiers-tv.html','/soldier-quest':'public/vitrine/soldier-quest.html'
 };
 const esc=value=>String(value).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 const tag=(key,value)=>`<meta ${key} content="${esc(value)}">`;
@@ -33,7 +34,7 @@ for(const [route,file] of Object.entries(pages)){
   .replaceAll("Mouvement Prophético-Apostolique Soldat de l'Éternel","Mouvement Prophético-Apostolique Soldats de l'Éternel");
  const parsed=new JSDOM(html).window.document;
  let title=parsed.title.trim()||'Mouvement SDE — Soldats de l’Éternel';
- if(route==='/')title="SDE — Soldats de l'Éternel, mouvement à Abidjan";
+ if(route==='/')title="SDE — Le Réveil Spirituel des Nations | Abidjan";
  else {
   const brand=" | Soldats de l'Éternel (SDE)";
   const prefix=title.split(/\s+[|—]\s+/)[0].trim();
@@ -44,8 +45,8 @@ for(const [route,file] of Object.entries(pages)){
    title=(prefix.length>available?prefix.slice(0,available-1).trimEnd()+'…':prefix)+brand;
   }
  }
- const description=parsed.querySelector('meta[name="description"]')?.content?.trim()||'Découvrez la vision, les programmes et les actions du Mouvement Prophético-Apostolique Soldats de l’Éternel (SDE).';
- const currentImage=parsed.querySelector('meta[property="og:image"]')?.content?.trim()||image;
+ const description=route==='/'?"Mouvement Prophético-Apostolique Soldats de l’Éternel (SDE) : découvrir la vision 2027, Exode 33:14, les cinq pôles, les programmes, les missions et Soldiers Academy.":(parsed.querySelector('meta[name="description"]')?.content?.trim()||'Découvrez la vision, les programmes et les actions du Mouvement Prophético-Apostolique Soldats de l’Éternel (SDE).');
+ const currentImage=route==='/'?base+'/vitrine/photos/hero-sde-1280.webp':(parsed.querySelector('meta[property="og:image"]')?.content?.trim()||image);
  const canonical=base+(route==='/'?'/':route);
  html=upsert(html,/<title>[\s\S]*?<\/title>/i,`<title>${esc(title)}</title>`);
  html=upsert(html,/<meta\b[^>]*\bname=["']description["'][^>]*>/i,tag('name="description"',description));
