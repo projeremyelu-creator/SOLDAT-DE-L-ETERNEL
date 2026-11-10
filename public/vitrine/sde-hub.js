@@ -30,8 +30,13 @@
  const map=qs('#hub-map-svg');
  if(map){
   const toXY=([name,lng,lat])=>[Math.round((lng+180)/360*950+25),Math.round((90-lat)/180*410+26)];
-  const parts=countries.map((row,i)=>{const [x,y]=toXY(row);return '<g tabindex="0" role="button" aria-label="'+escape(row[0])+'" data-country="'+escape(row[0])+'" style="cursor:pointer"><circle class="pin" cx="'+x+'" cy="'+y+'" r="10"/><text x="'+(x+13)+'" y="'+(y-10)+'" fill="#f9edc5" font-size="15" stroke="#132c42" stroke-width="2" paint-order="stroke">'+escape(row[0])+'</text></g>';});
+  // Surface interactive invisible adaptée à la largeur réelle de la carte :
+  // au moins 48px au toucher ; les repères visibles restent inchangés.
+  const tailleCible=()=>Math.max(25,Math.min(95,Math.ceil(24*1000/Math.max(220,map.getBoundingClientRect().width))));
+  const hitRadius=tailleCible();
+  const parts=countries.map((row,i)=>{const [x,y]=toXY(row);return '<g tabindex="0" role="button" aria-label="'+escape(row[0])+'" data-country="'+escape(row[0])+'" style="cursor:pointer"><circle class="pin-hit" cx="'+x+'" cy="'+y+'" r="'+hitRadius+'" fill="transparent" pointer-events="all"/><circle class="pin" cx="'+x+'" cy="'+y+'" r="10" pointer-events="none"/><text x="'+(x+13)+'" y="'+(y-10)+'" fill="#f9edc5" font-size="15" stroke="#132c42" stroke-width="2" paint-order="stroke" pointer-events="none">'+escape(row[0])+'</text></g>';});
   map.innerHTML='<title>Localisation illustrative des six pays SDE</title><desc>Repères approximatifs à l’échelle des pays, sans localisation de responsables ou d’adresses.</desc><rect x="0" y="0" width="1000" height="460" rx="20" fill="#123b55"/><path d="M65 112 L145 65 242 70 292 142 240 220 160 236 115 187 Z M275 245 L342 208 367 318 317 424 284 335 Z M464 98 L581 62 688 73 779 99 891 142 909 201 822 224 737 189 680 247 610 200 552 160 500 182 Z M480 212 L561 204 626 257 573 375 521 346 Z" fill="#316b64" stroke="#77a692" stroke-width="3"/>'+parts.join('');
+  window.addEventListener('resize',()=>{const radius=String(tailleCible());map.querySelectorAll('.pin-hit').forEach(c=>c.setAttribute('r',radius));},{passive:true});
   const label=qs('#hub-map-label');
   const choose=name=>{if(label)label.textContent=name+' — représentation du pays. Adresse, responsable et prochain rendez-vous : informations à confirmer avant publication.';qs('[name=pays]')&&(qs('[name=pays]').value=name)};
   map.querySelectorAll('[data-country]').forEach(el=>{el.addEventListener('click',()=>choose(el.dataset.country));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose(el.dataset.country)}})});
