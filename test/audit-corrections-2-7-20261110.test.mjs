@@ -45,7 +45,7 @@ test("4. Harmonisation : suppression des imports CSS bloquants et scripts média
   assert.equal(css.length,1,path+" CSS dupliqué");
   assert.equal(js.length,1,path+" JS dupliqué");
   assert.ok(!html.includes('@import url("/vitrine/sde-premium-public.css'),path+" import inline");
-  assert.ok(html.includes("20261110audit"),path+" cachebust");
+  assert.match(html,/sde-public-media\.js\?v=[A-Za-z0-9_-]+/,path+" URL de script versionnée");
  }
  const premium=read("public/vitrine/sde-six-maquettes-2027.css");
  assert.ok(premium.includes("Audit 2026-11-10"));
