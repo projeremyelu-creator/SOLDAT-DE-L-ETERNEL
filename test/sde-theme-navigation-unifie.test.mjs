@@ -40,3 +40,37 @@ test("barre privée : cinq accès fixes sans exposition des finances administrat
  assert.match(design,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
  assert.match(design,/prefers-reduced-motion:reduce/);
 });
+
+test("lisibilité générale : surfaces bleues et cartes ivoire, sans violet global",()=>{
+ const final=css.slice(css.indexOf("SDE · Contraste et luminosité harmonisés"));
+ assert.ok(final.startsWith("SDE · Contraste et luminosité harmonisés"));
+ assert.match(final,/--fu-bg0:#101b35/);
+ assert.match(final,/--sde-forest:#101b35/);
+ assert.match(final,/--fu-card:#fffaf0/);
+ assert.match(final,/--fu-card-ink:#1b2942/);
+ assert.match(final,/background:linear-gradient\(145deg,#111e36/);
+ assert.match(final,/background:#fffaf0!important;color:#1b2942!important/);
+ assert.match(final,/\[data-sde-page="prieres"\]/);
+ assert.match(final,/\[data-sde-page="missions-humanitaires"\]/);
+ assert.doesNotMatch(final,/filter:brightness\(/);
+ assert.doesNotMatch(final,/body\.sde-reference/);
+ assert.doesNotMatch(final,/body\.sde-admin/);
+});
+test("contraste WCAG AA : ivoire et or sur bleu nuit ; encre et liens sur ivoire",()=>{
+ const lumi=h=>{
+  const rgb=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255);
+  const lin=rgb.map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);
+  return lin[0]*.2126+lin[1]*.7152+lin[2]*.0722;
+ };
+ const contrast=(a,b)=>{
+  const x=lumi(a),y=lumi(b);
+  return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);
+ };
+ for(const [name,foreground,background] of [
+  ["texte ivoire sur nuit","#f7f2e8","#101b35"],
+  ["accent or sur nuit","#e2c26a","#101b35"],
+  ["titre sur carte ivoire","#1b2942","#fffaf0"],
+  ["lien sur carte ivoire","#775312","#fffaf0"],
+  ["texte secondaire sur ivoire","#56647a","#fffaf0"]
+ ])assert.ok(contrast(foreground,background)>=4.5,name);
+});
