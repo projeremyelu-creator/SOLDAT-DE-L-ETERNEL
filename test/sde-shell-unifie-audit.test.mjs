@@ -125,3 +125,42 @@ test("Le pied de page commun est posé même si une page n'en possède pas",()=>
   assert.equal(dom.window.document.querySelectorAll(".sde-shell-footer").length,1);
  }finally{dom.window.close();}
 });
+
+test("Lisibilité 2026 : chaque fond sombre ou ivoire a une encre WCAG AA",()=>{
+ const css=read("public/vitrine/sde-shell-public.css");
+ const contrast=(fg,bg)=>{
+  const rgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255)
+   .map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);
+  const lum=h=>rgb(h).reduce((n,c,i)=>n+c*[.2126,.7152,.0722][i],0);
+  const a=lum(fg),b=lum(bg);
+  return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+ };
+ const pairs=[
+  ["libellés soutien","#f7f2e8","#16283d"],
+  ["champ soutien","#f7f2e8","#0d1c30"],
+  ["placeholder soutien","#c1cad7","#0d1c30"],
+  ["notice de confidentialité","#f7f2e8","#172942"],
+  ["lien notice","#f0d586","#172942"],
+  ["section légale","#17283f","#f7f2e8"],
+  ["texte légal","#293b51","#fffaf0"],
+  ["lien légal","#69470c","#fffaf0"]
+ ];
+ for(const [name,fg,bg] of pairs)assert.ok(contrast(fg,bg)>=4.5,
+  name+" : "+contrast(fg,bg).toFixed(2)+":1 inférieur à 4,5");
+ for(const token of [
+  'main .sde-privacy-note','main #confidentialite .confidentialite',
+  '.hub-main #formulaire .hub-form','::-placeholder',
+  ':is(input:not([type="checkbox"]),select,textarea)','background-image:none!important'
+ ]){
+  if(token==='::-placeholder')assert.match(css,/::placeholder/);
+  else assert.ok(css.includes(token),token);
+ }
+ for(const name of ["rejoindre","soutenir"]){
+  const source=read("public/vitrine/"+name+".html");
+  assert.match(source,/sde-shell-public\.css/);
+ }
+ const audit=read("scripts/audit-public-mobile.mjs");
+ assert.match(audit,/LISIBILITE_SDE/);
+ assert.ok(audit.includes('input[name="montant"]'));
+ assert.ok(audit.includes('textarea[name="message"]'));
+});

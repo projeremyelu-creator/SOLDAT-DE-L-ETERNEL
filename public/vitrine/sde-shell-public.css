@@ -1302,3 +1302,162 @@ body.sde-shell-mounted[data-sde-page="missions-humanitaires"] main .sde-intro,
 body.sde-shell-mounted[data-sde-page="projets"] main .sde-intro{border-bottom:3px solid #487e59!important}
 body.sde-shell-mounted[data-sde-page="missions-humanitaires"] main .sde-kicker,
 body.sde-shell-mounted[data-sde-page="projets"] main .sde-kicker{color:#c0e6c9!important}
+
+/* 2026-11-10 · Recette visuelle : séparation stricte surface / encre.
+   Corrige les champs de Soutenir (encre sombre sur carte sombre)
+   et la confidentialité Contact (encre claire sur papier ivoire).
+   La coque reste bleu nuit / ivoire / or, sans filtre de luminosité. */
+html body.sde-shell-mounted{
+ --sde-reading-night:#101b35;
+ --sde-reading-card:#16283d;
+ --sde-reading-paper:#fffaf0;
+ --sde-reading-ivory:#f7f2e8;
+ --sde-reading-ink:#1a2b44;
+ --sde-reading-muted:#33465b;
+ --sde-reading-gold:#f0d586;
+ --sde-reading-gold-ink:#69470c;
+}
+/* Toutes les notices de collecte se lisent sur leur propre fond sombre :
+   y compris les pages autonomes dépourvues de sde-sitewide-2026.css. */
+html body.sde-shell-mounted main .sde-privacy-note{
+ background:#172942!important;
+ color:#f7f2e8!important;
+ -webkit-text-fill-color:#f7f2e8!important;
+ border:1px solid rgba(240,213,134,.65)!important;
+ border-radius:12px;
+ padding:12px 14px;
+ font-weight:550;
+ line-height:1.6;
+ opacity:1!important;
+ text-shadow:none!important;
+}
+html body.sde-shell-mounted main .sde-privacy-note :not(a){
+ color:#f7f2e8!important;
+ -webkit-text-fill-color:#f7f2e8!important;
+ opacity:1!important;
+}
+html body.sde-shell-mounted main .sde-privacy-note a{
+ color:#f0d586!important;
+ -webkit-text-fill-color:#f0d586!important;
+ font-weight:800;
+ text-decoration:underline;
+ text-underline-offset:3px;
+}
+/* La fiche de soutien est sombre : interdiction d'y réutiliser l'encre
+   des cartes ivoire, même si un thème global modifie --texte ou --surface. */
+html body.sde-shell-mounted .hub-main #formulaire .hub-form{
+ background:#16283d!important;
+ color:#f7f2e8!important;
+ border:1px solid rgba(226,194,106,.5)!important;
+ box-shadow:0 12px 32px rgba(5,14,30,.15);
+}
+html body.sde-shell-mounted .hub-main #formulaire .hub-form :is(label,legend,p,small,strong),
+html body.sde-shell-mounted .hub-main #formulaire .hub-form label.check{
+ color:#f7f2e8!important;
+ -webkit-text-fill-color:#f7f2e8!important;
+ opacity:1!important;
+ text-shadow:none!important;
+}
+html body.sde-shell-mounted .hub-main #formulaire .hub-form :is(input:not([type="checkbox"]),select,textarea){
+ background:#0d1c30!important;
+ color:#f7f2e8!important;
+ -webkit-text-fill-color:#f7f2e8!important;
+ border:1px solid #aebdcb!important;
+ border-radius:11px;
+ min-height:48px;
+ opacity:1!important;
+}
+html body.sde-shell-mounted .hub-main #formulaire .hub-form :is(input,textarea)::placeholder{
+ color:#c1cad7!important;
+ -webkit-text-fill-color:#c1cad7!important;
+ opacity:1!important;
+}
+html body.sde-shell-mounted .hub-main #formulaire .hub-form select option{
+ background:#0d1c30;
+ color:#f7f2e8;
+}
+html body.sde-shell-mounted .hub-main #formulaire .hub-form label.check input[type="checkbox"]{
+ width:20px;height:20px;min-height:20px;flex:none;
+ accent-color:#e2c26a;
+ border-color:#e2c26a!important;
+}
+html body.sde-shell-mounted .hub-main #formulaire .hub-form a{
+ color:#f0d586!important;
+ -webkit-text-fill-color:#f0d586!important;
+ text-decoration:underline;
+}
+html body.sde-shell-mounted .hub-main #formulaire .hub-form :is(input,select,textarea):focus-visible{
+ outline:3px solid #f0d586!important;
+ outline-offset:3px;
+}
+html body.sde-shell-mounted .hub-main #formulaire .hub-form .hub-message{
+ color:#c8f3d0!important;
+ -webkit-text-fill-color:#c8f3d0!important;
+}
+html body.sde-shell-mounted .hub-main #formulaire .hub-form .hub-message[data-error="true"]{
+ color:#ffceb9!important;
+ -webkit-text-fill-color:#ffceb9!important;
+}
+/* Contact : section légale réellement ivoire, encres bleu nuit foncé.
+   Neutralise l'ancienne règle qui peignait les paragraphes en blanc
+   alors que le fond de la section restait blanc. */
+html body.sde-shell-mounted[data-sde-page="rejoindre"] main #confidentialite{
+ background:#f7f2e8!important;
+ background-image:none!important;
+ color:#1a2b44!important;
+ isolation:isolate;
+}
+html body.sde-shell-mounted[data-sde-page="rejoindre"] main #confidentialite .confidentialite{
+ background:#fffaf0!important;
+ background-image:none!important;
+ color:#1a2b44!important;
+ border:1px solid #d5c7a9!important;
+ border-radius:16px;
+ padding:clamp(18px,4vw,30px)!important;
+ box-shadow:0 8px 24px rgba(16,27,53,.08);
+ opacity:1!important;
+ filter:none!important;
+}
+html body.sde-shell-mounted[data-sde-page="rejoindre"] main #confidentialite :is(.tete-section h2,.tete-section h3,.confidentialite h2,.confidentialite h3,.confidentialite h4){
+ color:#17283f!important;
+ -webkit-text-fill-color:#17283f!important;
+ opacity:1!important;
+ text-shadow:none!important;
+}
+html body.sde-shell-mounted[data-sde-page="rejoindre"] main #confidentialite .tete-section .surtitre{
+ color:#69470c!important;
+ -webkit-text-fill-color:#69470c!important;
+ opacity:1!important;
+}
+html body.sde-shell-mounted[data-sde-page="rejoindre"] main #confidentialite .confidentialite :is(p,li,small,span,strong,em,b){
+ color:#293b51!important;
+ -webkit-text-fill-color:#293b51!important;
+ opacity:1!important;
+ text-shadow:none!important;
+}
+html body.sde-shell-mounted[data-sde-page="rejoindre"] main #confidentialite .confidentialite a,
+html body.sde-shell-mounted[data-sde-page="rejoindre"] main #confidentialite .confidentialite a:visited{
+ color:#69470c!important;
+ -webkit-text-fill-color:#69470c!important;
+ font-weight:750;
+ text-decoration:underline!important;
+ text-underline-offset:3px;
+}
+/* Une barre inférieure cohérente sur toutes les pages, sans gradient
+   violet/vert hérité de la navigation autonome historique. */
+html body.sde-shell-mounted .sde-shell-bottom{
+ background:#101b35!important;
+ background-image:none!important;
+ border-top:1px solid rgba(226,194,106,.6)!important;
+ color:#f7f2e8!important;
+}
+html body.sde-shell-mounted .sde-shell-bottom .sde-shell-bottom-item{
+ -webkit-text-fill-color:currentColor;
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-shell-mounted .hub-main #formulaire .hub-form *,
+ html body.sde-shell-mounted[data-sde-page="rejoindre"] main #confidentialite *{
+  animation:none!important;
+  transition:none!important;
+ }
+}
