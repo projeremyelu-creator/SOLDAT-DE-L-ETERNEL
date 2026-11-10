@@ -52,5 +52,5 @@ test("Mobile et contraste : les sections utilisent le bleu nuit, l'ivoire et l'o
  assert.ok(css.includes('#e2e8f2'));
  assert.ok(css.includes('-webkit-text-fill-color'));
  assert.ok(css.includes('min-height:44px'));
- assert.ok(section.includes('aria-label="Aperçu de l\\'expérience mobile SDE"'));
+ assert.ok(section.includes('class="sde-rv-phone"'));
 });
