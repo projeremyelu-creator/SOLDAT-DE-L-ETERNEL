@@ -5,7 +5,7 @@
     "pretest": "node --check scripts/audit-public-mobile.mjs && node --test test/sde-digital-universe.test.mjs && node --test test/maquette-hero-sde.test.mjs && node --test test/publication-propagation-sde.test.mjs test/corrections-integrales-1-7.test.mjs test/audit-corrections-1-7-20261108.test.mjs test/sde-direction-artistique.test.mjs test/roadmap-sde.test.mjs test/agenda-visible.test.mjs && node --test test/medias-transmis-2027.test.mjs && node --test test/publication-medias-zip-sde.test.mjs && node --test test/medias-binaires-github-publies.test.mjs && node --test test/charte-officielle-sde-2027.test.mjs && node --test test/sde-mediatheque-directe.test.mjs && node --check scripts/recette-mediatheque-production.mjs && node --test test/soldiers-tv-logo-transparent.test.mjs",
     "build:experience": "node scripts/harmoniser-seo.mjs && node scripts/build-experience.mjs && tailwindcss -i frontend/experience.css -o public/vitrine/sde-experience.css --minify",
     "test:production": "node scripts/recette-production.mjs",
-    "prebuild:experience": "node scripts/optimiser-affiche-mobile.mjs"
+    "prebuild:experience": "node scripts/optimiser-affiche-mobile.mjs && node scripts/optimiser-archives-sde.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",
