@@ -119,7 +119,7 @@ test("Palette officielle SDE, accessible et persistante dans les espaces privés
 });
 test("accueil réellement servi (portail.html) refait selon la maquette",()=>{
  const h=read("public/vitrine/portail.html");
- for(const t of ['class="ap-head"','Une génération enracinée en Jésus-Christ, prête à servir','Prochains programmes','Nos cinq pôles','Missions et impact','Prières et témoignages','Galerie IN FIRE','Espaces sécurisés','Nous rejoindre','accueil-maquette.css','id="ap-next-title"','id="ap-next-register"','class="private-access-card private-login"'])assert.ok(h.includes(t),t);
+ for(const t of ['class="ap-head"','LE RÉVEIL','Prochains programmes','Nos cinq pôles','Missions et impact','Prières et témoignages','Galerie IN FIRE','Espaces sécurisés','Nous rejoindre','accueil-maquette.css','id="ap-next-title"','id="ap-next-register"','class="private-access-card private-login"'])assert.ok(h.includes(t),t);
  assert.equal((h.match(/class="private-access-card/g)||[]).length,1,'une seule carte de connexion');
  assert.equal((h.match(/class="site-access-top"/g)||[]).length,1);
  const js=read("public/vitrine/portail-unifie.js");assert.ok(js.includes("sde-rail")&&js.includes("--sde-rail-top"),"rail sur toutes les pages publiques");
