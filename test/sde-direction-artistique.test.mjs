@@ -15,7 +15,7 @@ test("Direction artistique : palette royale et hiérarchie typographique",()=>{
  const doc=new JSDOM(home).window.document;
  assert.equal(doc.querySelectorAll(".sde-premium-pillar-top .sde-pillar-icon").length,3);
  assert.equal(doc.querySelectorAll(".sde-premium-pillar-top span[aria-hidden='true']").length,0);
- assert.equal(doc.querySelectorAll(".ap-hero .ap-actions a").length,2);
+ assert.equal(doc.querySelectorAll(".ap-hero .ap-actions a").length,3,"trois actions Vision 2027");
 });
 
 test("Grille Bento des cinq pôles, médaillon pour les emblèmes et galerie lisible",()=>{
