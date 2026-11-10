@@ -183,3 +183,14 @@ test("Recette Chromium : les règles haute priorité corrigent toutes les pages 
   assert.ok((radius*2*width/1000)>=44,width+"px");
  }
 });
+
+test("Pied de page : cibles mobiles 44px et case consentement associée",()=>{
+ const css=read("public/vitrine/sde-shell-public.css");
+ const js=read("public/vitrine/sde-shell-public.js");
+ assert.match(css,/html body\.sde-shell-mounted \.sde-shell-footer a,/);
+ assert.match(css,/html body\.sde-shell-mounted \.sde-shell-subfooter a/);
+ assert.match(css,/label\.sde-shell-consent\{/);
+ assert.match(css,/min-height:44px!important/);
+ assert.match(css,/label\.sde-shell-consent input\[type="checkbox"\]/);
+ assert.match(js,/class="sde-shell-consent"/);
+});
