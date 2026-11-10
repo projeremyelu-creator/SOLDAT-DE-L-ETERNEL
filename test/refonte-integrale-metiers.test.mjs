@@ -54,7 +54,7 @@ test('Les entrées de consultation des dossiers privés restent des routes authe
 });
 
 
-test('Accueil premium : hero immersif, deux actions et bandeau TPA compact',()=>{
+test('Accueil premium : hero Citadelle 2027, trois actions et bandeau TPA compact',()=>{
  const html=file('public/vitrine/portail.html');
  const css=file('public/vitrine/sde-accueil-premium.css');
  const hero=html.slice(html.indexOf('class="ap-hero"'),html.indexOf('id="programmes-accueil"'));
@@ -62,8 +62,8 @@ test('Accueil premium : hero immersif, deux actions et bandeau TPA compact',()=>
  assert.equal((html.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,0,'pas de grande affiche dans l’accueil compact');
  assert.ok(html.includes('href="/programmes#tpa-2026"'));
  assert.ok(html.includes('datetime="2026-12-18T20:00:00+00:00"'));
- assert.ok(hero.includes('class="ap-actions"'));
- for(const link of ['/contact#rejoindre','/mouvement#film'])assert.ok(hero.includes('href="'+link+'"'),'Action manquante '+link);
+ assert.ok(hero.includes('class="ap-actions sde-citadel-actions"'));
+ for(const link of ['/mouvement','/contact#rejoindre','/programmes#agenda','/mouvement#film'])assert.ok(hero.includes('href="'+link+'"'),'Action manquante '+link);
  assert.match(css,/\.ap-hero-inner\{[^}]*grid-template-columns:minmax\(0,1fr\)/);
  assert.match(css,/@media\(max-width:860px\)/);
  assert.match(css,/prefers-reduced-motion/);
