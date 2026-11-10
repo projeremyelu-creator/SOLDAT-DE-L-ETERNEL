@@ -522,3 +522,77 @@ html body.sde-unifie.sde-premium-home #espaces-prives .private-access-card.priva
     width:61px!important;height:61px!important;
   }
 }
+
+
+/* Audit 2026-11-10 : compactage mesurable du Hero Réveil sur Android 360/390.
+   Conserve les deux actions et la carte TPA sans sacrifier la lisibilité. */
+@media(max-width:490px){
+ html body.sde-unifie.sde-v5-home .ap-hero .ap-hero-inner{
+  min-height:0!important;gap:7px!important;
+  padding:44px 0 19px!important;
+  width:calc(100% - 26px)!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .ap-logo{
+  width:43px!important;height:43px!important;margin:0 auto 3px!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .ap-eyebrow{
+  font-size:.59rem!important;letter-spacing:.085em!important;line-height:1.35!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero h1{
+  font-size:clamp(1.8rem,7.7vw,2.25rem)!important;
+  min-height:0!important;margin:7px 0 6px!important;
+  letter-spacing:-.02em!important;line-height:1.06!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero :is(.ap-devise,.ap-lead){
+  font-size:.77rem!important;line-height:1.37!important;margin:2px 0!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-citadel-verse{
+  padding:7px 10px!important;margin:6px auto!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-citadel-verse p{
+  font-size:.81rem!important;line-height:1.37!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-citadel-verse cite{
+  font-size:.69rem!important;margin-top:3px!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-citadel-actions{
+  margin:8px 0 0!important;gap:7px!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-citadel-actions a{
+  width:100%!important;min-height:44px!important;
+  padding:8px 13px!important;font-size:.81rem!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-citadel-film{
+  margin:3px auto!important;font-size:.76rem!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-citadel-film a{min-height:34px!important}
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-citadel-founder{
+  margin:0 auto!important;font-size:.67rem!important;line-height:1.3!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-tpa-hero-card{
+  padding:9px 11px!important;margin:5px auto 0!important;
+  min-height:0!important;box-shadow:none!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-shell-event-message h2{
+  font-size:.91rem!important;margin:3px 0!important;line-height:1.3!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-tpa-facts{
+  flex-direction:row!important;justify-content:center!important;gap:3px 11px!important;
+  margin:5px auto!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-tpa-facts>div{
+  width:auto!important;min-height:0!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-tpa-actions{gap:6px!important}
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-tpa-actions a{
+  min-height:44px!important;padding:6px 11px!important;font-size:.76rem!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-shell-event-countdown{
+  gap:5px!important;margin:4px 0!important;
+ }
+ html body.sde-unifie.sde-v5-home .ap-hero .sde-countdown-unit strong{
+  font-size:.96rem!important;line-height:1.2!important;
+ }
+}
+/* Résoudre les médias évite le décalage sous les vignettes asynchrones. */
+body.sde-shell-mounted .sde-public-media-preview{aspect-ratio:4/3}

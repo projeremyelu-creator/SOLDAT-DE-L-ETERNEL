@@ -4,7 +4,7 @@
  */
 (()=>{"use strict";
 const root="/vitrine/media/";
-const photo=(id,title,alt,description)=>({type:"image",src:root+"archives-2027/"+id+(id==="polos-sde-vert-blanc"?".png":".jpg"),title,alt,description});
+const photo=(id,title,alt,description)=>({type:"image",src:root+"archives-2027/"+id+(id==="polos-sde-vert-blanc"?".png":".jpg"),thumb:root+"archives-2027/"+id+"-optimise.webp",title,alt,description});
 const clip=(id,title,description)=>({type:"video",src:root+"videos-2027/"+id+".mp4",poster:"",title,description});
 const views={
  "/priere":{
@@ -59,9 +59,9 @@ function card(item){
  if(item.type==="image"){
   const a=make("a","sde-archive-photo-link");a.href=item.src;a.target="_blank";a.rel="noopener noreferrer";
   a.setAttribute("aria-label","Ouvrir l'image en grand : "+item.title);
-  m=make("img");m.src=item.src;m.alt=item.alt;m.loading="lazy";m.decoding="async";a.append(m);fig.append(a);
+  m=make("img");m.src=item.preview||item.src;m.alt=item.alt;m.loading="lazy";m.decoding="async";m.width=960;m.height=720;a.append(m);fig.append(a);
  }else{
-  m=make("video");m.controls=true;m.preload="metadata";m.playsInline=true;m.poster=item.poster;
+  m=make("video");m.controls=true;m.preload="none";m.playsInline=true;m.poster=item.poster;
   m.setAttribute("aria-label",item.title);m.src=item.src;fig.append(m);
  }
  const caption=make("figcaption");caption.append(make("strong","",item.title));
@@ -72,8 +72,11 @@ async function start(){
  const entry=views[location.pathname];if(!entry)return;
  const anchor=document.querySelector(entry.selector);
  if(!anchor||document.querySelector(".sde-archive-gallery"))return;
- const statuses=await Promise.all(entry.items.map(item=>available(item.src,item.type)));
- const items=entry.items.filter((_,i)=>statuses[i]);
+ const statuses=await Promise.all(entry.items.map(async item=>{
+  if(item.type==="image"&&item.thumb&&await available(item.thumb,"image"))return "thumb";
+  return await available(item.src,item.type)?"source":null;
+ }));
+ const items=entry.items.flatMap((item,i)=>statuses[i]?[{...item,preview:statuses[i]==="thumb"?item.thumb:item.src}]:[]);
  if(!items.length)return;
  const section=make("section","sde-archive-gallery");
  section.setAttribute("aria-label",entry.title);

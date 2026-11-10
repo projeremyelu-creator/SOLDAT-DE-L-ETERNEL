@@ -15,6 +15,9 @@ const mapping={
  "/mediatheque":null
 };
 if(!(page in mapping))return;
+// Garde idempotente : certaines pages historiques chargeaient ce module deux fois.
+if(document.documentElement.dataset.sdePublicMediaRunning==="1")return;
+document.documentElement.dataset.sdePublicMediaRunning="1";
 const sections=mapping[page];
 const container=document.querySelector("main");
 if(!container)return;
@@ -92,13 +95,25 @@ function init(items){
  }
 }
 async function run(){
+ const target=page==="/mediatheque"?document.getElementById("sde-published-content"):null;
  try{
   const response=await fetch("/api/medias",{credentials:"omit",cache:"no-store"});
-  if(!response.ok)return;
+  if(!response.ok)throw new Error("Erreur HTTP");
   const data=await response.json();
-  if(!data||!Array.isArray(data.medias))return;
+  if(!data||!Array.isArray(data.medias))throw new Error("Réponse invalide");
   init(data.medias);
- }catch{/* Échec réseau : aucun faux média ni message trompeur */ }
+ }catch{
+  if(target&&!target.querySelector(".sde-public-media-empty")){
+   target.append(node("p","sde-public-media-empty","Les publications sont temporairement indisponibles. Réessayez ultérieurement."));
+  }
+ }finally{
+  if(target){
+   target.classList.remove("sde-public-media-loading");
+   target.classList.add("sde-public-media-ready");
+   target.setAttribute("aria-busy","false");
+   target.querySelector(".sde-public-media-loading-text")?.remove();
+  }
+ }
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",run,{once:true});else run();
 })();

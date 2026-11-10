@@ -45,7 +45,8 @@ test('Le contraste des cartes est explicite et les images de fond mobiles ne blo
 
 test('Le format mobile est produit par le pipeline sans dépendance réseau tierce',()=>{
  const packageJson=JSON.parse(readFileSync('package.json','utf8'));
- assert.equal(packageJson.scripts['prebuild:experience'],'node scripts/optimiser-affiche-mobile.mjs');
+ assert.ok(packageJson.scripts['prebuild:experience'].startsWith('node scripts/optimiser-affiche-mobile.mjs'));
+ assert.ok(packageJson.scripts['prebuild:experience'].includes('node scripts/optimiser-archives-sde.mjs'));
  const generator=readFileSync('scripts/optimiser-affiche-mobile.mjs','utf8');
  assert.ok(generator.includes('libwebp'));
  assert.ok(generator.includes("copyFileSync(source,cible)"));
