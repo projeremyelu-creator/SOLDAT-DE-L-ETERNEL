@@ -109,3 +109,10 @@ test("Un visiteur non administrateur ne peut ouvrir le studio dans le navigateur
   assert.match(dom.window.document.getElementById("auth-status").textContent,/réservé/);
  }finally{dom.window.close();}
 });
+
+test("La route technique HTML n'expose jamais directement le studio sans la session",()=>{
+ const marker='if (p === "/vitrine/sde-mediatheque-admin.html"';
+ assert.ok(worker.includes(marker));
+ assert.ok(worker.includes('location:url.origin+"/administration/medias"'));
+ assert.ok(worker.includes('"cache-control":"private, no-store"'));
+});
