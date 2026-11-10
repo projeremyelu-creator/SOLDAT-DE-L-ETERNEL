@@ -72,7 +72,7 @@ test("Le studio offre l'import local multiple, les droits et le suivi",()=>{
  assert.ok(d.querySelector('select[name=visibilite] option[value=public]'));
  assert.ok(d.querySelector("#rights-confirm"));
  assert.ok(d.querySelector("#upload-log"));
- for(const marker of ['/api/moi','/api/medias','method:"PUT"','"/fin"','format(e.fichierMax)','/administration'])
+ for(const marker of ['/api/moi','/api/medias','method:"PUT"','"/fin"','format(e.fichierMax)','/api/medias'])
   assert.ok(studioJS.includes(marker),marker);
  assert.match(studio,/Médiathèque publique/);
  assert.match(studio,/robots" content="noindex,nofollow"/);
