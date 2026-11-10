@@ -1539,3 +1539,29 @@ body.sde-reference .ref-tabbar button span{font-weight:650;white-space:nowrap}
 }
 @media(max-width:380px){body.sde-reference .ref-tabbar button svg{width:21px;height:21px}body.sde-reference .ref-tabbar button{font-size:.64rem}}
 @media(prefers-reduced-motion:reduce){body.sde-reference .ref-tabbar :is(button,svg){animation:none!important;transition:none!important}}
+
+/* L'aspect standard reste bleu nuit, ivoire et or même dans les modules de gestion. */
+html:not([data-theme="light"]) body.sde-reference .ops-heading{
+ background:linear-gradient(100deg,#182a4b,#101b35 85%)!important;
+ border:1px solid rgba(226,194,106,.4)!important;border-left:3px solid #e2c26a!important;border-radius:12px}
+html:not([data-theme="light"]) body.sde-reference .ops-card{
+ background:linear-gradient(180deg,#16243d,#101b35)!important;
+ border-color:rgba(226,194,106,.27)!important;border-radius:14px!important}
+html:not([data-theme="light"]) body.sde-reference .ref-sidebar nav button[data-fam="spi"][aria-current="page"]{
+ box-shadow:inset 3px 0 0 #7545a6!important}
+html:not([data-theme="light"]) body.sde-reference .ref-sidebar nav button[data-fam="mis"][aria-current="page"]{
+ box-shadow:inset 3px 0 0 #427957!important}
+/* Le second choix d'apparence augmente effectivement le contraste des textes et des contours. */
+html[data-sde-palette="contraste"] body.sde-reference{
+ --m-texte:#fff9ed!important;--m-or:#f6d889!important;
+ --m-carte:#0b1529!important;--m-carte-2:#0b1529!important}
+html[data-sde-palette="contraste"] body.sde-reference .ops-card{background:#0b1529!important;border-color:#f6d889!important}
+html[data-sde-palette="contraste"] body.sde-reference :is(.ref-tabbar button,.ref-sidebar nav button,.ref-toolbar button){color:#fff9ed!important}
+html[data-sde-palette="contraste"] body.sde-reference .ref-tabbar button[aria-current="page"]{color:#f6d889!important;outline:1px solid #f6d889}
+@media(min-width:761px) and (max-width:1024px) and (pointer:coarse){
+ body.sde-reference .ref-tabbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  position:fixed;left:0;right:0;bottom:0;z-index:100;background:#101b35;
+  padding:6px 8px calc(6px + env(safe-area-inset-bottom));border-top:1px solid #e2c26a80}
+ body.sde-reference .ref-tabbar button{min-height:52px;color:#e2e8f1}
+ body.sde-reference{padding-bottom:calc(77px + env(safe-area-inset-bottom,0px))}
+}
