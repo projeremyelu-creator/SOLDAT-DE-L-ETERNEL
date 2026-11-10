@@ -34,7 +34,7 @@ for(const [route,file] of Object.entries(pages)){
   .replaceAll("Mouvement Prophético-Apostolique Soldat de l'Éternel","Mouvement Prophético-Apostolique Soldats de l'Éternel");
  const parsed=new JSDOM(html).window.document;
  let title=parsed.title.trim()||'Mouvement SDE — Soldats de l’Éternel';
- if(route==='/')title="SDE — Le Réveil Spirituel des Nations | Abidjan";
+ if(route==='/')title="SDE — Le Réveil Spirituel des Nations | Soldats de l'Éternel";
  else {
   const brand=" | Soldats de l'Éternel (SDE)";
   const prefix=title.split(/\s+[|—]\s+/)[0].trim();
