@@ -1286,3 +1286,11 @@ body.sde-shell-mounted[data-sde-page="projets"] main{--sde-section-accent:var(--
 @media(prefers-reduced-motion:reduce){
  body.sde-shell-mounted :is(.sde-premium-pillar,.ap-card,.ap-poles a,.sde-shell-rubriques){transition:none!important;animation:none!important;transform:none!important}
 }
+
+/* Entre tablette et ordinateur compact, le bouton Rubriques remplace les menus
+   qui ne tiennent pas sur une seule ligne et donne accès à la même arborescence. */
+@media(min-width:801px) and (max-width:1120px){
+ body.sde-shell-mounted .sde-shell-mega{display:none!important}
+ body.sde-shell-mounted .sde-shell-rubriques{display:inline-flex}
+ body.sde-shell-mounted .sde-shell-head-inner{justify-content:space-between}
+}
