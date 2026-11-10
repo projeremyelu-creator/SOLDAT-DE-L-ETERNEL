@@ -1789,6 +1789,13 @@ async function traiter(req, env, ctx) {
     const p = url.pathname;
     if (url.hostname === "www.mouvement-sde.org") return Response.redirect("https://mouvement-sde.org" + p + url.search, 301);
     const appHost = url.hostname === "app.mouvement-sde.org";
+    // Le HTML du studio ne doit pas être consulté par sa route d'asset publique.
+    // Toute navigation passe par la route authentifiée /administration/medias.
+    if (p === "/vitrine/sde-mediatheque-admin.html" && (req.method === "GET" || req.method === "HEAD"))
+      return new Response(null, {status:302,headers:{
+        location:url.origin+"/administration/medias",
+        "cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"
+      }});
     if (url.hostname === "mouvement-sde.org" || appHost) {
       // Routage unifié : pages réelles, un guichet de connexion, deux espaces protégés.
       // Compatibilité des anciens liens vers le bilan annuel, sans doubler les pages indexables.
