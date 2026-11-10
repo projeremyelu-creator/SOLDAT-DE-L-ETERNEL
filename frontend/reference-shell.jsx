@@ -2,9 +2,9 @@ import React,{useEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 export function RefIcon({name}){const p={home:'M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9',members:'M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M16 3a4 4 0 0 1 0 8M22 21v-2a4 4 0 0 0-3-3.87M12 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0',qr:'M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h2v2h-2zM19 15h2v6h-6v-2',money:'M12 2v20M17 5H9a4 4 0 0 0 0 8h6a4 4 0 0 1 0 8H5',mission:'M4 21V3M4 4h14l-3 5 3 5H4',academy:'m2 9 10-5 10 5-10 5-10-5M6 11v7c4 3 8 3 12 0v-7M22 9v9',communication:'m3 10 16-6v16L3 14v-4M7 15v6h3l-1-5',settings:'M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8M9 3l-1 3-3 1-2 3 2 2-1 3 2 3 3-1 2 3h3l1-3 3-1 2-3-2-2 1-3-2-3-3 1-2-3H9',search:'m21 21-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0',bell:'M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4',menu:'M3 6h18M3 12h18M3 18h18',check:'m4 12 5 5L20 5',urgent:'M12 8v5M12 17v1M12 2 2 21h20L12 2'};return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={p[name]||p.home}/></svg>}
 function Avatar({account}){const photo=typeof account.photo==='string'&&/^(https:\/\/|\/_blob\/|data:image\/)/.test(account.photo)?account.photo:'';return <span className="ref-avatar">{photo?<img src={photo} alt=""/>:String(account.nom||'SDE').trim().split(/\s+/).slice(0,2).map(n=>n[0]).join('')}</span>}
-const PALETTES=[['fusion','Fusion · Violet · Vert · Or'],['ivoire','Ivoire · Treillis · Or'],['terracotta','Crème · Terracotta · Bourgogne'],['tactique','Tactique · Bleu nuit · Bordeaux · Or'],['militaire','Militaire Premium'],['violet','Violet impérial · Or']];
-/* Choix du Leader (30/10/2026) : Ivoire · Treillis · Or partout par défaut. Un autre choix fait ensuite reste mémorisé. */
-function paletteInitiale(){try{const p=localStorage.getItem('sde-private-palette');if(localStorage.getItem('sde-private-palette-version')!=='fusion-04'){localStorage.setItem('sde-private-palette-version','fusion-04');return 'fusion'}return PALETTES.some(([id])=>id===p)?p:'fusion'}catch{return 'fusion'}}
+const PALETTES=[['tactique','SDE officiel · Bleu nuit · Ivoire · Or'],['contraste','Accessibilité · Contraste renforcé']];
+/* Charte unifiée 2026 : seul le bleu nuit/ivoire/or est global ; les deux options conservent ces teintes. */
+function paletteInitiale(){try{const p=localStorage.getItem('sde-private-palette');if(localStorage.getItem('sde-private-palette-version')!=='night-ivory-gold-01'){localStorage.setItem('sde-private-palette-version','night-ivory-gold-01');return 'tactique'}return PALETTES.some(([id])=>id===p)?p:'tactique'}catch{return 'tactique'}}
 export function ReferenceChrome({portal,current}){
  const account=portal.compte,admin=location.pathname==='/administration',header=document.getElementById('sde-operations-nav'),sidebar=document.getElementById('sde-reference-sidebar');
  const [search,setSearch]=useState(false),[query,setQuery]=useState(''),[mobile,setMobile]=useState(false),[palette,setPalette]=useState(paletteInitiale),[paletteOpen,setPaletteOpen]=useState(false),input=useRef(null),trigger=useRef(null);
@@ -51,7 +51,11 @@ export function ReferenceChrome({portal,current}){
   'contributions':'Finances personnelles',
   'priere':'Prière et ressources'
  };
- const tabs=admin?[['pilotage','Accueil','home'],['annuaire','Membres','members'],['rendezvous','Agenda','mission'],account.niveau>=2?['finance-direction','Finances','money']:['scanner','Pointages','qr']]:[['espace-soldat','Accueil','home'],['carteqr','Ma carte','qr'],['rendezvous','Agenda','mission'],['academie','Academy','academy']];
+ // Cinq onglets fixes : un compte membre n'accède qu'à son profil et à ses cotisations.
+ // Les responsables sans habilitation financière gardent Pointages à la place de Finances.
+ const tabs=admin
+  ?[['pilotage','Accueil','home'],['annuaire','Membres','members'],['rendezvous','Agenda','mission'],account.niveau>=2?['finance-direction','Finances','money']:['scanner','Pointages','qr']]
+  :[['espace-soldat','Accueil','home'],['espace','Membres','members'],['rendezvous','Agenda','mission'],['contributions','Finances','money']];
  const options=[...document.querySelectorAll('#sde-direct-tabs [data-module]')].map(b=>({module:b.dataset.module,title:b.textContent})).filter(x=>(x.title+' '+x.module).toLowerCase().includes(query.toLowerCase()));
  const selected=(m)=>m===current||(m==='espace-soldat'&&current==='synthese')||(m==='academy-direction'&&current==='academie')||(m==='finance-direction'&&current==='finances');
  const tabbar=createPortal(<nav className="ref-tabbar" aria-label="Navigation rapide">{tabs.map(([m,l,i])=><button key={m} onClick={()=>go(m)} aria-current={selected(m)||(m==='espace-soldat'&&current==='synthese')?'page':undefined}><RefIcon name={i}/><span>{l}</span></button>)}<button type="button" onClick={()=>setMobile(true)} aria-label="Afficher toutes les rubriques" aria-haspopup="dialog" aria-expanded={mobile} aria-controls={admin?"ref-accessible-sidebar":"ref-mobile-menu"}><RefIcon name="menu"/><span>Plus</span></button></nav>,document.body);
