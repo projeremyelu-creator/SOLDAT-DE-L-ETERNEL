@@ -60,6 +60,15 @@
   const search=link("/rechercher","","sde-shell-search");search.setAttribute("aria-label","Rechercher");search.append(icon("recherche"));
   const portal=link("/portail","Mon Portail S.D.E","sde-shell-portal");portal.prepend(icon("portail"));
   actions.append(search,portal);row.append(brand,nav,actions);h.append(row);
+  // Repère visuel et accessible de la rubrique active, sans modifier les URL.
+  const here=location.pathname.replace(/\\/$/,"")||"/";
+  for(const group of nav.querySelectorAll("details")){
+   const active=[...group.querySelectorAll("a[href]")].some(a=>{
+    const target=new URL(a.href,location.href);
+    return target.pathname===here && target.pathname!=="/";
+   });
+   if(active)group.classList.add("sde-shell-group-active");
+  }
   const details=[...nav.querySelectorAll("details")];
   details.forEach(d=>d.addEventListener("toggle",()=>{if(d.open)details.forEach(x=>{if(x!==d)x.open=false;});}));
   document.addEventListener("pointerdown",e=>{if(!nav.contains(e.target))details.forEach(x=>x.open=false);});
@@ -161,6 +170,12 @@
   const bottom=drawer();
   document.querySelectorAll(".sde-global-nav,.sde-public-bottom-nav,.sde-standalone-bottom,.nav-mobile,.sde-bottom-nav,.sde-rail").forEach(el=>el.remove());
   document.body.append(bottom.overlay,bottom.tab);
+  // La rubrique doit toujours correspondre à l'URL affichée, y compris
+  // sur les anciennes pages qui ne portent pas encore data-sde-page.
+  if(!document.body.dataset.sdePage){
+   const slug=location.pathname.split("/").filter(Boolean)[0]||"accueil";
+   document.body.dataset.sdePage=slug;
+  }
   document.body.classList.add("sde-shell-mounted");
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();

@@ -1109,3 +1109,69 @@ body.sde-shell-mounted[data-motion="paused"] :is(.revele,.scroll-reveal,[data-re
   transform:none!important;animation:none!important;transition:none!important;
  }
 }
+
+
+/* SDE 2027 — harmonisation finale des surfaces et repères de navigation.
+ * Palette fonctionnelle : or = action, violet = spiritualité, vert = mission.
+ * Sélecteurs limités aux pages publiques ; aucun style du portail privé. */
+body.sde-shell-mounted{
+ --sde-ui-surface:var(--sde-2027-paper,#fffdf8);
+ --sde-ui-border:var(--sde-2027-line,#d8cdb8);
+ --sde-ui-ink:var(--sde-2027-ink,#202b43);
+ --sde-ui-gold-on-ivory:var(--sde-2027-gold-dark,#735918);
+}
+body.sde-shell-mounted .sde-shell-mega-group.sde-shell-group-active>summary{
+ color:var(--sde-2027-gold-light,#efd487)!important;
+ text-decoration:underline;text-underline-offset:8px;
+ text-decoration-thickness:2px;
+}
+body.sde-shell-mounted .sde-shell-mega-group.sde-shell-group-active>summary::marker{
+ color:var(--sde-2027-gold-light,#efd487);
+}
+body.sde-shell-mounted .sde-shell-bottom-item[aria-current="page"],
+body.sde-shell-mounted .sde-shell-drawer a[aria-current="page"]{
+ color:var(--sde-2027-gold-light,#efd487)!important;
+ text-decoration:underline;text-underline-offset:3px;
+}
+body.sde-shell-mounted.sde-subpage main :is(.pg-block,.hub-card,.sde-initiative-card,.form-carte,.niveau-carte,.parcours){
+ border-radius:clamp(12px,1.8vw,19px);
+}
+body.sde-shell-mounted.sde-subpage main :is(.pg-tabs,.sde-section-jumps) a:not([aria-current="page"]):not([aria-selected="true"]){
+ text-decoration-thickness:1px;
+}
+body.sde-shell-mounted.sde-subpage main :is(.pg-tabs,.sde-section-jumps) a:hover{
+ text-underline-offset:4px;
+}
+body.sde-shell-mounted :is(input,select,textarea,button,a,summary):focus-visible{
+ outline-offset:3px!important;
+}
+body.sde-shell-mounted :is(.sde-shell-drawer,.sde-shell-mega) a[aria-current="page"]{
+ font-weight:800;
+}
+body.sde-shell-mounted[data-sde-page="prieres"] main :is(.pg-tabs,.sde-section-jumps) [aria-current="page"],
+body.sde-shell-mounted[data-sde-page="temoignages"] main :is(.pg-tabs,.sde-section-jumps) [aria-current="page"],
+body.sde-shell-mounted[data-sde-page="academy"] main :is(.pg-tabs,.sde-section-jumps) [aria-current="page"]{
+ background:var(--sde-2027-violet-dark,#3c245d)!important;
+ color:#fffaf0!important;
+}
+body.sde-shell-mounted[data-sde-page="missions-humanitaires"] main :is(.pg-tabs,.sde-section-jumps) [aria-current="page"],
+body.sde-shell-mounted[data-sde-page="pole-social"] main :is(.pg-tabs,.sde-section-jumps) [aria-current="page"],
+body.sde-shell-mounted[data-sde-page="pole-logistique"] main :is(.pg-tabs,.sde-section-jumps) [aria-current="page"]{
+ background:var(--sde-2027-green-dark,#173e35)!important;
+ color:#fffaf0!important;
+}
+@media(max-width:390px){
+ body.sde-shell-mounted .sde-shell-drawer{max-width:100vw}
+ body.sde-shell-mounted .sde-shell-bottom-item{
+  touch-action:manipulation;
+  min-height:55px;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-shell-mounted .sde-shell-header *,
+ body.sde-shell-mounted .sde-shell-drawer *,
+ body.sde-shell-mounted .sde-shell-bottom *{
+  animation-duration:0.01ms!important;
+  transition-duration:0.01ms!important;
+ }
+}
