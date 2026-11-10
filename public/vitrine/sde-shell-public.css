@@ -1242,3 +1242,63 @@ body.sde-shell-mounted[data-sde-page="rejoindre"] main .confidentialite a{
   scroll-margin-bottom:calc(90px + env(safe-area-inset-bottom));
  }
 }
+
+/* SDE 2026-11-10 · Identité unique du chrome public : nuit / ivoire / or.
+   Violet et vert restent des accents de rubrique, jamais des couleurs du menu. */
+:root{--sde-brand-night:#101b35;--sde-brand-ivory:#f7f2e8;--sde-brand-gold:#e2c26a;--sde-brand-violet:#542b79;--sde-brand-green:#355c43}
+body.sde-shell-mounted .sde-shell-header{background:rgba(16,27,53,.98)!important;color:var(--sde-brand-ivory)!important;border-bottom:1px solid rgba(226,194,106,.5)!important}
+body.sde-shell-mounted .sde-shell-footer{background:#101b35!important;color:var(--sde-brand-ivory)!important}
+body.sde-shell-mounted .sde-shell-mega-group>summary{color:var(--sde-brand-ivory)!important}
+body.sde-shell-mounted .sde-shell-mega-group[open]>summary,
+body.sde-shell-mounted .sde-shell-mega-group>summary:hover{background:rgba(226,194,106,.15)!important;color:#f5d995!important}
+body.sde-shell-mounted .sde-shell-submenu{background:#152443!important;border-color:rgba(226,194,106,.55)!important}
+body.sde-shell-mounted .sde-shell-submenu a{color:var(--sde-brand-ivory)!important;min-height:44px}
+body.sde-shell-mounted .sde-shell-submenu a:is(:hover,:focus-visible){background:#f0d586!important;color:#101b35!important}
+body.sde-shell-mounted .sde-shell-portal{background:var(--sde-brand-gold)!important;color:#101b35!important;border:1px solid #f0d586!important;font-weight:800}
+body.sde-shell-mounted .sde-shell-portal svg{color:#101b35!important}
+.sde-shell-rubriques{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:9px 12px;border:1px solid rgba(226,194,106,.55);border-radius:11px;background:transparent;color:#f7f2e8;font:700 .82rem/1.2 system-ui,sans-serif;cursor:pointer}
+.sde-shell-rubriques svg{width:19px;height:19px;flex:none}
+.sde-shell-rubriques:is(:hover,[aria-expanded="true"]){background:rgba(226,194,106,.16);color:#ffe2a7}
+.sde-shell-header :is(button,summary,a):focus-visible,.sde-shell-overlay :is(button,summary,a,input):focus-visible,
+.sde-shell-bottom :is(button,a):focus-visible{outline:3px solid #f0d586!important;outline-offset:3px}
+body.sde-shell-mounted .sde-shell-bottom{background:rgba(16,27,53,.98)!important}
+body.sde-shell-mounted .sde-shell-bottom-item[aria-current="page"],
+body.sde-shell-mounted .sde-shell-bottom-item[aria-expanded="true"]{color:#f5d995!important;background:rgba(226,194,106,.16)!important}
+body.sde-shell-mounted :is(.sde-shell-drawer-group>summary,.sde-shell-close,.sde-shell-quick a){min-height:44px}
+body.sde-shell-mounted .sde-shell-drawer{background:#101b35;color:#f7f2e8}
+body.sde-shell-mounted .sde-shell-drawer-group a{min-height:44px}
+body.sde-shell-mounted :is(.sde-shell-footer a,.sde-shell-subfooter a){color:#f4d997!important}
+body.sde-shell-mounted :is(.sde-shell-footer a,.sde-shell-subfooter a):hover{text-decoration:underline}
+body.sde-shell-mounted :is(.sde-premium-pillar,.ap-card,.ap-poles a,.sde-shell-directory-group){border-radius:16px}
+body.sde-shell-mounted :is(.sde-premium-pillar,.ap-card,.ap-poles a){transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+body.sde-shell-mounted :is(.sde-premium-pillar,.ap-card,.ap-poles a):focus-within{outline:2px solid var(--sde-brand-gold);outline-offset:2px}
+/* Couleurs secondaires bornées aux sections correspondantes. */
+body.sde-shell-mounted[data-sde-page="prieres"] main :is(.sde-intro,.sde-kicker){--sde-section-accent:var(--sde-brand-violet)}
+body.sde-shell-mounted[data-sde-page="missions-humanitaires"] main,
+body.sde-shell-mounted[data-sde-page="projets"] main{--sde-section-accent:var(--sde-brand-green)}
+@media(max-width:800px){
+ .sde-shell-rubriques{display:none}
+ body.sde-shell-mounted .sde-shell-bottom-item{min-height:54px;font-size:clamp(.67rem,2.6vw,.78rem)}
+ body.sde-shell-mounted{padding-bottom:calc(82px + env(safe-area-inset-bottom,0px))}
+}
+@media(max-width:370px){body.sde-shell-mounted .sde-shell-bottom-item{font-size:.65rem;gap:3px}
+ .sde-shell-head-actions{gap:4px!important}.sde-shell-portal{font-size:.7rem!important;padding-inline:7px!important}}
+@media(prefers-reduced-motion:reduce){
+ body.sde-shell-mounted :is(.sde-premium-pillar,.ap-card,.ap-poles a,.sde-shell-rubriques){transition:none!important;animation:none!important;transform:none!important}
+}
+
+/* Entre tablette et ordinateur compact, le bouton Rubriques remplace les menus
+   qui ne tiennent pas sur une seule ligne et donne accès à la même arborescence. */
+@media(min-width:801px) and (max-width:1120px){
+ body.sde-shell-mounted .sde-shell-mega{display:none!important}
+ body.sde-shell-mounted .sde-shell-rubriques{display:inline-flex}
+ body.sde-shell-mounted .sde-shell-head-inner{justify-content:space-between}
+}
+
+/* Les accents secondaires se voient dans leurs univers et n'atteignent jamais l'en-tête. */
+body.sde-shell-mounted[data-sde-page="prieres"] main .sde-intro{border-bottom:3px solid #8655b0!important}
+body.sde-shell-mounted[data-sde-page="prieres"] main .sde-kicker{color:#dbc0f2!important}
+body.sde-shell-mounted[data-sde-page="missions-humanitaires"] main .sde-intro,
+body.sde-shell-mounted[data-sde-page="projets"] main .sde-intro{border-bottom:3px solid #487e59!important}
+body.sde-shell-mounted[data-sde-page="missions-humanitaires"] main .sde-kicker,
+body.sde-shell-mounted[data-sde-page="projets"] main .sde-kicker{color:#c0e6c9!important}

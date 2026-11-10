@@ -42,13 +42,13 @@ test("Générateur de QR servi par le site, plus par un CDN", () => {
   assert.match(i, /\/vitrine\/vendor\/qrcode-generator-1\.4\.4\.js/);
 });
 
-test("Refonte Fusion 03+04 : charte violet/or chargée partout, palette fusion par défaut", () => {
+test("Refonte Fusion historique : site public conservé, palette privée officielle bleu nuit/ivoire/or", () => {
   const css = lire("public/vitrine/sde-fusion.css");
   for (const k of ["--fu-gold", "data-sde-palette=fusion", "body.sde-unifie", ".fu-strip"]) assert.ok(css.includes(k), k);
   const app = lire("public/index.html");
   assert.match(app, /sde-fusion\.css/);
   assert.match(app, /"fusion-04"/);
-  assert.match(lire("frontend/reference-shell.jsx"), /\['fusion','Fusion · Violet · Vert · Or'\]/);
+  assert.match(lire("frontend/reference-shell.jsx"), /\['tactique','SDE officiel · Bleu nuit · Ivoire · Or'\]/);
   for (const f of ["portail", "mouvement", "programmes", "missions-humanitaires", "ressources", "rejoindre", "prieres", "tableau-administration", "tableau-membre"])
     assert.match(lire(`public/vitrine/${f}.html`), /sde-fusion\.css/, f);
   assert.match(lire("public/vitrine/portail.html"), /class="ap-hero"/);
@@ -108,7 +108,7 @@ test("Refonte Fusion : agenda avec tuiles réelles, projets et fiche membre au s
 
 test("Palette Tactique et modules tactiques fondés sur des données réelles", () => {
   const shell = lire("frontend/reference-shell.jsx");
-  assert.match(shell, /\['tactique','Tactique · Bleu nuit · Bordeaux · Or'\]/);
+  assert.match(shell, /\['tactique','SDE officiel · Bleu nuit · Ivoire · Or'\]/);
   assert.match(lire("public/index.html"), /fusion\|ivoire\|terracotta\|militaire\|violet\|tactique/);
   assert.match(lire("public/index.html"), /sde-tactique\.css/);
   const css = lire("public/vitrine/sde-tactique.css");

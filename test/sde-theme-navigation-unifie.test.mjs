@@ -26,3 +26,17 @@ test("les styles privés ne sont pas ciblés par cette livraison",()=>{
  assert.doesNotMatch(section,/body\.sde-admin/);
  assert.doesNotMatch(section,/body\.sde-member/);
 });
+
+test("barre privée : cinq accès fixes sans exposition des finances administrateur",()=>{
+ const shell=readFileSync("frontend/reference-shell.jsx","utf8");
+ const design=readFileSync("frontend/reference.css","utf8");
+ assert.match(shell,/\['espace','Membres','members'\]/);
+ assert.match(shell,/\['contributions','Finances','money'\]/);
+ assert.match(shell,/account\.niveau>=2\?\['finance-direction','Finances','money'\]:\['scanner','Pointages','qr'\]/);
+ assert.match(shell,/\['rendezvous','Agenda','mission'\]/);
+ assert.match(shell,/\['tactique','SDE officiel/);
+ assert.doesNotMatch(shell,/\['fusion','Fusion/);
+ assert.match(shell,/<span>Plus<\/span>/);
+ assert.match(design,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
+ assert.match(design,/prefers-reduced-motion:reduce/);
+});

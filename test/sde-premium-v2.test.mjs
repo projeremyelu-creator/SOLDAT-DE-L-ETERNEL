@@ -65,7 +65,7 @@ test('Navigation privée : regroupements et cinq onglets dont Plus, sans extensi
  assert.ok(src.includes('const entrySections=admin?'));
  assert.ok(src.includes('ref-nav-section'));
  assert.ok(src.includes("['pilotage','Accueil','home']"));
- assert.ok(src.includes("['carteqr','Ma carte','qr']"));
+ assert.ok(src.includes("['carteqr','Ma carte QR','qr']"),"La carte QR reste accessible dans Plus sans remplacer les cinq accès");
  assert.ok(src.includes('<span>Plus</span>'));
  assert.ok(src.includes('account.niveau>=2'));
  assert.ok(entry.includes('@import "./sde-premium-v2.css"'));

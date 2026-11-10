@@ -135,7 +135,7 @@ test('Priorité 02 : onglets privés cohérents et registres accessibles sur mob
  const css=file('frontend/reference.css');
  assert.ok(nav.includes("['rendezvous','Agenda & inscriptions','mission']"));
  assert.ok(nav.includes("['carteqr','Ma carte QR','qr']"));
- assert.ok(nav.includes("['academie','Academy','academy']"));
+ assert.ok(nav.includes("['academie','Soldiers Academy','academy']"),"Academy accessible dans le tiroir Plus du membre");
  assert.ok(nav.includes("['rendezvous','Mon agenda','mission']"));
  assert.ok(css.includes('Étape 2, tableaux de bord privés'));
  assert.ok(css.includes('data-sde-module=annuaire'));

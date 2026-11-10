@@ -59,9 +59,12 @@
   const actions=make("div","sde-shell-head-actions");
   const search=link("/rechercher","","sde-shell-search");search.setAttribute("aria-label","Rechercher");search.append(icon("recherche"));
   const portal=link("/portail","Mon Portail S.D.E","sde-shell-portal");portal.prepend(icon("portail"));
-  actions.append(search,portal);row.append(brand,nav,actions);h.append(row);
+  const rubriques=make("button","sde-shell-rubriques","Rubriques");
+  rubriques.type="button";rubriques.setAttribute("aria-controls","sde-shell-overlay");
+  rubriques.setAttribute("aria-expanded","false");rubriques.prepend(icon("menu"));
+  actions.append(search,rubriques,portal);row.append(brand,nav,actions);h.append(row);
   // Repère visuel et accessible de la rubrique active, sans modifier les URL.
-  const here=location.pathname.replace(/\\/$/,"")||"/";
+  const here=location.pathname.replace(/\/$/,"")||"/";
   for(const group of nav.querySelectorAll("details")){
    const active=[...group.querySelectorAll("a[href]")].some(a=>{
     const target=new URL(a.href,location.href);
@@ -122,18 +125,28 @@
    const a=link(href,"","sde-shell-bottom-item");a.append(icon(key),make("span","",label));tab.append(a);
   }
   const toggle=make("button","sde-shell-bottom-item sde-shell-open");toggle.type="button";toggle.append(icon("menu"),make("span","","Menu"));
-  toggle.setAttribute("aria-expanded","false");toggle.setAttribute("aria-controls","sde-shell-overlay");tab.append(toggle);overlay.id="sde-shell-overlay";
+  toggle.setAttribute("aria-expanded","false");toggle.setAttribute("aria-controls","sde-shell-overlay");
+  toggle.setAttribute("aria-label","Plus — ouvrir toutes les rubriques");
+  toggle.querySelector("span").textContent="Plus";
+  tab.append(toggle);overlay.id="sde-shell-overlay";
+  const triggers=[toggle,document.querySelector(".sde-shell-rubriques")].filter(Boolean);
   let lastFocus=null;
   const open=()=>{
-   lastFocus=document.activeElement;overlay.hidden=false;toggle.setAttribute("aria-expanded","true");
+   lastFocus=document.activeElement;
+   search.value="";noResult.hidden=true;
+   for(const group of content.querySelectorAll("details")){
+    group.hidden=false;group.open=false;
+    group.querySelectorAll("a").forEach(a=>{a.hidden=false;});
+   }
+   overlay.hidden=false;triggers.forEach(b=>b.setAttribute("aria-expanded","true"));
    document.body.classList.add("sde-shell-drawer-open");search.focus();
   };
   const dismiss=()=>{
-   overlay.hidden=true;toggle.setAttribute("aria-expanded","false");
+   overlay.hidden=true;triggers.forEach(b=>b.setAttribute("aria-expanded","false"));
    document.body.classList.remove("sde-shell-drawer-open");
-   if(lastFocus&&typeof lastFocus.focus==="function")lastFocus.focus();
+   if(lastFocus&&lastFocus.isConnected&&typeof lastFocus.focus==="function")lastFocus.focus();
   };
-  toggle.addEventListener("click",()=>overlay.hidden?open():dismiss());
+  triggers.forEach(b=>b.addEventListener("click",()=>overlay.hidden?open():dismiss()));
   close.addEventListener("click",dismiss);bg.addEventListener("click",dismiss);
   overlay.addEventListener("click",e=>{if(e.target.closest("a"))dismiss();});
   overlay.addEventListener("keydown",e=>{
@@ -162,11 +175,12 @@
  }
  function start(){
   if(document.body.classList.contains("sde-reference-login")||/^\/(mon-espace|administration)(\/|$)/.test(location.pathname))return;
-  const old=document.querySelector("header.site-header,header.sde-hub-head") || (location.pathname==="/album-infire"?document.querySelector("body > header"):null);
+  const old=document.querySelector("header.site-header,header.sde-hub-head,header.entete") || (location.pathname==="/album-infire"?document.querySelector("body > header"):null);
   if(!old||document.querySelector(".sde-shell-header"))return;
   old.replaceWith(header());
-  const oldFoot=document.querySelector("footer.site-footer,footer.hub-footer") || (location.pathname==="/album-infire"?document.querySelector("body > footer"):null);
+  const oldFoot=document.querySelector("footer.site-footer,footer.hub-footer") || document.querySelector("body > footer, footer");
   if(oldFoot)oldFoot.replaceWith(footer());
+  else document.body.append(footer());
   const bottom=drawer();
   document.querySelectorAll(".sde-global-nav,.sde-public-bottom-nav,.sde-standalone-bottom,.nav-mobile,.sde-bottom-nav,.sde-rail").forEach(el=>el.remove());
   document.body.append(bottom.overlay,bottom.tab);
