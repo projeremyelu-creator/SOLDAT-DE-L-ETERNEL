@@ -596,3 +596,27 @@ html body.sde-unifie.sde-premium-home #espaces-prives .private-access-card.priva
 }
 /* Résoudre les médias évite le décalage sous les vignettes asynchrones. */
 body.sde-shell-mounted .sde-public-media-preview{aspect-ratio:4/3}
+
+
+/* Audit visuel final : stabiliser le changement d'en-tête et le verset (CLS).
+ * Les réserves n'affectent pas les en-têtes réellement montés par le shell. */
+body[data-sde-page="mouvement"] .sde-versets-slot{
+ height:88px!important;min-height:88px!important;max-height:88px!important;
+ box-sizing:border-box;display:grid;place-items:center;padding:12px 18px;
+ background:linear-gradient(90deg,#0f111a,#07080c 56%,#0f111a);
+ border-bottom:1px solid rgba(212,175,55,.42);
+ color:#f3e5ab!important;-webkit-text-fill-color:#f3e5ab!important;
+ font:italic 500 .9rem/1.4 Georgia,serif;text-align:center;
+}
+@media(min-width:681px) and (max-width:860px){
+ html body.sde-v5-home:not(.sde-shell-mounted) header.site-header:not(.sde-shell-header){
+  box-sizing:border-box!important;min-height:63px!important;max-height:63px!important;
+  height:63px!important;overflow:hidden!important;
+ }
+}
+@media(min-width:1100px){
+ html body[data-sde-page="mouvement"]:not(.sde-shell-mounted) header.site-header:not(.sde-shell-header){
+  box-sizing:border-box!important;min-height:72px!important;max-height:72px!important;
+  height:72px!important;overflow:hidden!important;
+ }
+}
