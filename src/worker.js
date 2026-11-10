@@ -1420,6 +1420,8 @@ async function apiMedias(req, env, u, url, ctx) {
     if (t.total + taille > lim.total) return erreur("too_large", "L’espace de la médiathèque est plein : supprimez des fichiers ou activez un stockage plus grand.", 413);
     const miniature = typeof b.miniature === "string" && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(b.miniature) && b.miniature.length < 160000 ? b.miniature : null;
     const p = propreMedia(b);
+    // Seuls les administrateurs publient une ressource à accès public.
+    if (u.niveau < 2 && p.visibilite === "public") return erreur("refuse", "Publication publique réservée aux administrateurs.", 403);
     if (u.restreint) p.visibilite = "membres";
     const mid = idDoc();
     await env.DB.prepare("INSERT INTO medias (id, titre, description, categorie, genre, nom, mime, taille, morceau, morceaux, stockage, visibilite, miniature, auteur, auteurNom, cree, fini) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)")
@@ -1448,6 +1450,7 @@ async function apiMedias(req, env, u, url, ctx) {
   }
   if (req.method === "POST" && !n) {
     const p = propreMedia(await req.json(), m);
+    if (u.niveau < 2 && p.visibilite === "public") return erreur("refuse", "Publication publique réservée aux administrateurs.", 403);
     if (u.restreint) p.visibilite = "membres";
     await env.DB.prepare("UPDATE medias SET titre = ?, description = ?, categorie = ?, visibilite = ? WHERE id = ?").bind(p.titre || m.titre, p.description, p.categorie, p.visibilite, m.id).run();
     return json({ ok: true });
@@ -1495,8 +1498,9 @@ async function servirMedia(req, env, u, id) {
   const enLigne = ["video", "audio", "image", "pdf"].includes(m.genre) && new URL(req.url).searchParams.get("telecharger") === null;
   const h = {
     "content-type": m.mime, "content-length": String(fin - debut + 1), "accept-ranges": "bytes",
+    "x-content-type-options": "nosniff", "referrer-policy": "no-referrer",
     "content-disposition": `${enLigne ? "inline" : "attachment"}; filename*=UTF-8''${encodeURIComponent(m.nom)}`,
-    "cache-control": (accesLove.restreint || accesAcademy.restreint) ? "private, no-store" : (m.visibilite === "public" ? "public, max-age=86400" : "private, max-age=3600"),
+    "cache-control": "private, no-store", // retrait des droits public immédiat, aucune copie cache d’un média révoqué
   };
   if (m.genre !== "pdf") h["content-security-policy"] = "default-src 'none'; img-src 'self'; media-src 'self'; style-src 'unsafe-inline'; sandbox";
   if (partiel) h["content-range"] = `bytes ${debut}-${fin}/${m.taille}`;
@@ -1785,6 +1789,13 @@ async function traiter(req, env, ctx) {
     const p = url.pathname;
     if (url.hostname === "www.mouvement-sde.org") return Response.redirect("https://mouvement-sde.org" + p + url.search, 301);
     const appHost = url.hostname === "app.mouvement-sde.org";
+    // Le HTML du studio ne doit pas être consulté par sa route d'asset publique.
+    // Toute navigation passe par la route authentifiée /administration/medias.
+    if (p === "/vitrine/sde-mediatheque-admin.html" && (req.method === "GET" || req.method === "HEAD"))
+      return new Response(null, {status:302,headers:{
+        location:url.origin+"/administration/medias",
+        "cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"
+      }});
     if (url.hostname === "mouvement-sde.org" || appHost) {
       // Routage unifié : pages réelles, un guichet de connexion, deux espaces protégés.
       // Compatibilité des anciens liens vers le bilan annuel, sans doubler les pages indexables.
@@ -1810,6 +1821,7 @@ async function traiter(req, env, ctx) {
         "/academy-programme-24": "/vitrine/academy-programme-24.html",
         "/verifier-attestation": "/vitrine/verifier-attestation.html",
         "/enseignements": "/vitrine/ressources.html",
+        "/mediatheque": "/vitrine/mediatheque-publique.html",
         "/missions": "/vitrine/projets.html",
         "/projets": "/vitrine/projets.html",
         "/priere": "/vitrine/prieres.html",
@@ -1925,6 +1937,22 @@ async function traiter(req, env, ctx) {
           n.headers.set("cache-control","private, no-store");
           n.headers.set("x-robots-tag","noindex, nofollow");
           n.headers.set("content-type",p.endsWith(".js")?"text/javascript; charset=utf-8":"text/css; charset=utf-8");
+          return n;
+        }
+        // Studio médias privé : rendu uniquement après authentification et rôle admin.
+        if (p === "/administration/medias" || p === "/administration/mediatheque") {
+          const u = await utilisateur(req, env);
+          if (!u.connecte) return new Response(null, {status:302,headers:{
+            location:url.origin+"/connexion?retour=%2Fadministration%2Fmedias",
+            "cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"
+          }});
+          if (u.niveau < 2) return erreur("refuse","Publication réservée aux administrateurs.",403);
+          const r=await assetPortail("/vitrine/sde-mediatheque-admin.html");
+          const n=new Response(r.body,r);
+          n.headers.set("cache-control","private, no-store");
+          n.headers.set("x-robots-tag","noindex, nofollow");
+          n.headers.set("content-security-policy",
+            "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
           return n;
         }
         if (["/mon-espace","/administration","/mon-espace/outils","/administration/outils",

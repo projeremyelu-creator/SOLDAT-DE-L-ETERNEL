@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b1730">
+<title>Studio de publication · Médiathèque SDE</title>
+<link rel="icon" href="/vitrine/logo-96.webp">
+<link rel="stylesheet" href="/vitrine/sde-premium-public.css?v=20261110medias">
+<link rel="stylesheet" href="/vitrine/sde-mediatheque-admin.css?v=20261110upload">
+<script defer src="/vitrine/sde-mediatheque-admin.js?v=20261110upload"></script>
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="head"><div class="head-inner">
+  <a href="/administration" class="brand"><img src="/vitrine/logo-96.webp" width="42" height="42" alt=""><span><strong>S.D.E.</strong><small>Poste de commandement · Médias</small></span></a>
+  <nav aria-label="Navigation de l'administration"><a href="/administration">Administration</a><a href="/mediatheque" target="_blank" rel="noopener noreferrer">Médiathèque publique</a><a href="/">Site SDE</a></nav>
+</div></header>
+<main id="contenu" class="layout">
+  <p class="kicker">Direction · Communication · Pôle 4</p>
+  <h1>Publier depuis mon appareil</h1>
+  <p class="intro">Ajoutez des photos, des vidéos et des documents directement depuis votre téléphone ou ordinateur, sans GitHub et sans passer par ChatGPT. Seuls les fichiers explicitement rendus <strong>publics</strong> apparaissent sur le site.</p>
+  <p id="auth-status" class="status" role="status" aria-live="polite">Vérification de votre compte administrateur…</p>
+  <div id="studio" hidden>
+    <div class="columns">
+      <section class="panel" aria-labelledby="depot-title">
+        <h2 id="depot-title">1. Choisir les fichiers</h2>
+        <form id="upload-form" method="post">
+          <label id="dropzone" class="dropzone" for="media-files" tabindex="0">
+            <span class="drop-icon" aria-hidden="true">＋</span>
+            <strong>Parcourir mon appareil</strong>
+            <span>Ou déposer les fichiers ici depuis un ordinateur</span>
+            <small>Photos JPG, PNG, WebP, GIF · Vidéos MP4, MOV, WebM · PDF, Word, Excel, PowerPoint, audio</small>
+          </label>
+          <input id="media-files" name="fichiers" type="file" multiple
+            accept=".jpg,.jpeg,.png,.webp,.gif,.heic,.mp4,.m4v,.mov,.webm,.mp3,.m4a,.aac,.wav,.ogg,.pdf,.doc,.docx,.ppt,.pptx,.pps,.ppsx,.xls,.xlsx,.csv">
+          <div id="selected-files" class="selected-files" aria-live="polite"></div>
+          <div class="form-grid">
+            <label>Rubrique du site
+              <select id="media-category" name="categorie" required>
+                <option value="Soldiers TV">Soldiers TV · Vidéos</option>
+                <option value="Prières et intercession">Prière et intercession</option>
+                <option value="Missions humanitaires">Missions humanitaires</option>
+                <option value="Tenues SDE">Tenues et boutique SDE</option>
+                <option value="Enseignements et documents">Bibliothèque · Documents et enseignements</option>
+                <option value="IN FIRE">Albums IN FIRE</option>
+                <option value="Soldiers Voice">Soldiers Voice · Louange</option>
+                <option value="Témoignages">Témoignages</option>
+              </select>
+            </label>
+            <label>Qui peut consulter ?
+              <select id="media-visibility" name="visibilite">
+                <option value="membres">Membres connectés (privé)</option>
+                <option value="responsables">Responsables (privé)</option>
+                <option value="public">Tout le monde — publier sur le site</option>
+              </select>
+            </label>
+          </div>
+          <label>Description (facultative)
+            <textarea id="media-description" rows="3" maxlength="2000" placeholder="Thème, orateur, contexte confirmé, crédits…"></textarea>
+          </label>
+          <label class="consent" id="publication-consent" hidden>
+            <input type="checkbox" id="rights-confirm">
+            <span>Je confirme disposer des autorisations de publication nécessaires, notamment du droit à l'image des personnes reconnaissables.</span>
+          </label>
+          <div id="quota" class="help" role="status">Lecture de l'espace disponible…</div>
+          <button id="upload-button" class="primary" type="submit" disabled>Envoyer les fichiers</button>
+          <button id="abort-button" class="secondary" type="button" hidden>Arrêter après le fichier en cours</button>
+        </form>
+      </section>
+      <section class="panel" aria-labelledby="envois-title">
+        <h2 id="envois-title">2. Suivi de l'envoi</h2>
+        <p class="help">Les gros fichiers sont envoyés par morceaux sécurisés. La publication commence seulement à la fin d'un envoi complet.</p>
+        <div id="upload-log" role="log" aria-live="polite" aria-relevant="additions text"><p>Aucun envoi en cours.</p></div>
+        <p class="help">Vidéos volumineuses : la limite réelle dépend du stockage Cloudflare actuellement actif. Le studio la vérifie avant l'envoi.</p>
+        <h3>Après publication</h3>
+        <p>Les photos, vidéos et documents publics apparaissent automatiquement dans la rubrique sélectionnée et dans <a href="/mediatheque" target="_blank" rel="noopener noreferrer">la médiathèque publique</a>. Aucun redéploiement GitHub n'est nécessaire.</p>
+      </section>
+    </div>
+    <section class="panel library" aria-labelledby="library-title">
+      <div class="library-heading"><div><p class="kicker">Administration des publications</p><h2 id="library-title">3. Mes fichiers et publications</h2></div><button id="reload" type="button" class="secondary">Actualiser</button></div>
+      <label class="filter-label">Rechercher un fichier
+        <input id="filter-files" type="search" placeholder="Titre, catégorie, nom du fichier…" autocomplete="off">
+      </label>
+      <div id="library-list" class="media-list" aria-live="polite"></div>
+    </section>
+  </div>
+</main>
+<footer class="footer">SDE · Données protégées par les permissions du serveur · <a href="/confidentialite">Confidentialité</a></footer>
+</body>
+</html>
