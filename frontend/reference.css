@@ -1520,3 +1520,22 @@ body.sde-reference-admin .ref-command .ref-chart-filter select:focus-visible{
 body[data-motion=paused].sde-reference-admin .ref-command .ref-kpis-live .ref-kpi-number.is-updated{
  animation:none!important;
 }
+
+/* SDE · Une navigation privée à cinq accès, selon les permissions du compte.
+   Aucun style ne déverrouille des fonctionnalités serveur. */
+body.sde-reference{--sde-ui-night:#101b35;--sde-ui-ivory:#f7f2e8;--sde-ui-gold:#e2c26a}
+body.sde-reference :is(.ref-toolbar,.ref-sidebar){background-color:#101b35!important}
+body.sde-reference .ref-toolbar :is(button,a):focus-visible,
+body.sde-reference .ref-sidebar :is(button,a):focus-visible,
+body.sde-reference .ref-tabbar button:focus-visible{outline:3px solid #f0d586!important;outline-offset:2px}
+body.sde-reference .ref-tabbar button{min-width:0;padding:7px 2px;border-radius:10px;line-height:1.25}
+body.sde-reference .ref-tabbar button[aria-current="page"]{background:rgba(226,194,106,.14);color:#f5d995}
+body.sde-reference .ref-tabbar button svg{stroke-width:1.8}
+body.sde-reference .ref-tabbar button span{font-weight:650;white-space:nowrap}
+@media(max-width:760px){
+ body.sde-reference .ref-tabbar{grid-template-columns:repeat(5,minmax(0,1fr));background:#101b35;border-top:1px solid rgba(226,194,106,.55);z-index:100;box-shadow:0 -6px 25px rgba(3,7,20,.2)}
+ body.sde-reference .ref-tabbar button{min-height:52px;color:#d2d9e7;font-size:clamp(.66rem,2.6vw,.76rem)}
+ body.sde-reference{padding-bottom:calc(77px + env(safe-area-inset-bottom,0px))}
+}
+@media(max-width:380px){body.sde-reference .ref-tabbar button svg{width:21px;height:21px}body.sde-reference .ref-tabbar button{font-size:.64rem}}
+@media(prefers-reduced-motion:reduce){body.sde-reference .ref-tabbar :is(button,svg){animation:none!important;transition:none!important}}
