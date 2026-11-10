@@ -57,6 +57,9 @@ export const CONTROLES = Object.freeze([
   {path:'/calendrier',type:'page-publique'},
   {path:'/rechercher',type:'page-publique'},
   {path:'/newsletter',type:'page-publique'},
+  {path:'/mediatheque',type:'page-moderne'},
+  {path:'/soldiers-tv',type:'page-moderne'},
+  {path:'/soldier-quest',type:'page-moderne'},
 ]);
 
 function verifierReponse(origine,controle,reponse,corps) {
@@ -159,6 +162,11 @@ function verifierReponse(origine,controle,reponse,corps) {
   if(controle.type==='document-pdf'){
     if(!type.includes('application/pdf'))erreur('Document officiel non servi comme PDF');
     if(!corps.startsWith('%PDF-'))erreur('Signature PDF officielle absente');
+  }
+  if(controle.type==='page-moderne'){
+    if(!type.includes('text/html'))erreur('Nouvelle rubrique publique non HTML');
+    if(!corps.includes('/vitrine/sde-shell-public.css'))erreur('En-tête et pied de page partagés non chargés');
+    return;
   }
   if(controle.type==='page-publique'){
     if(!type.includes('text/html'))erreur('Page publique non HTML');
