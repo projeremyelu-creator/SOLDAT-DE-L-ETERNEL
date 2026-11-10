@@ -86,7 +86,7 @@ test("Privé 06 · Command Center et cinq onglets : outils réels, habilitations
  const source=read("frontend/operations.jsx"),shell=read("frontend/reference-shell.jsx");
  assert.match(source,/S\.D\.E · COMMAND CENTER/);
  assert.match(source,/\/api\/tableau-de-bord/);
- assert.match(source,/\['finance-direction','Finances'\]/);
+ assert.match(source,/\['finance-direction','Finances & missions'\]/);
  assert.match(shell,/account\.niveau>=2\?\['finance-direction','Finances','money'\]:\['scanner','Pointages','qr'\]/);
  assert.match(shell,/<span>Plus<\/span>/);
  assert.match(read("frontend/reference.css"),/sde-campus-admin-hero/);
