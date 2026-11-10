@@ -1461,3 +1461,62 @@ html body.sde-shell-mounted .sde-shell-bottom .sde-shell-bottom-item{
   transition:none!important;
  }
 }
+
+/* Audit Chromium 49 pages · correctif de spécificité des anciennes règles.
+   Un formulaire à fond nuit doit garder son texte ivoire, même à l'intérieur
+   des cartes ayant reçu --sde-2027-muted sur fond clair. */
+html body.sde-shell-mounted main#contenu .sde-privacy-note,
+html body.sde-shell-mounted.sde-subpage main#contenu .sde-privacy-note{
+ color:#f7f2e8!important;
+ -webkit-text-fill-color:#f7f2e8!important;
+ opacity:1!important;
+}
+html body.sde-shell-mounted main#contenu .sde-privacy-note a,
+html body.sde-shell-mounted.sde-subpage main#contenu .sde-privacy-note a{
+ color:#f0d586!important;
+ -webkit-text-fill-color:#f0d586!important;
+ opacity:1!important;
+}
+html body.sde-shell-mounted main#contenu .sde-privacy-note :is(span,small,strong,em,b),
+html body.sde-shell-mounted.sde-subpage main#contenu .sde-privacy-note :is(span,small,strong,em,b){
+ color:#f7f2e8!important;
+ -webkit-text-fill-color:#f7f2e8!important;
+ opacity:1!important;
+}
+/* La charte ivoire avait une règle très spécifique pour les titres de section
+   (main#contenu>section.section .tete-section h2) : surcharge exacte. */
+html body.sde-shell-mounted[data-sde-page="rejoindre"] main#contenu section#confidentialite #titre-confidentialite{
+ color:#17283f!important;
+ -webkit-text-fill-color:#17283f!important;
+ text-shadow:none!important;
+ opacity:1!important;
+}
+html body.sde-shell-mounted[data-sde-page="rejoindre"] main#contenu section#confidentialite .tete-section .surtitre{
+ color:#69470c!important;
+ -webkit-text-fill-color:#69470c!important;
+ text-shadow:none!important;
+ opacity:1!important;
+}
+/* Cibles tactiles dans les liens de médiathèque et de pied de page ;
+   ne pas toucher aux liens éditoriaux au milieu des paragraphes. */
+@media(max-width:800px){
+ html body.sde-shell-mounted[data-sde-page="mediatheque"] main .sde-intro nav a{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;margin:2px 3px;padding:8px 11px;
+  border-radius:9px;
+  background:#172942;
+  color:#f0d586!important;
+  -webkit-text-fill-color:#f0d586!important;
+  text-decoration:none;
+ }
+ html body.sde-shell-mounted .sde-shell-footer-grid nav>a{
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
+  padding:7px 3px;
+ }
+ html body.sde-shell-mounted .sde-shell-footer-grid nav>a:focus-visible{
+  outline:3px solid #f0d586;
+  outline-offset:2px;
+ }
+}
