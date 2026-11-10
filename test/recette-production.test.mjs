@@ -15,6 +15,7 @@ function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=fals
     }
     if(p==='/academy-programme-24')
       return html(academyCatalogueObsolete?'<h1>Ancien programme Soldiers Academy 12 cours</h1>':'<h1>Soldiers Academy 24 cours · 192 h</h1>'+Array.from({length:24},(_,i)=>'<article class="course" data-level="'+(Math.floor(i/8)+1)+'"><b>SA-'+String(i+1).padStart(2,'0')+'</b></article>').join(''));
+    if(CONTROLES.some(c=>c.path===p&&c.type==='page-moderne'))return html('<link rel="stylesheet" href="/vitrine/sde-shell-public.css">');
     if(CONTROLES.some(c=>c.path===p&&c.type==='page-publique'))return html(siteObsolete?'<main>Page SDE ancienne</main>':'<main>Page SDE</main><link rel="stylesheet" href="/vitrine/sde-sitewide-2026.css?v=20261030global">');
     if(p==='/connexion')return html('<form>Connexion mot de passe</form><aside id="sde-event-root"><a href="/programmes#tpa-2026">TPA 2026</a></aside>',{'cache-control':'no-store','x-robots-tag':'noindex, nofollow'});
     if(['/mon-espace','/administration','/mon-espace/academy','/administration/academy','/mon-espace/enseignants'].includes(p))return pagePriveExposee
