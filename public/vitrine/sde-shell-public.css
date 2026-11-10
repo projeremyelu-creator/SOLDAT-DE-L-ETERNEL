@@ -1553,3 +1553,126 @@ html body.sde-shell-mounted[data-sde-page="rejoindre"] main#contenu section#conf
   border-radius:8px;
  }
 }
+
+
+/* SDE 2027 — correction lisibilite reelle du pied de page mobile (10-11-2026) */
+/* Le shell est partagé entre toutes les pages publiques : ne pas dépendre
+   d'une feuille spécifique à l'accueil pour corriger ce composant. */
+html body.sde-shell-mounted .sde-shell-footer .sde-shell-footer-grid,
+html body.sde-shell-mounted .sde-shell-footer .sde-shell-subfooter {
+  max-width:100%;
+  box-sizing:border-box;
+}
+html body.sde-shell-mounted .sde-shell-footer .sde-shell-footer-grid nav h2{
+  color:#f1d38d!important;
+  -webkit-text-fill-color:#f1d38d!important;
+  opacity:1!important;
+}
+html body.sde-shell-mounted .sde-shell-footer .sde-shell-footer-grid :is(p,small,strong),
+html body.sde-shell-mounted .sde-shell-footer .sde-shell-subfooter span{
+  color:#f3f1ec!important;
+  -webkit-text-fill-color:#f3f1ec!important;
+  opacity:1!important;
+}
+html body.sde-shell-mounted .sde-shell-footer .sde-shell-footer-grid a,
+html body.sde-shell-mounted .sde-shell-footer .sde-shell-subfooter a{
+  color:#f4d997!important;
+  -webkit-text-fill-color:#f4d997!important;
+  opacity:1!important;
+}
+html body.sde-shell-mounted .sde-shell-footer .sde-shell-newsletter .sde-privacy-note{
+  background:#1b2c47!important;
+  border-color:#bba26f!important;
+  color:#f3f1ec!important;
+  -webkit-text-fill-color:#f3f1ec!important;
+  opacity:1!important;
+  font-size:.9rem!important;
+  line-height:1.5!important;
+  padding:12px!important;
+}
+html body.sde-shell-mounted .sde-shell-footer .sde-shell-newsletter .sde-privacy-note a{
+  color:#f4d997!important;-webkit-text-fill-color:#f4d997!important;
+}
+@media(max-width:1120px){
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-footer-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:26px 24px!important;
+  }
+}
+@media(max-width:850px){
+  html body.sde-shell-mounted .sde-shell-footer{
+    padding-top:28px!important;
+  }
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-footer-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+    width:calc(100% - 36px)!important;
+    gap:24px!important;
+  }
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-footer-grid>nav{
+    width:100%!important;
+    min-width:0!important;
+    gap:2px!important;
+    border-top:1px solid rgba(241,211,141,.24);
+    padding-top:16px!important;
+  }
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-footer-grid nav h2{
+    font-size:1.08rem!important;
+    line-height:1.4!important;
+    margin-bottom:9px!important;
+  }
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-footer-brand strong{
+    font-size:1rem!important;
+    line-height:1.45!important;
+  }
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-footer-grid p{
+    font-size:.95rem!important;
+    line-height:1.65!important;
+    overflow-wrap:anywhere;
+  }
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-footer-grid nav>a{
+    display:flex!important;
+    align-items:center!important;
+    box-sizing:border-box!important;
+    width:100%!important;
+    min-height:44px!important;
+    font-size:.97rem!important;
+    line-height:1.45!important;
+    padding:9px 4px!important;
+    text-decoration:none!important;
+  }
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-social a{
+    min-height:44px!important;
+    font-size:.94rem!important;
+    display:inline-flex!important;
+    align-items:center!important;
+  }
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-newsletter>label:first-child{
+    font-size:1rem!important;
+    color:#f1d38d!important;
+    -webkit-text-fill-color:#f1d38d!important;
+  }
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-newsletter .sde-shell-consent{
+    font-size:.94rem!important;
+    line-height:1.5!important;
+  }
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-subfooter{
+    width:calc(100% - 36px)!important;
+    margin-top:26px!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    gap:12px!important;
+    font-size:.88rem!important;
+    line-height:1.5!important;
+  }
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-subfooter nav{
+    display:flex!important;
+    flex-wrap:wrap!important;
+    gap:8px 17px!important;
+  }
+  html body.sde-shell-mounted .sde-shell-footer .sde-shell-subfooter nav a{
+    display:inline-flex!important;
+    align-items:center!important;
+    min-height:44px!important;
+    font-size:.9rem!important;
+  }
+}
