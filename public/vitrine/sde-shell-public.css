@@ -1520,3 +1520,36 @@ html body.sde-shell-mounted[data-sde-page="rejoindre"] main#contenu section#conf
   outline-offset:2px;
  }
 }
+
+/* Dernier contrôle mobile : liens du pied de page et consentement newsletter
+   doivent être activables sur >=44px, y compris sur les pages très courtes. */
+@media(max-width:800px){
+ html body.sde-shell-mounted .sde-shell-footer a,
+ html body.sde-shell-mounted .sde-shell-subfooter a{
+  display:inline-flex;
+  align-items:center;
+  min-height:44px!important;
+  padding-block:9px;
+  box-sizing:border-box;
+ }
+ html body.sde-shell-mounted .sde-shell-newsletter label.sde-shell-consent{
+  display:flex;
+  align-items:center;
+  min-height:44px!important;
+  padding-block:8px;
+  box-sizing:border-box;
+  cursor:pointer;
+  line-height:1.45;
+ }
+ html body.sde-shell-mounted .sde-shell-newsletter label.sde-shell-consent input[type="checkbox"]{
+  flex:0 0 20px;
+  width:20px;
+  height:20px;
+  min-height:20px;
+ }
+ html body.sde-shell-mounted .sde-shell-newsletter label.sde-shell-consent:focus-within{
+  outline:2px solid #f0d586;
+  outline-offset:3px;
+  border-radius:8px;
+ }
+}
