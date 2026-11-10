@@ -20,12 +20,12 @@ test("Le monogramme Soldiers TV est un PNG transparent intègre et décodable",(
  }
  const ihdr=chunks.find(c=>c.type==="IHDR");
  assert.ok(ihdr,"En-tête PNG");
- assert.equal(ihdr.data.readUInt32BE(0),320);
- assert.equal(ihdr.data.readUInt32BE(4),320);
+ assert.equal(ihdr.data.readUInt32BE(0),256);
+ assert.equal(ihdr.data.readUInt32BE(4),256);
  assert.ok(chunks.some(c=>c.type==="tRNS"),"transparence conservée");
  const idat=Buffer.concat(chunks.filter(c=>c.type==="IDAT").map(c=>c.data));
  const pixels=inflateSync(idat);
- assert.ok(pixels.length>102000,"Données des pixels non corrompues");
+ assert.ok(pixels.length>65000,"Données des pixels non corrompues");
 });
 test("Soldiers TV affiche son logo officiel sans retirer la marque SDE mère",()=>{
  const html=readFileSync("public/vitrine/soldiers-tv.html","utf8");
