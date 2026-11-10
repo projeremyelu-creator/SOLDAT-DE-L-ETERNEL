@@ -35,19 +35,37 @@
    if(!grid)return;
    const items=Array.from(grid.querySelectorAll("[data-sdu-category]"));
    const buttons=Array.from(group.querySelectorAll("button[data-sdu-filter]"));
+   const search=group.querySelector("[data-sdu-search]");
    const status=group.querySelector("[data-sdu-filter-status]");
-   const render=(value)=>{
-    let shown=0;
+   let category=buttons.find(b=>b.getAttribute("aria-pressed")==="true")?.dataset.sduFilter||"tous";
+   const norm=text=>String(text||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+   const render=()=>{
+    const q=norm(search?.value),shown=[];
     for(const item of items){
      const terms=(item.getAttribute("data-sdu-category")||"").split(/\s+/);
-     const visible=value==="tous"||terms.includes(value);
-     item.hidden=!visible;if(visible)shown++;
+     const categoryOK=category==="tous"||terms.includes(category);
+     const searchOK=!q||norm(item.textContent).includes(q);
+     const visible=categoryOK&&searchOK;
+     item.hidden=!visible;
+     if(visible)shown.push(item);
     }
-    for(const button of buttons)button.setAttribute("aria-pressed",String(button.dataset.sduFilter===value));
-    if(status)status.textContent=shown===0?"Aucun contenu dans cette catégorie.":shown+" rubrique"+(shown>1?"s":"")+" disponible"+(shown>1?"s":"")+".";
+    for(const button of buttons)button.setAttribute("aria-pressed",String(button.dataset.sduFilter===category));
+    if(status)status.textContent=shown.length===0?
+     "Aucun espace trouvé. Essayez une autre catégorie ou un autre mot.":
+     shown.length+" espace"+(shown.length>1?"s":"")+" disponible"+(shown.length>1?"s":"")+".";
    };
-   for(const button of buttons)button.addEventListener("click",()=>render(button.dataset.sduFilter));
-   render(buttons.find(b=>b.getAttribute("aria-pressed")==="true")?.dataset.sduFilter||"tous");
+   for(const button of buttons)button.addEventListener("click",()=>{
+    category=button.dataset.sduFilter;render();
+   });
+   if(search){
+    search.addEventListener("input",render);
+    search.addEventListener("keydown",event=>{
+     if(event.key==="Escape"&&search.value){
+      event.stopPropagation();search.value="";render();
+     }
+    });
+   }
+   render();
   });
  };
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",ready,{once:true});else ready();
