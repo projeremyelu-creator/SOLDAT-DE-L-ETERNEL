@@ -42,6 +42,8 @@
 <script defer src="/vitrine/sde-media-archives.js?v=20261109a"></script>
 
 <script defer src="/vitrine/sde-public-media.js?v=20261110audit"></script>
+<link rel="stylesheet" href="/vitrine/sde-cartes-reelles.css?v=20261111r1">
+<script defer src="/vitrine/sde-cartes-reelles.js?v=20261111r1"></script>
 </head>
 <body class="sde-unifie sde-subpage sde-initiative sde-ivoire" data-sde-page="missions-humanitaires">
 <a class="skip" href="#contenu">Accéder au contenu</a>
@@ -62,24 +64,45 @@
  <div class="sde-v5-missions-inner">
   <div class="sde-v5-missions-copy"><span class="sde-v5-kicker">SDE · UNE VISION, DES ACTES CONCRETS</span>
    <h2 id="sde-v5-missions-title">Un mouvement tourné vers les nations</h2>
-   <p>Notre carte illustre la portée de la vision. Seules les missions officiellement annoncées et documentées sont présentées comme activités réalisées.</p>
+   <p>Une vraie carte géographique vous permet d’explorer les villes et régions. Les missions ne sont géolocalisées qu’après confirmation et publication officielle.</p>
    <div class="sde-v5-missions-actions"><a href="#actions">Découvrir nos actions</a><a href="#participer">Participer à une mission</a></div>
   </div>
-  <div class="sde-v5-missions-art" role="img" aria-label="Illustration artistique de continents et de trajectoires lumineuses, sans positions de missions réelles">
-   <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
-    <defs><radialGradient id="v5-mission-light"><stop stop-color="#fff4bf"/><stop offset=".3" stop-color="#dfb664" stop-opacity=".75"/><stop offset="1" stop-color="#dfb664" stop-opacity="0"/></radialGradient></defs>
-    <g fill="#66748c" stroke="#b2bac5" opacity=".62" stroke-width="1.2">
-     <path d="M44 83 72 53 123 39 163 52 182 82 166 111 143 127 124 155 101 162 76 131 57 118Z"/>
-     <path d="M132 156 163 170 189 208 188 239 170 278 145 251 129 218 119 181Z"/>
-     <path d="M271 64 309 56 350 67 391 57 442 72 505 98 530 125 501 143 473 132 436 151 412 141 379 155 338 135 301 143 272 117Z"/>
-     <path d="M297 142 341 153 364 187 357 237 331 264 302 239 290 196Z"/>
-     <path d="M481 220 533 222 568 252 546 276 502 260Z"/>
-    </g>
-    <g fill="none" stroke="#ecca82" stroke-width="1.2" opacity=".65"><path d="M93 135Q240 -20 465 110"/><path d="M150 207Q300 70 533 248"/><path d="M340 185Q450 135 501 248"/></g>
-    <g fill="url(#v5-mission-light)"><circle cx="93" cy="135" r="24"/><circle cx="150" cy="207" r="21"/><circle cx="340" cy="185" r="26"/><circle cx="465" cy="110" r="20"/><circle cx="533" cy="248" r="23"/></g>
-   </svg>
-   <span>CARTE ILLUSTRATIVE · AUCUN POINT NE CORRESPOND À UNE IMPLANTATION SDE CONFIRMÉE</span>
+  <div class="sde-geo sde-v5-missions-art" id="sde-carte-missions" data-sde-real-map data-geo-start="coteivoire" aria-label="Carte interactive géographique SDE">
+ <div class="sde-geo-toolbar">
+  <div class="sde-geo-views" role="group" aria-label="Changer de région">
+   <button type="button" data-geo-view="monde" aria-pressed="false">Monde</button>
+   <button type="button" data-geo-view="afrique" aria-pressed="false">Afrique</button>
+   <button type="button" data-geo-view="coteivoire" aria-pressed="true">Côte d’Ivoire</button>
   </div>
+  <button type="button" data-geo-fullscreen class="sde-geo-fullscreen" disabled aria-pressed="false">Agrandir la carte</button>
+ </div>
+ <div class="sde-geo-map-frame">
+  <div class="sde-geo-intro" data-geo-intro>
+   <span class="sde-geo-intro-symbol" aria-hidden="true">◎</span>
+   <strong>Explorer une véritable carte du monde</strong>
+   <p>Déplacez la carte, zoomez, sélectionnez un repère et consultez sa fiche. Les fonds OpenStreetMap sont chargés seulement avec votre accord.</p>
+   <button type="button" class="sde-geo-launch" data-geo-launch>Activer la carte interactive</button>
+  </div>
+  <div class="sde-geo-map-canvas" data-geo-map-canvas hidden aria-label="Fond de carte OpenStreetMap, déplaçable au toucher ou à la souris"></div>
+ </div>
+ <div class="sde-geo-bottom">
+  <div class="sde-geo-filters">
+   <span class="sde-geo-filter-heading">Afficher les repères</span>
+   <div class="sde-geo-filter-buttons" role="group" aria-label="Filtrer les lieux">
+    <button type="button" data-geo-filter="all" aria-pressed="true">Tous les repères</button>
+    <button type="button" data-geo-filter="mission" aria-pressed="false">Missions confirmées</button>
+   </div>
+  </div>
+  <button type="button" class="sde-geo-reset" data-geo-reset disabled>Recentrer la carte</button>
+ </div>
+ <p class="sde-geo-status" data-geo-status role="status" aria-live="polite">Repère documenté : Abidjan (ville uniquement). Ouvrez la carte pour explorer.</p>
+ <div class="sde-geo-places" data-geo-places>
+  <p class="sde-geo-empty">Abidjan — repère du centre-ville, pas l’adresse d’un siège ou d’une mission.</p>
+ </div>
+ <p class="sde-geo-privacy">Le fond cartographique est fourni par <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>. Aucune donnée privée du mouvement n’est transmise. Les missions sont marquées seulement après publication et validation de leur localisation.</p>
+ <a class="sde-geo-fallback" data-geo-fallback hidden target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/#map=7/7.54/-5.55">Voir sur OpenStreetMap ↗</a>
+</div>
+
  </div>
 </section>
 <section class="sde-initiative-lead" aria-labelledby="lead-missions-humanitaires"><div class="enveloppe"><p class="sde-kicker">Servir avec compassion</p><h2 id="lead-missions-humanitaires">Missions humanitaires</h2><p>Le Mouvement SDE souhaite mettre ses membres au service des personnes et des communautés. Nos actions solidaires sont préparées à partir de besoins identifiés et menées dans un esprit de respect, de compassion et de responsabilité.</p><p class="sde-lead-actions"><a href="#actions">Découvrir les actions</a> · <a href="#participer">Proposer une initiative</a> · <a href="/vitrine/projets#soutenir">Soutenir une mission</a></p></div></section>
