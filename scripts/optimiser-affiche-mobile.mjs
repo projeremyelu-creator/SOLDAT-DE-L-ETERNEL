@@ -13,12 +13,16 @@ const cible='public/vitrine/illus/tpa-2026-mobile.webp';
 const tmp='public/vitrine/illus/tpa-2026-mobile.tmp.webp';
 if(!existsSync(source))throw new Error('Affiche officielle TPA introuvable');
 const original=statSync(source).size;
+// La version mobile optimisée du dépôt reste valable si les outils externes
+// sont momentanément indisponibles ; ne pas l'écraser par une copie plus lourde.
+const mobilePrebuilt=existsSync(cible)?statSync(cible).size:Infinity;
 const methods=[
  ['ffmpeg',['-hide_banner','-loglevel','error','-y','-i',source,
   '-vf','scale=480:-2:flags=lanczos','-frames:v','1','-c:v','libwebp',
   '-lossless','0','-quality','68','-compression_level','6',tmp]],
  ['magick',[source,'-resize','480x480>','-strip','-quality','68',tmp]],
- ['convert',[source,'-resize','480x480>','-strip','-quality','68',tmp]]
+ ['convert',[source,'-resize','480x480>','-strip','-quality','68',tmp]],
+ [process.execPath,['scripts/encoder-webp-chrome.mjs',source,tmp,'480','480','68']]
 ];
 let success=false,engine='source';
 const failures=[];
@@ -30,6 +34,11 @@ for(const [binary,args] of methods){
  failures.push({outil:binary,code:run.status,erreur:run.error?.code||String(run.stderr||'').slice(0,120)});
  rmSync(tmp,{force:true});
 }
-if(!success)copyFileSync(source,cible);
+if(!success){
+ if(mobilePrebuilt>2000&&mobilePrebuilt<original){
+  engine='prebuilt';
+  success=true;
+ }else copyFileSync(source,cible);
+}
 const bytes=statSync(cible).size;
 console.log('AFFICHE_TPA_MOBILE '+JSON.stringify({engine,originalBytes:original,mobileBytes:bytes,reductionPercent:Math.round((1-bytes/original)*100),fallback:!success,failures:success?[]:failures}));

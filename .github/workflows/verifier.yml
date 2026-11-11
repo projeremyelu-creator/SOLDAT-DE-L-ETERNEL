@@ -15,11 +15,23 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Installer l'encodeur WebP pour l'affiche mobile
         run: |
-          if ! command -v convert >/dev/null 2>&1; then
-            sudo apt-get update -qq
-            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq imagemagick
+          # Éviter la dépendance APT si FFmpeg ou ImageMagick est déjà présent.
+          # Le build utilise un fallback WebP natif FFmpeg et préserve les sources.
+          if command -v convert >/dev/null 2>&1; then
+            convert -version | head -1
+          elif command -v magick >/dev/null 2>&1; then
+            magick -version | head -1
+          elif command -v ffmpeg >/dev/null 2>&1; then
+            ffmpeg -version | head -1
+          elif command -v google-chrome >/dev/null 2>&1; then
+            echo "Chrome disponible pour l'encodeur WebP local."
+            google-chrome --version
+          elif command -v chromium >/dev/null 2>&1; then
+            chromium --version
+          else
+            echo "::error::Aucun encodeur WebP (ImageMagick/FFmpeg/Chrome) disponible."
+            exit 1
           fi
-          convert -version | head -1
       - run: npm run build:experience
       - name: Garantir une affiche mobile réellement plus légère
         run: |
