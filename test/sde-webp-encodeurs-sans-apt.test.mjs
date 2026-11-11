@@ -34,3 +34,12 @@ test('Encodeur CDP Chrome : sortie WebP vérifiée sans navigateur réseau',()=>
  assert.match(s,/WebSocket/);
  assert.match(s,/readFileSync\(input\)/);
 });
+
+test('Les archives JPEG déjà compressées bénéficient de paliers de secours plus petits',()=>{
+ const s=read('scripts/optimiser-archives-sde.mjs');
+ assert.match(s,/ARCHIVE_WEBP_SECOURS/);
+ assert.match(s,/\[720,60\],\[600,52\],\[480,45\],\[400,38\],\[320,32\]/);
+ assert.match(s,/bytes<inputSize/);
+ assert.match(s,/rmSync\(tmp,\{force:true\}\)/);
+ assert.match(s,/renameSync\(tmp,output\)/);
+});

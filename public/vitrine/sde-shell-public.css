@@ -1818,3 +1818,31 @@ html body.sde-unifie.sde-campus-public #sde-event-root{
  border:0!important;
  overflow:hidden!important;
 }
+
+/* Réserves avant montage de la navigation partagée (audit réel du 11-11-2026).
+   Ces règles ne touchent pas les espaces privés. Elles évitent les sauts
+   entre les hauteurs mesurées au premier rendu et après remplacement du header. */
+@media(min-width:701px) and (max-width:800px){
+ html body.sde-unifie[data-sde-page="programmes"]:not(.sde-shell-mounted)>header.site-header:not(.sde-shell-header){
+  height:63px!important;min-height:63px!important;max-height:63px!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+ }
+ html body.sde-unifie[data-sde-page="programmes"]:not(.sde-shell-mounted)>header.site-header .site-header-inner{
+  height:62px!important;min-height:62px!important;max-height:62px!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+ }
+}
+@media(min-width:1101px){
+ html body.sde-unifie[data-sde-page="mouvement"]:not(.sde-shell-mounted)>header.site-header:not(.sde-shell-header){
+  height:76px!important;min-height:76px!important;max-height:76px!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+ }
+ html body.sde-unifie[data-sde-page="mouvement"]:not(.sde-shell-mounted)>header.site-header .site-header-inner{
+  height:75px!important;min-height:75px!important;max-height:75px!important;
+  box-sizing:border-box!important;overflow:hidden!important;flex-wrap:nowrap!important;
+ }
+ html body.sde-campus-public[data-sde-page="academy"]:not(.sde-shell-mounted)>header.site-header:not(.sde-shell-header){
+  height:161px!important;min-height:161px!important;max-height:161px!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+ }
+}

@@ -36,6 +36,29 @@ for(const [file,target] of sources){
   }
   rmSync(tmp,{force:true});
  }
+ if(!ok){
+  // Certaines photos JPEG compressées sont déjà très petites : une tentative
+  // à 960 px / qualité 72 peut produire un fichier WebP plus lourd. Réessayer
+  // avec des dimensions dégressives, plutôt que bloquer tout le déploiement.
+  // Les fichiers sources ne sont jamais touchés.
+  const secours=[
+   [720,60],[600,52],[480,45],[400,38],[320,32]
+  ];
+  for(const [taille,qualite] of secours){
+   const args=["scripts/encoder-webp-chrome.mjs",input,tmp,
+    String(taille),String(taille),String(qualite)];
+   const result=spawnSync(process.execPath,args,{timeout:45000,encoding:"utf8"});
+   if(result.status===0&&existsSync(tmp)){
+    const bytes=statSync(tmp).size;
+    if(bytes>=2000&&bytes<inputSize){
+     renameSync(tmp,output);ok=true;
+     console.log("ARCHIVE_WEBP_SECOURS "+JSON.stringify({source:file,taille,qualite,bytes}));
+     break;
+    }
+   }
+   rmSync(tmp,{force:true});
+  }
+ }
  if(!ok)throw Error("Impossible de produire un WebP réellement plus léger pour "+file);
  total+=inputSize;saved+=statSync(output).size;
 }
