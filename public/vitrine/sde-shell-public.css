@@ -1898,3 +1898,60 @@ html body[data-sde-page="programmes"] #agenda-liste > .programme[data-sde-archiv
   flex-shrink:0!important;
  }
 }
+
+
+/* Dernière passe CLS 11/11/2026 — bandeau TPA aux dimensions stables.
+   Aucun texte ni lien supprimé : le décompte reste actif sur mobile et
+   sur les autres pages, mais la tablette affiche la date officielle. */
+@media(min-width:701px) and (max-width:800px){
+ html body[data-sde-page="programmes"] #sde-event-root{
+  display:flex!important;
+  box-sizing:border-box!important;
+  height:122px!important;min-height:122px!important;max-height:122px!important;
+  overflow:hidden!important;
+ }
+ html body[data-sde-page="programmes"] #sde-event-root .event-bar-inner{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:48px 44px!important;
+  align-content:center!important;justify-items:center!important;
+  row-gap:6px!important;padding:8px 12px!important;
+  min-height:0!important;
+ }
+ html body[data-sde-page="programmes"] #sde-event-root .event-bar-inner>a:first-child{
+  min-width:0!important;max-width:100%!important;
+  min-height:48px!important;justify-content:center!important;
+ }
+ html body[data-sde-page="programmes"] #sde-event-root .event-clock{
+  display:none!important;
+ }
+ html body[data-sde-page="programmes"] #sde-event-root .event-bar-action{
+  box-sizing:border-box!important;min-height:44px!important;
+  display:inline-flex!important;align-items:center!important;
+  justify-content:center!important;justify-self:center!important;
+ }
+}
+@media(min-width:1101px){
+ /* Le premier calcul des polices ne doit pas déplacer les deux liens
+    du bandeau de /mouvement (ancien CLS 0,101). */
+ html body[data-sde-page="mouvement"] #sde-event-root .event-bar-inner{
+  display:grid!important;grid-template-columns:minmax(0,1fr) 188px!important;
+  gap:16px!important;align-items:center!important;
+  justify-content:stretch!important;
+ }
+ html body[data-sde-page="mouvement"] #sde-event-root .event-bar-inner>a:first-child{
+  display:flex!important;min-width:0!important;max-width:100%!important;
+  overflow:hidden!important;white-space:nowrap!important;
+ }
+ html body[data-sde-page="mouvement"] #sde-event-root .event-bar-inner strong{
+  flex:0 0 99px!important;min-width:99px!important;
+ }
+ html body[data-sde-page="mouvement"] #sde-event-root .event-bar-date{
+  flex:1 1 auto!important;min-width:0!important;
+  overflow:hidden!important;text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+ }
+ html body[data-sde-page="mouvement"] #sde-event-root .event-bar-action{
+  width:188px!important;min-width:188px!important;
+  text-align:center!important;box-sizing:border-box!important;
+ }
+}
