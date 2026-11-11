@@ -92,3 +92,35 @@ test('Maquette direction : un vrai taux nul est affiché à 0 %, et membre n a j
  try{assert.equal(membre.window.document.querySelector('.sde-command-v4-insights'),null);}
  finally{membre.window.close();}
 });
+
+
+test('Chaque fiche individuelle du registre a le modèle accessible SDE 2027',()=>{
+ const html=read('public/index.html');
+ const css=read('public/vitrine/sde-command-v4.css');
+ const start=html.indexOf('function ficheMembre(id) {');
+ const stop=html.indexOf('const ouvrirMembre =',start);
+ assert.ok(start>=0&&stop>start,'fonction réelle des fiches membres conservée');
+ const profile=html.slice(start,stop);
+ assert.ok(profile.includes('class="sde-member-profile"'));
+ assert.ok(profile.includes('aria-label="Dossier individuel du membre"'));
+ assert.ok(profile.includes('</section>'));
+ for(const part of ['blocVoyants(m)','blocAssiduite(m)','blocParcours(m)','cotis','data-act="copier-val"','data-act="voir-garnison"']){
+  if(part==='data-act="voir-garnison"')assert.ok(profile.includes('data-act="voir-garnison"'),part);
+  else assert.ok(profile.includes(part),part);
+ }
+ assert.match(html,/sde-command-v4\.css\?v=[a-zA-Z0-9_-]+/,'feuille privée versionnée, même après la compilation');
+ for(const token of [
+  '#sheet:has(.sde-member-profile)',
+  '.sde-member-profile .sde-member-phone',
+  '.sde-member-profile .kv dd',
+  '.sde-member-profile .cot-mois',
+  '.sde-member-register .sde-member-row',
+  '.sde-member-filters .sel',
+  '@media(max-width:390px)',
+  'prefers-reduced-motion:reduce',
+  'env(safe-area-inset-bottom'
+ ])assert.ok(css.includes(token),token);
+ assert.ok(css.includes('background:#fffaf0!important'),'champ clair et lisible');
+ assert.ok(css.includes('color:#fff9ef!important'),'texte ivoire sur fond sombre');
+ assert.equal((css.match(/\\{/g)||[]).length,(css.match(/\\}/g)||[]).length,'accolades CSS équilibrées');
+});
