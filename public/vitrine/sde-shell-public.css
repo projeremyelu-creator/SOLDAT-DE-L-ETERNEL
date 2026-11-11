@@ -1870,3 +1870,31 @@ html body.sde-unifie.sde-campus-public #sde-event-root{
   height:56px!important;min-height:56px!important;max-height:56px!important;
  }
 }
+
+
+/* Stabilisation avant peinture, novembre 2026 :
+   l'événement IN FIRE achevé ne doit jamais prendre 267 px puis être déplacé
+   après DOMContentLoaded vers les archives. Le script le conserve dans la
+   section historique dépliable, sans mutation des données de l'agenda. */
+html body[data-sde-page="programmes"] #agenda-liste > .programme[data-sde-archive-pending="2026-10-31"]{
+ display:none!important;
+}
+/* Réserver la largeur du compte à rebours avant que le script remplace
+   le texte initial par quatre valeurs. Sans cela, le bandeau déplace
+   horizontalement les liens de /mouvement sur ordinateur. */
+@media(min-width:1101px){
+ html body[data-sde-page="mouvement"] #sde-event-root .event-clock{
+  flex:0 0 316px!important;
+  box-sizing:border-box!important;
+  width:316px!important;
+  min-width:316px!important;
+  min-height:39px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  white-space:nowrap!important;
+ }
+ html body[data-sde-page="mouvement"] #sde-event-root .event-clock > span{
+  flex-shrink:0!important;
+ }
+}
