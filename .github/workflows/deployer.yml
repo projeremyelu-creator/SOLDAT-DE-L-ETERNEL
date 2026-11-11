@@ -6,7 +6,7 @@ on:
 
 jobs:
   verifier:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -15,8 +15,10 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Installer ImageMagick pour les ressources Web
         run: |
-          sudo apt-get update -qq
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq imagemagick
+          if ! command -v convert >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq imagemagick
+          fi
           convert -version | head -1
       - name: Identifier et optimiser les dix médias officiels du dépôt
         run: python3 scripts/installer-medias-sde.py
@@ -28,7 +30,7 @@ jobs:
 
   deployer:
     needs: verifier
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     concurrency:
       group: sde-cloudflare-deploiement-production
       cancel-in-progress: false
@@ -43,8 +45,10 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Installer ImageMagick pour les ressources Web
         run: |
-          sudo apt-get update -qq
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq imagemagick
+          if ! command -v convert >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq imagemagick
+          fi
           convert -version | head -1
       - name: Identifier et optimiser les dix médias officiels du dépôt
         run: python3 scripts/installer-medias-sde.py

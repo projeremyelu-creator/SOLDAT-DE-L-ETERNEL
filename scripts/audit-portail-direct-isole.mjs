@@ -32,7 +32,7 @@ const fixture=`<!doctype html><html lang="fr"><head>
 <script defer src="/vitrine/portail-direct.js"></script>
 <script defer src="/vitrine/sde-command-v4.js"></script></body></html>`;
 const mime={'.css':'text/css','.js':'application/javascript','.png':'image/png','.html':'text/html'};
-const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const browser=await chromium.launch({headless:true,...(process.env.SDE_CHROME_EXECUTABLE?{executablePath:process.env.SDE_CHROME_EXECUTABLE}:{}),args:['--no-sandbox']});
 try{
  for(const mode of modes){
   for(const width of widths){

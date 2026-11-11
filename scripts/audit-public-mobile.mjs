@@ -80,7 +80,7 @@ const poleReferences={
  'pole-formation-390':'Formation & développement intégral'
 };
 const report={date:new Date().toISOString(),domain,checks:[],issues:[],notes:[]};
-const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const browser=await chromium.launch({headless:true,...(process.env.SDE_CHROME_EXECUTABLE?{executablePath:process.env.SDE_CHROME_EXECUTABLE}:{}),args:['--no-sandbox']});
 
 function issue(label,description,critical=false){
  report.issues.push({label,description,critical});

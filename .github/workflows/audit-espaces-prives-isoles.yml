@@ -52,7 +52,15 @@ jobs:
       - name: Installer Chromium localement
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.0
-          npx playwright install --with-deps chromium
+          # Ubuntu 24.04 inclut Google Chrome. Éviter les dépôts APT lors des
+          # indisponibilités DNS ; Playwright garde son installation classique
+          # sur une image qui ne dispose pas de Chrome.
+          if command -v google-chrome >/dev/null 2>&1; then
+            echo "SDE_CHROME_EXECUTABLE=$(command -v google-chrome)" >> "$GITHUB_ENV"
+            google-chrome --version
+          else
+            npx playwright install --with-deps chromium
+          fi
       - name: Auditer le membre et les trois niveaux de direction sans réseau de production
         run: node scripts/audit-prive-isole.mjs
       - name: Auditer la véritable coque /mon-espace et /administration, sessions fictives
