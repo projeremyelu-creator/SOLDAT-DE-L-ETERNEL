@@ -12,17 +12,29 @@ mkdirSync(out,{recursive:true});
 const cases=[
  {path:'/',name:'accueil-360',width:360,height:800},
  {path:'/',name:'accueil-390',width:390,height:844},
+ {path:'/programmes',name:'programmes-360',width:360,height:800},
+ {path:'/programmes',name:'programmes-768',width:768,height:1024},
+ {path:'/programmes',name:'programmes-1600',width:1600,height:900},
  {path:'/programmes',name:'programmes-390',width:390,height:844},
  {path:'/mouvement',name:'mouvement-390',width:390,height:844},
+ {path:'/connexion',name:'connexion-360',width:360,height:800},
+ {path:'/connexion',name:'connexion-768',width:768,height:1024},
+ {path:'/connexion',name:'connexion-1280',width:1280,height:900},
+ {path:'/connexion',name:'connexion-1600',width:1600,height:900},
  {path:'/connexion',name:'connexion-390',width:390,height:844},
  {path:'/priere',name:'priere-anonyme-390',width:390,height:844},
  {path:'/soutenir',name:'soutenir-390',width:390,height:844},
  {path:'/transparence',name:'transparence-390',width:390,height:844},
  {path:'/calendrier',name:'calendrier-390',width:390,height:844},
+ {path:'/academy',name:'academy-768',width:768,height:1024},
+ {path:'/academy',name:'academy-1280',width:1280,height:900},
  {path:'/academy',name:'academy-390',width:390,height:844},
  {path:'/soldier-quest',name:'soldier-quest-390',width:390,height:844},
  {path:'/soldiers-tv',name:'soldiers-tv-390',width:390,height:844},
+ {path:'/soldier-quest',name:'soldier-quest-1600',width:1600,height:900},
  {path:'/soldier-quest',name:'soldier-quest-desktop',width:1280,height:900},
+ {path:'/soldiers-tv',name:'soldiers-tv-768',width:768,height:1024},
+ {path:'/soldiers-tv',name:'soldiers-tv-1600',width:1600,height:900},
  {path:'/soldiers-tv',name:'soldiers-tv-desktop',width:1280,height:900},
  {path:'/vitrine/album-infire.html',name:'galerie-infire-390',width:390,height:844},
  {path:'/',name:'accueil-tablette',width:768,height:1024},
@@ -606,6 +618,30 @@ try{
    if(c.path==='/'&&row.premiumHome&&(!(row.premiumHeroHeight>=280)))
     issue(c.name,'hauteur du nouvel accueil premium insuffisante : '+row.premiumHeroHeight+' px',true);
    if(row.status!==200)issue(c.name,'HTTP '+row.status,true);
+   if(c.path==='/connexion'){
+    const isolated=await page.evaluate(()=>{
+     const visible=selector=>[...document.querySelectorAll(selector)].some(el=>{
+      const s=getComputedStyle(el),r=el.getBoundingClientRect();
+      return s.display!=='none'&&s.visibility!=='hidden'&&r.width>1&&r.height>1;
+     });
+     return {nav:visible('.site-header,.sde-auth-nav,.sde-shell-bottom,.sde-public-bottom-nav'),
+      event:visible('.infire-takeover,#sde-event-root'),animations:visible('.sde-ambiance-ctl')};
+    });
+    if(isolated.nav||isolated.event||isolated.animations)
+     issue(c.name,'connexion non isolée : '+JSON.stringify(isolated),true);
+   }
+   if(c.path==='/programmes'&&await page.locator('.event-clock').count()){
+    const clock=(await page.locator('.event-clock').textContent())||'';
+    if(clock.includes('--')||(!clock.includes('jours')&&!clock.includes('18 décembre')))
+     issue(c.name,'compte à rebours TPA vide ou date lisible absente',true);
+   }
+   if(c.path==='/academy'&&(await page.locator('.sa-premium-quick a').count())<3)
+    issue(c.name,'liens de parcours Academy absents',true);
+   if(c.path==='/soldiers-tv'&&(await page.locator('.sdu-playlist-item').count())<2)
+    issue(c.name,'playlist vidéo interactive absente',true);
+   if(c.path==='/soldier-quest'&&(await page.locator('[data-sdu-filter-group]').count())<1)
+    issue(c.name,'filtres de missions Soldier Quest absents',true);
+
    if(row.overflowX>16)issue(c.name,'débordement horizontal de '+row.overflowX+' px',true);
    if(mobileViewports.includes(c.width)&&row.touchTargets?.length)
     issue(c.name,'zones tactiles inférieures à 44 px : '+JSON.stringify(row.touchTargets.slice(0,6)),true);
