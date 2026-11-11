@@ -1,0 +1,158 @@
+/* Soldiers Voice · Correctifs issus de la capture mobile du 11/11/2026.
+   Cette feuille est chargée APRÈS les anciens thèmes de la page. */
+html body.sde-unifie[data-sde-page="soldiers-voice"]{
+ --voice-night:#0b1730;--voice-ivory:#f8f0e5;--voice-ink:#142138;
+ --voice-body:#354158;--voice-gold:#edc975;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ :is(.sde-initiative-lead,.sde-initiative-section){
+ color:#f8f0e5;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-grid{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:clamp(12px,2vw,20px)!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-card{
+ min-width:0!important;
+ color:var(--voice-ink)!important;
+ -webkit-text-fill-color:var(--voice-ink)!important;
+ background:#fffaf1!important;
+ border:1px solid #d6c4a2!important;
+ border-top:3px solid var(--voice-gold)!important;
+ border-radius:16px!important;
+ box-shadow:0 8px 24px #080f201f!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-card :is(h3,strong){
+ color:var(--voice-ink)!important;
+ -webkit-text-fill-color:var(--voice-ink)!important;
+ opacity:1!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-card :is(p,span:not(:first-child)){
+ color:var(--voice-body)!important;
+ -webkit-text-fill-color:var(--voice-body)!important;
+ opacity:1!important;
+ line-height:1.55;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-card :is(a,a span){
+ color:#71480d!important;
+ -webkit-text-fill-color:#71480d!important;
+ opacity:1!important;
+ font-weight:800;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-card a:focus-visible{
+ outline:3px solid #b07d1e!important;
+ outline-offset:3px!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-form{
+ background:#fffaf1!important;
+ border:1px solid #d6c4a2!important;
+ color:var(--voice-ink)!important;
+ border-radius:16px!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-form :is(h3,label,.sde-consent){
+ color:var(--voice-ink)!important;
+ -webkit-text-fill-color:var(--voice-ink)!important;
+ opacity:1!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-form :is(input:not([type="checkbox"]),select,textarea){
+ box-sizing:border-box;
+ min-height:48px!important;
+ max-width:100%!important;
+ border:1.5px solid #758095!important;
+ background:#ffffff!important;
+ color:#142138!important;
+ -webkit-text-fill-color:#142138!important;
+ font:500 1rem/1.45 "Atkinson Hyperlegible",system-ui,sans-serif!important;
+ opacity:1!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-form :is(input,select,button):focus-visible{
+ outline:3px solid #aa7517!important;
+ outline-offset:2px!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-form .sde-privacy-note{
+ background:#13223d!important;
+ color:#f8f0e5!important;
+ -webkit-text-fill-color:#f8f0e5!important;
+ border-radius:9px;
+ line-height:1.5!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-form .sde-privacy-note a{
+ color:#ffe1a0!important;
+ -webkit-text-fill-color:#ffe1a0!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-form .sde-form-submit{
+ background:var(--voice-gold)!important;
+ color:var(--voice-ink)!important;
+ -webkit-text-fill-color:var(--voice-ink)!important;
+ min-height:48px!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-lead{
+ padding-block:clamp(22px,4vw,43px)!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-section{
+ padding-block:clamp(27px,5vw,56px)!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ :is(.sde-initiative-lead,.sde-initiative-section) .sde-kicker{
+ color:#f1d08a!important;
+ -webkit-text-fill-color:#f1d08a!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-link{
+ color:#ffe0a1!important;
+ -webkit-text-fill-color:#ffe0a1!important;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-split{
+ grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+ align-items:start;
+}
+@media(max-width:900px){
+ html body.sde-unifie[data-sde-page="soldiers-voice"] main .sde-initiative-grid{
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:12px!important;
+ }
+ html body.sde-unifie[data-sde-page="soldiers-voice"] main .sde-initiative-card{
+  min-height:0!important;
+  padding:18px 20px!important;
+ }
+ html body.sde-unifie[data-sde-page="soldiers-voice"] main .sde-initiative-split{
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:18px!important;
+ }
+ html body.sde-unifie[data-sde-page="soldiers-voice"] main .sde-initiative-form{
+  width:100%!important;
+  box-sizing:border-box!important;
+  padding:20px!important;
+ }
+ html body.sde-unifie[data-sde-page="soldiers-voice"] main .sde-initiative-next
+ .sde-initiative-grid a[href="/rubriques"]{
+  display:none!important;
+ }
+}
+@media(max-width:500px){
+ html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-form{padding:16px!important}
+ html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-card :is(h3,strong){font-size:1.08rem!important}
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-unifie[data-sde-page="soldiers-voice"] main
+ .sde-initiative-card{transition:none!important;transform:none!important}
+}
