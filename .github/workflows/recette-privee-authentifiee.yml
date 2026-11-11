@@ -29,6 +29,8 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22.23.4'
+      - name: Vérifier le script de recette
+        run: node --check scripts/audit-prive-authentifie.mjs
       - name: Vérifier la configuration des comptes de recette
         id: comptes
         shell: bash
@@ -51,8 +53,6 @@ jobs:
         run: |
           echo "::error::La recette authentifiée ne peut pas être considérée comme réussie sans comptes de test membre et administrateur."
           exit 1
-      - name: Vérifier le script de recette
-        run: node --check scripts/audit-prive-authentifie.mjs
       - name: Installer Chromium sans toucher aux données
         if: steps.comptes.outputs.configured == 'true'
         run: |
