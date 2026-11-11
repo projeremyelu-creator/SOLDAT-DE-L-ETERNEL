@@ -21,7 +21,8 @@ const methods=[
   '-vf','scale=480:-2:flags=lanczos','-frames:v','1','-c:v','libwebp',
   '-lossless','0','-quality','68','-compression_level','6',tmp]],
  ['magick',[source,'-resize','480x480>','-strip','-quality','68',tmp]],
- ['convert',[source,'-resize','480x480>','-strip','-quality','68',tmp]]
+ ['convert',[source,'-resize','480x480>','-strip','-quality','68',tmp]],
+ [process.execPath,['scripts/encoder-webp-chrome.mjs',source,tmp,'480','480','68']]
 ];
 let success=false,engine='source';
 const failures=[];
