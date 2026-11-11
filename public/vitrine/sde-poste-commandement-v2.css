@@ -293,3 +293,29 @@ body.sde-direct .sde-direct-bottom-nav[hidden]{display:none!important}
 @media(prefers-reduced-motion:reduce){
  body.sde-direct .sde-direct-bottom-nav .sde-direct-bottom-action{transition:none!important}
 }
+
+/* Poste de commandement SDE 2027 — identite visuelle sans modification des autorisations. */
+html body.sde-direct{
+ --sde-cmd-night:#0b1730;--sde-cmd-violet:#382257;--sde-cmd-gold:#edc975;
+}
+html body.sde-direct #sde-direct-top{background:linear-gradient(115deg,#0b1730,#112443)!important}
+html body.sde-direct .view :is(.stat,.tile,.card){
+ border-radius:16px!important;min-width:0;border-color:#b9995f70;
+ transition:border-color .2s,box-shadow .2s;
+}
+html body.sde-direct .view :is(.stat,.tile,.card):focus-within{
+ border-color:#b9954c!important;box-shadow:0 0 0 2px #edc97550;
+}
+html body.sde-direct .view :is(a,button):focus-visible{outline:3px solid #edc975!important;outline-offset:3px}
+html body.sde-direct .view .sec-title{
+ font-family:"Cinzel",Georgia,serif;line-height:1.18;
+ font-size:clamp(1.35rem,2.5vw,2.15rem);text-wrap:balance;
+}
+html body.sde-direct .view .stat-v{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+@media(max-width:760px){
+ html body.sde-direct .view :is(.stat,.tile,.card){padding:clamp(12px,3vw,18px)}
+ html body.sde-direct .view .sec-title{font-size:clamp(1.3rem,5.8vw,1.8rem)}
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-direct .view :is(.stat,.tile,.card){transition:none!important}
+}
