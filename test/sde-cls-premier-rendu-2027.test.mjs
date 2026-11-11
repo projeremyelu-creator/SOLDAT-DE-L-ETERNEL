@@ -55,3 +55,27 @@ test('Le CLS réel 11/11 pré-réserve la même intro Programmes et le même hea
  assert.match(patch,/data-sde-page="mouvement"/);
  assert.match(patch,/height:57px!important/);
 });
+
+test('IN FIRE expiré est déjà hors flux avant déplacement vers les archives',()=>{
+ const d=new JSDOM(file('public/vitrine/programmes.html')).window.document;
+ const exp=d.querySelector('#agenda-liste > .programme[data-sde-archive-pending="2026-10-31"]');
+ assert.ok(exp,'l\'archive IN FIRE est identifiée dans le HTML initial');
+ assert.match(exp.textContent,/IN FIRE 2026/);
+ const tpa=d.querySelector('#agenda-liste > #tpa-2026');
+ assert.ok(tpa,'la TPA future reste présente dans l\'agenda');
+ const css=file('public/vitrine/sde-shell-public.css');
+ assert.match(css,/#agenda-liste > \.programme\[data-sde-archive-pending="2026-10-31"\]\s*\{\s*display:none!important;/);
+ const js=file('public/vitrine/portail-unifie.js');
+ assert.match(js,/archives\.append\(ancienne\)/,'le transfert vers les archives historiques est conservé');
+});
+test('Mouvement desktop : place du décompte réservée dès la première peinture',()=>{
+ const css=file('public/vitrine/sde-shell-public.css');
+ const section=css.slice(css.lastIndexOf('Stabilisation avant peinture, novembre 2026'));
+ assert.ok(section.startsWith('Stabilisation avant peinture'));
+ assert.match(section,/#sde-event-root \.event-clock/);
+ assert.match(section,/flex:0 0 316px!important/);
+ assert.match(section,/width:316px!important/);
+ assert.match(section,/min-height:39px!important/);
+ const d=new JSDOM(file('public/vitrine/mouvement.html')).window.document;
+ assert.ok(d.querySelector('#sde-event-root .event-clock time'));
+});
