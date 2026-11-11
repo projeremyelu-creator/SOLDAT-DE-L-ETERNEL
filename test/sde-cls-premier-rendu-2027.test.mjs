@@ -89,7 +89,10 @@ test('Le bandeau TPA stabilise les liens sans supprimer la date ni le décompte'
  assert.match(patch,/grid-template-rows:48px 44px!important/);
  assert.match(patch,/\.event-clock\{\s*display:none!important/);
  assert.match(patch,/data-sde-page="mouvement"/);
- assert.match(patch,/grid-template-columns:minmax\(0,1fr\) 188px!important/);
+ assert.match(patch,/grid-template-columns:minmax\(0,1fr\) 316px 188px!important/);
+ assert.match(patch,/grid-template-rows:minmax\(44px,auto\)!important/);
+ assert.match(patch,/\.event-clock\{\s*grid-column:2!important;grid-row:1!important/);
+ assert.match(patch,/\.event-bar-action\{\s*grid-column:3!important;grid-row:1!important/);
  assert.match(patch,/text-overflow:ellipsis!important/);
  for(const page of ['programmes','mouvement']){
   const doc=new JSDOM(file('public/vitrine/'+page+'.html')).window.document;
