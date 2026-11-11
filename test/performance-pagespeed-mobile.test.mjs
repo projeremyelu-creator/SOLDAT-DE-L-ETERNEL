@@ -25,7 +25,7 @@ test('Le thème est découvert directement, sans @import en cascade après les a
  const premium=link.findIndex(x=>x.includes('/vitrine/sde-premium-public.css'));
  const accueil=link.findIndex(x=>x.includes('/vitrine/sde-accueil-premium.css'));
  assert.ok(premium>=0&&premium<accueil);
- assert.ok(link.at(-3).includes('sde-shell-public.css')&&link.at(-2).includes('sde-maquette-hero.css')&&link.at(-1).includes('sde-six-maquettes-2027.css'),'navigation commune, Hero ciblé et finition 2027 dans le bon ordre');
+ assert.ok(link.at(-4).includes('sde-shell-public.css')&&link.at(-3).includes('sde-maquette-hero.css')&&link.at(-2).includes('sde-six-maquettes-2027.css')&&link.at(-1).includes('sde-accueil-officiel-2027.css'),'navigation commune, Hero ciblé et maquette officielle 2027 dans le bon ordre');
  assert.doesNotMatch(html,/<style>[^<]*@import[^<]*sde-premium-public\.css/i);
 });
 
