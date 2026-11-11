@@ -156,3 +156,17 @@ html body.sde-unifie[data-sde-page="soldiers-voice"] main
  html body.sde-unifie[data-sde-page="soldiers-voice"] main
  .sde-initiative-card{transition:none!important;transform:none!important}
 }
+
+html body.sde-unifie[data-sde-page="soldiers-voice"] main .sde-voice-lead-cta{
+ display:inline-flex!important;
+ align-items:center;justify-content:center;
+ min-height:46px;padding:11px 18px;margin-top:17px;
+ background:#edc975!important;color:#142138!important;
+ -webkit-text-fill-color:#142138!important;
+ border-radius:11px;border:1px solid #e6c076;
+ text-decoration:none!important;font-weight:850;
+ box-shadow:0 8px 22px #0003;
+}
+html body.sde-unifie[data-sde-page="soldiers-voice"] main .sde-voice-lead-cta:focus-visible{
+ outline:3px solid #fff3d0!important;outline-offset:3px!important;
+}
