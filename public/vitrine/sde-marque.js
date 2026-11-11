@@ -76,5 +76,16 @@
     try { localStorage.setItem(KEY, userPaused ? "paused" : "on"); } catch (e) {}
     label(); wake();
   });
-  label(); document.body.append(btn); wake();
+  label();
+  // Conserver un vrai contrôle accessible, mais jamais au-dessus des CTA mobiles.
+  // Utiliser l'emplacement de l'en-tête lorsqu'il existe, sinon le pied de page.
+  function installerControle() {
+    var slot = document.querySelector('[data-sde-motion-slot]');
+    var destination = slot || document.querySelector('.sde-shell-footer, footer') || document.body;
+    if (btn.parentNode !== destination) destination.appendChild(btn);
+  }
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', installerControle, { once: true });
+  else installerControle();
+  wake();
 })();
