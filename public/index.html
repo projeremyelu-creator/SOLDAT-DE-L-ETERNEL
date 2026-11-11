@@ -1112,7 +1112,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
   /* ════════════════════════ Membres ════════════════════════ */
   function rowMembre(m) {
     const meta = [m.fonction, m.eglise || m.quartier, poleCourt(m.pole)].filter(Boolean).join(" · ") || (m.telephone ? telAffiche(m.telephone) : "");
-    return `<button class="row" type="button" data-act="voir-membre" data-id="${esc(m.id)}">${avatar(m)}<span class="row-main"><span class="row-t">${esc(nomComplet(m))}</span>${meta ? `<span class="row-m">${esc(meta)}</span>` : ""}</span><span class="row-r">${pastilleEtat(m)}${m.statut ? `<span class="chip">${esc(m.statut)}</span>` : ""}${m.actif === false ? `<span class="chip">Archivé</span>` : ""}</span></button>`;
+    return `<button class="row sde-member-row" type="button" data-act="voir-membre" data-id="${esc(m.id)}">${avatar(m)}<span class="row-main"><span class="row-t">${esc(nomComplet(m))}</span>${meta ? `<span class="row-m">${esc(meta)}</span>` : ""}</span><span class="row-r">${pastilleEtat(m)}${m.statut ? `<span class="chip">${esc(m.statut)}</span>` : ""}${m.actif === false ? `<span class="chip">Archivé</span>` : ""}</span></button>`;
   }
   VUES.membres = function () {
     const c = cfg();
@@ -1140,7 +1140,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
       return out + `<p class="note">Membres actifs absents des trois derniers rassemblements pointés, depuis le ${esc(fmtJour(sp.depuis))}. Appelez-les ou écrivez-leur pour prendre de leurs nouvelles.</p><div class="list">${sp.liste.map(rowMembre).join("")}</div>`;
     }
     const f = S.f.membres;
-    out += `<div class="filters"><label class="sr" for="q-membres">Rechercher un membre</label><input class="search" id="q-membres" type="search" placeholder="Nom, matricule, téléphone, église…" value="${esc(f.q)}" data-filtre="membres.q" autocomplete="off">
+    out += `<div class="filters sde-member-filters"><label class="sr" for="q-membres">Rechercher un membre</label><input class="search" id="q-membres" type="search" placeholder="Nom, matricule, téléphone, église…" value="${esc(f.q)}" data-filtre="membres.q" autocomplete="off">
       <label class="sr" for="f-pole">Pôle</label><select class="sel" id="f-pole" data-filtre="membres.pole">${options(c.poles, f.pole === "__aucun" ? "" : f.pole, "Tous les pôles")}<option value="__aucun"${f.pole === "__aucun" ? " selected" : ""}>Sans pôle</option></select>
       <label class="sr" for="f-statut">Statut</label><select class="sel" id="f-statut" data-filtre="membres.statut">${options(c.statuts, f.statut, "Tous les statuts")}</select>${S.garnisons.length ? `<label class="sr" for="f-garn">Garnison</label><select class="sel" id="f-garn" data-filtre="membres.garnison">${options(optionsGarnisons(), f.garnison === "__aucune" ? "" : f.garnison, "Toutes les garnisons")}<option value="__aucune"${f.garnison === "__aucune" ? " selected" : ""}>Sans garnison</option></select>` : ""}
       <div class="btn-row">${peutAdmin() ? btn("cartes", "Cartes", { ico: "i-card", sm: true }) : ""}${ecr ? btn("matricules", "Matricules", { ico: "i-edit", sm: true }) : ""}${peutAdmin() ? btn("espaces", "Espaces soldats", { ico: "i-card", sm: true }) : ""}${ecr ? btn("import-membres", "Importer", { ico: "i-up", sm: true }) : ""}${btn("export-membres", "Exporter", { ico: "i-down", sm: true })}</div></div>`;
@@ -1158,7 +1158,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     });
     if (!liste.length) return out + vide("i-search", sous === "archives" ? "Aucun membre archivé ne correspond." : "Aucun membre ne correspond à cette recherche.");
     const visibles = liste.slice(0, S.limite);
-    return out + `<p class="hint" style="margin:0 0 8px">${pluriel(liste.length, "fiche", "fiches")}</p><div class="list">${visibles.map(rowMembre).join("")}${liste.length > visibles.length ? `<button class="more" type="button" data-act="plus">Afficher ${nb(Math.min(80, liste.length - visibles.length))} fiches de plus</button>` : ""}</div>`;
+    return out + `<p class="hint" style="margin:0 0 8px">${pluriel(liste.length, "fiche", "fiches")}</p><div class="list sde-member-register">${visibles.map(rowMembre).join("")}${liste.length > visibles.length ? `<button class="more" type="button" data-act="plus">Afficher ${nb(Math.min(80, liste.length - visibles.length))} fiches de plus</button>` : ""}</div>`;
   };
   function listeAnniversaires(actifs) {
     const avec = actifs.filter((m) => m.anniv && /^\d{2}-\d{2}$/.test(m.anniv));
@@ -1480,7 +1480,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const a = prochainAnniv(m);
     const ecr = peutEcrire();
     const adm = peutAdmin();
-    const tel = m.telephone ? `<span class="num">${esc(telAffiche(m.telephone))}</span><span class="inline-actions"><a class="btn btn-ghost btn-sm" href="${esc(lienWa(m.telephone))}" target="_blank" rel="noopener">${I("i-msg")}WhatsApp</a><button class="btn btn-ghost btn-sm" type="button" data-act="copier-val" data-val="${esc(telAffiche(m.telephone))}">${I("i-copy")}Copier</button></span>` : "";
+    const tel = m.telephone ? `<div class="sde-member-phone"><span class="num">${esc(telAffiche(m.telephone))}</span><span class="inline-actions"><a class="btn btn-ghost btn-sm" href="${esc(lienWa(m.telephone))}" target="_blank" rel="noopener">${I("i-msg")}WhatsApp</a><button class="btn btn-ghost btn-sm" type="button" data-act="copier-val" data-val="${esc(telAffiche(m.telephone))}">${I("i-copy")}Copier</button></span></div>` : "";
     const naiss = m.anniv ? `${esc(fmtJM((a ? a.date.slice(0, 4) : "2000") + "-" + m.anniv))}${m.annee ? " " + esc(m.annee) : ""}${a ? ` <span class="chip ${a.dans === 0 ? "warn" : "gold"}">${a.dans === 0 ? "C’est aujourd’hui" : a.age ? `${a.age} ans ${relLong(a.date)}` : "Anniversaire " + relLong(a.date)}</span>` : ""}` : "";
     const voeux = a && a.dans <= 14 ? `<div class="note${a.dans === 0 ? " warn" : ""}"><p><b>${a.dans === 0 ? "C’est son anniversaire aujourd’hui." : `Anniversaire ${relLong(a.date)}.`}</b> Le message est prêt.</p><div class="btn-row">${btn("voeux", "Préparer le message", { ico: "i-cake", sm: true, data: `data-id="${esc(m.id)}"` })}${btn("affiche-anniv", "Affiche d’anniversaire", { ico: "i-image", sm: true, data: `data-id="${esc(m.id)}"` })}</div></div>` : "";
     const saisie = [m.creeLe ? `Ajouté le ${fmtStamp(m.creeLe)}${m.creePar ? " par " + nomDe(m.creePar) : ""}` : "", m.modifieLe && m.modifieLe !== m.creeLe ? `modifié le ${fmtStamp(m.modifieLe)}${m.modifiePar ? " par " + nomDe(m.modifiePar) : ""}` : ""].filter(Boolean).join(", ");
