@@ -1650,9 +1650,9 @@ async function syncEspacesMembres(env) {
 const CSP_CRITIQUE = "object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'";
 const CSP_PUBLIQUE = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "img-src 'self' data: blob:",
+  "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css",
+  "img-src 'self' data: blob: https://tile.openstreetmap.org",
   "font-src 'self' data: https://fonts.gstatic.com",
   "connect-src 'self' https://cloudflareinsights.com",
   "media-src 'self' blob:",
@@ -1666,9 +1666,9 @@ const CSP_PUBLIQUE = [
 // rendre bloquant. L'en-tête principal reste immédiatement protecteur.
 const CSP_OBSERVATION = [
   "default-src 'self'",
-  "script-src 'self' https://static.cloudflareinsights.com",
-  "style-src 'self' https://fonts.googleapis.com",
-  "img-src 'self' data: blob:",
+  "script-src 'self' https://static.cloudflareinsights.com https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js",
+  "style-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css",
+  "img-src 'self' data: blob: https://tile.openstreetmap.org",
   "font-src 'self' data: https://fonts.gstatic.com",
   "connect-src 'self' https://cloudflareinsights.com",
   "media-src 'self' blob:",

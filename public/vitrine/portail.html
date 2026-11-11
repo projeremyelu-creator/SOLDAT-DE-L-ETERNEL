@@ -51,6 +51,8 @@
 <script defer src="/vitrine/sde-visuels-premium.js?v=20261110v1"></script>
 <link rel="stylesheet" href="/vitrine/sde-reveil-immersif.css?v=20261110r1">
 <script defer src="/vitrine/sde-reveil-immersif.js?v=20261110r1"></script>
+<link rel="stylesheet" href="/vitrine/sde-cartes-reelles.css?v=20261111r1">
+<script defer src="/vitrine/sde-cartes-reelles.js?v=20261111r1"></script>
 <link rel="stylesheet" href="/vitrine/sde-shell-public.css?v=20261108menu">
 <script defer src="/vitrine/sde-shell-public.js?v=20261108menu"></script>
 <link rel="stylesheet" href="/vitrine/sde-maquette-hero.css?v=20261109a">
@@ -151,36 +153,45 @@
     <div class="sde-rv-stage sde-v5-map-stage" id="sde-rv-immersive-stage">
      <div class="sde-v5-map-header">
       <div><p class="sde-rv-stage-eyebrow">LE RÉVEIL SPIRITUEL DES NATIONS · SDE</p><h2 id="sde-rv-title">Un appel qui traverse les frontières</h2><p class="sde-v5-map-subtitle">Un seul mouvement, une mission : éveiller, former et servir.</p></div>
-      <span class="sde-v5-map-label">CARTE ARTISTIQUE · NON GÉOGRAPHIQUE</span>
+      <span class="sde-v5-map-label">CARTE RÉELLE · OPENSTREETMAP</span>
      </div>
-     <div class="sde-v5-map-canvas" role="img" aria-label="Illustration artistique du monde et de la portée de la vision SDE, sans localisation d'activités confirmée">
-      <svg viewBox="0 0 960 470" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
-       <defs><radialGradient id="sde-v5-map-glow"><stop stop-color="#fff6ba" stop-opacity="1"/><stop offset=".22" stop-color="#fbd17c" stop-opacity=".9"/><stop offset="1" stop-color="#ecb65a" stop-opacity="0"/></radialGradient><filter id="sde-v5-map-shadow"><feGaussianBlur stdDeviation="7"/></filter></defs>
-       <g class="sde-v5-latitudes" fill="none" stroke="#e8c67b" stroke-width="1" opacity=".13"><path d="M50 118H910M50 190H910M50 262H910M50 334H910"/><path d="M170 10V455M330 10V455M490 10V455M650 10V455M810 10V455"/></g>
-       <g class="sde-v5-continents" fill="#59677d" stroke="#a9b1bf" stroke-width="1.4" opacity=".65">
-        <path d="M65 115 89 77 151 51 215 60 251 79 264 109 240 129 232 166 194 183 173 210 145 213 135 238 106 223 102 188 82 169 73 151 54 141Z"/>
-        <path d="M194 245 217 251 253 272 280 305 279 340 267 365 252 401 225 442 207 431 207 392 181 352 170 311 169 280Z"/>
-        <path d="M287 51 306 30 344 26 359 43 344 61 312 72Z"/>
-        <path d="M425 92 462 81 486 96 508 86 542 93 564 115 587 103 622 88 675 81 736 72 787 97 817 115 851 141 838 174 802 164 777 181 741 181 718 210 676 205 644 187 615 194 575 166 551 174 515 162 483 171 468 155 434 160 404 142Z"/>
-        <path d="M460 183 510 192 541 225 558 273 551 323 521 362 488 382 463 342 450 297 440 249 447 217Z"/>
-        <path d="M563 204 587 218 592 254 579 279 568 267Z"/>
-        <path d="M690 217 709 219 721 249 743 257 748 281 730 296 719 277 700 262Z"/>
-        <path d="M754 302 799 285 838 300 877 334 868 361 828 382 785 369 751 342Z"/>
-        <path d="M845 397 857 404 850 421 840 417Z"/>
-       </g>
-       <g class="sde-v5-orbits" fill="none" stroke="#eac779" stroke-width="1.5" opacity=".55"><path d="M129 184Q510 -80 789 318"/><path d="M195 311Q480 25 776 160"/><path d="M525 225Q720 110 848 338"/><path d="M245 348Q420 431 708 262"/></g>
-       <g class="sde-v5-light-points">
-        <circle cx="130" cy="184" r="29" fill="url(#sde-v5-map-glow)"/><circle cx="129" cy="184" r="4" fill="#fff0b7"/>
-        <circle cx="195" cy="311" r="27" fill="url(#sde-v5-map-glow)"/><circle cx="195" cy="311" r="4" fill="#fff0b7"/>
-        <circle cx="525" cy="225" r="34" fill="url(#sde-v5-map-glow)"/><circle cx="525" cy="225" r="5" fill="#fff0b7"/>
-        <circle cx="776" cy="160" r="23" fill="url(#sde-v5-map-glow)"/><circle cx="776" cy="160" r="4" fill="#fff0b7"/>
-        <circle cx="789" cy="318" r="29" fill="url(#sde-v5-map-glow)"/><circle cx="789" cy="318" r="4" fill="#fff0b7"/>
-        <circle cx="708" cy="262" r="20" fill="url(#sde-v5-map-glow)"/><circle cx="708" cy="262" r="4" fill="#fff0b7"/>
-       </g>
-      </svg>
-     </div>
+     <div class="sde-geo sde-v5-map-canvas" id="sde-carte-home" data-sde-real-map data-geo-start="monde" aria-label="Carte interactive géographique SDE">
+ <div class="sde-geo-toolbar">
+  <div class="sde-geo-views" role="group" aria-label="Changer de région">
+   <button type="button" data-geo-view="monde" aria-pressed="true">Monde</button>
+   <button type="button" data-geo-view="afrique" aria-pressed="false">Afrique</button>
+   <button type="button" data-geo-view="coteivoire" aria-pressed="false">Côte d’Ivoire</button>
+  </div>
+  <button type="button" data-geo-fullscreen class="sde-geo-fullscreen" disabled aria-pressed="false">Agrandir la carte</button>
+ </div>
+ <div class="sde-geo-map-frame">
+  <div class="sde-geo-intro" data-geo-intro>
+   <span class="sde-geo-intro-symbol" aria-hidden="true">◎</span>
+   <strong>Explorer une véritable carte du monde</strong>
+   <p>Déplacez la carte, zoomez, sélectionnez un repère et consultez sa fiche. Les fonds OpenStreetMap sont chargés seulement avec votre accord.</p>
+   <button type="button" class="sde-geo-launch" data-geo-launch>Activer la carte interactive</button>
+  </div>
+  <div class="sde-geo-map-canvas" data-geo-map-canvas hidden aria-label="Fond de carte OpenStreetMap, déplaçable au toucher ou à la souris"></div>
+ </div>
+ <div class="sde-geo-bottom">
+  <div class="sde-geo-filters">
+   <span class="sde-geo-filter-heading">Afficher les repères</span>
+   <div class="sde-geo-filter-buttons" role="group" aria-label="Filtrer les lieux">
+    <button type="button" data-geo-filter="all" aria-pressed="true">Tous les repères</button>
+    <button type="button" data-geo-filter="mission" aria-pressed="false">Missions confirmées</button>
+   </div>
+  </div>
+  <button type="button" class="sde-geo-reset" data-geo-reset disabled>Recentrer la carte</button>
+ </div>
+ <p class="sde-geo-status" data-geo-status role="status" aria-live="polite">Repère documenté : Abidjan (ville uniquement). Ouvrez la carte pour explorer.</p>
+ <div class="sde-geo-places" data-geo-places>
+  <p class="sde-geo-empty">Abidjan — repère du centre-ville, pas l’adresse d’un siège ou d’une mission.</p>
+ </div>
+ <p class="sde-geo-privacy">Le fond cartographique est fourni par <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>. Aucune donnée privée du mouvement n’est transmise. Les missions sont marquées seulement après publication et validation de leur localisation.</p>
+ <a class="sde-geo-fallback" data-geo-fallback hidden target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/#map=7/7.54/-5.55">Voir sur OpenStreetMap ↗</a>
+</div>
      <div class="sde-v5-map-actions"><a href="/missions-humanitaires">Explorer nos missions réelles →</a><a href="/transparence">Nos engagements et rapports →</a></div>
-     <p class="sde-v5-map-disclaimer">Les points et les trajectoires sont uniquement décoratifs : ils ne décrivent ni des missions, ni des implantations, ni une couverture internationale effectivement constatée.</p>
+     <p class="sde-v5-map-disclaimer">La carte utilise de véritables données géographiques. Les repères précisent leur niveau de localisation ; ils ne prouvent pas à eux seuls une implantation ou une mission.</p>
     </div>
     <div class="sde-rv-screen-footer">
      <span>Discipline · Unité · Impact</span>
@@ -204,9 +215,7 @@
     </section>
     <section class="sde-rv-card sde-rv-missions" aria-labelledby="sde-rv-missions-title">
      <div class="sde-rv-card-heading"><span class="sde-rv-card-icon" aria-hidden="true">◎</span><h3 id="sde-rv-missions-title">Missions</h3></div>
-     <div class="sde-rv-globe" aria-hidden="true">
-      <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg"><ellipse cx="120" cy="60" rx="106" ry="50" fill="none" stroke="#d8b974" opacity=".4"/><path d="M14 60h212M120 11v98M37 33h166M37 87h166" stroke="#d8b974" fill="none" opacity=".25"/><path d="M42 28l31-9 18 9 8 12-14 4-7 14-14 2-7-11-16-2-8-9zm49 40 23 2 15 21-9 22-13-5-4-16-12-13zm35-45 28-6 42 10 11 17-15 9-22-6-15 15-14-10-21-7zm19 49 17-6 10 12-9 21-8 12-9-18z" fill="#b99b62" opacity=".83"/><circle cx="112" cy="73" r="3.7" fill="#fff5d4" stroke="#273d61" stroke-width="2"/></svg>
-     </div>
+     <a class="sde-rv-globe sde-rv-geo-link" href="#sde-carte-home" aria-label="Accéder à la carte réelle SDE">◎ <span>Explorer la carte interactive</span></a>
      <p>À partir d'Abidjan : servir, accompagner et porter des projets d'impact.</p>
      <div class="sde-rv-mission-controls" role="group" aria-label="Explorer l'impact SDE">
       <button type="button" data-sde-mission-view="carte" aria-pressed="true">Carte</button>
