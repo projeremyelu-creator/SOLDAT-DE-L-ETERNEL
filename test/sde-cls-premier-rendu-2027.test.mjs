@@ -79,3 +79,23 @@ test('Mouvement desktop : place du décompte réservée dès la première peintu
  const d=new JSDOM(file('public/vitrine/mouvement.html')).window.document;
  assert.ok(d.querySelector('#sde-event-root .event-clock time'));
 });
+
+test('Le bandeau TPA stabilise les liens sans supprimer la date ni le décompte',()=>{
+ const css=file('public/vitrine/sde-shell-public.css');
+ const patch=css.slice(css.lastIndexOf('Dernière passe CLS 11/11/2026'));
+ assert.ok(patch.startsWith('Dernière passe CLS'));
+ assert.match(patch,/data-sde-page="programmes"/);
+ assert.match(patch,/height:122px!important/);
+ assert.match(patch,/grid-template-rows:48px 44px!important/);
+ assert.match(patch,/\.event-clock\{\s*display:none!important/);
+ assert.match(patch,/data-sde-page="mouvement"/);
+ assert.match(patch,/grid-template-columns:minmax\(0,1fr\) 188px!important/);
+ assert.match(patch,/text-overflow:ellipsis!important/);
+ for(const page of ['programmes','mouvement']){
+  const doc=new JSDOM(file('public/vitrine/'+page+'.html')).window.document;
+  assert.ok(doc.querySelector('#sde-event-root a[href="/programmes#tpa-2026"]'));
+  assert.ok(doc.querySelector('#sde-event-root .event-bar-date'));
+ }
+ const pg=new JSDOM(file('public/vitrine/programmes.html')).window.document;
+ assert.ok(pg.querySelector('.event-clock time[datetime="2026-12-18T20:00:00Z"]'));
+});
