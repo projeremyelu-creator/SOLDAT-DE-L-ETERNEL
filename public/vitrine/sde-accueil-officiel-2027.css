@@ -12,7 +12,8 @@ html body.sde-2027-reference{
  --home27-copy:#f6f0e8;
  background:#f8f0e5!important;
 }
-html body.sde-2027-reference .sde-versets-slot{
+html body.sde-2027-reference .sde-versets-slot,
+html body.sde-2027-reference .sde-versets{
  display:none!important;
 }
 html body.sde-2027-reference .sde-2027-anchor{
