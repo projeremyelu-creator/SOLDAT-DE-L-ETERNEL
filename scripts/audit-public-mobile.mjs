@@ -452,11 +452,15 @@ try{
    if(c.name==='connexion-390'){
     try{
      const visible=await page.evaluate(()=>{
-      const h=document.querySelector('.site-header'),ref=document.querySelector('.ref-login-art');
-      return {header:h?getComputedStyle(h).display:null,
-       reference:ref?getComputedStyle(ref).display:null};
+      const shown=selector=>[...document.querySelectorAll(selector)].some(el=>{
+       const css=getComputedStyle(el),rect=el.getBoundingClientRect();
+       return css.display!=='none'&&css.visibility!=='hidden'&&
+        css.opacity!=='0'&&rect.width>1&&rect.height>1;
+      });
+      return {header:shown('.site-header'),reference:shown('.ref-login-art')};
      });
-     if(visible.header!=='none'||visible.reference!=='none')
+     // Un élément complètement absent du HTML est conforme, au même titre qu'un élément masqué.
+     if(visible.header||visible.reference)
       issue(c.name,'barre publique ou image de maquette visible pendant la connexion',true);
      if(await page.locator('.access-back[href="/"]').count()!==1)
       issue(c.name,'lien de retour au site absent',true);
