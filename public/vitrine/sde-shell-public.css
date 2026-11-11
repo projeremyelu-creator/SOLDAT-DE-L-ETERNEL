@@ -1934,11 +1934,13 @@ html body[data-sde-page="programmes"] #agenda-liste > .programme[data-sde-archiv
  /* Le premier calcul des polices ne doit pas déplacer les deux liens
     du bandeau de /mouvement (ancien CLS 0,101). */
  html body[data-sde-page="mouvement"] #sde-event-root .event-bar-inner{
-  display:grid!important;grid-template-columns:minmax(0,1fr) 188px!important;
-  gap:16px!important;align-items:center!important;
+  display:grid!important;grid-template-columns:minmax(0,1fr) 316px 188px!important;
+  grid-template-rows:minmax(44px,auto)!important;
+  column-gap:16px!important;row-gap:0!important;align-items:center!important;
   justify-content:stretch!important;
  }
  html body[data-sde-page="mouvement"] #sde-event-root .event-bar-inner>a:first-child{
+  grid-column:1!important;grid-row:1!important;
   display:flex!important;min-width:0!important;max-width:100%!important;
   overflow:hidden!important;white-space:nowrap!important;
  }
@@ -1954,4 +1956,14 @@ html body[data-sde-page="programmes"] #agenda-liste > .programme[data-sde-archiv
   width:188px!important;min-width:188px!important;
   text-align:center!important;box-sizing:border-box!important;
  }
+ html body[data-sde-page="mouvement"] #sde-event-root .event-bar-inner>.event-clock{
+  grid-column:2!important;grid-row:1!important;
+  justify-self:center!important;
+  width:316px!important;min-width:316px!important;
+ }
+ html body[data-sde-page="mouvement"] #sde-event-root .event-bar-inner>.event-bar-action{
+  grid-column:3!important;grid-row:1!important;
+  justify-self:end!important;
+ }
+
 }
