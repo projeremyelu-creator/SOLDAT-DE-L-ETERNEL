@@ -1846,3 +1846,27 @@ html body.sde-unifie.sde-campus-public #sde-event-root{
   box-sizing:border-box!important;overflow:hidden!important;
  }
 }
+
+/* Recette navigateur réelle 11-11 : le montage du shell compactait
+   l'introduction Programmes de ~58–80 px, créant le CLS 0,309.
+   Pré-appliquer la géométrie de l'état final plutôt que déplacer le contenu
+   à DOMContentLoaded. L'Academy (CLS 0,054) reste inchangée. */
+@media(min-width:701px) and (max-width:800px){
+ html body.sde-unifie[data-sde-page="programmes"]:not(.sde-shell-mounted) main#contenu>.sde-intro{
+  padding-top:20px!important;padding-bottom:20px!important;
+  margin-bottom:0!important;box-sizing:border-box!important;
+ }
+ html body.sde-unifie[data-sde-page="programmes"]:not(.sde-shell-mounted) main#contenu>.sde-intro :is(h1,p){
+  margin-block:6px!important;
+ }
+}
+/* Mouvement desktop : la première coque réservait 19px de trop
+   selon les sources du CLS réel (main: top 240 -> 221). */
+@media(min-width:1101px){
+ html body.sde-unifie[data-sde-page="mouvement"]:not(.sde-shell-mounted)>header.site-header:not(.sde-shell-header){
+  height:57px!important;min-height:57px!important;max-height:57px!important;
+ }
+ html body.sde-unifie[data-sde-page="mouvement"]:not(.sde-shell-mounted)>header.site-header .site-header-inner{
+  height:56px!important;min-height:56px!important;max-height:56px!important;
+ }
+}
