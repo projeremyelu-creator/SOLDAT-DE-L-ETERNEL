@@ -17,6 +17,7 @@ for(const a of accounts) {
 }
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
 const report=[];
+const fiches=[];
 try{
  for(const account of accounts){
   const context=await browser.newContext({viewport:{width:360,height:800},deviceScaleFactor:1,isMobile:true,hasTouch:true,locale:'fr-CI'});
@@ -82,6 +83,47 @@ try{
     report.push({role:account.type,width,overflow:Math.max(data.bodyWidth,data.documentWidth)-width,
       headerOverlaps:data.headerOverlaps.length,rendered:true});
    }
+
+   // Ouvrir une vraie fiche via la navigation utilisateur, sans capturer son contenu.
+   // Les assertions se limitent aux dimensions des blocs et des commandes.
+   if(account.type==='administrateur'){
+    await page.setViewportSize({width:390,height:844});
+    const accesRegistre=page.locator('.sde-command-v4-bottom [data-module="membres"]');
+    await accesRegistre.waitFor({state:'visible',timeout:15000});
+    await accesRegistre.click();
+    const premiereFiche=page.locator('#main .sde-member-register [data-act="voir-membre"]').first();
+    await premiereFiche.waitFor({state:'visible',timeout:20000});
+    await premiereFiche.click();
+    const fiche=page.locator('#sheet .sde-member-profile');
+    await fiche.waitFor({state:'visible',timeout:12000});
+    for(const width of [360,390,768,1280,1600]){
+     await page.setViewportSize({width,height:width===360?800:width===390?844:width===768?1024:900});
+     await page.waitForTimeout(300);
+     const dimensions=await fiche.evaluate(el=>{
+      const sheet=el.closest('#sheet');
+      const pane=sheet?.querySelector('.sheet-b');
+      if(!pane)return {ouverte:false,debordement:0,blocsHorsCadre:0,ciblesTropPetites:0};
+      const limite=pane.getBoundingClientRect();
+      const blocs=[...el.querySelectorAll('.ident,.kv,.sde-member-phone,.actions')];
+      const blocsHorsCadre=blocs.filter(node=>{
+       const rect=node.getBoundingClientRect();
+       return rect.left<limite.left-4||rect.right>limite.right+4;
+      }).length;
+      const cibles=[...el.querySelectorAll('.sde-member-phone .inline-actions .btn')];
+      const ciblesTropPetites=cibles.filter(node=>node.getBoundingClientRect().height<43.5).length;
+      return {ouverte:!sheet.hidden,debordement:Math.max(0,el.scrollWidth-el.clientWidth),
+       blocsHorsCadre,ciblesTropPetites};
+     });
+     if(!dimensions.ouverte||dimensions.debordement>4||dimensions.blocsHorsCadre)
+      throw Error('Fiche individuelle mal cadrée sur '+width+'px');
+     if(dimensions.ciblesTropPetites)
+      throw Error('Actions téléphoniques trop petites sur '+width+'px');
+     fiches.push({width,ouverte:true,debordement:dimensions.debordement,ciblesTropPetites:0});
+    }
+    // Aucun nom, téléphone, identifiant, cookie ou visuel privé dans le rapport.
+    console.log('RECETTE_FICHE '+JSON.stringify({tailles:fiches.map(x=>x.width),erreurs:0}));
+   }
+
    // Vérifier la restriction entre les deux espaces avec le cookie actif, sans écrire.
    const forbidden=await context.request.get(base+'/administration',{maxRedirects:0});
    if(account.type==='membre'&&forbidden.status()!==403)
@@ -92,5 +134,5 @@ try{
   }finally{await context.close();}
  }
 }finally{await browser.close();}
-if(report.length!==10)throw Error('Recette authentifiée incomplète');
-console.log('BILAN_RECETTE_AUTH '+JSON.stringify({parcours:report.length,erreurs:0,details:report}));
+if(report.length!==10||fiches.length!==5)throw Error('Recette authentifiée ou fiches incomplètes');
+console.log('BILAN_RECETTE_AUTH '+JSON.stringify({parcours:report.length,fiches:fiches.length,erreurs:0,details:report}));

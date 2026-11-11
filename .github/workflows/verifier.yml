@@ -32,6 +32,8 @@ jobs:
             echo "::error::Aucun encodeur WebP (ImageMagick/FFmpeg/Chrome) disponible."
             exit 1
           fi
+      - name: Vérifier la syntaxe du contrôle des fiches privées
+        run: node --check scripts/audit-prive-authentifie.mjs
       - run: npm run build:experience
       - name: Garantir une affiche mobile réellement plus légère
         run: |
