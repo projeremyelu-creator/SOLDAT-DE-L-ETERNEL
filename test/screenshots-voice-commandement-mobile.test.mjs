@@ -8,7 +8,7 @@ test('Soldiers Voice charge le correctif de contraste après le shell historique
  const d=new JSDOM(h).window.document;
  const sheets=[...d.querySelectorAll('link[rel="stylesheet"]')].map(el=>el.getAttribute('href'));
  assert.ok(sheets.find(s=>s.includes('sde-soldiers-voice-accessible.css')));
- assert.ok(sheets.findIndex(s=>s.includes('sde-soldiers-voice-accessible.css'))>
+ assert.ok(sheets.findIndex(s=>s.includes('sde-soldiers-voice-accessible.css'))<
   sheets.findIndex(s=>s.includes('sde-shell-public.css')));
  assert.equal(d.querySelectorAll('#musique .sde-initiative-card').length,3);
  assert.ok(d.querySelector('a.sde-voice-lead-cta[href="#rejoindre-voice"]'));
