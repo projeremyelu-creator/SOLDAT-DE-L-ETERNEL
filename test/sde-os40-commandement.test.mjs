@@ -108,7 +108,7 @@ test('Chaque fiche individuelle du registre a le modèle accessible SDE 2027',()
   if(part==='data-act="voir-garnison"')assert.ok(profile.includes('data-act="voir-garnison"'),part);
   else assert.ok(profile.includes(part),part);
  }
- assert.ok(html.includes('sde-command-v4.css?v=20261111-fiche2027b'));
+ assert.match(html,/sde-command-v4\.css\?v=[a-zA-Z0-9_-]+/,'feuille privée versionnée, même après la compilation');
  for(const token of [
   '#sheet:has(.sde-member-profile)',
   '.sde-member-profile .sde-member-phone',
