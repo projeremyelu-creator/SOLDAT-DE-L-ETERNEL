@@ -44,7 +44,7 @@ test("Prier Organiser Agir : trois cartes accessibles et toutes les destinations
  const items=[...p.querySelectorAll(".sde-2027-pillar-link")];
  assert.deepEqual(items.map(a=>a.getAttribute("href")),["/priere","/gouvernance","/missions-humanitaires"]);
  for(const item of items){
-  assert.ok(item.querySelector(".sde-pillar-icon[aria-hidden]"));
+  assert.ok(item.querySelector(".sde-2027-pillar-icon[aria-hidden] .sde-pillar-icon"));
   assert.ok(item.querySelector(".sde-2027-pillar-copy strong"));
   assert.ok(item.querySelector(".sde-2027-pillar-copy>span"));
  }
@@ -56,7 +56,7 @@ test("Prier Organiser Agir : trois cartes accessibles et toutes les destinations
 
 test("Responsive PC/tablette/mobile, contraste, mouvement réduit et navigation partagée",()=>{
  const links=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(x=>x[1]);
- assert.equal(links.at(-1),"/vitrine/sde-accueil-officiel-2027.css?v=20261111ref1","nouvelle charte chargée en dernier");
+ assert.match(links.at(-1),/^\/vitrine\/sde-accueil-officiel-2027\.css\?v=[a-zA-Z0-9]+$/,"nouvelle charte chargée en dernier avec versionnement automatique");
  for(const required of [
   "@media(max-width:1000px)","@media(max-width:650px)","@media(max-width:800px)","@media(max-width:365px)",
   "@media(prefers-reduced-motion:reduce)","grid-template-columns:repeat(3,minmax(0,1fr))",
