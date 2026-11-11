@@ -26,7 +26,7 @@
 
   function eventBanner(){
     const host=document.getElementById('sde-event-root');
-    if(!host)return;
+    if(!host || host.querySelector(".event-bar-inner.upcoming"))return;
     const inner=document.createElement('div');
     inner.className='event-bar-inner upcoming';
     const main=document.createElement('a');
