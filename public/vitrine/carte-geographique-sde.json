@@ -1,0 +1,17 @@
+{
+  "version": "2026-11-11",
+  "sourcePolicy": "Uniquement des lieux publics dont la localisation est documentée ; aucun lieu privé ni mission non confirmée.",
+  "locations": [
+    {
+      "id": "abidjan",
+      "title": "Abidjan — ville de référence du SDE",
+      "kind": "reference",
+      "latitude": 5.34947032165547,
+      "longitude": -4.01813077089814,
+      "precision": "city",
+      "description": "Ce repère indique le centre géographique d'Abidjan, et non l'adresse exacte du mouvement ou le lieu d'une mission.",
+      "link": "/mouvement",
+      "evidence": "https://ungegn.un.org/dashboard/cities/details?id=3454"
+    }
+  ]
+}
