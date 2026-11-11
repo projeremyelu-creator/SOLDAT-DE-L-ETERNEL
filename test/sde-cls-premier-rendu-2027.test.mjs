@@ -27,3 +27,20 @@ test('Academy : bannière redondante masquée sans supprimer les cours ni la TPA
  assert.ok(p.querySelector('#tpa-2026'));
  assert.ok(p.querySelector('.event-clock time[datetime="2026-12-18T20:00:00Z"]'));
 });
+
+test('Les trois pages ayant un CLS mesuré réservent leur hauteur avant montage',()=>{
+ const css=file('public/vitrine/sde-shell-public.css');
+ const section=css.slice(css.lastIndexOf('Réserves avant montage de la navigation partagée'));
+ assert.ok(section.startsWith('Réserves avant montage'));
+ for(const name of ['programmes','mouvement','academy']){
+  const html=file('public/vitrine/'+name+'.html');
+  const d=new JSDOM(html).window.document;
+  assert.equal(d.body.getAttribute('data-sde-page'),name);
+  assert.ok(d.querySelector('header.site-header'));
+  assert.ok(section.includes('data-sde-page="'+name+'"'));
+ }
+ assert.match(section,/height:63px!important/);
+ assert.match(section,/height:76px!important/);
+ assert.match(section,/height:161px!important/);
+ assert.match(section,/not\(\.sde-shell-mounted\)/);
+});
