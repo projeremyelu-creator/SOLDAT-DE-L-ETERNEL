@@ -40,7 +40,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
 <link rel="stylesheet" href="/vitrine/sde-tactique.css?v=19fa73fcaa6a">
 <link rel="stylesheet" href="/vitrine/sde-mobile-correctifs-20261103.css?v=19fa73fcaa6a">
 <link rel="stylesheet" href="/vitrine/sde-poste-commandement-v2.css?v=19fa73fcaa6a">
-<link rel="stylesheet" href="/vitrine/sde-command-v4.css?v=19fa73fcaa6a">
+<link rel="stylesheet" href="/vitrine/sde-command-v4.css?v=20261111-fiche2027b">
 <script>/* Palette des espaces privés appliquée avant le premier affichage (Fusion violet · vert · or par défaut). */try{var d=document.documentElement,v=localStorage.getItem("sde-private-palette-version")==="fusion-04"?localStorage.getItem("sde-private-palette"):"fusion";d.setAttribute("data-sde-palette",/^(fusion|ivoire|terracotta|militaire|violet|tactique)$/.test(v||"")?v:"fusion")}catch(e){document.documentElement.setAttribute("data-sde-palette","fusion")}</script>
 <script defer src="/sde-bridge.js?v=19fa73fcaa6a"></script>
 <script>/* Thème : applique le choix utilisateur avant le premier paint */
@@ -1493,14 +1493,14 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
         <div class="btn-row" style="margin-top:10px">${adm ? btn("ajout-cotis", "Enregistrer une cotisation", { ico: "i-plus", sm: true, data: `data-id="${esc(m.id)}" data-annee="${an}"` }) : ""}${e.retard.length ? btn("relance-cotis", "Relancer", { ico: "i-msg", sm: true, data: `data-id="${esc(m.id)}" data-annee="${an}"` }) : ""}</div>`;
     }
     const disc = accesDirection() && S.pret.discipline ? `<h3 class="h3">Discipline</h3>${blocDiscipline(m)}` : "";
-    return `<div class="ident">${avatar(m, true)}<div><h3>${esc(nomUsuel(m) || nomComplet(m))}</h3><p>${esc([m.fonction, m.statut].filter(Boolean).join(" · ") || "Membre du mouvement")}${m.actif === false ? " · archivé" : ""}</p></div></div>
+    return `<section class="sde-member-profile" aria-label="Dossier individuel du membre"><div class="ident">${avatar(m, true)}<div><h3>${esc(nomUsuel(m) || nomComplet(m))}</h3><p>${esc([m.fonction, m.statut].filter(Boolean).join(" · ") || "Membre du mouvement")}${m.actif === false ? " · archivé" : ""}</p></div></div>
       ${photo}${voeux}
       ${blocVoyants(m)}
       ${kv([["Matricule", `${m.matricule ? `<span class="num">${esc(m.matricule)}</span>` : `<span class="muted">Aucun</span>`}${ecr ? ` <button class="link" type="button" data-act="editer-matricule" data-id="${esc(m.id)}">Modifier</button>` : ""}`], ["Téléphone", tel], ["Autre numéro", m.telephone2 ? `<span class="num">${esc(telAffiche(m.telephone2))}</span>` : ""], ["E-mail", m.email ? esc(m.email) : ""], ["Naissance", naiss], ["Sexe", m.sexe === "H" ? "Homme" : m.sexe === "F" ? "Femme" : ""], ["Situation", esc(m.situation || "")], ["Baptême", esc(baptiseLib(m))], ["Quartier", esc(m.quartier || "")], ["Église", esc(m.eglise || "")], ["Implantation", esc(m.implantation || "")], ["Garnison", garnison(m.garnisonId) ? `<button class="link" type="button" data-act="voir-garnison" data-id="${esc(m.garnisonId)}">${esc(cheminG(m.garnisonId))}</button>` : ""], ["Pôle", esc(m.pole || "")], ["Département", esc(m.departement || "")], ["Membre depuis", m.adhesion ? esc(fmtJour(m.adhesion)) : ""], ["Observations", m.notes ? `<span style="white-space:pre-wrap">${esc(m.notes)}</span>` : ""]])}
       <h3 class="h3">Assiduité</h3>${blocAssiduite(m)}
       ${blocParcours(m)}${blocProjetsMembre(m)}${cotis}${blocEspaceMembre(m)}${accesDirection() ? blocCotisAutres(m) : ""}${disc}
       ${saisie ? `<p class="hint" style="margin-top:14px">${esc(cap(saisie))}.</p>` : ""}
-      ${ecr ? `<div class="actions">${btn("editer-membre", "Modifier", { ico: "i-edit", cls: "btn-primary", data: `data-id="${esc(m.id)}"` })}${adm ? btn("carte", "Carte de membre", { ico: "i-card", data: `data-id="${esc(m.id)}"` }) : ""}${m.actif === false ? btn("reactiver-membre", "Réactiver", { ico: "i-undo", data: `data-id="${esc(m.id)}"` }) : btn("archiver-membre", "Archiver", { ico: "i-archive", data: `data-id="${esc(m.id)}"` })}${adm ? btn("supprimer-membre", "Supprimer", { ico: "i-trash", cls: "btn-danger", data: `data-id="${esc(m.id)}"` }) : ""}</div>` : ""}`;
+      ${ecr ? `<div class="actions">${btn("editer-membre", "Modifier", { ico: "i-edit", cls: "btn-primary", data: `data-id="${esc(m.id)}"` })}${adm ? btn("carte", "Carte de membre", { ico: "i-card", data: `data-id="${esc(m.id)}"` }) : ""}${m.actif === false ? btn("reactiver-membre", "Réactiver", { ico: "i-undo", data: `data-id="${esc(m.id)}"` }) : btn("archiver-membre", "Archiver", { ico: "i-archive", data: `data-id="${esc(m.id)}"` })}${adm ? btn("supprimer-membre", "Supprimer", { ico: "i-trash", cls: "btn-danger", data: `data-id="${esc(m.id)}"` }) : ""}</div>` : ""}</section>`;
   }
   const ouvrirMembre = (id) => ouvrir({ titre: "Fiche membre", refresh: surveiller(() => ficheMembre(id)) });
 
