@@ -233,3 +233,18 @@ test("Soutenir réserve 73 px pour la navigation avant le remplacement du header
  assert.match(reserve,/height:73px!important;min-height:73px!important;max-height:73px!important/);
  assert.match(reserve,/flex-wrap:nowrap!important;overflow:hidden!important/);
 });
+
+test("Accès public unique et contrôle d'animations sans superposition mobile",()=>{
+ const navigation=read("public/vitrine/portail-unifie.js");
+ assert.ok(navigation.includes('membres:"/portail"'));
+ assert.ok(!navigation.includes('membres:"/mon-espace"'));
+ const motion=read("public/vitrine/sde-marque.js");
+ const css=read("public/vitrine/sde-marque.css");
+ assert.ok(motion.includes("document.querySelector('[data-sde-motion-slot]')"));
+ assert.ok(motion.includes("document.querySelector('.sde-shell-footer, footer')"));
+ assert.ok(!motion.includes("document.body.append(btn)"));
+ assert.ok(css.includes(".sde-ambiance-ctl{position:static;"));
+ assert.ok(!css.includes(".sde-ambiance-ctl{position:fixed;"));
+ assert.ok(css.includes(".sde-motion-slot .sde-ambiance-ctl{margin:0"));
+ assert.ok(css.includes("@media(max-width:900px)"));
+});
