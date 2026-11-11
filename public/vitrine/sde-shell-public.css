@@ -1676,3 +1676,54 @@ html body.sde-shell-mounted .sde-shell-footer .sde-shell-newsletter .sde-privacy
     font-size:.9rem!important;
   }
 }
+
+
+/* Recette 2026-11-11 : les pages Soutenir doivent réserver leur structure
+   dès la première peinture, AVANT que le shell JavaScript remplace l'en-tête.
+   Supprime le changement brutal de disposition des cartes/formulaire. */
+html body[data-sde-page="soutenir"] .sde-donation-overview{
+ display:grid!important;
+ grid-template-columns:minmax(0,1.07fr) minmax(320px,.93fr)!important;
+ align-items:start!important;
+ gap:clamp(20px,3vw,40px)!important;
+ margin:24px 0 30px!important;
+}
+html body[data-sde-page="soutenir"] .sde-donation-overview #formulaire{
+ position:sticky!important;top:110px!important;
+ padding:22px!important;border:1px solid #c8b48c!important;
+ border-radius:18px!important;
+ background:var(--sde-surface,#f9f4ea)!important;
+ box-shadow:0 9px 25px #0001!important;
+}
+html body[data-sde-page="soutenir"] .hub-progress,
+html body[data-sde-page="soutenir"] .hub-card .hub-status{
+ display:none!important;
+}
+html body[data-sde-page="soutenir"] #pay-liste[hidden]{display:none!important}
+@media(min-width:901px){
+ html body[data-sde-page="soutenir"] header.sde-hub-head:not(.sde-shell-header){
+  min-height:76px!important;height:76px!important;max-height:76px!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+ }
+ html body[data-sde-page="soutenir"] header.sde-hub-head:not(.sde-shell-header)>.inner{
+  height:76px!important;min-height:76px!important;max-height:76px!important;
+  padding:8px 18px!important;box-sizing:border-box!important;
+  flex-wrap:nowrap!important;
+ }
+ html body[data-sde-page="soutenir"] header.sde-hub-head:not(.sde-shell-header) .sde-hub-nav{
+  flex-wrap:nowrap!important;white-space:nowrap!important;
+  max-width:68%;overflow-x:auto!important;scrollbar-width:thin;
+ }
+ html body[data-sde-page="soutenir"] .sde-shell-header,
+ html body[data-sde-page="soutenir"] .sde-shell-head-inner{
+  min-height:76px!important;height:76px!important;box-sizing:border-box!important;
+ }
+}
+@media(max-width:900px){
+ html body[data-sde-page="soutenir"] .sde-donation-overview{
+  grid-template-columns:minmax(0,1fr)!important;
+ }
+ html body[data-sde-page="soutenir"] .sde-donation-overview #formulaire{
+  position:static!important;order:-1!important;top:auto!important;
+ }
+}
