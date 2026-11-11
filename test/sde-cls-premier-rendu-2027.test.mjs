@@ -44,3 +44,14 @@ test('Les trois pages ayant un CLS mesuré réservent leur hauteur avant montage
  assert.match(section,/height:161px!important/);
  assert.match(section,/not\(\.sde-shell-mounted\)/);
 });
+
+test('Le CLS réel 11/11 pré-réserve la même intro Programmes et le même header Mouvement',()=>{
+ const css=file('public/vitrine/sde-shell-public.css');
+ const patch=css.slice(css.lastIndexOf('Recette navigateur réelle 11-11'));
+ assert.ok(patch.startsWith('Recette navigateur réelle'));
+ assert.match(patch,/data-sde-page="programmes"/);
+ assert.match(patch,/padding-top:20px!important;padding-bottom:20px!important/);
+ assert.match(patch,/margin-block:6px!important/);
+ assert.match(patch,/data-sde-page="mouvement"/);
+ assert.match(patch,/height:57px!important/);
+});
