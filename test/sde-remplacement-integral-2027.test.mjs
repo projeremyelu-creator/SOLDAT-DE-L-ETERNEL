@@ -28,8 +28,9 @@ test("Atlas : illustration sans fausses implantations, navigation vers les activ
  const doc=new JSDOM(home).window.document;
  const atlas=doc.querySelector(".sde-v5-map-stage");
  assert.ok(atlas);
- assert.equal(atlas.querySelectorAll(".sde-v5-light-points circle").length,12);
- assert.match(atlas.querySelector(".sde-v5-map-disclaimer").textContent,/uniquement décoratifs/);
+ assert.ok(atlas.querySelector("[data-sde-real-map]"),"carte réelle en lieu et place des cercles décoratifs");
+ assert.equal(atlas.querySelectorAll(".sde-v5-light-points circle").length,0);
+ assert.match(atlas.querySelector(".sde-v5-map-disclaimer").textContent,/véritables données géographiques/);
  assert.ok(atlas.querySelector('a[href="/missions-humanitaires"]'));
  assert.ok(atlas.querySelector('a[href="/transparence"]'));
  assert.equal(atlas.querySelectorAll("[data-mission-location]").length,0);
