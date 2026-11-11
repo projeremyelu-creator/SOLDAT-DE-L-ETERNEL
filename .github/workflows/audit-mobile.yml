@@ -42,7 +42,15 @@ jobs:
         if: steps.revision.outputs.verifier == 'true'
         run: |
           npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.0
-          npx playwright install --with-deps chromium
+          # Ubuntu 24.04 inclut Google Chrome. Éviter les dépôts APT lors des
+          # indisponibilités DNS ; Playwright garde son installation classique
+          # sur une image qui ne dispose pas de Chrome.
+          if command -v google-chrome >/dev/null 2>&1; then
+            echo "SDE_CHROME_EXECUTABLE=$(command -v google-chrome)" >> "$GITHUB_ENV"
+            google-chrome --version
+          else
+            npx playwright install --with-deps chromium
+          fi
       - name: Vérifier les pages publiques et la protection anonyme
         if: steps.revision.outputs.verifier == 'true'
         run: node scripts/audit-public-mobile.mjs

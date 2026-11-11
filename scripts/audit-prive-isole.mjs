@@ -37,7 +37,7 @@ const cases=[
   {mode:'administration',niveau:2,width:1440,height:900}
 ];
 const report={type:'audit-isole-sans-donnees-reelles',origin:'localhost',checks:[],issues:[]};
-const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const browser=await chromium.launch({headless:true,...(process.env.SDE_CHROME_EXECUTABLE?{executablePath:process.env.SDE_CHROME_EXECUTABLE}:{}),args:['--no-sandbox']});
 function requireOk(ok,code,detail){if(!ok)report.issues.push({code,detail})}
 try{
   for(const c of cases){
