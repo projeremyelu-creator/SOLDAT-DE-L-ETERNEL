@@ -248,3 +248,31 @@ test("Accès public unique et contrôle d'animations sans superposition mobile",
  assert.ok(css.includes(".sde-motion-slot .sde-ambiance-ctl{margin:0"));
  assert.ok(css.includes("@media(max-width:900px)"));
 });
+
+test("Registre administrateur : noms et filtres contrastés, actions fiche mobile non superposées",()=>{
+ const app=read("public/index.html");
+ const css=read("public/vitrine/sde-command-v4.css");
+ assert.ok(app.includes('class="row sde-member-row" type="button" data-act="voir-membre"'));
+ assert.ok(app.includes('class="filters sde-member-filters"'));
+ assert.ok(app.includes('class="list sde-member-register"'));
+ assert.ok(app.includes('class="sde-member-phone"'));
+ assert.ok(css.includes(".sde-member-row .row-t"));
+ assert.ok(css.includes("color:#fffaf0!important"));
+ assert.ok(css.includes(".sde-member-filters :is(.search,.sel)"));
+ assert.ok(css.includes("background:#fffaf0!important"));
+ assert.ok(css.includes(".sde-member-filters .search::placeholder"));
+ assert.ok(css.includes(".sde-member-phone .inline-actions"));
+ assert.ok(css.includes("grid-template-columns:repeat(2,minmax(0,1fr))"));
+ const luminance=hex=>{
+  const v=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255)
+   .map(x=>x<=0.04045?x/12.92:((x+0.055)/1.055)**2.4);
+  return v[0]*0.2126+v[1]*0.7152+v[2]*0.0722;
+ };
+ const contraste=(a,b)=>{
+  const x=luminance(a),y=luminance(b);
+  return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05);
+ };
+ assert.ok(contraste("#fffaf0","#111e37")>=7,"Le nom doit respecter WCAG AAA sur le fond bleu nuit");
+ assert.ok(contraste("#17263f","#fffaf0")>=7,"Les filtres doivent respecter WCAG AAA");
+ assert.ok(contraste("#566278","#fffaf0")>=4.5,"Le placeholder doit respecter WCAG AA");
+});

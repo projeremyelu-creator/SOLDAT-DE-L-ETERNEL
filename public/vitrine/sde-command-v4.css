@@ -208,3 +208,94 @@ body.sde-direct-admin .sde-command-v4-item{border-radius:13px;min-height:80px}
  body.sde-direct-admin .sde-command-v4-insight{padding:11px}
  body.sde-direct-admin .sde-command-v4-insight strong{font-size:1.3rem}
 }
+
+/* Recette visuelle SDE 11/11/2026 — registre et fiche membre.
+   Les intitulés étaient violets sombres sur des cartes bleu nuit, et
+   les menus déroulants avaient une encre illisible. Aucun effet sur les données. */
+html body.sde-direct-admin #main .sde-member-register{
+ background:#101c34!important;
+ border:1px solid #43516d!important;
+ border-radius:15px;overflow:hidden;
+}
+html body.sde-direct-admin #main .sde-member-row{
+ color:#f8f0e5!important;
+ background:#111e37!important;
+ border-top:1px solid #34435e!important;
+}
+html body.sde-direct-admin #main .sde-member-row:first-child{border-top:0!important}
+html body.sde-direct-admin #main .sde-member-row .row-t{
+ color:#fffaf0!important;font-weight:800;line-height:1.35;
+}
+html body.sde-direct-admin #main .sde-member-row .row-m{
+ color:#d1d9e7!important;line-height:1.48;
+}
+html body.sde-direct-admin #main .sde-member-row .row-r .chip{
+ color:#f4e6c9!important;background:#23324f!important;
+ border:1px solid #64718d!important;
+}
+html body.sde-direct-admin #main .sde-member-row:is(:hover,:focus-visible){
+ background:#223653!important;outline-color:#e9c982!important;
+}
+html body.sde-direct-admin #main .sde-member-filters :is(.search,.sel){
+ color:#17263f!important;background:#fffaf0!important;
+ border:1px solid #a88b5c!important;
+ box-shadow:0 2px 8px #0a122014;
+ min-height:48px;
+ color-scheme:light;
+}
+html body.sde-direct-admin #main .sde-member-filters .search::placeholder{
+ color:#566278!important;opacity:1;
+}
+html body.sde-direct-admin #main .sde-member-filters :is(.search,.sel):focus-visible{
+ outline:3px solid #d4af37!important;outline-offset:2px;
+}
+html body.sde-direct-admin #main .sde-member-filters .sel option{
+ color:#17263f!important;background:#fffaf0!important;
+}
+html body.sde-direct-admin #sheet .sde-member-phone{
+ display:grid;grid-template-columns:minmax(0,1fr);gap:10px;
+ width:100%;min-width:0;
+}
+html body.sde-direct-admin #sheet .sde-member-phone>.num{
+ display:block;min-width:0;overflow-wrap:anywhere;
+ font-variant-numeric:tabular-nums;color:#f8f0e5!important;
+}
+html body.sde-direct-admin #sheet .sde-member-phone .inline-actions{
+ display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:0;
+}
+html body.sde-direct-admin #sheet .sde-member-phone .inline-actions .btn{
+ min-height:44px;min-width:0;
+}
+@media(max-width:760px){
+ html body.sde-direct-admin #main .sde-member-filters{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:10px;
+ }
+ html body.sde-direct-admin #main .sde-member-filters :is(.search,.sel){
+  display:block;box-sizing:border-box;width:100%;max-width:none;
+ }
+ html body.sde-direct-admin #main .sde-member-filters>.btn-row{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  width:100%;gap:8px;
+ }
+ html body.sde-direct-admin #main .sde-member-filters>.btn-row>*{
+  width:100%;min-width:0;min-height:44px;white-space:normal;
+ }
+ html body.sde-direct-admin #main .sde-member-row{
+  grid-template-columns:46px minmax(0,1fr);
+  gap:5px 12px;padding:13px 12px;
+ }
+ html body.sde-direct-admin #main .sde-member-row>.row-r{
+  grid-column:2;grid-row:2;align-items:flex-start;
+  justify-self:start;flex-direction:row;flex-wrap:wrap;
+  text-align:left;margin-top:4px;
+ }
+ html body.sde-direct-admin #sheet .sde-member-phone .inline-actions{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+ html body.sde-direct-admin #sheet .sde-member-phone .inline-actions .btn{
+  padding-inline:8px;justify-content:center;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-direct-admin #main .sde-member-row{transition:none!important}
+}
