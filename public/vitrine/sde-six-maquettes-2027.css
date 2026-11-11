@@ -620,3 +620,41 @@ body[data-sde-page="mouvement"] .sde-versets-slot{
   height:72px!important;overflow:hidden!important;
  }
 }
+
+
+/* Recette 2026-11-11 : maintien des emplacements pendant l'initialisation
+   de l'en-tête SDE, du bandeau TPA et du verset du jour.
+   S'applique seulement à "Le Mouvement" sur grand écran ; les autres
+   rubriques et les tailles mobiles conservent leur comportement actuel. */
+@media(min-width:1100px){
+ html body[data-sde-page="mouvement"] #sde-event-root{
+  height:76px!important;min-height:76px!important;max-height:76px!important;
+  overflow:hidden!important;box-sizing:border-box!important;
+  contain:layout paint!important;
+ }
+ html body[data-sde-page="mouvement"] #sde-event-root .event-bar-inner{
+  min-height:0!important;max-height:76px!important;height:76px!important;
+  box-sizing:border-box!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;gap:12px!important;flex-wrap:nowrap!important;
+ }
+ html body[data-sde-page="mouvement"] #sde-event-root .event-bar-inner a{
+  min-height:44px!important;display:inline-flex!important;align-items:center!important;
+ }
+ html body[data-sde-page="mouvement"] header.site-header:not(.sde-shell-header){
+  height:76px!important;min-height:76px!important;max-height:76px!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+ }
+ html body[data-sde-page="mouvement"] .sde-shell-header,
+ html body[data-sde-page="mouvement"] .sde-shell-head-inner{
+  height:76px!important;min-height:76px!important;
+  box-sizing:border-box!important;
+ }
+ html body[data-sde-page="mouvement"] :is(.sde-versets-slot,.sde-versets){
+  height:88px!important;min-height:88px!important;max-height:88px!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+ }
+ html body[data-sde-page="mouvement"] .sde-versets-fenetre{
+  min-height:0!important;height:88px!important;max-height:88px!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+ }
+}
