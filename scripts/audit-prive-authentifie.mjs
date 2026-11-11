@@ -46,8 +46,8 @@ try{
    ]);
    await page.locator('main#main').waitFor({state:'attached',timeout:20000});
    await page.locator('#sde-direct-top').waitFor({state:'attached',timeout:20000});
-   for(const width of [360,390,1280]){
-    await page.setViewportSize({width,height:width===360?800:width===390?844:900});
+   for(const width of [360,390,768,1280,1600]){
+    await page.setViewportSize({width,height:width===360?800:width===390?844:width===768?1024:900});
     await page.waitForTimeout(450);
     const data=await page.evaluate(()=>{
       const rect=el=>{if(!el)return null;const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
@@ -88,9 +88,9 @@ try{
     throw Error('Le compte membre a reçu un statut inattendu sur Administration : '+forbidden.status());
    if(account.type==='administrateur'&&forbidden.status()!==200)
     throw Error('Administration inaccessible pour le compte de recette : '+forbidden.status());
-   console.log('RECETTE_AUTH '+JSON.stringify({role:account.type,viewports:[360,390,1280],writesBlocked:blocked.length}));
+   console.log('RECETTE_AUTH '+JSON.stringify({role:account.type,viewports:[360,390,768,1280,1600],writesBlocked:blocked.length}));
   }finally{await context.close();}
  }
 }finally{await browser.close();}
-if(report.length!==6)throw Error('Recette authentifiée incomplète');
+if(report.length!==10)throw Error('Recette authentifiée incomplète');
 console.log('BILAN_RECETTE_AUTH '+JSON.stringify({parcours:report.length,erreurs:0,details:report}));
