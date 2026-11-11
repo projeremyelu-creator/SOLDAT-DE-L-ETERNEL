@@ -146,7 +146,11 @@ function verifierReponse(origine,controle,reponse,corps) {
   if(controle.type==='html-prive'){
     if(!type.includes('text/html'))erreur('Page connexion non HTML');
     if(!/connexion|mot de passe/i.test(corps))erreur('Formulaire de connexion introuvable');
-    if(!corps.includes('id="sde-event-root"')||!corps.includes('href="/programmes#tpa-2026"'))erreur('Annonce TPA 2026 absente de la page de connexion');
+    // La connexion doit être autonome : ni bannière événementielle, ni navigation publique.
+    if(!corps.includes('id="form-connexion"')||!corps.includes('id="form-inscription"'))
+      erreur('Formulaires de connexion et inscription manquants');
+    if(/id=["']sde-event-root["']|class=["'][^"']*sde-auth-nav|class=["'][^"']*site-header/i.test(corps))
+      erreur('Bandeau ou navigation publique encore présent sur la connexion');
     if(!/no-store/.test(reponse.headers.get('cache-control')||''))erreur('Formulaire de connexion mis en cache');
     if(!/noindex/i.test(reponse.headers.get('x-robots-tag')||''))erreur('Formulaire de connexion indexable');
   }

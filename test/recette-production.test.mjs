@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {DOMAINES,CONTROLES,recetteProduction} from '../scripts/recette-production.mjs';
 
 const html=(text,extra={})=>new Response('<!doctype html><title>SDE</title>'+text,{status:200,headers:{'content-type':'text/html; charset=UTF-8',...extra}});
-function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=false,sessionExposee=false,erreurDomaine=false,marqueObsolete=false,stylePilotageObsolete=false,siteObsolete=false,academyExposee=false,academyCatalogueObsolete=false,academyRetourPerdu=false,academyScriptObsolete=false}={}){
+function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=false,sessionExposee=false,erreurDomaine=false,marqueObsolete=false,stylePilotageObsolete=false,siteObsolete=false,academyExposee=false,academyCatalogueObsolete=false,academyRetourPerdu=false,academyScriptObsolete=false,loginBandeauObsolete=false}={}){
   const appels=[];
   const fetcher=async(url,opts)=>{
     const u=new URL(url),p=u.pathname;
@@ -17,7 +17,10 @@ function simulateur({pagePriveExposee=false,lienExterne=false,styleObsolete=fals
       return html(academyCatalogueObsolete?'<h1>Ancien programme Soldiers Academy 12 cours</h1>':'<h1>Soldiers Academy 24 cours · 192 h</h1>'+Array.from({length:24},(_,i)=>'<article class="course" data-level="'+(Math.floor(i/8)+1)+'"><b>SA-'+String(i+1).padStart(2,'0')+'</b></article>').join(''));
     if(CONTROLES.some(c=>c.path===p&&c.type==='page-moderne'))return html('<link rel="stylesheet" href="/vitrine/sde-shell-public.css">');
     if(CONTROLES.some(c=>c.path===p&&c.type==='page-publique'))return html(siteObsolete?'<main>Page SDE ancienne</main>':'<main>Page SDE</main><link rel="stylesheet" href="/vitrine/sde-sitewide-2026.css?v=20261030global">');
-    if(p==='/connexion')return html('<form>Connexion mot de passe</form><aside id="sde-event-root"><a href="/programmes#tpa-2026">TPA 2026</a></aside>',{'cache-control':'no-store','x-robots-tag':'noindex, nofollow'});
+    if(p==='/connexion')return html(
+      '<form id="form-connexion">Connexion mot de passe</form><form id="form-inscription">Inscription</form>'+
+      (loginBandeauObsolete?'<aside id="sde-event-root"><a href="/programmes#tpa-2026">TPA 2026</a></aside>':''),
+      {'cache-control':'no-store','x-robots-tag':'noindex, nofollow'});
     if(['/mon-espace','/administration','/mon-espace/academy','/administration/academy','/mon-espace/enseignants'].includes(p))return pagePriveExposee
       ?html('Contenu confidentiel')
       :new Response(null,{status:302,headers:{'cache-control':'private, no-store','x-robots-tag':'noindex, nofollow',location:(lienExterne?'https://autre-site.example':u.origin)+'/connexion?retour='+encodeURIComponent(academyRetourPerdu&&/\/(academy|enseignants)$/.test(p)?p.replace(/\/(academy|enseignants)$/,''):p)}});
@@ -159,4 +162,14 @@ test('Recette Academy : studio et publication des supports, version effective du
  const ancien=simulateur({academyScriptObsolete:true});
  const ref=await recetteProduction({fetcher:ancien.fetcher,domaines:[DOMAINES[0]],controles:CONTROLES.filter(c=>c.type==='academy-script'),essais:1});
  assert.equal(ref.ok,false,'Un ancien script Academy en production ne doit pas être validé.');
+});
+
+test('Recette production : le bandeau TPA et les menus publics restent exclus du formulaire de connexion',async()=>{
+ const controls=CONTROLES.filter(c=>c.type==='html-prive');
+ const current=await recetteProduction({fetcher:simulateur().fetcher,domaines:[DOMAINES[0]],controles:controls,essais:1});
+ assert.equal(current.ok,true);
+ const old=await recetteProduction({fetcher:simulateur({loginBandeauObsolete:true}).fetcher,
+  domaines:[DOMAINES[0]],controles:controls,essais:1});
+ assert.equal(old.ok,false);
+ assert.match(old.resultats[0].erreur,/navigation publique|bandeau/i);
 });
