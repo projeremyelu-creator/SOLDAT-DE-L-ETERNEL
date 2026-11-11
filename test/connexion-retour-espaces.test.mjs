@@ -33,15 +33,13 @@ test("La demande explicite d'administration reste sélectionnée",()=>{
  assert.equal(a.getAttribute("aria-pressed"),"false");
  d.window.close();
 });
-test("La connexion annonce la TPA sans réafficher IN FIRE comme prochain programme",()=>{
- const d=new JSDOM(loginHtml);
- const root=d.window.document.querySelector("#sde-event-root");
- assert.match(root.getAttribute("aria-label"),/TPA 2026/);
- assert.ok(root.querySelector('a[href="/programmes#tpa-2026"]'));
- assert.match(root.textContent,/Vendredi 18 décembre · 20h00 · Google Meet/);
- assert.doesNotMatch(root.textContent,/IN FIRE 2026/);
- assert.match(loginHtml,/data-access-target="\/mon-espace" aria-pressed="true"/);
- assert.match(loginHtml,/portail-connexion\.js\?v=[a-z0-9]+/i);
+test("La connexion reste isolée des événements publics et conserve les espaces membre/admin",()=>{
+ const d=new JSDOM(loginHtml),doc=d.window.document;
+ assert.equal(doc.querySelector("#sde-event-root"),null);
+ assert.equal(doc.querySelector(".site-header,.site-menu,.sde-auth-nav"),null);
+ assert.ok(doc.querySelector('[data-access-target="/mon-espace"][aria-pressed="true"]'));
+ assert.ok(doc.querySelector('[data-access-target="/administration"]'));
+ assert.ok(doc.querySelector('#form-connexion'));
  d.window.close();
 });
 test("Le Worker impose authentification et habilitation pour les deux espaces",()=>{

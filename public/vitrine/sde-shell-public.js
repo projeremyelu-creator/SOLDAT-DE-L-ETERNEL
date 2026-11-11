@@ -57,12 +57,24 @@
   const nav=make("nav","sde-shell-mega");nav.setAttribute("aria-label","Navigation principale");
   for(const group of groups)nav.append(menuGroup(group,"sde-shell-mega-group"));
   const actions=make("div","sde-shell-head-actions");
+  // Une seule action contextuelle : le contenu avant les utilitaires globaux.
+  const pageActions={
+   "/mouvement":["Les 5 pôles","/mouvement#poles"],
+   "/programmes":["Voir l’agenda","/programmes#agenda"],
+   "/academy":["Voir les 24 cours","/academy-programme-24"],
+   "/soldiers-tv":["Voir les vidéos","/soldiers-tv#a-la-une"],
+   "/soldier-quest":["Voir les missions","/soldier-quest#missions"],
+   "/soutenir":["Faire un don","/soutenir#formulaire"],
+   "/contact":["Rejoindre SDE","/contact#rejoindre"]
+  };
+  const pageAction=pageActions[location.pathname];
+  const contextCTA=pageAction?link(pageAction[1],pageAction[0],"sde-shell-context-cta"):null;
   const search=link("/rechercher","","sde-shell-search");search.setAttribute("aria-label","Rechercher");search.append(icon("recherche"));
   const portal=link("/portail","Mon Portail S.D.E","sde-shell-portal");portal.prepend(icon("portail"));
   const rubriques=make("button","sde-shell-rubriques","Rubriques");
   rubriques.type="button";rubriques.setAttribute("aria-controls","sde-shell-overlay");
   rubriques.setAttribute("aria-expanded","false");rubriques.prepend(icon("menu"));
-  actions.append(search,rubriques,portal);row.append(brand,nav,actions);h.append(row);
+  actions.append(search);if(contextCTA)actions.append(contextCTA);actions.append(portal,rubriques);row.append(brand,nav,actions);h.append(row);
   // Repère visuel et accessible de la rubrique active, sans modifier les URL.
   const here=location.pathname.replace(/\/$/,"")||"/";
   for(const group of nav.querySelectorAll("details")){
@@ -173,7 +185,30 @@
   });
   return {overlay,tab};
  }
+ function initTpaClock(){
+  const clocks=[...document.querySelectorAll(".event-clock")];
+  if(!clocks.length)return;
+  const target=Date.UTC(2026,11,18,20,0,0);
+  const update=()=>{
+   const remaining=target-Date.now();
+   for(const clock of clocks){
+    if(remaining<=0){clock.textContent="TPA 2026 · 18 décembre à 20 h GMT";
+     clock.setAttribute("aria-label","Date de la TPA 2026");continue;}
+    const total=Math.floor(remaining/1000);
+    const values=[Math.floor(total/86400),Math.floor(total%86400/3600),Math.floor(total%3600/60),total%60];
+    clock.replaceChildren(...values.map((v,i)=>{
+     const item=make("span","sde-tpa-time-unit");
+     item.append(make("b","",String(v).padStart(2,"0")),make("small","",["jours","heures","minutes","secondes"][i]));
+     return item;
+    }));
+    clock.setAttribute("aria-label","Décompte TPA 2026 : "+values[0]+" jours, "+values[1]+" heures, "+values[2]+" minutes");
+   }
+  };
+  update();
+  if(Date.now()<target)window.setInterval(update,1000);
+ }
  function start(){
+  initTpaClock();
   if(document.body.classList.contains("sde-reference-login")||/^\/(mon-espace|administration)(\/|$)/.test(location.pathname))return;
   const old=document.querySelector("header.site-header,header.sde-hub-head,header.entete") || (location.pathname==="/album-infire"?document.querySelector("body > header"):null);
   if(!old||document.querySelector(".sde-shell-header"))return;

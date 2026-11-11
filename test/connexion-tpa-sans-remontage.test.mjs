@@ -1,22 +1,26 @@
-import {test} from "node:test";
-import assert from "node:assert/strict";
-import {readFileSync} from "node:fs";
-import {JSDOM} from "jsdom";
-
-test("Connexion : le lien TPA reste dans le DOM HTML initial et ne dépend pas d'un montage React",()=>{
- const html=readFileSync("public/vitrine/connexion-unifiee.html","utf8");
- const jsx=readFileSync("frontend/experience.jsx","utf8");
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {JSDOM} from 'jsdom';
+test('Connexion sans bandeau TPA ni navigation publique et sans remontage React',()=>{
+ const html=readFileSync('public/vitrine/connexion-unifiee.html','utf8');
+ const jsx=readFileSync('frontend/experience.jsx','utf8');
  const dom=new JSDOM(html),doc=dom.window.document;
- assert.equal(doc.body.classList.contains("sde-reference-login"),true);
- const banner=doc.querySelector("#sde-event-root .event-bar-inner");
- assert.ok(banner);
- assert.ok(banner.querySelector('a[href="/programmes#tpa-2026"]'));
- assert.equal(doc.querySelector('script[src*="sde-experience.js"]'),null,"La connexion ne doit pas monter React sur le bandeau TPA");
- assert.ok(doc.querySelector('script[src*="portail-connexion.js"]'),"Le script de connexion doit rester présent");
- assert.match(banner.textContent,/18 décembre 2026/);
- assert.match(banner.textContent,/20h00/);
- assert.equal(banner.querySelector(".event-clock"),null,"Le décompte non initialisé ne doit pas figurer sur la connexion");
+ assert.equal(doc.body.classList.contains('sde-reference-login'),true);
+ assert.equal(doc.querySelector('#sde-event-root'),null);
+ assert.equal(doc.querySelector('header.site-header,.sde-auth-nav,.site-menu'),null);
+ assert.equal(doc.querySelector('script[src*="sde-experience.js"]'),null);
+ assert.ok(doc.querySelector('script[src*="portail-connexion.js"]'));
+ assert.ok(doc.querySelector('#form-connexion'));
+ assert.ok(doc.querySelector('#form-inscription'));
  assert.match(jsx,/if\(event&&!document\.body\.classList\.contains\('sde-reference-login'\)\)createRoot\(event\)\.render\(<EventBanner\/>\)/);
- assert.match(jsx,/function EventBanner\(/);
  dom.window.close();
+});
+test('Date TPA accessible sur la page Programmes sans Javascript',()=>{
+ const d=new JSDOM(readFileSync('public/vitrine/programmes.html','utf8'));
+ const clock=d.window.document.querySelector('#sde-event-root .event-clock');
+ assert.ok(clock);
+ assert.ok(clock.querySelector('time[datetime="2026-12-18T20:00:00Z"]'));
+ assert.doesNotMatch(clock.textContent,/--/);
+ d.window.close();
 });

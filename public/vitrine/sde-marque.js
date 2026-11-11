@@ -2,6 +2,8 @@
    S'arrête avec « mouvement réduit », la pause (bouton ou body[data-motion=paused]) et quand l'onglet est caché. */
 (function () {
   "use strict";
+  // Le portail sécurisé reste libre de toute animation et bouton flottant.
+  if (document.body && document.body.classList.contains("sde-reference-login")) return;
   if (window.__sdeAmbiance) return;
   window.__sdeAmbiance = true;
   var KEY = "sde-motion", GOLD = "212,175,55", PALE = "255,244,214", RED = "214,64,70";

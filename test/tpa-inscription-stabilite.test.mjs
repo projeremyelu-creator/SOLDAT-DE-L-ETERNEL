@@ -13,7 +13,8 @@ test("Premier affichage : la structure TPA précède React sur la page Programme
     const root=dom.window.document.getElementById("sde-event-root");
     assert.ok(root,page+" a un bandeau");
     assert.ok(root.querySelector(".event-bar-inner.upcoming"),page+" a déjà le conteneur final");
-    assert.equal(root.querySelectorAll(".event-clock span").length,4);
+    assert.ok(root.querySelector('.event-clock time[datetime="2026-12-18T20:00:00Z"]'),"date statique avant JS");
+    assert.doesNotMatch(root.querySelector(".event-clock").textContent,/--/);
     assert.ok(root.querySelector('a[href="/programmes#tpa-2026"]'));
     assert.doesNotMatch(root.textContent,/IN FIRE 2026/);
     dom.window.close();
