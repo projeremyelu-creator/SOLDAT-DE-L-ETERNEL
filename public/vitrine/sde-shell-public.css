@@ -1676,3 +1676,19 @@ html body.sde-shell-mounted .sde-shell-footer .sde-shell-newsletter .sde-privacy
     font-size:.9rem!important;
   }
 }
+
+/* Recette CLS 11/11/2026 : réserver exactement la place du shell partagé
+   avant son insertion sur /soutenir (l'ancien menu passait sur deux lignes).
+   Les règles cessent de s'appliquer dès que le shell est monté. */
+@media(min-width:1100px){
+ body[data-sde-page="soutenir"]:not(.sde-shell-mounted)>header.sde-hub-head{
+  box-sizing:border-box!important;
+  height:73px!important;min-height:73px!important;max-height:73px!important;
+  overflow:hidden!important;
+ }
+ body[data-sde-page="soutenir"]:not(.sde-shell-mounted)>header.sde-hub-head>.inner{
+  box-sizing:border-box!important;
+  min-height:71px!important;height:71px!important;max-height:71px!important;
+  flex-wrap:nowrap!important;overflow:hidden!important;
+ }
+}
