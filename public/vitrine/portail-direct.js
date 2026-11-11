@@ -110,6 +110,10 @@
     const dessinerPicto=(cle)=>{
       const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
       svg.setAttribute("viewBox","0 0 24 24");
+      // Taille native fixe : une ancienne règle globale ne doit jamais agrandir
+      // les icônes de la barre mobile jusqu'à remplir toute la cellule.
+      svg.setAttribute("width","23");
+      svg.setAttribute("height","23");
       svg.setAttribute("aria-hidden","true");
       svg.setAttribute("fill","none");svg.setAttribute("stroke","currentColor");
       svg.setAttribute("stroke-width","1.8");
