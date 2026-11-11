@@ -13,9 +13,9 @@ test('Accueil premium : trois univers reliés aux vraies rubriques publiques',()
   assert.equal(pillars.length,3);
   assert.ok(doc.querySelector('.sde-premium-commandement a[href="/gouvernance"]'),"Lien organisation vers la gouvernance réelle");
   for(const [selector,label,path] of [
-   ['.sde-premium-spiritualite','Spiritualité','/priere'],
-   ['.sde-premium-commandement','Commandement','/portail'],
-   ['.sde-premium-missions','Missions','/missions']
+   ['.sde-premium-spiritualite','Vie de l’Esprit','/priere'],
+   ['.sde-premium-commandement','Gouvernance & Ordre','/gouvernance'],
+   ['.sde-premium-missions','Terrain & Compassion','/missions-humanitaires']
   ]){
    const panel=doc.querySelector(selector);
    assert.ok(panel,selector);

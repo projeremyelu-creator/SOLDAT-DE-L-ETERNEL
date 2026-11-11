@@ -48,8 +48,8 @@ test('Accueil premium : en-tête avec logo, menu compact, recherche et connexion
 test('Accueil premium : hero Réveil Spirituel 2027, deux CTA et une seule annonce TPA compacte',()=>{
  const hero=html.slice(html.indexOf('class="ap-hero"'),html.indexOf('id="programmes-accueil"'));
  assert.match(hero,/<h1[^>]*>LE RÉVEIL/);
- assert.ok(hero.includes('Discipline · Unité · Impact'));
- assert.ok(hero.includes('logo-sde.webp'));
+ assert.match(hero,/DISCIPLINE[\s\S]*UNITÉ[\s\S]*IMPACT/i);
+ assert.ok(html.includes('logo-96.webp'),'le logo officiel reste présent dans la navigation commune');
  assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,2,'deux CTA principaux');
  for(const libellé of ['Découvrir SDE','Rejoindre le mouvement','Exode 33:14'])assert.ok(hero.includes(libellé),libellé);
  assert.equal((html.match(/<img[^>]+tpa-2026\.webp/g)||[]).length,0,'affiche non chargée sur l’accueil compact');
@@ -60,9 +60,9 @@ test('Accueil premium : hero Réveil Spirituel 2027, deux CTA et une seule annon
 
 test('Accueil premium : la fiche événement centrale alimente l’accueil sans valeur divergente',()=>{
  assert.equal(phare.id,'tpa-2026');
- assert.ok(html.includes(phare.dateLibelle),'date');
+ assert.ok(html.includes('datetime="'+phare.debut+'"'),'date et heure TPA vérifiées');
  assert.ok(html.includes(phare.lieu),'lieu');
- assert.ok(html.includes(phare.description),'description');
+ assert.ok(html.includes(phare.titreCourt),'titre de la carte TPA cohérent');
  assert.ok(html.includes(phare.inscription),'lien d’inscription');
  assert.ok(html.includes(phare.debut),'horodatage');
  assert.ok(existsSync('public'+phare.affiche),'affiche présente');
@@ -99,7 +99,7 @@ test('Accueil premium : charte Fusion chargée en dernier, scripts sans inline, 
  const feuilles=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
  const fusionIndex=feuilles.findIndex(f=>f.includes('sde-fusion.css'));
  assert.ok(fusionIndex>=0,'charte Fusion toujours présente');
- assert.ok(feuilles.at(-3).includes('sde-shell-public.css')&&feuilles.at(-2).includes('sde-maquette-hero.css')&&feuilles.at(-1).includes('sde-six-maquettes-2027.css'),'navigation commune, hero et surcouche 2027 chargées après Fusion');
+ assert.ok(feuilles.at(-4).includes('sde-shell-public.css')&&feuilles.at(-3).includes('sde-maquette-hero.css')&&feuilles.at(-2).includes('sde-six-maquettes-2027.css')&&feuilles.at(-1).includes('sde-accueil-officiel-2027.css'),'nouvelle direction artistique chargée après toutes les anciennes surcouches');
  assert.ok(fusionIndex<feuilles.length-1,'la charte Fusion reste la base de la couche responsive');
  assert.ok(feuilles.some(f=>f.includes('sde-accueil-premium.css')));
  assert.ok(html.includes('sde-accueil-premium.js'));

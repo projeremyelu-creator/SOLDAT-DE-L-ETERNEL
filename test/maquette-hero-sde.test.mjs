@@ -100,14 +100,16 @@ test('Maquette SDE : titre et texte du Hero réservés à 1 100 px sans figer le
  assert.doesNotMatch(css.slice(css.indexOf('@media(max-width:960px)')),/min-height:2\.4em!important/,'le petit écran garde un titre à hauteur naturelle');
 });
 
-test('Trois chemins de l accueil : liens réels vers vision, programmes et portail',()=>{
+test('Nouvelle maquette : trois expressions et Soldiers Academy remplacent les anciens chemins',()=>{
  const d=new JSDOM(home).window.document;
- const panel=d.querySelector('section.sde-master-access');
- assert.ok(panel);
- const links=[...panel.querySelectorAll('a.sde-master-path')];
- assert.deepEqual(links.map(a=>a.getAttribute('href')),['/mouvement','/programmes','/portail']);
- assert.ok(links.every(a=>a.querySelector('strong')&&a.querySelector('b')));
- const css=read('public/vitrine/sde-shell-public.css');
- assert.match(css,/sde-master-access-grid/);
- assert.match(css,/@media\(max-width:860px\)/);
+ assert.equal(d.querySelectorAll('section.sde-master-access').length,0,'ancienne section supprimée');
+ const panel=d.querySelector('.sde-2027-expressions');
+ assert.ok(panel,'nouvelle section ivoire présente');
+ const links=[...panel.querySelectorAll('a.sde-2027-pillar-link')];
+ assert.deepEqual(links.map(a=>a.getAttribute('href')),['/priere','/gouvernance','/missions-humanitaires']);
+ assert.ok(links.every(a=>a.querySelector('strong')&&a.querySelector('.sde-pillar-icon')));
+ assert.equal(panel.querySelector('a.sde-2027-academy-feature')?.getAttribute('href'),'/academy');
+ const css=read('public/vitrine/sde-accueil-officiel-2027.css');
+ assert.match(css,/sde-2027-expressions/);
+ assert.match(css,/@media\(max-width:650px\)/);
 });

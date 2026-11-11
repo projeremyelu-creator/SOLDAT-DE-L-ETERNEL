@@ -18,7 +18,8 @@ test("La grille d'accueil réserve 260 px sur les grands écrans, sans figer le 
  assert.equal(doc.querySelector(".iv-vitrine .iv-intro"),null);
  const hero=doc.querySelector("section.ap-hero");
  assert.ok(hero);
- for(const item of ["h1",".ap-actions",".ap-logo[width][height]"])assert.ok(hero.querySelector(item),item);
+ for(const item of ["h1",".ap-actions",".sde-tpa-hero-card"])assert.ok(hero.querySelector(item),item);
+ assert.ok(doc.querySelector(".site-header img.site-logo"),"logo SDE dans le nouvel en-tête, non répété dans le Hero");
  // Le build de production remplace les versions de fichiers par une empreinte.
  assert.match(html,/sde-sitewide-2026\.css\?v=[a-z0-9]+/i);
 });
