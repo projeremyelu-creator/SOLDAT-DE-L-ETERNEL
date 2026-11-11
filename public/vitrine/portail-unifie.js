@@ -124,7 +124,7 @@
       responsables:"/mouvement#responsables",programmes:"/programmes#programmes",
       agenda:"/programmes#agenda",infire:"/programmes#infire",
       ressources:"/enseignements#ressources",galerie:"/enseignements#galerie",
-      rejoindre:"/contact#rejoindre",membres:"/mon-espace",
+      rejoindre:"/contact#rejoindre",membres:"/portail",
       projets:"/missions#projets",engagement:"/missions#engagement",
       soutenir:"/missions#soutenir",faq:"/contact#faq",confidentialite:"/contact#confidentialite"
     };
