@@ -299,3 +299,147 @@ html body.sde-direct-admin #sheet .sde-member-phone .inline-actions .btn{
 @media(prefers-reduced-motion:reduce){
  html body.sde-direct-admin #main .sde-member-row{transition:none!important}
 }
+
+
+/* SDE 2027 — Fiches membres individuelles, communes à tout le registre.
+   Données, autorisations, voyants et actions métier : aucun changement.
+   Thème privé à contraste élevé sans couleur sombre sur carte sombre. */
+html body.sde-direct-admin #sheet:has(.sde-member-profile){
+ --surface:#101d36;--surface-2:#233451;--ink:#fff9ef;--muted:#ced8e8;
+ --line:#405373;--line-strong:#8497b5;
+ color:#fff9ef!important;color-scheme:dark!important;
+ background:#101d36!important;
+}
+html body.sde-direct-admin #sheet:has(.sde-member-profile) :is(.sheet-h,.sheet-b){
+ color:#fff9ef!important;background:#101d36!important;
+}
+html body.sde-direct-admin #sheet:has(.sde-member-profile) .sheet-h{
+ border-bottom:1px solid #627492!important;
+}
+html body.sde-direct-admin #sheet:has(.sde-member-profile) :is(.sheet-t,.h3){
+ color:#f5d28b!important;
+}
+html body.sde-direct-admin #sheet .sde-member-profile{
+ min-width:0;max-width:100%;overflow-wrap:anywhere;line-height:1.5;
+}
+html body.sde-direct-admin #sheet .sde-member-profile :is(.ident h3,.ident strong,.kv dd,.num,.row-t,.tally b,.big-figure){
+ color:#fff9ef!important;-webkit-text-fill-color:currentColor;
+}
+html body.sde-direct-admin #sheet .sde-member-profile :is(.ident p,.kv dt,.row-m,.hint,.legend,.small,.vy-l,.vy-d){
+ color:#d0d9e8!important;-webkit-text-fill-color:currentColor;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .ident{
+ display:flex;align-items:center;gap:15px;
+ min-width:0;max-width:100%;flex-wrap:wrap;
+ padding:12px 0 18px;border-bottom:1px solid #405373;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .ident>div:last-child{
+ flex:1 1 195px;min-width:0;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .kv{
+ margin:16px 0;min-width:0;max-width:100%;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .kv>div{
+ border-bottom:1px solid #405373!important;min-width:0;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .kv dd{
+ overflow-wrap:anywhere;min-width:0;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .sde-member-phone{
+ display:flex;flex-direction:column;align-items:stretch;gap:12px;min-width:0;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .sde-member-phone>.num{
+ font-size:clamp(1rem,3vw,1.25rem);line-height:1.35;
+ word-break:break-word;overflow-wrap:anywhere;white-space:normal;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .sde-member-phone .inline-actions{
+ display:flex;flex-wrap:wrap;gap:8px;min-width:0;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .sde-member-phone .inline-actions :is(.btn,a){
+ display:inline-flex;justify-content:center;align-items:center;
+ flex:1 1 120px;min-width:0;min-height:44px;
+ color:#fff9ef!important;background:#233451!important;
+ border:1px solid #8b9db7!important;white-space:normal;
+}
+html body.sde-direct-admin #sheet .sde-member-profile :is(.btn,.link){
+ min-height:44px;line-height:1.3;max-width:100%;white-space:normal;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .btn-primary{
+ background:#edc975!important;color:#14223b!important;border-color:#edc975!important;
+}
+html body.sde-direct-admin #sheet .sde-member-profile :is(.actions,.btn-row,.tally,.legend){
+ flex-wrap:wrap;gap:8px;min-width:0;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .chip{
+ background:#263956!important;color:#f6e8cc!important;
+ border:1px solid #6f7f98!important;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .chip.danger{
+ background:#572637!important;color:#ffc8d0!important;border-color:#be6d80!important;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .chip:is(.ok,.info){
+ background:#1b4039!important;color:#d1ffe3!important;border-color:#80ba9e!important;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .cot-mois{
+ display:flex;max-width:100%;min-width:0;gap:4px;
+ overflow-x:auto;scrollbar-width:thin;padding:4px 0;
+}
+html body.sde-direct-admin #sheet .sde-member-profile .cot-mois i{
+ flex:0 0 auto;min-width:24px;
+}
+html body.sde-direct-admin #sheet .sde-member-profile :is(.voyants,.card,.list){
+ max-width:100%;min-width:0;
+}
+html body.sde-direct-admin #sheet .sde-member-profile a:focus-visible,
+html body.sde-direct-admin #sheet .sde-member-profile button:focus-visible{
+ outline:3px solid #edc975!important;outline-offset:2px;
+}
+@media(max-width:760px){
+ html body.sde-direct-admin #main .sde-member-register .sde-member-row{
+  grid-template-columns:46px minmax(0,1fr)!important;
+  align-items:start!important;gap:6px 11px!important;
+ }
+ html body.sde-direct-admin #main .sde-member-register .sde-member-row>.row-main{
+  min-width:0!important;grid-column:2!important;
+ }
+ html body.sde-direct-admin #main .sde-member-register .sde-member-row>.row-r{
+  grid-column:2!important;grid-row:auto!important;
+  display:flex!important;gap:6px!important;flex-wrap:wrap!important;
+  max-width:100%!important;justify-self:start!important;
+ }
+ html body.sde-direct-admin #main .sde-member-filters .sel,
+ html body.sde-direct-admin #main .sde-member-filters .search{
+  width:100%!important;max-width:100%!important;
+  color:#14223b!important;-webkit-text-fill-color:#14223b!important;
+  background:#fffaf0!important;
+ }
+ html body.sde-direct-admin #sheet:has(.sde-member-profile) .sheet-b{
+  padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))!important;
+ }
+ html body.sde-direct-admin #sheet .sde-member-profile .sde-member-phone .inline-actions{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+ html body.sde-direct-admin #sheet .sde-member-profile .sde-member-phone .inline-actions :is(.btn,a){
+  width:100%!important;padding:10px 8px!important;
+ }
+ /* La commande d'animations reste accessible hors fiche, sans flotter dessus. */
+ html body.sde-direct-admin:has(#sheet:not([hidden])) :is(.sde-ambiance-ctl,.sdu-motion-toggle){
+  visibility:hidden!important;pointer-events:none!important;
+ }
+}
+@media(max-width:390px){
+ html body.sde-direct-admin #sheet .sde-member-profile .sde-member-phone .inline-actions{
+  grid-template-columns:minmax(0,1fr);
+ }
+ html body.sde-direct-admin #main .sde-member-filters>.btn-row{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ }
+ html body.sde-direct-admin #main .sde-member-filters>.btn-row>*{
+  min-width:0!important;overflow-wrap:anywhere!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-direct-admin #sheet .sde-member-profile *{
+  animation:none!important;scroll-behavior:auto!important;
+ }
+}
