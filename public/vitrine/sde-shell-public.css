@@ -1781,3 +1781,40 @@ html body.sde-shell-mounted :is(.sa-premium-quick a,.sa-premium-card summary,.sd
 @media(prefers-reduced-motion:reduce){
  html body.sde-shell-mounted .sa-premium-card{transition:none!important}
 }
+
+/* Stabilisation du premier rendu — audit Chromium du 11 novembre 2026.
+   La coque unifiée occupe 73 px à 768 px. Réserver cette hauteur AVANT
+   que le script remplace l'en-tête historique évite le saut du contenu. */
+@media(min-width:701px) and (max-width:800px){
+ html body.sde-unifie[data-sde-page="programmes"]:not(.sde-shell-mounted)>header.site-header:not(.sde-shell-header){
+  position:relative!important;
+  box-sizing:border-box!important;
+  height:73px!important;
+  min-height:73px!important;
+  max-height:73px!important;
+  padding-block:0!important;
+  margin-block:0!important;
+  overflow:hidden!important;
+ }
+ html body.sde-unifie[data-sde-page="programmes"]:not(.sde-shell-mounted)>header.site-header .site-header-inner{
+  box-sizing:border-box!important;
+  height:72px!important;
+  min-height:72px!important;
+  max-height:72px!important;
+  overflow:hidden!important;
+  flex-wrap:nowrap!important;
+ }
+}
+/* Academy dispose de son propre accès à la programmation : ne pas
+   réinjecter au-dessus des cours une bannière événementielle React plus
+   haute que l'annonce initiale. La TPA reste disponible sur /programmes. */
+html body.sde-unifie.sde-campus-public #sde-event-root{
+ display:none!important;
+ min-height:0!important;
+ max-height:0!important;
+ height:0!important;
+ padding:0!important;
+ margin:0!important;
+ border:0!important;
+ overflow:hidden!important;
+}
