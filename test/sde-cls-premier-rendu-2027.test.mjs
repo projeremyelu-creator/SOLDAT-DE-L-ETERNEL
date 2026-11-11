@@ -102,3 +102,18 @@ test('Le bandeau TPA stabilise les liens sans supprimer la date ni le décompte'
  const pg=new JSDOM(file('public/vitrine/programmes.html')).window.document;
  assert.ok(pg.querySelector('.event-clock time[datetime="2026-12-18T20:00:00Z"]'));
 });
+
+
+test('Mouvement : grille deux colonnes sans horloge, trois si horloge présente',()=>{
+ const d=new JSDOM(file('public/vitrine/mouvement.html')).window.document;
+ const bar=d.querySelector('#sde-event-root .event-bar-inner');
+ assert.ok(bar,'bandeau événement présent');
+ assert.equal(bar.children.length,2,'deux liens directs dans le HTML');
+ assert.equal(bar.querySelector(':scope > .event-clock'),null,'pas de décompte initial sur cette page');
+ const css=file('public/vitrine/sde-shell-public.css');
+ assert.match(css,/\.event-bar-inner:not\(:has\(> \.event-clock\)\)/);
+ assert.match(css,/grid-template-columns:minmax\(0,1fr\) 188px!important/);
+ assert.match(css,/\.event-bar-inner:not\(:has\(> \.event-clock\))>\.event-bar-action/);
+ assert.match(css,/grid-column:2!important;grid-row:1!important/);
+ assert.match(css,/grid-template-columns:minmax\(0,1fr\) 316px 188px!important/);
+});
