@@ -391,3 +391,39 @@ body.sde-universe-page .sde-shell-newsletter label.sde-shell-consent input[type=
   width:100%;max-width:270px;min-width:0;justify-self:end
  }
 }
+
+/* 2027 · Soldiers TV et Quest : cartes interactives cohérentes bleu nuit/or. */
+html body.sde-universe-page{
+ --sdu-night:#0b1730;--sdu-deep:#0b1730;--sdu-panel:#112443;
+ --sdu-gold:#edc975;--sdu-gold-light:#ffe7a6;
+ --sdu-violet:#382257;--sdu-forest:#355c47;
+ background:#0b1730;color:#f8f0e5;
+}
+html body.sde-universe-page :is(.sdu-quest,.sdu-media-tile,.sdu-feature,.sdu-card,.sdu-playlist-item){
+ border-color:#edc97560;transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+html body.sde-universe-page :is(.sdu-quest,.sdu-media-tile,.sdu-feature,.sdu-card):is(:focus-within,:hover){
+ border-color:#edc975!important;box-shadow:0 12px 30px #0005;transform:translateY(-2px);
+}
+html body.sde-universe-page .sdu-playlist-item[aria-pressed="true"]{
+ border:2px solid #edc975!important;box-shadow:inset 3px 0 #edc975;
+}
+html body.sde-universe-page :is(.sdu-button,.sdu-quest a,.sdu-feature a,.sdu-playlist-item){min-height:44px}
+html body.sde-universe-page :is(.sdu-quest,.sdu-media-tile,.sdu-feature) h3{
+ font-size:clamp(1.07rem,1.8vw,1.42rem);line-height:1.28;text-wrap:balance;
+}
+@media(max-width:700px){
+ html body.sde-universe-page .sdu-hero-inner{min-height:0!important;padding-block:22px 26px!important;gap:12px!important}
+ html body.sde-universe-page .sdu-hero h1{font-size:clamp(1.8rem,8vw,2.6rem);margin:6px 0 9px!important}
+ html body.sde-universe-page .sdu-hero p{font-size:.93rem;line-height:1.45;margin-bottom:13px}
+ html body.sde-universe-page .sdu-hero-aside{display:none!important}
+ html body.sde-universe-page .sdu-section{padding-block:25px}
+ html body.sde-universe-page .sdu-hero-actions .sdu-button{flex:1 1 130px;padding:9px 10px}
+ html body.sde-universe-page .sdu-heading{margin-bottom:16px}
+ html body.sdu-tv-page .stv-brand-panel img{max-height:95px!important;width:auto!important;object-fit:contain!important}
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-universe-page :is(.sdu-quest,.sdu-media-tile,.sdu-feature,.sdu-card,.sdu-playlist-item){
+  transition:none!important;transform:none!important;
+ }
+}
