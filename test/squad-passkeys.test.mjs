@@ -161,7 +161,7 @@ test('Passkeys : activation, liste, connexion sans mot de passe et retrait',asyn
  const ok=await activer(w,alice,a);assert.equal(ok.statut,200);assert.equal(ok.json.ok,true);
  const liste=(await w.appel('/api/passkeys',{jeton:alice})).json;
  assert.equal(liste.passkeys.length,1);assert.equal(liste.passkeys[0].nom,'Téléphone de test');
- assert.ok(!JSON.stringify(liste).includes('cle'),'la clé n’est jamais renvoyée');
+ assert.deepEqual(Object.keys(liste.passkeys[0]).sort(),['cree','derniere','id','nom'],'seuls les champs autorisés sont renvoyés, jamais une clé cryptographique');
  const stocke=w.sql.prepare('SELECT * FROM sde_passkeys').get();
  assert.equal(stocke.email,'alice@exemple.test');assert.equal(stocke.cle,b64u.enc(a.spki),'seule la clé publique est conservée');
  // connexion publique
