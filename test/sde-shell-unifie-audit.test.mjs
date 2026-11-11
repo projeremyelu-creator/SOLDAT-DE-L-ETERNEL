@@ -211,3 +211,25 @@ test("Le Bilan 2026 garde ses événements sans ancien bouton de thème",()=>{
   assert.ok(win.document.querySelector("form#formulaire"),"le formulaire de bilan est conservé");
  }finally{dom.window.close();}
 });
+test("Le bandeau TPA du Mouvement est présent avant JavaScript, sans changement de structure au chargement",()=>{
+ const html=read("public/vitrine/mouvement.html");
+ const doc=new JSDOM(html).window.document;
+ const banner=doc.getElementById("sde-event-root");
+ assert.ok(banner?.querySelector(".event-bar-inner.upcoming"));
+ assert.equal(banner.querySelectorAll("a[href='/programmes#tpa-2026']").length,2);
+ assert.equal(banner.querySelector(".event-bar-date")?.textContent,"Traversée Prophétique Annuelle · Vendredi 18 décembre · 20h00 · Google Meet");
+ const script=read("public/vitrine/sde-public-ui-lite.js");
+ assert.match(script,/host\.querySelector\("\.event-bar-inner\.upcoming"\)/);
+});
+
+test("Soutenir réserve 73 px pour la navigation avant le remplacement du header sur ordinateur",()=>{
+ const html=read("public/vitrine/soutenir.html");
+ const doc=new JSDOM(html).window.document;
+ assert.equal(doc.body.dataset.sdePage,"soutenir");
+ const css=read("public/vitrine/sde-shell-public.css");
+ const reserve=css.slice(css.lastIndexOf("Recette CLS 11/11/2026"));
+ assert.match(reserve,/@media\(min-width:1100px\)/);
+ assert.match(reserve,/body\[data-sde-page="soutenir"\]:not\(\.sde-shell-mounted\)>header\.sde-hub-head/);
+ assert.match(reserve,/height:73px!important;min-height:73px!important;max-height:73px!important/);
+ assert.match(reserve,/flex-wrap:nowrap!important;overflow:hidden!important/);
+});
