@@ -17,8 +17,15 @@ for(const [file,target] of sources){
  if(!existsSync(input))throw Error("Archive officielle introuvable : "+file);
  const inputSize=statSync(input).size;
  let ok=false;
- for(const binary of ["magick","convert"]){
-  const process=spawnSync(binary,[input,"-auto-orient","-resize","960x960>","-strip","-quality","72",tmp],{timeout:45000,encoding:"utf8"});
+ // FFmpeg (fourni par les runners GitHub) est un moteur WebP de repli,
+ // sans commande APT ni remplacement des fichiers sources.
+ for(const binary of ["magick","convert","ffmpeg"]){
+  const args=binary==="ffmpeg"
+   ?["-hide_banner","-loglevel","error","-y","-i",input,
+     "-vf","scale=960:960:force_original_aspect_ratio=decrease:flags=lanczos",
+     "-frames:v","1","-c:v","libwebp","-quality","72","-compression_level","6",tmp]
+   :[input,"-auto-orient","-resize","960x960>","-strip","-quality","72",tmp];
+  const process=spawnSync(binary,args,{timeout:45000,encoding:"utf8"});
   if(process.status===0&&existsSync(tmp)){
    const outputSize=statSync(tmp).size;
    if(outputSize>=2500&&outputSize<inputSize){
