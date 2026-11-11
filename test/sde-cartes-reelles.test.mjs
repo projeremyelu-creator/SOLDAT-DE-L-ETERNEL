@@ -10,25 +10,24 @@ const css=read("public/vitrine/sde-cartes-reelles.css");
 const worker=read("src/worker.js");
 const data=JSON.parse(read("public/vitrine/carte-geographique-sde.json"));
 
-test("Cartes réelles : les anciennes fausses mappemondes sont retirées des deux pages",()=>{
+test("Carte réelle : missions géographiques conservées, accueil fidèle à la nouvelle capture",()=>{
  const a=new JSDOM(home).window.document;
  const b=new JSDOM(missions).window.document;
- for(const doc of [a,b]){
-  const map=doc.querySelector("[data-sde-real-map]");
-  assert.ok(map);
-  assert.equal(doc.querySelectorAll("[data-sde-real-map]").length,1);
-  assert.ok(map.querySelector("[data-geo-launch]"));
-  assert.ok(map.querySelector("[data-geo-map-canvas][hidden]"));
-  assert.equal(map.querySelectorAll("[data-geo-view]").length,3);
-  assert.equal(map.querySelectorAll("[data-geo-filter]").length,2);
-  assert.ok(map.querySelector("[data-geo-status][aria-live='polite']"));
-  assert.ok(doc.querySelector('link[href*="sde-cartes-reelles.css"]'));
-  assert.ok(doc.querySelector('script[src*="sde-cartes-reelles.js"]'));
- }
+ assert.equal(a.querySelectorAll("[data-sde-real-map]").length,0,"la carte ne masque plus les trois expressions de la page d'accueil");
+ assert.ok(a.querySelector('a.sde-2027-pillar-link[href="/missions-humanitaires"]'),"navigation directe vers la vraie carte");
+ assert.ok(!a.querySelector('script[src*="sde-cartes-reelles.js"]'),"aucune requête cartographique au chargement de l'accueil");
+ const map=b.querySelector("[data-sde-real-map]");
+ assert.ok(map);
+ assert.equal(b.querySelectorAll("[data-sde-real-map]").length,1);
+ assert.ok(map.querySelector("[data-geo-launch]"));
+ assert.ok(map.querySelector("[data-geo-map-canvas][hidden]"));
+ assert.equal(map.querySelectorAll("[data-geo-view]").length,3);
+ assert.equal(map.querySelectorAll("[data-geo-filter]").length,2);
+ assert.ok(map.querySelector("[data-geo-status][aria-live='polite']"));
+ assert.ok(b.querySelector('link[href*="sde-cartes-reelles.css"]'));
+ assert.ok(b.querySelector('script[src*="sde-cartes-reelles.js"]'));
  assert.equal(a.querySelectorAll(".sde-v5-continents").length,0);
  assert.equal(b.querySelectorAll("#v5-mission-light").length,0);
- assert.ok(a.querySelector('a[href="#sde-carte-home"]'));
- assert.match(a.querySelector(".sde-v5-map-label").textContent,/OPENSTREETMAP/);
 });
 
 test("Les coordonnées sont vraies, vérifiées et ne prétendent pas situer des missions",()=>{
@@ -45,7 +44,7 @@ test("Les coordonnées sont vraies, vérifiées et ne prétendent pas situer des
 });
 
 test("Confidentialité : aucun chargement cartographique avant l'action volontaire",async()=>{
- const dom=new JSDOM(home,{url:"https://mouvement-sde.org/",runScripts:"outside-only"});
+ const dom=new JSDOM(missions,{url:"https://mouvement-sde.org/missions-humanitaires",runScripts:"outside-only"});
  const w=dom.window;
  let fetched=0;
  w.fetch=async()=>{fetched++;return {ok:true,json:async()=>data};};
@@ -53,7 +52,7 @@ test("Confidentialité : aucun chargement cartographique avant l'action volontai
  w.matchMedia=()=>({matches:false});
  w.eval(source);
  w.document.dispatchEvent(new w.Event("DOMContentLoaded"));
- const root=w.document.getElementById("sde-carte-home");
+ const root=w.document.getElementById("sde-carte-missions");
  assert.ok(root);
  assert.equal(fetched,0);
  assert.equal(w.document.querySelectorAll('script[src*="leaflet@"]').length,0);
