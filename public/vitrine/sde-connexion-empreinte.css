@@ -464,3 +464,10 @@ html body.sde-reference-login :is(.sde-auth-return,.sde-auth-help a,.access-pane
 @media(prefers-reduced-motion:reduce){
  html body.sde-reference-login .sde-auth-member-preview{transform:none!important}
 }
+
+/* Défense en profondeur : toute ancienne barre mise en cache est masquée sur le login. */
+html body.sde-reference-login .sde-public-bottom-nav,
+html body.sde-reference-login .sde-shell-bottom,
+html body.sde-reference-login .sde-global-nav,
+html body.sde-reference-login .nav-mobile{display:none!important}
+html body.sde-reference-login.sde-has-bottom-nav{padding-bottom:0!important}

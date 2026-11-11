@@ -333,6 +333,9 @@
   // Parcours public : cinq raccourcis fixes sur téléphone, sans accès aux
   // finances internes. « Finances » mène uniquement au soutien public.
   function installerRaccourcisPublics(){
+    // Aucun bandeau mobile public sur la connexion, même sans shell partagé.
+    if(document.body.classList.contains("sde-reference-login") ||
+       /^\/connexion(?:\/|$)/.test(location.pathname))return;
     if(document.body.classList.contains("sde-tableau") ||
        document.querySelector(".sde-public-bottom-nav"))return;
     const menu=document.getElementById("site-menu");

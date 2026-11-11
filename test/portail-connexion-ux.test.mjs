@@ -137,3 +137,18 @@ test('Portail isolé : le contrôle flottant des animations n’est plus inject�
  const css=readFileSync('public/vitrine/sde-connexion-empreinte.css','utf8');
  assert.match(css,/html body\.sde-reference-login/);
 });
+
+test('Connexion : l’ancien script public ne doit jamais injecter de barre mobile',()=>{
+ const c=ui();try{
+  c.w.eval(readFileSync('public/vitrine/portail-unifie.js','utf8'));
+  c.d.dispatchEvent(new c.w.Event('DOMContentLoaded'));
+  assert.equal(c.d.querySelector('.sde-public-bottom-nav'),null);
+  assert.equal(c.d.body.classList.contains('sde-has-bottom-nav'),false);
+  assert.ok(c.d.querySelector('#form-connexion'));
+ }finally{c.dom.window.close()}
+});
+test('Connexion : la feuille sécurisée neutralise les anciennes barres encore en cache',()=>{
+ const css=readFileSync('public/vitrine/sde-connexion-empreinte.css','utf8');
+ assert.match(css,/body\.sde-reference-login \.sde-public-bottom-nav/);
+ assert.match(css,/body\.sde-reference-login\.sde-has-bottom-nav/);
+});
