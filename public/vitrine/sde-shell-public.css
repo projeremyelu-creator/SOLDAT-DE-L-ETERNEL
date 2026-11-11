@@ -1967,3 +1967,17 @@ html body[data-sde-page="programmes"] #agenda-liste > .programme[data-sde-archiv
  }
 
 }
+
+/* SDE 2027 : le bandeau Mouvement n'a que deux liens dans le HTML initial.
+   Préserver les trois colonnes UNIQUEMENT lorsque .event-clock existe ;
+   sans horloge, éviter de réserver 316px vides au détriment du titre. */
+@media(min-width:1101px){
+ html body[data-sde-page="mouvement"] #sde-event-root
+ .event-bar-inner:not(:has(> .event-clock)){
+  grid-template-columns:minmax(0,1fr) 188px!important;
+ }
+ html body[data-sde-page="mouvement"] #sde-event-root
+ .event-bar-inner:not(:has(> .event-clock))>.event-bar-action{
+  grid-column:2!important;grid-row:1!important;
+ }
+}
