@@ -179,7 +179,7 @@ test("fiche membre plein écran et cache mobile : accessibilité sans changement
 });
 test("logo officiel et verset fondateur Ézéchiel 37",()=>{
  const h=read("public/vitrine/portail.html");
- assert.ok(h.includes('src="/vitrine/logo-96.webp"')&&h.includes("logo-sde.webp"),"logo officiel");
+ assert.ok(h.includes('src="/vitrine/logo-96.webp"')&&h.includes('class="site-logo"'),"logo officiel en en-tête sans doublon dans le Hero");
  assert.ok(h.includes("Ézéchiel 37.10")&&h.includes("Ézéchiel 37.9"),"verset fondateur");
  assert.ok(read("public/vitrine/portail-unifie.js").includes('class="site-logo"'),"logo sur les pages intérieures");
 });
