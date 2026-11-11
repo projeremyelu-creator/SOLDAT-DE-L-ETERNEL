@@ -376,7 +376,8 @@ html body.sde-2027-reference .sde-roadmap{
 }
 html body.sde-2027-reference main{overflow-x:clip!important}
 
-/* En-tête et navigation mobile existants : même arborescence, nouvelle peau. */
+html body.sde-2027-reference .sde-universe .sde-2027-foundation{max-width:75ch!important;margin:13px auto 0!important;color:#f2d38c!important;-webkit-text-fill-color:#f2d38c!important;font-size:.84rem!important;line-height:1.6!important;text-align:center!important;}
+\n/* En-tête et navigation mobile existants : même arborescence, nouvelle peau. */
 html body.sde-shell-mounted.sde-2027-reference .sde-shell-header{
  min-height:62px!important;background:#0a172f!important;
  border-bottom:1px solid #d4ad6447!important;box-shadow:0 5px 16px #02091644!important;
