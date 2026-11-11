@@ -108,7 +108,7 @@ try{
         const el=s.node;
         const tag=typeof el?.tagName==='string'?el.tagName.toLowerCase():'unknown';
         return {element:tag+(el?.id?'#'+el.id:'')+(typeof el?.className==='string'&&el.className?'.'+el.className.trim().replace(/\s+/g,'.').slice(0,90):''),
-         previousTop:Math.round(s.previousRect?.top||0),currentTop:Math.round(s.currentRect?.top||0)};
+         previousTop:Math.round(s.previousRect?.top||0),currentTop:Math.round(s.currentRect?.top||0),previousLeft:Math.round(s.previousRect?.left||0),currentLeft:Math.round(s.currentRect?.left||0),previousWidth:Math.round(s.previousRect?.width||0),currentWidth:Math.round(s.currentRect?.width||0),previousHeight:Math.round(s.previousRect?.height||0),currentHeight:Math.round(s.currentRect?.height||0)};
        });
        window.__sdeLabMetrics.shifts.push({value:Math.round(entry.value*10000)/10000,moved});
       }
