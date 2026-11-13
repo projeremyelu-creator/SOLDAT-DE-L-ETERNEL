@@ -56,7 +56,8 @@ test("Prier Organiser Agir : trois cartes accessibles et toutes les destinations
 
 test("Responsive PC/tablette/mobile, contraste, mouvement réduit et navigation partagée",()=>{
  const links=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(x=>x[1]);
- assert.match(links.at(-1),/^\/vitrine\/sde-accueil-officiel-2027\.css\?v=[a-zA-Z0-9]+$/,"nouvelle charte chargée en dernier avec versionnement automatique");
+ assert.ok(links.some(link=>/^\/vitrine\/sde-accueil-officiel-2027\.css\?v=[a-zA-Z0-9]+$/.test(link)),"charte officielle conservée");
+ assert.match(links.at(-1),/^\/vitrine\/sde-hybride-integral-2027\.css\?v=[a-zA-Z0-9]+$/,"couche responsive chargée en dernier avec versionnement automatique");
  for(const required of [
   "@media(max-width:1000px)","@media(max-width:650px)","@media(max-width:800px)","@media(max-width:365px)",
   "@media(prefers-reduced-motion:reduce)","grid-template-columns:repeat(3,minmax(0,1fr))",

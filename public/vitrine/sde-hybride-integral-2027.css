@@ -1,0 +1,467 @@
+/*
+ * SDE Digital · Citadelle Royale × Institution × Digital Universe
+ * 13 novembre 2026 — couche visuelle responsive pour les VRAIES pages servies.
+ * Aucun compteur simulé, aucune modification des sessions ni permissions.
+ * La feuille est chargée en dernier : elle harmonise le site sans remplacer
+ * les interactions, les contenus et les règles d'accès existants.
+ */
+:root{
+  --sde27-night:#0b1730;
+  --sde27-night-2:#142944;
+  --sde27-night-3:#1d3150;
+  --sde27-paper:#f8f4eb;
+  --sde27-ivory:#fff9ec;
+  --sde27-gold:#e7c677;
+  --sde27-gold-ink:#9b702b;
+  --sde27-violet:#735298;
+  --sde27-green:#366b56;
+  --sde27-line:rgba(231,198,119,.36);
+  --sde27-ring:#f3d58e;
+  --sde27-shadow:0 18px 45px rgba(3,11,27,.20);
+  --sde27-round:18px;
+}
+html{scroll-padding-top:82px}
+html,body{max-width:100%}
+body{overflow-wrap:break-word}
+body :is(button,input,select,textarea){font-family:inherit}
+body :is(a,button,input,textarea,select,summary,[role="tab"]):focus-visible{
+  outline:3px solid var(--sde27-ring)!important;
+  outline-offset:3px!important;
+}
+body :is(button,a,summary){-webkit-tap-highlight-color:rgba(231,198,119,.21)}
+body :is(input,textarea,select){max-width:100%}
+body img,body video{max-width:100%}
+body [hidden],body [aria-hidden="true"][hidden]{display:none!important}
+
+/* 01 — Accueil public officiel. Le contenu actuel, Ézéchiel 37 et les deux
+ * vraies actions de la couverture sont préservés. */
+body.sde-2027-reference{
+  --sde27-home-surface:#f8f4eb;
+  background:var(--sde27-home-surface)!important;
+}
+body.sde-2027-reference .ap-hero{
+  box-shadow:inset 0 -1px rgba(231,198,119,.28);
+}
+body.sde-2027-reference .ap-hero .ap-hero-inner{
+  max-width:1320px!important;
+}
+body.sde-2027-reference .ap-hero .sde-citadel-actions a{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:48px!important;
+  border-radius:14px!important;
+  font-weight:750!important;
+  white-space:normal!important;
+  text-align:center!important;
+  text-decoration:none!important;
+}
+body.sde-2027-reference .ap-hero .sde-citadel-verse{
+  border-radius:14px!important;
+  backdrop-filter:blur(8px);
+}
+body.sde-2027-reference :is(.sde-premium-pillars-grid,.sdu-grid,.sde-2027-academy-feature){
+  min-width:0;
+}
+body.sde-2027-reference :is(.sdu-card,.sde-premium-pillar){
+  border-radius:var(--sde27-round)!important;
+  contain:layout style;
+}
+body.sde-2027-reference :is(.sdu-card a,.sde-premium-pillar a){
+  min-height:44px;
+}
+body.sde-2027-reference .sde-shell-event{
+  border-color:var(--sde27-line)!important;
+}
+@media(hover:hover) and (pointer:fine){
+  body.sde-2027-reference :is(.sdu-card,.sde-premium-pillar):hover{
+    transform:translateY(-3px);
+    box-shadow:var(--sde27-shadow);
+  }
+}
+
+/* 02 — Connexion et création de compte : vraie page /connexion,
+ * sans menu du site public ni étroites zones tactiles. */
+body.sde-reference-login .access-main{
+  background:
+    radial-gradient(ellipse at 50% 16%,rgba(115,82,152,.20),transparent 59%),
+    linear-gradient(160deg,#09152b,#142647 62%,#1c1532)!important;
+}
+body.sde-reference-login .access-shell{
+  width:min(100%,1200px);
+}
+body.sde-reference-login .access-card{
+  border:1px solid rgba(231,198,119,.43)!important;
+  border-radius:19px!important;
+  background:linear-gradient(145deg,rgba(25,43,73,.96),rgba(18,29,52,.94))!important;
+  box-shadow:0 24px 65px rgba(3,8,23,.33)!important;
+}
+body.sde-reference-login .ref-access-targets button{
+  min-height:44px!important;
+  padding:8px 5px!important;
+  font-size:clamp(.78rem,1.2vw,.91rem)!important;
+  color:#e6e9f1!important;
+}
+body.sde-reference-login .ref-access-targets button[aria-pressed="true"]{
+  color:var(--sde27-gold)!important;
+}
+body.sde-reference-login .access-panel label{
+  color:#f6f4ee!important;
+  font-size:.88rem!important;
+  line-height:1.45!important;
+}
+body.sde-reference-login .access-panel input{
+  width:100%!important;
+  height:auto!important;
+  min-height:48px!important;
+  padding:11px 13px!important;
+  border-radius:11px!important;
+  border:1px solid #6e7f9a!important;
+  font:400 16px/1.3 system-ui,sans-serif!important;
+  color:#fff!important;
+}
+body.sde-reference-login .access-panel input::placeholder{
+  color:#b5bed0!important;
+}
+body.sde-reference-login .access-submit{
+  width:100%!important;
+  min-height:48px!important;
+  height:auto!important;
+  border-radius:12px!important;
+  padding:11px 16px!important;
+  font-size:.95rem!important;
+  font-weight:800!important;
+  color:#0b1730!important;
+}
+body.sde-reference-login :is(.access-forgot,.ref-account-links button){
+  min-height:44px!important;
+  padding:10px 6px!important;
+  font-size:.85rem!important;
+}
+body.sde-reference-login .access-message{
+  font-size:.86rem!important;
+  line-height:1.5!important;
+}
+body.sde-reference-login .access-password-toggle{
+  min-width:40px!important;
+  min-height:40px!important;
+  height:40px!important;
+  top:auto!important;
+  bottom:52px!important;
+}
+body.sde-reference-login .access-back{
+  color:var(--sde27-gold)!important;
+}
+
+/* 03 — Soldiers Academy, site public et cursus connecté.
+ * Conserver la progression réelle et les validations coach. */
+body.sde-v5-academy-public .sa-premium-preview{
+  border-radius:22px!important;
+  border:1px solid var(--sde27-line)!important;
+  overflow:hidden;
+}
+body.sde-v5-academy-public .sa-premium-preview :is(a,button),
+body.sde-v5-academy-public .sa-premium-grid a{
+  min-height:44px;
+}
+body.sde-v5-academy-public .niveau-carte,
+body.sde-v5-academy-public .form-carte{
+  border-radius:17px!important;
+}
+body.sde-campus-student,body.sde-campus-student :is(input,button,select,textarea),
+body:has(#formFormateur){
+  accent-color:var(--sde27-gold);
+}
+body.sde-campus-student :is(.panel,.card,.lesson,.metric,.level),
+body:has(#formFormateur) :is(.panel,.card,.metric){
+  border-radius:17px;
+  border-color:rgba(231,198,119,.28);
+  box-shadow:0 12px 30px rgba(3,11,27,.13);
+}
+body.sde-campus-student .hero.sde-v5-academy-hero{
+  padding:clamp(22px,4vw,52px)!important;
+  border:1px solid rgba(231,198,119,.40)!important;
+  border-left:4px solid var(--sde27-gold)!important;
+  border-radius:22px!important;
+  background:
+    radial-gradient(ellipse at 100% 0,rgba(115,82,152,.24),transparent 65%),
+    linear-gradient(140deg,#10223e,#211a38)!important;
+  box-shadow:var(--sde27-shadow);
+}
+body.sde-campus-student .hero h1{
+  font-size:clamp(2.2rem,5.2vw,4.3rem);
+  line-height:1.07;
+  text-wrap:balance;
+}
+body.sde-campus-student :is(.tabs,.sdu-student-links){
+  max-width:100%;
+}
+body.sde-campus-student .tabs{
+  scrollbar-width:thin;
+}
+body.sde-campus-student :is(.tabs button,.btn,.button){
+  min-height:46px;
+}
+body.sde-campus-student :is(.metric,.card,.lesson){
+  min-width:0;
+}
+body.sde-campus-student .love-hero{
+  border-radius:22px!important;
+}
+body.sde-campus-student [class*="progress"]{
+  max-width:100%;
+}
+body.sde-campus-student .sde-v5-campus-rail{
+  isolation:isolate;
+}
+body:has(#formFormateur) .pane{
+  min-width:0;
+}
+
+/* 04 et 05 — véritables espaces privés (public/index.html).
+ * Les routes /mon-espace et /administration affichent cette application,
+ * pas les anciennes pages tableau-membre/tableau-administration. */
+body.sde-direct{
+  --sde-cmd-night:#0b1730;
+  --sde-cmd-gold:#e7c677;
+}
+body.sde-direct #sde-direct-top{
+  background:linear-gradient(115deg,#0b1730,#211d3d)!important;
+  border-bottom:1px solid var(--sde27-line)!important;
+}
+body.sde-direct #sde-direct-top .sde-direct-intro{
+  background:
+    radial-gradient(circle at 84% 15%,rgba(115,82,152,.21),transparent 41%),
+    linear-gradient(116deg,#132846,#1b2545)!important;
+}
+body.sde-direct #sde-direct-top .sde-direct-head-links a{
+  min-height:44px!important;
+  border-radius:10px!important;
+  text-decoration:none!important;
+}
+body.sde-direct #sde-direct-tabs{
+  background:linear-gradient(180deg,#10233e,#16233d)!important;
+  border-right:1px solid var(--sde27-line)!important;
+}
+body.sde-direct #sde-direct-tabs button{
+  min-height:45px!important;
+  border-radius:11px!important;
+}
+body.sde-direct .main,body.sde-direct .shell,
+body.sde-direct #main{min-width:0!important;max-width:100%!important}
+body.sde-direct .view :is(.stat,.tile,.card,.panel){
+  border-radius:16px;
+  min-width:0;
+}
+body.sde-direct .view :is(.stat,.tile,.card) :is(h2,h3,h4,p,span,strong){
+  overflow-wrap:break-word;
+}
+body.sde-direct .view .stat{
+  box-shadow:0 9px 25px rgba(16,27,48,.10);
+}
+body.sde-direct .view :is(.btn,button,[role="button"]){
+  min-height:42px;
+}
+body.sde-direct :is(.sde-campus-member,.sde-campus-admin-hero,.sde-command-center){
+  border-radius:21px!important;
+  border-color:rgba(231,198,119,.38)!important;
+  box-shadow:var(--sde27-shadow);
+}
+body.sde-direct .sde-command-v4{
+  border-color:rgba(231,198,119,.48)!important;
+  border-radius:19px!important;
+}
+body.sde-direct .sde-command-v4-grid{
+  min-width:0;
+}
+body.sde-direct-admin .sde-command-v4-item{
+  min-height:88px;
+  border-radius:14px;
+  text-align:left;
+}
+body.sde-direct-admin .sde-command-v4-item:focus-visible{
+  outline:3px solid var(--sde27-ring)!important;
+}
+body.sde-reference .ref-bottom-nav,
+body.sde-direct .sde-command-v4-bottom{
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+
+/* Grande tablette et ordinateur : garder le contenu sur la même grille,
+ * sans colonnes trop étroites ni chevauchements. */
+@media(min-width:1100px){
+  body.sde-campus-student main{max-width:1360px}
+  body.sde-direct .shell{max-width:100%}
+  body.sde-direct-admin .sde-command-v4-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+  body.sde-2027-reference .ap-hero .ap-hero-inner{
+    gap:clamp(24px,4vw,72px)!important;
+  }
+}
+@media(min-width:700px) and (max-width:1099px){
+  body.sde-direct-admin .sde-command-v4-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  body.sde-campus-student main{padding-inline:22px}
+  body.sde-campus-student .metrics{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+/* Mobiles 360 / 390 px : pas de débordement horizontal,
+ * actions au pouce et bandes de navigation existantes. */
+@media(max-width:699px){
+  html{scroll-padding-top:64px}
+  body{min-width:0}
+  body.sde-2027-reference .ap-hero .ap-hero-inner{
+    width:calc(100% - 28px)!important;
+    min-height:0!important;
+    padding:28px 0 26px!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:18px!important;
+  }
+  body.sde-2027-reference .ap-hero .ap-hero-copy{min-width:0!important}
+  body.sde-2027-reference .ap-hero .sde-citadel-actions{
+    width:100%;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:9px!important;
+  }
+  body.sde-2027-reference .ap-hero .sde-citadel-actions a{
+    width:100%;
+    min-height:46px!important;
+  }
+  body.sde-2027-reference .ap-hero :is(.sde-tpa-hero-card,.sde-shell-event){
+    width:100%!important;max-width:100%!important;margin:0!important;
+  }
+  body.sde-2027-reference :is(.sdu-grid,.sde-premium-pillars-grid){
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  body.sde-reference-login .access-shell{
+    min-height:100svh;
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  body.sde-reference-login .access-content{
+    width:min(390px,calc(100% - 24px))!important;
+    max-width:calc(100% - 24px)!important;
+    top:clamp(180px,25svh,245px)!important;
+  }
+  body.sde-reference-login .access-card{padding:18px 15px!important}
+  body.sde-reference-login .ref-access-targets{
+    gap:8px!important;
+    flex-wrap:wrap;
+    white-space:normal;
+  }
+  body.sde-reference-login .ref-access-targets button{
+    flex:1 1 70px;
+    text-align:center;
+  }
+  body.sde-reference-login .access-panel input{font-size:16px!important}
+  body.sde-campus-student header .inner,
+  body:has(#formFormateur) header .inner{
+    align-items:flex-start;
+    gap:10px;
+  }
+  body.sde-campus-student main,body:has(#formFormateur) main{
+    padding:15px 12px 100px;
+    width:100%;
+  }
+  body.sde-campus-student .hero.sde-v5-academy-hero{
+    padding:22px 16px!important;
+    border-radius:16px!important;
+  }
+  body.sde-campus-student .hero .actions{
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:10px;
+  }
+  body.sde-campus-student .hero .actions a{width:100%;justify-content:center}
+  body.sde-campus-student .metrics{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  body.sde-campus-student .tabs{
+    display:flex;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+    scrollbar-width:thin;
+    padding-bottom:5px;
+  }
+  body.sde-campus-student .tabs button{flex:0 0 auto}
+  body.sde-campus-student :is(.panel,.card,.lesson,.metric){
+    padding:clamp(12px,3vw,18px);
+  }
+  body.sde-campus-student :is(.sdu-student-links,.sdu-campus-navigation){
+    max-width:100%;
+    overflow-wrap:anywhere;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-header{
+    padding:8px 12px!important;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-head-links{
+    width:100%;
+    min-width:0;
+  }
+  body.sde-direct #sde-direct-top .sde-direct-head-links a{
+    flex:1 1 auto;
+    padding:9px 8px;
+    text-align:center;
+  }
+  body.sde-direct .main{
+    padding-inline:12px!important;
+    padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))!important;
+  }
+  body.sde-direct .view .sec-head{
+    flex-wrap:wrap;
+    min-width:0;
+  }
+  body.sde-direct-admin .sde-command-v4-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+  }
+  body.sde-direct-admin .sde-command-v4-item{
+    min-height:88px;
+    padding:11px 9px!important;
+    grid-template-columns:25px minmax(0,1fr);
+  }
+  body.sde-direct-admin .sde-command-v4-item :is(strong,span){
+    overflow-wrap:anywhere;
+  }
+  body.sde-direct .sde-command-v4{padding:12px!important}
+  body.sde-reference .sde-campus-member{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  body.sde-reference-admin .sde-command-center .ref-kpis-live{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  body.sde-reference-admin .sde-command-center .ref-kpi{
+    padding:12px!important;
+  }
+}
+@media(max-width:390px){
+  body.sde-2027-reference .ap-hero .ap-hero-inner{
+    width:calc(100% - 22px)!important;
+  }
+  body.sde-direct-admin .sde-command-v4-item{
+    grid-template-columns:1fr!important;
+  }
+  body.sde-reference-login .access-identity{
+    top:6%!important;
+  }
+  body.sde-reference-login .access-content{
+    top:24svh!important;
+  }
+}
+/* Accessibilité : pas d'animations imposées en mobilité réduite,
+ * focus visible et tailles tactiles identiques sur toutes les interfaces. */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important}
+  body.sde-2027-reference :is(.sdu-card,.sde-premium-pillar),
+  body.sde-campus-student :is(.card,.panel,.metric),
+  body.sde-direct :is(.sde-command-v4-item,.card,.tile),
+  body.sde-reference-login .access-card{
+    transition:none!important;
+    animation:none!important;
+    transform:none!important;
+  }
+}

@@ -92,3 +92,45 @@ test("Privé 06 · Command Center et cinq onglets : outils réels, habilitations
  assert.match(read("frontend/reference.css"),/sde-campus-admin-hero/);
  assert.match(read("frontend/reference.css"),/sde-command-center/);
 });
+
+
+test("SDE 2027 · les six interfaces actives chargent la même charte desktop/mobile",()=>{
+ const paths=[
+  "public/vitrine/portail.html",        // accueil public réellement rendu
+  "public/vitrine/academy.html",        // présentation publique Academy
+  "public/index.html",                  // /mon-espace et /administration protégés
+  "public/vitrine/sde-academy-parcours.html", // campus authentifié
+  "public/vitrine/academy-enseignants.html",  // studio authentifié
+  "public/vitrine/connexion-unifiee.html"     // /portail -> connexion
+ ];
+ for(const path of paths){
+  const html=read(path);
+  assert.match(html,/\/vitrine\/sde-hybride-integral-2027\.css\?v=[a-zA-Z0-9]+/,
+   "charte absente : "+path);
+  assert.equal((html.match(/sde-hybride-integral-2027\.css/g)||[]).length,1,
+   "une seule feuille de design : "+path);
+ }
+ const css=read("public/vitrine/sde-hybride-integral-2027.css");
+ for(const scope of [
+  "body.sde-2027-reference", "body.sde-reference-login",
+  "body.sde-v5-academy-public", "body.sde-campus-student",
+  "body.sde-direct", "body.sde-direct-admin"
+ ])assert.ok(css.includes(scope), "portée absente : "+scope);
+ assert.match(css,/@media\(max-width:699px\)/);
+ assert.match(css,/@media\(max-width:390px\)/);
+ assert.match(css, /@media\(prefers-reduced-motion:reduce\)/);
+ assert.match(css,/:focus-visible/);
+ assert.match(css, /\[hidden\]\{display:none!important\}/);
+});
+test("SDE 2027 · la charte vise les vraies routes sans ouvrir les espaces protégés",()=>{
+ const worker=read("src/worker.js");
+ assert.match(worker,/return assetPortail\("\/vitrine\/portail\.html"\)/);
+ assert.match(worker,/const fichier = p\.endsWith\("\/os-v31"\)\?"\/os-v31\/index\.html":"\/index\.html"/);
+ assert.match(worker,/const fichierAcademy = p\.endsWith\("\/academy"\)\?"\/vitrine\/sde-academy-parcours\.html"/);
+ assert.match(worker,/if \(!u\.connecte\)/);
+ assert.match(worker,/if \(p\.startsWith\("\/administration"\) && u\.niveau < 1\)/);
+ const app=read("public/index.html");
+ assert.match(app,/\/vitrine\/sde-hybride-integral-2027\.css/);
+ const academy=read("public/vitrine/sde-academy-parcours.html");
+ assert.match(academy,/progression affichée ci-dessous provient de vos résultats réels/i);
+});
