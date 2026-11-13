@@ -115,6 +115,22 @@ test("MPA: les sections éditoriales existantes sont reprises sans altérer leur
         assert.equal(links.length,2,"Deux liens directs attendus sur les projets");
         for(const link of links)link.remove();
         assert.equal(normalize(editable.textContent),normalize(a.textContent),name+"/"+id);
+      }else if(name==="mouvement"&&id==="mouvement"){
+        // Seule la formulation doctrinale des six axes change sur la page publique.
+        const ancienne=normalize(a.textContent);
+        const nouvelle=ancienne.replace(
+          "Réveiller, restaurer, former, équiper et envoyer",
+          "Rassembler et unir, former, réveiller, restaurer, équiper et envoyer"
+        );
+        assert.notEqual(ancienne,nouvelle,"la version source contenait bien cinq actions");
+        assert.equal(normalize(b.textContent),nouvelle,name+"/"+id);
+      }else if(name==="mouvement"&&id==="axes"){
+        // Nouvelle décision officielle : le chapitre « Parcours » comporte six
+        // axes, pas cinq, dans l'ordre approuvé par le Mouvement.
+        const titres=[...b.querySelectorAll('ol.six-axes > li h3')].map(el=>el.textContent.trim());
+        assert.deepEqual(titres,["Rassembler et Unir","Former","Réveiller","Restaurer","Équiper","Envoyer"]);
+        assert.match(b.textContent,/Six axes pour former un soldat/);
+        assert.equal(a.querySelectorAll('ol > li').length,5,"ancienne version source");
       }else assert.equal(normalize(b.textContent),normalize(a.textContent),name+"/"+id);
       assert.equal(b.querySelectorAll("img").length,a.querySelectorAll("img").length,name+"/"+id+" images");
       if(!(name==="programmes"&&id==="infire"))
