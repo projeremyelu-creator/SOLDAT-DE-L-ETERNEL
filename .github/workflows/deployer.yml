@@ -114,15 +114,21 @@ jobs:
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
           CLOUDFLARE_CACHE_PURGE_TOKEN: ${{ secrets.CLOUDFLARE_CACHE_PURGE_TOKEN }}
           CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-      - name: Vérifier l'Academy publiée sur les deux domaines (sans connexion ni écriture)
-        if: steps.dernier.outputs.deployer == 'true'
-        run: node scripts/recette-academy-production.mjs
       - name: Confirmer les routes et la révision publiée sur les deux domaines SDE
         if: steps.dernier.outputs.deployer == 'true'
         timeout-minutes: 20
         run: node scripts/attendre-publication-sde.mjs
         env:
           SDE_EXPECTED_REV: ${{ github.sha }}
+      - name: Vérifier les routes publiques, la confidentialité anonyme et l'application sur les deux domaines
+        if: steps.dernier.outputs.deployer == 'true'
+        timeout-minutes: 15
+        run: node scripts/recette-production.mjs
+        env:
+          SDE_EXPECTED_REV: ${{ github.sha }}
+      - name: Vérifier l'Academy publiée sur les deux domaines (sans connexion ni écriture)
+        if: steps.dernier.outputs.deployer == 'true'
+        run: node scripts/recette-academy-production.mjs
       - name: Vérifier les dix médias SDE 2027 sur les deux domaines après publication
         if: steps.dernier.outputs.deployer == 'true'
         timeout-minutes: 8

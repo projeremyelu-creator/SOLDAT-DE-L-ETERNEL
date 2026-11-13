@@ -6,8 +6,8 @@
  */
 import {chromium} from 'playwright';
 import {lectureDeRecetteAutorisee} from './recette-lecture-seule.mjs';
+import {DOMAINES_PUBLICATION} from './attendre-publication-sde.mjs';
 
-const base='https://mouvement-sde.org';
 const accounts=[
  {type:'membre',path:'/mon-espace',login:process.env.SDE_QA_MEMBER_LOGIN,password:process.env.SDE_QA_MEMBER_PASSWORD},
  {type:'administrateur',path:'/administration',login:process.env.SDE_QA_ADMIN_LOGIN,password:process.env.SDE_QA_ADMIN_PASSWORD}
@@ -15,10 +15,13 @@ const accounts=[
 for(const a of accounts) {
  if(!a.login||!a.password)throw Error('Comptes de recette manquants : renseigner les secrets SDE_QA_MEMBER_* et SDE_QA_ADMIN_* dans GitHub Actions');
 }
+// Deux hôtes : sessions indépendantes ; aucun cookie entre domaines.
+const sessions=DOMAINES_PUBLICATION.flatMap(base=>accounts.map(account=>({...account,base})));
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
 const report=[];
 try{
- for(const account of accounts){
+ for(const account of sessions){
+  const base=account.base;
   const context=await browser.newContext({viewport:{width:360,height:800},deviceScaleFactor:1,isMobile:true,hasTouch:true,locale:'fr-CI'});
   const page=await context.newPage();
   const blocked=[];
@@ -79,7 +82,7 @@ try{
     // Capture en mémoire : confirmer que Chromium dessine la page, sans disque ni artifact.
     const image=await page.screenshot({animations:'disabled',fullPage:false});
     if(image.length<10000)throw Error('Rendu incomplet pour '+account.type);
-    report.push({role:account.type,width,overflow:Math.max(data.bodyWidth,data.documentWidth)-width,
+    report.push({domaine:base,role:account.type,width,overflow:Math.max(data.bodyWidth,data.documentWidth)-width,
       headerOverlaps:data.headerOverlaps.length,rendered:true});
    }
    // Vérifier la restriction entre les deux espaces avec le cookie actif, sans écrire.
@@ -88,9 +91,9 @@ try{
     throw Error('Le compte membre a reçu un statut inattendu sur Administration : '+forbidden.status());
    if(account.type==='administrateur'&&forbidden.status()!==200)
     throw Error('Administration inaccessible pour le compte de recette : '+forbidden.status());
-   console.log('RECETTE_AUTH '+JSON.stringify({role:account.type,viewports:[360,390,768,1280,1600],writesBlocked:blocked.length}));
+   console.log('RECETTE_AUTH '+JSON.stringify({domaine:base,role:account.type,viewports:[360,390,768,1280,1600],writesBlocked:blocked.length}));
   }finally{await context.close();}
  }
 }finally{await browser.close();}
-if(report.length!==10)throw Error('Recette authentifiée incomplète');
+if(report.length!==sessions.length*5)throw Error('Recette authentifiée incomplète sur les deux domaines');
 console.log('BILAN_RECETTE_AUTH '+JSON.stringify({parcours:report.length,erreurs:0,details:report}));
