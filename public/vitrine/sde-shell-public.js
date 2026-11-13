@@ -70,7 +70,7 @@
   const pageAction=pageActions[location.pathname];
   const contextCTA=pageAction?link(pageAction[1],pageAction[0],"sde-shell-context-cta"):null;
   const search=link("/rechercher","","sde-shell-search");search.setAttribute("aria-label","Rechercher");search.append(icon("recherche"));
-  const portal=link("/portail","Mon Portail S.D.E","sde-shell-portal");portal.prepend(icon("portail"));
+  const portal=link("/portail","","sde-shell-portal");portal.setAttribute("aria-label","Ouvrir mon Portail S.D.E");portal.append(icon("portail"),make("span","sde-shell-portal-label","Mon Portail S.D.E"));
   const rubriques=make("button","sde-shell-rubriques","Rubriques");
   rubriques.type="button";rubriques.setAttribute("aria-controls","sde-shell-overlay");
   rubriques.setAttribute("aria-expanded","false");rubriques.prepend(icon("menu"));
