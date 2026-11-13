@@ -1,22 +1,22 @@
 /*
- * SDE Digital · Citadelle Royale × Institution × Digital Universe
- * 13 novembre 2026 — couche visuelle responsive pour les VRAIES pages servies.
+ * Mouvement SDE · Direction unique 2 + 3 (cinéma + communauté)
+ * Thème canonique des écrans publics, de l'Academy et des espaces privés.
  * Aucun compteur simulé, aucune modification des sessions ni permissions.
- * La feuille est chargée en dernier : elle harmonise le site sans remplacer
- * les interactions, les contenus et les règles d'accès existants.
+ * Remplace les thèmes précédents sans toucher aux APIs, comptes,
+ * parcours d'inscription ou règles de confidentialité.
  */
 :root{
-  --sde27-night:#0b1730;
-  --sde27-night-2:#142944;
-  --sde27-night-3:#1d3150;
-  --sde27-paper:#f8f4eb;
-  --sde27-ivory:#fff9ec;
-  --sde27-gold:#e7c677;
-  --sde27-gold-ink:#9b702b;
-  --sde27-violet:#735298;
-  --sde27-green:#366b56;
-  --sde27-line:rgba(231,198,119,.36);
-  --sde27-ring:#f3d58e;
+  --sde27-night:#0D1B38;
+  --sde27-night-2:#162D4D;
+  --sde27-night-3:#1D3656;
+  --sde27-paper:#FAF7F0;
+  --sde27-ivory:#FFFDF8;
+  --sde27-gold:#D9A72E;
+  --sde27-gold-ink:#805A18;
+  --sde27-violet:#B74624;
+  --sde27-green:#00644F;
+  --sde27-line:rgba(217,167,46,.36);
+  --sde27-ring:#E9C76D;
   --sde27-shadow:0 18px 45px rgba(3,11,27,.20);
   --sde27-round:18px;
 }
@@ -28,19 +28,18 @@ body :is(a,button,input,textarea,select,summary,[role="tab"]):focus-visible{
   outline:3px solid var(--sde27-ring)!important;
   outline-offset:3px!important;
 }
-body :is(button,a,summary){-webkit-tap-highlight-color:rgba(231,198,119,.21)}
+body :is(button,a,summary){-webkit-tap-highlight-color:rgba(217,167,46,.21)}
 body :is(input,textarea,select){max-width:100%}
 body img,body video{max-width:100%}
 body [hidden],body [aria-hidden="true"][hidden]{display:none!important}
 
-/* 01 — Accueil public officiel. Le contenu actuel, Ézéchiel 37 et les deux
- * vraies actions de la couverture sont préservés. */
+/* 01 — Accueil SDE 2+3 : manifeste, Ézéchiel 37 et quatre portes réelles. */
 body.sde-2027-reference{
-  --sde27-home-surface:#f8f4eb;
+  --sde27-home-surface:#FAF7F0;
   background:var(--sde27-home-surface)!important;
 }
 body.sde-2027-reference .ap-hero{
-  box-shadow:inset 0 -1px rgba(231,198,119,.28);
+  box-shadow:inset 0 -1px rgba(217,167,46,.28);
 }
 body.sde-2027-reference .ap-hero .ap-hero-inner{
   max-width:1320px!important;
@@ -84,14 +83,14 @@ body.sde-2027-reference .sde-shell-event{
  * sans menu du site public ni étroites zones tactiles. */
 body.sde-reference-login .access-main{
   background:
-    radial-gradient(ellipse at 50% 16%,rgba(115,82,152,.20),transparent 59%),
-    linear-gradient(160deg,#09152b,#142647 62%,#1c1532)!important;
+    radial-gradient(ellipse at 50% 16%,rgba(183,70,36,.20),transparent 59%),
+    linear-gradient(160deg,#0D1B38,#1D3656 62%,#112F42)!important;
 }
 body.sde-reference-login .access-shell{
   width:min(100%,1200px);
 }
 body.sde-reference-login .access-card{
-  border:1px solid rgba(231,198,119,.43)!important;
+  border:1px solid rgba(217,167,46,.43)!important;
   border-radius:19px!important;
   background:linear-gradient(145deg,rgba(25,43,73,.96),rgba(18,29,52,.94))!important;
   box-shadow:0 24px 65px rgba(3,8,23,.33)!important;
@@ -131,7 +130,7 @@ body.sde-reference-login .access-submit{
   padding:11px 16px!important;
   font-size:.95rem!important;
   font-weight:800!important;
-  color:#0b1730!important;
+  color:#0D1B38!important;
 }
 body.sde-reference-login :is(.access-forgot,.ref-account-links button){
   min-height:44px!important;
@@ -175,16 +174,16 @@ body:has(#formFormateur){
 body.sde-campus-student :is(.panel,.card,.lesson,.metric,.level),
 body:has(#formFormateur) :is(.panel,.card,.metric){
   border-radius:17px;
-  border-color:rgba(231,198,119,.28);
+  border-color:rgba(217,167,46,.28);
   box-shadow:0 12px 30px rgba(3,11,27,.13);
 }
 body.sde-campus-student .hero.sde-v5-academy-hero{
   padding:clamp(22px,4vw,52px)!important;
-  border:1px solid rgba(231,198,119,.40)!important;
+  border:1px solid rgba(217,167,46,.40)!important;
   border-left:4px solid var(--sde27-gold)!important;
   border-radius:22px!important;
   background:
-    radial-gradient(ellipse at 100% 0,rgba(115,82,152,.24),transparent 65%),
+    radial-gradient(ellipse at 100% 0,rgba(183,70,36,.24),transparent 65%),
     linear-gradient(140deg,#10223e,#211a38)!important;
   box-shadow:var(--sde27-shadow);
 }
@@ -222,16 +221,16 @@ body:has(#formFormateur) .pane{
  * Les routes /mon-espace et /administration affichent cette application,
  * pas les anciennes pages tableau-membre/tableau-administration. */
 body.sde-direct{
-  --sde-cmd-night:#0b1730;
-  --sde-cmd-gold:#e7c677;
+  --sde-cmd-night:#0D1B38;
+  --sde-cmd-gold:#D9A72E;
 }
 body.sde-direct #sde-direct-top{
-  background:linear-gradient(115deg,#0b1730,#211d3d)!important;
+  background:linear-gradient(115deg,#0D1B38,#211d3d)!important;
   border-bottom:1px solid var(--sde27-line)!important;
 }
 body.sde-direct #sde-direct-top .sde-direct-intro{
   background:
-    radial-gradient(circle at 84% 15%,rgba(115,82,152,.21),transparent 41%),
+    radial-gradient(circle at 84% 15%,rgba(183,70,36,.21),transparent 41%),
     linear-gradient(116deg,#132846,#1b2545)!important;
 }
 body.sde-direct #sde-direct-top .sde-direct-head-links a{
@@ -264,11 +263,11 @@ body.sde-direct .view :is(.btn,button,[role="button"]){
 }
 body.sde-direct :is(.sde-campus-member,.sde-campus-admin-hero,.sde-command-center){
   border-radius:21px!important;
-  border-color:rgba(231,198,119,.38)!important;
+  border-color:rgba(217,167,46,.38)!important;
   box-shadow:var(--sde27-shadow);
 }
 body.sde-direct .sde-command-v4{
-  border-color:rgba(231,198,119,.48)!important;
+  border-color:rgba(217,167,46,.48)!important;
   border-radius:19px!important;
 }
 body.sde-direct .sde-command-v4-grid{
@@ -466,182 +465,9 @@ body.sde-direct .sde-command-v4-bottom{
   }
 }
 
-/* ================================================================
-   Citadelle 2027 v2 — REFONTE VISIBLE, pas seulement correctifs CSS.
-   Correspond aux compositions desktop/mobile validées : identité,
-   quatre accès opérationnels, Academy et commandement authentifié.
-   ================================================================ */
-html body.sde-citadelle-live .ap-hero .ap-hero-copy{
-  text-align:center!important;
-  align-items:center!important;
-}
-html body.sde-citadelle-live .ap-hero .sde-vision-wordmark{
-  display:grid!important;
-  grid-template-columns:1fr;
-  gap:7px;
-  justify-items:center;
-  max-width:100%;
-  padding:10px 0 7px;
-  color:#ffe5a0!important;
-  -webkit-text-fill-color:#ffe5a0!important;
-  font:700 clamp(2.6rem,4.9vw,5.5rem)/.96 "Cinzel",Georgia,serif!important;
-  letter-spacing:.035em;
-  text-shadow:0 5px 30px rgba(0,0,0,.72),0 1px 9px rgba(0,0,0,.8);
-  text-wrap:balance;
-}
-html body.sde-citadelle-live .ap-hero .sde-vision-wordmark .sde-vision-emblem{
-  display:grid;place-items:center;
-  width:38px;height:30px;
-  color:#f6d688!important;-webkit-text-fill-color:#f6d688!important;
-  font:500 1.3rem/1 Georgia,serif!important;
-  border-bottom:1px solid rgba(246,214,136,.65);
-}
-html body.sde-citadelle-live .ap-hero h1#titre-accueil{
-  font:italic 600 clamp(1.15rem,2.1vw,1.78rem)/1.3 "Cormorant Garamond",Georgia,serif!important;
-  letter-spacing:.025em!important;
-  text-transform:none!important;
-  color:#fff7e8!important;-webkit-text-fill-color:#fff7e8!important;
-  text-align:center!important;
-  max-width:34ch!important;
-  margin:8px auto 12px!important;
-  text-shadow:0 3px 15px rgba(0,0,0,.8);
-}
-html body.sde-citadelle-live .ap-hero h1#titre-accueil .sde-citadel-highlight{
-  color:#ffdea0!important;-webkit-text-fill-color:#ffdea0!important;
-  font:inherit!important;
-}
-html body.sde-citadelle-live .ap-hero .sde-citadelle-foundation{
-  display:inline-block!important;
-  max-width:100%;
-  padding:7px 16px!important;
-  border:1px solid rgba(245,212,134,.72)!important;
-  border-radius:999px!important;
-  background:rgba(6,15,34,.78)!important;
-  color:#ffe1a0!important;-webkit-text-fill-color:#ffe1a0!important;
-  font:750 clamp(.64rem,.9vw,.78rem)/1.5 "Plus Jakarta Sans",system-ui,sans-serif!important;
-  letter-spacing:.08em!important;
-  text-align:center!important;
-  white-space:normal!important;
-}
-html body.sde-citadelle-live .ap-hero .ap-devise{
-  letter-spacing:.18em!important;
-  text-align:center!important;
-  font-size:clamp(.79rem,1.1vw,.96rem)!important;
-  color:#f7dfa0!important;-webkit-text-fill-color:#f7dfa0!important;
-}
-html body.sde-citadelle-live .ap-hero .sde-citadel-verse{
-  max-width:590px!important;
-  margin-inline:auto!important;
-}
-html body.sde-citadelle-live .ap-hero .sde-citadel-actions{
-  justify-content:center!important;
-}
-html body.sde-citadelle-live .sde-citadelle-quicknav{
-  width:100%;
-  position:relative;
-  background:#f8f4eb!important;
-  color:#13223b!important;
-  border-bottom:1px solid #ddcfb5!important;
-  padding:0 18px 22px!important;
-}
-html body.sde-citadelle-live .sde-citadelle-quicknav-inner{
-  width:min(1340px,100%);
-  margin:-17px auto 0;
-  position:relative;
-  z-index:2;
-  display:grid;
-  grid-template-columns:minmax(200px,.82fr) minmax(0,2.2fr);
-  align-items:stretch;
-  gap:0;
-  overflow:hidden;
-  border:1px solid rgba(237,201,117,.42);
-  border-radius:19px;
-  box-shadow:0 16px 35px rgba(5,19,40,.19);
-  background:#0c1e39;
-}
-html body.sde-citadelle-live .sde-citadelle-quicknav-title{
-  padding:20px 24px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:8px;
-  color:#f9f3e5;
-  background:linear-gradient(135deg,#162947,#241c40);
-  border-right:1px solid rgba(237,201,117,.28);
-}
-html body.sde-citadelle-live .sde-citadelle-quicknav-title>span{
-  color:#f2cc80;font:800 .68rem/1.4 system-ui,sans-serif;
-  letter-spacing:.14em;
-}
-html body.sde-citadelle-live .sde-citadelle-quicknav-title>strong{
-  color:#fff7e7;
-  font:650 clamp(1.05rem,1.8vw,1.6rem)/1.2 "Cinzel",Georgia,serif;
-}
-html body.sde-citadelle-live .sde-citadelle-quicknav-items{
-  padding:10px;
-  display:grid!important;
-  grid-template-columns:repeat(4,minmax(0,1fr))!important;
-  gap:8px!important;
-  align-items:stretch;
-  min-width:0;
-}
-html body.sde-citadelle-live .sde-citadelle-quicknav-items>a{
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:center!important;
-  justify-content:center!important;
-  gap:8px;
-  padding:14px 7px!important;
-  border-radius:12px!important;
-  border:1px solid rgba(224,190,119,.35)!important;
-  background:linear-gradient(145deg,#1e3354,#122441)!important;
-  color:#fff7e7!important;
-  text-align:center!important;
-  text-decoration:none!important;
-  min-width:0;min-height:104px;
-  transition:transform .18s,border-color .18s,background .18s;
-}
-html body.sde-citadelle-live .sde-citadelle-quicknav-icon{
-  display:grid;place-items:center;
-  width:34px;height:34px;
-  font:600 1.45rem/1 Georgia,serif;
-  color:#f3ce7e;
-}
-html body.sde-citadelle-live .sde-citadelle-quicknav-items a span:last-child{
-  display:grid;gap:4px;min-width:0;
-}
-html body.sde-citadelle-live .sde-citadelle-quicknav-items strong{
-  font:750 clamp(.77rem,1.06vw,.94rem)/1.25 "Plus Jakarta Sans",system-ui,sans-serif;
-  color:#ffe3a1;
-}
-html body.sde-citadelle-live .sde-citadelle-quicknav-items small{
-  font:500 clamp(.68rem,.92vw,.8rem)/1.3 system-ui,sans-serif;
-  color:#e1e7ee;
-}
-@media(hover:hover) and (pointer:fine){
-  html body.sde-citadelle-live .sde-citadelle-quicknav-items>a:hover{
-    transform:translateY(-3px);
-    border-color:#f2d089!important;
-    background:linear-gradient(145deg,#2e4569,#1a3155)!important;
-  }
-}
-/* Les cinq pôles et les cartes restent des liens vrais, jamais des KPI de démo. */
-html body.sde-citadelle-live .sde-premium-pillars.sde-2027-expressions{
-  background:linear-gradient(180deg,#f8f4eb,#fffdfa)!important;
-}
-html body.sde-citadelle-live .sde-premium-pillars .sde-premium-pillar{
-  border:1px solid #ddc9a5!important;
-  box-shadow:0 9px 24px rgba(11,23,48,.07)!important;
-}
-html body.sde-citadelle-live .sde-premium-pillars .sde-premium-pillar:nth-child(2){
-  border-top:4px solid #c5a05b!important;
-}
-html body.sde-citadelle-live .sde-premium-pillars .sde-premium-pillar:first-child{
-  border-top:4px solid #8a65ac!important;
-}
-html body.sde-citadelle-live .sde-premium-pillars .sde-premium-pillar:last-child{
-  border-top:4px solid #49856b!important;
-}
+/* La composition Citadelle précédente a été remplacée à la source.
+   Le campus, les couvertures membre et les commandes privées ci-dessous
+   restent branchés sur les modules, données et permissions existants. */
 /* Academy publique : remplacer visuellement le simple bloc de préinscription
    par un campus institutionnel à trois cartes et un héros illustré. */
 html body.sde-v5-academy-public .sa-premium-preview{
@@ -752,7 +578,7 @@ body.sde-reference .sde-citadelle-member-cover-actions button{
   padding:11px 14px;
   min-height:46px;
   background:linear-gradient(130deg,#f5d68c,#d7ac58);
-  color:#0b1730;
+  color:#0D1B38;
   border:1px solid #ffe0a2;
   font-weight:800;
   cursor:pointer;
