@@ -1045,3 +1045,20 @@ html body.sde-shell-mounted .sde-shell-header a.sde-shell-portal .sde-shell-port
     border-radius:10px!important;
   }
 }
+
+/* Tablettes 700–899 px : l'ancien thème mettait implicitement le libellé
+ * du Portail à 0 px. Le garde-fou responsive restaure un vrai texte. */
+@media(min-width:700px) and (max-width:899px){
+ html body.sde-shell-mounted .sde-shell-header a.sde-shell-portal{
+  min-width:150px!important;
+  max-width:none!important;
+  font-size:.76rem!important;
+  overflow:visible!important;
+  text-indent:0!important;
+ }
+ html body.sde-shell-mounted .sde-shell-header a.sde-shell-portal .sde-shell-portal-label{
+  font-size:.76rem!important;
+  display:inline!important;
+  visibility:visible!important;
+ }
+}
