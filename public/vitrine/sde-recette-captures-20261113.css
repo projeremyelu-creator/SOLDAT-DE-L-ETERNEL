@@ -507,3 +507,17 @@ html body.sde-direct #sheet .sheet-b .voyants .vy-f{
   flex-wrap:wrap!important;
  }
 }
+
+
+/* CLS /mouvement : réserver la hauteur de l'en-tête final (76 px)
+ * avant le remplacement du header original par la coque commune. */
+@media (min-width:1101px) {
+ html body.sde-unifie[data-sde-page="mouvement"]:not(.sde-shell-mounted)
+ > header.site-header:not(.sde-shell-header) {
+  box-sizing:border-box!important;
+  height:76px!important;
+  min-height:76px!important;
+  max-height:76px!important;
+  overflow:hidden!important;
+ }
+}
