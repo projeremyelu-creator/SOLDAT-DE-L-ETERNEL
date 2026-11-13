@@ -428,8 +428,13 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
   function telAffiche(t) {
     const brut = String(t || "").trim();
     const d = brut.replace(/\D/g, "");
-    if (/^\d{10}$/.test(d) && !brut.startsWith("+")) return d.replace(/(\d{2})(?=\d)/g, "$1 ").trim();
-    if (/^225\d{10}$/.test(d)) return "+225 " + d.slice(3).replace(/(\d{2})(?=\d)/g, "$1 ").trim();
+    // L'indicatif 00225 est équivalent à +225. Affichage seulement :
+    // les numéros stockés et les liens tel:/WhatsApp restent inchangés.
+    const international = d.startsWith("00") ? d.slice(2) : d;
+    if (/^225\d{10}$/.test(international))
+      return "+225 " + international.slice(3).replace(/(\d{2})(?=\d)/g, "$1 ").trim();
+    if (/^\d{10}$/.test(d) && !brut.startsWith("+"))
+      return d.replace(/(\d{2})(?=\d)/g, "$1 ").trim();
     return brut;
   }
   const lienWa = (tel, texte) => { const d = telChiffres(tel); const q = texte ? `?text=${encodeURIComponent(texte)}` : ""; return d ? `https://wa.me/${d}${q}` : `https://wa.me/${q}`; };
