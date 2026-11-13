@@ -149,7 +149,7 @@ test('Film de présentation : bouton sur l’accueil (hors des quatre actions) e
  const home=page('portail'),contact=page('rejoindre'),film=page('mouvement');
  assert.ok(film.includes('id="film"'),'cible du lien');
  const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf('</section>',home.indexOf('class="ap-hero"')));
-  const actions=hero.match(/<nav class="ap-actions[^"]*">[\s\S]*?<\/nav>/)?.[0]||'';
+  const actions=hero.match(/<nav class="ap-actions[^"]*"[^>]*>[\s\S]*?<\/nav>/)?.[0]||'';
   assert.equal((actions.match(/<a /g)||[]).length,4,'quatre actions principales de la refonte Work 2+3');
   for(const route of ['/mouvement','/contact#rejoindre','/programmes#agenda','/portail'])assert.ok(actions.includes('href="'+route+'"'),'Action absente : '+route);
  assert.ok(actions.includes('href="/contact#rejoindre"')&&actions.includes('href="/mouvement"'), 'découverte et adhésion');
