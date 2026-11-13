@@ -1341,3 +1341,30 @@ html body.sde23-native :is(.sdu-filters button,.sde-institutional-links a,.sde-d
 @media(prefers-reduced-motion:reduce){
  html body.sde23-native .sde-institutional-links a{transition:none!important;transform:none!important}
 }
+
+
+/* SDE 2+3 — accessibilité contrastée des cinq pôles sans dépendance Fusion */
+html body.sde23-native.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card{
+ background:#FAF7F0!important;color:#0D1B38!important;
+ border-color:rgba(13,27,56,.22)!important;
+}
+html body.sde23-native.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card :is(h3,h4,strong,b){
+ color:#0D1B38!important;-webkit-text-fill-color:#0D1B38!important;text-shadow:none!important;
+}
+html body.sde23-native.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card :is(p,li,small,dd,dt,span:not(:first-child)){
+ color:#2B3851!important;-webkit-text-fill-color:#2B3851!important;opacity:1!important;text-shadow:none!important;
+}
+html body.sde23-native.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card a{
+ color:#00644F!important;-webkit-text-fill-color:#00644F!important;
+ text-decoration:underline;text-underline-offset:3px!important;
+}
+html body.sde23-native.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card a:is(:hover,:focus-visible){
+ color:#0D1B38!important;-webkit-text-fill-color:#0D1B38!important;
+}
+@media(max-width:390px){
+ html body.sde23-native :is(button,[role="button"]){min-inline-size:44px;min-block-size:44px}
+ html body.sde23-native nav a{min-inline-size:44px;min-block-size:44px;box-sizing:border-box}
+ html body.sde23-native form :is(button,select,textarea){min-block-size:44px}
+ html body.sde23-native form input[type="checkbox"],
+ html body.sde23-native form input[type="radio"]{inline-size:24px;block-size:24px;min-inline-size:24px;flex-shrink:0}
+}
