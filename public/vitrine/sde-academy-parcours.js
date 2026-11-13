@@ -78,8 +78,8 @@ function vuLe(){try{return Number(localStorage.getItem("sde-academy-biblio-vu"))
 let loveSchool=null,loveSelected=null,loveBusy=false,lovePublicActif="tous";
 const LOVE_GROUPS=[
  {id:"fondations",title:"01 · Les fondements du cœur",desc:"Identité, amour christocentrique et discernement relationnel.",symbol:"♡",ids:["LS-01","LS-02","LS-03"]},
- {id:"relations",title:"02 · L’art d’aimer et de communiquer",desc:"Respect, gestion des conflits, langages de l’amour et écoute.",symbol:"✧",ids:["LS-04","LS-05","LS-07","LS-08"]},
- {id:"intimite",title:"03 · Engagement et intimité responsable",desc:"Foyer, santé et intimité adulte abordés avec dignité.",symbol:"♥",ids:["LS-06","LS-09","LS-10"]}
+ {id:"relations",title:"02 · Relations, communication et engagement",desc:"Respect, gestion des conflits, langages de l’amour, dialogue et préparation du foyer.",symbol:"✧",ids:["LS-04","LS-05","LS-06","LS-07","LS-08"]},
+ {id:"intimite",title:"03 · Intimité responsable",desc:"Santé et intimité adulte abordées avec dignité, selon les autorisations individuelles.",symbol:"♥",ids:["LS-09","LS-10"]}
 ];
 const loveList=()=>loveSchool?.courses||[];
 const LOVE_STATUTS={verrouille:"Verrouillé · validation requise",en_attente:"Demande en attente",approuve:"Accès validé",refuse:"Demande refusée",revoque:"Accès retiré"};
