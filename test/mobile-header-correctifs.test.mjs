@@ -59,3 +59,23 @@ test("les routes privées continuent à vérifier la session et les rôles", () 
   assert.match(worker, /if \(!u\.connecte\)/);
   assert.match(worker, /p\.startsWith\("\/administration"\) && u\.niveau < 1/);
 });
+
+test("les correctifs issus des captures sont réellement chargés sur le portail privé", () => {
+  const css = read("public/vitrine/sde-recette-captures-20261113.css");
+  const path = "/vitrine/sde-recette-captures-20261113.css";
+  const head = app.slice(0, app.indexOf("<script>/* Palette des espaces privés"));
+  const links = [...head.matchAll(/<link[^>]+rel="stylesheet"[^>]*>/g)].map(m=>m[0]);
+  assert.equal(links.filter(link=>link.includes(path)).length,1,"un seul chargement dans l'interface privée");
+  assert.ok(head.indexOf(path)>head.indexOf("/vitrine/sde-command-v4.css"),"le correctif doit prendre le dessus sur les anciennes feuilles");
+  for(const token of [
+    "body.sde-reference-admin .sde-citadelle-command-launch",
+    ".sde-citadelle-command-launch > button > svg",
+    "grid-template-columns:minmax(0,1fr)!important",
+    "flex-basis:34px!important",
+    ".sde-direct #main .view"
+  ])assert.ok(css.includes(token),"Sélecteur des captures absent : "+token);
+  assert.match(css,/@media\(max-width:700px\)/);
+  assert.match(css,/@media\(max-width:640px\)/);
+  // Fiche membre : ses ajustements sont dans la feuille spécialisée.
+  assert.match(read("public/vitrine/sde-command-v4.css"), /\.sde-member-profile/);
+});

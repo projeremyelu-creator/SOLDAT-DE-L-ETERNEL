@@ -222,9 +222,11 @@ test("Doctrine SDE 2027 · six axes exacts dans leur ordre officiel",()=>{
 test("Captures SDE · corrections réelles chargées sur les bons écrans",()=>{
  const page=read("public/index.html");
  const css=read("public/vitrine/sde-recette-captures-20261113.css");
- const position=page.indexOf('/vitrine/sde-recette-captures-20261113.css');
- const old=page.indexOf('/vitrine/sde-hybride-integral-2027.css');
- assert.ok(position>old&&old>0,"feuille correctrice chargée APRÈS le thème général");
+ // Vérifier l'en-tête réel du portail, pas la chaîne HTML de copie hors ligne.
+ const head=page.slice(0,page.indexOf('<script>/* Palette des espaces privés'));
+ const position=head.indexOf('/vitrine/sde-recette-captures-20261113.css');
+ const old=head.indexOf('/vitrine/sde-command-v4.css');
+ assert.ok(position>old&&old>0,"feuille correctrice chargée APRÈS les styles du portail");
  for(const selector of [
   "#axes ol.six-axes","#axes ol.six-axes > li",
   ".sde-citadelle-command-launch > button > svg",
