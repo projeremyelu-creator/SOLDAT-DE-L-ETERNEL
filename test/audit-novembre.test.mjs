@@ -46,12 +46,12 @@ test("Direction SDE 2+3 : la charte Fusion est archivée sans être chargée", (
  const legacy=lire("public/vitrine/sde-fusion.css");
  for(const token of ["--fu-gold","data-sde-palette=fusion",".fu-strip"])assert.ok(legacy.includes(token));
  const app=lire("public/index.html");
- assert.doesNotMatch(app, /<link[^>]+sde-fusion\\.css/);
+ assert.ok(!app.includes('href="/vitrine/sde-fusion.css'),"ancien style Fusion privé désactivé");
  assert.ok(app.includes("sde-hybride-integral-2027.css"));
  assert.match(app, /"fusion-04"/,'le choix de palette conserve ses données métiers, sans CSS Fusion actif');
  for(const p of ["portail","mouvement","programmes","missions-humanitaires","ressources","rejoindre","prieres","tableau-administration","tableau-membre"]){
   const html=lire("public/vitrine/"+p+".html");
-  assert.doesNotMatch(html, /<link[^>]+sde-fusion\\.css/,p+' : ancienne charte encore branchée');
+  assert.ok(!html.includes('href="/vitrine/sde-fusion.css'),p+" : ancienne charte encore branchée");
   assert.ok(html.includes("sde-hybride-integral-2027.css"),p+" : direction 2+3 absente");
  }
  assert.match(lire("public/vitrine/portail.html"), /class="ap-hero"/);
