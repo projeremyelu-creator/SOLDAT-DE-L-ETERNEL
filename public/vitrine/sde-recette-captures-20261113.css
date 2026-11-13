@@ -369,3 +369,141 @@ html body.sde-direct #sheet .sheet-b .vy-f{
   transition:none!important;animation:none!important;transform:none!important;
  }
 }
+
+
+/* Chambre Haute : le radar SVG et la liste n'avaient pas de couleurs
+ * lisibles explicitement définies sur le thème bleu nuit. */
+html body.sde-direct #main .view .card.rd-card .rd-wrap{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr)!important;
+ gap:16px!important;
+ justify-items:center!important;
+ align-items:start!important;
+ min-width:0!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-svg{
+ display:block!important;
+ width:min(100%,340px)!important;
+ height:auto!important;
+ margin:auto!important;
+ overflow:visible!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-ring{
+ fill:none!important;stroke:#5b779e!important;stroke-width:.8!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-axe{
+ stroke:#83a1c4!important;stroke-width:.8!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-zone{
+ fill:rgba(234,194,100,.24)!important;
+ stroke:#f1d284!important;
+ stroke-width:1.8!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-lab{
+ fill:#f3ebdc!important;
+ color:#f3ebdc!important;
+ font-size:8px!important;
+ stroke:none!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-list{
+ box-sizing:border-box!important;
+ width:100%!important;
+ padding:0!important;
+ margin:0!important;
+ list-style:none!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-list li{
+ display:flex!important;
+ justify-content:space-between!important;
+ align-items:baseline!important;
+ gap:12px!important;
+ min-width:0!important;
+ padding:10px 2px!important;
+ border-bottom:1px solid #536887!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-list li span{
+ color:#f1f2f8!important;
+ -webkit-text-fill-color:#f1f2f8!important;
+ opacity:1!important;
+ font-size:.92rem!important;
+ line-height:1.4!important;
+ overflow-wrap:break-word!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-list li strong{
+ color:#f0d48e!important;
+ -webkit-text-fill-color:#f0d48e!important;
+ opacity:1!important;
+ font-variant-numeric:tabular-nums!important;
+}
+html body.sde-direct #main .view .pr-row{
+ box-sizing:border-box!important;
+ background:#111e38!important;
+ border-color:#647899!important;
+ border-radius:12px!important;
+ padding:12px!important;
+ margin:8px 0!important;
+ min-width:0!important;
+}
+html body.sde-direct #main .view .pr-row .pr-main{
+ color:#f6f3e9!important;
+ text-align:left!important;
+ min-width:0!important;
+}
+html body.sde-direct #main .view .pr-row .row-t{
+ color:#f5e1a1!important;
+ -webkit-text-fill-color:#f5e1a1!important;
+ opacity:1!important;
+ line-height:1.38!important;
+}
+html body.sde-direct #main .view .pr-row .row-m{
+ color:#d4dfef!important;
+ -webkit-text-fill-color:#d4dfef!important;
+ opacity:1!important;
+ line-height:1.5!important;
+}
+html body.sde-direct #main .view .pr-row .row-q{
+ color:#f1eee8!important;
+ -webkit-text-fill-color:#f1eee8!important;
+}
+html body.sde-direct #main .view .subtabs button{
+ color:#f2ecdd!important;
+ -webkit-text-fill-color:#f2ecdd!important;
+ opacity:1!important;
+}
+html body.sde-direct #main .view .subtabs button.on{
+ color:#fff7e4!important;
+ -webkit-text-fill-color:#fff7e4!important;
+}
+html body.sde-direct #sheet .sheet-b .voyants{
+ background:#223551!important;
+ border:1px solid #667e9f!important;
+ color:#f7f0e1!important;
+}
+html body.sde-direct #sheet .sheet-b .voyants :is(.vy-k,.vy-g,.vy-d){
+ color:#f7f0e1!important;
+ -webkit-text-fill-color:#f7f0e1!important;
+ opacity:1!important;
+}
+html body.sde-direct #sheet .sheet-b .voyants .vy-f{
+ color:#f1dfad!important;
+ -webkit-text-fill-color:#f1dfad!important;
+ background:#314766!important;
+}
+@media(max-width:650px){
+ html body.sde-direct #main .view .card.rd-card .rd-svg{
+  max-width:275px!important;
+ }
+ /* Les catégories détaillées restent sous le graphique : on masque
+  * uniquement les abréviations SVG chevauchantes à petit écran. */
+ html body.sde-direct #main .view .card.rd-card .rd-svg .rd-lab{
+  display:none!important;
+ }
+ html body.sde-direct #main .view .pr-row{
+  grid-template-columns:minmax(0,1fr)!important;
+ }
+ html body.sde-direct #main .view .pr-row .pr-side{
+  justify-self:start!important;
+  display:flex!important;
+  flex-wrap:wrap!important;
+ }
+}
