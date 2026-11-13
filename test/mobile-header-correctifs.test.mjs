@@ -14,9 +14,9 @@ const linkPath = "/vitrine/sde-mobile-correctifs-20261103.css";
 const linkPattern = /<link rel="stylesheet" href="\/vitrine\/sde-mobile-correctifs-20261103\.css(?:\?v=[^"]+)?">/g;
 
 test("le même thème responsive SDE 2+3 est chargé une fois sur les deux interfaces réellement servies", () => {
-  const canonical = /<link rel="stylesheet" href="\\/vitrine\\/sde-hybride-integral-2027\\.css(?:\\?v=[^"]+)?">/g;
-  assert.equal([...app.matchAll(canonical)].length, 1);
-  assert.equal([...accueil.matchAll(canonical)].length, 1);
+  const canonicalLinks = (html) => [...html.matchAll(/<link[^>]+>/g)].filter(([tag]) => tag.includes('rel="stylesheet"') && tag.includes("/vitrine/sde-hybride-integral-2027.css"));
+  assert.equal(canonicalLinks(app).length, 1);
+  assert.equal(canonicalLinks(accueil).length, 1);
   for(const html of [app,accueil]){
     assert.equal([...html.matchAll(linkPattern)].length,0,"ancien correctif mobile désactivé");
     assert.ok(!html.includes('href="/vitrine/sde-fusion.css'),"Fusion n'est plus activé");
