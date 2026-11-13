@@ -323,6 +323,37 @@ try{
    });
    const row={...c,status:response?.status()||0,url:page.url(),...view,pageErrors};
    report.checks.push(row);
+   if(c.path==='/mouvement'){
+    // Recette visible de l'ordre doctrinal et des couleurs réellement calculées.
+    // Aucun accès privé, aucune écriture et aucun secret de membre.
+    const doctrine=await page.evaluate(()=>{
+     const title=document.querySelector('#titre-axes')?.textContent.trim()||'';
+     const lis=[...document.querySelectorAll('#axes .six-axes > li')];
+     const items=lis.map(el=>{
+      const h=el.querySelector('h3'),p=el.querySelector('p');
+      const hs=h?getComputedStyle(h):null,li=getComputedStyle(el);
+      const rect=el.getBoundingClientRect();
+      return {
+       name:h?.textContent.trim()||'',subtitle:p?.textContent.trim()||'',
+       fg:hs?.color||'',opacity:li.opacity,visibility:li.visibility,
+       width:Math.round(rect.width),bg:li.backgroundImage
+      };
+     });
+     return {title,items,css:!!document.querySelector('link[href*="sde-recette-captures-20261113.css"]')};
+    });
+    report.notes.push({page:c.name,doctrine});
+    console.log('SIX_AXES_SDE '+c.name+' '+JSON.stringify(doctrine));
+    const names=['Rassembler et Unir','Former','Réveiller','Restaurer','Équiper','Envoyer'];
+    const subtitles=['','Enraciner dans la Parole',"Ranimer la flamme de l'Esprit",
+     'Guérir, relever, rétablir','Armer pour le combat','Partir vers les nations'];
+    if(!doctrine.css||doctrine.title!=='Six axes pour former un soldat'||
+       JSON.stringify(doctrine.items.map(x=>x.name))!==JSON.stringify(names)||
+       JSON.stringify(doctrine.items.map(x=>x.subtitle))!==JSON.stringify(subtitles)||
+       doctrine.items.some(x=>x.fg!=='rgb(41, 25, 59)'||x.visibility!=='visible'||Number(x.opacity)<.99||x.width<120)){
+      issue(c.name,'Doctrine des six axes illisible, dans le désordre ou absente sur le vrai site : '+JSON.stringify(doctrine).slice(0,700),true);
+    }
+    await page.locator('#axes').scrollIntoViewIfNeeded();
+   }
    const screenshot=join(out,c.name+'.png');
    await page.screenshot({path:screenshot,fullPage:false,animations:'disabled'});
    
