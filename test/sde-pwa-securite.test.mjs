@@ -66,7 +66,7 @@ test('Mise à jour PWA : effacement du cache historique potentiellement sensible
  sw.handlers.get('activate')({waitUntil:p=>{promise=p;}});
  await promise;
  assert.ok(sw.deleted.includes('sde-v11'));
- assert.equal(sw.deleted.includes('sde-v12-public-only-20261030'),false);
+ assert.equal(sw.deleted.includes('sde-v12-public-only-20261030'),true,'une ancienne installation doit être rafraîchie');
 });
 
 test('Notification : une destination extérieure ne peut être ouverte',async()=>{

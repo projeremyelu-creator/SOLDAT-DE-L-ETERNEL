@@ -2,7 +2,7 @@
    Les API, la connexion, l'administration, les dossiers membres et les
    réponses comportant des cookies ou Cache-Control: private/no-store
    ne sont JAMAIS copiés dans Cache Storage. */
-const CACHE = "sde-v12-public-only-20261030";
+const CACHE = "sde-v13-public-only-20261113-citadelle";
 const PRECACHE = ["/offline.html", "/icone-192.png", "/icone-512.png"];
 const PUBLIC_PAGES = new Set([
   "/mouvement", "/programmes", "/academy", "/enseignements", "/missions",

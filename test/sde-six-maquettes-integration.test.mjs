@@ -167,3 +167,30 @@ test("Citadelle v2 · Campus, connexion, membre et commandement rendent des comp
  }
  assert.match(styles,/@media\(max-width:699px\)/);
 });
+
+
+test("Citadelle PWA · les six véritables écrans proposent l'actualisation après changement de Worker",()=>{
+ const paths=[
+  "public/vitrine/portail.html",
+  "public/vitrine/academy.html",
+  "public/vitrine/connexion-unifiee.html",
+  "public/vitrine/sde-academy-parcours.html",
+  "public/vitrine/academy-enseignants.html",
+  "public/index.html"
+ ];
+ for(const path of paths){
+  const html=read(path);
+  assert.match(html,/\/vitrine\/sde-actualisation-2027\.js\?v=[a-zA-Z0-9]+/,"mise à jour absente : "+path);
+ }
+ const update=read("public/vitrine/sde-actualisation-2027.js");
+ assert.match(update,/controllerchange/);
+ assert.match(update,/Nouvelle interface SDE Digital disponible/);
+ assert.match(update,/button\.addEventListener\("click"/);
+ assert.doesNotMatch(update,/caches\.delete|localStorage\.clear|indexedDB\.deleteDatabase/,"aucune suppression de compte/données");
+ const pub=read("public/sw-public.js"),prive=read("public/sw.js");
+ assert.match(pub,/sde-public-shell-20261113-citadelle-v3/);
+ assert.match(prive,/sde-v13-public-only-20261113-citadelle/);
+ assert.match(read("public/vitrine/pwa-public.js"),/updateViaCache: "none"/);
+ assert.match(read("public/index.html"),/updateViaCache:"none"/);
+ assert.match(prive,/"/mon-espace", "\/administration", "\/connexion", "\/portail"/);
+});

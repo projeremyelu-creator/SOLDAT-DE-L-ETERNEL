@@ -15,7 +15,9 @@
             await old.unregister();
           }
         }
-        await navigator.serviceWorker.register("/sw-public.js", { scope: "/" });
+        const registration = await navigator.serviceWorker.register("/sw-public.js", { scope: "/", updateViaCache: "none" });
+        // Vérifier immédiatement les nouvelles publications, même en PWA installée.
+        await registration.update();
       } catch (_) { /* PWA indisponible */ }
     };
     if (document.readyState === "complete") register();
