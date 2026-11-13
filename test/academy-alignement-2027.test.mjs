@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {ECOLES} from "../src/courriel.js";
 import {SDE_OS_31} from "../src/os-v31.js";
+import {LOVE_SCHOOL_IDS,LOVE_SCHOOL_PUBLICS} from "../src/love-school.js";
 import {ECOLES as ECOLES_OS} from "../src/sde-os.js";
 const lire=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 
@@ -29,4 +30,20 @@ test("SDE OS : cinq écoles de spécialisation, une par pôle, sur de nouvelles 
   assert.ok(!/osv31_academy|os_parcours/.test(src),"anciennes tables non réutilisées");
   assert.ok(/osv31_ecoles/.test(src)&&/os_ecoles/.test(src));
   assert.ok(src.includes("ecole>5")&&src.includes("int(b.ecole,1,5)"));
+});
+
+test("Love School : dix bonus classés LS-01 à LS-10 et filtres par publics sans duplication",()=>{
+ const js=lire("public/vitrine/sde-academy-parcours.js");
+ const groups=js.match(/const LOVE_GROUPS=\[([\s\S]*?)\n\];/);
+ assert.ok(groups,"collections Love School absentes");
+ const ids=[...groups[1].matchAll(/ids:\[([^\]]+)\]/g)].flatMap(m=>[...m[1].matchAll(/"LS-\d+"/g)].map(x=>JSON.parse(x[0])));
+ assert.deepEqual(ids,LOVE_SCHOOL_IDS,"la vue Tous les cours doit suivre l'ordre officiel");
+ assert.equal(new Set(ids).size,10,"chaque cours doit apparaître une seule fois");
+ assert.equal(LOVE_SCHOOL_PUBLICS.length,3);
+ for(const audience of LOVE_SCHOOL_PUBLICS){
+  assert.ok(audience.ids.length>0);
+  assert.equal(audience.ids.length,new Set(audience.ids).size,"aucun cours répété dans le parcours "+audience.id);
+  assert.ok(audience.ids.every(id=>LOVE_SCHOOL_IDS.includes(id)),"cours de public hors catalogue");
+ }
+ assert.deepEqual(LOVE_SCHOOL_PUBLICS.map(p=>p.ids.length),[7,8,8],"les parcours se chevauchent volontairement");
 });

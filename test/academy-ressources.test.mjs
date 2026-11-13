@@ -408,7 +408,7 @@ test("Love School : nouveau design animé contrôlable et textes exacts accessib
  for(const text of ["Aimer avec sagesse. Communiquer avec douceur. Construire avec vérité.","Explorer les cours","Dix cours bonus Love School","Mettre les animations en pause","Je déclare avoir au moins 18 ans"]){
   assert.ok((html+script).includes(text),text);
  }
- for(const phrase of ["Les fondements du cœur","L’art d’aimer et de communiquer","Engagement et intimité responsable","Vérifier ma réponse","ouvrirLoveAdulte","love-motion-paused"]){
+ for(const phrase of ["Les fondements du cœur","Relations, communication et engagement","Intimité responsable","Vérifier ma réponse","ouvrirLoveAdulte","love-motion-paused"]){
   assert.ok((script+css).includes(phrase),phrase);
  }
  assert.match(html,/id="loveMotionToggle" aria-pressed="false"/);
