@@ -102,7 +102,7 @@ test('Accueil SDE 2+3 : le thème officiel remplace réellement les anciennes fe
  for(const ancien of ['sde-fusion.css','sde-v5-complet.css','sde-six-maquettes-2027.css','sde-maquette-hero.css','accueil-maquette.css'])
    assert.ok(!feuilles.some(f=>f.includes(ancien)),'ancienne feuille encore chargée : '+ancien);
  assert.ok(html.includes('sde23-native')&&html.includes('sde-accueil-premium.js'));
- const inline=[...html.matchAll(/<script(?![^>]*\\bsrc=)(?![^>]*type="application\\/ld\\+json")[^>]*>/g)];
+ const inline=[...html.matchAll(/<script[^>]*>/g)].filter(([tag])=>!tag.includes('src=')&&!tag.includes('application/ld+json'));
  assert.equal(inline.length,0,'CSP : aucun script en ligne');
  const css=lire('public/vitrine/sde-hybride-integral-2027.css');
  for(const jeton of ['#0D1B38','#FAF7F0','#D9A72E','#B74624','#00644F','prefers-reduced-motion'])assert.ok(css.includes(jeton),jeton);
