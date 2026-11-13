@@ -167,3 +167,21 @@ test("Citadelle v2 · Campus, connexion, membre et commandement rendent des comp
  }
  assert.match(styles,/@media\(max-width:699px\)/);
 });
+
+
+test("Recette 2027 · contrastes réels et contrôles mobiles corrigés",()=>{
+ const css=read("public/vitrine/sde-hybride-integral-2027.css");
+ const shell=read("public/vitrine/sde-shell-public.js");
+ const sw=read("public/sw-public.js");
+ const audit=read("scripts/audit-public-mobile.mjs");
+ assert.match(css,/\.sa-premium-grid \.sa-premium-card summary strong\{/);
+ assert.match(css,/-webkit-text-fill-color:#142641!important/);
+ assert.match(css,/\.ref-access-targets button\[aria-pressed="true"\]\{/);
+ assert.match(css,/-webkit-text-fill-color:#132139!important/);
+ assert.match(css,/\.sde-shell-portal-label/);
+ assert.match(css,/\.sde-reader-tools\{\s*bottom:calc\(84px \+ env\(safe-area-inset-bottom,0px\)\)!important/);
+ assert.match(shell,/sde-shell-portal-label","Mon Portail S\.D\.E"/);
+ assert.match(sw,/sde-public-shell-20261113-citadelle-contrastes/);
+ assert.match(audit,/CONTRASTE_NAV_SDE/);
+ assert.match(audit,/visualQA\.contrast<4\.5/);
+});
