@@ -21,7 +21,7 @@ test('Identité SDE : les 16 pages publiques utilisent toutes le même thème fi
       assert.equal(links.filter(x=>x.includes('sde-mobile-correctifs-20261103.css')).length,1);
     } else {
       if(page==='soutenir') assert.ok(links.at(-2).includes('sde-shell-public.css')&&links.at(-1).includes('sde-maquette-hero.css'),page+' : surcouche Soutenir ciblée après navigation');
-      else if(page==='mouvement')assert.ok(links.at(-1).includes('sde-six-maquettes-2027.css')&&links.at(-2).includes('sde-shell-public.css'),'mouvement : charte institutionnelle 2027');
+      else if(page==='mouvement')assert.ok(links.at(-1).includes('sde-recette-captures-20261113.css')&&links.at(-2).includes('sde-six-maquettes-2027.css')&&links.at(-3).includes('sde-shell-public.css'),'mouvement : charte institutionnelle 2027 puis correctifs des six axes');
        else if(page==='academy')assert.ok(links.at(-1).includes('sde-hybride-integral-2027.css')&&links.at(-2).includes('sde-shell-public.css'),'academy : charte publique conservée avant la déclinaison responsive');
        else assert.ok(links.at(-1).includes(source.includes('sde-shell-public.css')?'sde-shell-public.css':'sde-fusion.css'),page+' : dernière feuille attendue');
     }
