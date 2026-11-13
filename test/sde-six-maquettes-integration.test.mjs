@@ -69,7 +69,8 @@ test("Public 03/04 · Filtres + recherche accessibles sur mobile et ordinateur",
   assert.equal(visible().length,8);
   const toggle=doc.querySelector("[data-sdu-motion-toggle]");
   toggle.click();assert.equal(toggle.getAttribute("aria-pressed"),"true");
-  assert.ok(doc.querySelector('link[href*="sde-six-maquettes-2027.css"]'));
+  assert.ok(doc.querySelector('link[href*="sde-hybride-integral-2027.css"]'),"charte SDE 2+3 active");
+   assert.equal(doc.querySelectorAll('link[href*="sde-six-maquettes-2027.css"]').length,0,"ancien CSS Six Maquettes retiré");
  }finally{dom.window.close();}
 });
 test("Privé 05 · Campus : progression du membre et validations du directeur, sans droits contournés",()=>{
