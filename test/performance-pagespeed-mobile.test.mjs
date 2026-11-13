@@ -5,7 +5,7 @@ import {JSDOM} from 'jsdom';
 
 const html=readFileSync('public/vitrine/portail.html','utf8');
 const doc=new JSDOM(html).window.document;
-const css=readFileSync('public/vitrine/sde-mobile-correctifs-20261103.css','utf8');
+const css=readFileSync('public/vitrine/sde-hybride-integral-2027.css','utf8');
 const audit=readFileSync('scripts/audit-public-mobile.mjs','utf8');
 
 test("PageSpeed : afficher une affiche TPA compacte sur mobile sans casser l'affiche officielle",()=>{
@@ -25,7 +25,9 @@ test('Le thème est découvert directement, sans @import en cascade après les a
  const premium=link.findIndex(x=>x.includes('/vitrine/sde-premium-public.css'));
  const accueil=link.findIndex(x=>x.includes('/vitrine/sde-accueil-premium.css'));
  assert.ok(premium>=0&&premium<accueil);
- assert.ok(link.at(-5).includes('sde-shell-public.css')&&link.at(-4).includes('sde-maquette-hero.css')&&link.at(-3).includes('sde-six-maquettes-2027.css')&&link.at(-2).includes('sde-accueil-officiel-2027.css')&&link.at(-1).includes('sde-hybride-integral-2027.css'),'navigation et Hero existants conservés avant la couche responsive 2027');
+ assert.ok(link.includes(link.find(x=>x.includes('sde-shell-public.css'))),'navigation commune conservée');
+ assert.ok(link.at(-1).includes('sde-hybride-integral-2027.css'),'thème 2+3 responsive découvert en dernier');
+ for(const legacy of ['sde-maquette-hero.css','sde-six-maquettes-2027.css','sde-fusion.css'])assert.ok(!link.some(x=>x.includes(legacy)),'ancien style '+legacy);
  assert.doesNotMatch(html,/<style>[^<]*@import[^<]*sde-premium-public\.css/i);
 });
 
@@ -33,11 +35,11 @@ test('Le contraste des cartes est explicite et les images de fond mobiles ne blo
  for(const name of ['ap-next','ap-upcoming','ap-mission','ap-panel','ap-indicateurs']){
   assert.ok(css.includes('.'+name),name);
  }
- assert.ok(css.includes('-webkit-text-fill-color:#281549!important'));
- assert.ok(css.includes('background:#fffaf0!important'));
+ assert.ok(css.includes('-webkit-text-fill-color:#0D1B38!important'));
+ assert.ok(css.includes('background:#FAF7F0!important'));
  assert.match(css,/@media\(max-width:860px\)/);
  assert.ok(css.includes('.ap-hero .ap-hero-bg'));
- assert.ok(css.includes('background-image:none!important'));
+ assert.ok(css.includes('hero-sde-640.webp'),'photo mobile optimisée de la direction cinématique 2+3');
  assert.ok(audit.includes('homepageTextContrast'));
  assert.ok(audit.includes('posterImageSource'));
  assert.ok(audit.includes('x.ratio<4.5'));

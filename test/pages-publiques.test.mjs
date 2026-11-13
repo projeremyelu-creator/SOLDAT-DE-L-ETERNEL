@@ -17,7 +17,7 @@ test('Pages publiques : structure conservée et habillage unique 2+3 sans Fusion
   assert.match(h,new RegExp(`<body[^>]*class="[^"]*sde-pages-premium[^"]*"[^>]*data-fam="${fam}"`),n+' : famille '+fam);
   assert.ok(h.includes('sde23-native'),n+' : classe canonique');
   assert.equal((h.match(/class="pg-tabs/g)||[]).length,1,n+' : une seule navigation interne');
-  assert.equal((h.match(/<h1[\\s>]/g)||[]).length,1,n+' : un seul h1');
+  assert.equal(h.split("<h1").length-1,1,n+" : un seul h1");
  }
  const css=lire('public/vitrine/sde-hybride-integral-2027.css');
  for(const k of ['#0D1B38','#FAF7F0','#D9A72E','#B74624','#00644F','prefers-reduced-motion'])assert.ok(css.includes(k),k);

@@ -13,11 +13,17 @@ const accueil = read("public/vitrine/portail.html");
 const linkPath = "/vitrine/sde-mobile-correctifs-20261103.css";
 const linkPattern = /<link rel="stylesheet" href="\/vitrine\/sde-mobile-correctifs-20261103\.css(?:\?v=[^"]+)?">/g;
 
-test("le même correctif mobile est chargé sur les deux interfaces réellement servies", () => {
-  assert.equal([...app.matchAll(linkPattern)].length, 1);
-  assert.equal([...accueil.matchAll(linkPattern)].length, 1);
-  assert.ok(app.indexOf(linkPath) > app.indexOf("/vitrine/sde-tactique.css"));
-  assert.ok(accueil.indexOf(linkPath) > accueil.indexOf("/vitrine/sde-fusion.css"));
+test("le même thème responsive SDE 2+3 est chargé une fois sur les deux interfaces réellement servies", () => {
+  const canonicalLinks = (html) => [...html.matchAll(/<link[^>]+>/g)].filter(([tag]) => tag.includes('rel="stylesheet"') && tag.includes("/vitrine/sde-hybride-integral-2027.css"));
+  assert.equal(canonicalLinks(app).length, 1);
+  assert.equal(canonicalLinks(accueil).length, 1);
+  for(const html of [app,accueil]){
+    assert.equal([...html.matchAll(linkPattern)].length,0,"ancien correctif mobile désactivé");
+    assert.ok(!html.includes('href="/vitrine/sde-fusion.css'),"Fusion n'est plus activé");
+  }
+  assert.ok(read("public/vitrine/sde-hybride-integral-2027.css").includes("@media(max-width:390px)"));
+  assert.ok(app.indexOf("/vitrine/sde-hybride-integral-2027.css") > app.indexOf("/vitrine/sde-command-v4.css"));
+  assert.ok(accueil.indexOf("/vitrine/sde-hybride-integral-2027.css") > accueil.indexOf("/vitrine/sde-shell-public.css"));
 });
 
 test("le style respecte les deux en-têtes et les interactions privées", () => {
