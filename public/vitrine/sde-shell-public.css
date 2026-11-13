@@ -1978,6 +1978,83 @@ html body.sde-citadelle-live :is(.ap-head h2,.ap-presentation-tete h2,.sdu-head 
  html body.sde-unifie :is(.sde-citadelle-quicknav-items>a,.programme,.sde-initiative-card){transition:none!important;transform:none!important}
 }
 
+/* Direction 2+3 native pour TOUTES les rubriques : supprimer le violet
+   hérité, poser la même hiérarchie bleu nuit/ivoire/or et ne pas changer les
+   contenus, boutons de formulaire ou chemins de navigation existants. */
+html body.sde-shell-mounted .sde-shell-header{
+ background:#0D1B38!important;border-color:rgba(217,167,46,.5)!important;
+ box-shadow:0 8px 28px rgba(13,27,56,.17)!important;
+}
+html body.sde-shell-mounted .sde-shell-mega-group>summary{
+ font-family:"Manrope",Inter,system-ui,sans-serif!important;
+}
+html body.sde-shell-mounted .sde-shell-footer{
+ background:#0D1B38!important;border-color:rgba(217,167,46,.32)!important;
+}
+html body.sde-unifie.sde-subpage[data-sde-page="programmes"] .sde-intro,
+html body.sde-shell-mounted .hub-hero,
+html body.sde-unifie.sde-subpage .pg-hero{
+ background:
+  radial-gradient(ellipse at 87% 5%,rgba(183,70,36,.30),transparent 55%),
+  linear-gradient(110deg,#0D1B38 0%,#173760 70%,#00644F 100%)!important;
+ border-bottom:3px solid #D9A72E!important;
+ border-radius:0 0 22px 22px!important;
+ color:#FAF7F0!important;
+ box-shadow:0 13px 30px rgba(13,27,56,.11)!important;
+}
+html body.sde-unifie.sde-subpage[data-sde-page="programmes"] .sde-intro :is(h1,p,span),
+html body.sde-shell-mounted .hub-hero :is(h1,p,span),
+html body.sde-unifie.sde-subpage .pg-hero :is(h1,p,span){
+ color:#FAF7F0!important;-webkit-text-fill-color:#FAF7F0!important;
+}
+html body.sde-unifie.sde-subpage[data-sde-page="programmes"] .sde-intro h1,
+html body.sde-shell-mounted .hub-hero h1,
+html body.sde-unifie.sde-subpage .pg-hero h1{
+ font-family:"Cormorant Garamond","DM Serif Display",Georgia,serif!important;
+ font-size:clamp(2.45rem,4vw,4.3rem)!important;line-height:1.04!important;
+ font-weight:600!important;letter-spacing:-.027em!important;
+}
+html body.sde-unifie[data-sde-page="programmes"] .infire-takeover{
+ background:#0D1B38!important;border-color:rgba(217,167,46,.45)!important;
+ color:#FAF7F0!important;
+}
+html body.sde-unifie[data-sde-page="programmes"] #agenda-liste .programme:not([hidden]){
+ background:#FAF7F0!important;color:#0D1B38!important;
+ border:1px solid rgba(13,27,56,.13)!important;
+ border-left:4px solid #D9A72E!important;border-radius:15px!important;
+ box-shadow:0 9px 28px rgba(13,27,56,.07)!important;
+}
+html body.sde-unifie[data-sde-page="programmes"] #agenda-liste .programme:not([hidden]) :is(h3,p,.rythme){
+ color:#0D1B38!important;-webkit-text-fill-color:#0D1B38!important;
+}
+html body.sde-shell-mounted .hub-grid .hub-card,
+html body.sde-shell-mounted .hub-section,
+html body.sde-shell-mounted .hub-form{
+ background:#FFFDF8!important;color:#0D1B38!important;
+ border-color:rgba(13,27,56,.16)!important;
+ border-radius:16px!important;box-shadow:0 10px 30px rgba(13,27,56,.07)!important;
+}
+html body.sde-shell-mounted .hub-grid .hub-card :is(h2,h3),
+html body.sde-shell-mounted .hub-section :is(h2,h3){
+ color:#0D1B38!important;font-family:"Cormorant Garamond",Georgia,serif!important;
+}
+html body.sde-shell-mounted .hub-btn:not(.secondary),
+html body.sde-unifie.sde-subpage .pg-btn.plein{
+ background:#D9A72E!important;color:#0D1B38!important;border-color:#B88A20!important;
+}
+@media(max-width:680px){
+ html body.sde-shell-mounted .hub-hero,
+ html body.sde-unifie.sde-subpage[data-sde-page="programmes"] .sde-intro{
+  border-radius:0 0 17px 17px!important;
+ }
+ html body.sde-shell-mounted .hub-grid .hub-card{border-radius:13px!important;}
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-shell-mounted :is(.hub-card,.programme,.sde-shell-mega-group){
+  animation:none!important;transition:none!important;
+ }
+}
+
 /* Pages publiques autonomes : elles reçoivent la même direction dès que la
    coque partagée les monte, sans réécrire leurs contenus ni leurs formulaires. */
 html body:has(.sde-hub-head){
