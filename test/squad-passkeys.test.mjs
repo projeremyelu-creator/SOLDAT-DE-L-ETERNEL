@@ -259,8 +259,8 @@ test('Pages Squads et Empreinte : thème hub, privées, sans script en ligne ni 
   assert.match(h,/<meta name="robots" content="noindex, nofollow">/,page+' : jamais indexée');
   assert.ok(h.indexOf('/vitrine/sde-premium-public.css')<h.indexOf('</head>'));
   const feuilles=[...h.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
-  assert.ok(feuilles.some(f=>f.includes('sde-fusion.css')),page+' : charte Fusion présente');
-  assert.ok(feuilles.at(-1).includes(page==='squads'?'sde-shell-public.css':'sde-fusion.css'),page+' : dernière feuille attendue');
+  assert.ok(!feuilles.some(f=>f.includes('sde-fusion.css')),page+' : ancien CSS Fusion absent');
+  assert.ok(feuilles.at(-1).includes('sde-hybride-integral-2027.css'),page+' : charte SDE 2+3 finale');
   assert.ok(h.includes(`/vitrine/${script}`));
   assert.doesNotMatch(h,/<script(?![^>]*\bsrc=)[^>]*>/,page+' : aucun script en ligne (CSP)');
   assert.doesNotMatch(h,/\son(click|load|error|submit)=/i);
