@@ -47,12 +47,12 @@ test("Direction SDE 2+3 : la charte Fusion est archivée sans être chargée", (
  for(const token of ["--fu-gold","data-sde-palette=fusion",".fu-strip"])assert.ok(legacy.includes(token));
  const app=lire("public/index.html");
  assert.doesNotMatch(app, /<link[^>]+sde-fusion\\.css/);
- assert.match(app, /sde-hybride-integral-2027\\.css/);
+ assert.ok(app.includes("sde-hybride-integral-2027.css"));
  assert.match(app, /"fusion-04"/,'le choix de palette conserve ses données métiers, sans CSS Fusion actif');
  for(const p of ["portail","mouvement","programmes","missions-humanitaires","ressources","rejoindre","prieres","tableau-administration","tableau-membre"]){
   const html=lire("public/vitrine/"+p+".html");
   assert.doesNotMatch(html, /<link[^>]+sde-fusion\\.css/,p+' : ancienne charte encore branchée');
-  assert.match(html,/sde-hybride-integral-2027\\.css/,p+' : direction 2+3 absente');
+  assert.ok(html.includes("sde-hybride-integral-2027.css"),p+" : direction 2+3 absente");
  }
  assert.match(lire("public/vitrine/portail.html"), /class="ap-hero"/);
 });
@@ -113,7 +113,7 @@ test("Palette Tactique et modules tactiques fondés sur des données réelles", 
   const shell = lire("frontend/reference-shell.jsx");
   assert.match(shell, /\['tactique','SDE officiel · Bleu nuit · Ivoire · Or'\]/);
   assert.match(lire("public/index.html"), /fusion\|ivoire\|terracotta\|militaire\|violet\|tactique/);
-  assert.match(lire("public/index.html"), /sde-tactique\.css/);
+  assert.doesNotMatch(lire("public/index.html"), /<link[^>]+sde-tactique\.css/);
   const css = lire("public/vitrine/sde-tactique.css");
   for (const k of ['data-sde-palette="tactique"', "#6b1730", "--pal-surface"]) assert.ok(css.includes(k), k);
   const ops = lire("frontend/operations.jsx");
