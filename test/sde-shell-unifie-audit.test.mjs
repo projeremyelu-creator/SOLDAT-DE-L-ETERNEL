@@ -42,7 +42,7 @@ test("Le tiroir Plus s'ouvre, cherche les sous-rubriques et se ferme",()=>{
 test("Accueil : deux CTA Réveil Spirituel, intitulés métiers, TPA compact et états vides cachés",()=>{
  const c=render("portail","/");
  try{
-  assert.equal(c.doc.querySelectorAll(".ap-hero .ap-actions a").length,2);
+  assert.equal(c.doc.querySelectorAll(".ap-hero .ap-actions a").length,4);
   assert.match(c.doc.querySelector(".sde-premium-pillars").textContent,/Vie de l’Esprit/);
   assert.match(c.doc.querySelector(".sde-premium-pillars").textContent,/Gouvernance & Ordre/);
   assert.match(c.doc.querySelector(".sde-premium-pillars").textContent,/Terrain & Compassion/);
