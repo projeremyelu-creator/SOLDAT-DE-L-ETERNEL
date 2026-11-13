@@ -99,7 +99,7 @@ test('Accueil premium : charte Fusion chargée en dernier, scripts sans inline, 
  const feuilles=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
  const fusionIndex=feuilles.findIndex(f=>f.includes('sde-fusion.css'));
  assert.ok(fusionIndex>=0,'charte Fusion toujours présente');
- assert.ok(feuilles.at(-4).includes('sde-shell-public.css')&&feuilles.at(-3).includes('sde-maquette-hero.css')&&feuilles.at(-2).includes('sde-six-maquettes-2027.css')&&feuilles.at(-1).includes('sde-accueil-officiel-2027.css'),'nouvelle direction artistique chargée après toutes les anciennes surcouches');
+ assert.ok(feuilles.at(-5).includes('sde-shell-public.css')&&feuilles.at(-4).includes('sde-maquette-hero.css')&&feuilles.at(-3).includes('sde-six-maquettes-2027.css')&&feuilles.at(-2).includes('sde-accueil-officiel-2027.css')&&feuilles.at(-1).includes('sde-hybride-integral-2027.css'),'la direction artistique officielle est conservée avant la couche responsive finale');
  assert.ok(fusionIndex<feuilles.length-1,'la charte Fusion reste la base de la couche responsive');
  assert.ok(feuilles.some(f=>f.includes('sde-accueil-premium.css')));
  assert.ok(html.includes('sde-accueil-premium.js'));
