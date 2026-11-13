@@ -329,14 +329,34 @@ try{
     const doctrine=await page.evaluate(()=>{
      const title=document.querySelector('#titre-axes')?.textContent.trim()||'';
      const lis=[...document.querySelectorAll('#axes .six-axes > li')];
+     // Contraste WCAG calculé : plusieurs teintes foncées sont autorisées sur ivoire.
+     const rgb=value=>{
+      const match=String(value||'').match(/rgba?\(\s*(\d+)\s*[, ]\s*(\d+)\s*[, ]\s*(\d+)/);
+      return match ? match.slice(1,4).map(Number) : null;
+     };
+     const luminance=values=>{
+      const [r,g,b]=values.map(x=>{const n=x/255;return n<=0.04045?n/12.92:((n+0.055)/1.055)**2.4;});
+      return 0.2126*r+0.7152*g+0.0722*b;
+     };
+     const ratio=(a,b)=>{
+      if(!a||!b)return null;
+      const x=luminance(a),y=luminance(b);
+      return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05);
+     };
      const items=lis.map(el=>{
       const h=el.querySelector('h3'),p=el.querySelector('p');
       const hs=h?getComputedStyle(h):null,li=getComputedStyle(el);
       const rect=el.getBoundingClientRect();
+      const bg=li.backgroundImage;
+      const stops=[...bg.matchAll(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/g)]
+       .map(match=>match.slice(1,4).map(Number));
+      if(!stops.length){const plain=rgb(li.backgroundColor);if(plain)stops.push(plain);}
+      const foregrounds=[h,p].filter(Boolean).map(node=>rgb(getComputedStyle(node).color));
+      const all=foregrounds.flatMap(fg=>stops.map(stop=>ratio(fg,stop))).filter(x=>x!==null);
       return {
        name:h?.textContent.trim()||'',subtitle:p?.textContent.trim()||'',
        fg:hs?.color||'',opacity:li.opacity,visibility:li.visibility,
-       width:Math.round(rect.width),bg:li.backgroundImage
+       width:Math.round(rect.width),bg,contrastMin:all.length?Math.min(...all):null
       };
      });
      return {title,items,css:!!document.querySelector('link[href*="sde-recette-captures-20261113.css"]')};
@@ -349,7 +369,7 @@ try{
     if(!doctrine.css||doctrine.title!=='Six axes pour former un soldat'||
        JSON.stringify(doctrine.items.map(x=>x.name))!==JSON.stringify(names)||
        JSON.stringify(doctrine.items.map(x=>x.subtitle))!==JSON.stringify(subtitles)||
-       doctrine.items.some(x=>x.fg!=='rgb(41, 25, 59)'||x.visibility!=='visible'||Number(x.opacity)<.99||x.width<120)){
+       doctrine.items.some(x=>x.contrastMin===null||x.contrastMin<4.5||x.visibility!=='visible'||Number(x.opacity)<.99||x.width<120)){
       issue(c.name,'Doctrine des six axes illisible, dans le désordre ou absente sur le vrai site : '+JSON.stringify(doctrine).slice(0,700),true);
     }
     await page.locator('#axes').scrollIntoViewIfNeeded();
