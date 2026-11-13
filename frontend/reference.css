@@ -1737,6 +1737,63 @@ body.sde-reference{
 body.sde-reference :is(.sde23-member-journey,.sde23-command-journey){
  font-family:var(--sde23-private-sans);
 }
+body.sde-reference :is(.sde23-member-hero,.sde23-command-hero){
+ position:relative;isolation:isolate;
+ border-inline-start:5px solid var(--sde23-private-gold)!important;
+ padding:clamp(22px,3vw,38px)!important;
+}
+body.sde-reference .sde23-hero-label{
+ display:inline-flex;align-items:center;gap:8px;
+ color:#F0D58B!important;font-size:.76rem!important;
+ font-family:var(--sde23-private-sans)!important;
+ font-weight:800!important;letter-spacing:.12em!important;
+ margin-bottom:10px!important;text-transform:uppercase!important;
+}
+body.sde-reference .sde23-hero-label::before{
+ content:"";width:19px;height:2px;background:var(--sde23-private-gold);
+}
+body.sde-reference .sde23-command-access button{
+ display:flex!important;min-width:0!important;gap:12px!important;
+ align-items:center!important;justify-content:flex-start!important;
+ text-align:left!important;overflow-wrap:anywhere!important;
+ background:linear-gradient(130deg,#173760,#0D1B38)!important;
+ border:1px solid rgba(217,167,46,.43)!important;
+ padding:15px!important;min-height:90px!important;
+ color:var(--sde23-private-ivory)!important;
+}
+body.sde-reference .sde23-command-access button:nth-child(3){
+ background:linear-gradient(130deg,#184D50,#0D1B38)!important;
+}
+body.sde-reference .sde23-command-access button > svg{
+ width:32px!important;height:32px!important;min-width:32px!important;max-width:32px!important;
+ flex:0 0 32px!important;color:var(--sde23-private-gold)!important;
+}
+body.sde-reference .sde23-command-access button > span{
+ display:flex;min-width:0;flex:1;flex-direction:column;gap:4px!important;
+}
+body.sde-reference .sde23-command-access button > span :is(strong,small){
+ display:block;min-width:0;overflow-wrap:anywhere;line-height:1.25!important;
+}
+body.sde-reference .sde23-command-access button > span strong{
+ font-size:.96rem!important;color:#FFF7E9!important;font-weight:750!important;
+}
+body.sde-reference .sde23-command-access button > span small{
+ font-size:.78rem!important;color:#CFE0E8!important;font-weight:550!important;
+}
+@media(max-width:700px){
+ body.sde-reference .sde23-command-access{
+  grid-template-columns:minmax(0,1fr)!important;gap:9px!important;
+ }
+ body.sde-reference .sde23-command-access button{
+  min-height:66px!important;padding:12px!important;border-radius:13px!important;
+ }
+ body.sde-reference .sde23-command-access button > svg{
+  width:28px!important;height:28px!important;min-width:28px!important;max-width:28px!important;flex:0 0 28px!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.sde-reference .sde23-command-access button{transition:none!important;transform:none!important}
+}
 body.sde-reference .sde23-member-journey .sv-hello,
 body.sde-reference-admin .sde23-command-journey .sv-hello-admin{
  position:relative;overflow:hidden;
