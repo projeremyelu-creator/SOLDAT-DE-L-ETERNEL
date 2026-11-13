@@ -21,21 +21,21 @@ test('Maquette SDE : Hero immersif et fiche TPA unique, routes réelles préserv
  assert.ok(d.querySelector('a[href="/portail"]'));
  assert.equal(d.querySelectorAll('.sde-pole-talents').length,5);
  assert.equal(d.querySelectorAll('.sde-pole-officiel-lien img').length,5);
- assert.ok(d.querySelector('.sde-member-demo em')?.textContent.includes('Aucun QR actif'));
+ assert.equal(d.querySelectorAll('.sde-member-demo').length,0,'supprimer la fausse carte membre de l\'ancienne maquette');
  assert.equal(d.querySelectorAll('a[href="/login"]').length,0);
  assert.equal(d.querySelectorAll('a[href^="mailto:contact@mouvement-sde.org"]').length,0);
  dom.window.close();
 });
 
-test('Maquette SDE : image existante sous double voile, désactivée sur smartphone',()=>{
- const css=read('public/vitrine/sde-maquette-hero.css');
- assert.ok(existsSync('public/vitrine/photos/hero-sde-1280.webp'),'image existante');
- assert.match(css,/radial-gradient\(circle at 50% 35%/);
- assert.match(css,/linear-gradient\(to bottom/);
+test('SDE 2+3 : vraie photo, aube chaleureuse et aucune ancienne maquette chargée',()=>{
+ const css=read('public/vitrine/sde-hybride-integral-2027.css');
+ assert.ok(existsSync('public/vitrine/photos/hero-sde-1280.webp'));
+ assert.match(css,/COMPOSITION CANONIQUE/);
+ assert.match(css,/linear-gradient\(94deg/);
  assert.match(css,/hero-sde-1280\.webp/);
- assert.match(css,/@media\(max-width:860px\)/);
- assert.match(css,/\.ap-hero-bg\{background-image:none!important/);
- assert.match(home,/sde-maquette-hero\.css/);
+ assert.match(css,/hero-sde-640\.webp/);
+ assert.match(home,/sde-hybride-integral-2027\.css/);
+ assert.doesNotMatch(home,/(?:sde-fusion|sde-v5-complet|sde-six-maquettes-2027|sde-maquette-hero|accueil-maquette)\.css/);
 });
 
 test('Maquette SDE : montant et canal s’actualisent sans paiement fictif',()=>{
@@ -87,17 +87,14 @@ test('Maquette SDE : calendrier Google synchronisé avec le fichier événement 
  dom.window.close();
 });
 
-test('Maquette SDE : titre et texte du Hero réservés à 1 100 px sans figer le mobile',()=>{
- const css=read('public/vitrine/sde-maquette-hero.css');
- const beginning=css.indexOf('@media(min-width:1051px) and (max-width:1199px)');
- assert.ok(beginning>=0,'réservation tablette/grand écran présente');
- const stable=css.slice(beginning,css.indexOf('@media(max-width:960px)',beginning));
- assert.match(stable,/\.ap-hero \.ap-hero-copy h1\{/);
- assert.match(stable,/font-size:clamp\(2\.625rem,4\.2vw,3rem\)!important/);
- assert.match(stable,/min-height:2\.4em!important/);
- assert.match(stable,/\.ap-hero-copy \.ap-lead\{/);
- assert.match(stable,/min-height:calc\(1\.65em \* 4\)!important/);
- assert.doesNotMatch(css.slice(css.indexOf('@media(max-width:960px)')),/min-height:2\.4em!important/,'le petit écran garde un titre à hauteur naturelle');
+test('SDE 2+3 : hero typographique adaptatif à 960 et 390 pixels',()=>{
+ const css=read('public/vitrine/sde-hybride-integral-2027.css');
+ assert.match(css,/\.ap-hero h1#titre-accueil\{/);
+ assert.match(css,/clamp\(4rem,6\.2vw,7\.1rem\)/);
+ assert.match(css,/@media\(max-width:960px\)/);
+ assert.match(css,/@media\(max-width:390px\)/);
+ assert.match(css,/clamp\(2\.8rem,10vw,3\.7rem\)/);
+ assert.match(css,/prefers-reduced-motion:reduce/);
 });
 
 test('Nouvelle maquette : trois expressions et Soldiers Academy remplacent les anciens chemins',()=>{
