@@ -37,7 +37,8 @@ test("le style respecte les deux en-têtes et les interactions privées", () => 
   assert.match(css, /max-width:\s*760px/);
   assert.match(css, /env\(safe-area-inset-bottom\)/);
   assert.match(css, /focus-visible/);
-  assert.match(css, /aria-pressed="true"/);
+  assert.match(css, /\.sde-private-motion-row \.sde-ambiance-ctl/);
+  assert.match(read("public/vitrine/sde-marque.js"), /setAttribute\("aria-pressed"/);
 });
 
 test("feuille CSS équilibrée et aucune dépendance de données introduite", () => {

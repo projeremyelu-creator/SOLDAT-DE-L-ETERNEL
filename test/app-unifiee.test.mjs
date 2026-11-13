@@ -32,3 +32,16 @@ test("Annuaire SDE : indicatif ivoirien 00225 normalisé à l'affichage sans mod
  assert.equal(telAffiche("0033 6 10 20 30 40"),"0033 6 10 20 30 40");
  assert.match(source,/function telChiffres\(t\)/,"liens d'appel conservés");
 });
+
+test('Affichage privé : le bouton Animations reste dans une zone non flottante et accessible',()=>{
+ const html=read('public/index.html');
+ const css=read('public/vitrine/sde-mobile-correctifs-20261103.css');
+ const js=read('public/vitrine/sde-marque.js');
+ assert.match(html,/class="sde-private-motion-row"[^>]*role="group"/);
+ assert.match(html,/class="sde-motion-slot" data-sde-motion-slot="true"/);
+ assert.match(css,/\.sde-private-motion-row \.sde-ambiance-ctl\{/);
+ assert.match(css,/position:static!important/);
+ assert.match(css,/min-height:44px!important/);
+ assert.doesNotMatch(css,/html body\.sde-direct \.sde-ambiance-ctl\s*\{\s*position:fixed!important/);
+ assert.match(js,/localStorage\.setItem\(KEY, userPaused/);
+});

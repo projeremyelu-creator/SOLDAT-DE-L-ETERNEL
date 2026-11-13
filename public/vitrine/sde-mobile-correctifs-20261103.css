@@ -304,24 +304,6 @@ body :is(button,a,summary,input,select,textarea):focus-visible {
     padding-bottom:calc(115px + env(safe-area-inset-bottom))!important;
     max-width:100%!important;overflow-wrap:anywhere!important;
   }
-  html body.sde-direct .sde-ambiance-ctl {
-    position:fixed!important;
-    left:auto!important;right:12px!important;
-    bottom:calc(85px + env(safe-area-inset-bottom))!important;
-    width:42px!important;min-width:42px!important;
-    height:42px!important;min-height:42px!important;
-    padding:0!important;
-    display:grid!important;place-items:center!important;
-    font-size:0!important;z-index:85!important;
-    border-color:#eac578!important;
-  }
-  html body.sde-direct .sde-ambiance-ctl::before {
-    content:"❚❚";font-size:15px!important;
-    line-height:1!important;color:#f1cf88!important;
-  }
-  html body.sde-direct .sde-ambiance-ctl[aria-pressed="true"]::before {
-    content:"▶";font-size:17px!important;
-  }
 }
 
 
@@ -367,3 +349,29 @@ html body.sde-unifie.sde-premium-home .ap-main .ap-mission em{
   background-image:none!important;
  }
 }
+
+/* SDE Digital : la commande d'animations est intégrée au flux de la page
+ * et ne recouvre plus le tableau de bord, les finances ou les fiches.
+ * Elle garde son rôle de bouton et l'option de pause mémorisée. */
+html body .sde-private-motion-row{
+  display:flex;justify-content:flex-end;align-items:center;
+  min-height:50px;padding:3px clamp(12px,3vw,28px);
+  box-sizing:border-box;background:#101d36;
+  border-bottom:1px solid rgba(226,194,106,.38);
+}
+html body .sde-private-motion-row .sde-motion-slot{
+  display:inline-flex;justify-content:flex-end;align-items:center;
+}
+html body .sde-private-motion-row .sde-ambiance-ctl{
+  position:static!important;inset:auto!important;
+  z-index:auto!important;transform:none!important;
+  display:inline-flex!important;align-items:center!important;
+  width:auto!important;min-width:44px!important;
+  height:44px!important;min-height:44px!important;
+  padding:0 14px!important;font-size:.78rem!important;
+  color:#f3e5ab!important;border-color:#eac578!important;
+}
+html body .sde-private-motion-row .sde-ambiance-ctl::before{
+  content:none!important;display:none!important;
+}
+html[data-theme="light"] body .sde-private-motion-row{display:none!important}
