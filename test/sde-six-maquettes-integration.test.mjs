@@ -7,15 +7,15 @@ const read=path=>readFileSync(path,"utf8");
 const homepage=()=>new JSDOM(read("public/vitrine/portail.html"),{
  url:"https://mouvement-sde.org/",runScripts:"outside-only",pretendToBeVisual:true
 });
-test("Public 01 · Réveil Spirituel : vision 2027, Exode 33:14 et deux CTA réels",()=>{
+test("Public 01 · Work 2+3 : vision 2027, Exode 33:14 et quatre accès réels",()=>{
  const dom=homepage(),doc=dom.window.document;
  try{
   const hero=doc.querySelector(".ap-hero");
   assert.ok(hero);
-  assert.match(hero.querySelector("h1")?.textContent||"",/LE RÉVEIL\s+SPIRITUEL\s+DES NATIONS/i);
+  assert.match(hero.querySelector("h1")?.textContent||"",/UNE ARMÉE\s+VIVANTE\s+POUR LES NATIONS/i);
   assert.match(hero.querySelector(".sde-citadel-verse")?.textContent||"",/Exode 33:14/);
   const actions=[...hero.querySelectorAll(".sde-citadel-actions a")];
-  assert.deepEqual(actions.map(a=>a.getAttribute("href")),["/mouvement","/contact#rejoindre"]);
+  assert.deepEqual(actions.map(a=>a.getAttribute("href")),["/mouvement","/contact#rejoindre","/programmes#agenda","/portail"]);
   assert.ok(hero.querySelector(".sde-tpa-hero-card"),"le rendez-vous TPA n'est pas supprimé");
   assert.match(read("public/vitrine/sde-six-maquettes-2027.css"),/prefers-reduced-motion/);
  }finally{dom.window.close();}
@@ -84,7 +84,7 @@ test("Privé 05 · Campus : progression du membre et validations du directeur, s
 });
 test("Privé 06 · Command Center et cinq onglets : outils réels, habilitations préservées",()=>{
  const source=read("frontend/operations.jsx"),shell=read("frontend/reference-shell.jsx");
- assert.match(source,/S\.D\.E · COMMAND CENTER/);
+ assert.match(source,/S\.D\.E · GOUVERNANCE & SERVICE/);
  assert.match(source,/\/api\/tableau-de-bord/);
  assert.match(source,/\['finance-direction','Finances & missions'\]/);
  assert.match(shell,/account\.niveau>=2\?\['finance-direction','Finances','money'\]:\['scanner','Pointages','qr'\]/);
@@ -147,7 +147,7 @@ test("Citadelle v2 · l'accueil possède quatre accès visibles et la devise fon
  assert.deepEqual([...nav.querySelectorAll("a")].map(a=>a.getAttribute("href")),[
   "/mouvement","/contact#rejoindre","/programmes#agenda","/portail"
  ]);
- assert.equal(hero.querySelectorAll(".sde-citadel-actions a").length,2,"deux CTA de couverture préservés");
+ assert.equal(hero.querySelectorAll(".sde-citadel-actions a").length,4,"quatre CTA 2+3 fidèlement appliqués");
 });
 test("Citadelle v2 · Campus, connexion, membre et commandement rendent des compositions distinctes",()=>{
  const school=new JSDOM(read("public/vitrine/academy.html")).window.document;
@@ -157,7 +157,7 @@ test("Citadelle v2 · Campus, connexion, membre et commandement rendent des comp
  assert.ok(login.querySelector("#form-connexion"),"formulaire de connexion original conservé");
  const code=read("frontend/operations.jsx");
  assert.match(code,/className="sde-citadelle-member-cover"/);
- assert.match(code,/className="sde-citadelle-command-launch"/);
+ assert.match(code,/className="sde-citadelle-command-launch sde23-command-access"/);
  assert.match(code,/portal\.compte\.niveau>=2&&<button type="button" onClick=\{\(\)=>portal\.selectionner\('finance-direction'\)\}/);
  assert.match(code,/portal\.selectionner\('academie'\)/);
  assert.match(code,/portal\.selectionner\('rendezvous'\)/);

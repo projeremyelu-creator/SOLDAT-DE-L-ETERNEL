@@ -45,13 +45,13 @@ test('Accueil premium : en-tête avec logo, menu compact, recherche et connexion
  assert.match(header,/Mon Portail S\.D\.E/);
 });
 
-test('Accueil premium : hero Réveil Spirituel 2027, deux CTA et une seule annonce TPA compacte',()=>{
+test('Accueil premium : hero 2+3 cinématique, quatre accès et une seule annonce TPA compacte',()=>{
  const hero=html.slice(html.indexOf('class="ap-hero"'),html.indexOf('id="programmes-accueil"'));
- assert.match(hero,/<h1[^>]*>LE RÉVEIL/);
+ assert.match(hero,/<h1[^>]*>UNE ARMÉE/);
  assert.match(hero,/DISCIPLINE[\s\S]*UNITÉ[\s\S]*IMPACT/i);
  assert.ok(html.includes('logo-96.webp'),'le logo officiel reste présent dans la navigation commune');
- assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,2,'deux CTA principaux');
- for(const libellé of ['Découvrir SDE','Rejoindre le mouvement','Exode 33:14'])assert.ok(hero.includes(libellé),libellé);
+ assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,4,'quatre accès principaux');
+ for(const libellé of ['Découvrir','Rejoindre','Programmes','Mon portail','Exode 33:14'])assert.ok(hero.includes(libellé),libellé);
  assert.equal((html.match(/<img[^>]+tpa-2026\.webp/g)||[]).length,0,'affiche non chargée sur l’accueil compact');
  assert.equal((html.match(/<link rel="preload" as="image" href="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,0,'plus de préchargement de l’affiche cachée');
  assert.ok(!html.includes('infire-takeover'),'plus de bandeau doublon');
