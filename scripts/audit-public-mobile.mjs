@@ -168,6 +168,7 @@ try{
        contrast:strong&&card?ratio(getComputedStyle(strong).color,getComputedStyle(card).backgroundColor):null,
        fg:strong?getComputedStyle(strong).color:null,bg:card?getComputedStyle(card).backgroundColor:null,
        focusBottom:document.querySelector('.sde-reader-tools')?.getBoundingClientRect().bottom||null,
+       previewTop:document.querySelector('.sa-premium-preview')?.getBoundingClientRect().top||null,
        navTop:document.querySelector('.sde-shell-bottom')?.getBoundingClientRect().top||null};
      }
      if(location.pathname==='/connexion'){
@@ -191,6 +192,10 @@ try{
     if(c.path==='/academy' && c.width<700 &&
        visualQA.focusBottom!==null&&visualQA.navTop!==null&&visualQA.focusBottom>visualQA.navTop+2){
      issue(c.name,'Bouton Mode Focus superposé à la barre mobile',true);
+    }
+    if(c.path==='/academy' && c.width<700 &&
+       visualQA.previewTop!==null&&visualQA.focusBottom!==null&&visualQA.focusBottom>visualQA.previewTop+2){
+     issue(c.name,'Bouton Mode Focus superposé à la couverture Academy',true);
     }
     if(c.path==='/' && c.width<700 && !visualQA.visible){
      issue(c.name,'Libellé Portail absent de la barre mobile',true);
