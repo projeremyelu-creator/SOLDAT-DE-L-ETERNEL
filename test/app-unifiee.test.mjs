@@ -17,3 +17,18 @@ test("L'ambiance respecte mouvement réduit, pause, thème clair et onglet cach�
  assert.match(css,/html\[data-theme="light"\] \.sde-ambiance\{display:none\}/);
  assert.match(css,/@media print\{\.sde-ambiance/);
 });
+
+
+test("Annuaire SDE : indicatif ivoirien 00225 normalisé à l'affichage sans modifier les contacts",async()=>{
+ const {runInNewContext}=await import("node:vm");
+ const source=read("public/index.html");
+ const fonction=source.match(/  function telAffiche\(t\) \{[\s\S]*?\n  \}/)?.[0];
+ assert.ok(fonction,"la fonction d'affichage du téléphone doit exister");
+ const telAffiche=runInNewContext("("+fonction+")");
+ assert.equal(telAffiche("00225 07 87 12 45 55"),"+225 07 87 12 45 55");
+ assert.equal(telAffiche("+225 07 87 12 45 55"),"+225 07 87 12 45 55");
+ assert.equal(telAffiche("2250787124555"),"+225 07 87 12 45 55");
+ assert.equal(telAffiche("07 87 12 45 55"),"07 87 12 45 55");
+ assert.equal(telAffiche("0033 6 10 20 30 40"),"0033 6 10 20 30 40");
+ assert.match(source,/function telChiffres\(t\)/,"liens d'appel conservés");
+});
