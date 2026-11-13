@@ -197,7 +197,7 @@ try{
        visualQA.previewTop!==null&&visualQA.focusBottom!==null&&visualQA.focusBottom>visualQA.previewTop+2){
      issue(c.name,'Bouton Mode Focus superposé à la couverture Academy',true);
     }
-    if(c.path==='/' && c.width<700 && !visualQA.visible){
+    if(c.path==='/' && c.width<900 && !visualQA.visible){
      issue(c.name,'Libellé Portail absent de la barre mobile',true);
     }
    }
