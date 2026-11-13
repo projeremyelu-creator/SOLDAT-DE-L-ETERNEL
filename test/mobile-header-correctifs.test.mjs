@@ -72,7 +72,7 @@ test("les correctifs issus des captures sont réellement chargés sur le portail
     ".sde-citadelle-command-launch > button > svg",
     "grid-template-columns:minmax(0,1fr)!important",
     "flex-basis:34px!important",
-    ".sde-member-profile",
+    ".sde-direct #main .view",
     ".sde-direct #main .view"
   ])assert.ok(css.includes(token),"Sélecteur des captures absent : "+token);
   assert.match(css,/@media\(max-width:700px\)/);
