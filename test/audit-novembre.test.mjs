@@ -42,16 +42,19 @@ test("Générateur de QR servi par le site, plus par un CDN", () => {
   assert.match(i, /\/vitrine\/vendor\/qrcode-generator-1\.4\.4\.js/);
 });
 
-test("Refonte Fusion historique : site public conservé, palette privée officielle bleu nuit/ivoire/or", () => {
-  const css = lire("public/vitrine/sde-fusion.css");
-  for (const k of ["--fu-gold", "data-sde-palette=fusion", "body.sde-unifie", ".fu-strip"]) assert.ok(css.includes(k), k);
-  const app = lire("public/index.html");
-  assert.match(app, /sde-fusion\.css/);
-  assert.match(app, /"fusion-04"/);
-  assert.match(lire("frontend/reference-shell.jsx"), /\['tactique','SDE officiel · Bleu nuit · Ivoire · Or'\]/);
-  for (const f of ["portail", "mouvement", "programmes", "missions-humanitaires", "ressources", "rejoindre", "prieres", "tableau-administration", "tableau-membre"])
-    assert.match(lire(`public/vitrine/${f}.html`), /sde-fusion\.css/, f);
-  assert.match(lire("public/vitrine/portail.html"), /class="ap-hero"/);
+test("Direction SDE 2+3 : la charte Fusion est archivée sans être chargée", () => {
+ const legacy=lire("public/vitrine/sde-fusion.css");
+ for(const token of ["--fu-gold","data-sde-palette=fusion",".fu-strip"])assert.ok(legacy.includes(token));
+ const app=lire("public/index.html");
+ assert.doesNotMatch(app, /<link[^>]+sde-fusion\\.css/);
+ assert.match(app, /sde-hybride-integral-2027\\.css/);
+ assert.match(app, /"fusion-04"/,'le choix de palette conserve ses données métiers, sans CSS Fusion actif');
+ for(const p of ["portail","mouvement","programmes","missions-humanitaires","ressources","rejoindre","prieres","tableau-administration","tableau-membre"]){
+  const html=lire("public/vitrine/"+p+".html");
+  assert.doesNotMatch(html, /<link[^>]+sde-fusion\\.css/,p+' : ancienne charte encore branchée');
+  assert.match(html,/sde-hybride-integral-2027\\.css/,p+' : direction 2+3 absente');
+ }
+ assert.match(lire("public/vitrine/portail.html"), /class="ap-hero"/);
 });
 
 test("Refonte Fusion : espace membre et poste de commandement reconstruits sur des données réelles", () => {
