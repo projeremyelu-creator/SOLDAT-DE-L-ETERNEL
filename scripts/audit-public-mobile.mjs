@@ -740,8 +740,8 @@ try{
     const insuffisants=ratios.filter(x=>x.ratio===null||x.ratio<4.5);
     if(ratios.length<5||insuffisants.length)
      issue(c.name,'contraste des cartes de l’accueil inférieur à 4,5:1 : '+JSON.stringify(insuffisants.slice(0,4)),true);
-    if(c.width<=860&&row.heroBgMobile!=='none')
-     issue(c.name,'photo de fond décorative encore téléchargée sur mobile : '+row.heroBgMobile,true);
+    if(c.width<=860&&(!String(row.heroBgMobile||'').includes('hero-sde-640.webp')||String(row.heroBgMobile||'').includes('hero-sde-1280.webp')))
+     issue(c.name,'la photo optimisée de la Citadelle doit être visible sans télécharger le grand fichier : '+row.heroBgMobile,true);
     if(c.width<=860&&row.posterImageSource!==null)
      issue(c.name,'l’accueil mobile charge inutilement une grande affiche TPA',true);
     report.notes.push({test:'pagespeed-cards',page:c.name,count:ratios.length,minRatio:Math.min(...ratios.map(x=>x.ratio||0)),poster:row.posterImageSource,heroBackground:row.heroBgMobile});

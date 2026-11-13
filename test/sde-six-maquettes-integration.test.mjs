@@ -185,3 +185,16 @@ test("Recette 2027 · contrastes réels et contrôles mobiles corrigés",()=>{
  assert.match(audit,/CONTRASTE_NAV_SDE/);
  assert.match(audit,/visualQA\.contrast<4\.5/);
 });
+
+
+test("Citadelle mobile · vraie image WebP compressée, pas l'image PC",()=>{
+ const css=read("public/vitrine/sde-hybride-integral-2027.css");
+ const audit=read("scripts/audit-public-mobile.mjs");
+ const mobile=readFileSync("public/vitrine/photos/hero-sde-640.webp");
+ const desktop=readFileSync("public/vitrine/photos/hero-sde-1280.webp");
+ assert.match(css,/html body\.sde-unifie\.sde-premium-home\.sde-2027-reference\.sde-citadelle-live \.ap-hero \.ap-hero-bg/);
+ assert.match(css,/url\("\/vitrine\/photos\/hero-sde-640\.webp"\)!important/);
+ assert.match(audit,/row\.heroBgMobile\|\|''\)\.includes\('hero-sde-640\.webp'\)/);
+ assert.ok(mobile.length<48000,"image de couverture mobile <48 Ko");
+ assert.ok(mobile.length<desktop.length,"la version mobile reste plus légère que le bureau");
+});
