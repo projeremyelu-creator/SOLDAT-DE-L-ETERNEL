@@ -25,7 +25,7 @@ test("La capture officielle remplace les anciens panneaux sans doublon",()=>{
  assert.ok(d.getElementById("reveil-des-nations"),"ancien lien d'ancrage fonctionne encore");
 });
 
-test("Nouvel accueil : deux actions, texte biblique, film et TPA 2026 vérifiés",()=>{
+test("Accueil 2+3 : quatre actions, texte biblique, film et TPA 2026 vérifiés",()=>{
  const d=page(),hero=d.querySelector(".ap-hero");
  assert.match(hero.querySelector("h1").textContent,/UNE ARMÉE\s+VIVANTE\s+POUR LES NATIONS/i);
  assert.match(hero.querySelector(".sde-citadel-verse").textContent,/Exode 33:14/);
