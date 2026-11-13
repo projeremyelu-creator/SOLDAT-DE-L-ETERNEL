@@ -16,7 +16,7 @@ test("Direction artistique : palette royale et hiérarchie typographique",()=>{
  assert.equal(doc.querySelectorAll(".sde-2027-pillar-icon .sde-pillar-icon").length,3,"les trois emblèmes actifs ont un pictogramme SVG");
  assert.equal(doc.querySelectorAll(".sde-2027-pillar-icon[aria-hidden='true']").length,3);
  assert.equal(doc.querySelectorAll(".sde-premium-pillar-top").length,0,"anciens blocs remplacés");
- assert.equal(doc.querySelectorAll(".ap-hero .ap-actions a").length,2,"deux actions principales dans la nouvelle maquette Réveil 2027");
+ assert.equal(doc.querySelectorAll(".ap-hero .sde23-actions a").length,4,"quatre destinations réelles de la direction cinématique et communautaire 2+3");
 });
 
 test("Grille Bento des cinq pôles, médaillon pour les emblèmes et galerie lisible",()=>{
