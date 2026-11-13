@@ -4267,7 +4267,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const s = accesDirection() && S.pret.suivi ? suiviDe(m.id) : null;
     for (const x of auto) {
       const f = forcage(s, x[0]);
-      if (f) x[2] = { n: f.n, lib: LIB_AUTO[x[0]][f.n], detail: f.note || `Calcul automatique : ${x[2].lib}`, force: true, calcule: x[2] };
+      if (f) x[2] = { n: f.n, lib: LIB_AUTO[x[0]][f.n], detail: "Calcul automatique : " + x[2].lib + (f.note ? " · Motif de l’ajustement : " + f.note : ""), force: true, calcule: x[2] };
     }
     const sante = [];
     if (s || (accesDirection() && S.pret.suivi)) {
@@ -4295,7 +4295,7 @@ try{history.replaceState(null,"",location.pathname+location.search+"#espace-sold
     const s = accesDirection() && S.pret.suivi ? suiviDe(m.id) : null;
     const adm = peutAdmin() && S.pret.suivi;
     const relance = s && s.prochainSuivi ? (s.prochainSuivi <= aujourdhui() ? `<span class="chip warn">Suivi prévu ${esc(relLong(s.prochainSuivi))}</span>` : `<span class="chip">Prochain suivi le ${esc(fmtJour(s.prochainSuivi))}</span>`) : "";
-    const gNote = v.globalForce ? `<p class="vy-d" style="margin:2px 0 0">${esc(v.globalForce.note || `Calcul automatique : ${ETAT_GLOBAL[v.globalCalcule]}`)}</p>` : "";
+    const gNote = v.globalForce ? `<p class="vy-d" style="margin:2px 0 0">Calcul automatique : ${esc(ETAT_GLOBAL[v.globalCalcule])}</p>` + (v.globalForce.note ? `<p class="vy-d" style="margin:2px 0 0">Motif de l’ajustement : ${esc(v.globalForce.note)}</p>` : "") : "";
     let out = `<section class="voyants" aria-label="Voyants du membre">
       <div class="vy-h">${led(v.global, true)}<div><p class="vy-k">État général${v.globalForce ? `<span class="vy-f">ajusté</span>` : ""}</p><p class="vy-g">${esc(ETAT_GLOBAL[v.global])}</p>${gNote}</div>${relance}${adm ? btn("evaluer-membre", "Modifier", { ico: "i-edit", sm: true, data: `data-id="${esc(m.id)}" data-k="global"` }) : ""}</div>
       <div class="vy-grid">${v.auto.map((x) => tuileVoyant(x, m.id)).join("")}</div>`;
