@@ -144,6 +144,58 @@ try{
      issue(c.name,'La refonte Citadelle 2027 ne se voit pas sur la page publiée (CSS/DOM/dimensions).',true);
     }
    }
+   // Recette visuelle : vérifier les COULEURS CALCULÉES, et non seulement
+   // la présence des classes ou la réussite du déploiement.
+   if(['/academy','/connexion','/'].includes(c.path)){
+    const visualQA=await page.evaluate(()=>{
+     const rgb=s=>{
+      const m=String(s).match(/rgba?\(([^)]+)\)/);
+      return m?m[1].split(/[ ,/]+/).slice(0,3).map(Number):null;
+     };
+     const lum=s=>{
+      const arr=rgb(s);if(!arr||arr.length!==3||arr.some(v=>!Number.isFinite(v)))return null;
+      const v=arr.map(n=>{n/=255;return n<=.04045?n/12.92:((n+.055)/1.055)**2.4});
+      return .2126*v[0]+.7152*v[1]+.0722*v[2];
+     };
+     const ratio=(a,b)=>{
+      const x=lum(a),y=lum(b);
+      return x===null||y===null?null:Math.round((Math.max(x,y)+.05)/(Math.min(x,y)+.05)*100)/100;
+     };
+     if(location.pathname==='/academy'){
+      const strong=document.querySelector('.sa-premium-grid .sa-premium-card summary strong');
+      const card=strong?.closest('.sa-premium-card');
+      return {kind:'academy-card',found:!!(strong&&card),
+       contrast:strong&&card?ratio(getComputedStyle(strong).color,getComputedStyle(card).backgroundColor):null,
+       fg:strong?getComputedStyle(strong).color:null,bg:card?getComputedStyle(card).backgroundColor:null,
+       focusBottom:document.querySelector('.sde-reader-tools')?.getBoundingClientRect().bottom||null,
+       navTop:document.querySelector('.sde-shell-bottom')?.getBoundingClientRect().top||null};
+     }
+     if(location.pathname==='/connexion'){
+      const selected=document.querySelector('.ref-access-targets button[aria-pressed="true"]');
+      return {kind:'login-target',found:!!selected,
+       contrast:selected?ratio(getComputedStyle(selected).color,getComputedStyle(selected).backgroundColor):null,
+       fg:selected?getComputedStyle(selected).color:null,bg:selected?getComputedStyle(selected).backgroundColor:null};
+     }
+     const label=document.querySelector('.sde-shell-portal .sde-shell-portal-label');
+     const parent=label?.closest('a');
+     const rect=label?.getBoundingClientRect();
+     return {kind:'portal-label',found:!!label,
+      labelWidth:rect?.width||0,visible:!!(label&&parent&&rect.width>12&&getComputedStyle(label).visibility!=='hidden'),
+      text:label?.textContent||''};
+    });
+    report.notes.push({page:c.name,visualQA});
+    console.log('CONTRASTE_NAV_SDE '+c.name+' '+JSON.stringify(visualQA));
+    if(visualQA.kind!=='portal-label' && (!visualQA.found||visualQA.contrast===null||visualQA.contrast<4.5)){
+     issue(c.name,'Contraste illisible dans '+visualQA.kind+' : '+String(visualQA.contrast),true);
+    }
+    if(c.path==='/academy' && c.width<700 &&
+       visualQA.focusBottom!==null&&visualQA.navTop!==null&&visualQA.focusBottom>visualQA.navTop+2){
+     issue(c.name,'Bouton Mode Focus superposé à la barre mobile',true);
+    }
+    if(c.path==='/' && c.width<700 && !visualQA.visible){
+     issue(c.name,'Libellé Portail absent de la barre mobile',true);
+    }
+   }
    if(c.path==='/'){
     const images=await page.locator('.sde-pole-officiel-lien img, img.sde-event-poster, .ap-poster-media img').all();
     for(const img of images){
