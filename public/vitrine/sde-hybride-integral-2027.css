@@ -1084,42 +1084,225 @@ html body.sde-shell-mounted .sde-shell-header a.sde-shell-portal .sde-shell-port
  }
 }
 
-/* Refonte 2 + 3 — dernier calque de l'accueil, après les règles Citadelle.
-   La photographie officielle est conservée ; la composition devient plus
-   chaleureuse et orientée vers les quatre portes d'engagement. */
+/* SDE 2 + 3 — COMPOSITION CANONIQUE (source du design public).
+   Remplace le bloc visuel Citadelle hérité et conserve les services SDE.
+   Cinématique : photographie authentique SDE + chaleur d'Abidjan à l'aube.
+   Communauté : ivoire, 4 portes lisibles, événement TPA discret.
+   Rien dans cette feuille ne modifie authentification, APIs ou permissions. */
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live{
+ --sde27-night:#0D1B38;
+ --sde27-night-2:#172D47;
+ --sde27-night-3:#1D3654;
+ --sde27-paper:#FAF7F0;
+ --sde27-ivory:#FAF7F0;
+ --sde27-gold:#D9A72E;
+ --sde27-gold-ink:#8A5E11;
+ --sde27-green:#00644F;
+ --sde27-earth:#B74624;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero{
+ position:relative!important;isolation:isolate!important;overflow:hidden!important;
+ min-height:clamp(680px,88svh,890px)!important;
+ background:#0D1B38!important;border-bottom:4px solid #D9A72E!important;
+}
 html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .ap-hero-bg{
+ display:block!important;opacity:1!important;position:absolute!important;inset:0!important;z-index:-1!important;
  background:
-  linear-gradient(92deg,rgba(13,27,56,.96) 2%,rgba(13,27,56,.72) 52%,rgba(0,100,79,.60) 100%),
-  linear-gradient(180deg,transparent 58%,rgba(13,27,56,.92) 100%),
-  url("/vitrine/photos/hero-sde-1280.webp") center 45%/cover no-repeat!important;
- filter:saturate(.9) contrast(1.03)!important;
+  linear-gradient(94deg,rgba(13,27,56,.97) 0%,rgba(13,27,56,.87) 31%,rgba(13,27,56,.42) 63%,rgba(13,27,56,.55) 100%),
+  radial-gradient(ellipse 55% 66% at 86% 22%,rgba(217,167,46,.49) 0%,rgba(183,70,36,.26) 43%,transparent 84%),
+  linear-gradient(0deg,rgba(13,27,56,.95),transparent 36%),
+  url("/vitrine/photos/hero-sde-1280.webp") center 44%/cover no-repeat!important;
+ filter:saturate(1.02) contrast(1.04)!important;
+ transform:none!important;mix-blend-mode:normal!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .ap-hero-inner{
+ box-sizing:border-box!important;width:min(1350px,calc(100% - 72px))!important;
+ min-height:clamp(680px,88svh,890px)!important;padding:clamp(76px,8vw,126px) 0 92px!important;
+ display:grid!important;grid-template-columns:minmax(0,1.2fr) minmax(290px,.7fr)!important;
+ gap:clamp(34px,5vw,88px)!important;align-items:center!important;
+ text-align:left!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .ap-hero-copy{
+ text-align:left!important;align-items:flex-start!important;justify-content:center!important;
+ display:flex!important;flex-direction:column!important;gap:0!important;max-width:800px!important;
+ margin:0!important;position:relative!important;z-index:1!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde23-arrival{
+ display:inline-flex!important;align-items:center;gap:12px;flex-wrap:wrap;
+ margin:0 0 17px!important;padding:8px 14px!important;
+ background:rgba(250,247,240,.10)!important;border:1px solid rgba(250,247,240,.3)!important;
+ border-radius:999px!important;color:#FAF7F0!important;
+ font:750 .72rem/1.2 "Manrope",Inter,sans-serif!important;
+ letter-spacing:.13em!important;text-transform:uppercase;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde23-arrival span{
+ color:#D9A72E!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-vision-wordmark{
+ display:inline-flex!important;align-items:center!important;justify-items:start!important;
+ justify-content:flex-start!important;gap:10px!important;
+ padding:0!important;margin:0 0 18px!important;
+ color:#f2d083!important;-webkit-text-fill-color:#f2d083!important;
+ font:750 clamp(.85rem,1vw,1.02rem)/1.25 "Manrope",Inter,sans-serif!important;
+ letter-spacing:.24em!important;text-transform:uppercase!important;
+ text-align:left!important;text-shadow:0 2px 8px rgba(0,0,0,.4)!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-vision-wordmark .sde-vision-emblem{
+ display:inline-flex!important;width:auto!important;height:auto!important;
+ border:0!important;color:#D9A72E!important;-webkit-text-fill-color:#D9A72E!important;
+ font:800 1.15rem/1 serif!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-citadelle-foundation{
+ margin:0 0 14px!important;padding:0!important;text-align:left!important;
+ font:750 .82rem/1.5 "Manrope",Inter,sans-serif!important;
+ color:#F5DFB1!important;-webkit-text-fill-color:#F5DFB1!important;
+ letter-spacing:.11em!important;border:0!important;max-width:100%!important;
 }
 html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero h1#titre-accueil{
- font:650 clamp(2.75rem,5.3vw,5.8rem)/1.04 "Cormorant Garamond","DM Serif Display",Georgia,serif!important;
- letter-spacing:-.036em!important;text-transform:uppercase!important;
+ margin:0 0 20px!important;max-width:15ch!important;text-align:left!important;
+ font:600 clamp(4rem,6.2vw,7.1rem)/.91 "Cormorant Garamond","DM Serif Display",Georgia,serif!important;
+ letter-spacing:-.035em!important;text-transform:none!important;
+ color:#FAF7F0!important;-webkit-text-fill-color:#FAF7F0!important;
+ text-wrap:balance!important;text-shadow:0 8px 30px rgba(5,11,27,.5)!important;
 }
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero h1#titre-accueil .sde-citadel-highlight{
+ color:#E8C370!important;-webkit-text-fill-color:#E8C370!important;
+ font:inherit!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .ap-devise{
+ margin:0 0 19px!important;text-align:left!important;color:#F6E3B8!important;
+ letter-spacing:.2em!important;font-family:"Manrope",Inter,sans-serif!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-citadel-verse{
+ margin:0 0 26px!important;max-width:52ch!important;padding:13px 18px!important;
+ border:0!important;border-left:3px solid #D9A72E!important;
+ border-radius:0 12px 12px 0!important;background:rgba(13,27,56,.48)!important;
+ backdrop-filter:blur(9px)!important;text-align:left!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-citadel-verse :is(p,cite){
+ color:#FAF7F0!important;-webkit-text-fill-color:#FAF7F0!important;text-align:left!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde23-actions{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ width:min(100%,610px)!important;gap:11px!important;margin:0!important;align-items:stretch!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde23-actions .ap-btn{
+ border-radius:12px!important;min-height:55px!important;padding:13px 17px!important;
+ text-align:left!important;display:flex!important;gap:10px!important;align-items:center!important;
+ background:rgba(13,27,56,.53)!important;border:1px solid rgba(250,247,240,.54)!important;
+ color:#FAF7F0!important;box-shadow:0 12px 20px rgba(8,15,29,.2)!important;
+ font:750 .9rem/1.2 "Manrope",Inter,sans-serif!important;
+ transition:background .18s ease,transform .18s ease,border-color .18s ease!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde23-actions .ap-btn:first-child{
+ color:#0D1B38!important;background:#D9A72E!important;border-color:#F2D286!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde23-actions .ap-btn:is(:hover,:focus-visible){
+ transform:translateY(-2px)!important;background:#00644F!important;
+ border-color:#D9A72E!important;color:#FAF7F0!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-citadel-film{
+ margin:20px 0 0!important;text-align:left!important;color:#FAF7F0!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-tpa-hero-card{
+ width:100%!important;max-width:440px!important;min-width:0!important;
+ align-self:center!important;justify-self:end!important;box-sizing:border-box!important;
+ padding:clamp(15px,2.6vw,29px)!important;border-radius:22px!important;
+ background:linear-gradient(140deg,rgba(250,247,240,.96),rgba(250,247,240,.90))!important;
+ border:1px solid rgba(217,167,46,.55)!important;box-shadow:0 34px 80px rgba(0,0,0,.3)!important;
+ backdrop-filter:blur(14px)!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-tpa-hero-card .sde-shell-event-inner{
+ padding:0!important;background:transparent!important;box-shadow:none!important;border:0!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-tpa-hero-card :is(h2,h3,p,dd,dt,time){
+ color:#0D1B38!important;-webkit-text-fill-color:#0D1B38!important;text-shadow:none!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-tpa-hero-card h2{
+ font:600 clamp(2.5rem,3vw,3.4rem)/1 "Cormorant Garamond",Georgia,serif!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-tpa-hero-card .sde-tpa-kicker{
+ color:#98600E!important;-webkit-text-fill-color:#98600E!important;letter-spacing:.17em!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-tpa-hero-card .sde-shell-event-countdown{
+ background:rgba(13,27,56,.06)!important;color:#0D1B38!important;
+ border-radius:12px!important;max-width:100%!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-tpa-hero-card .sde-shell-event-register{
+ background:#D9A72E!important;color:#0D1B38!important;
+ border:1px solid #B78920!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-tpa-hero-card :is(.sde-2027-tpa-calendar,.sde-tpa-detail){
+ color:#064D3E!important;-webkit-text-fill-color:#064D3E!important;
+}
+/* Plus de duplication héroïques : le deuxième accès reste une barre d'orientation
+   chaleureuse, sans reproduire l'ancienne Citadelle sombre. */
 html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav{
- background:#FAF7F0!important;border-bottom-color:rgba(13,27,56,.12)!important;
+ background:#FAF7F0!important;border-color:rgba(13,27,56,.10)!important;
 }
 html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-inner{
- background:#0D1B38!important;border-color:rgba(217,167,46,.46)!important;
+ background:#FAF7F0!important;border:1px solid rgba(13,27,56,.13)!important;
+ box-shadow:0 12px 35px rgba(13,27,56,.09)!important;border-radius:20px!important;
 }
 html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-title{
- background:linear-gradient(145deg,#0D1B38,#17315c)!important;
+ background:#FAF7F0!important;border-color:rgba(13,27,56,.12)!important;
 }
-html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-title>strong{
- font-family:"Cormorant Garamond","DM Serif Display",Georgia,serif!important;
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-title :is(span,strong){
+ color:#0D1B38!important;-webkit-text-fill-color:#0D1B38!important;
+ font-family:"Cormorant Garamond",Georgia,serif!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-title span{
+ font:750 .68rem/1.4 "Manrope",Inter,sans-serif!important;letter-spacing:.14em!important;
 }
 html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-items>a{
- background:transparent!important;border-color:rgba(250,247,240,.16)!important;
+ background:#FFFFFF!important;color:#0D1B38!important;
+ border:1px solid rgba(13,27,56,.15)!important;border-radius:13px!important;
+ box-shadow:0 6px 18px rgba(13,27,56,.04)!important;
 }
-html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-items>a:hover{
- background:rgba(250,247,240,.08)!important;border-color:rgba(217,167,46,.72)!important;
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-items>a :is(strong,small,span){
+ color:#0D1B38!important;-webkit-text-fill-color:#0D1B38!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-items>a:is(:hover,:focus-visible){
+ background:#EDE6D4!important;border-color:#D9A72E!important;
+}
+@media(max-width:960px){
+ html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .ap-hero-inner{
+  width:min(720px,calc(100% - 40px))!important;min-height:0!important;
+  padding:clamp(44px,7vw,80px) 0!important;grid-template-columns:minmax(0,1fr)!important;
+  gap:30px!important;
+ }
+ html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde-tpa-hero-card{
+  width:min(100%,620px)!important;max-width:620px!important;justify-self:start!important;
+ }
 }
 @media(max-width:860px){
  html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .ap-hero-bg{
   background:
-   linear-gradient(180deg,rgba(13,27,56,.82),rgba(13,27,56,.74) 38%,rgba(0,100,79,.88) 100%),
-   url("/vitrine/photos/hero-sde-640.webp") center 38%/cover no-repeat!important;
+   linear-gradient(180deg,rgba(13,27,56,.85),rgba(13,27,56,.69) 38%,rgba(13,27,56,.95) 100%),
+   radial-gradient(circle at 72% 12%,rgba(217,167,46,.27),transparent 52%),
+   url("/vitrine/photos/hero-sde-640.webp") center 32%/cover no-repeat!important;
+ }
+ html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero h1#titre-accueil{
+  font-size:clamp(3.15rem,9vw,5.4rem)!important;
+ }
+}
+@media(max-width:390px){
+ html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .ap-hero-inner{
+  width:calc(100% - 28px)!important;
+  padding:40px 0 48px!important;
+ }
+ html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero h1#titre-accueil{
+  font-size:clamp(2.8rem,10vw,3.7rem)!important;
+ }
+ html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde23-actions{
+  gap:8px!important;
+ }
+ html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .sde23-actions .ap-btn{
+  min-height:52px!important;padding:10px!important;font-size:.78rem!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero *{
+  animation:none!important;transition:none!important;transform:none!important;
  }
 }
