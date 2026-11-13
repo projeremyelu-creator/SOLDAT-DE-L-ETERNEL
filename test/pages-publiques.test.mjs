@@ -11,7 +11,7 @@ test('Pages publiques : feuille premium chargée avant la charte Fusion, famille
   const iF=feuilles.findIndex(f=>f.includes('sde-fusion.css')),iP=feuilles.findIndex(f=>f.includes('sde-pages-premium.css'));
   assert.ok(iP>=0&&iP<iF,n+' : feuille premium avant la charte Fusion');
   const apres=feuilles.slice(iF+1);
-  assert.ok(apres.every(f=>f.includes('sde-shell-public.css')||(n==='mouvement'&&f.includes('sde-six-maquettes-2027.css'))||(n==='soutenir'&&(f.includes('sde-standalone-clarte.css')||f.includes('sde-maquette-hero.css')))),n+' : uniquement les surcouches visuelles approuvées après Fusion');
+  assert.ok(apres.every(f=>f.includes('sde-shell-public.css')||(n==='mouvement'&&(f.includes('sde-six-maquettes-2027.css')||f.includes('sde-recette-captures-20261113.css')))||(n==='soutenir'&&(f.includes('sde-standalone-clarte.css')||f.includes('sde-maquette-hero.css')))),n+' : uniquement les surcouches visuelles approuvées après Fusion');
   assert.match(h,new RegExp(`<body[^>]*class="[^"]*sde-pages-premium[^"]*"[^>]*data-fam="${fam}"`),n+' : famille '+fam);
   assert.equal((h.match(/class="pg-tabs/g)||[]).length,1,n+' : une seule navigation interne');
   assert.equal((h.match(/<h1[\s>]/g)||[]).length,1,n+' : un seul h1');
