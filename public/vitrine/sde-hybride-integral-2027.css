@@ -1062,3 +1062,24 @@ html body.sde-shell-mounted .sde-shell-header a.sde-shell-portal .sde-shell-port
   visibility:visible!important;
  }
 }
+
+
+/* Citadelle mobile · La règle de performance historique masquait toutes les
+ * photos de couverture sur <=860 px, même le WebP 640 px de 34 Ko.
+ * La couche visuelle finale autorise UNIQUEMENT l'image mobile compressée,
+ * avec un voile bleu nuit assez dense pour garantir la lecture. */
+@media(max-width:860px){
+ html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .ap-hero-bg{
+  background-image:
+   linear-gradient(180deg,
+    rgba(7,18,39,.84) 0%,
+    rgba(8,21,43,.78) 24%,
+    rgba(9,21,45,.87) 55%,
+    rgba(7,18,39,.98) 100%),
+   url("/vitrine/photos/hero-sde-640.webp")!important;
+  background-position:center,center 38%!important;
+  background-size:cover,cover!important;
+  background-repeat:no-repeat,no-repeat!important;
+  filter:saturate(.88) contrast(1.03)!important;
+ }
+}
