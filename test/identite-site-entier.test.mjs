@@ -9,26 +9,18 @@ const pages=['portail','programmes','mouvement','projets','rejoindre',
   'soldiers-voice','soldiers-award','temoignages','404','formulaire'];
 const html=page=>readFileSync('public/vitrine/'+page+'.html','utf8');
 
-test('Identité SDE : les 16 pages publiques utilisent toutes le même thème final',()=>{
-  for(const page of pages){
-    const source=html(page);
-    const doc=new JSDOM(source).window.document;
-    const links=[...doc.querySelectorAll('head link[rel=stylesheet]')].map(el=>el.getAttribute('href'));
-    assert.equal(links.filter(x=>x.includes('sde-sitewide-2026.css')).length,1,page);
-    if(page==='portail') {
-      assert.ok(links.at(-5).includes('sde-shell-public.css')&&links.at(-4).includes('sde-maquette-hero.css')&&links.at(-3).includes('sde-six-maquettes-2027.css')&&links.at(-2).includes('sde-accueil-officiel-2027.css')&&links.at(-1).includes('sde-hybride-integral-2027.css'),'accueil : charte officielle suivie de la couche responsive mobile/PC');
-      assert.ok(links.findIndex(x=>x.includes('sde-fusion.css')) < links.length-1,'accueil : Fusion précède les correctifs');
-      assert.equal(links.filter(x=>x.includes('sde-mobile-correctifs-20261103.css')).length,1);
-    } else {
-      if(page==='soutenir') assert.ok(links.at(-2).includes('sde-shell-public.css')&&links.at(-1).includes('sde-maquette-hero.css'),page+' : surcouche Soutenir ciblée après navigation');
-      else if(page==='mouvement')assert.ok(links.at(-1).includes('sde-recette-captures-20261113.css')&&links.at(-2).includes('sde-six-maquettes-2027.css')&&links.at(-3).includes('sde-shell-public.css'),'mouvement : charte institutionnelle 2027 puis correctifs des six axes');
-       else if(page==='academy')assert.ok(links.at(-1).includes('sde-hybride-integral-2027.css')&&links.at(-2).includes('sde-shell-public.css'),'academy : charte publique conservée avant la déclinaison responsive');
-       else assert.ok(links.at(-1).includes(source.includes('sde-shell-public.css')?'sde-shell-public.css':'sde-fusion.css'),page+' : dernière feuille attendue');
-    }
-    assert.equal(links.filter(x=>x.includes('sde-fusion.css')).length,1,page);
-    assert.match(source,/<body\b/,page+' : contenu existant présent');
-    assert.ok(!source.includes('SDE DIGITAL — MILITAIRE PREMIUM'),page);
-  }
+test('Identité SDE : seize pages portent uniquement la direction 2+3',()=>{
+ for(const page of pages){
+  const source=html(page),doc=new JSDOM(source).window.document;
+  const links=[...doc.querySelectorAll('head link[rel=stylesheet]')].map(el=>el.getAttribute('href'));
+  assert.equal(links.filter(x=>x.includes('sde-sitewide-2026.css')).length,1,page+' : infrastructure commune conservée');
+  assert.equal(links.filter(x=>x.includes('sde-hybride-integral-2027.css')).length,1,page+' : thème unique 2+3');
+  assert.ok(links.at(-1).includes('sde-hybride-integral-2027.css'),page+' : thème final en dernier');
+  for(const ancien of ['sde-fusion.css','sde-maquette-hero.css','sde-v5-complet.css','sde-six-maquettes-2027.css','sde-maquette.css','accueil-maquette.css'])
+   assert.equal(links.filter(x=>x.includes(ancien)).length,0,page+' : ancienne couche '+ancien);
+  assert.ok(doc.body.classList.contains('sde23-native'),page+' : identité actuelle sur le vrai body');
+  assert.ok(!source.includes('SDE DIGITAL — MILITAIRE PREMIUM'),page);
+ }
 });
 test('Identité SDE : routes publiques réelles couvertes et espaces privés non altérés',()=>{
   const worker=readFileSync('src/worker.js','utf8');

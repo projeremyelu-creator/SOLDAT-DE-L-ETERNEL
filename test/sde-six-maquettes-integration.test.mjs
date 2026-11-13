@@ -181,7 +181,7 @@ test("Recette 2027 · contrastes réels et contrôles mobiles corrigés",()=>{
  assert.match(css,/\.sde-shell-portal-label/);
  assert.match(css,/\.sde-reader-tools\{\s*bottom:calc\(84px \+ env\(safe-area-inset-bottom,0px\)\)!important/);
  assert.match(shell,/sde-shell-portal-label","Mon Portail S\.D\.E"/);
- assert.match(sw,/sde-public-shell-20261113-direction23-natif/);
+ assert.match(sw,/sde-public-shell-20261113-unique-source-v3/);
  assert.match(audit,/CONTRASTE_NAV_SDE/);
  assert.match(audit,/visualQA\.contrast<4\.5/);
 });

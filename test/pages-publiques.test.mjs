@@ -5,19 +5,22 @@ const lire=f=>readFileSync(f,'utf8');
 const page=n=>lire(`public/vitrine/${n}.html`);
 const PAGES={mouvement:'spi',programmes:'mis',soutenir:'cmd',temoignages:'spi',rejoindre:'cmd'};
 
-test('Pages publiques : feuille premium chargée avant la charte Fusion, famille de couleur déclarée',()=>{
+test('Pages publiques : structure conservée et habillage unique 2+3 sans Fusion',()=>{
  for(const [n,fam] of Object.entries(PAGES)){
   const h=page(n),feuilles=[...h.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
-  const iF=feuilles.findIndex(f=>f.includes('sde-fusion.css')),iP=feuilles.findIndex(f=>f.includes('sde-pages-premium.css'));
-  assert.ok(iP>=0&&iP<iF,n+' : feuille premium avant la charte Fusion');
-  const apres=feuilles.slice(iF+1);
-  assert.ok(apres.every(f=>f.includes('sde-shell-public.css')||(n==='mouvement'&&(f.includes('sde-six-maquettes-2027.css')||f.includes('sde-recette-captures-20261113.css')))||(n==='soutenir'&&(f.includes('sde-standalone-clarte.css')||f.includes('sde-maquette-hero.css')))),n+' : uniquement les surcouches visuelles approuvées après Fusion');
+  const iP=feuilles.findIndex(f=>f.includes('sde-pages-premium.css'));
+  const iFinal=feuilles.findIndex(f=>f.includes('sde-hybride-integral-2027.css'));
+  assert.ok(iP>=0&&iP<iFinal,n+' : fondations de page avant la nouvelle charte');
+  assert.equal(iFinal,feuilles.length-1,n+' : une seule charte 2+3 finale');
+  for(const ancien of ['sde-fusion.css','sde-v5-complet.css','sde-maquette.css','sde-six-maquettes-2027.css'])
+    assert.ok(!feuilles.some(f=>f.includes(ancien)),n+' : ancien habillage '+ancien);
   assert.match(h,new RegExp(`<body[^>]*class="[^"]*sde-pages-premium[^"]*"[^>]*data-fam="${fam}"`),n+' : famille '+fam);
+  assert.ok(h.includes('sde23-native'),n+' : classe canonique');
   assert.equal((h.match(/class="pg-tabs/g)||[]).length,1,n+' : une seule navigation interne');
-  assert.equal((h.match(/<h1[\s>]/g)||[]).length,1,n+' : un seul h1');
+  assert.equal((h.match(/<h1[\\s>]/g)||[]).length,1,n+' : un seul h1');
  }
- const css=lire('public/vitrine/sde-pages-premium.css');
- for(const k of ['--fam-cmd:#1b2f6b','--fam-spi:#5b21b6','--fam-mis:#3f6b34','prefers-reduced-motion','max-width:620px'])assert.ok(css.includes(k),k);
+ const css=lire('public/vitrine/sde-hybride-integral-2027.css');
+ for(const k of ['#0D1B38','#FAF7F0','#D9A72E','#B74624','#00644F','prefers-reduced-motion'])assert.ok(css.includes(k),k);
 });
 
 test('Pages publiques : chaque lien de navigation interne mène à une section existante',()=>{

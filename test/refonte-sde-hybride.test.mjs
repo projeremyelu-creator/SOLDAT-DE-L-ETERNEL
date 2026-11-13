@@ -71,7 +71,7 @@ test("Phase 2 : cinq accès publics mobiles, sans fuite des finances internes",(
 test("Phase 2 : galerie IN FIRE premium, focus retenu et fermeture clavier",()=>{
  const html=read("public/vitrine/album-infire.html");
  const css=read("public/vitrine/sde-premium-public.css");
- assert.ok(html.includes('class="sde-infire-album"'));
+ assert.match(html,/class="[^"]*\bsde-infire-album\b[^"]*"/);
  assert.ok(html.includes('class="archive-note"'));
  assert.ok(html.includes("document.body.style.overflow='hidden'"));
  assert.ok(html.includes("document.body.style.overflow=oldOverflow"));

@@ -95,19 +95,18 @@ test('Accueil premium : indicateurs issus de /api/impact, agrégats seulement, a
  assert.ok(script.includes('Number(d[t[0]]) > 0'),'les valeurs nulles ne sont pas affichées');
 });
 
-test('Accueil premium : charte Fusion chargée en dernier, scripts sans inline, tri des trois couleurs',()=>{
- const feuilles=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
- const fusionIndex=feuilles.findIndex(f=>f.includes('sde-fusion.css'));
- assert.ok(fusionIndex>=0,'charte Fusion toujours présente');
- assert.ok(feuilles.at(-5).includes('sde-shell-public.css')&&feuilles.at(-4).includes('sde-maquette-hero.css')&&feuilles.at(-3).includes('sde-six-maquettes-2027.css')&&feuilles.at(-2).includes('sde-accueil-officiel-2027.css')&&feuilles.at(-1).includes('sde-hybride-integral-2027.css'),'la direction artistique officielle est conservée avant la couche responsive finale');
- assert.ok(fusionIndex<feuilles.length-1,'la charte Fusion reste la base de la couche responsive');
- assert.ok(feuilles.some(f=>f.includes('sde-accueil-premium.css')));
- assert.ok(html.includes('sde-accueil-premium.js'));
- const inline=[...html.matchAll(/<script(?![^>]*\bsrc=)(?![^>]*type="application\/ld\+json")[^>]*>/g)];
+test('Accueil SDE 2+3 : le thème officiel remplace réellement les anciennes feuilles',()=>{
+ const feuilles=[...html.matchAll(/<link rel="stylesheet" href="([^\"]+)"/g)].map(m=>m[1]);
+ assert.ok(feuilles.at(-1).includes('sde-hybride-integral-2027.css'),'la seule direction graphique finale est 2+3');
+ assert.ok(feuilles.includes('/vitrine/sde-accueil-premium.css?v=405b772b7a5d')||feuilles.some(f=>f.includes('sde-accueil-premium.css')),'structure de l\'accueil conservée');
+ for(const ancien of ['sde-fusion.css','sde-v5-complet.css','sde-six-maquettes-2027.css','sde-maquette-hero.css','accueil-maquette.css'])
+   assert.ok(!feuilles.some(f=>f.includes(ancien)),'ancienne feuille encore chargée : '+ancien);
+ assert.ok(html.includes('sde23-native')&&html.includes('sde-accueil-premium.js'));
+ const inline=[...html.matchAll(/<script(?![^>]*\\bsrc=)(?![^>]*type="application\\/ld\\+json")[^>]*>/g)];
  assert.equal(inline.length,0,'CSP : aucun script en ligne');
- const css=lire('public/vitrine/sde-accueil-premium.css');
- for(const jeton of ['--ap-navy0','--ap-mil1','--ap-bg1','prefers-reduced-motion','max-width:620px'])assert.ok(css.includes(jeton),jeton);
- assert.ok(html.includes('ap-navy')&&html.includes('ap-mil')&&html.includes('ap-dark'),'bleu nuit, vert militaire, violet');
+ const css=lire('public/vitrine/sde-hybride-integral-2027.css');
+ for(const jeton of ['#0D1B38','#FAF7F0','#D9A72E','#B74624','#00644F','prefers-reduced-motion'])assert.ok(css.includes(jeton),jeton);
+ assert.ok(html.includes('ap-navy')&&html.includes('ap-mil')&&html.includes('ap-dark'),'les sections et parcours sont conservés');
 });
 
 test('Accueil premium : identifiants uniques et un seul h1',()=>{
