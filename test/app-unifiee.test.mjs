@@ -45,3 +45,13 @@ test('Affichage privé : le bouton Animations reste dans une zone non flottante 
  assert.doesNotMatch(css,/html body\.sde-direct \.sde-ambiance-ctl\s*\{\s*position:fixed!important/);
  assert.match(js,/localStorage\.setItem\(KEY, userPaused/);
 });
+
+test('Fiche membre : conserver la valeur automatique même lors d’un ajustement manuel avec motif',()=>{
+ const app=read('public/index.html');
+ // Ne pas remplacer le calcul par le motif : les deux informations doivent rester consultables.
+ assert.match(app, /detail: "Calcul automatique : " \+ x\[2\]\.lib/);
+ assert.match(app, /" · Motif de l’ajustement : " \+ f\.note/);
+ assert.match(app, /Calcul automatique : \$\{esc\(ETAT_GLOBAL\[v\.globalCalcule\]\)\}/);
+ assert.match(app, /Motif de l’ajustement : \$\{esc\(v\.globalForce\.note\)\}/);
+ assert.doesNotMatch(app, /detail: f\.note \|\| \`Calcul automatique/);
+});
