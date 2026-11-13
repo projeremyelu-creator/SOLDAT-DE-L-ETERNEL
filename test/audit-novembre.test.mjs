@@ -175,7 +175,7 @@ test("Navigation publique SDE : même header, footer et tiroir à cinq catégori
 test("Corrections UX : aucun indicateur ni compteur vide, contact avec un seul guichet, dons sûrs",()=>{
  const home=lire("public/vitrine/portail.html");
  const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf("</section>",home.indexOf('class="ap-hero"')));
-  const buttons=hero.match(/<nav class="ap-actions[^"]*">[\s\S]*?<\/nav>/)?.[0]||"";
+  const buttons=hero.match(/<nav class="ap-actions[^"]*"[^>]*>[\s\S]*?<\/nav>/)?.[0]||"";
   assert.equal((buttons.match(/<a /g)||[]).length,4,'quatre accès de la refonte Work 2+3');
   for(const route of ['/mouvement','/contact#rejoindre','/programmes#agenda','/portail'])assert.ok(buttons.includes('href="'+route+'"'),'Accès manquant : '+route);
  assert.match(home,/>Vie de l’Esprit<\/strong>/);
