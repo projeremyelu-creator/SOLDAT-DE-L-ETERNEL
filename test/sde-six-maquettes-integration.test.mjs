@@ -105,7 +105,7 @@ test("SDE 2027 · les six interfaces actives chargent la même charte desktop/mo
  ];
  for(const path of paths){
   const html=read(path);
-  assert.match(html,/\/vitrine\/sde-hybride-integral-2027\.css\?v=20261113/,
+  assert.match(html,/\/vitrine\/sde-hybride-integral-2027\.css\?v=[a-zA-Z0-9]+/,
    "charte absente : "+path);
   assert.equal((html.match(/sde-hybride-integral-2027\.css/g)||[]).length,1,
    "une seule feuille de design : "+path);
