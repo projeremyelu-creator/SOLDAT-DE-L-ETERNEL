@@ -62,7 +62,8 @@ test('Accueil premium : hero Citadelle 2027, trois actions et bandeau TPA compac
  assert.equal((html.match(/<img[^>]+src="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,0,'pas de grande affiche dans l’accueil compact');
  assert.ok(html.includes('href="/programmes#tpa-2026"'));
  assert.ok(html.includes('datetime="2026-12-18T20:00:00+00:00"'));
- assert.ok(hero.includes('class="ap-actions sde-citadel-actions"'));
+ assert.ok(hero.includes('class="ap-actions sde-citadel-actions sde23-actions"'));
+ assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,4,'quatre destinations visibles');
  for(const link of ['/mouvement','/contact#rejoindre','/programmes#agenda','/mouvement#film'])assert.ok(hero.includes('href="'+link+'"'),'Action manquante '+link);
  assert.match(css,/\.ap-hero-inner\{[^}]*grid-template-columns:minmax\(0,1fr\)/);
  assert.match(css,/@media\(max-width:860px\)/);
@@ -214,4 +215,21 @@ test('Nouvelle étape : palette publique et poste de commandement premium access
  for(const target of ['adhesions','scanner','academy-direction','rendezvous','suivi-poles','finance-direction'])
   assert.ok(ops.includes("portal.selectionner('"+target+"')"),'Module '+target);
  assert.ok(ops.includes('portal.compte.niveau>=2'),'Finances direction toujours conditionnelles');
+});
+
+test('La refonte 2+3 remplace bien les structures et couleurs de l’ancienne mosaïque',()=>{
+ const html=file('public/vitrine/portail.html');
+ const hero=new JSDOM(html).window.document.querySelector('.sde23-actions');
+ assert.ok(hero,'Hero 2+3 absent de la page publique');
+ assert.deepEqual([...hero.querySelectorAll('a')].map(a=>a.getAttribute('href')),['/mouvement','/contact#rejoindre','/programmes#agenda','/portail']);
+ const shell=file('public/vitrine/sde-shell-public.css');
+ assert.match(shell,/\.sde23-actions/);
+ assert.match(shell,/@media\(max-width:390px\)/);
+ const ops=file('frontend/operations.jsx'),css=file('frontend/business-mosaic.css');
+ assert.match(ops,/data-sde-refonte="2plus3"/);
+ assert.match(ops,/data-sde-visible-revision="refonte-2plus3-2027"/);
+ assert.match(ops,/sde23-command-access/);
+ assert.match(ops,/portal\.compte\.niveau>=2&&<button/);
+ for(const token of ['--sde23-night:#0D1B38','--sde23-ivory:#FAF7F0','--sde23-gold:#D9A72E','--sde23-earth:#B74624','--sde23-green:#00644F'])assert.ok(css.includes(token),token);
+ for(const obsolete of ['#321354','#4a2178','#25113c','#123c2e'])assert.ok(!css.includes(obsolete),'ancien thème encore présent : '+obsolete);
 });
