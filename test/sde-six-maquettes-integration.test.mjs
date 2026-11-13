@@ -134,3 +134,36 @@ test("SDE 2027 · la charte vise les vraies routes sans ouvrir les espaces prot�
  const academy=read("public/vitrine/sde-academy-parcours.html");
  assert.match(academy,/progression affichée ci-dessous provient de vos résultats réels/i);
 });
+
+
+test("Citadelle v2 · l'accueil possède quatre accès visibles et la devise fondatrice",()=>{
+ const doc=new JSDOM(read("public/vitrine/portail.html")).window.document;
+ const hero=doc.querySelector(".ap-hero");
+ assert.ok(hero.querySelector(".sde-vision-wordmark"));
+ assert.match(hero.querySelector(".sde-vision-wordmark").textContent,/SOLDATS DE L’ÉTERNEL/);
+ assert.match(hero.querySelector(".sde-citadelle-foundation").textContent,/ÉZÉCHIEL 37/);
+ const nav=doc.querySelector('.sde-citadelle-quicknav[data-sde-visible-revision="citadelle-2027-v2"]');
+ assert.ok(nav);
+ assert.deepEqual([...nav.querySelectorAll("a")].map(a=>a.getAttribute("href")),[
+  "/programmes","/mouvement#poles","/academy","/portail"
+ ]);
+ assert.equal(hero.querySelectorAll(".sde-citadel-actions a").length,2,"deux CTA de couverture préservés");
+});
+test("Citadelle v2 · Campus, connexion, membre et commandement rendent des compositions distinctes",()=>{
+ const school=new JSDOM(read("public/vitrine/academy.html")).window.document;
+ assert.ok(school.querySelector('.sa-premium-preview[data-sde-visible-revision="citadelle-2027-v2"]'));
+ const login=new JSDOM(read("public/vitrine/connexion-unifiee.html")).window.document;
+ assert.match(login.querySelector('.sde-citadelle-login-badge')?.textContent||"",/SDE DIGITAL 2027/);
+ assert.ok(login.querySelector("#form-connexion"),"formulaire de connexion original conservé");
+ const code=read("frontend/operations.jsx");
+ assert.match(code,/className="sde-citadelle-member-cover"/);
+ assert.match(code,/className="sde-citadelle-command-launch"/);
+ assert.match(code,/portal\.compte\.niveau>=2&&<button type="button" onClick=\{\(\)=>portal\.selectionner\('finance-direction'\)\}/);
+ assert.match(code,/portal\.selectionner\('academie'\)/);
+ assert.match(code,/portal\.selectionner\('rendezvous'\)/);
+ const styles=read("public/vitrine/sde-hybride-integral-2027.css");
+ for(const name of [".sde-vision-wordmark",".sde-citadelle-quicknav-items",".sde-citadelle-member-cover",".sde-citadelle-command-launch",".sde-citadelle-login-badge"]){
+  assert.ok(styles.includes(name),"règles visuelles absentes: "+name);
+ }
+ assert.match(styles,/@media\(max-width:699px\)/);
+});

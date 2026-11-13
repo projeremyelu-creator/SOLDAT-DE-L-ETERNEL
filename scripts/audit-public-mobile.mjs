@@ -122,6 +122,28 @@ try{
   try{
    const response=await page.goto(domain+c.path,{waitUntil:'domcontentloaded',timeout:60000});
    await page.waitForTimeout(1700);
+   // Vérification matérielle de la refonte : présence du nouveau DOM ET de la
+   // feuille CSS réellement chargée sur le domaine (pas seulement dans GitHub).
+   if(['/', '/academy', '/connexion'].includes(c.path)){
+    const visible=await page.evaluate(()=>{
+     const css=[...document.styleSheets].some(s=>(s.href||'').includes('sde-hybride-integral-2027.css'));
+     const marker=document.querySelector('[data-sde-visible-revision="citadelle-2027-v2"]');
+     const style=marker?getComputedStyle(marker):null;
+     const rect=marker?.getBoundingClientRect();
+     const visual=!!(marker&&style&&style.display!=='none'&&style.visibility!=='hidden'&&rect.width>200&&rect.height>25);
+     const home=location.pathname==='/';
+     const cards=home?document.querySelectorAll('.sde-citadelle-quicknav-items a').length:0;
+     const title=home?document.querySelector('.sde-vision-wordmark')?.textContent?.trim():null;
+     return {css,visual,cards,title,
+      version:marker?.dataset.sdeVisibleRevision||null,
+      computedBackground:style?.backgroundColor||null};
+    });
+    report.notes.push({page:c.name,relaunch:visible});
+    console.log('RECEPTION CITADELLE '+c.name+' '+JSON.stringify(visible));
+    if(!visible.css||!visible.visual||(c.path==='/'&&(visible.cards!==4||!visible.title?.includes('SOLDATS DE L’ÉTERNEL')))){
+     issue(c.name,'La refonte Citadelle 2027 ne se voit pas sur la page publiée (CSS/DOM/dimensions).',true);
+    }
+   }
    if(c.path==='/'){
     const images=await page.locator('.sde-pole-officiel-lien img, img.sde-event-poster, .ap-poster-media img').all();
     for(const img of images){

@@ -465,3 +465,468 @@ body.sde-direct .sde-command-v4-bottom{
     transform:none!important;
   }
 }
+
+/* ================================================================
+   Citadelle 2027 v2 — REFONTE VISIBLE, pas seulement correctifs CSS.
+   Correspond aux compositions desktop/mobile validées : identité,
+   quatre accès opérationnels, Academy et commandement authentifié.
+   ================================================================ */
+html body.sde-citadelle-live .ap-hero .ap-hero-copy{
+  text-align:center!important;
+  align-items:center!important;
+}
+html body.sde-citadelle-live .ap-hero .sde-vision-wordmark{
+  display:grid!important;
+  grid-template-columns:1fr;
+  gap:7px;
+  justify-items:center;
+  max-width:100%;
+  padding:10px 0 7px;
+  color:#ffe5a0!important;
+  -webkit-text-fill-color:#ffe5a0!important;
+  font:700 clamp(2.6rem,4.9vw,5.5rem)/.96 "Cinzel",Georgia,serif!important;
+  letter-spacing:.035em;
+  text-shadow:0 5px 30px rgba(0,0,0,.72),0 1px 9px rgba(0,0,0,.8);
+  text-wrap:balance;
+}
+html body.sde-citadelle-live .ap-hero .sde-vision-wordmark .sde-vision-emblem{
+  display:grid;place-items:center;
+  width:38px;height:30px;
+  color:#f6d688!important;-webkit-text-fill-color:#f6d688!important;
+  font:500 1.3rem/1 Georgia,serif!important;
+  border-bottom:1px solid rgba(246,214,136,.65);
+}
+html body.sde-citadelle-live .ap-hero h1#titre-accueil{
+  font:italic 600 clamp(1.15rem,2.1vw,1.78rem)/1.3 "Cormorant Garamond",Georgia,serif!important;
+  letter-spacing:.025em!important;
+  text-transform:none!important;
+  color:#fff7e8!important;-webkit-text-fill-color:#fff7e8!important;
+  text-align:center!important;
+  max-width:34ch!important;
+  margin:8px auto 12px!important;
+  text-shadow:0 3px 15px rgba(0,0,0,.8);
+}
+html body.sde-citadelle-live .ap-hero h1#titre-accueil .sde-citadel-highlight{
+  color:#ffdea0!important;-webkit-text-fill-color:#ffdea0!important;
+  font:inherit!important;
+}
+html body.sde-citadelle-live .ap-hero .sde-citadelle-foundation{
+  display:inline-block!important;
+  max-width:100%;
+  padding:7px 16px!important;
+  border:1px solid rgba(245,212,134,.72)!important;
+  border-radius:999px!important;
+  background:rgba(6,15,34,.78)!important;
+  color:#ffe1a0!important;-webkit-text-fill-color:#ffe1a0!important;
+  font:750 clamp(.64rem,.9vw,.78rem)/1.5 "Plus Jakarta Sans",system-ui,sans-serif!important;
+  letter-spacing:.08em!important;
+  text-align:center!important;
+  white-space:normal!important;
+}
+html body.sde-citadelle-live .ap-hero .ap-devise{
+  letter-spacing:.18em!important;
+  text-align:center!important;
+  font-size:clamp(.79rem,1.1vw,.96rem)!important;
+  color:#f7dfa0!important;-webkit-text-fill-color:#f7dfa0!important;
+}
+html body.sde-citadelle-live .ap-hero .sde-citadel-verse{
+  max-width:590px!important;
+  margin-inline:auto!important;
+}
+html body.sde-citadelle-live .ap-hero .sde-citadel-actions{
+  justify-content:center!important;
+}
+html body.sde-citadelle-live .sde-citadelle-quicknav{
+  width:100%;
+  position:relative;
+  background:#f8f4eb!important;
+  color:#13223b!important;
+  border-bottom:1px solid #ddcfb5!important;
+  padding:0 18px 22px!important;
+}
+html body.sde-citadelle-live .sde-citadelle-quicknav-inner{
+  width:min(1340px,100%);
+  margin:-17px auto 0;
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:minmax(200px,.82fr) minmax(0,2.2fr);
+  align-items:stretch;
+  gap:0;
+  overflow:hidden;
+  border:1px solid rgba(237,201,117,.42);
+  border-radius:19px;
+  box-shadow:0 16px 35px rgba(5,19,40,.19);
+  background:#0c1e39;
+}
+html body.sde-citadelle-live .sde-citadelle-quicknav-title{
+  padding:20px 24px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:8px;
+  color:#f9f3e5;
+  background:linear-gradient(135deg,#162947,#241c40);
+  border-right:1px solid rgba(237,201,117,.28);
+}
+html body.sde-citadelle-live .sde-citadelle-quicknav-title>span{
+  color:#f2cc80;font:800 .68rem/1.4 system-ui,sans-serif;
+  letter-spacing:.14em;
+}
+html body.sde-citadelle-live .sde-citadelle-quicknav-title>strong{
+  color:#fff7e7;
+  font:650 clamp(1.05rem,1.8vw,1.6rem)/1.2 "Cinzel",Georgia,serif;
+}
+html body.sde-citadelle-live .sde-citadelle-quicknav-items{
+  padding:10px;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:8px!important;
+  align-items:stretch;
+  min-width:0;
+}
+html body.sde-citadelle-live .sde-citadelle-quicknav-items>a{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px;
+  padding:14px 7px!important;
+  border-radius:12px!important;
+  border:1px solid rgba(224,190,119,.35)!important;
+  background:linear-gradient(145deg,#1e3354,#122441)!important;
+  color:#fff7e7!important;
+  text-align:center!important;
+  text-decoration:none!important;
+  min-width:0;min-height:104px;
+  transition:transform .18s,border-color .18s,background .18s;
+}
+html body.sde-citadelle-live .sde-citadelle-quicknav-icon{
+  display:grid;place-items:center;
+  width:34px;height:34px;
+  font:600 1.45rem/1 Georgia,serif;
+  color:#f3ce7e;
+}
+html body.sde-citadelle-live .sde-citadelle-quicknav-items a span:last-child{
+  display:grid;gap:4px;min-width:0;
+}
+html body.sde-citadelle-live .sde-citadelle-quicknav-items strong{
+  font:750 clamp(.77rem,1.06vw,.94rem)/1.25 "Plus Jakarta Sans",system-ui,sans-serif;
+  color:#ffe3a1;
+}
+html body.sde-citadelle-live .sde-citadelle-quicknav-items small{
+  font:500 clamp(.68rem,.92vw,.8rem)/1.3 system-ui,sans-serif;
+  color:#e1e7ee;
+}
+@media(hover:hover) and (pointer:fine){
+  html body.sde-citadelle-live .sde-citadelle-quicknav-items>a:hover{
+    transform:translateY(-3px);
+    border-color:#f2d089!important;
+    background:linear-gradient(145deg,#2e4569,#1a3155)!important;
+  }
+}
+/* Les cinq pôles et les cartes restent des liens vrais, jamais des KPI de démo. */
+html body.sde-citadelle-live .sde-premium-pillars.sde-2027-expressions{
+  background:linear-gradient(180deg,#f8f4eb,#fffdfa)!important;
+}
+html body.sde-citadelle-live .sde-premium-pillars .sde-premium-pillar{
+  border:1px solid #ddc9a5!important;
+  box-shadow:0 9px 24px rgba(11,23,48,.07)!important;
+}
+html body.sde-citadelle-live .sde-premium-pillars .sde-premium-pillar:nth-child(2){
+  border-top:4px solid #c5a05b!important;
+}
+html body.sde-citadelle-live .sde-premium-pillars .sde-premium-pillar:first-child{
+  border-top:4px solid #8a65ac!important;
+}
+html body.sde-citadelle-live .sde-premium-pillars .sde-premium-pillar:last-child{
+  border-top:4px solid #49856b!important;
+}
+/* Academy publique : remplacer visuellement le simple bloc de préinscription
+   par un campus institutionnel à trois cartes et un héros illustré. */
+html body.sde-v5-academy-public .sa-premium-preview{
+  border-radius:23px!important;
+  background:linear-gradient(180deg,#101e36,#122642)!important;
+  box-shadow:0 22px 56px rgba(5,14,31,.22)!important;
+}
+html body.sde-v5-academy-public .sa-premium-preview .sa-premium-head{
+  position:relative;
+  overflow:hidden;
+  padding:clamp(28px,5vw,55px)!important;
+  min-height:310px;
+  isolation:isolate;
+  background:
+   linear-gradient(90deg,rgba(9,20,40,.97) 0%,rgba(13,25,49,.87) 58%,rgba(10,18,36,.15) 100%),
+   url("/vitrine/illus/livre-academy.webp") right 35% center/auto 94% no-repeat,
+   linear-gradient(120deg,#142b50,#221637)!important;
+}
+html body.sde-v5-academy-public .sa-premium-head :is(h1,.sa-premium-eyebrow,p){
+  position:relative;z-index:1;max-width:700px;
+}
+html body.sde-v5-academy-public .sa-premium-head h1{
+  font:700 clamp(2.45rem,5.4vw,4.8rem)/1.08 "Cinzel",Georgia,serif!important;
+  letter-spacing:.015em!important;
+  color:#f3d28d!important;
+  -webkit-text-fill-color:#f3d28d!important;
+  text-wrap:balance;
+  text-transform:uppercase;
+}
+html body.sde-v5-academy-public .sa-premium-head .sa-premium-eyebrow{
+  color:#f5d590!important;-webkit-text-fill-color:#f5d590!important;
+  letter-spacing:.14em;font-size:.82rem;
+}
+html body.sde-v5-academy-public .sa-premium-head p{
+  color:#f6f0e8!important;-webkit-text-fill-color:#f6f0e8!important;
+  font-size:clamp(.98rem,1.5vw,1.15rem)!important;
+}
+html body.sde-v5-academy-public .sa-premium-main-action{
+  position:relative;z-index:1;
+  border-radius:11px!important;
+  min-height:48px!important;
+  color:#0d203e!important;
+  background:linear-gradient(135deg,#fbe8ae,#dfb75b)!important;
+}
+html body.sde-v5-academy-public .sa-premium-grid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:12px!important;
+  padding:16px!important;
+  background:#f5efe4;
+}
+html body.sde-v5-academy-public .sa-premium-grid .sa-premium-card{
+  background:#fffdfa!important;
+  color:#172944!important;
+  border:1px solid #dfd3c2!important;
+  border-radius:14px!important;
+  box-shadow:0 8px 20px rgba(12,22,43,.08)!important;
+}
+html body.sde-v5-academy-public .sa-premium-grid .sa-premium-card :is(summary,strong,p,a,span){
+  color:#182b48!important;-webkit-text-fill-color:currentColor!important;
+}
+html body.sde-v5-academy-public .sa-premium-grid .sa-premium-card summary{
+  min-height:68px!important;
+}
+/* Membre connecté : bannière vraiment nouvelle, liée aux modules existants. */
+body.sde-reference .soldier-space .sv-hello{
+  position:relative;
+  overflow:hidden;
+  padding:clamp(18px,3vw,30px)!important;
+  border-radius:22px!important;
+  border:1px solid rgba(226,194,106,.51)!important;
+  background:
+   linear-gradient(110deg,rgba(10,24,48,.96),rgba(26,33,70,.90)),
+   url("/vitrine/photos/hero-sde-1280.webp") center/cover no-repeat!important;
+  box-shadow:0 15px 33px rgba(9,15,34,.18);
+  color:#fff7ea!important;
+}
+body.sde-reference .soldier-space .sv-hello :is(h1,p){
+  color:#fff7ea!important;-webkit-text-fill-color:#fff7ea!important;
+}
+body.sde-reference .soldier-space .sv-hello h1{
+  font:700 clamp(2rem,3.4vw,3.6rem)/1.08 "Cinzel",Georgia,serif!important;
+}
+body.sde-reference .sde-citadelle-member-cover{
+  display:flex;
+  gap:16px;
+  justify-content:space-between;
+  align-items:flex-end;
+  flex-wrap:wrap;
+  border-top:1px solid rgba(238,205,143,.42);
+  padding-top:17px;
+  margin-top:18px;
+}
+body.sde-reference .sde-citadelle-member-cover-copy{display:grid;gap:6px;max-width:600px}
+body.sde-reference .sde-citadelle-member-cover-copy>span{
+  color:#f4d593;font:800 .73rem/1.5 system-ui,sans-serif;letter-spacing:.1em;
+}
+body.sde-reference .sde-citadelle-member-cover-copy>strong{
+  color:#fffaf1;font:650 clamp(1.02rem,1.6vw,1.35rem)/1.35 "Cinzel",Georgia,serif;
+}
+body.sde-reference .sde-citadelle-member-cover-copy>small{
+  color:#eacb9c;font-size:.85rem;
+}
+body.sde-reference .sde-citadelle-member-cover-actions{display:flex;gap:9px;flex-wrap:wrap}
+body.sde-reference .sde-citadelle-member-cover-actions button{
+  display:flex;align-items:center;gap:7px;
+  border-radius:11px;
+  padding:11px 14px;
+  min-height:46px;
+  background:linear-gradient(130deg,#f5d68c,#d7ac58);
+  color:#0b1730;
+  border:1px solid #ffe0a2;
+  font-weight:800;
+  cursor:pointer;
+}
+body.sde-reference .sde-citadelle-member-cover-actions button+button{
+  background:#1a3155;color:#f8e7bd;
+}
+body.sde-reference .sde-citadelle-member-cover-actions svg{
+  width:20px;height:20px;
+}
+/* Poste de commandement : architecture sombre + panneau d'accès rapide. */
+body.sde-reference-admin .ref-command.sde-command-center .sv-hello-admin{
+  border:1px solid rgba(245,213,150,.5)!important;
+  border-radius:21px!important;
+  padding:clamp(23px,3.1vw,35px)!important;
+  background:
+    radial-gradient(ellipse at 86% 45%,rgba(192,132,73,.25),transparent 52%),
+    linear-gradient(130deg,#091a31,#192b4a 70%,#2b2140)!important;
+  box-shadow:0 16px 42px rgba(1,10,24,.22);
+}
+body.sde-reference-admin .ref-command.sde-command-center .sv-hello-admin h1{
+  color:#ffe1a0!important;-webkit-text-fill-color:#ffe1a0!important;
+  font:700 clamp(2rem,3.6vw,3.7rem)/1.05 "Cinzel",Georgia,serif!important;
+}
+body.sde-reference-admin .sde-citadelle-command-vision{
+  color:#f7d388!important;-webkit-text-fill-color:#f7d388!important;
+  font-weight:750;
+  font-size:.8rem;
+  letter-spacing:.1em;
+  margin:10px 0!important;
+}
+body.sde-reference-admin .sde-citadelle-command-launch{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:11px;
+  margin:15px 0 17px;
+}
+body.sde-reference-admin .sde-citadelle-command-launch button{
+  border:1px solid rgba(218,181,105,.53);
+  border-radius:15px;
+  min-height:102px;
+  display:flex;align-items:center;gap:13px;
+  padding:15px;
+  text-align:left;
+  cursor:pointer;
+  background:linear-gradient(135deg,#132847,#1f3153);
+  color:#f5f3e8;
+  box-shadow:0 10px 20px rgba(7,15,31,.15);
+  transition:transform .18s,border-color .18s;
+}
+body.sde-reference-admin .sde-citadelle-command-launch button:nth-child(2){
+  background:linear-gradient(135deg,#292148,#402459);
+}
+body.sde-reference-admin .sde-citadelle-command-launch button:nth-child(3){
+  background:linear-gradient(135deg,#173b3b,#254a43);
+}
+body.sde-reference-admin .sde-citadelle-command-launch button:last-child:nth-child(4){
+  background:linear-gradient(135deg,#4a3522,#6b482c);
+}
+body.sde-reference-admin .sde-citadelle-command-launch svg{
+  width:31px;height:31px;flex:none;color:#f4d58a;
+}
+body.sde-reference-admin .sde-citadelle-command-launch button span{
+  display:grid;gap:4px;min-width:0;
+}
+body.sde-reference-admin .sde-citadelle-command-launch button strong{
+  color:#fff3d0;font-size:clamp(.82rem,1.2vw,1rem);line-height:1.25;
+}
+body.sde-reference-admin .sde-citadelle-command-launch button small{
+  color:#e9e5dd;font-size:.75rem;line-height:1.35;
+}
+@media(hover:hover) and (pointer:fine){
+  body.sde-reference-admin .sde-citadelle-command-launch button:hover{
+    transform:translateY(-3px);
+    border-color:#f8d993;
+  }
+}
+@media(max-width:1099px){
+  html body.sde-citadelle-live .sde-citadelle-quicknav-inner{
+    grid-template-columns:1fr;
+  }
+  html body.sde-citadelle-live .sde-citadelle-quicknav-title{
+    padding:13px 20px;
+    border-right:0;
+    border-bottom:1px solid rgba(237,201,117,.3);
+  }
+  body.sde-reference-admin .sde-citadelle-command-launch{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:699px){
+  html body.sde-citadelle-live .ap-hero .sde-vision-wordmark{
+    font-size:clamp(2rem,7.5vw,3.35rem)!important;
+    line-height:1.02!important;
+    margin:5px auto!important;
+  }
+  html body.sde-citadelle-live .ap-hero h1#titre-accueil{
+    font-size:clamp(1.05rem,4.3vw,1.48rem)!important;
+  }
+  html body.sde-citadelle-live .ap-hero .sde-citadelle-foundation{
+    font-size:.69rem!important;padding:6px 10px!important;
+  }
+  html body.sde-citadelle-live .sde-citadelle-quicknav{
+    padding:0 12px 16px!important;
+  }
+  html body.sde-citadelle-live .sde-citadelle-quicknav-inner{
+    margin:-3px auto 0;
+    border-radius:16px;
+  }
+  html body.sde-citadelle-live .sde-citadelle-quicknav-items{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  html body.sde-citadelle-live .sde-citadelle-quicknav-items>a{
+    min-height:95px;
+    padding:11px 6px!important;
+  }
+  html body.sde-v5-academy-public .sa-premium-preview .sa-premium-head{
+    min-height:0;
+    padding:24px 18px!important;
+    background:
+      linear-gradient(90deg,rgba(9,20,40,.92),rgba(12,22,43,.88)),
+      url("/vitrine/illus/livre-academy.webp") center/cover no-repeat!important;
+  }
+  html body.sde-v5-academy-public .sa-premium-head h1{
+    font-size:clamp(2rem,10vw,3.4rem)!important;
+  }
+  html body.sde-v5-academy-public .sa-premium-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+    padding:9px!important;
+  }
+  body.sde-reference .soldier-space .sv-hello{
+    padding:19px 14px!important;
+    border-radius:15px!important;
+  }
+  body.sde-reference .sde-citadelle-member-cover-actions{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.sde-reference .sde-citadelle-member-cover-actions button{padding:10px;justify-content:center;font-size:.82rem}
+  body.sde-reference .sde-citadelle-member-cover-actions svg{width:17px;height:17px}
+  body.sde-reference-admin .sde-citadelle-command-launch{gap:7px}
+  body.sde-reference-admin .sde-citadelle-command-launch button{
+    min-height:97px;padding:11px 8px;gap:6px;flex-direction:column;
+    align-items:flex-start;
+  }
+  body.sde-reference-admin .sde-citadelle-command-launch svg{width:24px;height:24px}
+  body.sde-reference-admin .sde-citadelle-command-launch button strong{font-size:.77rem}
+  body.sde-reference-admin .sde-citadelle-command-launch button small{font-size:.68rem}
+}
+@media(prefers-reduced-motion:reduce){
+  html body.sde-citadelle-live .sde-citadelle-quicknav-items>a,
+  body.sde-reference-admin .sde-citadelle-command-launch button{
+    transition:none!important;transform:none!important;
+  }
+}
+
+/* Identité de connexion : témoin visuel sans modification de l'authentification. */
+body.sde-reference-login .sde-citadelle-login-badge{
+  position:relative;z-index:3;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:4px 10px;
+  align-items:center;
+  margin:0 0 14px;
+  padding:10px 12px;
+  border:1px solid rgba(235,200,124,.54);
+  border-radius:13px;
+  background:rgba(12,26,48,.93);
+  box-shadow:0 8px 22px rgba(0,0,0,.15);
+  color:#ffe1a3;
+  text-align:center;
+}
+body.sde-reference-login .sde-citadelle-login-badge strong{
+  font:700 .84rem/1.3 "Cinzel",Georgia,serif;
+  letter-spacing:.065em;
+  color:#ffe3a6;
+}
+body.sde-reference-login .sde-citadelle-login-badge span{
+  color:#e7e9f1;
+  font:.74rem/1.4 system-ui,sans-serif;
+}
