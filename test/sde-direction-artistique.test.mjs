@@ -104,3 +104,20 @@ test("Préférence de mouvement réduit : affichage statique au chargement",()=>
   assert.equal(band.querySelector("q").textContent,before);
  }finally{dom.window.close();}
 });
+
+test("2+3 : la composition réellement servie remplace la domination de l'ancienne Citadelle",()=>{
+ const html=read("public/vitrine/portail.html");
+ const last=read("public/vitrine/sde-hybride-integral-2027.css");
+ const shell=read("public/vitrine/sde-shell-public.css");
+ const doc=new JSDOM(html).window.document;
+ assert.ok(doc.querySelector(".ap-hero .sde23-arrival"),"arrivée Abidjan visible dans le vrai hero");
+ assert.equal(doc.querySelectorAll(".ap-hero .sde23-actions>a").length,4);
+ assert.match(last,/COMPOSITION CANONIQUE/);
+ assert.match(last,/\.ap-hero \.sde-vision-wordmark\{[\s\S]*?font:750 clamp\(\.85rem/);
+ assert.match(last,/\.ap-hero h1#titre-accueil\{[\s\S]*?clamp\(4rem,6\.2vw,7\.1rem\)/);
+ assert.match(last,/grid-template-columns:minmax\(0,1\.2fr\) minmax\(290px,\.7fr\)/);
+ assert.match(last,/url\("\/vitrine\/photos\/hero-sde-640\.webp"\)/);
+ assert.match(last,/prefers-reduced-motion:reduce/);
+ assert.match(shell,/body\.sde-unifie\[data-sde-page="programmes"\] \.infire-takeover/);
+ assert.match(shell,/body\.sde-shell-mounted \.hub-hero/);
+});
