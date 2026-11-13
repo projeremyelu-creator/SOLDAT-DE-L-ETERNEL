@@ -198,3 +198,49 @@ test("Citadelle mobile · vraie image WebP compressée, pas l'image PC",()=>{
  assert.ok(mobile.length<48000,"image de couverture mobile <48 Ko");
  assert.ok(mobile.length<desktop.length,"la version mobile reste plus légère que le bureau");
 });
+
+
+test("Doctrine SDE 2027 · six axes exacts dans leur ordre officiel",()=>{
+ const doc=new JSDOM(read("public/vitrine/mouvement.html")).window.document;
+ const labels=[...doc.querySelectorAll('#axes ol.six-axes > li h3')].map(x=>x.textContent.trim());
+ const descriptions=[...doc.querySelectorAll('#axes ol.six-axes > li p')].map(x=>x.textContent.trim());
+ assert.deepEqual(labels,[
+  "Rassembler et Unir","Former","Réveiller","Restaurer","Équiper","Envoyer"
+ ]);
+ assert.deepEqual(descriptions,[
+  "Enraciner dans la Parole","Ranimer la flamme de l'Esprit",
+  "Guérir, relever, rétablir","Armer pour le combat","Partir vers les nations"
+ ]);
+ assert.match(doc.querySelector("#titre-axes").textContent,/Six axes pour former un soldat/);
+ assert.ok(!doc.querySelector(".pg-tabs")?.textContent.includes("Cinq axes"));
+ assert.equal(doc.querySelectorAll('link[href*="sde-recette-captures-20261113.css"]').length,1);
+ const main=read("public/index.html");
+ assert.match(main,/Rassembler et Unir · Former · Réveiller · Restaurer · Équiper · Envoyer/);
+ assert.doesNotMatch(main,/Réveiller · Restaurer · Former · Équiper · Envoyer/);
+});
+
+test("Captures SDE · corrections réelles chargées sur les bons écrans",()=>{
+ const page=read("public/index.html");
+ const css=read("public/vitrine/sde-recette-captures-20261113.css");
+ const position=page.indexOf('/vitrine/sde-recette-captures-20261113.css');
+ const old=page.indexOf('/vitrine/sde-hybride-integral-2027.css');
+ assert.ok(position>old&&old>0,"feuille correctrice chargée APRÈS le thème général");
+ for(const selector of [
+  "#axes ol.six-axes","#axes ol.six-axes > li",
+  ".sde-citadelle-command-launch > button > svg",
+  ".sde-citadelle-command-launch > button > span",
+  "#main .view .list .row .row-t",
+  "#main .view .list .row .row-m",
+  "#main .view .stat-v",
+  "#main .view .card .bar-top",
+  "#main .view .seg button",
+  "#sheet .sheet-b .vy-t"
+ ]){
+  assert.ok(css.includes(selector),"contraste/cadrage absent: "+selector);
+ }
+ assert.match(css,/max-width:700px/);
+ assert.match(css,/max-width:540px/);
+ assert.match(css,/max-width:640px/);
+ assert.match(css,/webkit-text-fill-color:/);
+ assert.match(css,/min-height:44px!important/);
+});

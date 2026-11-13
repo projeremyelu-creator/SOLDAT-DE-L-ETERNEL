@@ -1,0 +1,509 @@
+/* SDE Digital · correctifs issus des captures réelles du 13 novembre 2026
+ * Couverture : doctrine des SIX axes, commandement, veille, finances, prière, annuaire.
+ * Aucun changement des données, habilitations, sessions et calculs serveur. */
+
+:root{--sde-fix-night:#101d36;--sde-fix-night-2:#172946;--sde-fix-ivory:#fff8e9;--sde-fix-muted:#d4e0ee;--sde-fix-gold:#f0d48e}
+
+/* Mouvement : six axes lisibles (l'ancienne feuille imposait du texte ivoire
+ * sur des fonds beige clair, et des animations laissaient les cartes pâles). */
+html body.sde-unifie.sde-subpage #axes ol.six-axes{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:clamp(11px,1.8vw,20px)!important;
+ margin:18px 0 28px!important;
+ padding:0!important;
+ list-style:none!important;
+}
+html body.sde-unifie.sde-subpage #axes ol.six-axes > li{
+ box-sizing:border-box!important;
+ min-width:0!important;
+ min-height:166px!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:center!important;
+ gap:8px!important;
+ padding:22px 14px!important;
+ margin:0!important;
+ position:relative!important;
+ opacity:1!important;
+ visibility:visible!important;
+ transform:none!important;
+ background:linear-gradient(145deg,#fffdf7,#f6ebd9)!important;
+ border:1px solid #cbb57b!important;
+ border-radius:18px!important;
+ box-shadow:0 8px 20px rgba(19,27,52,.09)!important;
+ text-align:center!important;
+}
+html body.sde-unifie.sde-subpage #axes ol.six-axes > li:nth-child(even){
+ background:linear-gradient(145deg,#fffefa,#f3e9e0)!important;
+}
+html body.sde-unifie.sde-subpage #axes ol.six-axes > li svg{
+ flex:0 0 auto!important;
+ width:38px!important;height:38px!important;
+ stroke:#ae8035!important;
+ color:#ae8035!important;
+ opacity:1!important;
+ filter:none!important;
+}
+html body.sde-unifie.sde-subpage #axes ol.six-axes > li :is(h3,p){
+ margin:0!important;
+ opacity:1!important;
+ visibility:visible!important;
+ text-shadow:none!important;
+ color:#29193b!important;
+ -webkit-text-fill-color:#29193b!important;
+ line-height:1.28!important;
+ overflow-wrap:normal!important;
+ word-break:normal!important;
+}
+html body.sde-unifie.sde-subpage #axes ol.six-axes > li h3{
+ font-size:clamp(1.02rem,1.6vw,1.31rem)!important;
+ font-weight:850!important;
+ text-transform:uppercase!important;
+ letter-spacing:.01em!important;
+}
+html body.sde-unifie.sde-subpage #axes ol.six-axes > li p{
+ font-size:clamp(.87rem,1.25vw,1.05rem)!important;
+ font-weight:550!important;
+ line-height:1.45!important;
+ max-width:30ch!important;
+}
+@media(max-width:970px){
+ html body.sde-unifie.sde-subpage #axes ol.six-axes{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ }
+}
+@media(max-width:540px){
+ html body.sde-unifie.sde-subpage #axes ol.six-axes{
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:9px!important;
+ }
+ html body.sde-unifie.sde-subpage #axes ol.six-axes > li{
+  min-height:98px!important;
+  display:grid!important;
+  grid-template-columns:44px minmax(0,1fr)!important;
+  column-gap:13px!important;
+  row-gap:4px!important;
+  text-align:left!important;
+  justify-items:start!important;
+  padding:14px 17px!important;
+ }
+ html body.sde-unifie.sde-subpage #axes ol.six-axes > li svg{
+  grid-row:1/span 2!important;
+  width:36px!important;height:36px!important;
+ }
+ html body.sde-unifie.sde-subpage #axes ol.six-axes > li h3{
+  font-size:1.02rem!important;
+ }
+ html body.sde-unifie.sde-subpage #axes ol.six-axes > li p{
+  font-size:.9rem!important;
+ }
+}
+
+/* Poste de commandement : quatre actions réelles, pas quatre pictogrammes
+ * gigantesques avec titres écrasés. Contrôle iconographique indépendant
+ * de la taille héritée des composants React. */
+html body.sde-reference-admin .sde-citadelle-command-launch{
+ width:100%!important;
+ max-width:100%!important;
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:12px!important;
+}
+html body.sde-reference-admin .sde-citadelle-command-launch > button{
+ box-sizing:border-box!important;
+ width:100%!important;
+ min-width:0!important;
+ max-width:100%!important;
+ min-height:106px!important;
+ height:auto!important;
+ display:flex!important;
+ flex-direction:row!important;
+ align-items:center!important;
+ justify-content:flex-start!important;
+ padding:16px!important;
+ gap:14px!important;
+ overflow:hidden!important;
+ text-align:left!important;
+}
+html body.sde-reference-admin .sde-citadelle-command-launch > button > svg{
+ display:block!important;
+ flex:0 0 42px!important;
+ width:42px!important;
+ height:42px!important;
+ max-width:42px!important;
+ max-height:42px!important;
+ min-width:42px!important;
+ min-height:42px!important;
+ stroke-width:1.7!important;
+ color:#f0d48e!important;
+ opacity:1!important;
+}
+html body.sde-reference-admin .sde-citadelle-command-launch > button > span{
+ display:flex!important;
+ flex:1 1 auto!important;
+ min-width:0!important;
+ width:auto!important;
+ flex-direction:column!important;
+ gap:3px!important;
+ justify-content:center!important;
+ overflow-wrap:break-word!important;
+ word-break:normal!important;
+}
+html body.sde-reference-admin .sde-citadelle-command-launch > button > span > :is(strong,small){
+ display:block!important;
+ max-width:100%!important;
+ width:auto!important;
+ margin:0!important;
+ line-height:1.35!important;
+ white-space:normal!important;
+ overflow-wrap:break-word!important;
+ word-break:normal!important;
+ text-shadow:none!important;
+}
+html body.sde-reference-admin .sde-citadelle-command-launch > button strong{
+ color:#fff2cc!important;
+ -webkit-text-fill-color:#fff2cc!important;
+ font-size:clamp(.93rem,1.7vw,1.13rem)!important;
+ font-weight:800!important;
+}
+html body.sde-reference-admin .sde-citadelle-command-launch > button small{
+ color:#e3e9f2!important;
+ -webkit-text-fill-color:#e3e9f2!important;
+ font-size:clamp(.79rem,1.32vw,.95rem)!important;
+ font-weight:500!important;
+}
+@media(min-width:1150px){
+ html body.sde-reference-admin .sde-citadelle-command-launch{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ }
+ html body.sde-reference-admin .sde-citadelle-command-launch > button{gap:10px!important;padding:13px!important}
+ html body.sde-reference-admin .sde-citadelle-command-launch > button > svg{
+  width:32px!important;height:32px!important;
+  min-width:32px!important;min-height:32px!important;flex-basis:32px!important;
+ }
+}
+@media(max-width:700px){
+ html body.sde-reference-admin .sde-citadelle-command-launch{
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:9px!important;
+ }
+ html body.sde-reference-admin .sde-citadelle-command-launch > button{
+  min-height:86px!important;
+  padding:12px 15px!important;
+ }
+ html body.sde-reference-admin .sde-citadelle-command-launch > button > svg{
+  width:34px!important;height:34px!important;
+  min-width:34px!important;min-height:34px!important;flex-basis:34px!important;
+ }
+}
+
+/* Portail privé : contrastes explicites sur les blocs sombres, y compris
+ * annuaire de garnison, demandes de prière et journal de caisse.
+ * La couleur héritée --ink était sombre sur des surfaces bleu nuit. */
+html body.sde-direct #main .view :is(.card,.stat){
+ background:var(--sde-fix-night)!important;
+ color:var(--sde-fix-ivory)!important;
+ border-color:#596c8d!important;
+}
+html body.sde-direct #main .view :is(.card,.stat) :is(.card-t,.stat-l,.h3,.row-t,.bar-top,.kv-l,.kvl,.mnav-l,.day-h){
+ color:var(--sde-fix-ivory)!important;
+ -webkit-text-fill-color:var(--sde-fix-ivory)!important;
+ opacity:1!important;
+ text-shadow:none!important;
+}
+html body.sde-direct #main .view :is(.card,.stat) :is(.hint,.row-m,.card-f,small,.muted){
+ color:var(--sde-fix-muted)!important;
+ -webkit-text-fill-color:var(--sde-fix-muted)!important;
+ opacity:1!important;
+}
+html body.sde-direct #main .view .stat-v{
+ color:var(--sde-fix-gold)!important;
+ -webkit-text-fill-color:var(--sde-fix-gold)!important;
+ opacity:1!important;
+ font-variant-numeric:tabular-nums!important;
+}
+html body.sde-direct #main .view .list :is(.row,button.row,.row.nolead){
+ color:var(--sde-fix-ivory)!important;
+ border-color:#506380!important;
+ min-width:0!important;
+}
+html body.sde-direct #main .view .list .row .row-t{
+ color:#fff5dc!important;
+ -webkit-text-fill-color:#fff5dc!important;
+ opacity:1!important;
+ line-height:1.3!important;
+ font-weight:800!important;
+ word-break:normal!important;
+}
+html body.sde-direct #main .view .list .row .row-m{
+ color:#d6e1ef!important;
+ -webkit-text-fill-color:#d6e1ef!important;
+ opacity:1!important;
+ line-height:1.48!important;
+}
+html body.sde-direct #main .view .list .row .row-r{
+ min-width:0!important;
+}
+html body.sde-direct #main .view .list .row .amt,
+html body.sde-direct #main .view .kv-l .num,
+html body.sde-direct #main .view .bar-top b{
+ color:#96cbff!important;
+ -webkit-text-fill-color:#96cbff!important;
+ opacity:1!important;
+ font-weight:850!important;
+}
+html body.sde-direct #main .view :is(.card,.stat) .card-h{
+ min-width:0!important;
+}
+html body.sde-direct #main .view .card .card-t{
+ font-size:clamp(.95rem,2.6vw,1.16rem)!important;
+ line-height:1.3!important;
+ overflow-wrap:break-word!important;
+}
+html body.sde-direct #main .view .card .bar-top,
+html body.sde-direct #main .view .card .kv-l{
+ display:flex!important;
+ justify-content:space-between!important;
+ flex-wrap:wrap!important;
+ gap:8px!important;
+}
+html body.sde-direct #main .view .card .bar-top span,
+html body.sde-direct #main .view .card .kv-l > span{
+ min-width:0!important;
+}
+html body.sde-direct #main .view .mnav{
+ background:#142440!important;
+ border:1px solid #7d8da4!important;
+ color:#fff8ea!important;
+}
+html body.sde-direct #main .view .mnav :is(.mnav-l,.icon-btn){
+ color:#fff8ea!important;
+ -webkit-text-fill-color:#fff8ea!important;
+ opacity:1!important;
+}
+html body.sde-direct #main .view .seg{
+ background:#15243f!important;
+ border-color:#697792!important;
+}
+html body.sde-direct #main .view .seg button{
+ color:#eef2f9!important;
+ -webkit-text-fill-color:#eef2f9!important;
+ opacity:1!important;
+ min-height:45px!important;
+ white-space:normal!important;
+ line-height:1.35!important;
+}
+html body.sde-direct #main .view .seg button.on{
+ color:#fff9ea!important;
+ -webkit-text-fill-color:#fff9ea!important;
+ background:#82304a!important;
+}
+html body.sde-direct #main .view :is(.card,.stat) svg text{
+ fill:#f3ecd9!important;
+ opacity:1!important;
+}
+html body.sde-direct #main .view .bar{
+ background:#2a3955!important;
+}
+
+/* Veille pastorale : badges, libellés et calcul automatique demeurent
+ * distincts. Les validations ou modifications ne changent pas. */
+html body.sde-direct #sheet .sheet-b :is(.vy-t,button.vy-t.edit){
+ background:#12213c!important;
+ border-color:#647c9d!important;
+ color:#f6f3ea!important;
+ min-width:0!important;
+}
+html body.sde-direct #sheet .sheet-b .vy-t :is(.vy-l,.vy-v,.vy-d){
+ color:#f7f2e8!important;
+ -webkit-text-fill-color:#f7f2e8!important;
+ opacity:1!important;
+ line-height:1.4!important;
+}
+html body.sde-direct #sheet .sheet-b .vy-t .vy-d{
+ color:#d7e2f1!important;
+ -webkit-text-fill-color:#d7e2f1!important;
+}
+html body.sde-direct #sheet .sheet-b .vy-t .vy-e{
+ color:#f1d58d!important;opacity:1!important;
+}
+html body.sde-direct #sheet .sheet-b .vy-f{
+ color:#f2ead8!important;
+ -webkit-text-fill-color:#f2ead8!important;
+ background:#344560!important;
+}
+@media(max-width:640px){
+ html body.sde-direct #main .view .list .row{
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px!important;
+ }
+ html body.sde-direct #main .view .list .row:not(.nolead):has(> .avatar){
+  grid-template-columns:auto minmax(0,1fr) auto;
+ }
+ html body.sde-direct #main .view .list .row-r :is(.btn,a){
+  min-width:44px!important;min-height:44px!important;
+ }
+ html body.sde-direct #main .view .g3{
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:11px!important;
+ }
+ html body.sde-direct #main .view :is(.stats,.grid){
+  min-width:0!important;
+ }
+ html body.sde-direct #main .view .card{
+  padding:15px!important;
+  overflow-wrap:break-word!important;
+ }
+ html body.sde-direct #sheet .sheet-b .vy-grid{
+  grid-template-columns:minmax(0,1fr)!important;
+ }
+ html body.sde-direct #main .view .mnav-l{
+  min-width:0!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-unifie.sde-subpage #axes ol.six-axes > li,
+ html body.sde-reference-admin .sde-citadelle-command-launch > button{
+  transition:none!important;animation:none!important;transform:none!important;
+ }
+}
+
+
+/* Chambre Haute : le radar SVG et la liste n'avaient pas de couleurs
+ * lisibles explicitement définies sur le thème bleu nuit. */
+html body.sde-direct #main .view .card.rd-card .rd-wrap{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr)!important;
+ gap:16px!important;
+ justify-items:center!important;
+ align-items:start!important;
+ min-width:0!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-svg{
+ display:block!important;
+ width:min(100%,340px)!important;
+ height:auto!important;
+ margin:auto!important;
+ overflow:visible!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-ring{
+ fill:none!important;stroke:#5b779e!important;stroke-width:.8!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-axe{
+ stroke:#83a1c4!important;stroke-width:.8!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-zone{
+ fill:rgba(234,194,100,.24)!important;
+ stroke:#f1d284!important;
+ stroke-width:1.8!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-lab{
+ fill:#f3ebdc!important;
+ color:#f3ebdc!important;
+ font-size:8px!important;
+ stroke:none!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-list{
+ box-sizing:border-box!important;
+ width:100%!important;
+ padding:0!important;
+ margin:0!important;
+ list-style:none!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-list li{
+ display:flex!important;
+ justify-content:space-between!important;
+ align-items:baseline!important;
+ gap:12px!important;
+ min-width:0!important;
+ padding:10px 2px!important;
+ border-bottom:1px solid #536887!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-list li span{
+ color:#f1f2f8!important;
+ -webkit-text-fill-color:#f1f2f8!important;
+ opacity:1!important;
+ font-size:.92rem!important;
+ line-height:1.4!important;
+ overflow-wrap:break-word!important;
+}
+html body.sde-direct #main .view .card.rd-card .rd-list li strong{
+ color:#f0d48e!important;
+ -webkit-text-fill-color:#f0d48e!important;
+ opacity:1!important;
+ font-variant-numeric:tabular-nums!important;
+}
+html body.sde-direct #main .view .pr-row{
+ box-sizing:border-box!important;
+ background:#111e38!important;
+ border-color:#647899!important;
+ border-radius:12px!important;
+ padding:12px!important;
+ margin:8px 0!important;
+ min-width:0!important;
+}
+html body.sde-direct #main .view .pr-row .pr-main{
+ color:#f6f3e9!important;
+ text-align:left!important;
+ min-width:0!important;
+}
+html body.sde-direct #main .view .pr-row .row-t{
+ color:#f5e1a1!important;
+ -webkit-text-fill-color:#f5e1a1!important;
+ opacity:1!important;
+ line-height:1.38!important;
+}
+html body.sde-direct #main .view .pr-row .row-m{
+ color:#d4dfef!important;
+ -webkit-text-fill-color:#d4dfef!important;
+ opacity:1!important;
+ line-height:1.5!important;
+}
+html body.sde-direct #main .view .pr-row .row-q{
+ color:#f1eee8!important;
+ -webkit-text-fill-color:#f1eee8!important;
+}
+html body.sde-direct #main .view .subtabs button{
+ color:#f2ecdd!important;
+ -webkit-text-fill-color:#f2ecdd!important;
+ opacity:1!important;
+}
+html body.sde-direct #main .view .subtabs button.on{
+ color:#fff7e4!important;
+ -webkit-text-fill-color:#fff7e4!important;
+}
+html body.sde-direct #sheet .sheet-b .voyants{
+ background:#223551!important;
+ border:1px solid #667e9f!important;
+ color:#f7f0e1!important;
+}
+html body.sde-direct #sheet .sheet-b .voyants :is(.vy-k,.vy-g,.vy-d){
+ color:#f7f0e1!important;
+ -webkit-text-fill-color:#f7f0e1!important;
+ opacity:1!important;
+}
+html body.sde-direct #sheet .sheet-b .voyants .vy-f{
+ color:#f1dfad!important;
+ -webkit-text-fill-color:#f1dfad!important;
+ background:#314766!important;
+}
+@media(max-width:650px){
+ html body.sde-direct #main .view .card.rd-card .rd-svg{
+  max-width:275px!important;
+ }
+ /* Les catégories détaillées restent sous le graphique : on masque
+  * uniquement les abréviations SVG chevauchantes à petit écran. */
+ html body.sde-direct #main .view .card.rd-card .rd-svg .rd-lab{
+  display:none!important;
+ }
+ html body.sde-direct #main .view .pr-row{
+  grid-template-columns:minmax(0,1fr)!important;
+ }
+ html body.sde-direct #main .view .pr-row .pr-side{
+  justify-self:start!important;
+  display:flex!important;
+  flex-wrap:wrap!important;
+ }
+}
