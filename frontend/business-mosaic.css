@@ -1,6 +1,6 @@
-/* SDE — Reconstruction visuelle Fusion 03 + 04
-   Source: maquettes approuvées, composants React réels (pas de chiffres simulés).
-   Couleurs: violet prophétique / vert Command / or / ivoire.
+/* SDE — Interface native refonte 2 + 3 : cinématique et communauté
+   Source: cahier Work 2+3, données réelles, aucune modification des droits.
+   Couleurs: bleu nuit / ivoire / or / ocre / vert profond.
    Les contrôles d'accès restent sur Cloudflare Worker. */
 :root{
  --sde-fusion-purple:#0D1B38;
@@ -12,6 +12,9 @@
  --sde-fusion-gold-pale:#f4d58c;
  --sde-fusion-cream:#FAF7F0;
  --sde-fusion-radius:20px;
+ --sde23-night:#0D1B38;--sde23-ivory:#FAF7F0;--sde23-gold:#D9A72E;--sde23-earth:#B74624;--sde23-green:#00644F;
+ --sde23-serif:"Cormorant Garamond","DM Serif Display",Georgia,serif;
+ --sde23-sans:"Manrope",Inter,"Atkinson Hyperlegible",system-ui,sans-serif;
 }
 body.sde-reference{
  --sde-fusion-bg:#0D1B38;
@@ -109,8 +112,8 @@ body.sde-reference .ops-panel :is(.ops-table-scroll,.ops-grid){max-width:100%;mi
 body.sde-reference .ops-panel .ops-table-scroll{overflow-x:auto}
 /* Mosaïque : tableau de bord métier réellement connecté */
 .sde-mosaic{--mx-accent:#eac77b;--mx-back:#0D1B38;display:grid;gap:22px;min-width:0}
-.sde-mosaic-member{--mx-back:#25113c}
-.sde-mosaic-command{--mx-back:#123c2e}
+.sde-mosaic-member{--mx-back:#0D1B38}
+.sde-mosaic-command{--mx-back:#00644F}
 .sde-mosaic-intro{
  position:relative;overflow:hidden;isolation:isolate;
  display:grid;grid-template-columns:minmax(0,1.6fr) minmax(170px,.65fr);
@@ -121,7 +124,7 @@ body.sde-reference .ops-panel .ops-table-scroll{overflow-x:auto}
  padding:clamp(22px,4vw,43px);box-shadow:0 22px 48px rgba(3,3,14,.24);
 }
 .sde-mosaic-command .sde-mosaic-intro{
- background:linear-gradient(98deg,rgba(11,47,36,.98),rgba(22,73,55,.95) 61%,rgba(50,18,78,.86)),
+ background:linear-gradient(98deg,rgba(13,27,56,.98),rgba(23,55,96,.96) 61%,rgba(0,100,79,.88)),
  url('/vitrine/photos/hero-sde-1280.webp') center/cover;
 }
 .sde-mosaic-intro:before{
@@ -132,7 +135,7 @@ body.sde-reference .ops-panel .ops-table-scroll{overflow-x:auto}
 .sde-mosaic-intro-copy{position:relative;z-index:1;min-width:0}
 .sde-mosaic-eyebrow{color:#f1cc86;font-size:.73rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase}
 .sde-mosaic-intro h3{
- font:800 clamp(2rem,3.6vw,3.2rem)/1.05 'Saira Condensed',system-ui,sans-serif;
+ font:650 clamp(2rem,3.6vw,3.2rem)/1.05 var(--sde23-serif);
  color:#fff0c1;letter-spacing:-.014em;margin:14px 0;
 }
 .sde-mosaic-intro p:not(.sde-mosaic-eyebrow){
@@ -169,9 +172,9 @@ body.sde-reference .ops-panel .ops-table-scroll{overflow-x:auto}
  padding:18px;border-radius:16px;background:linear-gradient(155deg,#301a4e,#1b1934);
  border:1px solid rgba(226,186,109,.35);
 }
-.sde-mosaic-command .sde-mosaic-stat{background:linear-gradient(145deg,#1b4b38,#1d3433)}
+.sde-mosaic-command .sde-mosaic-stat{background:linear-gradient(145deg,#184d50,#143044)}
 .sde-mosaic-stat span{color:#e7dfef;font-size:.85rem;line-height:1.3;font-weight:700}
-.sde-mosaic-stat strong{font:800 clamp(1.65rem,3vw,2.75rem)/1 'Saira Condensed',system-ui,sans-serif;color:#ffe2a5}
+.sde-mosaic-stat strong{font:700 clamp(1.65rem,3vw,2.75rem)/1 var(--sde23-serif);color:#ffe2a5}
 .sde-mosaic-error{padding:12px 16px;border:1px solid #e3ab91;border-radius:12px;background:#55283c;color:#fff0e8}
 .sde-mosaic-error button{margin-left:10px;color:#ffdcaa;text-decoration:underline}
 .sde-mosaic-explore{
@@ -179,7 +182,7 @@ body.sde-reference .ops-panel .ops-table-scroll{overflow-x:auto}
  border-bottom:1px solid rgba(227,184,104,.35);padding:8px 0 19px;
 }
 .sde-mosaic-explore h3{
- font:800 clamp(1.55rem,2.7vw,2.25rem)/1.1 'Saira Condensed',system-ui,sans-serif;
+ font:650 clamp(1.55rem,2.7vw,2.25rem)/1.1 var(--sde23-serif);
  color:#fff1c3;margin:8px 0 0;
 }
 .sde-mosaic-explore label{display:grid;gap:6px;font-size:.8rem;font-weight:750;color:#f5e8d4;min-width:min(100%,290px)}
@@ -188,10 +191,10 @@ body.sde-reference .ops-panel .ops-table-scroll{overflow-x:auto}
 .sde-mosaic-filters button{
  padding:9px 13px;border:1px solid rgba(222,186,110,.45);
  border-radius:999px;background:rgba(31,25,54,.7);color:#eedeee;
- font-size:.82rem;font-weight:750;min-height:40px;cursor:pointer;
+ font-size:.82rem;font-weight:750;min-height:44px;cursor:pointer;
 }
 .sde-mosaic-filters button[aria-pressed=true]{
- background:#e0b76c;color:#292033;border-color:#f4d895;
+ background:#D9A72E;color:#0D1B38;border-color:#F0D58B;
 }
 .sde-mosaic-grid{
  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
@@ -200,13 +203,13 @@ body.sde-reference .ops-panel .ops-table-scroll{overflow-x:auto}
 .sde-mosaic-module{
  position:relative;display:flex;flex-direction:column;align-items:flex-start;
  min-width:0;min-height:198px;padding:21px;text-align:left;cursor:pointer;
- border-radius:17px;border:1px solid rgba(226,186,111,.28);
- background:linear-gradient(140deg,#291947,#201536 78%);color:#f7eedf;
+ border-radius:17px;border:1px solid rgba(217,167,46,.38);
+ background:linear-gradient(140deg,#173760,#0D1B38 78%);color:#FAF7F0;
  box-shadow:0 10px 30px rgba(6,4,18,.14);
  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
 }
 .sde-mosaic-command .sde-mosaic-module{
- background:linear-gradient(142deg,#1a4033,#1d2c2c 76%);
+ background:linear-gradient(142deg,#18575b,#132D47 76%);
 }
 .sde-mosaic-module:hover{
  transform:translateY(-3px);border-color:#e9c779;
@@ -221,12 +224,12 @@ body.sde-reference .ops-panel .ops-table-scroll{overflow-x:auto}
 .sde-mosaic-icon svg{width:22px;height:22px}
 .sde-mosaic-category{display:block;margin-top:12px;color:#ddbb7a;font-size:.69rem;font-weight:800;text-transform:uppercase;letter-spacing:.13em}
 .sde-mosaic-module strong{
- color:#fff2ce;font-size:1.08rem;line-height:1.2;margin-top:7px;
+ color:#FFF7E9;font-size:1.08rem;line-height:1.2;margin-top:7px;
 }
-.sde-mosaic-description{color:#e6d9e7!important;font-size:.84rem;line-height:1.42;margin-top:7px}
+.sde-mosaic-description{color:#DDE7EB!important;font-size:.84rem;line-height:1.42;margin-top:7px}
 .sde-mosaic-arrow{font-size:.8rem;font-weight:800;color:#efd095!important;margin-top:auto;padding-top:17px}
 .sde-mosaic-empty{background:rgba(244,218,172,.1);border-radius:12px;padding:18px;color:#f7e9d4}
-.sde-mosaic-footnote{font-size:.78rem;color:#d9c8dd;max-width:80ch;line-height:1.5}
+.sde-mosaic-footnote{font-size:.78rem;color:#CCDAE5;max-width:80ch;line-height:1.5}
 @media(max-width:1180px){
  .sde-mosaic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
@@ -283,7 +286,7 @@ body.sde-reference .ops-panel .ops-table-scroll{overflow-x:auto}
  margin:0 0 7px;color:#edc97e;font-size:.68rem;
 }
 .sde-mosaic-insight-heading h4{
- font:800 clamp(1.45rem,2.1vw,1.95rem)/1.13 "Saira Condensed",system-ui,sans-serif;
+ font:650 clamp(1.45rem,2.1vw,1.95rem)/1.13 var(--sde23-serif);
  color:#fff2d3;margin:0;
 }
 .sde-mosaic-insight-heading button{
