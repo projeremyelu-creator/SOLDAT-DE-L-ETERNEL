@@ -1083,3 +1083,43 @@ html body.sde-shell-mounted .sde-shell-header a.sde-shell-portal .sde-shell-port
   filter:saturate(.88) contrast(1.03)!important;
  }
 }
+
+/* Refonte 2 + 3 — dernier calque de l'accueil, après les règles Citadelle.
+   La photographie officielle est conservée ; la composition devient plus
+   chaleureuse et orientée vers les quatre portes d'engagement. */
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .ap-hero-bg{
+ background:
+  linear-gradient(92deg,rgba(13,27,56,.96) 2%,rgba(13,27,56,.72) 52%,rgba(0,100,79,.60) 100%),
+  linear-gradient(180deg,transparent 58%,rgba(13,27,56,.92) 100%),
+  url("/vitrine/photos/hero-sde-1280.webp") center 45%/cover no-repeat!important;
+ filter:saturate(.9) contrast(1.03)!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero h1#titre-accueil{
+ font:650 clamp(2.75rem,5.3vw,5.8rem)/1.04 "Cormorant Garamond","DM Serif Display",Georgia,serif!important;
+ letter-spacing:-.036em!important;text-transform:uppercase!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav{
+ background:#FAF7F0!important;border-bottom-color:rgba(13,27,56,.12)!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-inner{
+ background:#0D1B38!important;border-color:rgba(217,167,46,.46)!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-title{
+ background:linear-gradient(145deg,#0D1B38,#17315c)!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-title>strong{
+ font-family:"Cormorant Garamond","DM Serif Display",Georgia,serif!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-items>a{
+ background:transparent!important;border-color:rgba(250,247,240,.16)!important;
+}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .sde-citadelle-quicknav-items>a:hover{
+ background:rgba(250,247,240,.08)!important;border-color:rgba(217,167,46,.72)!important;
+}
+@media(max-width:860px){
+ html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .ap-hero-bg{
+  background:
+   linear-gradient(180deg,rgba(13,27,56,.82),rgba(13,27,56,.74) 38%,rgba(0,100,79,.88) 100%),
+   url("/vitrine/photos/hero-sde-640.webp") center 38%/cover no-repeat!important;
+ }
+}

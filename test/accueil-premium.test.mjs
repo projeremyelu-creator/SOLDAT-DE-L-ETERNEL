@@ -41,7 +41,7 @@ test('Accueil premium : sections 01 à 08 dans l’ordre demandé',()=>{
 
 test('Accueil premium : en-tête avec logo, menu compact, recherche et connexion',()=>{
  const header=html.slice(html.indexOf('<header class="site-header"'),html.indexOf('</header>'));
- for(const part of ['class="site-brand"','class="site-menu"','href="/rechercher"','class="site-portal-cta"','Connexion<span','class="site-burger"'])assert.ok(header.includes(part),part);
+ for(const part of ['class="site-brand"','class="site-menu"','href="/rechercher"','class="site-portal-cta"','Mon Portail S.D.E<span','class="site-burger"'])assert.ok(header.includes(part),part);
  assert.match(header,/Mon Portail S\.D\.E/);
 });
 

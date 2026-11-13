@@ -94,6 +94,16 @@ test('Bandeau membre SDE : identité cohérente et sans raccourcis administratif
    assert.deepEqual(c.errors,[]);
  }finally{c.close()}
 });
+test('Refonte 2+3 : les deux espaces privés partagent la palette et la hiérarchie SDE sans toucher aux rôles',()=>{
+ const css=readFileSync('frontend/reference.css','utf8');
+ const source=readFileSync('frontend/operations.jsx','utf8');
+ for(const token of ['--sde23-private-night:#0D1B38','--sde23-private-ivory:#FAF7F0','--sde23-private-gold:#D9A72E','--sde23-private-earth:#B74624','--sde23-private-green:#00644F','Cormorant Garamond','Manrope'])assert.ok(css.includes(token),token);
+ assert.match(css,/\.sde23-member-journey/);
+ assert.match(css,/\.sde23-command-journey/);
+ assert.match(source,/sde23-member-journey/);
+ assert.match(source,/sde23-command-journey/);
+ assert.doesNotMatch(source,/mot de passe|password|niveau\s*=/i);
+});
 test('Bandeau responsive SDE : mise en page en flux, contraste, focus et touch targets',()=>{
  const css=readFileSync('frontend/palette-themes.css','utf8');
  const section=css.slice(css.lastIndexOf('En-tête privé SDE — correction'));

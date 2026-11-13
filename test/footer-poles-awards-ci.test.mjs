@@ -3,10 +3,13 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 const read=p=>readFileSync(p,'utf8');
+const normaliserFinsDeLigne=texte=>texte.replace(/\r\n/g,'\n');
 
 test('Le CSS commun reste strictement identique au style de la vitrine après les pôles détaillés',()=>{
   const document=new JSDOM(read('public/vitrine/index.html')).window.document;
-  assert.equal(read('public/vitrine/mpa-base.css'),document.querySelector('style')?.textContent);
+  // JSDOM normalise les fins de ligne de la balise <style>. La comparaison
+  // reste ainsi stricte sur le CSS, quel que soit le système hôte.
+  assert.equal(normaliserFinsDeLigne(read('public/vitrine/mpa-base.css')),normaliserFinsDeLigne(document.querySelector('style')?.textContent));
 });
 
 test('Le fond du pied de page n’hérite plus du sélecteur ID transparent',()=>{

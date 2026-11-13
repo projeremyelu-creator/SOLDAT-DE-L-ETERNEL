@@ -180,7 +180,9 @@ test("MPA: programmation — calendrier futur et archive IN FIRE présents",()=>
 test("MPA: base CSS mutualisée plutôt que dupliquée sur six HTML",()=>{
   const source=new JSDOM(home).window.document;
   const fromHome=source.querySelector("style")?.textContent;
-  assert.equal(read("public/vitrine/mpa-base.css"),fromHome);
+  // Le DOM normalise CRLF en LF dans une balise <style>; comparer le
+  // contenu CSS, indépendamment des fins de ligne de l'hôte de tests.
+  assert.equal(read("public/vitrine/mpa-base.css").replace(/\r\n/g,"\n"),fromHome?.replace(/\r\n/g,"\n"));
   for(const name of Object.keys(pages)){
     const html=read("public/vitrine/"+name+".html");
     assert.ok(html.includes("/vitrine/portail-subpage.css"),name);

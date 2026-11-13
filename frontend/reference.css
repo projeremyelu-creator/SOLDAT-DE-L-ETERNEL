@@ -1722,3 +1722,92 @@ body.sde-reference-admin .sde-command-center .ref-kpis-live .ref-kpi{
   animation:none!important;transition:none!important;scroll-behavior:auto!important;
  }
 }
+
+/* Refonte SDE 2 + 3 — espaces authentifiés : même langage que la vitrine,
+   sans introduire de rôle, donnée, permission ou action supplémentaire. */
+body.sde-reference{
+ --sde23-private-night:#0D1B38;
+ --sde23-private-ivory:#FAF7F0;
+ --sde23-private-gold:#D9A72E;
+ --sde23-private-earth:#B74624;
+ --sde23-private-green:#00644F;
+ --sde23-private-sans:"Manrope",Inter,"Atkinson Hyperlegible",system-ui,sans-serif;
+ --sde23-private-serif:"Cormorant Garamond","DM Serif Display",Georgia,serif;
+}
+body.sde-reference :is(.sde23-member-journey,.sde23-command-journey){
+ font-family:var(--sde23-private-sans);
+}
+body.sde-reference .sde23-member-journey .sv-hello,
+body.sde-reference-admin .sde23-command-journey .sv-hello-admin{
+ position:relative;overflow:hidden;
+ background:
+  radial-gradient(circle at 88% 14%,rgba(217,167,46,.26),transparent 29%),
+  linear-gradient(126deg,var(--sde23-private-night),#173760 55%,var(--sde23-private-green))!important;
+ border:1px solid rgba(217,167,46,.58)!important;
+ border-radius:22px!important;
+ box-shadow:0 20px 48px rgba(13,27,56,.26)!important;
+}
+body.sde-reference :is(.sde23-member-journey,.sde23-command-journey) :is(h1,h2,h3){
+ font-family:var(--sde23-private-serif)!important;
+ font-weight:650!important;
+ letter-spacing:-.025em!important;
+ text-transform:none!important;
+}
+body.sde-reference .sde23-member-journey .sde-citadelle-member-cover{
+ background:rgba(250,247,240,.10)!important;
+ border:1px solid rgba(250,247,240,.22)!important;
+ border-left:4px solid var(--sde23-private-gold)!important;
+}
+body.sde-reference .sde23-member-journey .sde-citadelle-member-cover-copy strong{
+ font-family:var(--sde23-private-serif)!important;
+ font-size:clamp(1.18rem,2.2vw,1.7rem)!important;
+ font-weight:600!important;
+}
+body.sde-reference .sde23-member-journey :is(.sv-card,.sv-tile,.sde-campus-member,.ops-card){
+ border-color:rgba(217,167,46,.30)!important;
+ box-shadow:0 14px 34px rgba(13,27,56,.17)!important;
+}
+body.sde-reference .sde23-member-journey .soldier-card{
+ background:linear-gradient(145deg,var(--sde23-private-night),#1c4267)!important;
+}
+body.sde-reference .sde23-member-journey .sv-tile:nth-child(2){border-top-color:var(--sde23-private-earth)!important}
+body.sde-reference .sde23-member-journey .sv-tile:nth-child(3){border-top-color:#6bbda9!important}
+body.sde-reference .sde23-member-journey :is(button,[data-act]){
+ border-radius:12px!important;
+}
+body.sde-reference .sde23-member-journey :is(.sv-hello button,.sde-campus-member button,.sv-bottom button){
+ background:var(--sde23-private-gold)!important;
+ color:var(--sde23-private-night)!important;
+ border-color:#f4d98e!important;
+}
+body.sde-reference-admin .sde23-command-journey .sde-command-eyebrow{color:#f3d58b!important}
+body.sde-reference-admin .sde23-command-journey .sde-command-capabilities span{
+ border-color:rgba(250,247,240,.25)!important;
+ background:rgba(250,247,240,.10)!important;
+ color:#fff6e6!important;
+}
+body.sde-reference-admin .sde23-command-journey .sde-citadelle-command-launch{
+ background:var(--sde23-private-ivory)!important;
+ border:1px solid rgba(13,27,56,.12)!important;
+ border-radius:18px!important;
+ box-shadow:0 13px 30px rgba(13,27,56,.10)!important;
+}
+body.sde-reference-admin .sde23-command-journey .sde-citadelle-command-launch button{
+ border-radius:13px!important;
+}
+body.sde-reference-admin .sde23-command-journey .sde-citadelle-command-launch button:nth-child(2){border-color:rgba(183,70,36,.35)!important}
+body.sde-reference-admin .sde23-command-journey .sde-citadelle-command-launch button:nth-child(3){border-color:rgba(0,100,79,.42)!important}
+body.sde-reference-admin .sde23-command-journey :is(.ops-card,.ref-command-focus,.ref-command-livebar){
+ border-color:rgba(217,167,46,.32)!important;
+ box-shadow:0 12px 30px rgba(13,27,56,.14)!important;
+}
+body.sde-reference-admin .sde23-command-journey .ref-command-refresh,
+body.sde-reference-admin .sde23-command-journey .ref-small-action{
+ background:var(--sde23-private-gold)!important;
+ color:var(--sde23-private-night)!important;
+ border-color:#f4d98e!important;
+}
+@media(max-width:760px){
+ body.sde-reference :is(.sde23-member-journey,.sde23-command-journey) .sv-hello{border-radius:17px!important}
+ body.sde-reference-admin .sde23-command-journey .sde-citadelle-command-launch{border-radius:14px!important}
+}

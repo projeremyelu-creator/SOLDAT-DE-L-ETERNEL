@@ -1,4 +1,4 @@
-import React,{useEffect,useState,useRef} from 'react';
+import React,{useEffect,useLayoutEffect,useState,useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {createPortal} from 'react-dom';
 import {infireState,tpaState} from './event-clock.js';
@@ -86,7 +86,7 @@ function PrayerWall(){
 function PrivateExperience({portal}){
  const [module,setModule]=useState(()=>new URL(location.href).searchParams.get('module')||'espace');
  const [tools,setTools]=useState(false),[wall,setWall]=useState(false);
- useEffect(()=>{
+ useLayoutEffect(()=>{
   const opening=e=>{if(e.detail?.module==='mur'){e.preventDefault();setWall(true)}else setWall(false)};
   const navigate=e=>{setModule(e.detail.module);setTools(false)};
   document.addEventListener('sde:open',opening);document.addEventListener('sde:navigate',navigate);
@@ -94,7 +94,10 @@ function PrivateExperience({portal}){
   return()=>{document.removeEventListener('sde:open',opening);document.removeEventListener('sde:navigate',navigate)};
  },[portal]);
  useEffect(()=>{document.body.dataset.sdeTools=String(tools);return()=>{delete document.body.dataset.sdeTools}},[tools]);
- const open=name=>{setTools(false);portal.selectionner(name)};
+ // Refermer immédiatement le panneau de prière avant la navigation native :
+ // l'événement de navigation reste la source de vérité, mais l'interface ne
+ // peut jamais laisser le panneau communautaire recouvrir le module choisi.
+ const open=name=>{setTools(false);setWall(false);portal.selectionner(name)};
  const direction=location.pathname==='/administration';
  const nav=direction?[
   ['synthese','Accueil','home'],['membres','Membres','members'],['agenda','Agenda','calendar'],

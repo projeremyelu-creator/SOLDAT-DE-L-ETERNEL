@@ -2,6 +2,15 @@
  * Aucune information privée. Les liens partagent les routes publiques existantes. */
 (() => {
  "use strict";
+ const loadRefonteFonts=()=>{
+  const id="sde-2plus3-fonts";
+  if(document.getElementById(id))return;
+  const link=document.createElement("link");
+  link.id=id;link.rel="stylesheet";
+  link.href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap";
+  document.head.append(link);
+ };
+ loadRefonteFonts();
  const groups=[
   {title:"Le Mouvement",links:[
    ["/mouvement","Notre histoire & vision"],["/gouvernance","Gouvernance & leadership"],

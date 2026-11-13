@@ -1847,6 +1847,144 @@ html body.sde-unifie.sde-campus-public #sde-event-root{
  }
 }
 
+/* -------------------------------------------------------------------------
+   REFONTE SDE 2 + 3 — aube d'Abidjan, chaleur communautaire et action utile.
+   Cette couche ne modifie ni les formulaires, ni les parcours, ni les droits.
+   Elle s'applique aux pages publiques qui partagent la coque SDE. */
+html body.sde-unifie{
+ --sde23-night:#0D1B38;
+ --sde23-ivory:#FAF7F0;
+ --sde23-gold:#D9A72E;
+ --sde23-earth:#B74624;
+ --sde23-green:#00644F;
+ --sde23-ink:#18233b;
+ --sde23-muted:#566278;
+ --sde23-serif:"Cormorant Garamond","DM Serif Display",Georgia,serif;
+ --sde23-sans:"Manrope",Inter,"Atkinson Hyperlegible",system-ui,sans-serif;
+ --sde23-shadow:0 18px 48px rgba(13,27,56,.13);
+ font-family:var(--sde23-sans);
+ background:var(--sde23-ivory)!important;
+ color:var(--sde23-ink);
+}
+html body.sde-unifie main :is(h1,h2){
+ font-family:var(--sde23-serif)!important;
+ font-weight:600!important;
+ letter-spacing:-.025em!important;
+ text-transform:none!important;
+}
+html body.sde-unifie main :is(h3,h4,h5,h6),
+html body.sde-unifie .sde-shell-header,
+html body.sde-unifie .sde-shell-bottom{font-family:var(--sde23-sans)!important}
+html body.sde-unifie .sde-shell-header{
+ background:rgba(13,27,56,.96)!important;
+ border-bottom:1px solid rgba(217,167,46,.42)!important;
+ box-shadow:0 9px 30px rgba(13,27,56,.12);
+}
+html body.sde-unifie .sde-shell-brand-title small,
+html body.sde-unifie .sde-shell-mega-group[open]>summary{color:#f1ce79!important}
+html body.sde-unifie .sde-shell-portal{
+ background:var(--sde23-gold)!important;color:var(--sde23-night)!important;
+ border-color:#f3d58b!important;box-shadow:0 8px 20px rgba(217,167,46,.23)!important;
+}
+html body.sde-unifie.sde-subpage :is(.sde-intro,.pg-hero,.hub-hero){
+ background:
+  linear-gradient(110deg,rgba(13,27,56,.98),rgba(0,100,79,.90)),
+  radial-gradient(circle at 84% 18%,rgba(217,167,46,.3),transparent 32%)!important;
+ border-radius:0 0 28px 28px!important;
+ box-shadow:inset 0 -1px rgba(255,255,255,.18);
+}
+html body.sde-unifie.sde-subpage :is(.sde-intro,.pg-hero,.hub-hero) :is(h1,h2){color:#fffaf1!important}
+html body.sde-unifie.sde-subpage :is(.sde-intro,.pg-hero,.hub-hero) :is(p,.lead,.sde-lead){color:#f5e8cf!important}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-card,.programme,.pg-card,.sde-card,.sde-public-card){
+ background:rgba(255,253,248,.94)!important;
+ border:1px solid rgba(13,27,56,.12)!important;
+ border-radius:18px!important;
+ box-shadow:var(--sde23-shadow)!important;
+}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-card,.programme,.pg-card,.sde-card,.sde-public-card) :is(h3,h4){
+ color:var(--sde23-night)!important;font-family:var(--sde23-serif)!important;font-weight:650!important;
+}
+html body.sde-unifie.sde-subpage :is(.sde-initiative-card,.programme,.pg-card,.sde-card,.sde-public-card) p{color:var(--sde23-muted)!important}
+html body.sde-unifie.sde-subpage :is(.bouton.b-or,.sde-primary,.sde-page-actions a:first-child,.sde-tpa-inscription){
+ background:var(--sde23-gold)!important;color:var(--sde23-night)!important;
+ border-color:#b98816!important;box-shadow:0 9px 20px rgba(217,167,46,.2)!important;
+}
+html body.sde-unifie.sde-subpage :is(.bouton.b-or,.sde-primary,.sde-page-actions a:first-child,.sde-tpa-inscription):hover{background:#efc65c!important}
+
+/* Accueil — cadre cinématique serein, cartes à destination immédiate. */
+html body.sde-citadelle-live .ap-main{background:var(--sde23-ivory)!important}
+html body.sde-citadelle-live .ap-hero .ap-hero-bg{
+ background:
+  linear-gradient(92deg,rgba(13,27,56,.96) 2%,rgba(13,27,56,.72) 52%,rgba(0,100,79,.60) 100%),
+  linear-gradient(180deg,transparent 58%,rgba(13,27,56,.92) 100%),
+  url("/vitrine/photos/hero-sde-1280.webp") center 45%/cover no-repeat!important;
+ filter:saturate(.9) contrast(1.03)!important;
+}
+html body.sde-citadelle-live .ap-hero h1{font-family:var(--sde23-serif)!important;font-weight:650!important;letter-spacing:-.036em!important}
+html body.sde-citadelle-live .ap-hero .ap-eyebrow,
+html body.sde-citadelle-live .ap-hero .sde-citadelle-foundation{font-family:var(--sde23-sans)!important}
+html body.sde-citadelle-live .ap-hero .sde-citadel-verse{border-color:rgba(217,167,46,.72)!important;background:rgba(13,27,56,.72)!important}
+html body.sde-citadelle-live .ap-hero .ap-btn-gold{background:var(--sde23-gold)!important;color:var(--sde23-night)!important}
+html body.sde-citadelle-live .ap-hero .ap-btn-ghost{border-color:#f3d58b!important;background:rgba(250,247,240,.11)!important}
+html body.sde-citadelle-live .sde-tpa-hero-card{
+ border:1px solid rgba(217,167,46,.62)!important;
+ background:linear-gradient(155deg,rgba(13,27,56,.96),rgba(0,100,79,.91))!important;
+ box-shadow:0 26px 60px rgba(1,12,31,.31)!important;
+}
+html body.sde-citadelle-live .sde-citadelle-quicknav{background:var(--sde23-ivory)!important;border-bottom-color:rgba(13,27,56,.12)!important}
+html body.sde-citadelle-live .sde-citadelle-quicknav-inner{background:var(--sde23-night)!important;box-shadow:0 19px 42px rgba(13,27,56,.22)!important}
+html body.sde-citadelle-live .sde-citadelle-quicknav-title{background:linear-gradient(145deg,var(--sde23-night),#17315c)!important}
+html body.sde-citadelle-live .sde-citadelle-quicknav-items>a{background:transparent!important;border-color:rgba(250,247,240,.16)!important}
+html body.sde-citadelle-live .sde-citadelle-quicknav-items>a:nth-child(2) .sde-citadelle-quicknav-icon{color:#f1b5a4!important}
+html body.sde-citadelle-live .sde-citadelle-quicknav-items>a:nth-child(3) .sde-citadelle-quicknav-icon{color:#f3d58b!important}
+html body.sde-citadelle-live .sde-citadelle-quicknav-items>a:nth-child(4) .sde-citadelle-quicknav-icon{color:#88d3bf!important}
+html body.sde-citadelle-live .sde-citadelle-quicknav-items>a:hover{background:rgba(250,247,240,.08)!important;border-color:rgba(217,167,46,.72)!important}
+html body.sde-citadelle-live :is(.sdu-card,.sde-premium-pillar,.ap-panel,.ap-next){border-radius:20px!important;box-shadow:var(--sde23-shadow)!important}
+html body.sde-citadelle-live :is(.ap-head h2,.ap-presentation-tete h2,.sdu-head h2){font-family:var(--sde23-serif)!important;color:var(--sde23-night)!important}
+
+@media(max-width:760px){
+ html body.sde-unifie.sde-subpage :is(.sde-intro,.pg-hero,.hub-hero){border-radius:0 0 20px 20px!important}
+ html body.sde-citadelle-live .ap-hero .ap-hero-bg{background-position:57% 45%!important}
+ html body.sde-citadelle-live .sde-citadelle-quicknav-items>a{min-height:112px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ html body.sde-unifie :is(.sde-citadelle-quicknav-items>a,.programme,.sde-initiative-card){transition:none!important;transform:none!important}
+}
+
+/* Pages publiques autonomes : elles reçoivent la même direction dès que la
+   coque partagée les monte, sans réécrire leurs contenus ni leurs formulaires. */
+html body:has(.sde-hub-head){
+ --sde23-night:#0D1B38;--sde23-ivory:#FAF7F0;--sde23-gold:#D9A72E;
+ --sde23-earth:#B74624;--sde23-green:#00644F;--sde23-ink:#18233b;
+ --sde23-muted:#566278;--sde23-serif:"Cormorant Garamond","DM Serif Display",Georgia,serif;
+ --sde23-sans:"Manrope",Inter,"Atkinson Hyperlegible",system-ui,sans-serif;
+ background:var(--sde23-ivory)!important;color:var(--sde23-ink);font-family:var(--sde23-sans);
+}
+html body:has(.sde-hub-head) .sde-hub-head{
+ background:rgba(13,27,56,.97)!important;border-bottom:1px solid rgba(217,167,46,.46)!important;
+ box-shadow:0 9px 28px rgba(13,27,56,.14);
+}
+html body:has(.sde-hub-head) :is(.hub-hero,.sde-intro){
+ background:linear-gradient(112deg,var(--sde23-night),#173760 54%,var(--sde23-green))!important;
+ border-radius:0 0 26px 26px!important;
+}
+html body:has(.sde-hub-head) :is(.hub-hero,.sde-intro) :is(h1,h2){
+ color:#fffaf1!important;font-family:var(--sde23-serif)!important;font-weight:600!important;
+ text-transform:none!important;letter-spacing:-.025em!important;
+}
+html body:has(.sde-hub-head) :is(.hub-hero,.sde-intro) :is(p,.hub-lead){color:#f5e8cf!important}
+html body:has(.sde-hub-head) :is(.hub-card,.hub-note,.hub-form){
+ background:rgba(255,253,248,.96)!important;border:1px solid rgba(13,27,56,.12)!important;
+ border-radius:18px!important;box-shadow:0 14px 32px rgba(13,27,56,.10)!important;
+}
+html body:has(.sde-hub-head) :is(.hub-card,.hub-note,.hub-form) :is(h2,h3){
+ color:var(--sde23-night)!important;font-family:var(--sde23-serif)!important;font-weight:650!important;
+ text-transform:none!important;
+}
+html body:has(.sde-hub-head) .hub-btn{
+ background:var(--sde23-gold)!important;color:var(--sde23-night)!important;border-color:#b98816!important;
+}
+
 /* Recette navigateur réelle 11-11 : le montage du shell compactait
    l'introduction Programmes de ~58–80 px, créant le CLS 0,309.
    Pré-appliquer la géométrie de l'état final plutôt que déplacer le contenu

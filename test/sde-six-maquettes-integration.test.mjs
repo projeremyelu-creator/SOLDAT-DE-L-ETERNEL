@@ -145,7 +145,7 @@ test("Citadelle v2 · l'accueil possède quatre accès visibles et la devise fon
  const nav=doc.querySelector('.sde-citadelle-quicknav[data-sde-visible-revision="citadelle-2027-v2"]');
  assert.ok(nav);
  assert.deepEqual([...nav.querySelectorAll("a")].map(a=>a.getAttribute("href")),[
-  "/programmes","/mouvement#poles","/academy","/portail"
+  "/mouvement","/contact#rejoindre","/programmes#agenda","/portail"
  ]);
  assert.equal(hero.querySelectorAll(".sde-citadel-actions a").length,2,"deux CTA de couverture préservés");
 });

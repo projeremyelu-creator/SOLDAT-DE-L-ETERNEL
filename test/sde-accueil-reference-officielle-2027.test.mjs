@@ -38,6 +38,28 @@ test("Nouvel accueil : deux actions, texte biblique, film et TPA 2026 vérifiés
  assert.doesNotMatch(hero.textContent,/\b(?:3[,.]7\s?k|visiteurs en ligne)\b/i);
 });
 
+test("Refonte 2+3 : quatre portes d'engagement explicites et la palette SDE restent vérifiables",()=>{
+ const d=page();
+ const acces=[...d.querySelectorAll(".sde-citadelle-quicknav-items a")];
+ assert.deepEqual(acces.map(a=>a.getAttribute("href")),["/mouvement","/contact#rejoindre","/programmes#agenda","/portail"]);
+ assert.deepEqual(acces.map(a=>a.querySelector("strong")?.textContent.trim()),["Découvrir","Rejoindre","Programmes","Portail"]);
+ const refonte=read("public/vitrine/sde-shell-public.css");
+ for(const token of ["--sde23-night:#0D1B38","--sde23-ivory:#FAF7F0","--sde23-gold:#D9A72E","--sde23-earth:#B74624","--sde23-green:#00644F","Cormorant Garamond","Manrope"])
+  assert.ok(refonte.includes(token),token);
+});
+
+test("Refonte 2+3 : les pages autonomes et le dernier calque d'accueil reçoivent la même direction",()=>{
+ const shell=read("public/vitrine/sde-shell-public.css");
+ const finalLayer=read("public/vitrine/sde-hybride-integral-2027.css");
+ const script=read("public/vitrine/sde-shell-public.js");
+ for(const page of ["gouvernance","calendrier","reseau","transparence","soutenir"])
+  assert.ok(read("public/vitrine/"+page+".html").includes("sde-shell-public.css"),page);
+ assert.ok(shell.includes("body:has(.sde-hub-head)"));
+ assert.ok(script.includes("sde-2plus3-fonts"));
+ assert.match(finalLayer,/background:#0D1B38!important/);
+ assert.match(finalLayer,/Cormorant Garamond/);
+});
+
 test("Prier Organiser Agir : trois cartes accessibles et toutes les destinations officielles",()=>{
  const d=page(),p=d.querySelector(".sde-2027-expressions");
  assert.match(p.querySelector("h2").textContent,/Prier\.\s*Organiser\.\s*Agir\./);
