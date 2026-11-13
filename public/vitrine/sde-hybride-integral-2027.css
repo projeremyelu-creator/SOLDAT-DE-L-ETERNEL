@@ -903,3 +903,30 @@ body.sde-reference-admin .sde-citadelle-command-launch button small{
     transition:none!important;transform:none!important;
   }
 }
+
+/* Identité de connexion : témoin visuel sans modification de l'authentification. */
+body.sde-reference-login .sde-citadelle-login-badge{
+  position:relative;z-index:3;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:4px 10px;
+  align-items:center;
+  margin:0 0 14px;
+  padding:10px 12px;
+  border:1px solid rgba(235,200,124,.54);
+  border-radius:13px;
+  background:rgba(12,26,48,.93);
+  box-shadow:0 8px 22px rgba(0,0,0,.15);
+  color:#ffe1a3;
+  text-align:center;
+}
+body.sde-reference-login .sde-citadelle-login-badge strong{
+  font:700 .84rem/1.3 "Cinzel",Georgia,serif;
+  letter-spacing:.065em;
+  color:#ffe3a6;
+}
+body.sde-reference-login .sde-citadelle-login-badge span{
+  color:#e7e9f1;
+  font:.74rem/1.4 system-ui,sans-serif;
+}
