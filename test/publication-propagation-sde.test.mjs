@@ -61,3 +61,24 @@ test('Le pipeline déclenche la recette seulement après les contrôles de publi
  assert.match(yml,/attendre-publication-sde\.mjs/);
  assert.match(yml,/SDE_EXPECTED_REV:/);
 });
+
+test('Recette authentifiée : chaque rôle sur les deux domaines, sans partager la session',()=>{
+ const script=readFileSync('scripts/audit-prive-authentifie.mjs','utf8');
+ assert.match(script,/DOMAINES_PUBLICATION\.flatMap\(base=>accounts\.map\(account=>\(\{\.\.\.account,base\}\)\)\)/);
+ assert.match(script,/for\(const account of sessions\)/);
+ assert.match(script,/const base=account\.base/);
+ assert.match(script,/const context=await browser\.newContext/);
+ assert.match(script,/u\.origin!==base/);
+ assert.match(script,/lectureDeRecetteAutorisee/);
+ assert.match(script,/report\.length!==sessions\.length\*5/);
+ assert.match(script,/domaine:base,role:account\.type/);
+});
+
+test('Pipeline : attendre la publication des deux domaines avant les recettes publiques',()=>{
+ const workflow=readFileSync('.github/workflows/deployer.yml','utf8');
+ const gate=workflow.indexOf('run: node scripts/attendre-publication-sde.mjs');
+ const smoke=workflow.indexOf('run: node scripts/recette-production.mjs');
+ const academy=workflow.indexOf('run: node scripts/recette-academy-production.mjs');
+ assert.ok(gate>0&&smoke>gate&&academy>smoke);
+ assert.match(workflow,/SDE_EXPECTED_REV:\s*\$\{\{ github\.sha \}\}/);
+});
