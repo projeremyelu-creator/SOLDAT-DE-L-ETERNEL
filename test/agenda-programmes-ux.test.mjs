@@ -17,6 +17,7 @@ test('Agenda public : cartes, titres et filtres conservés',()=>{
   assert.equal(cards.length,4);
   assert.deepEqual(cards.map(c=>c.dataset.type),['Rencontre','Prière','Prière','Formation']);
   assert.match(cards[0].textContent,/IN FIRE 2026/);
+  assert.equal(cards[0].hidden,true,"IN FIRE 2026 doit être retiré des prochains rendez-vous après octobre");
   assert.match(cards[1].textContent,/Traversée Prophétique Annuelle/);
   assert.match(cards[2].textContent,/Traversée Prophétique Mensuelle/);
   assert.match(cards[3].textContent,/Soldiers Academy/);

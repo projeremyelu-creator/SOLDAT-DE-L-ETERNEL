@@ -146,6 +146,13 @@
       setTimeout(()=>URL.revokeObjectURL(url),5000);
     });
     const list=$("#agenda-liste");
+    // Dans les prochains rendez-vous, retirer avant tout filtre les événements terminés.
+    // La fiche IN FIRE et ses archives restent accessibles dans la section dédiée.
+    const dateAbidjan=new Date().toISOString().slice(0,10);
+    list?.querySelectorAll("[data-sde-archive-pending]").forEach(card=>{
+      const date=card.dataset.sdeArchivePending||"";
+      if(/^\d{4}-\d{2}-\d{2}$/.test(date)&&date<dateAbidjan)card.remove();
+    });
     const buttons=$("#agenda-filtres");
     // Les types réels de l'agenda (Culte, Conférence, Évangélisation, « Prière et intercession »…)
     // sont regroupés sous les trois filtres affichés.

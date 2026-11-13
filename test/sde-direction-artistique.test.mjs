@@ -8,7 +8,7 @@ const read = path => readFileSync(path,"utf8");
 test("Direction artistique : palette royale et hiérarchie typographique",()=>{
  const css=read("public/vitrine/sde-shell-public.css");
  const home=read("public/vitrine/portail.html");
- for(const color of ["#07080C","#0F111A","#D4AF37","#F3E5AB"])assert.ok(css.includes(color),color);
+ for(const color of ["#0D1B38","#FAF7F0","#D9A72E","#B74624","#00644F"])assert.ok(css.includes(color),color);
  assert.match(css,/\.sde-premium-pillar-top small/);
  assert.match(css,/letter-spacing:\.2em/);
  assert.match(css,/\.ap-verset p/);
