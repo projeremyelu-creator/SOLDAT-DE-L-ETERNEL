@@ -72,9 +72,10 @@ test("les correctifs issus des captures sont réellement chargés sur le portail
     ".sde-citadelle-command-launch > button > svg",
     "grid-template-columns:minmax(0,1fr)!important",
     "flex-basis:34px!important",
-    ".sde-direct #main .view",
     ".sde-direct #main .view"
   ])assert.ok(css.includes(token),"Sélecteur des captures absent : "+token);
   assert.match(css,/@media\(max-width:700px\)/);
   assert.match(css,/@media\(max-width:640px\)/);
+  // Fiche membre : ses ajustements sont dans la feuille spécialisée.
+  assert.match(read("public/vitrine/sde-command-v4.css"), /\.sde-member-profile/);
 });
