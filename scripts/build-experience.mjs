@@ -25,16 +25,18 @@ function versionnerHtml(dossier){
 // Ne jamais retirer le JS métier, l'authentification, les albums ni les permissions.
 const citadelStylePath = '/vitrine/sde-citadelle-celeste-2027.css';
 const citadelScriptPath = '/vitrine/sde-citadelle-celeste-2027.js';
+const referenceStylePath = '/vitrine/sde-citadelle-reference-v4.css';
 function installerCitadelleFinale(html){
  if (!/<html\b/i.test(html) || !/(<\/head>|<body\b)/i.test(html)) return html;
  html=html.replace(/<link\b[^>]*href=["']\/vitrine\/sde-citadelle-celeste-2027\.css[^"']*["'][^>]*>\s*/gi,'');
  html=html.replace(/<script\b[^>]*src=["']\/vitrine\/sde-citadelle-celeste-2027\.js[^"']*["'][^>]*>\s*<\/script>\s*/gi,'');
- html=html.replace(/<html\b/i,'<html data-sde-citadel-integral="v3"');
+ html=html.replace(/<html\b/i,'<html data-sde-citadel-integral="v4"');
  const links='<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>\n'+
  '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'+
  '<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">\n'+
  '<link rel="stylesheet" href="'+citadelStylePath+'?v='+revision+'">\n'+
- '<script defer src="'+citadelScriptPath+'?v='+revision+'"></script>\n';
+ '<script defer src="'+citadelScriptPath+'?v='+revision+'"></script>\n'+
+ '<link rel="stylesheet" href="'+referenceStylePath+'?v='+revision+'">\n';
  // L'application native utilise un <head> implicite et contient un <\/head> DANS une
  // chaîne JavaScript de sauvegarde hors-ligne. Ne jamais insérer le thème dans
  // cette chaîne : construire un véritable head juste avant le splash initial.

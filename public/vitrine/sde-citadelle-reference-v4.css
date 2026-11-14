@@ -1,0 +1,144 @@
+/* CITADelle CÉLESTE V4 — le dernier langage graphique pour site public et SDE Digital.
+   Source maquettes du 14/11/2026 : bleu nuit, ivoire, or, Citadelle illustrée.
+   Les informations métier restent exclusivement issues des services existants. */
+:root{--cit-navy:#061529;--cit-mid:#0a1c35;--cit-panel:#12253f;--cit-gold:#e3bf72;--cit-ivory:#f7eedf;--cit-line:rgba(234,198,126,.29);--cit-castle:url("/vitrine/illus/citadelle-celeste.svg");--cit-heading:"Cinzel",Georgia,serif;--cit-text:"Plus Jakarta Sans",system-ui,sans-serif}
+html[data-sde-citadel-integral]{color-scheme:dark;background:#061529!important}
+html[data-sde-citadel-integral] body{font-family:var(--cit-text)}
+html[data-sde-citadel-integral] :is(a,button,summary,input,select,textarea):focus-visible{outline:3px solid #ffdf91!important;outline-offset:3px!important}
+html[data-sde-citadel-integral] *,html[data-sde-citadel-integral] *::before,html[data-sde-citadel-integral] *::after{box-sizing:border-box}
+/* Public : logo, menu horizontal direct, verre fumé sur l'image de la Citadelle. */
+html[data-sde-citadel-integral] body.sde-shell-mounted .sde-shell-header{background:rgba(5,17,35,.97)!important;border-bottom:1px solid var(--cit-line)!important;box-shadow:0 5px 20px #030b19!important}
+html[data-sde-citadel-integral] body.sde-shell-mounted .sde-shell-head-inner{min-height:65px!important;max-width:1370px!important;gap:18px!important}
+html[data-sde-citadel-integral] body.sde-shell-mounted .sde-shell-brand-title b{font-family:var(--cit-heading)!important;color:#f4e6c6!important;-webkit-text-fill-color:#f4e6c6!important;font-size:1.32rem!important}
+html[data-sde-citadel-integral] body.sde-shell-mounted .sde-shell-brand-title small{display:none!important}
+html[data-sde-citadel-integral] body.sde-shell-mounted nav.sde-shell-mega{display:flex!important;flex:1!important;gap:clamp(11px,1.7vw,29px)!important;align-items:center!important;justify-content:center!important;min-width:0!important;background:transparent!important;border:0!important}
+html[data-sde-citadel-integral] body.sde-shell-mounted nav.sde-shell-mega>a{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:44px!important;padding:7px 2px!important;font:700 clamp(.73rem,.9vw,.9rem)/1.3 var(--cit-text)!important;text-decoration:none!important;color:#f9eedb!important;-webkit-text-fill-color:#f9eedb!important;white-space:nowrap!important}
+html[data-sde-citadel-integral] body.sde-shell-mounted nav.sde-shell-mega>a:hover,
+html[data-sde-citadel-integral] body.sde-shell-mounted nav.sde-shell-mega>a[aria-current=page]{color:#f8d58b!important;-webkit-text-fill-color:#f8d58b!important}
+html[data-sde-citadel-integral] body.sde-shell-mounted .sde-shell-portal,html[data-sde-citadel-integral] body.sde-shell-mounted .sde-shell-context-cta{display:none!important}
+html[data-sde-citadel-integral] body.sde-shell-mounted .sde-shell-search{min-width:44px!important;min-height:44px!important;color:#f4d797!important}
+/* Hero PC : typographie Cinzel, illustration nocturne, deux CTA et rendez-vous. */
+html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{isolation:isolate!important;min-height:545px!important;padding:45px 22px 152px!important;background:linear-gradient(90deg,rgba(2,13,32,.65),rgba(4,17,40,.23) 60%,rgba(3,10,29,.51)),var(--cit-castle) center 50%/cover no-repeat!important;color:var(--cit-ivory)!important;overflow:hidden!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero::before{display:block!important;content:""!important;position:absolute!important;inset:0!important;background:linear-gradient(180deg,transparent 18%,rgba(5,17,37,.11) 48%,#06172d 100%)!important;z-index:0!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero::after,html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-bg{display:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner{position:relative!important;z-index:2!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(255px,295px)!important;gap:clamp(25px,4vw,66px)!important;align-items:center!important;width:min(100%,1240px)!important;max-width:1240px!important;min-height:320px!important;margin:0 auto!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-copy{text-align:center!important;max-width:780px!important;min-width:0!important;margin:0 auto!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero :is(.ap-eyebrow,.sde-vision-wordmark,.sde-citadelle-foundation,.sde-citadel-verse,.sde-citadel-film){display:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero h1#titre-accueil{font:600 clamp(2.8rem,5vw,5.35rem)/1.05 var(--cit-heading)!important;color:#faebc7!important;-webkit-text-fill-color:#faebc7!important;letter-spacing:.02em!important;text-shadow:0 5px 26px #050f25!important;margin:0 0 12px!important;text-transform:uppercase!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero h1#titre-accueil .sde-citadel-highlight{display:block!important;color:inherit!important;-webkit-text-fill-color:inherit!important;background:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-tagline{font:600 clamp(.75rem,1.2vw,1rem)/1.65 var(--cit-heading)!important;letter-spacing:.08em!important;color:#fff7e8!important;-webkit-text-fill-color:#fff7e8!important;margin:0 0 9px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-devise{font:800 .76rem/1.5 var(--cit-text)!important;letter-spacing:.17em!important;color:#f5d68b!important;-webkit-text-fill-color:#f5d68b!important;margin:0 0 20px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-actions{display:flex!important;justify-content:center!important;gap:14px!important;flex-wrap:wrap!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-actions>.ap-btn{min-height:47px!important;min-width:174px!important;padding:10px 16px!important;margin:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;font:800 .83rem var(--cit-text)!important;border-radius:11px!important;text-decoration:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde23-cta-index{display:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-btn-gold{background:linear-gradient(180deg,#f9db93,#d1a34d)!important;color:#071629!important;-webkit-text-fill-color:#071629!important;border:1px solid #f4d28a!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-btn-ghost{background:rgba(5,15,33,.62)!important;color:#ffedcf!important;-webkit-text-fill-color:#ffedcf!important;border:1px solid #edcd86!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-tpa-hero-card{position:relative!important;inset:auto!important;transform:none!important;width:100%!important;max-width:295px!important;min-height:216px!important;margin:0 auto!important;padding:16px!important;border:1px solid rgba(239,206,137,.65)!important;border-radius:14px!important;background:linear-gradient(152deg,rgba(23,42,73,.89),rgba(6,20,43,.8)),var(--cit-castle) 82% center/cover no-repeat!important;color:#f8ecdb!important;backdrop-filter:blur(15px)!important;box-shadow:0 17px 34px #030a1b90!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-tpa-hero-card :is(h2,p,dd,time){color:#fbf1e3!important;-webkit-text-fill-color:#fbf1e3!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-tpa-hero-card h2{font:800 1.28rem var(--cit-text)!important;margin:8px 0!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-tpa-hero-card .sde-tpa-kicker{font-size:.73rem!important;color:#e7c67d!important;-webkit-text-fill-color:#e7c67d!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-tpa-hero-card :is(.sde-2027-tpa-subtitle,#ap-countdown,.sde-2027-tpa-calendar,.sde-tpa-detail){display:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-tpa-hero-card .sde-shell-event-register{background:linear-gradient(180deg,#f6db92,#caa04a)!important;color:#0a1729!important;-webkit-text-fill-color:#0a1729!important;padding:11px!important;min-height:42px!important;border-radius:10px!important}
+/* Les six axes en barre impériale, pas six cartes historiques. */
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-vision{position:relative!important;z-index:5!important;margin:-118px auto 0!important;padding:0 16px 27px!important;max-width:1210px!important;background:transparent!important;border:0!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-vision>.ap-wrap{background:rgba(8,27,48,.94)!important;border:1px solid rgba(246,220,161,.33)!important;backdrop-filter:blur(16px)!important;padding:8px!important;border-radius:16px!important;box-shadow:0 13px 35px #061128a0!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-vision :is(h2,.sde-citadelle-foundation){display:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axes{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:0!important;padding:0!important;margin:0!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:7px!important;min-height:99px!important;border:0!important;border-right:1px solid rgba(235,206,151,.2)!important;border-radius:0!important;background:transparent!important;padding:10px 5px!important;text-align:center!important;box-shadow:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:last-child{border-right:0!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:before{display:block!important;font:28px/1 Georgia,serif!important;color:#f1c872!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:nth-child(1):before{content:"♛"!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:nth-child(2):before{content:"◎"!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:nth-child(3):before{content:"☀"!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:nth-child(4):before{content:"❧"!important;color:#9adca6!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:nth-child(5):before{content:"♨"!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:nth-child(6):before{content:"♛"!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis strong{font:800 clamp(.68rem,1vw,.86rem)/1.35 var(--cit-text)!important;color:#fff3df!important;-webkit-text-fill-color:#fff3df!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis small{display:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference :is(.sde-citadelle-quicknav,.sde-premium-pillars.sde-2027-expressions,.sde-2027-expressions-inner){background:#081a31!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-premium-pillars-title h2{color:#f4dcaa!important;-webkit-text-fill-color:#f4dcaa!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-premium-pillar{background:#16263e!important;border:1px solid var(--cit-line)!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-premium-pillar .sde-2027-pillar-copy :is(strong,span){color:#fff0da!important;-webkit-text-fill-color:#fff0da!important}
+/* Rubriques publiques : même illustration, sans déplacer les vraies photos d'albums. */
+html[data-sde-citadel-integral] body.sde-subpage :is(.sde-intro,.m-band,.sde-hero,.page-hero,.pg-hero){background-image:linear-gradient(100deg,rgba(4,14,32,.88),rgba(7,21,42,.38)),var(--cit-castle)!important;background-size:cover!important;background-position:center!important}
+@media(max-width:900px){html[data-sde-citadel-integral] body.sde-shell-mounted nav.sde-shell-mega{display:none!important}}
+@media(max-width:760px){
+html[data-sde-citadel-integral] body.sde-shell-mounted .sde-shell-head-inner{min-height:58px!important}
+html[data-sde-citadel-integral] body.sde-shell-mounted .sde-shell-brand-title b{font-size:1.05rem!important}
+html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{min-height:auto!important;padding:26px 13px 25px!important;background-position:65% center!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner{display:flex!important;flex-direction:column!important;gap:13px!important;min-height:0!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero h1#titre-accueil{font-size:clamp(1.8rem,8vw,3rem)!important;margin:4px 0 7px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-tagline{font-size:clamp(.65rem,2.8vw,.83rem)!important;max-width:290px!important;margin:0 auto 7px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-devise{font-size:.64rem!important;margin:0 auto 12px!important;letter-spacing:.11em!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-actions{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:8px!important;width:min(100%,335px)!important;margin:auto!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-actions>.ap-btn{min-height:44px!important;width:100%!important;padding:8px 13px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-tpa-hero-card{max-width:355px!important;min-height:0!important;padding:10px 12px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-tpa-hero-card h2{font-size:1rem!important;margin:4px 0!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-tpa-hero-card :is(.sde-tpa-actions,.sde-tpa-detail){display:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-vision{margin:0 auto!important;padding:0 10px 22px!important;background:#081a31!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axes{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis{min-height:90px!important;border-right:0!important;border-bottom:1px solid var(--cit-line)!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:nth-child(3n+2){border-inline:1px solid var(--cit-line)!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:nth-child(n+4){border-bottom:0!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:before{font-size:23px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis strong{font-size:clamp(.65rem,2.8vw,.77rem)!important}
+}
+/* SDE DIGITAL - le véritable moteur privé reste actif derrière les cartes. */
+html[data-sde-citadel-integral] body.sde-direct{--night:#071527;--ink:#f5eddd;--on-night:#f5eddd;--muted:#cbd5e2;--surface:#14263e;--surface-2:#1c3451;--line:rgba(228,188,109,.3);--gold-mark:#e3bf72;background:#071629!important;color:#f9edda!important;font-family:var(--cit-text)!important}
+html[data-sde-citadel-integral] body.sde-direct :is(.hdr,#sde-direct-top){background:#08172c!important;color:#f8e8ce!important;border-color:var(--cit-line)!important}
+html[data-sde-citadel-integral] body.sde-direct #sde-direct-top .sde-direct-header{min-height:63px!important;gap:14px!important;padding:9px clamp(12px,2.5vw,37px)!important}
+html[data-sde-citadel-integral] body.sde-direct #sde-direct-top .sde-direct-logo{display:inline-flex!important;align-items:center!important;gap:9px!important;color:#f5e5c6!important;-webkit-text-fill-color:#f5e5c6!important;font:600 1.33rem var(--cit-heading)!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-citadel-private-title{font:800 clamp(.77rem,1.25vw,1.12rem) var(--cit-text)!important;color:#f2d287!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html[data-sde-citadel-integral] body.sde-direct #sde-direct-top .sde-direct-intro{background:linear-gradient(95deg,rgba(5,18,36,.91),rgba(7,24,43,.66)),var(--cit-castle) center/cover no-repeat!important;border-block:1px solid var(--cit-line)!important;color:#fff0d5!important}
+html[data-sde-citadel-integral] body.sde-direct #sde-direct-top .sde-direct-title{font-family:var(--cit-heading)!important;color:#f5d79a!important;-webkit-text-fill-color:#f5d79a!important}
+html[data-sde-citadel-integral] body.sde-direct #sde-direct-top .sde-direct-description{color:#e6e5e1!important}
+html[data-sde-citadel-integral] body.sde-direct .shell{background:#07182e!important;max-width:1550px!important}
+html[data-sde-citadel-integral] body.sde-direct :is(.nav#nav,#sde-direct-tabs){background:#0a1b33!important;border-color:var(--cit-line)!important}
+html[data-sde-citadel-integral] body.sde-direct #main.main{min-width:0!important;background:radial-gradient(ellipse at 92% 4%,rgba(227,189,105,.09),transparent 37%),#091a31!important;color:#f8ecdd!important}
+html[data-sde-citadel-integral] body.sde-direct #main :is(.card,.tile,.stat,.panel,.auj,.chiffre,.prio,.direction,.sde-ref-card){background:linear-gradient(155deg,#142b48,#0d2038)!important;color:#f8eddf!important;border:1px solid var(--cit-line)!important;border-radius:15px!important;box-shadow:0 9px 26px rgba(2,9,23,.2)!important}
+html[data-sde-citadel-integral] body.sde-direct #main :is(.card,.tile,.stat,.panel,.auj,.chiffre,.prio,.direction,.sde-ref-card) :is(h2,h3,h4,p,span,small,b,strong){color:inherit!important;-webkit-text-fill-color:currentColor!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sec-title{font-family:var(--cit-heading)!important;color:#f6dda9!important;-webkit-text-fill-color:#f6dda9!important}
+html[data-sde-citadel-integral] body.sde-direct #main :is(.acc-hero,.chiffres){display:none!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-command{display:grid!important;gap:13px!important;margin:0 0 22px!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-headline{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:10px!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-headline h2{font:800 clamp(1.05rem,1.7vw,1.4rem) var(--cit-text)!important;color:#f9e6c2!important;margin:0!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-status{border-radius:99px;padding:8px 11px;background:#163e31;color:#bfe8c9;font-size:.74rem;font-weight:800;border:1px solid #47765f}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-metrics{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-metric{display:flex!important;flex-direction:column!important;gap:6px!important;min-height:103px!important;padding:15px!important;text-align:left!important;cursor:pointer}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-metric:nth-child(4n+1){background:linear-gradient(125deg,#1b4b6d,#112c4a)!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-metric:nth-child(4n+2){background:linear-gradient(125deg,#41444c,#242e3c)!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-metric:nth-child(4n+3){background:linear-gradient(125deg,#1d5445,#10342e)!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-metric:nth-child(4n){background:linear-gradient(125deg,#492b64,#272246)!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-metric b{font:800 1.65rem var(--cit-text)!important;color:#ffeed0!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-metric span{font-size:.81rem!important;color:#ebebe8!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-cards{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:11px!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-card{padding:17px!important;display:flex!important;flex-direction:column!important;gap:8px!important;min-width:0!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-card h3{font:800 .95rem var(--cit-text)!important;color:#f4ddad!important;margin:0!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-card p{font-size:.84rem!important;line-height:1.5!important;margin:0!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-card :is(a,button){display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:10px;background:linear-gradient(130deg,#f1d48b,#b99144)!important;color:#0b1a2f!important;-webkit-text-fill-color:#0b1a2f!important;border:0!important;border-radius:10px;text-decoration:none;font-weight:800;margin-top:auto}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-card--missions{background:linear-gradient(160deg,#1a4b3b,#102c32)!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-card--priere{background:linear-gradient(160deg,#41275b,#1c2442)!important}
+html[data-sde-citadel-integral] body.sde-direct-member #main .esp-hero{display:none!important}
+html[data-sde-citadel-integral] body.sde-direct-member #main .esp-id{background:linear-gradient(100deg,rgba(24,42,70,.8),rgba(83,65,37,.47)),var(--cit-castle) center/cover no-repeat!important;border:1px solid #e4bc70!important}
+html[data-sde-citadel-integral] body.sde-direct-member #main .esp-id canvas{max-width:100%!important;height:auto!important;border-radius:11px!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-member-shortcuts{display:grid;gap:10px;margin:14px 0 20px}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-member-shortcuts h2{font:800 .94rem var(--cit-text)!important;color:#fff0d2!important;margin:0!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-member-shortcuts-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-member-shortcuts-grid>*{display:flex;flex-direction:column;gap:7px;align-items:flex-start;justify-content:center;min-height:100px;padding:12px;background:#152b4a!important;border:1px solid var(--cit-line)!important;border-radius:12px;color:#fff0d8!important;text-decoration:none!important;text-align:left!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-member-shortcuts-grid>*:nth-child(2){background:#272d47!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-member-shortcuts-grid>*:nth-child(3){background:#1a4436!important}
+html[data-sde-citadel-integral] body.sde-direct :is(.sde-direct-bottom-nav,.sde-command-v4-bottom-nav){background:#061429!important;border-top:1px solid var(--cit-line)!important}
+html[data-sde-citadel-integral] body.sde-direct :is(.sde-direct-bottom-action,.sde-command-v4-bottom-item)[aria-current=page]{background:rgba(226,193,115,.19)!important;color:#f5d68a!important}
+@media(min-width:1000px){html[data-sde-citadel-integral] body.sde-direct .shell{display:grid!important;grid-template-columns:238px minmax(0,1fr)!important;gap:0!important}html[data-sde-citadel-integral] body.sde-direct #main.main{padding:24px 28px 58px!important}}
+@media(max-width:760px){
+html[data-sde-citadel-integral] body.sde-direct #sde-direct-top .sde-direct-header{min-height:57px!important;padding:8px 13px!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-citadel-private-title{display:none!important}
+html[data-sde-citadel-integral] body.sde-direct #sde-direct-top .sde-direct-intro{display:none!important}
+html[data-sde-citadel-integral] body.sde-direct #main.main{padding:12px 12px calc(95px + env(safe-area-inset-bottom))!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-cards,html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-member-shortcuts-grid{grid-template-columns:minmax(0,1fr)!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-member-shortcuts-grid>*{min-height:84px!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-headline h2{font-size:1rem!important}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-status{font-size:.65rem!important;padding:7px!important}
+}
+@media(prefers-reduced-motion:reduce){html[data-sde-citadel-integral] *,html[data-sde-citadel-integral] *::before,html[data-sde-citadel-integral] *::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
