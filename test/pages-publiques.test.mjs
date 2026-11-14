@@ -9,7 +9,7 @@ test('Pages publiques : structure conservée et habillage unique 2+3 sans Fusion
  for(const [n,fam] of Object.entries(PAGES)){
   const h=page(n),feuilles=[...h.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
   const iP=feuilles.findIndex(f=>f.includes('sde-pages-premium.css'));
-  const iFinal=feuilles.findIndex(f=>f.includes('sde-hybride-integral-2027.css'));
+  const iFinal=feuilles.findIndex(f=>f.includes('sde-citadelle-celeste-2027.css'));
   assert.ok(iP>=0&&iP<iFinal,n+' : fondations de page avant la nouvelle charte');
   assert.equal(iFinal,feuilles.length-1,n+' : une seule charte 2+3 finale');
   for(const ancien of ['sde-fusion.css','sde-v5-complet.css','sde-maquette.css','sde-six-maquettes-2027.css'])
@@ -19,8 +19,8 @@ test('Pages publiques : structure conservée et habillage unique 2+3 sans Fusion
   assert.equal((h.match(/class="pg-tabs/g)||[]).length,1,n+' : une seule navigation interne');
   assert.equal(h.split("<h1").length-1,1,n+" : un seul h1");
  }
- const css=lire('public/vitrine/sde-hybride-integral-2027.css');
- for(const k of ['#0D1B38','#FAF7F0','#D9A72E','#B74624','#00644F','prefers-reduced-motion'])assert.ok(css.includes(k),k);
+ const css=lire('public/vitrine/sde-citadelle-celeste-2027.css');
+ for(const k of ['#071226','#f4ebdd','#d8b455','#3a245f','#405a45','prefers-reduced-motion'])assert.ok(css.includes(k),k);
 });
 
 test('Pages publiques : chaque lien de navigation interne mène à une section existante',()=>{
@@ -153,8 +153,8 @@ test('Film de présentation : bouton sur l’accueil (hors des quatre actions) e
  assert.ok(film.includes('id="film"'),'cible du lien');
  const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf('</section>',home.indexOf('class="ap-hero"')));
   const actions=hero.match(/<nav class="ap-actions[^"]*"[^>]*>[\s\S]*?<\/nav>/)?.[0]||'';
-  assert.equal((actions.match(/<a /g)||[]).length,4,'quatre actions principales de la refonte Work 2+3');
-  for(const route of ['/mouvement','/contact#rejoindre','/programmes#agenda','/portail'])assert.ok(actions.includes('href="'+route+'"'),'Action absente : '+route);
+  assert.equal((actions.match(/<a /g)||[]).length,2,'deux actions principales de la refonte Citadelle');
+  for(const route of ['/mouvement','/contact#rejoindre'])assert.ok(actions.includes('href="'+route+'"'),'Action absente : '+route);
  assert.ok(actions.includes('href="/contact#rejoindre"')&&actions.includes('href="/mouvement"'), 'découverte et adhésion');
  assert.ok(hero.includes('href="/mouvement#film"')&&hero.includes('data-film-link'),'film présent en lien secondaire distinct des CTA');
  assert.ok(contact.includes('id="film-contact"')&&contact.includes('href="/mouvement#film"'));

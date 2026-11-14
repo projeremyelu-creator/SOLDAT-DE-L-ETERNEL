@@ -25,11 +25,11 @@ test("La capture officielle remplace les anciens panneaux sans doublon",()=>{
  assert.ok(d.getElementById("reveil-des-nations"),"ancien lien d'ancrage fonctionne encore");
 });
 
-test("Accueil 2+3 : quatre actions, texte biblique, film et TPA 2026 vérifiés",()=>{
+test("Accueil Citadelle : deux actions, texte biblique, film et TPA 2026 vérifiés",()=>{
  const d=page(),hero=d.querySelector(".ap-hero");
  assert.match(hero.querySelector("h1").textContent,/UNE ARMÉE\s+VIVANTE\s+POUR LES NATIONS/i);
  assert.match(hero.querySelector(".sde-citadel-verse").textContent,/Exode 33:14/);
- assert.deepEqual([...hero.querySelectorAll(".sde-citadel-actions a")].map(a=>a.getAttribute("href")),["/mouvement","/contact#rejoindre","/programmes#agenda","/portail"]);
+ assert.deepEqual([...hero.querySelectorAll(".sde-citadel-actions a")].map(a=>a.getAttribute("href")),["/mouvement","/contact#rejoindre"]);
  assert.equal(hero.querySelector('a[data-film-link]').getAttribute("href"),"/mouvement#film");
  assert.equal(hero.querySelector(".sde-tpa-hero-card time").getAttribute("datetime"),tpa.debut);
  assert.equal(hero.querySelector(".sde-shell-event-register").getAttribute("href"),tpa.inscription);
@@ -50,14 +50,14 @@ test("Refonte 2+3 : quatre portes d'engagement explicites et la palette SDE rest
 
 test("Refonte 2+3 : les pages autonomes et le dernier calque d'accueil reçoivent la même direction",()=>{
  const shell=read("public/vitrine/sde-shell-public.css");
- const finalLayer=read("public/vitrine/sde-hybride-integral-2027.css");
+ const finalLayer=read("public/vitrine/sde-citadelle-celeste-2027.css");
  const script=read("public/vitrine/sde-shell-public.js");
  for(const page of ["gouvernance","calendrier","reseau","transparence","soutenir"])
   assert.ok(read("public/vitrine/"+page+".html").includes("sde-shell-public.css"),page);
  assert.ok(shell.includes("body:has(.sde-hub-head)"));
  assert.ok(script.includes("sde-2plus3-fonts"));
- assert.match(finalLayer,/background:#0D1B38!important/);
- assert.match(finalLayer,/Cormorant Garamond/);
+ assert.match(finalLayer,/--sde-citadel-navy: #071226/);
+ assert.match(finalLayer,/--sde-citadel-title: Cinzel/);
 });
 
 test("Prier Organiser Agir : trois cartes accessibles et toutes les destinations officielles",()=>{
@@ -79,7 +79,7 @@ test("Prier Organiser Agir : trois cartes accessibles et toutes les destinations
 test("Responsive PC/tablette/mobile, contraste, mouvement réduit et navigation partagée",()=>{
  const links=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(x=>x[1]);
  assert.ok(links.some(link=>/^\/vitrine\/sde-accueil-officiel-2027\.css\?v=[a-zA-Z0-9]+$/.test(link)),"charte officielle conservée");
- assert.match(links.at(-1),/^\/vitrine\/sde-hybride-integral-2027\.css\?v=[a-zA-Z0-9]+$/,"couche responsive chargée en dernier avec versionnement automatique");
+ assert.match(links.at(-1),/^\/vitrine\/sde-citadelle-celeste-2027\.css\?v=[a-zA-Z0-9]+$/,"couche Citadelle chargée en dernier avec versionnement automatique");
  for(const required of [
   "@media(max-width:1000px)","@media(max-width:650px)","@media(max-width:800px)","@media(max-width:365px)",
   "@media(prefers-reduced-motion:reduce)","grid-template-columns:repeat(3,minmax(0,1fr))",

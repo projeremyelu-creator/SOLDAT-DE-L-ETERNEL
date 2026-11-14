@@ -47,12 +47,12 @@ test("Direction SDE 2+3 : la charte Fusion est archivée sans être chargée", (
  for(const token of ["--fu-gold","data-sde-palette=fusion",".fu-strip"])assert.ok(legacy.includes(token));
  const app=lire("public/index.html");
  assert.ok(!app.includes('href="/vitrine/sde-fusion.css'),"ancien style Fusion privé désactivé");
- assert.ok(app.includes("sde-hybride-integral-2027.css"));
+ assert.ok(app.includes("sde-citadelle-celeste-2027.css"));
  assert.match(app, /"fusion-04"/,'le choix de palette conserve ses données métiers, sans CSS Fusion actif');
  for(const p of ["portail","mouvement","programmes","missions-humanitaires","ressources","rejoindre","prieres","tableau-administration","tableau-membre"]){
   const html=lire("public/vitrine/"+p+".html");
   assert.ok(!html.includes('href="/vitrine/sde-fusion.css'),p+" : ancienne charte encore branchée");
-  assert.ok(html.includes("sde-hybride-integral-2027.css"),p+" : direction 2+3 absente");
+  assert.ok(html.includes("sde-citadelle-celeste-2027.css"),p+" : direction 2+3 absente");
  }
  assert.match(lire("public/vitrine/portail.html"), /class="ap-hero"/);
 });
@@ -179,8 +179,8 @@ test("Corrections UX : aucun indicateur ni compteur vide, contact avec un seul g
  const home=lire("public/vitrine/portail.html");
  const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf("</section>",home.indexOf('class="ap-hero"')));
   const buttons=hero.match(/<nav class="ap-actions[^"]*"[^>]*>[\s\S]*?<\/nav>/)?.[0]||"";
-  assert.equal((buttons.match(/<a /g)||[]).length,4,'quatre accès de la refonte Work 2+3');
-  for(const route of ['/mouvement','/contact#rejoindre','/programmes#agenda','/portail'])assert.ok(buttons.includes('href="'+route+'"'),'Accès manquant : '+route);
+  assert.equal((buttons.match(/<a /g)||[]).length,2,'deux accès de la refonte Citadelle');
+  for(const route of ['/mouvement','/contact#rejoindre'])assert.ok(buttons.includes('href="'+route+'"'),'Accès manquant : '+route);
  assert.match(home,/>Vie de l’Esprit<\/strong>/);
  assert.match(home,/>Gouvernance &amp; Ordre<\/strong>/);
  assert.match(home,/>Terrain &amp; Compassion<\/strong>/);

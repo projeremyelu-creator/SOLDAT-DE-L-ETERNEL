@@ -6,7 +6,7 @@ import {JSDOM} from 'jsdom';
 const read=p=>readFileSync(p,'utf8');
 const movement=new JSDOM(read('public/vitrine/mouvement.html')).window.document;
 const application=new JSDOM(read('public/index.html')).window.document;
-const styles=read('public/vitrine/sde-recette-captures-20261113.css');
+const styles=read('public/vitrine/sde-citadelle-celeste-2027.css');
 
 test('Doctrine officielle · six axes, bon ordre, formulations exactes et sans axe inventé',()=>{
  const nav=movement.querySelector('nav.pg-tabs a[href="#axes"]');
@@ -27,8 +27,8 @@ test('Doctrine officielle · six axes, bon ordre, formulations exactes et sans a
 test('Corrections réelles · la feuille de contraste est chargée sur Mouvement et le vrai portail',()=>{
  for(const [name,doc] of [['mouvement',movement],['portail privé',application]]){
   const links=[...doc.querySelectorAll('link[rel="stylesheet"]')];
-  assert.ok(links.some(x=>x.getAttribute('href')?.includes('sde-recette-captures-20261113.css')),'CSS absent : '+name);
-  assert.equal(links.at(-1)?.getAttribute('href'),'/vitrine/sde-recette-captures-20261113.css','CSS doit primer sur les anciennes règles : '+name);
+  assert.ok(links.some(x=>x.getAttribute('href')?.includes('sde-citadelle-celeste-2027.css')),'CSS absent : '+name);
+  assert.equal(links.at(-1)?.getAttribute('href'),'/vitrine/sde-citadelle-celeste-2027.css','CSS doit primer sur les anciennes règles : '+name);
  }
  for(const selector of [
   '#axes ol.six-axes > li',

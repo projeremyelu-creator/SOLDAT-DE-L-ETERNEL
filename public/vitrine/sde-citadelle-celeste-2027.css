@@ -1,0 +1,83 @@
+/* SDE — La Citadelle Céleste 2027: shared final visual system */
+:root {
+  --sde-citadel-navy: #071226;
+  --sde-citadel-ivory: #f4ebdd;
+  --sde-citadel-gold: #d8b455;
+  --sde-citadel-violet: #3a245f;
+  --sde-citadel-green: #405a45;
+  --sde-citadel-ink: #101a2e;
+  --sde-citadel-line: color-mix(in srgb, var(--sde-citadel-ivory) 18%, transparent);
+  --sde-citadel-shadow: 0 20px 48px rgb(1 7 18 / .34);
+  --sde-citadel-radius: 1.25rem;
+  --sde-citadel-title: Cinzel, Georgia, serif;
+  --sde-citadel-sans: "Plus Jakarta Sans", Atkinson Hyperlegible, system-ui, sans-serif;
+}
+
+html { background: var(--sde-citadel-navy); scroll-behavior: smooth; }
+body { font-family: var(--sde-citadel-sans); background: var(--sde-citadel-navy); color: var(--sde-citadel-ivory); }
+body::selection { background: var(--sde-citadel-gold); color: var(--sde-citadel-navy); }
+h1, h2, h3, .site-brand b, .sde-citadel-title { font-family: var(--sde-citadel-title); letter-spacing: .025em; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--sde-citadel-gold); outline-offset: 4px; }
+
+.site-header, .sde-shell-public, .sde-dash-sidebar { background: rgb(7 18 38 / .92); border-color: var(--sde-citadel-line); backdrop-filter: blur(18px); }
+.site-menu a, .site-brand, .site-search, .sde-dash-side-nav a { color: var(--sde-citadel-ivory); }
+.site-menu a[aria-current="page"], .site-menu a:hover, .site-brand:hover { color: var(--sde-citadel-gold); }
+.site-portal-cta, .ap-btn-gold, .sde-shell-event-register, .sde-button, .sde-citadel-cta { background: var(--sde-citadel-gold); color: var(--sde-citadel-navy); border-color: transparent; font-weight: 800; }
+.site-portal-cta:hover, .ap-btn-gold:hover, .sde-shell-event-register:hover, .sde-button:hover, .sde-citadel-cta:hover { filter: brightness(1.07); transform: translateY(-1px); }
+.ap-btn-ghost, .sde-shell-event, .sde-premium-pillar, .sdu-card, .sde-2027-academy-feature, .sde-dash-panel, .sde-dash-card { border-color: var(--sde-citadel-line); box-shadow: var(--sde-citadel-shadow); }
+.ap-next, .ap-upcoming, .ap-mission, .ap-panel, .ap-indicateurs { background:#FAF7F0!important; color:#0D1B38!important; -webkit-text-fill-color:#0D1B38!important; }
+.ap-hero::before, .sde-citadel-hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 75% 25%, rgb(216 180 85 / .18), transparent 34%), linear-gradient(110deg, rgb(7 18 38 / .94), rgb(7 18 38 / .52)); pointer-events: none; }
+.ap-hero .ap-hero-bg { background-image: linear-gradient(94deg, rgb(7 18 38 / .94), rgb(7 18 38 / .45)), url("/vitrine/photos/hero-sde-1280.webp"); background-position: center; background-size: cover; }
+.ap-hero h1#titre-accueil { font-size: clamp(4rem,6.2vw,7.1rem); line-height: .94; }
+.ap-hero-inner { position: relative; }
+.sde-citadelle-foundation, .sde-citadel-eyebrow, .sde-tpa-kicker { color: var(--sde-citadel-gold); letter-spacing: .13em; }
+.sde-citadel-axes { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .8rem; margin: 1.5rem 0; }
+.sde-citadel-axis { min-height: 7.5rem; display: grid; align-content: space-between; padding: 1rem; border: 1px solid var(--sde-citadel-line); border-radius: var(--sde-citadel-radius); background: linear-gradient(145deg, rgb(244 235 221 / .1), rgb(244 235 221 / .03)); color: var(--sde-citadel-ivory); }
+.sde-citadel-axis strong { color: var(--sde-citadel-gold); font-family: var(--sde-citadel-title); }
+.sde-citadel-axis small { color: color-mix(in srgb, var(--sde-citadel-ivory) 82%, transparent); }
+.sde-citadel-prayer { --sde-context: var(--sde-citadel-violet); border-color: color-mix(in srgb, var(--sde-citadel-violet) 62%, var(--sde-citadel-ivory)); }
+.sde-citadel-mission { --sde-context: var(--sde-citadel-green); border-color: color-mix(in srgb, var(--sde-citadel-green) 72%, var(--sde-citadel-ivory)); }
+.sde-citadel-private { background: linear-gradient(145deg, #0b1830, #111d34); }
+.sde-citadel-loading, .sde-citadel-empty, .sde-citadel-error { border: 1px dashed var(--sde-citadel-line); border-radius: var(--sde-citadel-radius); padding: 1rem; color: var(--sde-citadel-ivory); }
+body.sde-2027-reference, body.sde-reference-login, body.sde-v5-academy-public, body.sde-campus-student, body.sde-direct, body.sde-direct-admin { font-family:var(--sde-citadel-sans); }
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .ap-hero-bg { background-image:linear-gradient(94deg,rgb(7 18 38 / .94),rgb(7 18 38 / .45)),url("/vitrine/photos/hero-sde-1280.webp")!important; }
+.sde-vision-wordmark, .sde-citadelle-login-badge { color:var(--sde-citadel-gold); font-family:var(--sde-citadel-title); letter-spacing:.12em; }
+.sde-citadelle-quicknav-items { display:flex; flex-wrap:wrap; gap:.7rem; }
+.sde-citadelle-member-cover { background:linear-gradient(135deg,#0b1830,#17284a); border:1px solid var(--sde-citadel-line); border-radius:var(--sde-citadel-radius); }
+.sa-premium-grid .sa-premium-card summary strong{color:#142641!important;-webkit-text-fill-color:#142641!important}
+.ref-access-targets button[aria-pressed="true"]{background:var(--sde-citadel-gold);color:#132139!important;-webkit-text-fill-color:#132139!important}
+.sde-shell-portal-label{font-weight:800;color:var(--sde-citadel-gold)}
+.sde-reader-tools{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important}
+#axes ol.six-axes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;padding:0;list-style:none}
+#axes ol.six-axes > li{min-height:100%;padding:1rem;border:1px solid var(--sde-citadel-line);border-radius:var(--sde-citadel-radius)}
+html body.sde23-native.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card { background:#FAF7F0!important; color:#0D1B38!important; }
+html body.sde23-native.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card p { color:#2B3851!important; -webkit-text-fill-color:#2B3851!important; }
+html body.sde23-native.sde-unifie.sde-subpage.sde-ivoire.sde-pole #contenu .sde-initiative-card :is(h2,h3,strong,a) { color:#0D1B38!important; -webkit-text-fill-color:#0D1B38!important; }
+
+/* Private command centre: keep the compact mobile launch controls aligned. */
+body.sde-reference-admin .sde-citadelle-command-launch { display: grid; grid-template-columns:minmax(0,1fr)!important; gap: .75rem; }
+.sde-citadelle-command-launch > button > svg { flex-basis:34px!important; color: var(--sde-citadel-gold); }
+.sde-citadelle-command-launch > button > span { min-width:0; }
+.sde-direct #main .view { min-width: 0; }
+#main .view .list .row .row-t, #main .view .list .row .row-m, #main .view .stat-v, #main .view .card .bar-top, #main .view .seg button, #sheet .sheet-b .vy-t { color:var(--sde-citadel-ivory); -webkit-text-fill-color:currentColor; }
+#main .view .seg button { min-height:44px!important; }
+
+@media (max-width: 900px) {
+  .sde-citadel-axes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sde-citadel-axis { min-height: 6.25rem; }
+  .site-header { padding-inline: max(1rem, env(safe-area-inset-left)); }
+}
+@media(max-width:860px) { .ap-next, .ap-upcoming, .ap-mission, .ap-panel { min-height:auto; } }
+@media(max-width:960px) { .ap-hero h1#titre-accueil { font-size: clamp(3.3rem,8vw,5.2rem); } }
+@media(max-width:699px) { #axes ol.six-axes { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:700px) { body.sde-reference-admin .sde-citadelle-command-launch { gap: .55rem; } }
+@media(max-width:640px) { .sde-direct #main .view { padding-inline: .9rem; } }
+@media(max-width:540px) { #axes ol.six-axes { grid-template-columns:1fr; } }
+@media (max-width: 390px) { .sde-citadel-axes { gap: .55rem; } .sde-citadel-axis { padding: .8rem; font-size: .9rem; } }
+@media(max-width:390px) { .ap-hero h1#titre-accueil { font-size: clamp(2.8rem,10vw,3.7rem); } .ap-hero .ap-hero-bg { background-image: linear-gradient(94deg, rgb(7 18 38 / .94), rgb(7 18 38 / .45)), url("/vitrine/photos/hero-sde-640.webp"); } }
+@media(max-width:390px) { html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live .ap-hero .ap-hero-bg { background-image:url("/vitrine/photos/hero-sde-640.webp")!important; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+@media(prefers-reduced-motion:reduce) { .ap-hero .ap-hero-bg { transform: none !important; } }
+[hidden]{display:none!important}

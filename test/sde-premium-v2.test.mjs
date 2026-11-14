@@ -27,8 +27,8 @@ test('Accueil premium : trois univers reliés aux vraies rubriques publiques',()
  assert.ok(doc.querySelector('.ap-indicateurs'),"Indicateurs vérifiés préservés");
   const actions=doc.querySelector('.ap-hero .ap-actions');
   assert.ok(actions,'Actions d’accueil présentes');
-  assert.equal(actions.querySelectorAll('a').length,4,'quatre accès officiels de la refonte Work 2+3');
-  assert.deepEqual([...actions.querySelectorAll('a')].map(a=>a.getAttribute('href')),['/mouvement','/contact#rejoindre','/programmes#agenda','/portail']);
+  assert.equal(actions.querySelectorAll('a').length,2,'deux accès officiels de la Citadelle');
+  assert.deepEqual([...actions.querySelectorAll('a')].map(a=>a.getAttribute('href')),['/mouvement','/contact#rejoindre']);
   assert.ok(doc.querySelector('.sde-shell-event a[href="/programmes#tpa-2026"]'));
   assert.equal(doc.querySelectorAll('.sde-premium-pillars img[src="/vitrine/illus/tpa-2026.webp"]').length,0);
  }finally{dom.window.close()}

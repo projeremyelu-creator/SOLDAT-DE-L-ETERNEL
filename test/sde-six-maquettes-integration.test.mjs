@@ -7,7 +7,7 @@ const read=path=>readFileSync(path,"utf8");
 const homepage=()=>new JSDOM(read("public/vitrine/portail.html"),{
  url:"https://mouvement-sde.org/",runScripts:"outside-only",pretendToBeVisual:true
 });
-test("Public 01 · Work 2+3 : vision 2027, Exode 33:14 et quatre accès réels",()=>{
+test("Public 01 · Citadelle : vision 2027, Exode 33:14 et deux accès réels",()=>{
  const dom=homepage(),doc=dom.window.document;
  try{
   const hero=doc.querySelector(".ap-hero");
@@ -15,7 +15,7 @@ test("Public 01 · Work 2+3 : vision 2027, Exode 33:14 et quatre accès réels",
   assert.match(hero.querySelector("h1")?.textContent||"",/UNE ARMÉE\s+VIVANTE\s+POUR LES NATIONS/i);
   assert.match(hero.querySelector(".sde-citadel-verse")?.textContent||"",/Exode 33:14/);
   const actions=[...hero.querySelectorAll(".sde-citadel-actions a")];
-  assert.deepEqual(actions.map(a=>a.getAttribute("href")),["/mouvement","/contact#rejoindre","/programmes#agenda","/portail"]);
+  assert.deepEqual(actions.map(a=>a.getAttribute("href")),["/mouvement","/contact#rejoindre"]);
   assert.ok(hero.querySelector(".sde-tpa-hero-card"),"le rendez-vous TPA n'est pas supprimé");
   assert.match(read("public/vitrine/sde-six-maquettes-2027.css"),/prefers-reduced-motion/);
  }finally{dom.window.close();}
@@ -69,7 +69,7 @@ test("Public 03/04 · Filtres + recherche accessibles sur mobile et ordinateur",
   assert.equal(visible().length,8);
   const toggle=doc.querySelector("[data-sdu-motion-toggle]");
   toggle.click();assert.equal(toggle.getAttribute("aria-pressed"),"true");
-  assert.ok(doc.querySelector('link[href*="sde-hybride-integral-2027.css"]'),"charte SDE 2+3 active");
+  assert.ok(doc.querySelector('link[href*="sde-citadelle-celeste-2027.css"]'),"charte SDE 2+3 active");
    assert.equal(doc.querySelectorAll('link[href*="sde-six-maquettes-2027.css"]').length,0,"ancien CSS Six Maquettes retiré");
  }finally{dom.window.close();}
 });
@@ -106,12 +106,12 @@ test("SDE 2027 · les six interfaces actives chargent la même charte desktop/mo
  ];
  for(const path of paths){
   const html=read(path);
-  assert.match(html,/\/vitrine\/sde-hybride-integral-2027\.css\?v=[a-zA-Z0-9]+/,
+  assert.match(html,/\/vitrine\/sde-citadelle-celeste-2027\.css\?v=[a-zA-Z0-9]+/,
    "charte absente : "+path);
-  assert.equal((html.match(/sde-hybride-integral-2027\.css/g)||[]).length,1,
+  assert.equal((html.match(/sde-citadelle-celeste-2027\.css/g)||[]).length,1,
    "une seule feuille de design : "+path);
  }
- const css=read("public/vitrine/sde-hybride-integral-2027.css");
+ const css=read("public/vitrine/sde-citadelle-celeste-2027.css");
  for(const scope of [
   "body.sde-2027-reference", "body.sde-reference-login",
   "body.sde-v5-academy-public", "body.sde-campus-student",
@@ -131,7 +131,7 @@ test("SDE 2027 · la charte vise les vraies routes sans ouvrir les espaces prot�
  assert.match(worker,/if \(!u\.connecte\)/);
  assert.match(worker,/if \(p\.startsWith\("\/administration"\) && u\.niveau < 1\)/);
  const app=read("public/index.html");
- assert.match(app,/\/vitrine\/sde-hybride-integral-2027\.css/);
+ assert.match(app,/\/vitrine\/sde-citadelle-celeste-2027\.css/);
  const academy=read("public/vitrine/sde-academy-parcours.html");
  assert.match(academy,/progression affichée ci-dessous provient de vos résultats réels/i);
 });
@@ -148,7 +148,7 @@ test("Citadelle v2 · l'accueil possède quatre accès visibles et la devise fon
  assert.deepEqual([...nav.querySelectorAll("a")].map(a=>a.getAttribute("href")),[
   "/mouvement","/contact#rejoindre","/programmes#agenda","/portail"
  ]);
- assert.equal(hero.querySelectorAll(".sde-citadel-actions a").length,4,"quatre CTA 2+3 fidèlement appliqués");
+ assert.equal(hero.querySelectorAll(".sde-citadel-actions a").length,2,"deux CTA Citadelle fidèlement appliqués");
 });
 test("Citadelle v2 · Campus, connexion, membre et commandement rendent des compositions distinctes",()=>{
  const school=new JSDOM(read("public/vitrine/academy.html")).window.document;
@@ -162,7 +162,7 @@ test("Citadelle v2 · Campus, connexion, membre et commandement rendent des comp
  assert.match(code,/portal\.compte\.niveau>=2&&<button type="button" onClick=\{\(\)=>portal\.selectionner\('finance-direction'\)\}/);
  assert.match(code,/portal\.selectionner\('academie'\)/);
  assert.match(code,/portal\.selectionner\('rendezvous'\)/);
- const styles=read("public/vitrine/sde-hybride-integral-2027.css");
+ const styles=read("public/vitrine/sde-citadelle-celeste-2027.css");
  for(const name of [".sde-vision-wordmark",".sde-citadelle-quicknav-items",".sde-citadelle-member-cover",".sde-citadelle-command-launch",".sde-citadelle-login-badge"]){
   assert.ok(styles.includes(name),"règles visuelles absentes: "+name);
  }
@@ -171,7 +171,7 @@ test("Citadelle v2 · Campus, connexion, membre et commandement rendent des comp
 
 
 test("Recette 2027 · contrastes réels et contrôles mobiles corrigés",()=>{
- const css=read("public/vitrine/sde-hybride-integral-2027.css");
+ const css=read("public/vitrine/sde-citadelle-celeste-2027.css");
  const shell=read("public/vitrine/sde-shell-public.js");
  const sw=read("public/sw-public.js");
  const audit=read("scripts/audit-public-mobile.mjs");
@@ -189,7 +189,7 @@ test("Recette 2027 · contrastes réels et contrôles mobiles corrigés",()=>{
 
 
 test("Citadelle mobile · vraie image WebP compressée, pas l'image PC",()=>{
- const css=read("public/vitrine/sde-hybride-integral-2027.css");
+ const css=read("public/vitrine/sde-citadelle-celeste-2027.css");
  const audit=read("scripts/audit-public-mobile.mjs");
  const mobile=readFileSync("public/vitrine/photos/hero-sde-640.webp");
  const desktop=readFileSync("public/vitrine/photos/hero-sde-1280.webp");
@@ -214,7 +214,7 @@ test("Doctrine SDE 2027 · six axes exacts dans leur ordre officiel",()=>{
  ]);
  assert.match(doc.querySelector("#titre-axes").textContent,/Six axes pour former un soldat/);
  assert.ok(!doc.querySelector(".pg-tabs")?.textContent.includes("Cinq axes"));
- assert.equal(doc.querySelectorAll('link[href*="sde-recette-captures-20261113.css"]').length,1);
+ assert.equal(doc.querySelectorAll('link[href*="sde-citadelle-celeste-2027.css"]').length,1);
  const main=read("public/index.html");
  assert.match(main,/Rassembler et Unir · Former · Réveiller · Restaurer · Équiper · Envoyer/);
  assert.doesNotMatch(main,/Réveiller · Restaurer · Former · Équiper · Envoyer/);
@@ -222,10 +222,10 @@ test("Doctrine SDE 2027 · six axes exacts dans leur ordre officiel",()=>{
 
 test("Captures SDE · corrections réelles chargées sur les bons écrans",()=>{
  const page=read("public/index.html");
- const css=read("public/vitrine/sde-recette-captures-20261113.css");
+ const css=read("public/vitrine/sde-citadelle-celeste-2027.css");
  // Vérifier l'en-tête réel du portail, pas la chaîne HTML de copie hors ligne.
  const head=page.slice(0,page.indexOf('<script>/* Palette des espaces privés'));
- const position=head.indexOf('/vitrine/sde-recette-captures-20261113.css');
+ const position=head.indexOf('/vitrine/sde-citadelle-celeste-2027.css');
  const old=head.indexOf('/vitrine/sde-command-v4.css');
  assert.ok(position>old&&old>0,"feuille correctrice chargée APRÈS les styles du portail");
  for(const selector of [

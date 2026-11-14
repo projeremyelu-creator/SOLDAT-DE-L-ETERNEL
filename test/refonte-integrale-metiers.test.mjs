@@ -54,7 +54,7 @@ test('Les entrées de consultation des dossiers privés restent des routes authe
 });
 
 
-test('Accueil premium : hero Citadelle 2027, trois actions et bandeau TPA compact',()=>{
+test('Accueil premium : hero Citadelle 2027, deux actions et bandeau TPA compact',()=>{
  const html=file('public/vitrine/portail.html');
  const css=file('public/vitrine/sde-accueil-premium.css');
  const hero=html.slice(html.indexOf('class="ap-hero"'),html.indexOf('id="programmes-accueil"'));
@@ -63,8 +63,8 @@ test('Accueil premium : hero Citadelle 2027, trois actions et bandeau TPA compac
  assert.ok(html.includes('href="/programmes#tpa-2026"'));
  assert.ok(html.includes('datetime="2026-12-18T20:00:00+00:00"'));
  assert.ok(hero.includes('class="ap-actions sde-citadel-actions sde23-actions"'));
- assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,4,'quatre destinations visibles');
- for(const link of ['/mouvement','/contact#rejoindre','/programmes#agenda','/mouvement#film'])assert.ok(hero.includes('href="'+link+'"'),'Action manquante '+link);
+ assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,2,'deux destinations visibles');
+ for(const link of ['/mouvement','/contact#rejoindre','/mouvement#film'])assert.ok(hero.includes('href="'+link+'"'),'Action manquante '+link);
  assert.match(css,/\.ap-hero-inner\{[^}]*grid-template-columns:minmax\(0,1fr\)/);
  assert.match(css,/@media\(max-width:860px\)/);
  assert.match(css,/prefers-reduced-motion/);
@@ -221,7 +221,7 @@ test('La refonte 2+3 remplace bien les structures et couleurs de l’ancienne mo
  const html=file('public/vitrine/portail.html');
  const hero=new JSDOM(html).window.document.querySelector('.sde23-actions');
  assert.ok(hero,'Hero 2+3 absent de la page publique');
- assert.deepEqual([...hero.querySelectorAll('a')].map(a=>a.getAttribute('href')),['/mouvement','/contact#rejoindre','/programmes#agenda','/portail']);
+ assert.deepEqual([...hero.querySelectorAll('a')].map(a=>a.getAttribute('href')),['/mouvement','/contact#rejoindre']);
  const shell=file('public/vitrine/sde-shell-public.css');
  assert.match(shell,/\.sde23-actions/);
  assert.match(shell,/@media\(max-width:390px\)/);

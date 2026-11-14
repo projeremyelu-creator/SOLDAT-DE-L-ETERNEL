@@ -14,8 +14,8 @@ test('Identité SDE : seize pages portent uniquement la direction 2+3',()=>{
   const source=html(page),doc=new JSDOM(source).window.document;
   const links=[...doc.querySelectorAll('head link[rel=stylesheet]')].map(el=>el.getAttribute('href'));
   assert.equal(links.filter(x=>x.includes('sde-sitewide-2026.css')).length,1,page+' : infrastructure commune conservée');
-  assert.equal(links.filter(x=>x.includes('sde-hybride-integral-2027.css')).length,1,page+' : thème unique 2+3');
-  assert.ok(links.at(-1).includes('sde-hybride-integral-2027.css'),page+' : thème final en dernier');
+  assert.equal(links.filter(x=>x.includes('sde-citadelle-celeste-2027.css')).length,1,page+' : thème unique 2+3');
+  assert.ok(links.at(-1).includes('sde-citadelle-celeste-2027.css'),page+' : thème final en dernier');
   for(const ancien of ['sde-fusion.css','sde-maquette-hero.css','sde-v5-complet.css','sde-six-maquettes-2027.css','sde-maquette.css','accueil-maquette.css'])
    assert.equal(links.filter(x=>x.includes(ancien)).length,0,page+' : ancienne couche '+ancien);
   assert.ok(doc.body.classList.contains('sde23-native'),page+' : identité actuelle sur le vrai body');

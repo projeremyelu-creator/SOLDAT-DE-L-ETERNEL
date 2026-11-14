@@ -126,7 +126,7 @@ try{
    // feuille CSS réellement chargée sur le domaine (pas seulement dans GitHub).
    if(['/', '/academy', '/connexion'].includes(c.path)){
     const visible=await page.evaluate(()=>{
-     const css=[...document.styleSheets].some(s=>(s.href||'').includes('sde-hybride-integral-2027.css'));
+     const css=[...document.styleSheets].some(s=>(s.href||'').includes('sde-citadelle-celeste-2027.css'));
      const marker=document.querySelector('[data-sde-visible-revision="citadelle-2027-v2"]');
      const style=marker?getComputedStyle(marker):null;
      const rect=marker?.getBoundingClientRect();
@@ -359,7 +359,7 @@ try{
        width:Math.round(rect.width),bg,contrastMin:all.length?Math.min(...all):null
       };
      });
-     return {title,items,css:!!document.querySelector('link[href*="sde-recette-captures-20261113.css"]')};
+     return {title,items,css:!!document.querySelector('link[href*="sde-citadelle-celeste-2027.css"]')};
     });
     report.notes.push({page:c.name,doctrine});
     console.log('SIX_AXES_SDE '+c.name+' '+JSON.stringify(doctrine));

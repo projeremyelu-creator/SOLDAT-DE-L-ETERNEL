@@ -5,7 +5,7 @@ import {JSDOM} from 'jsdom';
 
 const html=readFileSync('public/vitrine/portail.html','utf8');
 const doc=new JSDOM(html).window.document;
-const css=readFileSync('public/vitrine/sde-hybride-integral-2027.css','utf8');
+const css=readFileSync('public/vitrine/sde-citadelle-celeste-2027.css','utf8');
 const audit=readFileSync('scripts/audit-public-mobile.mjs','utf8');
 
 test("PageSpeed : afficher une affiche TPA compacte sur mobile sans casser l'affiche officielle",()=>{
@@ -26,7 +26,7 @@ test('Le thème est découvert directement, sans @import en cascade après les a
  const accueil=link.findIndex(x=>x.includes('/vitrine/sde-accueil-premium.css'));
  assert.ok(premium>=0&&premium<accueil);
  assert.ok(link.includes(link.find(x=>x.includes('sde-shell-public.css'))),'navigation commune conservée');
- assert.ok(link.at(-1).includes('sde-hybride-integral-2027.css'),'thème 2+3 responsive découvert en dernier');
+ assert.ok(link.at(-1).includes('sde-citadelle-celeste-2027.css'),'thème 2+3 responsive découvert en dernier');
  for(const legacy of ['sde-maquette-hero.css','sde-six-maquettes-2027.css','sde-fusion.css'])assert.ok(!link.some(x=>x.includes(legacy)),'ancien style '+legacy);
  assert.doesNotMatch(html,/<style>[^<]*@import[^<]*sde-premium-public\.css/i);
 });

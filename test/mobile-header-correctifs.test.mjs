@@ -14,16 +14,16 @@ const linkPath = "/vitrine/sde-mobile-correctifs-20261103.css";
 const linkPattern = /<link rel="stylesheet" href="\/vitrine\/sde-mobile-correctifs-20261103\.css(?:\?v=[^"]+)?">/g;
 
 test("le même thème responsive SDE 2+3 est chargé une fois sur les deux interfaces réellement servies", () => {
-  const canonicalLinks = (html) => [...html.matchAll(/<link[^>]+>/g)].filter(([tag]) => tag.includes('rel="stylesheet"') && tag.includes("/vitrine/sde-hybride-integral-2027.css"));
+  const canonicalLinks = (html) => [...html.matchAll(/<link[^>]+>/g)].filter(([tag]) => tag.includes('rel="stylesheet"') && tag.includes("/vitrine/sde-citadelle-celeste-2027.css"));
   assert.equal(canonicalLinks(app).length, 1);
   assert.equal(canonicalLinks(accueil).length, 1);
   for(const html of [app,accueil]){
     assert.equal([...html.matchAll(linkPattern)].length,0,"ancien correctif mobile désactivé");
     assert.ok(!html.includes('href="/vitrine/sde-fusion.css'),"Fusion n'est plus activé");
   }
-  assert.ok(read("public/vitrine/sde-hybride-integral-2027.css").includes("@media(max-width:390px)"));
-  assert.ok(app.indexOf("/vitrine/sde-hybride-integral-2027.css") > app.indexOf("/vitrine/sde-command-v4.css"));
-  assert.ok(accueil.indexOf("/vitrine/sde-hybride-integral-2027.css") > accueil.indexOf("/vitrine/sde-shell-public.css"));
+  assert.ok(read("public/vitrine/sde-citadelle-celeste-2027.css").includes("@media(max-width:390px)"));
+  assert.ok(app.indexOf("/vitrine/sde-citadelle-celeste-2027.css") > app.indexOf("/vitrine/sde-command-v4.css"));
+  assert.ok(accueil.indexOf("/vitrine/sde-citadelle-celeste-2027.css") > accueil.indexOf("/vitrine/sde-shell-public.css"));
 });
 
 test("le style respecte les deux en-têtes et les interactions privées", () => {
@@ -67,8 +67,8 @@ test("les routes privées continuent à vérifier la session et les rôles", () 
 });
 
 test("les correctifs issus des captures sont réellement chargés sur le portail privé", () => {
-  const css = read("public/vitrine/sde-recette-captures-20261113.css");
-  const path = "/vitrine/sde-recette-captures-20261113.css";
+  const css = read("public/vitrine/sde-citadelle-celeste-2027.css");
+  const path = "/vitrine/sde-citadelle-celeste-2027.css";
   const head = app.slice(0, app.indexOf("<script>/* Palette des espaces privés"));
   const links = [...head.matchAll(/<link[^>]+rel="stylesheet"[^>]*>/g)].map(m=>m[0]);
   assert.equal(links.filter(link=>link.includes(path)).length,1,"un seul chargement dans l'interface privée");

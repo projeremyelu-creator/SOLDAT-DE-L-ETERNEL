@@ -16,7 +16,7 @@ test("Direction artistique : palette royale et hiérarchie typographique",()=>{
  assert.equal(doc.querySelectorAll(".sde-2027-pillar-icon .sde-pillar-icon").length,3,"les trois emblèmes actifs ont un pictogramme SVG");
  assert.equal(doc.querySelectorAll(".sde-2027-pillar-icon[aria-hidden='true']").length,3);
  assert.equal(doc.querySelectorAll(".sde-premium-pillar-top").length,0,"anciens blocs remplacés");
- assert.equal(doc.querySelectorAll(".ap-hero .sde23-actions a").length,4,"quatre destinations réelles de la direction cinématique et communautaire 2+3");
+ assert.equal(doc.querySelectorAll(".ap-hero .sde23-actions a").length,2,"deux destinations réelles de la direction Citadelle");
 });
 
 test("Grille Bento des cinq pôles, médaillon pour les emblèmes et galerie lisible",()=>{
@@ -107,15 +107,15 @@ test("Préférence de mouvement réduit : affichage statique au chargement",()=>
 
 test("2+3 : la composition réellement servie remplace la domination de l'ancienne Citadelle",()=>{
  const html=read("public/vitrine/portail.html");
- const last=read("public/vitrine/sde-hybride-integral-2027.css");
+ const last=read("public/vitrine/sde-citadelle-celeste-2027.css");
  const shell=read("public/vitrine/sde-shell-public.css");
  const doc=new JSDOM(html).window.document;
  assert.ok(doc.querySelector(".ap-hero .sde23-arrival"),"arrivée Abidjan visible dans le vrai hero");
- assert.equal(doc.querySelectorAll(".ap-hero .sde23-actions>a").length,4);
- assert.match(last,/COMPOSITION CANONIQUE/);
- assert.match(last,/\.ap-hero \.sde-vision-wordmark\{[\s\S]*?font:750 clamp\(\.85rem/);
- assert.match(last,/\.ap-hero h1#titre-accueil\{[\s\S]*?clamp\(4rem,6\.2vw,7\.1rem\)/);
- assert.match(last,/grid-template-columns:minmax\(0,1\.2fr\) minmax\(290px,\.7fr\)/);
+ assert.equal(doc.querySelectorAll(".ap-hero .sde23-actions>a").length,2);
+ assert.match(last,/Citadelle Céleste/);
+ assert.match(last,/\.ap-hero \.ap-hero-bg/);
+ assert.match(last,/\.ap-hero h1#titre-accueil\s*\{[\s\S]*?clamp\(4rem,6\.2vw,7\.1rem\)/);
+ assert.match(last,/grid-template-columns: repeat\(6/);
  assert.match(last,/url\("\/vitrine\/photos\/hero-sde-640\.webp"\)/);
  assert.match(last,/prefers-reduced-motion:reduce/);
  assert.match(shell,/body\.sde-unifie\[data-sde-page="programmes"\] \.infire-takeover/);

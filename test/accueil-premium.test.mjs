@@ -50,8 +50,8 @@ test('Accueil premium : hero 2+3 cinématique, quatre accès et une seule annonc
  assert.match(hero,/<h1[^>]*>UNE ARMÉE/);
  assert.match(hero,/DISCIPLINE[\s\S]*UNITÉ[\s\S]*IMPACT/i);
  assert.ok(html.includes('logo-96.webp'),'le logo officiel reste présent dans la navigation commune');
- assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,4,'quatre accès principaux');
- for(const libellé of ['Découvrir','Rejoindre','Programmes','Mon portail','Exode 33:14'])assert.ok(hero.includes(libellé),libellé);
+ assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,2,'deux accès principaux Citadelle');
+ for(const libellé of ['Découvrir','Rejoindre','Exode 33:14'])assert.ok(hero.includes(libellé),libellé);
  assert.equal((html.match(/<img[^>]+tpa-2026\.webp/g)||[]).length,0,'affiche non chargée sur l’accueil compact');
  assert.equal((html.match(/<link rel="preload" as="image" href="\/vitrine\/illus\/tpa-2026\.webp"/g)||[]).length,0,'plus de préchargement de l’affiche cachée');
  assert.ok(!html.includes('infire-takeover'),'plus de bandeau doublon');
@@ -97,15 +97,15 @@ test('Accueil premium : indicateurs issus de /api/impact, agrégats seulement, a
 
 test('Accueil SDE 2+3 : le thème officiel remplace réellement les anciennes feuilles',()=>{
  const feuilles=[...html.matchAll(/<link rel="stylesheet" href="([^\"]+)"/g)].map(m=>m[1]);
- assert.ok(feuilles.at(-1).includes('sde-hybride-integral-2027.css'),'la seule direction graphique finale est 2+3');
+ assert.ok(feuilles.at(-1).includes('sde-citadelle-celeste-2027.css'),'la seule direction graphique finale est 2+3');
  assert.ok(feuilles.includes('/vitrine/sde-accueil-premium.css?v=405b772b7a5d')||feuilles.some(f=>f.includes('sde-accueil-premium.css')),'structure de l\'accueil conservée');
  for(const ancien of ['sde-fusion.css','sde-v5-complet.css','sde-six-maquettes-2027.css','sde-maquette-hero.css','accueil-maquette.css'])
    assert.ok(!feuilles.some(f=>f.includes(ancien)),'ancienne feuille encore chargée : '+ancien);
  assert.ok(html.includes('sde23-native')&&html.includes('sde-accueil-premium.js'));
  const inline=[...html.matchAll(/<script[^>]*>/g)].filter(([tag])=>!tag.includes('src=')&&!tag.includes('application/ld+json'));
  assert.equal(inline.length,0,'CSP : aucun script en ligne');
- const css=lire('public/vitrine/sde-hybride-integral-2027.css');
- for(const jeton of ['#0D1B38','#FAF7F0','#D9A72E','#B74624','#00644F','prefers-reduced-motion'])assert.ok(css.includes(jeton),jeton);
+ const css=lire('public/vitrine/sde-citadelle-celeste-2027.css');
+ for(const jeton of ['#071226','#f4ebdd','#d8b455','#3a245f','#405a45','prefers-reduced-motion'])assert.ok(css.includes(jeton),jeton);
  assert.ok(html.includes('ap-navy')&&html.includes('ap-mil')&&html.includes('ap-dark'),'les sections et parcours sont conservés');
 });
 

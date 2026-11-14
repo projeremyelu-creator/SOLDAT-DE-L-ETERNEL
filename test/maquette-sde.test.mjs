@@ -83,13 +83,13 @@ test("refonte étape 6 : Anniversaires et Suivi des pôles réservés à l'admin
  for(const t of ["Examiner les adhésions","Publier une annonce","Consulter le suivi des pôles","Vérifier les opérations financières"])assert.ok(ops.includes(t),t);
 });
 test("charte visuelle SDE 2+3 : palette canonique et fonctions conservées",()=>{
- const charte=read("public/vitrine/sde-hybride-integral-2027.css");
- for(const t of ["#0D1B38","#FAF7F0","#D9A72E","#B74624","#00644F","Cormorant Garamond","Manrope"])assert.ok(charte.includes(t),t);
+ const charte=read("public/vitrine/sde-citadelle-celeste-2027.css");
+ for(const t of ["#071226","#f4ebdd","#d8b455","#3a245f","#405a45","Cinzel","Plus Jakarta Sans"])assert.ok(charte.includes(t),t);
  assert.ok(css.includes("url(/vitrine/illus/lion-sde.webp)"),"carte de membre au lion");
  assert.ok(ops.includes("function FeatureEvent")&&ops.includes("Événement phare"));
  for(const p of ["portail","mouvement","programmes","rejoindre","ressources"]){
   const h=read("public/vitrine/"+p+".html");
-  assert.ok(h.includes("sde-hybride-integral-2027.css"),p+" : source actuelle 2+3");
+  assert.ok(h.includes("sde-citadelle-celeste-2027.css"),p+" : source actuelle 2+3");
   assert.ok(!h.includes('href="/vitrine/sde-maquette.css'),p+" : ancienne charte retirée");
  }
  assert.ok(read("public/vitrine/index.html").includes('document.documentElement.setAttribute("data-theme", "dark");'),"source historique non servie préservée pour compatibilité");
@@ -122,7 +122,7 @@ test("Palette officielle SDE, accessible et persistante dans les espaces privés
 });
 test("accueil réellement servi (portail.html) refait selon la maquette",()=>{
  const h=read("public/vitrine/portail.html");
- for(const t of ['class="ap-head"','LE RÉVEIL','Prochains programmes','Nos cinq pôles','Missions et impact','Prières et témoignages','Galerie IN FIRE','Espaces sécurisés','Nous rejoindre','sde-hybride-integral-2027.css','id="ap-next-title"','id="ap-next-register"','class="private-access-card private-login"'])assert.ok(h.includes(t),t);
+ for(const t of ['class="ap-head"','LE RÉVEIL','Prochains programmes','Nos cinq pôles','Missions et impact','Prières et témoignages','Galerie IN FIRE','Espaces sécurisés','Nous rejoindre','sde-citadelle-celeste-2027.css','id="ap-next-title"','id="ap-next-register"','class="private-access-card private-login"'])assert.ok(h.includes(t),t);
  assert.equal((h.match(/class="private-access-card/g)||[]).length,1,'une seule carte de connexion');
  assert.equal((h.match(/class="site-access-top"/g)||[]).length,1);
  const js=read("public/vitrine/portail-unifie.js");assert.ok(js.includes("sde-rail")&&js.includes("--sde-rail-top"),"rail sur toutes les pages publiques");
@@ -173,7 +173,7 @@ test("fiche membre plein écran et cache mobile : accessibilité sans changement
  assert.ok(appCss.includes('.vy-grid'),"voyants adaptés");
  assert.ok(source.includes('Correctifs mobile 30 octobre 2026'),"nouvelle feuille publique");
  assert.ok(home.includes('/vitrine/portail-unifie.css?v='),"style principal public");
- assert.ok(home.includes('/vitrine/sde-hybride-integral-2027.css?v='),"charte SDE 2+3 active");
+ assert.ok(home.includes('/vitrine/sde-citadelle-celeste-2027.css?v='),"charte SDE 2+3 active");
  assert.ok(!home.includes('/vitrine/sde-maquette.css?v='),"ancienne charte publique désactivée");
  assert.ok(oldHome.includes('/vitrine/sde-maquette.css?v='),"style ancienne vitrine");
  assert.ok(builder.includes("versionnerHtml('public')"),"invalidation des assets gérée automatiquement");

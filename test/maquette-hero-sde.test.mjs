@@ -28,13 +28,13 @@ test('Maquette SDE : Hero immersif et fiche TPA unique, routes réelles préserv
 });
 
 test('SDE 2+3 : vraie photo, aube chaleureuse et aucune ancienne maquette chargée',()=>{
- const css=read('public/vitrine/sde-hybride-integral-2027.css');
+ const css=read('public/vitrine/sde-citadelle-celeste-2027.css');
  assert.ok(existsSync('public/vitrine/photos/hero-sde-1280.webp'));
- assert.match(css,/COMPOSITION CANONIQUE/);
+ assert.match(css,/Citadelle Céleste/);
  assert.match(css,/linear-gradient\(94deg/);
  assert.match(css,/hero-sde-1280\.webp/);
  assert.match(css,/hero-sde-640\.webp/);
- assert.match(home,/sde-hybride-integral-2027\.css/);
+ assert.match(home,/sde-citadelle-celeste-2027\.css/);
  assert.doesNotMatch(home,/(?:sde-fusion|sde-v5-complet|sde-six-maquettes-2027|sde-maquette-hero|accueil-maquette)\.css/);
 });
 
@@ -88,8 +88,8 @@ test('Maquette SDE : calendrier Google synchronisé avec le fichier événement 
 });
 
 test('SDE 2+3 : hero typographique adaptatif à 960 et 390 pixels',()=>{
- const css=read('public/vitrine/sde-hybride-integral-2027.css');
- assert.match(css,/\.ap-hero h1#titre-accueil\{/);
+ const css=read('public/vitrine/sde-citadelle-celeste-2027.css');
+ assert.match(css,/\.ap-hero h1#titre-accueil\s*\{/);
  assert.match(css,/clamp\(4rem,6\.2vw,7\.1rem\)/);
  assert.match(css,/@media\(max-width:960px\)/);
  assert.match(css,/@media\(max-width:390px\)/);
