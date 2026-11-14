@@ -47,7 +47,7 @@ test('Accueil premium : en-tête avec logo, menu compact, recherche et connexion
 
 test('Accueil premium : hero 2+3 cinématique, quatre accès et une seule annonce TPA compacte',()=>{
  const hero=html.slice(html.indexOf('class="ap-hero"'),html.indexOf('id="programmes-accueil"'));
- assert.match(hero,/<h1[^>]*>UNE ARMÉE/);
+ assert.match(hero,/<h1[^>]*>LA CITADELLE\s*<span[^>]*>CÉLESTE<\/span>/i);
  assert.match(hero,/DISCIPLINE[\s\S]*UNITÉ[\s\S]*IMPACT/i);
  assert.ok(html.includes('logo-96.webp'),'le logo officiel reste présent dans la navigation commune');
  assert.equal((hero.match(/class="ap-btn[^"]*"/g)||[]).length,2,'deux accès principaux Citadelle');
