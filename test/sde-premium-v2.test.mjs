@@ -28,7 +28,7 @@ test('Accueil premium : trois univers reliés aux vraies rubriques publiques',()
   const actions=doc.querySelector('.ap-hero .ap-actions');
   assert.ok(actions,'Actions d’accueil présentes');
   assert.equal(actions.querySelectorAll('a').length,2,'deux accès officiels de la Citadelle');
-  assert.deepEqual([...actions.querySelectorAll('a')].map(a=>a.getAttribute('href')),['/mouvement','/contact#rejoindre']);
+  assert.deepEqual([...actions.querySelectorAll('a')].map(a=>a.getAttribute('href')),['/contact#rejoindre','/mouvement']);
   assert.ok(doc.querySelector('.sde-shell-event a[href="/programmes#tpa-2026"]'));
   assert.equal(doc.querySelectorAll('.sde-premium-pillars img[src="/vitrine/illus/tpa-2026.webp"]').length,0);
  }finally{dom.window.close()}
