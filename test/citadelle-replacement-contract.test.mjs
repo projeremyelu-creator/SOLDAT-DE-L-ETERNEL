@@ -198,3 +198,23 @@ test("Citadelle V4.2 : paysage illustré cinématique dans le public et le priv�
  assert.ok(css.includes("var(--cit-cinema) 62% 50%/cover"));
  assert.doesNotMatch(css,/--cit-cinema:url\("\/vitrine\/photos\//);
 });
+
+
+test("La page membre utilise désormais directement la Citadelle V4 et ses vraies données",()=>{
+ const jsx=read("frontend/operations.jsx");
+ const css=read("public/vitrine/sde-citadelle-reference-v4.css");
+ const member=jsx.slice(jsx.indexOf("function SoldierSpace("),jsx.indexOf("function Adhesions("));
+ assert.match(member,/data-sde-refonte="citadelle-v4"/);
+ assert.doesNotMatch(member,/sde23-member-journey|refonte-2plus3-2027/);
+ assert.match(member,/sde-citadel-member-hero/);
+ assert.match(member,/sde-citadelle-member-cover/);
+ assert.match(member,/className="sv-tile sv-tile--event"/);
+ assert.match(member,/className="sv-tile sv-tile--academy"/);
+ assert.match(member,/className="sv-tile sv-tile--mission"/);
+ assert.match(member,/portal\.selectionner\('engagements'\)/);
+ assert.match(member,/c\?\.matricule/);
+ assert.match(member,/qr&&<img src={qr}/);
+ assert.match(css,/--cit-cinema/);
+ assert.match(css,/\.sde-citadel-member-v4 \.soldier-card\.sv-card/);
+ assert.match(css,/\.sde-citadel-member-v4 \.sv-tiles \.sv-tile/);
+});

@@ -93,10 +93,10 @@ function SoldierSpace({portal}){
  const paid=(cot.data?.cotisations||[]).find(r=>r.statut==='paye');
  const prev=(()=>{const d=new Date();d.setMonth(d.getMonth()-1);return d.toISOString().slice(0,7)})();
  const aJour=!!paid&&paid.mois>=prev;
- return <div className="soldier-space sv sde23-member-journey" data-sde-refonte="2plus3">
-  <header className="sv-hello sde23-member-hero"><span className="sde23-hero-label">S.D.E · MON PARCOURS · VISION 2027</span><h1>{estGeneral?'Bonjour mon Général':<>Bonjour, {prenom}</>}</h1><p>Avançons ensemble, pour un plus grand impact.</p><p className="ops-subtitle">Grandir · Servir · Impacter</p><p className="ops-welcome">Bienvenue dans votre espace SDE. Retrouvez ici les informations utiles à votre parcours, les prochains rendez-vous et les ressources disponibles.</p>
-  <div className="sde-citadelle-member-cover" data-sde-visible-revision="refonte-2plus3-2027">
-   <div className="sde-citadelle-member-cover-copy"><span>UNE ARMÉE VIVANTE · VISION 2027</span><strong>La présence de Dieu, notre force. Son repos, notre orientation.</strong><small>Ézéchiel 37 · Exode 33:14</small></div>
+ return <div className="soldier-space sv sde-citadel-member-v4" data-sde-refonte="citadelle-v4">
+  <header className="sv-hello sde-citadel-member-hero"><span className="sde-citadel-member-kicker">SDE DIGITAL · LA CITADELLE CÉLESTE</span><h1>Mon espace personnel</h1><p>Bienvenue, {estGeneral?'mon Général':prenom}. Retrouvez votre carte, vos formations et vos missions.</p><p className="ops-subtitle">DISCIPLINE · UNITÉ · IMPACT</p>
+  <div className="sde-citadelle-member-cover" data-sde-visible-revision="citadelle-v4">
+   <div className="sde-citadelle-member-cover-copy"><span>LA CITADELLE CÉLESTE</span><strong>Une armée spirituelle. Un écosystème vivant.</strong><small>Ézéchiel 37 · Exode 33:14</small></div>
    <div className="sde-citadelle-member-cover-actions"><button type="button" onClick={()=>portal.selectionner('academie')}><RefIcon name="academy"/> Mes formations</button><button type="button" onClick={()=>portal.selectionner('rendezvous')}><RefIcon name="mission"/> Mon agenda</button></div>
   </div></header>
   <div className="sv-top">
@@ -106,9 +106,9 @@ function SoldierSpace({portal}){
     <div className="sv-card-name"><strong>{String(nom).toUpperCase()}</strong><span>{presidentAcademy?"Président et Fondateur de Soldiers Academy":"Soldat de l’Éternel · Le Réveil Spirituel des Nations"}</span></div>
    </section>
    <div className="sv-tiles">
-    <button type="button" className="sv-tile" onClick={()=>portal.selectionner('academie')}><RefIcon name="academy"/><span>Formation</span><strong>{pct==null?'—':pct+' %'}</strong>{pct!=null&&<i className="sv-bar" style={{'--p':pct+'%'}} aria-hidden="true"/>}</button>
-    <button type="button" className="sv-tile" onClick={()=>portal.selectionner('contributions')}><RefIcon name="money"/><span>Cotisations</span><strong className={aJour?'sv-ok':''}>{paid?(aJour?'À jour':'À vérifier'):'Aucun versement'}</strong>{aJour&&<span className="sv-check" aria-hidden="true"><RefIcon name="check"/></span>}</button>
-    <button type="button" className="sv-tile" onClick={()=>portal.selectionner('rendezvous')}><RefIcon name="qr"/><span>Prochain rendez-vous</span><strong className={next?'':'sv-wait'}>{next?nd.d+' '+nd.m:'À confirmer'}</strong>{next&&<small>{next.titre}</small>}</button>
+    <button type="button" className="sv-tile sv-tile--event" onClick={()=>portal.selectionner('rendezvous')}><RefIcon name="qr"/><span>Événement prochain</span><strong className={next?'':'sv-wait'}>{next?next.titre:'Agenda à consulter'}</strong>{next&&<small>{nd.d+' '+nd.m+' · '+(next.heure||'Horaire à confirmer')}</small>}</button>
+    <button type="button" className="sv-tile sv-tile--academy" onClick={()=>portal.selectionner('academie')}><RefIcon name="academy"/><span>Ma formation</span><strong>Soldiers Academy</strong>{pct!=null&&<><i className="sv-bar" style={{'--p':pct+'%'}} aria-hidden="true"/><small>{pct} % de progression</small></>}</button>
+    <button type="button" className="sv-tile sv-tile--mission" onClick={()=>portal.selectionner('engagements')}><RefIcon name="mission"/><span>Ma mission</span><strong>Mes engagements</strong><small>Mobilisation et service</small></button>
    </div>
    <section className="ops-card sv-academy sde-campus-member" aria-labelledby="sde-campus-member-title">
     <div className="sde-campus-member-visual"><img src="/vitrine/illus/livre-academy.webp" alt="" width="197" height="134" loading="lazy"/></div>
