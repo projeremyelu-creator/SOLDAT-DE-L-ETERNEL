@@ -27,9 +27,9 @@ test("La capture officielle remplace les anciens panneaux sans doublon",()=>{
 
 test("Accueil Citadelle : deux actions, texte biblique, film et TPA 2026 vérifiés",()=>{
  const d=page(),hero=d.querySelector(".ap-hero");
- assert.match(hero.querySelector("h1").textContent,/UNE ARMÉE\s+VIVANTE\s+POUR LES NATIONS/i);
+ assert.match(hero.querySelector("h1").textContent,/LA CITADELLE\s+CÉLESTE/i);
  assert.match(hero.querySelector(".sde-citadel-verse").textContent,/Exode 33:14/);
- assert.deepEqual([...hero.querySelectorAll(".sde-citadel-actions a")].map(a=>a.getAttribute("href")),["/mouvement","/contact#rejoindre"]);
+ assert.deepEqual([...hero.querySelectorAll(".sde-citadel-actions a")].map(a=>a.getAttribute("href")),["/contact#rejoindre","/mouvement"]);
  assert.equal(hero.querySelector('a[data-film-link]').getAttribute("href"),"/mouvement#film");
  assert.equal(hero.querySelector(".sde-tpa-hero-card time").getAttribute("datetime"),tpa.debut);
  assert.equal(hero.querySelector(".sde-shell-event-register").getAttribute("href"),tpa.inscription);
@@ -79,7 +79,7 @@ test("Prier Organiser Agir : trois cartes accessibles et toutes les destinations
 test("Responsive PC/tablette/mobile, contraste, mouvement réduit et navigation partagée",()=>{
  const links=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(x=>x[1]);
  assert.ok(links.some(link=>/^\/vitrine\/sde-accueil-officiel-2027\.css\?v=[a-zA-Z0-9]+$/.test(link)),"charte officielle conservée");
- assert.match(links.at(-1),/^\/vitrine\/sde-citadelle-celeste-2027\.css\?v=[a-zA-Z0-9]+$/,"couche Citadelle chargée en dernier avec versionnement automatique");
+ assert.match(links.at(-1),/^\/vitrine\/sde-citadelle-celeste-2027\.css\?v=[a-zA-Z0-9-]+$/,"couche Citadelle chargée en dernier avec versionnement automatique");
  for(const required of [
   "@media(max-width:1000px)","@media(max-width:650px)","@media(max-width:800px)","@media(max-width:365px)",
   "@media(prefers-reduced-motion:reduce)","grid-template-columns:repeat(3,minmax(0,1fr))",
