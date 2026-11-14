@@ -110,7 +110,7 @@
   ].map(node=>node.dataset.module||node.dataset.vue));
   for(const [icon,title,detail,route] of shortcuts){
    if(permitted.size&&!permitted.has(route))continue;
-   const button=action("",""+route);
+   const button=action("",route);
    button.className="sde-ref-shortcut";
    button.setAttribute("aria-label",title);
    button.append(elt("span","sde-ref-shortcut-icon",icon),elt("b","",title),elt("small","",detail));
@@ -125,7 +125,7 @@
   grid.dataset.sdeReferenceExpanded="true";
   wrapper.append(grid);
   const tpa=elt("a","sde-ref-member-event","");
-  tpa.href="/programmes#tpa-2026";
+  tpa.href="/programmes";
   tpa.append(elt("strong","","ALEPH 12 · 12 jours de Jeûne et Prière"),elt("span","","À venir — consulter les programmes SDE"),elt("span","","Voir les programmes →"));
   wrapper.append(tpa);
   realCard.insertAdjacentElement("afterend",wrapper);
