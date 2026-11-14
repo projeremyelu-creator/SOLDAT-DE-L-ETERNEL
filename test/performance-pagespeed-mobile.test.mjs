@@ -26,9 +26,10 @@ test('Le thème est découvert directement, sans @import en cascade après les a
  const accueil=link.findIndex(x=>x.includes('/vitrine/sde-accueil-premium.css'));
  assert.ok(premium>=0&&premium<accueil);
  assert.ok(link.includes(link.find(x=>x.includes('sde-shell-public.css'))),'navigation commune conservée');
- assert.ok(link.at(-1).includes('sde-citadelle-celeste-2027.css'),'thème 2+3 responsive découvert en dernier');
+ assert.ok(link.at(-1).includes('sde-citadelle-reference-v4.css'),'thème 2+3 responsive découvert en dernier');
  for(const legacy of ['sde-maquette-hero.css','sde-six-maquettes-2027.css','sde-fusion.css'])assert.ok(!link.some(x=>x.includes(legacy)),'ancien style '+legacy);
  assert.doesNotMatch(html,/<style>[^<]*@import[^<]*sde-premium-public\.css/i);
+ assert.ok(link.some(x=>x.includes('sde-citadelle-celeste-2027.css')),'composants visuels antérieurs couverts par la V4');
 });
 
 test('Le contraste des cartes est explicite et les images de fond mobiles ne bloquent plus l’affichage',()=>{
