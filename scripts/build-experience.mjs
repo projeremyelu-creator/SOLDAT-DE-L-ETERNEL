@@ -35,6 +35,13 @@ function installerCitadelleFinale(html){
  '<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">\n'+
  '<link rel="stylesheet" href="'+citadelStylePath+'?v=citadel-integral-v3">\n'+
  '<script defer src="'+citadelScriptPath+'?v=citadel-integral-v3"></script>\n';
+ // L'application native utilise un <head> implicite et contient un <\/head> DANS une
+ // chaîne JavaScript de sauvegarde hors-ligne. Ne jamais insérer le thème dans
+ // cette chaîne : construire un véritable head juste avant le splash initial.
+ if (/^\s*<!doctype html>\s*<html[^>]*>\s*<meta/i.test(html) && html.includes('<div class="sde-splash"')) {
+   html=html.replace(/(<html\b[^>]*>)/i,'$1\n<head>');
+   return html.replace(/(?=<div class="sde-splash")/,links+'</head>\n<body>\n');
+ }
  if (html.includes('</head>')) return html.replace('</head>',links+'</head>');
  return html.replace(/<body\b/i,links+'<body');
 }
