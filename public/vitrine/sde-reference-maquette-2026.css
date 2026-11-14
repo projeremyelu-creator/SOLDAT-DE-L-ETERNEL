@@ -1,0 +1,114 @@
+/* Refonte de référence SDE 14/11/2026 — visuel uniquement.
+   Les comptes, API, rôles, albums et données métier restent inchangés.
+   Cette feuille est chargée après les thèmes précédents par build-experience.mjs. */
+:root{--sde-ref-night:#08152e;--sde-ref-mid:#102047;--sde-ref-plum:#241044;--sde-ref-gold:#e6bf68;--sde-ref-ivory:#fbf5ea;--sde-ref-muted:#d1cee3;--sde-ref-line:rgba(223,188,114,.25);--sde-ref-radius:18px;--sde-ref-shadow:0 22px 48px rgba(1,5,19,.38)}
+html[data-sde-citadel-integral] body{color:var(--sde-ref-ivory);background:#08152e}
+html[data-sde-citadel-integral] :is(a,button,input,summary,select,textarea):focus-visible{outline:3px solid #f6d788!important;outline-offset:3px!important}
+html[data-sde-citadel-integral] :is(a,button){-webkit-tap-highlight-color:rgba(230,191,104,.25)}
+/* Page publique : retrouver la composition hero / services / agenda / six missions. */
+html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-main{background:linear-gradient(180deg,#08152e 0%,#111a3b 50%,#101832 100%)!important}
+html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{position:relative!important;isolation:isolate!important;display:block!important;min-height:560px!important;padding:58px clamp(20px,5vw,72px) 33px!important;background-image:linear-gradient(90deg,rgba(4,12,30,.96) 0%,rgba(5,14,36,.82) 43%,rgba(6,17,43,.35) 78%,rgba(9,16,41,.65) 100%),url("/vitrine/photos/hero-sde-1280.webp")!important;background-position:center,center 40%!important;background-size:cover!important;border-bottom:1px solid var(--sde-ref-line)!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero::before{content:""!important;display:block!important;position:absolute!important;inset:0!important;z-index:-1!important;background:linear-gradient(180deg,rgba(5,10,29,.12),rgba(5,10,29,.14) 55%,#0b1630 100%)!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero::after{display:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner{width:min(1380px,100%)!important;max-width:1380px!important;margin:auto!important;display:grid!important;grid-template-columns:minmax(0,1.55fr) minmax(255px,.77fr)!important;align-items:center!important;gap:clamp(25px,4vw,70px)!important;min-height:360px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-copy{width:100%!important;max-width:760px!important;min-width:0!important;text-align:left!important;margin:0!important;padding:0!important;position:relative!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-copy .ap-eyebrow{display:block!important;color:#efd49b!important;letter-spacing:.15em!important;font-size:.75rem!important;text-align:left!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero h1#titre-accueil{color:var(--sde-ref-ivory)!important;-webkit-text-fill-color:var(--sde-ref-ivory)!important;font:600 clamp(2.7rem,5.5vw,5.5rem)/1.04 "Cinzel",Georgia,serif!important;letter-spacing:.007em!important;text-align:left!important;text-shadow:0 6px 24px rgba(0,0,0,.4)!important;max-width:700px!important;margin:10px 0 14px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-tagline{font:600 clamp(.88rem,1.25vw,1.07rem)/1.55 "Plus Jakarta Sans",system-ui,sans-serif!important;letter-spacing:.025em!important;color:#f0e7da!important;-webkit-text-fill-color:#f0e7da!important;text-align:left!important;margin:0 0 8px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-devise{color:#f2cf81!important;-webkit-text-fill-color:#f2cf81!important;text-align:left!important;font-size:.88rem!important;margin:0 0 18px!important;letter-spacing:.1em!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero :is(.sde-vision-wordmark,.sde-citadelle-foundation,.sde-citadel-film){display:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-verse{display:block!important;margin:0 0 20px!important;padding:0 0 0 15px!important;border-left:3px solid var(--sde-ref-gold)!important;max-width:580px!important;text-align:left!important;background:transparent!important;box-shadow:none!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-verse :is(p,cite){color:#f8eee0!important;-webkit-text-fill-color:#f8eee0!important;font-size:.86rem!important;text-align:left!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-actions{display:flex!important;justify-content:flex-start!important;flex-wrap:wrap!important;gap:12px!important;margin-top:6px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-actions a{border-radius:12px!important;min-height:48px!important;box-shadow:0 9px 22px rgba(5,6,16,.26)!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-btn-gold{background:linear-gradient(125deg,#f7db96,#d5a847)!important;color:#0d1831!important;-webkit-text-fill-color:#0d1831!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-btn-ghost{background:rgba(8,17,42,.72)!important;color:#fff4df!important;-webkit-text-fill-color:#fff4df!important;border:1px solid rgba(248,218,158,.55)!important}
+html[data-sde-citadel-integral] .sde-ref-hub-links{display:grid;gap:10px;min-width:0;width:100%;position:relative;z-index:1}
+html[data-sde-citadel-integral] .sde-ref-hub-links a{min-height:66px;display:flex;align-items:center;gap:14px;padding:13px 16px;color:#fff3e8!important;text-decoration:none!important;background:linear-gradient(120deg,rgba(18,24,61,.84),rgba(37,20,61,.78));border:1px solid rgba(242,206,147,.35);border-radius:13px;backdrop-filter:blur(14px);box-shadow:0 8px 24px #0004;transition:transform .2s,border-color .2s,background .2s}
+html[data-sde-citadel-integral] .sde-ref-hub-links a:hover{transform:translateX(-3px);border-color:#f6d084;background:rgba(37,28,75,.95)}
+html[data-sde-citadel-integral] .sde-ref-hub-links .sde-ref-icon{font-size:1.7rem;line-height:1;flex:none;width:40px;text-align:center;color:#f3c96e}
+html[data-sde-citadel-integral] .sde-ref-hub-links strong{display:block;font-weight:800;color:#fff8ec;font-size:.93rem}
+html[data-sde-citadel-integral] .sde-ref-hub-links small{display:block;font-size:.76rem;color:#d9d4e8;margin-top:2px}
+html[data-sde-citadel-integral] .sde-ref-hub-links .sde-ref-arrow{margin-left:auto;color:#f4ce77}
+html[data-sde-citadel-integral] .sde-ref-program-strip{width:min(1380px,100%);margin:20px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;background:linear-gradient(100deg,rgba(31,17,65,.96),rgba(20,28,65,.94));border:1px solid rgba(236,199,129,.35);border-radius:17px;box-shadow:var(--sde-ref-shadow);overflow:hidden;position:relative;z-index:3}
+html[data-sde-citadel-integral] .sde-ref-program-strip>a,html[data-sde-citadel-integral] .sde-ref-program-strip>.sde-tpa-hero-card{display:flex!important;position:relative!important;inset:auto!important;transform:none!important;width:100%!important;max-width:none!important;margin:0!important;min-width:0!important;min-height:94px!important;padding:16px 18px!important;background:transparent!important;border:0!important;border-right:1px solid rgba(229,195,126,.3)!important;border-radius:0!important;box-shadow:none!important;text-decoration:none!important;color:#fdf7ed!important}
+html[data-sde-citadel-integral] .sde-ref-program-strip>a{align-items:center;gap:12px}
+html[data-sde-citadel-integral] .sde-ref-program-strip>a:last-child{border-right:0!important}
+html[data-sde-citadel-integral] .sde-ref-program-strip .sde-ref-program-icon{font-size:1.85rem;flex:none;color:var(--sde-ref-gold)}
+html[data-sde-citadel-integral] .sde-ref-program-strip strong{display:block;font:700 clamp(.87rem,1.2vw,1.08rem)/1.3 "Cinzel",Georgia,serif;color:#f4d88d}
+html[data-sde-citadel-integral] .sde-ref-program-strip small{display:block;color:#f7e6d6;font:.75rem/1.35 "Plus Jakarta Sans",system-ui,sans-serif;margin-top:4px}
+html[data-sde-citadel-integral] .sde-ref-program-strip .sde-tpa-hero-card .sde-shell-event-inner{padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;min-height:0!important}
+html[data-sde-citadel-integral] .sde-ref-program-strip .sde-tpa-hero-card :is(.sde-tpa-kicker,.sde-tpa-facts,.sde-2027-tpa-subtitle,.sde-tpa-actions,.sde-tpa-detail){display:none!important}
+html[data-sde-citadel-integral] .sde-ref-program-strip .sde-tpa-hero-card h2{font:700 1.05rem "Cinzel",serif!important;color:#f4d88d!important;margin:0 0 5px!important}
+html[data-sde-citadel-integral] .sde-ref-program-strip .sde-tpa-hero-card::after{content:"18 décembre · 20 h GMT";font-size:.78rem;align-self:center;color:#f7e6d6}
+html[data-sde-citadel-integral] .sde-ref-program-strip>a:hover{background:rgba(229,193,119,.1)!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-vision{margin:0 auto!important;max-width:1440px!important;padding:28px 16px 38px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-vision>.ap-wrap{background:transparent!important;border:0!important;box-shadow:none!important;padding:8px 0!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axes{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:12px!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis{min-width:0!important;min-height:154px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:7px!important;padding:16px 9px!important;background:linear-gradient(145deg,#1b264b,#211d45)!important;border:1px solid var(--sde-ref-line)!important;border-radius:15px!important;text-align:center!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis :is(strong,small){display:block!important;color:#f9efe1!important;text-align:center!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis .sde-axis-icon{color:#efc76b!important}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:hover{border-color:#efc76b!important;transform:translateY(-2px)!important}
+/* Portail privé — conserver les vues/rôles réels et le moteur de navigation. */
+html[data-sde-citadel-integral] body.sde-direct{--sde-direct-night:#08152e;--sde-direct-gold:#e4bf70;background:linear-gradient(135deg,#09152c,#120b30)!important;color:#f8f0e4}
+html[data-sde-citadel-integral] body.sde-direct #sde-direct-top{background:rgba(6,15,35,.97)!important;border-bottom:1px solid rgba(238,199,114,.32)!important;backdrop-filter:blur(16px)}
+html[data-sde-citadel-integral] body.sde-direct :is(#main,.main){background:transparent!important;min-width:0}
+html[data-sde-citadel-integral] body.sde-direct .view{min-width:0;color:#f8f0e4}
+html[data-sde-citadel-integral] body.sde-direct :is(.sde-ref-command,.sde-ref-member-shortcuts){background:linear-gradient(155deg,rgba(11,27,60,.98),rgba(29,17,67,.95))!important;border:1px solid rgba(240,196,118,.27)!important;border-radius:20px!important;box-shadow:0 16px 40px #0005!important;padding:clamp(16px,2.2vw,26px)!important;margin:0 0 20px!important;max-width:100%!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-command::before{content:"";display:block;height:156px;margin:-8px -8px 18px;background:linear-gradient(90deg,rgba(8,20,49,.82),rgba(13,21,51,.18)),url("/vitrine/photos/hero-sde-1280.webp") center 40%/cover;border-radius:14px}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-headline{display:flex!important;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:16px}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-headline h2,html[data-sde-citadel-integral] body.sde-direct .sde-ref-member-shortcuts h2{color:#f9e5b7!important;font-family:"Cinzel",Georgia,serif!important;font-size:clamp(1.25rem,2.3vw,1.85rem)!important;line-height:1.2!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-status{background:rgba(29,104,68,.35)!important;border:1px solid #6abf91!important;color:#ddffec!important;border-radius:999px;padding:6px 12px}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-metrics{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;margin:10px 0 20px!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-metric{min-height:90px!important;background:linear-gradient(140deg,#25235a,#101e45)!important;border:1px solid rgba(216,174,103,.28)!important;border-radius:13px!important;color:#fdf2e1!important;text-align:left!important;padding:13px 16px!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-metric b{display:block;color:#fff!important;font-size:clamp(1.3rem,2.3vw,2rem)!important;line-height:1.2}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-metric span{color:#d9d6e9!important;font-size:.78rem!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-cards{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-card{background:linear-gradient(140deg,rgba(38,26,83,.85),rgba(16,31,64,.92))!important;border:1px solid rgba(227,183,113,.26)!important;border-radius:14px!important;padding:17px!important;min-height:160px!important;box-shadow:none!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-card h3{font-family:"Plus Jakarta Sans",system-ui,sans-serif!important;font-size:1.01rem!important;color:#f8d689!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-card p{color:#eee3dc!important;font-size:.88rem!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-card :is(button,a){border-radius:10px!important;min-height:44px!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-member-shortcuts-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-member-shortcuts-grid>*{display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;text-align:left!important;gap:7px!important;min-height:98px!important;padding:16px!important;border-radius:14px!important;background:linear-gradient(130deg,#1a2456,#281a55)!important;color:#fff5e7!important;border:1px solid rgba(227,183,113,.28)!important;text-decoration:none!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-member-shortcuts-grid>*:hover{background:#32255f!important;border-color:#efc979!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-member-shortcuts-grid b{color:#f6da91!important}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-member-shortcuts-grid small{color:#e3dce6!important}
+html[data-sde-citadel-integral] body.sde-direct :is(.card,.panel,.esp-id,.acc-hero,.sde-dash-panel){border-radius:16px;border-color:rgba(220,183,112,.24);box-shadow:0 12px 32px rgba(0,0,0,.17)}
+html[data-sde-citadel-integral] body.sde-direct #sde-direct-top :is(a,button){min-height:44px}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-operational>summary{color:#efd596!important;min-height:48px!important}
+@media(max-width:1050px){
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner{grid-template-columns:minmax(0,1fr) minmax(220px,.75fr)!important;gap:22px!important}
+ html[data-sde-citadel-integral] .sde-ref-program-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+ html[data-sde-citadel-integral] .sde-ref-program-strip>:nth-child(2){border-right:0!important}
+ html[data-sde-citadel-integral] body.sde-direct .sde-ref-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ html[data-sde-citadel-integral] body.sde-direct .sde-ref-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:760px){
+ html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{min-height:0!important;padding:26px 14px 20px!important;background-image:linear-gradient(90deg,rgba(5,11,29,.83),rgba(6,16,36,.3)),url("/vitrine/photos/hero-sde-640.webp")!important;background-position:center,62% 38%!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:17px!important;min-height:0!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero h1#titre-accueil{font-size:clamp(2.05rem,10vw,3.3rem)!important;max-width:390px!important;text-align:left!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-tagline{font-size:.8rem!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-devise{font-size:.74rem!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-actions{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+ html[data-sde-citadel-integral] .sde-ref-hub-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ html[data-sde-citadel-integral] .sde-ref-hub-links a{min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;min-height:95px;padding:12px 6px;gap:7px}
+ html[data-sde-citadel-integral] .sde-ref-hub-links .sde-ref-arrow{display:none}
+ html[data-sde-citadel-integral] .sde-ref-hub-links small{font-size:.68rem}
+ html[data-sde-citadel-integral] .sde-ref-program-strip{gap:0;margin-top:15px;border-radius:12px}
+ html[data-sde-citadel-integral] .sde-ref-program-strip>a,html[data-sde-citadel-integral] .sde-ref-program-strip>.sde-tpa-hero-card{min-height:78px!important;padding:11px!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axes{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis{min-height:122px!important}
+ html[data-sde-citadel-integral] body.sde-direct .sde-ref-cards,html[data-sde-citadel-integral] body.sde-direct .sde-ref-member-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ html[data-sde-citadel-integral] body.sde-direct .sde-ref-command::before{height:110px}
+}
+@media(max-width:440px){
+ html[data-sde-citadel-integral] .sde-ref-program-strip strong{font-size:.79rem}
+ html[data-sde-citadel-integral] .sde-ref-program-strip .sde-ref-program-icon{font-size:1.4rem}
+ html[data-sde-citadel-integral] body.sde-direct .sde-ref-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ html[data-sde-citadel-integral] body.sde-direct .sde-ref-member-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(prefers-reduced-motion:reduce){html[data-sde-citadel-integral] .sde-ref-hub-links a,html[data-sde-citadel-integral] .sde-citadel-axis{transition:none!important;transform:none!important;scroll-behavior:auto!important}}
+
+/* Préserver l'inscription réelle à la TPA dans le bandeau compact. */
+html[data-sde-citadel-integral] .sde-ref-program-strip .sde-tpa-hero-card .sde-tpa-actions{display:flex!important;margin:7px 0 0!important;padding:0!important;gap:4px!important}
+html[data-sde-citadel-integral] .sde-ref-program-strip .sde-tpa-hero-card .sde-tpa-actions .sde-shell-event-register{display:inline-flex!important;align-items:center!important;min-height:32px!important;padding:5px 9px!important;border-radius:9px!important;background:#e8bf69!important;color:#111936!important;-webkit-text-fill-color:#111936!important;font-size:.69rem!important;text-decoration:none!important}
