@@ -7,7 +7,7 @@
   if(document.getElementById(id))return;
   const link=document.createElement("link");
   link.id=id;link.rel="stylesheet";
-  link.href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap";
+  link.href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap";
   document.head.append(link);
  };
  loadRefonteFonts();
@@ -64,7 +64,10 @@
   const img=document.createElement("img");img.src="/vitrine/logo-96.webp";img.alt="";img.width=42;img.height=42;
   const title=make("span","sde-shell-brand-title");title.append(make("b","", "S.D.E"),make("small","","Soldats de l’Éternel"));brand.append(img,title);
   const nav=make("nav","sde-shell-mega");nav.setAttribute("aria-label","Navigation principale");
-  for(const group of groups)nav.append(menuGroup(group,"sde-shell-mega-group"));
+  // Une navigation fidèle à la maquette. Les détails restent accessibles dans le tiroir Plus.
+  for(const [href,label] of [["/","Accueil"],["/mouvement","Vision"],["/programmes#agenda","Agenda"],["/mediatheque","Ressources"],["/contact#rejoindre","Rejoindre"],["/soutenir","Soutenir"]]){
+    nav.append(link(href,label,"sde-citadel-top-link"));
+  }
   const actions=make("div","sde-shell-head-actions");
   // Une seule action contextuelle : le contenu avant les utilitaires globaux.
   const pageActions={

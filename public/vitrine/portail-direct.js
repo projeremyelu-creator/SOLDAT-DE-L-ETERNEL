@@ -134,8 +134,8 @@
     };
     const construireBarreMobile=()=>{
       const items=mode==="membre"?[
-        ["synthese","Accueil","accueil"],["priere","Prière","coeur"],
-        ["academie","Academy","academy"],["agenda","Agenda","agenda"]
+        ["synthese","Accueil","accueil"],["academie","Formation","academy"],
+        ["engagements","Missions","missions"],["priere","Prière","coeur"]
       ]:[
         ["accueil","Accueil","accueil"],["membres","Membres","membres"],
         ["agenda","Agenda","agenda"],compte?.niveau>=2?
