@@ -167,5 +167,5 @@ test("Citadelle V4 : hamburger mobile fonctionnel et deux vrais boutons compacts
  assert.match(css,/\.sde-citadel-actions > \.ap-btn\s*\{[\s\S]*?flex:0 0 auto!important;/);
  assert.match(css,/\.sde-shell-head-actions \.sde-shell-search\s*\{[\s\S]*?display:none!important;/);
  assert.match(css,/\.sde-shell-head-actions \.sde-shell-rubriques\s*\{[\s\S]*?width:48px!important;/);
- assert.match(audit,/innerWidth<=900\?'\\.sde-shell-rubriques':'\\.sde-shell-search'/);
+ assert.ok(audit.includes("innerWidth<=900?'.sde-shell-rubriques':'.sde-shell-search'"));
 });
