@@ -30,7 +30,7 @@ test("maquette : « Mon espace Soldat » est branché pour les membres seulement
  assert.ok(direct.includes('"espace-soldat":"Mon espace Soldat"'));
  assert.ok(direct.includes('nom==="espace-soldat"&&mode!=="membre"'));
  assert.ok(ops.includes("location.pathname==='/mon-espace'&&(!initial||initial==='synthese'))portal.selectionner('espace-soldat')"),"l'accueil réel s'ouvre après le montage React");
- for(const t of ["Soldiers Academy","Prochain rendez-vous","Mes cotisations","Mon carnet de prière","Colossiens 4:2","Mes ressources","Reprendre ma formation","Voir mon agenda","Ouvrir les ressources"])assert.ok(ops.includes(t),t);
+ for(const t of ["Soldiers Academy","Événement prochain","Mes cotisations","Mon carnet de prière","Colossiens 4:2","Mes ressources","Reprendre ma formation","Voir mon agenda","Ouvrir les ressources"])assert.ok(ops.includes(t),t);
 });
 test("maquette : progression Academy calculée côté serveur pour le membre connecté",()=>{
  assert.ok(worker.includes('p === "/api/mon-parcours-academy"'));
