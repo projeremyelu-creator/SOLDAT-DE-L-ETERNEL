@@ -125,3 +125,11 @@ test("Référence V4 : source graphique publique et privée réellement chargée
  assert.match(privateNav,/\["engagements","Missions","missions"\]/);
  assert.doesNotMatch(js,/4328|\b521\b|67%/);
 });
+
+
+test("Citadelle V4 : bouton de recherche tactile 48px et grille Soutenir stable avant montage",()=>{
+ const css=read("public/vitrine/sde-citadelle-reference-v4.css");
+ assert.match(css,/a\.sde-shell-search\s*\{[\s\S]*?width:48px!important;[\s\S]*?height:48px!important;/);
+ assert.match(css,/body\[data-sde-page="soutenir"\] \.sde-donation-overview\s*\{[\s\S]*?grid-template-columns:minmax\(0,1\.07fr\) minmax\(320px,\.93fr\)!important;/);
+ assert.match(css,/body\[data-sde-page="soutenir"\] \.sde-donation-overview #formulaire\s*\{[\s\S]*?position:sticky!important;/);
+});

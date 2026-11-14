@@ -142,3 +142,66 @@ html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-headline h2{font-
 html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-status{font-size:.65rem!important;padding:7px!important}
 }
 @media(prefers-reduced-motion:reduce){html[data-sde-citadel-integral] *,html[data-sde-citadel-integral] *::before,html[data-sde-citadel-integral] *::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+
+/* Citadelle V4 — recette finale de la maquette du 14/11/2026.
+   Conserver l'illustration, le moteur privé et les albums; corriger les
+   dimensions réellement touchables sur le bandeau et la grille Soutenir.
+   Ne pas réintroduire de gabarit ancien ni de compteurs de démonstration. */
+html[data-sde-citadel-integral] body.sde-shell-mounted .sde-shell-header a.sde-shell-search {
+  box-sizing:border-box!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 48px!important;
+  width:48px!important;
+  min-width:48px!important;
+  max-width:48px!important;
+  height:48px!important;
+  min-height:48px!important;
+  max-height:48px!important;
+  padding:12px!important;
+  margin:0!important;
+  transform:none!important;
+  animation:none!important;
+  border-radius:12px!important;
+}
+html[data-sde-citadel-integral] body.sde-shell-mounted .sde-shell-header a.sde-shell-search svg {
+  display:block!important;
+  width:23px!important;
+  height:23px!important;
+  flex:none!important;
+}
+@media(min-width:901px) {
+  /* Réserver la grille finale AVANT la pose asynchrone du shell :
+     l'article ne doit plus bondir de y=799px à y=0px. */
+  html[data-sde-citadel-integral] body[data-sde-page="soutenir"] .sde-donation-overview {
+    display:grid!important;
+    grid-template-columns:minmax(0,1.07fr) minmax(320px,.93fr)!important;
+    align-items:start!important;
+    gap:clamp(20px,3vw,40px)!important;
+    margin:24px 0 30px!important;
+  }
+  html[data-sde-citadel-integral] body[data-sde-page="soutenir"] .sde-donation-overview>.hub-section {
+    min-width:0!important;
+  }
+  html[data-sde-citadel-integral] body[data-sde-page="soutenir"] .sde-donation-overview #formulaire {
+    position:sticky!important;
+    top:110px!important;
+    padding:22px!important;
+    border:1px solid #c8b48c!important;
+    border-radius:18px!important;
+    background:var(--sde-surface,#f9f4ea)!important;
+    box-shadow:0 9px 25px #0001!important;
+  }
+}
+@media(max-width:900px){
+  html[data-sde-citadel-integral] body[data-sde-page="soutenir"] .sde-donation-overview {
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  html[data-sde-citadel-integral] body[data-sde-page="soutenir"] .sde-donation-overview #formulaire {
+    position:static!important;
+    order:-1!important;
+  }
+}
