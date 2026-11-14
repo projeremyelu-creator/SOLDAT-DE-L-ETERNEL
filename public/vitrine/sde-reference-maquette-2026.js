@@ -71,7 +71,8 @@
    const command=view.querySelector(".sde-ref-command");
    if(command){
      const h=command.querySelector(".sde-ref-headline h2");
-     if(h)h.textContent=document.body.classList.contains("sde-direct-member")?"Mon espace Soldat":"Poste de commandement";
+     const target=document.body.classList.contains("sde-direct-member")?"Mon espace Soldat":"Poste de commandement";
+     if(h&&h.textContent!==target)h.textContent=target;
    }
    if(!document.body.classList.contains("sde-direct-member"))return;
    const shortcuts=view.querySelector(".sde-ref-member-shortcuts-grid");
