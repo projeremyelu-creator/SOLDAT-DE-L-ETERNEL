@@ -76,7 +76,7 @@ test('Barre de menu mobile : cinq choix lisibles, icônes et Plus ouvre les rubr
   assert.ok(nav,'barre basse montée sur le portail membre');
   assert.equal(nav.hidden,false,'affichée seulement après vérification du compte');
   const actions=[...nav.querySelectorAll('button')];
-  assert.deepEqual(actions.map(x=>x.textContent),['Accueil','Prière','Academy','Agenda','Plus']);
+  assert.deepEqual(actions.map(x=>x.textContent),['Accueil','Formation','Missions','Prière','Plus']);
   assert.equal(actions.length,5);
   assert.ok(actions.every(x=>x.querySelector('svg[aria-hidden=true]')),'chaque action possède son pictogramme');
   const plus=nav.querySelector('[data-bottom-more]');
