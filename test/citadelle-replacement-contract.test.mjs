@@ -240,3 +240,18 @@ test("Maquette de référence 14/11 : partagée par le site public et l'applicat
  assert.doesNotMatch(js,/87 membres|156 apprenants|421 sujets/);
  assert.ok(js.includes("if(h&&h.textContent!==target)"),"Observateur de mutation idempotent");
 });
+
+
+test("la maquette du 14 novembre garde le design responsive sur les deux espaces sans simuler de données", () => {
+  const css = read("public/vitrine/sde-reference-maquette-2026.css");
+  assert.ok(css.includes("SDE MAQUETTE 14 NOV — FIN DE CASCADE"), "Le dernier calque de référence doit être chargé.");
+  assert.ok(css.includes("body.sde-2027-reference.sde-premium-home .ap-hero"), "Composition du site public manquante.");
+  assert.ok(css.includes("body.sde-tableau .sde-dash-shell"), "Composition du tableau de bord sécurisé manquante.");
+  assert.ok(css.includes("body.sde-direct #main .sde-ref-cards"), "Composition du portail privé historique manquante.");
+  assert.ok(css.includes("@media(max-width:760px)"), "Règles mobiles essentielles manquantes.");
+  assert.ok(css.includes("prefers-reduced-motion"), "Réduction des animations manquante.");
+  const build = read("scripts/build-experience.mjs");
+  assert.ok(build.includes("sde-reference-maquette-2026.css"), "La maquette doit figurer en dernière couche compilée.");
+  const worker = read("src/worker.js");
+  assert.ok(worker.includes("REGLES"), "Les contrôles d'accès serveur doivent être conservés.");
+});
