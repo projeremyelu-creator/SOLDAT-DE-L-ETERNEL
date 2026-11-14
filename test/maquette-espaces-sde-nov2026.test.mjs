@@ -19,13 +19,13 @@ function session(permissions){
  return dom;
 }
 
-test("SDE privé : six espaces de la maquette reliés aux vues autorisées et aux missions publiques",()=>{
- const routes=["academie","rendezvous","espace","priere","bibliotheque"];
+test("SDE privé : huit espaces de la maquette reliés aux vues autorisées et aux missions publiques",()=>{
+ const routes=["academie","rendezvous","espace","priere","bibliotheque","portevoix","espace-soldat"];
  const dom=session(routes);
  try{
   const doc=dom.window.document;
   const cards=[...doc.querySelectorAll(".sde-ref-member-shortcuts-grid > *")];
-  assert.equal(cards.length,6);
+  assert.equal(cards.length,8);
   assert.deepEqual(cards.filter(x=>x.dataset.vue).map(x=>x.dataset.vue),routes);
   assert.equal(cards.at(-1).getAttribute("href"),"/missions");
   const navigations=[];
