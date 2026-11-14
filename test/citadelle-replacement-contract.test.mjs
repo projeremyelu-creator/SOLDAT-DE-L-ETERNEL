@@ -103,3 +103,25 @@ test("les liens mobiles de navigation, fil d’Ariane et confidentialité offren
  assert.match(css,/min-width:44px!important/);
  assert.match(css,/min-height:44px!important/);
 });
+
+test("Référence V4 : source graphique publique et privée réellement chargée en dernier",()=>{
+ const source=read("scripts/build-experience.mjs");
+ const css=read("public/vitrine/sde-citadelle-reference-v4.css");
+ const js=read("public/vitrine/sde-citadelle-reference-v4.js");
+ const publicNav=read("public/vitrine/sde-shell-public.js");
+ const privateNav=read("public/vitrine/portail-direct.js");
+ assert.match(source,/referenceStylePath/);
+ assert.match(source,/referenceScriptPath/);
+ assert.match(source,/data-sde-citadel-integral="v4"/);
+ assert.match(css,/--cit-castle:url\("\/vitrine\/illus\/citadelle-celeste\.svg"\)/);
+ assert.match(css,/sde-ref-metrics/);
+ assert.match(css,/sde-ref-member-shortcuts/);
+ assert.match(css,/grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
+ assert.match(css,/@media\(max-width:760px\)/);
+ assert.match(js,/querySelectorAll\("\.chiffres \.chiffre"\)/);
+ assert.match(js,/if\(!value\|\|value==="—"\)continue/);
+ assert.match(js,/querySelector\("#sde-personal-card"\)/);
+ for(const heading of ["Accueil","Vision","Agenda","Ressources","Rejoindre","Soutenir"])assert.ok(publicNav.includes(',"'+heading+'"]'),heading);
+ assert.match(privateNav,/\["engagements","Missions","missions"\]/);
+ assert.doesNotMatch(js,/4328|\b521\b|67%/);
+});

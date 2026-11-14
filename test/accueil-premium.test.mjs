@@ -97,7 +97,7 @@ test('Accueil premium : indicateurs issus de /api/impact, agrégats seulement, a
 
 test('Accueil SDE 2+3 : le thème officiel remplace réellement les anciennes feuilles',()=>{
  const feuilles=[...html.matchAll(/<link rel="stylesheet" href="([^\"]+)"/g)].map(m=>m[1]);
- assert.ok(feuilles.at(-1).includes('sde-citadelle-celeste-2027.css'),'la seule direction graphique finale est 2+3');
+ assert.ok(feuilles.at(-1).includes('sde-citadelle-reference-v4.css'),'la seule direction graphique finale est 2+3');
  assert.ok(feuilles.includes('/vitrine/sde-accueil-premium.css?v=405b772b7a5d')||feuilles.some(f=>f.includes('sde-accueil-premium.css')),'structure de l\'accueil conservée');
  for(const ancien of ['sde-fusion.css','sde-v5-complet.css','sde-six-maquettes-2027.css','sde-maquette-hero.css','accueil-maquette.css'])
    assert.ok(!feuilles.some(f=>f.includes(ancien)),'ancienne feuille encore chargée : '+ancien);
