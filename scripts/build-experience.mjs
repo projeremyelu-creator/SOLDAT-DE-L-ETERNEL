@@ -40,7 +40,10 @@ function installerCitadelleFinale(html){
  // cette chaîne : construire un véritable head juste avant le splash initial.
  if (/^\s*<!doctype html>\s*<html[^>]*>\s*<meta/i.test(html) && html.includes('<div class="sde-splash"')) {
    html=html.replace(/(<html\b[^>]*>)/i,'$1\n<head>');
-   return html.replace(/(?=<div class="sde-splash")/,links+'</head>\n<body>\n');
+   // Charger les styles après la dernière feuille privée mais AVANT le script
+   // de palette, sans interrompre le gabarit HTML stocké dans le JS métier.
+   html=html.replace('<script>/* Palette des espaces privés',links+'<script>/* Palette des espaces privés');
+   return html.replace(/(?=<div class="sde-splash")/,'</head>\n<body>\n');
  }
  if (html.includes('</head>')) return html.replace('</head>',links+'</head>');
  return html.replace(/<body\b/i,links+'<body');
