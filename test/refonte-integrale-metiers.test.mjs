@@ -221,7 +221,7 @@ test('La refonte 2+3 remplace bien les structures et couleurs de l’ancienne mo
  const html=file('public/vitrine/portail.html');
  const hero=new JSDOM(html).window.document.querySelector('.sde23-actions');
  assert.ok(hero,'Hero 2+3 absent de la page publique');
- assert.deepEqual([...hero.querySelectorAll('a')].map(a=>a.getAttribute('href')),['/mouvement','/contact#rejoindre']);
+ assert.deepEqual([...hero.querySelectorAll('a')].map(a=>a.getAttribute('href')),['/contact#rejoindre','/mouvement']);
  const shell=file('public/vitrine/sde-shell-public.css');
  assert.match(shell,/\.sde23-actions/);
  assert.match(shell,/@media\(max-width:390px\)/);
