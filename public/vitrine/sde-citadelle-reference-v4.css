@@ -413,3 +413,47 @@ html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-card--reseau{
   html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-operational{margin-top:16px!important;}
   html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-operational-content{padding:11px!important;}
 }
+
+
+/* CITADELLE V4.2 — illustration cinématique permanente, non photographique.
+   Fichier AVIF optimisé provenant de l'illustration approuvée pour le hero.
+   Les photographies réelles ne sont utilisées que dans leurs albums existants.
+   Le SVG historique reste un repli documentaire (variable --cit-castle). */
+:root { --cit-cinema:url("/vitrine/illus/citadelle-celeste-cinema.avif"); }
+html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+ background:linear-gradient(90deg,rgba(2,12,29,.66) 0%,rgba(3,14,32,.52) 40%,rgba(4,15,34,.27) 70%,rgba(4,10,25,.45) 100%),
+   var(--cit-cinema) 62% 50%/cover no-repeat!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-tpa-hero-card{
+ background:linear-gradient(142deg,rgba(10,24,48,.91),rgba(8,22,45,.79)),
+   var(--cit-cinema) 84% center/cover no-repeat!important;
+}
+html[data-sde-citadel-integral] body.sde-subpage :is(.sde-intro,.m-band,.sde-hero,.page-hero,.pg-hero){
+ background-image:linear-gradient(90deg,rgba(5,14,31,.88),rgba(4,16,37,.38)),var(--cit-cinema)!important;
+}
+html[data-sde-citadel-integral] body.sde-direct-member #main .esp-id{
+ background:linear-gradient(95deg,rgba(13,28,55,.59),rgba(69,51,26,.40)),
+   var(--cit-cinema) 73% 50%/cover no-repeat!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-card--reseau{
+ background:linear-gradient(115deg,rgba(11,32,56,.88),rgba(8,35,49,.76)),
+   var(--cit-cinema) 82% center/cover no-repeat!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-main::before{
+ background:linear-gradient(90deg,rgba(7,22,44,.87),rgba(7,22,44,.15)),
+   var(--cit-cinema) 64% center/cover no-repeat!important;
+}
+html[data-sde-citadel-integral] body.sde-reference-login .access-main{
+ background:linear-gradient(110deg,rgba(4,15,32,.82),rgba(4,15,32,.45)),
+   var(--cit-cinema) 65% center/cover no-repeat!important;
+}
+@media(max-width:760px){
+ html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+  background:linear-gradient(180deg,rgba(1,10,28,.59),rgba(5,16,36,.34) 54%,rgba(5,14,32,.67)),
+    var(--cit-cinema) 68% center/cover no-repeat!important;
+ }
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-tpa-hero-card{
+  background:linear-gradient(145deg,rgba(13,29,53,.91),rgba(9,24,46,.76)),
+    var(--cit-cinema) 80% center/cover no-repeat!important;
+ }
+}

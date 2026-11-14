@@ -182,3 +182,19 @@ test("Citadelle V4 : aucun double tableau de bord historique au-dessus des carte
  assert.ok(css.includes("sde-ref-alert-list"));
  assert.ok(css.includes("sde-ref-operational-content"));
 });
+
+
+test("Citadelle V4.2 : paysage illustré cinématique dans le public et le privé, albums intacts",()=>{
+ const css=read("public/vitrine/sde-citadelle-reference-v4.css");
+ const imagePath="public/vitrine/illus/citadelle-celeste-cinema.avif";
+ assert.ok(existsSync(imagePath),"L'image cinématique AVIF manque.");
+ const bytes=readFileSync(imagePath);
+ assert.equal(bytes.toString("ascii",4,8),"ftyp","L'image doit être un conteneur AVIF valide.");
+ assert.ok(bytes.length>=1500&&bytes.length<15000,"Illustration cinématique optimisée mobile");
+ assert.match(css,/--cit-cinema:url\("\/vitrine\/illus\/citadelle-celeste-cinema\.avif"\)/);
+ for(const selector of ["sde-premium-home .ap-hero","sde-direct-member #main .esp-id","sde-tableau .sde-dash-main::before"]){
+  assert.ok(css.includes(selector),selector);
+ }
+ assert.ok(css.includes("var(--cit-cinema) 62% 50%/cover"));
+ assert.doesNotMatch(css,/--cit-cinema:url\("\/vitrine\/photos\//);
+});
