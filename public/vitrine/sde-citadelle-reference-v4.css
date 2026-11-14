@@ -205,3 +205,42 @@ html[data-sde-citadel-integral] body.sde-shell-mounted .sde-shell-header a.sde-s
     order:-1!important;
   }
 }
+
+
+/* V4 — icônes vectorielles officielles des six axes de la maquette.
+   Les glyphes décoratifs précédents sont entièrement remplacés. */
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis::before {
+  content:none!important;
+  display:none!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis .sde-axis-icon {
+  box-sizing:border-box!important;
+  display:grid!important;
+  place-items:center!important;
+  width:34px!important;
+  height:34px!important;
+  flex:none!important;
+  color:#edc875!important;
+  -webkit-text-fill-color:#edc875!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis .sde-axis-icon svg {
+  display:block!important;
+  width:30px!important;
+  height:30px!important;
+  max-width:100%!important;
+  stroke:currentColor!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:nth-child(4) .sde-axis-icon {
+  color:#96daa4!important;
+  -webkit-text-fill-color:#96daa4!important;
+}
+@media(max-width:760px){
+  html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis .sde-axis-icon {
+    width:29px!important;
+    height:29px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis .sde-axis-icon svg {
+    width:26px!important;
+    height:26px!important;
+  }
+}

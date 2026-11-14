@@ -133,3 +133,14 @@ test("Citadelle V4 : bouton de recherche tactile 48px et grille Soutenir stable 
  assert.match(css,/body\[data-sde-page="soutenir"\] \.sde-donation-overview\s*\{[\s\S]*?grid-template-columns:minmax\(0,1\.07fr\) minmax\(320px,\.93fr\)!important;/);
  assert.match(css,/body\[data-sde-page="soutenir"\] \.sde-donation-overview #formulaire\s*\{[\s\S]*?position:sticky!important;/);
 });
+
+
+test("La maquette source comporte six icônes SVG SDE, sans glyphes de remplacement",()=>{
+ const html=read("public/vitrine/portail.html");
+ const css=read("public/vitrine/sde-citadelle-reference-v4.css");
+ const axes=html.match(/<div class="sde-citadel-axes"[\s\S]*?<\/div>/)?.[0]||"";
+ assert.equal((axes.match(/class="sde-axis-icon"/g)||[]).length,6);
+ assert.equal((axes.match(/<svg viewBox="0 0 24 24"/g)||[]).length,6);
+ assert.match(css,/\.sde-citadel-axis::before\s*\{\s*content:none!important;/);
+ assert.match(css,/\.sde-citadel-axis:nth-child\(4\) \.sde-axis-icon/);
+});
