@@ -218,3 +218,23 @@ test("La page membre utilise désormais directement la Citadelle V4 et ses vraie
  assert.match(css,/\.sde-citadel-member-v4 \.soldier-card\.sv-card/);
  assert.match(css,/\.sde-citadel-member-v4 \.sv-tiles \.sv-tile/);
 });
+
+
+test("Maquette de référence 14/11 : partagée par le site public et l'application sans comptes fictifs",()=>{
+ const build=read("scripts/build-experience.mjs");
+ const css=read("public/vitrine/sde-reference-maquette-2026.css");
+ const js=read("public/vitrine/sde-reference-maquette-2026.js");
+ assert.ok(build.includes("screenshotStylePath")&&build.includes("screenshotScriptPath"));
+ assert.ok(build.includes("integrerToutesPages('public')"));
+ for(const selector of ["sde-ref-hub-links","sde-ref-program-strip","sde-ref-member-shortcuts-grid","sde-ref-command"]){
+  assert.ok(css.includes(selector),selector);
+ }
+ for(const route of ["/academy","/soldiers-tv","/missions-humanitaires","/priere","/programmes"]){
+  assert.ok(js.includes(route),"Lien public manquant "+route);
+ }
+ assert.match(css,/max-width:760px/);
+ assert.match(css,/prefers-reduced-motion:reduce/);
+ assert.match(js,/querySelector\("#nav"\)/);
+ assert.doesNotMatch(js,/87 membres|156 apprenants|421 sujets/);
+ assert.ok(js.includes("if(h&&h.textContent!==target)"),"Observateur de mutation idempotent");
+});
