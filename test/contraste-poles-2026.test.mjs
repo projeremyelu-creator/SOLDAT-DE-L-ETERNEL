@@ -20,7 +20,8 @@ test('Cinq pôles : une même carte ivoire et une correction de contraste ciblé
   assert.equal(doc.querySelectorAll('#vision .sde-initiative-card').length,2,name);
   const links=[...doc.querySelectorAll('head link[rel=stylesheet]')].map(x=>x.getAttribute('href'));
   assert.equal(links.filter(x=>x.includes('sde-fusion.css')).length,0,name+' : style Fusion retiré');
-  assert.ok(links.at(-1).includes('sde-citadelle-reference-v4.css'),name+' : thème 2+3 final');
+  assert.ok(links.some(x=>x.includes('sde-citadelle-reference-v4.css')),name+' : base 2+3 conservée');
+  assert.ok(links.at(-1).includes('sde-reference-maquette-2026.css'),name+' : maquette finale');
   assert.ok(links.some(x=>x.includes('sde-shell-public.css')),name+' : navigation commune conservée');
  }
 });
