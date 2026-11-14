@@ -655,3 +655,30 @@ html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quickn
     transform:none!important;
   }
 }
+
+
+/* Citadelle v3.3 — 44 × 44 px minimum sur les liens de navigation mobiles.
+   L'audit Chromium 61 pages du 14/11 a isolé les liens de fil d'Ariane
+   et d'informations légales : zones de 34×44 ou de 49×18 px.
+   Ne change pas le libellé, la destination, ni les permissions. */
+@media (max-width:800px) {
+  html[data-sde-citadel-integral] body :is(nav a,footer a,.sde-crumbs a,.fil-ariane a,.breadcrumbs a,a[href="/confidentialite"]) {
+    box-sizing:border-box!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center;
+    min-width:44px!important;
+    min-height:44px!important;
+    max-width:100%;
+    vertical-align:middle;
+    touch-action:manipulation;
+  }
+  html[data-sde-citadel-integral] body .sde-shell-bottom a {
+    display:flex!important;
+    justify-content:center!important;
+  }
+  html[data-sde-citadel-integral] body .sde-shell-footer :is(nav a,a[href="/confidentialite"]) {
+    min-width:44px!important;
+    min-height:44px!important;
+  }
+}

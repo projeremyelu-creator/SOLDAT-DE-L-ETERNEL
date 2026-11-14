@@ -94,3 +94,12 @@ test("les quatre portes de la Citadelle sont quatre cartes tactiles réellement 
  assert.match(css,/nav\.sde-citadelle-quicknav-items > a\s*\{[\s\S]*?display:flex!important/);
  assert.match(css,/nav\.sde-citadelle-quicknav-items > a strong\s*\{[\s\S]*?text-decoration:none!important/);
 });
+
+test("les liens mobiles de navigation, fil d’Ariane et confidentialité offrent 44px",()=>{
+ const css=read("public/vitrine/sde-citadelle-celeste-2027.css");
+ assert.ok(css.includes("Citadelle v3.3"));
+ assert.match(css,/@media \(max-width:800px\)/);
+ assert.match(css,/nav a,footer a,\.sde-crumbs a,\.fil-ariane a,\.breadcrumbs a,a\[href="\/confidentialite"\]/);
+ assert.match(css,/min-width:44px!important/);
+ assert.match(css,/min-height:44px!important/);
+});
