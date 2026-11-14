@@ -33,8 +33,8 @@ function installerCitadelleFinale(html){
  const links='<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>\n'+
  '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'+
  '<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">\n'+
- '<link rel="stylesheet" href="'+citadelStylePath+'?v=citadel-integral-v3">\n'+
- '<script defer src="'+citadelScriptPath+'?v=citadel-integral-v3"></script>\n';
+ '<link rel="stylesheet" href="'+citadelStylePath+'?v='+revision+'">\n'+
+ '<script defer src="'+citadelScriptPath+'?v='+revision+'"></script>\n';
  // L'application native utilise un <head> implicite et contient un <\/head> DANS une
  // chaîne JavaScript de sauvegarde hors-ligne. Ne jamais insérer le thème dans
  // cette chaîne : construire un véritable head juste avant le splash initial.

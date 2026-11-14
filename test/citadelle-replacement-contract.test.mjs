@@ -71,7 +71,7 @@ test("La Citadelle Céleste v3 est compilée comme unique charte finale de toute
   const build = read("scripts/build-experience.mjs");
   assert.ok(build.includes("integrerToutesPages('public')"));
   assert.ok(build.includes("installerCitadelleFinale"));
-  assert.ok(build.includes("citadel-integral-v3"));
+  assert.ok(build.includes("citadelStylePath+'?v='+revision"));
   const home = read("public/vitrine/portail.html");
   assert.ok(home.includes("LA CITADELLE"));
   assert.ok(home.includes("CÉLESTE"));
