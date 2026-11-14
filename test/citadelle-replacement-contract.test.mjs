@@ -156,3 +156,16 @@ test("V4 : doctrine six axes contrastée, liens mobile et commandes cartographiq
  assert.match(css,/button\[data-geo-fullscreen\]/);
  assert.match(shell,/Accès mobile accessibles dès le premier rendu/);
 });
+
+
+test("Citadelle V4 : hamburger mobile fonctionnel et deux vrais boutons compacts sur ordinateur",()=>{
+ const js=read("public/vitrine/sde-shell-public.js");
+ const css=read("public/vitrine/sde-citadelle-reference-v4.css");
+ const audit=read("scripts/audit-public-mobile.mjs");
+ assert.match(js,/hamburger:"M4 6h16M4 12h16M4 18h16"/);
+ assert.match(js,/rubriques\.prepend\(icon\("hamburger"\)\)/);
+ assert.match(css,/\.sde-citadel-actions > \.ap-btn\s*\{[\s\S]*?flex:0 0 auto!important;/);
+ assert.match(css,/\.sde-shell-head-actions \.sde-shell-search\s*\{[\s\S]*?display:none!important;/);
+ assert.match(css,/\.sde-shell-head-actions \.sde-shell-rubriques\s*\{[\s\S]*?width:48px!important;/);
+ assert.match(audit,/innerWidth<=900\?'\\.sde-shell-rubriques':'\\.sde-shell-search'/);
+});

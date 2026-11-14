@@ -295,3 +295,75 @@ body[data-sde-page="mouvement"] #axes ol.six-axes > li svg {
     touch-action:manipulation;
   }
 }
+
+
+/* Citadelle V4 : reproduction directe de l'en-tête téléphone et des deux
+   boutons PC, sans dissocier l'état du vrai menu accessible. */
+@media(min-width:901px){
+  html[data-sde-citadel-integral] body.sde-shell-mounted
+  .sde-shell-head-actions .sde-shell-rubriques{
+    display:none!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference
+  .ap-hero .sde-citadel-actions{
+    box-sizing:border-box!important;
+    display:flex!important;
+    flex-direction:row!important;
+    flex-wrap:nowrap!important;
+    justify-content:center!important;
+    align-items:center!important;
+    gap:15px!important;
+    width:100%!important;
+    max-width:100%!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference
+  .ap-hero .sde-citadel-actions > .ap-btn {
+    box-sizing:border-box!important;
+    display:inline-flex!important;
+    flex:0 0 auto!important;
+    width:195px!important;
+    min-width:195px!important;
+    max-width:210px!important;
+    justify-content:center!important;
+  }
+}
+@media(max-width:900px){
+  html[data-sde-citadel-integral] body.sde-shell-mounted
+  .sde-shell-head-actions .sde-shell-search{
+    display:none!important;
+  }
+  html[data-sde-citadel-integral] body.sde-shell-mounted
+  .sde-shell-head-actions .sde-shell-rubriques{
+    box-sizing:border-box!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    flex:0 0 48px!important;
+    width:48px!important;
+    min-width:48px!important;
+    max-width:48px!important;
+    height:48px!important;
+    min-height:48px!important;
+    padding:12px!important;
+    margin:0!important;
+    border:0!important;
+    border-radius:11px!important;
+    font-size:0!important;
+    line-height:0!important;
+    background:rgba(5,17,35,.65)!important;
+    color:#f5e2bd!important;
+    -webkit-text-fill-color:#f5e2bd!important;
+  }
+  html[data-sde-citadel-integral] body.sde-shell-mounted
+  .sde-shell-head-actions .sde-shell-rubriques svg{
+    width:23px!important;
+    height:23px!important;
+    flex:none!important;
+    stroke:currentColor!important;
+  }
+}
+@media(max-width:760px){
+  html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+    background:linear-gradient(180deg,rgba(1,10,27,.6),rgba(4,15,35,.32) 55%,rgba(4,14,33,.54)),var(--cit-castle) 65% center/cover no-repeat!important;
+  }
+}

@@ -45,7 +45,7 @@
   if((location.pathname==="/"&&path==="/")||(path!=="/"&&location.pathname===path.split("#")[0]&&!path.includes("#")))a.setAttribute("aria-current","page");
   return a;
  }
- const paths={accueil:"M3 9.5 12 3l9 6.5V21h-6v-7H9v7H3z",agenda:"M4 5h16v16H4zM4 10h16M8 3v4M16 3v4",rejoindre:"M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 21v-2a8 8 0 0 1 16 0v2M20 5v6M17 8h6",soutenir:"M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.5a5.5 5.5 0 0 0 0-7.8Z",menu:"M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z",recherche:"M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm5 12 5 5",portail:"M5 10h14v11H5zM8 10V7a4 4 0 0 1 8 0v3"};
+ const paths={accueil:"M3 9.5 12 3l9 6.5V21h-6v-7H9v7H3z",agenda:"M4 5h16v16H4zM4 10h16M8 3v4M16 3v4",rejoindre:"M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 21v-2a8 8 0 0 1 16 0v2M20 5v6M17 8h6",soutenir:"M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.5a5.5 5.5 0 0 0 0-7.8Z",menu:"M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z",hamburger:"M4 6h16M4 12h16M4 18h16",recherche:"M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm5 12 5 5",portail:"M5 10h14v11H5zM8 10V7a4 4 0 0 1 8 0v3"};
  function icon(type){
   const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
   svg.setAttribute("viewBox","0 0 24 24");svg.setAttribute("fill","none");svg.setAttribute("stroke","currentColor");svg.setAttribute("stroke-width","1.8");
@@ -85,7 +85,7 @@
   const portal=link("/portail","","sde-shell-portal");portal.setAttribute("aria-label","Ouvrir mon Portail S.D.E");portal.append(icon("portail"),make("span","sde-shell-portal-label","Mon Portail S.D.E"));
   const rubriques=make("button","sde-shell-rubriques","Rubriques");
   rubriques.type="button";rubriques.setAttribute("aria-controls","sde-shell-overlay");
-  rubriques.setAttribute("aria-expanded","false");rubriques.prepend(icon("menu"));
+  rubriques.setAttribute("aria-expanded","false");rubriques.setAttribute("aria-label","Ouvrir le menu SDE");rubriques.prepend(icon("hamburger"));
   actions.append(search);if(contextCTA)actions.append(contextCTA);actions.append(portal,rubriques);row.append(brand,nav,actions);h.append(row);
   // Repère visuel et accessible de la rubrique active, sans modifier les URL.
   const here=location.pathname.replace(/\/$/,"")||"/";

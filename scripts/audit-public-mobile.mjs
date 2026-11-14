@@ -722,7 +722,7 @@ try{
        return {login:true,visible:!!form&&getComputedStyle(form).display!=='none'};
       }
       const header=document.querySelector('.sde-shell-header');
-      const portal=header?.querySelector('.sde-shell-search');
+      const portal=header?.querySelector(innerWidth<=900?'.sde-shell-rubriques':'.sde-shell-search');
       const accessible=!!document.querySelector('.sde-shell-footer a[href="/portail"]')&&
        !!document.querySelector('.sde-shell-overlay .sde-shell-quick-portal[href="/portail"]');
       if(!header||!portal||!accessible)return {missing:true};
