@@ -12,7 +12,7 @@ test("Public 01 · Citadelle : vision 2027, Exode 33:14 et deux accès réels",(
  try{
   const hero=doc.querySelector(".ap-hero");
   assert.ok(hero);
-  assert.match(hero.querySelector("h1")?.textContent||"",/LA CITADELLE\s+CÉLESTE/i);
+  assert.match(hero.querySelector("h1")?.textContent||"",/SOLDATS DE L’ÉTERNEL/i);
   assert.match(hero.querySelector(".sde-citadel-verse")?.textContent||"",/Exode 33:14/);
   const actions=[...hero.querySelectorAll(".sde-citadel-actions a")];
   assert.deepEqual(actions.map(a=>a.getAttribute("href")),["/contact#rejoindre","/mouvement"]);
