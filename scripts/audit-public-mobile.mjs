@@ -177,16 +177,18 @@ try{
        contrast:selected?ratio(getComputedStyle(selected).color,getComputedStyle(selected).backgroundColor):null,
        fg:selected?getComputedStyle(selected).color:null,bg:selected?getComputedStyle(selected).backgroundColor:null};
      }
-     const label=document.querySelector('.sde-shell-portal .sde-shell-portal-label');
-     const parent=label?.closest('a');
-     const rect=label?.getBoundingClientRect();
-     return {kind:'portal-label',found:!!label,
-      labelWidth:rect?.width||0,visible:!!(label&&parent&&rect.width>12&&getComputedStyle(label).visibility!=='hidden'),
-      text:label?.textContent||''};
+     const drawerLink=document.querySelector('.sde-shell-overlay .sde-shell-quick-portal[href="/portail"]');
+     const footerLink=document.querySelector('.sde-shell-footer a[href="/portail"]');
+     const mobileMenu=document.querySelector('.sde-shell-bottom .sde-shell-open');
+     const visible=mobileMenu&&mobileMenu.getBoundingClientRect().width>=44&&
+      getComputedStyle(mobileMenu).visibility!=='hidden';
+     return {kind:'portal-access',found:!!drawerLink&&!!footerLink,
+      visible:!!visible||!!document.querySelector('.sde-shell-portal[href="/portail"]'),
+      text:drawerLink?.textContent||''};
     });
     report.notes.push({page:c.name,visualQA});
     console.log('CONTRASTE_NAV_SDE '+c.name+' '+JSON.stringify(visualQA));
-    if(visualQA.kind!=='portal-label' && (!visualQA.found||visualQA.contrast===null||visualQA.contrast<4.5)){
+    if(!['portal-label','portal-access'].includes(visualQA.kind) && (!visualQA.found||visualQA.contrast===null||visualQA.contrast<4.5)){
      issue(c.name,'Contraste illisible dans '+visualQA.kind+' : '+String(visualQA.contrast),true);
     }
     if(c.path==='/academy' && c.width<700 &&
@@ -197,8 +199,18 @@ try{
        visualQA.previewTop!==null&&visualQA.focusBottom!==null&&visualQA.focusBottom>visualQA.previewTop+2){
      issue(c.name,'Bouton Mode Focus superposé à la couverture Academy',true);
     }
-    if(c.path==='/' && c.width<900 && !visualQA.visible){
-     issue(c.name,'Libellé Portail absent de la barre mobile',true);
+    if(c.path==='/' && c.width<900){
+     const plus=page.locator('.sde-shell-bottom .sde-shell-open');
+     if(!visualQA.found||!(await plus.isVisible()))
+      issue(c.name,'Portail inaccessible depuis la navigation mobile',true);
+     else{
+      await plus.click({timeout:4000});
+      const portal=page.locator('.sde-shell-overlay .sde-shell-quick-portal[href="/portail"]');
+      const rect=await portal.boundingBox();
+      if(!(await portal.isVisible())||!rect||rect.width<44||rect.height<44)
+       issue(c.name,'lien Portail de Plus trop petit ou masqué',true);
+      await page.keyboard.press('Escape');
+     }
     }
    }
    if(c.path==='/'){
@@ -607,49 +619,46 @@ try{
      report.notes.push({test:'connexion-sans-distraction',url:page.url(),...visible});
     }catch(e){issue(c.name,'sélection membre/administrateur indisponible : '+String(e.message||e).slice(0,220),true);}
    }
-   // 801–1120px : la navigation principale s'ouvre via Rubriques.
-   // Au-delà de 1120px : les cinq catégories passent en méga-menu.
+   // Citadelle V4 : six liens horizontaux et cinq catégories dans le menu Plus.
    if(c.name==='accueil-1024'){
     try{
      const header=page.locator('.sde-shell-header');
-     const groups=header.locator('.sde-shell-mega-group');
      const compact=header.locator('.sde-shell-rubriques');
      const overlay=page.locator('#sde-shell-overlay');
      const expected=['Le Mouvement','Programmes & Agenda','Missions & Impact','Médias & Ressources','S’engager'];
-     if(await groups.count()!==5)issue(c.name,'le méga-menu ne contient plus cinq catégories',true);
-     if(!(await compact.isVisible()))issue(c.name,'bouton Rubriques masqué à 1024px',true);
-     else{
+     const expectedLinks=['Accueil','Vision','Agenda','Ressources','Rejoindre','Soutenir'];
+     if(await compact.isVisible()){
       await compact.click({timeout:4000});
       if(!(await overlay.isVisible())||(await compact.getAttribute('aria-expanded'))!=='true')
-       issue(c.name,'le bouton Rubriques ne déploie pas le tiroir',true);
+       issue(c.name,'bouton Rubriques inactif à 1024px',true);
       const titles=await overlay.locator('.sde-shell-drawer-group > summary').allTextContents();
       if(titles.map(x=>x.trim()).join('|')!==expected.join('|'))
-       issue(c.name,'catégories du tiroir compact incohérentes : '+titles.join(' | '),true);
+       issue(c.name,'catégories Plus incohérentes : '+titles.join(' | '),true);
       await overlay.locator('.sde-shell-filter').fill('formation',{timeout:4000});
       if(await overlay.locator('.sde-shell-submenu a:not([hidden])').count()===0)
        issue(c.name,'recherche Rubriques inactive à 1024px',true);
+      const portal=overlay.locator('.sde-shell-quick-portal[href="/portail"]');
+      const rect=await portal.boundingBox();
+      if(!(await portal.isVisible())||!rect||rect.width<44||rect.height<44)
+       issue(c.name,'lien Portail dans Plus trop petit ou masqué',true);
       await page.keyboard.press('Escape');
       if(await overlay.isVisible()||(await compact.getAttribute('aria-expanded'))!=='false')
-       issue(c.name,'Échap ne ferme pas Rubriques à 1024px',true);
+       issue(c.name,'Échap ne ferme pas Plus à 1024px',true);
      }
      await page.setViewportSize({width:1280,height:900});
-     await page.waitForTimeout(150);
-     const first=groups.first().locator('summary');
-     if(!(await first.isVisible()))issue(c.name,'le méga-menu ne réapparaît pas à 1280px',true);
-     else{
-      const titles=await groups.locator(':scope > summary').allTextContents();
-      if(titles.map(x=>x.trim()).join('|')!==expected.join('|'))
-       issue(c.name,'titres du méga-menu desktop incohérents : '+titles.join(' | '),true);
-      await first.click({timeout:4000});
-      if(!(await groups.first().evaluate(el=>el.open)))
-       issue(c.name,'le méga-menu Le Mouvement ne s’ouvre pas',true);
-     }
-     if(await groups.last().locator('a[href="/soutenir"]').count()!==1)
-      issue(c.name,'lien Soutenir absent du menu S’engager',true);
-     if(await header.locator('.sde-shell-portal[href="/portail"]').count()!==1)
-      issue(c.name,'entrée portail absente du header',true);
-     report.notes.push({test:'rubriques-compactes-et-mega-desktop',menus:await groups.count(),visible:await header.isVisible()});
-    }catch(error){issue(c.name,'navigation responsive indisponible : '+String(error.message||error).slice(0,300),true);}
+     await page.waitForTimeout(200);
+     const topLinks=header.locator('.sde-shell-mega > a');
+     const labels=(await topLinks.allTextContents()).map(x=>x.trim());
+     if(labels.join('|')!==expectedLinks.join('|'))
+      issue(c.name,'liens directs desktop V4 incohérents : '+labels.join(' | '),true);
+     if(!(await topLinks.first().isVisible()))
+      issue(c.name,'menu desktop V4 invisible à 1280px',true);
+     if(!(await header.locator('.sde-shell-search').isVisible()))
+      issue(c.name,'recherche absente du header',true);
+     if(await page.locator('.sde-shell-footer a[href="/portail"]').count()<1)
+      issue(c.name,'accès Portail absent du footer',true);
+     report.notes.push({test:'navigation-v4-compacte-et-desktop',liens:labels,visible:await header.isVisible()});
+    }catch(error){issue(c.name,'navigation V4 indisponible : '+String(error.message||error).slice(0,300),true);}
    }
    if(c.name==='plus-390'&&new URL(page.url()).pathname!=='/rubriques')
     issue(c.name,'/plus doit rediriger vers /rubriques',true);
@@ -713,8 +722,10 @@ try{
        return {login:true,visible:!!form&&getComputedStyle(form).display!=='none'};
       }
       const header=document.querySelector('.sde-shell-header');
-      const portal=header?.querySelector('.sde-shell-portal');
-      if(!header||!portal)return {missing:true};
+      const portal=header?.querySelector('.sde-shell-search');
+      const accessible=!!document.querySelector('.sde-shell-footer a[href="/portail"]')&&
+       !!document.querySelector('.sde-shell-overlay .sde-shell-quick-portal[href="/portail"]');
+      if(!header||!portal||!accessible)return {missing:true};
       const hs=getComputedStyle(header),ps=getComputedStyle(portal);
       const rect=portal.getBoundingClientRect();
       const top=header.getBoundingClientRect().top;
@@ -732,13 +743,13 @@ try{
      report.notes.push({test:'portail-stable-unifie',screen:c.name,...measure});
      if(measure.login){
       if(!measure.visible)issue(c.name,'formulaire de connexion masqué',true);
-     }else if(measure.missing)issue(c.name,'portail absent du header partagé',true);
+     }else if(measure.missing)issue(c.name,'recherche ou accès Portail manquant',true);
      else{
       if(measure.portalWidth<44||measure.portalHeight<40)
-       issue(c.name,'cible portail inférieure à 44 px',true);
-      if(measure.animation!=='none')issue(c.name,'bouton portail animé automatiquement',true);
+       issue(c.name,'bouton Recherche trop petit pour le toucher',true);
+      if(measure.animation!=='none')issue(c.name,'bouton Recherche animé automatiquement',true);
       if(Math.abs(measure.headerShift-measure.portalShift)>8)
-       issue(c.name,'bouton du portail déplacé indépendamment de l’en-tête',true);
+       issue(c.name,'bouton Recherche déplacé indépendamment de l’en-tête',true);
       if(measure.position==='sticky'&&Math.abs(measure.headerShift)>8)
        issue(c.name,'en-tête sticky instable au défilement',true);
      }
