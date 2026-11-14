@@ -81,3 +81,16 @@ test("La Citadelle Céleste v3 est compilée comme unique charte finale de toute
   assert.ok(css.includes("Plus Jakarta Sans"));
   assert.ok(existsSync("public/vitrine/illus/citadelle-celeste.svg"));
 });
+
+test("les quatre portes de la Citadelle sont quatre cartes tactiles réellement responsives", () => {
+ const home=read("public/vitrine/portail.html");
+ const css=read("public/vitrine/sde-citadelle-celeste-2027.css");
+ const quick=home.match(/<section class="sde-citadelle-quicknav"[\s\S]*?<\/section>/)?.[0]||"";
+ assert.ok(quick,"Section quatre portes absente");
+ assert.deepEqual([...quick.matchAll(/<a href="([^"]+)"/g)].map(m=>m[1]),["/mouvement","/contact#rejoindre","/programmes#agenda","/portail"]);
+ assert.ok(css.includes("RÉPARATION CITADELLE v3.2"));
+ assert.match(css,/nav\.sde-citadelle-quicknav-items\s*\{[\s\S]*?grid-template-columns:repeat\(4,minmax\(0,1fr\)\)!important/);
+ assert.match(css,/@media\(max-width:760px\)[\s\S]*?nav\.sde-citadelle-quicknav-items\s*\{\s*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/);
+ assert.match(css,/nav\.sde-citadelle-quicknav-items > a\s*\{[\s\S]*?display:flex!important/);
+ assert.match(css,/nav\.sde-citadelle-quicknav-items > a strong\s*\{[\s\S]*?text-decoration:none!important/);
+});

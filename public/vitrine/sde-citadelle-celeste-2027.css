@@ -469,3 +469,189 @@ html[data-sde-citadel-integral] body.sde-2027-reference
     padding:0!important;
   }
 }
+
+
+/* RÉPARATION CITADELLE v3.2 : 4 accès directs de l'accueil.
+   Évite l'ancienne disposition inline visible sur les captures 360/390px.
+   Un seul panneau cohérent, quatre vraies cartes tactiles lisibles. */
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadelle-quicknav {
+  box-sizing:border-box!important;
+  width:100%!important;
+  margin:0!important;
+  padding:clamp(22px,4vw,48px) clamp(12px,3vw,26px)!important;
+  background:linear-gradient(180deg,#071226 0%,#0b1d39 100%)!important;
+  border:0!important;
+  border-top:1px solid rgba(215,179,99,.18)!important;
+  color:#f5ecda!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadelle-quicknav-inner {
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:22px!important;
+  width:min(100%,1200px)!important;
+  max-width:1200px!important;
+  margin:0 auto!important;
+  padding:clamp(18px,3vw,34px)!important;
+  background:linear-gradient(140deg,rgba(14,33,61,.99),rgba(8,23,45,.98))!important;
+  border:1px solid rgba(232,197,127,.35)!important;
+  border-radius:22px!important;
+  box-shadow:0 18px 44px rgba(3,10,25,.28)!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadelle-quicknav-title {
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:7px!important;
+  min-width:0!important;
+  width:100%!important;
+  padding:0 0 16px!important;
+  margin:0!important;
+  border:0!important;
+  border-bottom:1px solid rgba(232,197,127,.28)!important;
+  background:none!important;
+  text-align:center!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadelle-quicknav-title > span {
+  display:block!important;
+  color:#e5c67c!important;
+  -webkit-text-fill-color:#e5c67c!important;
+  font:800 .7rem/1.5 var(--sde-citadel-sans)!important;
+  letter-spacing:.12em!important;
+  text-transform:uppercase!important;
+  overflow-wrap:break-word!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadelle-quicknav-title > strong {
+  display:block!important;
+  color:#fff2d7!important;
+  -webkit-text-fill-color:#fff2d7!important;
+  font:600 clamp(1.16rem,2.4vw,1.7rem)/1.35 var(--sde-citadel-title)!important;
+  letter-spacing:0!important;
+  overflow-wrap:break-word!important;
+  text-wrap:balance!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items {
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:clamp(10px,1.8vw,16px)!important;
+  min-width:0!important;
+  width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  background:none!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items > a {
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:8px!important;
+  min-width:0!important;
+  width:100%!important;
+  min-height:130px!important;
+  padding:18px 11px!important;
+  margin:0!important;
+  background:linear-gradient(150deg,rgba(25,47,76,.95),rgba(13,31,59,.97))!important;
+  border:1px solid rgba(231,196,126,.35)!important;
+  border-radius:16px!important;
+  color:#f8edd8!important;
+  -webkit-text-fill-color:#f8edd8!important;
+  text-decoration:none!important;
+  text-align:center!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important;
+  transition:border-color .18s ease,background-color .18s ease,transform .18s ease!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items > a:is(:hover,:focus-visible) {
+  background:#1d3655!important;
+  border-color:#efcd81!important;
+  transform:translateY(-2px)!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items > a > span:nth-child(2) {
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:5px!important;
+  align-content:start!important;
+  justify-items:center!important;
+  min-width:0!important;
+  width:100%!important;
+  margin:0!important;
+  padding:0!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items > a .sde-citadelle-quicknav-icon {
+  display:grid!important;
+  place-items:center!important;
+  flex:none!important;
+  width:44px!important;
+  height:44px!important;
+  margin:0!important;
+  padding:0!important;
+  border-radius:13px!important;
+  background:rgba(221,183,102,.12)!important;
+  color:#e9c575!important;
+  -webkit-text-fill-color:#e9c575!important;
+  font:700 1.65rem/1 var(--sde-citadel-sans)!important;
+  text-decoration:none!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items > a strong {
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  min-width:0!important;
+  color:#fff1d4!important;
+  -webkit-text-fill-color:#fff1d4!important;
+  font:800 clamp(.88rem,1.45vw,1.07rem)/1.32 var(--sde-citadel-sans)!important;
+  text-decoration:none!important;
+  overflow-wrap:break-word!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items > a small {
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  min-width:0!important;
+  color:#d8e0e7!important;
+  -webkit-text-fill-color:#d8e0e7!important;
+  font:500 clamp(.69rem,1vw,.79rem)/1.45 var(--sde-citadel-sans)!important;
+  text-decoration:none!important;
+  overflow-wrap:break-word!important;
+}
+@media(max-width:760px) {
+  html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadelle-quicknav {
+    padding:18px 12px 25px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadelle-quicknav-inner {
+    padding:18px 13px 17px!important;
+    gap:16px!important;
+    border-radius:17px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadelle-quicknav-title{
+    padding:0 5px 14px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items {
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items > a{
+    min-height:130px!important;
+    padding:13px 8px!important;
+  }
+}
+@media(max-width:370px) {
+  html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items > a {
+    padding:10px 6px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items > a strong{
+    font-size:.85rem!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items > a small {
+    font-size:.68rem!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quicknav-items > a {
+    transition:none!important;
+    transform:none!important;
+  }
+}
