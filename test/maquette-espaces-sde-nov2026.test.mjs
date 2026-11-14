@@ -31,7 +31,9 @@ test("SDE privé : huit espaces de la maquette reliés aux vues autorisées et a
   const navigations=[];
   dom.window.SDEPortal={selectionner:(route,options)=>navigations.push({route,options})};
   doc.querySelector('.sde-ref-member-shortcuts [data-vue="academie"]').click();
-  assert.deepEqual(navigations,[{route:"academie",options:{userInitiated:true}}],"le bouton ouvre réellement le module authentifié");
+  assert.equal(navigations.length,1,"un seul événement de navigation");
+  assert.equal(navigations[0].route,"academie","module attendu");
+  assert.equal(navigations[0].options?.userInitiated,true,"action utilisateur transmise au portail");
   assert.equal(doc.querySelector(".sde-ref-member-event")?.getAttribute("href"),"/programmes");
   assert.ok(doc.querySelector("#sde-personal-card"),"le vrai profil n'est pas remplacé");
   assert.equal(doc.querySelectorAll(".sde-ref-member-shortcuts").length,1);
