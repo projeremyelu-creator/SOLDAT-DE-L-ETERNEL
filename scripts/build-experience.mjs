@@ -20,5 +20,37 @@ function versionnerHtml(dossier){
   }
  }
 }
+
+// Refonte définitive : installer le thème Citadelle après TOUS les styles historiques.
+// Ne jamais retirer le JS métier, l'authentification, les albums ni les permissions.
+const citadelStylePath = '/vitrine/sde-citadelle-celeste-2027.css';
+const citadelScriptPath = '/vitrine/sde-citadelle-celeste-2027.js';
+function installerCitadelleFinale(html){
+ if (!/<html\b/i.test(html) || !/(<\/head>|<body\b)/i.test(html)) return html;
+ html=html.replace(/<link\b[^>]*href=["']\/vitrine\/sde-citadelle-celeste-2027\.css[^"']*["'][^>]*>\s*/gi,'');
+ html=html.replace(/<script\b[^>]*src=["']\/vitrine\/sde-citadelle-celeste-2027\.js[^"']*["'][^>]*>\s*<\/script>\s*/gi,'');
+ html=html.replace(/<html\b/i,'<html data-sde-citadel-integral="v3"');
+ const links='<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>\n'+
+ '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'+
+ '<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">\n'+
+ '<link rel="stylesheet" href="'+citadelStylePath+'?v=citadel-integral-v3">\n'+
+ '<script defer src="'+citadelScriptPath+'?v=citadel-integral-v3"></script>\n';
+ if (html.includes('</head>')) return html.replace('</head>',links+'</head>');
+ return html.replace(/<body\b/i,links+'<body');
+}
+
 versionnerHtml('public');
+// Les pages publiques et privées sont publiées depuis le même répertoire Cloudflare.
+function integrerToutesPages(dossier){
+ for(const entree of readdirSync(dossier,{withFileTypes:true})){
+  const chemin=`${dossier}/${entree.name}`;
+  if(entree.isDirectory())integrerToutesPages(chemin);
+  else if(entree.isFile()&&entree.name.endsWith('.html')&&!/offline/i.test(entree.name)){
+   const actuel=readFileSync(chemin,'utf8');const final=installerCitadelleFinale(actuel);
+   if(final!==actuel)writeFileSync(chemin,final);
+  }
+ }
+}
+integrerToutesPages('public');
+console.log('Citadelle Céleste v3 installée sur tous les HTML publics et privés, sans toucher aux albums.');
 console.log(`URLs CSS/JavaScript versionnées pour ${revision}.`);

@@ -65,3 +65,19 @@ test("les gabarits privés ne rendent ni navigation publique ni métriques inven
     assert.equal(/(?:membres actifs|présences|missions|intercession)\s*[:=]\s*\d+/i.test(html), false, `${file} ne doit pas figer de KPI privé.`);
   }
 });
+
+
+test("La Citadelle Céleste v3 est compilée comme unique charte finale de toutes les pages", () => {
+  const build = read("scripts/build-experience.mjs");
+  assert.ok(build.includes("integrerToutesPages('public')"));
+  assert.ok(build.includes("installerCitadelleFinale"));
+  assert.ok(build.includes("citadel-integral-v3"));
+  const home = read("public/vitrine/portail.html");
+  assert.ok(home.includes("LA CITADELLE"));
+  assert.ok(home.includes("CÉLESTE"));
+  assert.ok(home.includes("UNE ARMÉE SPIRITUELLE. UN ÉCOSYSTÈME VIVANT."));
+  const css = read("public/vitrine/sde-citadelle-celeste-2027.css");
+  assert.ok(css.includes("/vitrine/illus/citadelle-celeste.svg"));
+  assert.ok(css.includes("Plus Jakarta Sans"));
+  assert.ok(existsSync("public/vitrine/illus/citadelle-celeste.svg"));
+});

@@ -1,5 +1,7 @@
 /* Progressive-only Citadelle behaviour: no data access or permission changes. */
 (() => {
+  // Même identité graphique sur chaque route sans aucune requête aux données privées.
+  document.documentElement.setAttribute("data-sde-citadel-integral", "v3");
   const formatCountdown = (target) => {
     const value = new Date(target).getTime();
     if (!Number.isFinite(value)) return "Date à confirmer";
