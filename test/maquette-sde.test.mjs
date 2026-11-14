@@ -25,7 +25,7 @@ test("le commandement présente les cinq pôles et les programmes avec des donn�
  assert.ok(ops.includes('<div className="ref-command-overview"><PendingRequests/><CommandPoles portal={portal}/></div>'));
 });
 test("maquette : « Mon espace Soldat » est branché pour les membres seulement",()=>{
- assert.ok(ops.includes("Mon espace Soldat")&&ops.includes("Grandir · Servir · Impacter"));
+ assert.ok(ops.includes("Mon espace Soldat")&&ops.includes("DISCIPLINE · UNITÉ · IMPACT"));
  assert.ok(ops.includes("active==='espace-soldat'&&!direction"));
  assert.ok(direct.includes('"espace-soldat":"Mon espace Soldat"'));
  assert.ok(direct.includes('nom==="espace-soldat"&&mode!=="membre"'));
@@ -192,7 +192,7 @@ test("maquette 02 Ivoire · Treillis · Or : vitrine, chargement, espaces privé
  const app=read("public/index.html");assert.ok(app.includes('id="sde-splash"')&&app.includes("La vision en marche")&&app.includes("Chargement de votre espace"),"écran de chargement");
  assert.ok(read("public/vitrine/sde-splash.css").includes("prefers-reduced-motion"),"mouvement réduit respecté");
  assert.ok(shell.includes("['tactique','SDE officiel · Bleu nuit · Ivoire · Or']"),"palette officielle disponible");
- for(const t of ["Bonjour, {prenom}","Avançons ensemble, pour un plus grand impact.","Suivi, coordination et développement du mouvement.","Ajouter une prière"])assert.ok(ops.includes(t),t);
+ for(const t of ["Mon espace personnel","Retrouvez votre carte, vos formations et vos missions.","Suivi, coordination et développement du mouvement.","Ajouter une prière"])assert.ok(ops.includes(t),t);
 });
 test("Ivoire · Treillis · Or sur tout le site public",()=>{
  for(const p of ["mouvement","programmes","rejoindre","prieres","ressources","projets","academy"]){const h=read("public/vitrine/"+p+".html");assert.ok(/<body class="[^"]*sde-ivoire/.test(h),p);assert.ok(h.includes("ivoire-pages.css"),p+" feuille");assert.ok(h.includes("SDE - Mouvement"),p+" marque");}

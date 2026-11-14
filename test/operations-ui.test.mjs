@@ -100,7 +100,8 @@ test('Refonte 2+3 : les deux espaces privés partagent la palette et la hiérarc
  for(const token of ['--sde23-private-night:#0D1B38','--sde23-private-ivory:#FAF7F0','--sde23-private-gold:#D9A72E','--sde23-private-earth:#B74624','--sde23-private-green:#00644F','Cormorant Garamond','Manrope'])assert.ok(css.includes(token),token);
  assert.match(css,/\.sde23-member-journey/);
  assert.match(css,/\.sde23-command-journey/);
- assert.match(source,/sde23-member-journey/);
+ assert.match(source,/sde-citadel-member-v4/);
+ assert.doesNotMatch(source,/className="soldier-space sv sde23-member-journey"/);
  assert.match(source,/sde23-command-journey/);
  assert.doesNotMatch(source,/mot de passe|password|niveau\s*=/i);
 });
