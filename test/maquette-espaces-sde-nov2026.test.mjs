@@ -47,6 +47,9 @@ test("Les raccourcis non autorisés n'apparaissent pas et les comptes ne sont pa
   assert.deepEqual([...doc.querySelectorAll(".sde-ref-member-shortcuts [data-vue]")].map(x=>x.dataset.vue),["espace","priere"]);
   assert.equal(doc.querySelectorAll(".sde-ref-member-shortcuts").length,1);
   assert.equal(doc.querySelectorAll('[data-vue="finance-direction"]').length,0);
+  dom.window.SDEPortal={selectionner:()=>{}};
+  doc.dispatchEvent(new dom.window.CustomEvent("sde:modules"));
+  assert.deepEqual([...doc.querySelectorAll(".sde-ref-member-shortcuts [data-vue]")].map(x=>x.dataset.vue),["espace","priere"],"la présence du routeur ne dévoile aucune vue absente du menu autorisé");
  }finally{dom.window.close();}
 });
 
