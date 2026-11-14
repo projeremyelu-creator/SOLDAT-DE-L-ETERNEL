@@ -10,7 +10,7 @@
  };
  const action=(label,vue,tag="button")=>{
   const el=elt(tag,"",label);
-  if(tag==="button"){el.type="button";el.dataset.vue=vue;}
+  if(tag==="button"){el.type="button";el.dataset.vue=vue;el.addEventListener("click",()=>window.SDEPortal?.selectionner?.(vue,{userInitiated:true}));}
   return el;
  };
  function carte(titre,texte,lien,vue,cls){
