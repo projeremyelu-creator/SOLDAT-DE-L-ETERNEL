@@ -53,8 +53,39 @@
   cards.append(carte("✦ Soldiers Academy","Formations et ressources selon vos autorisations","Poursuivre ma formation →","academie",""));
   cards.append(carte("❧ Missions","Projets, mobilisation et impact sur le terrain","Voir les missions →",null,"sde-ref-card--missions"));
   cards.append(carte("♢ Intercession","Sujets et accompagnement dans votre espace autorisé","Ouvrir la prière →",null,"sde-ref-card--priere"));
+  // Les notifications sont issues des priorités réellement présentes dans la session :
+  // aucune quantité, alerte ou tâche de démonstration n'est créée.
+  const notices=[...view.querySelectorAll(".prio .prio-i")].slice(0,3);
+  if(notices.length){
+   const note=elt("article","sde-ref-card sde-ref-card--notifications");
+   note.append(elt("h3","","♧ Notifications"));
+   const list=elt("ul","sde-ref-alert-list");
+   for(const originalNotice of notices){
+    const label=originalNotice.querySelector(".prio-x b")?.textContent?.trim();
+    const detail=originalNotice.querySelector(".prio-x small")?.textContent?.trim();
+    if(!label)continue;
+    const item=elt("li","",label);
+    if(detail)item.append(elt("small","",detail));
+    list.append(item);
+   }
+   if(list.children.length){note.append(list);cards.append(note);}
+  }
+  const network=carte("✧ Réseau SDE","Présence, formation et missions : la vision au-delà des frontières.","Découvrir le réseau →",null,"sde-ref-card--reseau");
+  network.querySelector("a").href="/reseau";
+  cards.append(network);
   deck.append(cards);
   view.insertBefore(deck,view.firstChild);
+  // Un seul tableau de bord Citadelle affiché : les anciens blocs restent
+  // accessibles sur demande dans les outils complets, sans perte d'actions.
+  const legacy=[...view.children].filter(node=>node!==deck);
+  if(legacy.length){
+   const details=elt("details","sde-ref-operational");
+   details.append(elt("summary","","Outils complets, opérations et rapports SDE"));
+   const content=elt("div","sde-ref-operational-content");
+   for(const node of legacy)content.append(node);
+   details.append(content);
+   view.append(details);
+  }
  }
  function memberCards(view){
   const realCard=view.querySelector("#sde-personal-card");

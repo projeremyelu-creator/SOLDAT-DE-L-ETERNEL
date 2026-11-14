@@ -169,3 +169,16 @@ test("Citadelle V4 : hamburger mobile fonctionnel et deux vrais boutons compacts
  assert.match(css,/\.sde-shell-head-actions \.sde-shell-rubriques\s*\{[\s\S]*?width:48px!important;/);
  assert.ok(audit.includes("innerWidth<=900?'.sde-shell-rubriques':'.sde-shell-search'"));
 });
+
+test("Citadelle V4 : aucun double tableau de bord historique au-dessus des cartes",()=>{
+ const js=read("public/vitrine/sde-citadelle-reference-v4.js");
+ const css=read("public/vitrine/sde-citadelle-reference-v4.css");
+ assert.match(js,/const legacy=\[\.\.\.view\.children\]\.filter\(node=>node!==deck\)/);
+ assert.match(js,/elt\("details","sde-ref-operational"\)/);
+ assert.match(js,/for\(const node of legacy\)content\.append\(node\)/);
+ assert.match(js,/view\.querySelectorAll\("\.prio \.prio-i"\)/);
+ assert.match(js,/network\.querySelector\("a"\)\.href="\/reseau"/);
+ assert.doesNotMatch(js,/4328|\b521\b|67%/);
+ assert.ok(css.includes("sde-ref-alert-list"));
+ assert.ok(css.includes("sde-ref-operational-content"));
+});

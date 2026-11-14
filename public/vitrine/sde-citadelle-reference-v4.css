@@ -367,3 +367,49 @@ body[data-sde-page="mouvement"] #axes ol.six-axes > li svg {
     background:linear-gradient(180deg,rgba(1,10,27,.6),rgba(4,15,35,.32) 55%,rgba(4,14,33,.54)),var(--cit-castle) 65% center/cover no-repeat!important;
   }
 }
+
+
+/* Citadelle Céleste V4.1 — tableau de bord natif unique.
+   L'ancienne grille d'accueil n'est plus superposée aux cartes V4.
+   Elle demeure consultable, interactive et soumise aux autorisations existantes. */
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-operational{
+  margin:22px 0 30px!important;border:1px solid rgba(232,195,123,.36)!important;
+  border-radius:15px!important;background:#10223c!important;color:#f7e9d0!important;
+  overflow:hidden!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-operational>summary{
+  display:flex!important;align-items:center!important;gap:12px!important;
+  min-height:52px!important;padding:14px 18px!important;
+  cursor:pointer!important;list-style:inside!important;
+  font:800 .91rem/1.35 var(--cit-text)!important;
+  color:#f6d78e!important;-webkit-text-fill-color:#f6d78e!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-operational[open]>summary{
+  border-bottom:1px solid var(--cit-line)!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-operational-content{
+  display:grid!important;gap:15px!important;padding:16px!important;
+  min-width:0!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-card--notifications{
+  background:linear-gradient(160deg,#193050,#101d37)!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-alert-list{
+  padding:0!important;margin:0!important;list-style:none!important;
+  display:grid!important;gap:8px!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-alert-list li{
+  display:grid!important;gap:3px!important;padding:8px 9px!important;
+  font-size:.83rem!important;border-bottom:1px solid rgba(238,206,144,.2)!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-alert-list li small{
+  color:#d6deeb!important;font-size:.74rem!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-card--reseau{
+  background:linear-gradient(115deg,rgba(13,35,59,.94),rgba(16,51,65,.92)),
+    var(--cit-castle) 80% center/cover no-repeat!important;
+}
+@media(max-width:760px){
+  html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-operational{margin-top:16px!important;}
+  html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-operational-content{padding:11px!important;}
+}
