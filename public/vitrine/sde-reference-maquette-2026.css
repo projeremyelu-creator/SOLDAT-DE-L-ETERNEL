@@ -128,3 +128,8 @@ html[data-sde-citadel-integral] .sde-ref-program-strip .sde-tpa-hero-card .sde-t
  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner>.sde-tpa-hero-card{display:none!important}
  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip>.sde-tpa-hero-card{display:flex!important}
 }
+
+/* Accueil désormais entièrement rendu dès le HTML : aucun élément de couverture
+   n'est déplacé après le premier affichage. Harmoniser la nouvelle fondation. */
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-foundation{display:block!important;font:700 .85rem/1.5 "Plus Jakarta Sans",system-ui,sans-serif!important;color:#f4cf80!important;-webkit-text-fill-color:#f4cf80!important;letter-spacing:.06em!important;margin:0 0 6px!important}
+@media(min-width:761px) and (max-width:860px){html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{min-height:620px!important}}
