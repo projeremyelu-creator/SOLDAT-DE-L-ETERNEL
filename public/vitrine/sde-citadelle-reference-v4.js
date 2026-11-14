@@ -103,13 +103,13 @@
    ["✦","Mes prières","Intercession et suivi confidentiel","priere"],
    ["▤","Mes ressources","Bibliothèque et enseignements","bibliotheque"]
   ];
-  // Ne présenter que les modules effectivement présents dans la navigation
-  // autorisée de la session. Le serveur conserve l'intégralité du contrôle d'accès.
+  // Le routeur authentifié peut autoriser des vues absentes du menu historique.
+  // En l'absence du routeur, n'afficher que les vues explicitement navigables.
   const permitted=new Set([
    ...document.querySelectorAll("#sde-direct-tabs [data-module], #nav [data-vue]")
   ].map(node=>node.dataset.module||node.dataset.vue));
   for(const [icon,title,detail,route] of shortcuts){
-   if(permitted.size&&!permitted.has(route))continue;
+   if(permitted.size&&!permitted.has(route)&&!window.SDEPortal?.selectionner)continue;
    const button=action("",route);
    button.className="sde-ref-shortcut";
    button.setAttribute("aria-label",title);
