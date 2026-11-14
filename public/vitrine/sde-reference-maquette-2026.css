@@ -192,3 +192,302 @@ html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-member-event spa
  html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-shortcut{transition:none!important}
  html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-shortcut:hover{transform:none!important}
 }
+
+
+/* ==========================================================================
+   SDE MAQUETTE 14 NOV — FIN DE CASCADE / PUBLIC + PRIVÉ, PC + TÉLÉPHONE
+   Référence : image SDE Digital fournie le 14/11/2026.
+   Présentation seulement : aucun contrôle de session, rôle, accès API, formulaire
+   métier ou KPI n'est remplacé, supprimé ou simulé ici.
+   ========================================================================== */
+:root{
+  --sde-screen-navy:#070d29;
+  --sde-screen-blue:#0d1a46;
+  --sde-screen-violet:#422087;
+  --sde-screen-gold:#efbd4b;
+  --sde-screen-ivory:#f9f1e4;
+  --sde-screen-ghost:#d9d6ec;
+  --sde-screen-edge:rgba(239,196,116,.32);
+}
+html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home{
+  background:linear-gradient(180deg,#070d29,#141039 72%,#080e28)!important;
+  color:var(--sde-screen-ivory)!important;
+}
+/* Vitrine : hiérarchie et composition identiques à la référence sur écran large. */
+html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+  position:relative!important;isolation:isolate!important;
+  background:linear-gradient(90deg,#090f2be8 0%,#0c1131bc 30%,#17103836 66%,#070e2ad9 100%),url("/vitrine/photos/hero-sde-1280.webp") 64% 38%/cover no-repeat!important;
+  min-height:600px!important;padding:58px clamp(16px,3.7vw,56px) 144px!important;
+  overflow:hidden!important;border-bottom:1px solid rgba(244,196,99,.35)!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero::before{
+  content:""!important;display:block!important;z-index:0!important;
+  background:radial-gradient(circle at 70% 22%,rgba(247,188,86,.13),transparent 28%),linear-gradient(180deg,transparent 60%,#090d2f 100%)!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner{
+  position:relative!important;z-index:2!important;width:min(100%,1330px)!important;
+  max-width:1330px!important;display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(238px,275px)!important;
+  align-items:center!important;gap:clamp(16px,2.8vw,44px)!important;min-height:315px!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-copy{
+  text-align:left!important;margin:0!important;max-width:550px!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero :is(.ap-eyebrow,.sde-citadelle-foundation,.sde-citadel-verse){
+  display:block!important;text-align:left!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadelle-foundation{
+  font:700 .7rem/1.55 "Plus Jakarta Sans",system-ui,sans-serif!important;
+  color:#f7ddaa!important;-webkit-text-fill-color:#f7ddaa!important;letter-spacing:.15em!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-vision-wordmark{
+  display:none!important; /* Le H1 est l'unique titre, sans duplication. */
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero h1#titre-accueil{
+  max-width:540px!important;margin:14px 0 15px!important;
+  font:700 clamp(2.6rem,5.4vw,5.5rem)/.99 Cinzel,Georgia,serif!important;
+  color:#fff5e4!important;-webkit-text-fill-color:#fff5e4!important;
+  letter-spacing:-.018em!important;text-align:left!important;text-wrap:balance!important;
+  text-shadow:0 10px 28px rgba(2,7,28,.65)!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-tagline{
+  text-align:left!important;max-width:35rem!important;margin:0 0 10px!important;
+  font:600 clamp(.9rem,1.25vw,1.08rem)/1.5 "Plus Jakarta Sans",system-ui,sans-serif!important;
+  color:#fff4e9!important;-webkit-text-fill-color:#fff4e9!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-devise{
+  text-align:left!important;font:800 .79rem/1.6 "Plus Jakarta Sans",system-ui,sans-serif!important;
+  letter-spacing:.04em!important;color:#ffd173!important;-webkit-text-fill-color:#ffd173!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-verse{
+  max-width:480px!important;margin:12px 0 18px!important;padding:9px 15px!important;
+  border-left:3px solid var(--sde-screen-gold)!important;
+  background:linear-gradient(90deg,rgba(5,14,37,.72),transparent)!important;
+  color:#f6eadb!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-verse :is(p,cite){
+  color:#f6eadb!important;-webkit-text-fill-color:#f6eadb!important;
+  font:.78rem/1.5 "Plus Jakarta Sans",system-ui,sans-serif!important;
+  text-align:left!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-actions{
+  display:flex!important;justify-content:flex-start!important;gap:11px!important;flex-wrap:wrap!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-actions>.ap-btn{
+  min-height:46px!important;min-width:165px!important;padding:11px 17px!important;
+  font:800 .8rem/1.25 "Plus Jakarta Sans",system-ui,sans-serif!important;
+  border-radius:11px!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-btn-gold{
+  background:linear-gradient(180deg,#ffda76,#e8a523)!important;color:#10152a!important;
+  -webkit-text-fill-color:#10152a!important;
+  box-shadow:0 8px 25px rgba(241,163,34,.32)!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-btn-ghost{
+  background:rgba(7,14,39,.63)!important;color:#f9f3e5!important;
+  -webkit-text-fill-color:#f9f3e5!important;border:1px solid rgba(248,227,183,.75)!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-hub-links{
+  display:grid!important;grid-template-columns:1fr!important;gap:10px!important;
+  width:100%!important;margin:0!important;align-self:center!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-hub-links>a{
+  min-width:0!important;min-height:70px!important;border:1px solid rgba(239,192,116,.48)!important;
+  border-radius:14px!important;padding:12px 14px!important;
+  background:linear-gradient(115deg,rgba(13,17,53,.93),rgba(33,16,70,.85))!important;
+  box-shadow:0 12px 28px #0208215c!important;backdrop-filter:blur(10px)!important;
+  display:flex!important;align-items:center!important;text-decoration:none!important;
+  color:#fff6e8!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-hub-links strong{
+  font:800 .83rem/1.3 "Plus Jakarta Sans",system-ui,sans-serif!important;
+  color:#fff6ed!important;-webkit-text-fill-color:#fff6ed!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-hub-links small{
+  font:.68rem/1.5 "Plus Jakarta Sans",system-ui,sans-serif!important;color:#dfd5e7!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip{
+  width:min(1330px,100%)!important;max-width:1330px!important;
+  margin:23px auto -95px!important;display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  border:1px solid rgba(235,198,126,.52)!important;border-radius:16px!important;
+  background:linear-gradient(105deg,rgba(40,12,96,.97),rgba(16,22,73,.98))!important;
+  box-shadow:0 18px 38px rgba(2,5,20,.48)!important;z-index:3!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip>a,
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip>.sde-tpa-hero-card{
+  min-height:94px!important;display:flex!important;align-items:center!important;
+  padding:17px 16px!important;gap:10px!important;color:#fff0d8!important;
+  border-right:1px solid rgba(235,198,126,.3)!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip :is(strong,small){
+  text-align:left!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip strong{
+  font:700 .98rem/1.4 Cinzel,serif!important;
+  color:#ffe6a1!important;-webkit-text-fill-color:#ffe6a1!important;
+}
+/* Tableau de bord dédié : données synchronisées au serveur, jamais des exemples. */
+html[data-sde-citadel-integral] body.sde-tableau{
+  background:radial-gradient(ellipse at 75% 4%,#251154 0%,#10163a 35%,#070c26 80%)!important;
+  color:var(--sde-screen-ivory)!important;
+  font-family:"Plus Jakarta Sans",system-ui,sans-serif!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-header{
+  background:linear-gradient(100deg,#06132e,#111545 70%,#0a1634)!important;
+  border-bottom:1px solid var(--sde-screen-edge)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-shell{
+  grid-template-columns:minmax(212px,245px) minmax(0,1fr)!important;
+  max-width:1600px!important;margin-inline:auto!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side{
+  background:linear-gradient(180deg,#0b1236,#101345)!important;
+  border-right:1px solid var(--sde-screen-edge)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side a{
+  color:#ece9f8!important;-webkit-text-fill-color:#ece9f8!important;
+  border-radius:10px!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side a[aria-current="page"]{
+  background:linear-gradient(90deg,#251d78,#7229bf)!important;
+  color:white!important;-webkit-text-fill-color:white!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-main{
+  min-width:0!important;background:transparent!important;color:#f9efff!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-main::before{
+  background:linear-gradient(90deg,rgba(5,11,33,.88),rgba(13,18,57,.46)),url("/vitrine/photos/hero-sde-1280.webp") 65% center/cover no-repeat!important;
+  border:1px solid rgba(236,193,103,.3)!important;border-radius:16px!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-heading{
+  color:#fff4e4!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-heading h1{
+  font:700 clamp(1.6rem,3vw,2.55rem)/1.15 Cinzel,Georgia,serif!important;
+  color:#fff2d9!important;-webkit-text-fill-color:#fff2d9!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-metrics article,
+html[data-sde-citadel-integral] body.sde-tableau :is(.sde-panel,.sdu-member-universe){
+  color:#f6effb!important;
+  background:linear-gradient(145deg,rgba(22,28,73,.95),rgba(26,15,62,.95))!important;
+  border:1px solid var(--sde-screen-edge)!important;
+  border-radius:14px!important;box-shadow:0 10px 29px rgba(0,0,0,.22)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau :is(.sde-panel,.sde-dash-metrics article,.sdu-member-universe) :is(h2,h3,strong,dt,span,p,small){
+  color:#f8f1e7!important;-webkit-text-fill-color:#f8f1e7!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-metrics strong{
+  font:800 clamp(1.45rem,2.4vw,2.2rem)/1.2 "Plus Jakarta Sans",system-ui,sans-serif!important;
+  color:#ffdf8f!important;-webkit-text-fill-color:#ffdf8f!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-quick a,
+html[data-sde-citadel-integral] body.sde-tableau .sdu-member-grid a{
+  border:1px solid rgba(232,197,122,.36)!important;
+  background:linear-gradient(150deg,#191b57,#301357)!important;
+  color:#fff0d9!important;-webkit-text-fill-color:#fff0d9!important;
+  border-radius:13px!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-quick a:hover,
+html[data-sde-citadel-integral] body.sde-tableau .sdu-member-grid a:hover{
+  background:linear-gradient(145deg,#272175,#472375)!important;
+  border-color:#eeca73!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-form :is(input,textarea){
+  color:#10192c!important;background:#fffaf0!important;
+}
+/* Application historique : harmonisation visuelle, routes et rôles inchangés. */
+html[data-sde-citadel-integral] body.sde-direct #sde-direct-top{
+  background:linear-gradient(105deg,#071128,#121144)!important;border-color:var(--sde-screen-edge)!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main :is(.sde-ref-command,.sde-ref-member-shortcuts){
+  background:linear-gradient(135deg,rgba(12,21,62,.98),rgba(31,13,73,.95))!important;
+  border:1px solid rgba(235,199,132,.37)!important;border-radius:17px!important;
+}
+html[data-sde-citadel-integral] body.sde-direct .sde-ref-headline{
+  background:linear-gradient(100deg,rgba(8,15,41,.84),rgba(13,14,54,.42)),url("/vitrine/photos/hero-sde-1280.webp") 62% center/cover!important;
+  min-height:142px!important;border-radius:12px!important;padding:22px!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-cards>*,
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-member-shortcuts-grid>*{
+  background:linear-gradient(145deg,#141e52,#23114e)!important;
+  border:1px solid var(--sde-screen-edge)!important;border-radius:14px!important;
+  box-shadow:0 12px 25px rgba(3,7,24,.25)!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-cards>*:nth-child(3n){
+  background:linear-gradient(145deg,#122d3b,#152345)!important;
+}
+@media(max-width:960px){
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner{
+    grid-template-columns:minmax(0,1fr) minmax(195px,230px)!important;gap:17px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero h1#titre-accueil{
+    font-size:clamp(2.5rem,6vw,4.5rem)!important;
+  }
+  html[data-sde-citadel-integral] body.sde-tableau .sde-dash-shell{
+    grid-template-columns:210px minmax(0,1fr)!important;
+  }
+}
+@media(max-width:760px){
+  html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+    min-height:0!important;padding:36px 16px 120px!important;
+    background-image:linear-gradient(90deg,rgba(6,14,42,.94),rgba(11,17,52,.49)),url("/vitrine/photos/hero-sde-640.webp")!important;
+    background-position:64% center!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner{
+    grid-template-columns:minmax(0,1fr)!important;gap:26px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-copy{
+    max-width:100%!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero :is(.ap-eyebrow,.sde-citadelle-foundation){
+    font-size:.58rem!important;line-height:1.5!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero h1#titre-accueil{
+    font-size:clamp(2.15rem,9vw,3.55rem)!important;max-width:480px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-hub-links{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-hub-links>a{
+    min-height:74px!important;padding:10px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;margin:16px auto -90px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-tableau .sde-dash-shell{
+    display:block!important;
+  }
+  html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side{
+    position:static!important;width:100%!important;border-right:0!important;border-bottom:1px solid var(--sde-screen-edge)!important;
+  }
+  html[data-sde-citadel-integral] body.sde-tableau .sde-dash-main{
+    padding:20px 14px 90px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-tableau .sde-dash-metrics{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  html[data-sde-citadel-integral] body.sde-tableau .sde-dash-two{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
+@media(max-width:420px){
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-actions>.ap-btn{
+    min-width:0!important;flex:1 1 160px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-hub-links small{
+    font-size:.62rem!important;
+  }
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip>a,
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip>.sde-tpa-hero-card{
+    min-height:88px!important;padding:12px 9px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero *,
+  html[data-sde-citadel-integral] body.sde-tableau *,
+  html[data-sde-citadel-integral] body.sde-direct .sde-ref-command *{
+    animation-duration:.01ms!important;transition-duration:.01ms!important;
+  }
+}
+/* SDE MAQUETTE 14 NOV — FIN DE CASCADE */
