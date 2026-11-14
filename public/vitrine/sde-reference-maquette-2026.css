@@ -108,3 +108,7 @@ html[data-sde-citadel-integral] body.sde-direct .sde-ref-operational>summary{col
  html[data-sde-citadel-integral] body.sde-direct .sde-ref-member-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
 @media(prefers-reduced-motion:reduce){html[data-sde-citadel-integral] .sde-ref-hub-links a,html[data-sde-citadel-integral] .sde-citadel-axis{transition:none!important;transform:none!important;scroll-behavior:auto!important}}
+
+/* Préserver l'inscription réelle à la TPA dans le bandeau compact. */
+html[data-sde-citadel-integral] .sde-ref-program-strip .sde-tpa-hero-card .sde-tpa-actions{display:flex!important;margin:7px 0 0!important;padding:0!important;gap:4px!important}
+html[data-sde-citadel-integral] .sde-ref-program-strip .sde-tpa-hero-card .sde-tpa-actions .sde-shell-event-register{display:inline-flex!important;align-items:center!important;min-height:32px!important;padding:5px 9px!important;border-radius:9px!important;background:#e8bf69!important;color:#111936!important;-webkit-text-fill-color:#111936!important;font-size:.69rem!important;text-decoration:none!important}
