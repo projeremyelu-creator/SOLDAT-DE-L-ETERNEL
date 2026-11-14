@@ -138,7 +138,7 @@ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-founda
 /* SDE 14 novembre 2026 — déclinaison authentifiée de la planche public/privé.
    Complète la grille existante : pas de second tableau de bord ni de KPI factice. */
 html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-member-shortcuts-grid{
- grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;
 }
 html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-member-shortcuts-grid > .sde-ref-shortcut{
  min-width:0!important;min-height:116px!important;display:flex!important;flex-direction:column!important;
