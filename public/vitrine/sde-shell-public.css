@@ -2223,3 +2223,26 @@ html body[data-sde-page="programmes"] #agenda-liste > .programme[data-sde-archiv
   grid-column:2!important;grid-row:1!important;
  }
 }
+
+
+/* Accès mobile accessibles dès le premier rendu, avant injection du shell. */
+@media(max-width:800px){
+ body.sde23-native :is(
+   nav.sde-crumbs a,
+   .hub-breadcrumb a,
+   .sde-privacy-note a,
+   .sde-pole-confidentialite a,
+   a[href="/confidentialite"],
+   .site-footer nav a
+ ){
+   box-sizing:border-box!important;
+   display:inline-flex!important;
+   align-items:center!important;
+   min-width:44px!important;
+   min-height:44px!important;
+   padding:9px 7px!important;
+ }
+ body.sde23-native :is(button[data-geo-view],button[data-geo-fullscreen]){
+   min-height:44px!important;
+ }
+}

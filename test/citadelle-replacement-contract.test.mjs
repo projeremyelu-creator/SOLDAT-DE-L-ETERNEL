@@ -144,3 +144,15 @@ test("La maquette source comporte six icônes SVG SDE, sans glyphes de remplacem
  assert.match(css,/\.sde-citadel-axis::before\s*\{\s*content:none!important;/);
  assert.match(css,/\.sde-citadel-axis:nth-child\(4\) \.sde-axis-icon/);
 });
+
+
+test("V4 : doctrine six axes contrastée, liens mobile et commandes cartographiques touchables",()=>{
+ const css=read("public/vitrine/sde-citadelle-reference-v4.css");
+ const shell=read("public/vitrine/sde-shell-public.css");
+ assert.match(css,/body\[data-sde-page="mouvement"\] #axes ol\.six-axes > li\s*\{[\s\S]*?background:#faf7f0!important;/);
+ assert.match(css,/nav\.sde-crumbs a/);
+ assert.match(css,/\.sde-privacy-note a/);
+ assert.match(css,/button\[data-geo-view\]/);
+ assert.match(css,/button\[data-geo-fullscreen\]/);
+ assert.match(shell,/Accès mobile accessibles dès le premier rendu/);
+});

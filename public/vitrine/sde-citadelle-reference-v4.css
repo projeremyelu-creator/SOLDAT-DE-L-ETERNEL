@@ -244,3 +244,54 @@ html[data-sde-citadel-integral] body.sde-2027-reference .sde-citadel-axis:nth-ch
     height:26px!important;
   }
 }
+
+
+/* V4 — recette mobile globale, sourcée sur l'audit public des 61 vues.
+   Appliquer sur les chemins historiques aussi, sans toucher au moteur métier. */
+body[data-sde-page="mouvement"] #axes ol.six-axes > li {
+  background:#faf7f0!important;
+  background-image:none!important;
+  color:#142138!important;
+  -webkit-text-fill-color:#142138!important;
+  border:1px solid #c6aa69!important;
+  box-shadow:0 10px 24px rgba(2,10,24,.12)!important;
+}
+body[data-sde-page="mouvement"] #axes ol.six-axes > li :is(h3,p,small) {
+  color:#142138!important;
+  -webkit-text-fill-color:#142138!important;
+}
+body[data-sde-page="mouvement"] #axes ol.six-axes > li svg {
+  color:#79551a!important;
+  stroke:#79551a!important;
+}
+@media(max-width:800px) {
+  html body.sde23-native :is(
+    nav.sde-crumbs a,
+    nav.hub-breadcrumb a,
+    .hub-breadcrumb a,
+    .sde-privacy-note a,
+    .sde-pole-confidentialite a,
+    .sde-shell-footer a,
+    footer a[href="/confidentialite"],
+    a[href="/confidentialite"],
+    .site-footer a
+  ) {
+    box-sizing:border-box!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-width:44px!important;
+    min-height:44px!important;
+    padding:9px 7px!important;
+    vertical-align:middle!important;
+    touch-action:manipulation;
+  }
+  html body.sde23-native :is(
+    button[data-geo-view],
+    button[data-geo-fullscreen]
+  ) {
+    min-height:44px!important;
+    box-sizing:border-box!important;
+    touch-action:manipulation;
+  }
+}
