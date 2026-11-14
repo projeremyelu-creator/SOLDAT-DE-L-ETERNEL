@@ -105,13 +105,14 @@
    ["☷","Fil d’actualités","Annonces et vie communautaire","portevoix"],
    ["⌂","Mon tableau de bord","Suivre mon parcours SDE","espace-soldat"]
   ];
-  // Le routeur authentifié peut autoriser des vues absentes du menu historique.
-  // En l'absence du routeur, n'afficher que les vues explicitement navigables.
+  // Les raccourcis reflètent uniquement les modules visibles dans la
+  // navigation de la session, jamais une habilitation déduite du routeur.
   const permitted=new Set([
    ...document.querySelectorAll("#sde-direct-tabs [data-module], #nav [data-vue]")
   ].map(node=>node.dataset.module||node.dataset.vue));
+  if(!permitted.size)return;
   for(const [icon,title,detail,route] of shortcuts){
-   if(permitted.size&&!permitted.has(route)&&!window.SDEPortal?.selectionner)continue;
+   if(!permitted.has(route))continue;
    const button=action("",route);
    button.className="sde-ref-shortcut";
    button.setAttribute("aria-label",title);
