@@ -94,14 +94,16 @@
   wrapper.setAttribute("aria-label","Raccourcis personnels du soldat");
   wrapper.append(elt("h2","","Mon espace personnel"));
   const grid=elt("div","sde-ref-member-shortcuts-grid");
-  // Les cinq modules privés sont accessibles par le routeur existant :
+  // Les sept modules privés sont accessibles par le routeur existant :
   // aucune donnée d'un autre soldat n'est chargée, aucune permission n'est ajoutée.
   const shortcuts=[
    ["🎓","Soldiers Academy","Ma formation et mes attestations","academie"],
    ["▣","Mon agenda","Mes rendez-vous et activités","rendezvous"],
    ["♙","Mon profil","Ma fiche, ma photo et ma carte","espace"],
    ["✦","Mes prières","Intercession et suivi confidentiel","priere"],
-   ["▤","Mes ressources","Bibliothèque et enseignements","bibliotheque"]
+   ["▤","Mes ressources","Bibliothèque et enseignements","bibliotheque"],
+   ["☷","Fil d’actualités","Annonces et vie communautaire","portevoix"],
+   ["⌂","Mon tableau de bord","Suivre mon parcours SDE","espace-soldat"]
   ];
   // Le routeur authentifié peut autoriser des vues absentes du menu historique.
   // En l'absence du routeur, n'afficher que les vues explicitement navigables.
