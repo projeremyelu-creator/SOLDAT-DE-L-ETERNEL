@@ -73,9 +73,11 @@ test("La Citadelle Céleste v3 est compilée comme unique charte finale de toute
   assert.ok(build.includes("installerCitadelleFinale"));
   assert.ok(build.includes("citadelStylePath+'?v='+revision"));
   const home = read("public/vitrine/portail.html");
-  assert.ok(home.includes("LA CITADELLE"));
-  assert.ok(home.includes("CÉLESTE"));
-  assert.ok(home.includes("UNE ARMÉE SPIRITUELLE. UN ÉCOSYSTÈME VIVANT."));
+   assert.ok(home.includes("SOLDATS DE L’ÉTERNEL"));
+   assert.ok(home.includes("Mouvement S.D.E. · Ézéchiel 37"));
+   assert.ok(home.includes("Un peuple réveillé, formé, équipé et envoyé pour impacter les nations."));
+   assert.equal((home.match(/class="sde-ref-hub-links"/g)||[]).length,1);
+   assert.equal((home.match(/class="sde-ref-program-strip"/g)||[]).length,1);
   const css = read("public/vitrine/sde-citadelle-celeste-2027.css");
   assert.ok(css.includes("/vitrine/illus/citadelle-celeste.svg"));
   assert.ok(css.includes("Plus Jakarta Sans"));
