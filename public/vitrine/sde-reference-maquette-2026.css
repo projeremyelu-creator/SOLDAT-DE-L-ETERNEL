@@ -112,3 +112,19 @@ html[data-sde-citadel-integral] body.sde-direct .sde-ref-operational>summary{col
 /* Préserver l'inscription réelle à la TPA dans le bandeau compact. */
 html[data-sde-citadel-integral] .sde-ref-program-strip .sde-tpa-hero-card .sde-tpa-actions{display:flex!important;margin:7px 0 0!important;padding:0!important;gap:4px!important}
 html[data-sde-citadel-integral] .sde-ref-program-strip .sde-tpa-hero-card .sde-tpa-actions .sde-shell-event-register{display:inline-flex!important;align-items:center!important;min-height:32px!important;padding:5px 9px!important;border-radius:9px!important;background:#e8bf69!important;color:#111936!important;-webkit-text-fill-color:#111936!important;font-size:.69rem!important;text-decoration:none!important}
+
+/* Recette navigateur mobile : fond AVIF cinématique local, sans photo d'album.
+   Tablette 768 px : réserver le volume du bandeau avant le montage des
+   raccourcis pour ne pas provoquer de décalage de mise en page (CLS). */
+@media(max-width:860px){
+ html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+  background-image:linear-gradient(90deg,rgba(5,11,29,.89),rgba(6,16,36,.28)),url("/vitrine/illus/citadelle-celeste-cinema.avif")!important;
+  background-position:center,center center!important;
+  background-size:cover!important;
+ }
+}
+@media(min-width:761px) and (max-width:860px){
+ html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{min-height:750px!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner>.sde-tpa-hero-card{display:none!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip>.sde-tpa-hero-card{display:flex!important}
+}
