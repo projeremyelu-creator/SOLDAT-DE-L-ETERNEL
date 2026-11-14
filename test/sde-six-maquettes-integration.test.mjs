@@ -196,7 +196,7 @@ test("Citadelle mobile · illustration officielle sans photographie d'album en c
  const desktop=readFileSync("public/vitrine/photos/hero-sde-1280.webp");
  assert.match(css,/--sde-citadel-art:url\("\/vitrine\/illus\/citadelle-celeste\.svg"\)/);
  assert.match(css,/background:linear-gradient\(90deg,[^;]*var\(--sde-citadel-art\)/);
- assert.match(audit,/row\.heroBgMobile\|\|''\)\.includes\('citadelle-celeste\.svg'\)/);
+ assert.match(audit,/row\.heroBgMobile\|\|''\)\.includes\('citadelle-celeste-cinema\.avif'\)/);
  assert.match(svg,/<svg[^>]+viewBox="0 0 1600 900"/);
  assert.match(svg,/fortress/);
  assert.ok(mobile.length<48000,"ancienne vignette mobile préservée");
