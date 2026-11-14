@@ -188,16 +188,19 @@ test("Recette 2027 · contrastes réels et contrôles mobiles corrigés",()=>{
 });
 
 
-test("Citadelle mobile · vraie image WebP compressée, pas l'image PC",()=>{
+test("Citadelle mobile · illustration officielle sans photographie d'album en couverture",()=>{
  const css=read("public/vitrine/sde-citadelle-celeste-2027.css");
  const audit=read("scripts/audit-public-mobile.mjs");
+ const svg=read("public/vitrine/illus/citadelle-celeste.svg");
  const mobile=readFileSync("public/vitrine/photos/hero-sde-640.webp");
  const desktop=readFileSync("public/vitrine/photos/hero-sde-1280.webp");
- assert.match(css,/html body\.sde-unifie\.sde-premium-home\.sde-2027-reference\.sde-citadelle-live \.ap-hero \.ap-hero-bg/);
- assert.match(css,/url\("\/vitrine\/photos\/hero-sde-640\.webp"\)!important/);
- assert.match(audit,/row\.heroBgMobile\|\|''\)\.includes\('hero-sde-640\.webp'\)/);
- assert.ok(mobile.length<48000,"image de couverture mobile <48 Ko");
- assert.ok(mobile.length<desktop.length,"la version mobile reste plus légère que le bureau");
+ assert.match(css,/--sde-citadel-art:url\("\/vitrine\/illus\/citadelle-celeste\.svg"\)/);
+ assert.match(css,/background:linear-gradient\(90deg,[^;]*var\(--sde-citadel-art\)/);
+ assert.match(audit,/row\.heroBgMobile\|\|''\)\.includes\('citadelle-celeste\.svg'\)/);
+ assert.match(svg,/<svg[^>]+viewBox="0 0 1600 900"/);
+ assert.match(svg,/fortress/);
+ assert.ok(mobile.length<48000,"ancienne vignette mobile préservée");
+ assert.ok(mobile.length<desktop.length,"les fichiers anciens restent optimisés pour les albums");
 });
 
 
