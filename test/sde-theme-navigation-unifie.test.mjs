@@ -30,8 +30,11 @@ test("les styles privés ne sont pas ciblés par cette livraison",()=>{
 test("barre privée : cinq accès fixes sans exposition des finances administrateur",()=>{
  const shell=readFileSync("frontend/reference-shell.jsx","utf8");
  const design=readFileSync("frontend/reference.css","utf8");
- assert.match(shell,/\['espace','Membres','members'\]/);
- assert.match(shell,/\['contributions','Finances','money'\]/);
+ // La maquette validée donne priorité à Academy et Profil dans la barre mobile.
+ // Les cotisations demeurent dans le menu privé avec les mêmes permissions.
+ assert.match(shell,/\['academie','Academy','academy'\]/);
+ assert.match(shell,/\['espace','Profil','members'\]/);
+ assert.match(shell,/\['contributions','Mes cotisations','money'\]/);
  assert.match(shell,/account\.niveau>=2\?\['finance-direction','Finances','money'\]:\['scanner','Pointages','qr'\]/);
  assert.match(shell,/\['rendezvous','Agenda','mission'\]/);
  assert.match(shell,/\['tactique','SDE officiel/);

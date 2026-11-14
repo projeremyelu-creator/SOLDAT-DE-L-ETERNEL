@@ -10,7 +10,7 @@
  };
  const action=(label,vue,tag="button")=>{
   const el=elt(tag,"",label);
-  if(tag==="button"){el.type="button";el.dataset.vue=vue;}
+  if(tag==="button"){el.type="button";el.dataset.vue=vue;el.addEventListener("click",()=>window.SDEPortal?.selectionner?.(vue,{userInitiated:true}));}
   return el;
  };
  function carte(titre,texte,lien,vue,cls){
@@ -91,17 +91,46 @@
   const realCard=view.querySelector("#sde-personal-card");
   if(!realCard||view.querySelector(".sde-ref-member-shortcuts"))return;
   const wrapper=elt("section","sde-ref-member-shortcuts");
-  wrapper.setAttribute("aria-label","Mon espace personnel");
+  wrapper.setAttribute("aria-label","Raccourcis personnels du soldat");
   wrapper.append(elt("h2","","Mon espace personnel"));
   const grid=elt("div","sde-ref-member-shortcuts-grid");
-  const event=elt("a","","");
-  event.href="/programmes#tpa-2026";
-  event.append(elt("b","","▣ TPA 2026"),elt("small","","18 décembre · 20h GMT · Google Meet"));
-  const training=action("","academie");
-  training.append(elt("b","","✦ Ma formation"),elt("small","","Soldiers Academy · Mon parcours"));
-  const mission=elt("a","","");mission.href="/missions";
-  mission.append(elt("b","","❧ Ma mission"),elt("small","","Engagement et mobilisation sur le terrain"));
-  grid.append(event,training,mission);wrapper.append(grid);
+  // Les sept modules privés sont accessibles par le routeur existant :
+  // aucune donnée d'un autre soldat n'est chargée, aucune permission n'est ajoutée.
+  const shortcuts=[
+   ["🎓","Soldiers Academy","Ma formation et mes attestations","academie"],
+   ["▣","Mon agenda","Mes rendez-vous et activités","rendezvous"],
+   ["♙","Mon profil","Ma fiche, ma photo et ma carte","espace"],
+   ["✦","Mes prières","Intercession et suivi confidentiel","priere"],
+   ["▤","Mes ressources","Bibliothèque et enseignements","bibliotheque"],
+   ["☷","Fil d’actualités","Annonces et vie communautaire","portevoix"],
+   ["⌂","Mon tableau de bord","Suivre mon parcours SDE","espace-soldat"]
+  ];
+  // Les raccourcis reflètent uniquement les modules visibles dans la
+  // navigation de la session, jamais une habilitation déduite du routeur.
+  const permitted=new Set([
+   ...document.querySelectorAll("#sde-direct-tabs [data-module], #nav [data-vue]")
+  ].map(node=>node.dataset.module||node.dataset.vue));
+  if(!permitted.size)return;
+  for(const [icon,title,detail,route] of shortcuts){
+   if(!permitted.has(route))continue;
+   const button=action("",route);
+   button.className="sde-ref-shortcut";
+   button.setAttribute("aria-label",title);
+   button.append(elt("span","sde-ref-shortcut-icon",icon),elt("b","",title),elt("small","",detail));
+   grid.append(button);
+  }
+  const mission=elt("a","sde-ref-shortcut","");
+  mission.href="/missions";
+  mission.append(elt("span","sde-ref-shortcut-icon","♡"),elt("b","","Missions & Impact"),elt("small","","Servir et agir sur le terrain"));
+  grid.append(mission);
+  // Éviter de recréer les anciens raccourcis lorsque la couche de référence
+  // historique s'initialise après celle-ci.
+  grid.dataset.sdeReferenceExpanded="true";
+  wrapper.append(grid);
+  const tpa=elt("a","sde-ref-member-event","");
+  tpa.href="/programmes";
+  tpa.append(elt("strong","","ALEPH 12 · 12 jours de Jeûne et Prière"),elt("span","","À venir — consulter les programmes SDE"),elt("span","","Voir les programmes →"));
+  wrapper.append(tpa);
   realCard.insertAdjacentElement("afterend",wrapper);
  }
  function improveHeader(){

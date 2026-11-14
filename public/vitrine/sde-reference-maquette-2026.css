@@ -133,3 +133,62 @@ html[data-sde-citadel-integral] .sde-ref-program-strip .sde-tpa-hero-card .sde-t
    n'est déplacé après le premier affichage. Harmoniser la nouvelle fondation. */
 html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-foundation{display:block!important;font:700 .85rem/1.5 "Plus Jakarta Sans",system-ui,sans-serif!important;color:#f4cf80!important;-webkit-text-fill-color:#f4cf80!important;letter-spacing:.06em!important;margin:0 0 6px!important}
 @media(min-width:761px) and (max-width:860px){html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{min-height:620px!important}}
+
+
+/* SDE 14 novembre 2026 — déclinaison authentifiée de la planche public/privé.
+   Complète la grille existante : pas de second tableau de bord ni de KPI factice. */
+html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-member-shortcuts-grid{
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;
+}
+html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-member-shortcuts-grid > .sde-ref-shortcut{
+ min-width:0!important;min-height:116px!important;display:flex!important;flex-direction:column!important;
+ align-items:flex-start!important;justify-content:center!important;gap:7px!important;
+ border:1px solid rgba(236,194,108,.35)!important;border-radius:15px!important;
+ padding:16px!important;background:linear-gradient(135deg,#19234c,#2a1953)!important;
+ color:#fff6e7!important;-webkit-text-fill-color:#fff6e7!important;
+ font-family:"Plus Jakarta Sans",system-ui,sans-serif!important;text-align:left!important;
+ box-shadow:0 8px 22px rgba(4,8,31,.24)!important;
+ cursor:pointer!important;transition:transform .18s ease,border-color .18s ease!important;
+}
+html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-member-shortcuts-grid > .sde-ref-shortcut:hover{
+ transform:translateY(-2px)!important;border-color:#f3d28f!important;
+}
+html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-shortcut-icon{
+ font-size:1.35rem!important;line-height:1.3!important;color:#f5cd78!important;-webkit-text-fill-color:#f5cd78!important;
+}
+html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-shortcut b{
+ font-size:.92rem!important;font-weight:800!important;line-height:1.3!important;color:#fff4d9!important;-webkit-text-fill-color:#fff4d9!important;
+}
+html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-shortcut small{
+ font-size:.76rem!important;line-height:1.45!important;opacity:.92!important;
+}
+html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-member-event{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ flex-wrap:wrap!important;gap:9px!important;min-height:68px!important;margin-top:14px!important;
+ padding:14px 17px!important;border:1px solid rgba(246,203,116,.4)!important;
+ border-radius:15px!important;color:#fef1d3!important;
+ background:linear-gradient(100deg,rgba(64,22,81,.96),rgba(25,21,68,.94)),url("/vitrine/illus/prog-aleph12.svg") right center/auto 110% no-repeat!important;
+ text-decoration:none!important;font-family:"Plus Jakarta Sans",system-ui,sans-serif!important;
+}
+html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-member-event strong{
+ font:700 clamp(.92rem,2vw,1.3rem) "Cinzel",Georgia,serif!important;color:#f4d48b!important;
+}
+html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-member-event span{
+ font-size:.79rem!important;color:#f9eed9!important;
+}
+@media(max-width:760px){
+ html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-member-shortcuts-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;
+ }
+ html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-member-shortcuts-grid>.sde-ref-shortcut{
+  min-height:108px!important;padding:13px!important;
+ }
+ html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-member-event{align-items:flex-start!important;flex-direction:column!important}
+}
+@media(max-width:360px){
+ html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-shortcut small{font-size:.7rem!important}
+}
+@media(prefers-reduced-motion:reduce){
+ html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-shortcut{transition:none!important}
+ html[data-sde-citadel-integral] body.sde-direct-member .sde-ref-shortcut:hover{transform:none!important}
+}

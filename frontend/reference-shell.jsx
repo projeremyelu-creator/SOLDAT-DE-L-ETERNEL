@@ -51,11 +51,11 @@ export function ReferenceChrome({portal,current}){
   'contributions':'Finances personnelles',
   'priere':'Prière et ressources'
  };
- // Cinq onglets fixes : un compte membre n'accède qu'à son profil et à ses cotisations.
+ // Quatre raccourcis mobiles + « Plus » : Academy, Agenda et Profil restent sous contrôle du routeur et des permissions existantes.
  // Les responsables sans habilitation financière gardent Pointages à la place de Finances.
  const tabs=admin
   ?[['pilotage','Accueil','home'],['annuaire','Membres','members'],['rendezvous','Agenda','mission'],account.niveau>=2?['finance-direction','Finances','money']:['scanner','Pointages','qr']]
-  :[['espace-soldat','Accueil','home'],['espace','Membres','members'],['rendezvous','Agenda','mission'],['contributions','Finances','money']];
+  :[['espace-soldat','Accueil','home'],['academie','Academy','academy'],['rendezvous','Agenda','mission'],['espace','Profil','members']];
  const options=[...document.querySelectorAll('#sde-direct-tabs [data-module]')].map(b=>({module:b.dataset.module,title:b.textContent})).filter(x=>(x.title+' '+x.module).toLowerCase().includes(query.toLowerCase()));
  const selected=(m)=>m===current||(m==='espace-soldat'&&current==='synthese')||(m==='academy-direction'&&current==='academie')||(m==='finance-direction'&&current==='finances');
  const tabbar=createPortal(<nav className="ref-tabbar" aria-label="Navigation rapide">{tabs.map(([m,l,i])=><button key={m} onClick={()=>go(m)} aria-current={selected(m)||(m==='espace-soldat'&&current==='synthese')?'page':undefined}><RefIcon name={i}/><span>{l}</span></button>)}<button type="button" onClick={()=>setMobile(true)} aria-label="Afficher toutes les rubriques" aria-haspopup="dialog" aria-expanded={mobile} aria-controls={admin?"ref-accessible-sidebar":"ref-mobile-menu"}><RefIcon name="menu"/><span>Plus</span></button></nav>,document.body);
