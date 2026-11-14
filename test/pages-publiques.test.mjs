@@ -9,7 +9,7 @@ test('Pages publiques : structure conservée et habillage unique 2+3 sans Fusion
  for(const [n,fam] of Object.entries(PAGES)){
   const h=page(n),feuilles=[...h.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
   const iP=feuilles.findIndex(f=>f.includes('sde-pages-premium.css'));
-  const iFinal=feuilles.findIndex(f=>f.includes('sde-citadelle-celeste-2027.css'));
+  const iFinal=feuilles.findIndex(f=>f.includes('sde-citadelle-reference-v4.css'));
   assert.ok(iP>=0&&iP<iFinal,n+' : fondations de page avant la nouvelle charte');
   assert.equal(iFinal,feuilles.length-1,n+' : une seule charte 2+3 finale');
   for(const ancien of ['sde-fusion.css','sde-v5-complet.css','sde-maquette.css','sde-six-maquettes-2027.css'])
