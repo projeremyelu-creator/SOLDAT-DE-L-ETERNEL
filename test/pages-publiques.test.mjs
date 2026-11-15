@@ -158,8 +158,8 @@ test('Film de présentation : bouton sur l’accueil (hors des quatre actions) e
  const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf('</section>',home.indexOf('class="ap-hero"')));
   const actions=hero.match(/<nav class="ap-actions[^"]*"[^>]*>[\s\S]*?<\/nav>/)?.[0]||'';
   assert.equal((actions.match(/<a /g)||[]).length,2,'deux actions principales de la refonte Citadelle');
-  for(const route of ['/mouvement','/contact#rejoindre'])assert.ok(actions.includes('href="'+route+'"'),'Action absente : '+route);
- assert.ok(actions.includes('href="/contact#rejoindre"')&&actions.includes('href="/mouvement"'), 'découverte et adhésion');
+  for(const route of ['/mouvement','/mouvement#film'])assert.ok(actions.includes('href="'+route+'"'),'Action absente : '+route);
+ assert.ok(home.includes('href="/contact#rejoindre"')&&actions.includes('href="/mouvement"'), 'découverte et adhésion conservées');
  assert.ok(hero.includes('href="/mouvement#film"')&&hero.includes('data-film-link'),'film présent en lien secondaire distinct des CTA');
  assert.ok(contact.includes('id="film-contact"')&&contact.includes('href="/mouvement#film"'));
  assert.ok(contact.indexOf('id="film-contact"')<contact.indexOf('id="rejoindre" aria-labelledby'),'avant le formulaire, hors des sections de texte légal');

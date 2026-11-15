@@ -180,7 +180,8 @@ test("Corrections UX : aucun indicateur ni compteur vide, contact avec un seul g
  const hero=home.slice(home.indexOf('class="ap-hero"'),home.indexOf("</section>",home.indexOf('class="ap-hero"')));
   const buttons=hero.match(/<nav class="ap-actions[^"]*"[^>]*>[\s\S]*?<\/nav>/)?.[0]||"";
   assert.equal((buttons.match(/<a /g)||[]).length,2,'deux accès de la refonte Citadelle');
-  for(const route of ['/mouvement','/contact#rejoindre'])assert.ok(buttons.includes('href="'+route+'"'),'Accès manquant : '+route);
+  for(const route of ['/mouvement','/mouvement#film'])assert.ok(buttons.includes('href="'+route+'"'),'Action de la maquette absente : '+route);
+  assert.ok(home.includes('href="/contact#rejoindre"'), 'L’adhésion doit rester disponible dans les accès du site');
  assert.match(home,/>Vie de l’Esprit<\/strong>/);
  assert.match(home,/>Gouvernance &amp; Ordre<\/strong>/);
  assert.match(home,/>Terrain &amp; Compassion<\/strong>/);
