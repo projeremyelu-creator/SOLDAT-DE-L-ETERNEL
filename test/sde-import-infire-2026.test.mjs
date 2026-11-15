@@ -47,3 +47,18 @@ test("publication R2/KV via les API éprouvées, sans exposer de secrets",()=>{
  assert.ok(studio.includes('href="/vitrine/import-infire-2026.html"'));
  assert.ok(studio.includes('id="studio" hidden'));
 });
+
+
+test("affichage du nombre de médias réellement publics avant et après publication",()=>{
+ const html=read("public/vitrine/import-infire-2026.html");
+ const js=read("public/vitrine/sde-import-infire-2026.js");
+ assert.ok(html.includes('id="etat-publication"'));
+ assert.ok(js.includes('function publicationStatus(items)'));
+ assert.ok(js.includes('x?.visibilite==="public"'));
+ assert.ok(js.includes('x.categorie==="IN FIRE"'));
+ assert.ok(js.includes('x.categorie==="Tenues SDE"'));
+ assert.ok(js.includes('publicationStatus(data.medias)'));
+ assert.ok(js.includes('verified?.done===8'));
+ assert.ok(js.includes('Réessayez uniquement les fichiers manquants'));
+ assert.doesNotMatch(js,/\b(?:1991|0757126504)\b/);
+});
