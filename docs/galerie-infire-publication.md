@@ -19,3 +19,29 @@ Pour reclasser une photographie, déplacer les fichiers vers le répertoire de l
 ## Contrôle de publication
 
 Vérifier la réussite de la CI, la fusion dans `main`, le workflow de déploiement Cloudflare, puis ouvrir les URL `/vitrine/album-infire.html`, `/programmes` et `/ressources` sur téléphone et ordinateur.
+
+
+## Nouvelle sélection IN FIRE 2026 — intégration via le studio
+
+L'album /album-infire sait désormais afficher les médias publiés par le studio SDE
+sur /api/medias, dans l'onglet **IN FIRE 2026**. Cette intégration :
+
+- inclut uniquement les images et vidéos de la catégorie IN FIRE dont le titre,
+  la description ou le nom de fichier mentionne **2026** ;
+- ne lit aucune publication privée : le serveur conserve ses contrôles de visibilité ;
+- conserve les dix photographies de l'album 2025 et leurs fichiers ;
+- utilise un chargement progressif pour les photos et la lecture vidéo à la demande.
+
+Pour importer les **quatre photographies et trois clips** fournis pour l'édition 2026,
+ouvrir /sde-mediatheque-admin avec un compte autorisé, choisir la catégorie
+**IN FIRE**, nommer chaque fichier avec « IN FIRE 2026 », puis choisir
+**Public** et confirmer les droits à l'image. Les médias seront ensuite affichés
+automatiquement, sans redéploiement.
+
+La photographie de deux participantes présentant les tenues SDE doit être
+classée séparément dans **Tenues SDE** (son rattachement à IN FIRE 2026
+n'a pas été confirmé).
+
+**Important :** cette modification de code prépare et affiche les médias publiés
+sur le serveur ; elle ne prouve pas que les fichiers binaires transmis dans
+une conversation ont déjà été téléversés dans le studio.
