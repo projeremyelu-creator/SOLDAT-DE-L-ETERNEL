@@ -1017,3 +1017,33 @@ html body.sde-pixel-citadel .sde-pixel-panels{display:grid!important;grid-templa
  html body.sde-pixel-citadel .sde-pixel-panels{grid-template-columns:1fr!important}
  html body.sde-pixel-citadel .sde-pixel-poles{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important}
 }
+
+
+
+/* PRIORITÉ ABSOLUE DE LA SCÈNE CITADELLE APPROUVÉE : l'ancien fond du
+ * guerrier se trouvait sur le SECTION, et .ap-hero-bg était masqué par
+ * une ancienne règle. Ce correctif rend enfin la ville de la MAQUETTE
+ * directement visible, en recadrant ses pixels sans modifier le PNG. */
+html[data-sde-citadel-integral] body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live.sde-pixel-citadel main#contenu section#accueil.ap-hero{
+ background:#071a2c!important;
+ background-image:none!important;
+}
+html[data-sde-citadel-integral] body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live.sde-pixel-citadel main#contenu section#accueil.ap-hero::after{
+ content:none!important;display:none!important;background:none!important;
+}
+html[data-sde-citadel-integral] body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-hero-bg{
+ display:block!important;
+ visibility:visible!important;
+ position:absolute!important;
+ inset:0!important;
+ width:100%!important;height:100%!important;
+ opacity:1!important;transform:none!important;filter:none!important;
+ background:url("/vitrine/maquettes/citadelle-celeste-sde.png") 65% 19% / 294% auto no-repeat!important;
+ pointer-events:none!important;
+}
+@media(max-width:720px){
+ html[data-sde-citadel-integral] body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-hero-bg{
+  background-position:68% 16%!important;
+  background-size:510% auto!important;
+ }
+}
