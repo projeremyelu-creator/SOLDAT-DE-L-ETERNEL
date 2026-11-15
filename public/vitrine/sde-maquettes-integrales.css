@@ -717,3 +717,52 @@ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-p
   -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.65) 26%,#000 57%)!important;
   mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.65) 26%,#000 57%)!important;
 }
+
+
+/* Navigation de la maquette de référence : 7 rubriques et CTA Portail doré.
+   La navigation mobile conserve sa barre basse et son panneau Plus. */
+@media(min-width:1121px){
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-shell-mounted .sde-shell-portal{
+   display:inline-flex!important;
+   align-items:center!important;justify-content:center!important;
+   min-width:92px!important;min-height:43px!important;
+   padding:10px 14px!important;border-radius:10px!important;
+   border:1px solid #ffd876!important;
+   color:#10142a!important;-webkit-text-fill-color:#10142a!important;
+   background:linear-gradient(180deg,#ffe081,#ecac29)!important;
+   box-shadow:0 8px 19px rgba(239,175,51,.25)!important;
+   font:800 .82rem/1.2 var(--px-body)!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-shell-mounted .sde-shell-portal :is(svg,span){
+   color:#10142a!important;-webkit-text-fill-color:#10142a!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-shell-mounted .sde-shell-search{
+   display:none!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-shell-mounted .sde-shell-mega{
+   display:flex!important;gap:clamp(2px,.35vw,7px)!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-shell-mounted .sde-shell-mega>a{
+   padding:9px clamp(4px,.63vw,10px)!important;
+   font:700 clamp(.73rem,.82vw,.86rem)/1.28 var(--px-body)!important;
+   white-space:nowrap!important;
+ }
+}
+@media(min-width:801px) and (max-width:1120px){
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-shell-mounted .sde-shell-portal{
+   display:inline-flex!important;min-height:43px!important;
+   padding:8px 13px!important;border-radius:10px!important;
+   background:linear-gradient(180deg,#ffe081,#ecac29)!important;
+   border:1px solid #ffd876!important;
+   color:#10142a!important;-webkit-text-fill-color:#10142a!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-shell-mounted .sde-shell-portal svg{
+   color:#10142a!important;
+ }
+}
+/* Sur téléphone, pas de CTA concurrent : la connexion reste dans le menu Plus. */
+@media(max-width:800px){
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-shell-mounted .sde-shell-portal{
+   display:none!important;
+ }
+}
