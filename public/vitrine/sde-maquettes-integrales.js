@@ -417,7 +417,15 @@
    const head=$(".sde-dash-heading");
    if(head&&!$(".sde-px-admin-kicker",head))head.prepend(el("span","sde-px-admin-kicker","SDE DIGITAL · POSTE DE COMMANDEMENT"));
  }
- function start(){publicAccueil();mountMember();mountAdmin();}
+ function mountReferenceBranding(){
+   // Blason extrait de la maquette officielle : l'identité du membre n'est pas remplacée.
+   for(const img of document.querySelectorAll(".sde-shell-brand img, .sde-dash-logo img")){
+     if(img.dataset.sdeShieldReference)continue;
+     img.src="/vitrine/illus/blason-maquette-sde.webp";
+     img.dataset.sdeShieldReference="true";
+   }
+ }
+ function start(){mountReferenceBranding();publicAccueil();mountMember();mountAdmin();}
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});
  else start();
 })();
