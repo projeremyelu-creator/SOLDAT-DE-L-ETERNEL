@@ -10,7 +10,7 @@ import {resolve,sep,extname} from 'node:path';
 const root=resolve('public');
 const out='audit-mobile-sde/prives';
 mkdirSync(out,{recursive:true});
-const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.png':'image/png','.webp':'image/webp','.svg':'image/svg+xml'};
+const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.png':'image/png','.webp':'image/webp','.svg':'image/svg+xml','.avif':'image/avif'};
 const server=createServer(async(req,res)=>{
   const path=new URL(req.url||'/', 'http://127.0.0.1').pathname;
   const aliases={'/mon-espace':'/vitrine/tableau-membre.html','/administration':'/vitrine/tableau-administration.html'};
@@ -59,6 +59,8 @@ try{
       '/api/moi':account,
       '/api/mon-espace':{membre:{nom:'RECETTE',prenoms:'Soldat',matricule:'DEMO-000',email:'recette@example.invalid',telephone:'00000000',statut:'Membre',quartier:'Exemple',situation:''}},
       '/api/mon-historique':{presences:[{titre:'Séance fictive',date:'2026-10-01',etat:'P'}],prieres:[],totalPrieres:0},
+      '/api/mon-parcours-academy':{formations:1,certifie:0,modulesTotal:12,modulesFaits:5,pourcentage:42,parcours:[{titre:'Formation fictive',modules:[{titre:'Cours fictif à suivre',suivi:false}]}]},
+      '/api/actualites':{annonces:[{type:'annonce',titre:'Annonce de recette',contenu:'Contenu fictif isolé',date:'2026-11-15',categorie:'Communauté'}],evenements:[{titre:'Rencontre fictive',date:'2026-12-18',heure:'20:00',lieu:'En ligne',type:'evenement'}]},
       '/api/tableau-de-bord':{total:{membres:3,evenements:2,projets:1,annonces:4}},
       '/api/public':{evenements:[{titre:'Programme de démonstration',date:'2026-12-18',heure:'20:00',lieu:'En ligne'}]}
     };
@@ -93,12 +95,34 @@ try{
       requireOk(response?.status()===200,'HTTP',name+' HTTP '+response?.status());
       requireOk(geom.docWidth<=geom.width+2&&geom.bodyWidth<=geom.width+2,'DEBORDEMENT',name+' largeur '+geom.docWidth+'/'+geom.bodyWidth+' pour '+geom.width);
       requireOk(geom.mainWidth>240,'CONTENU_ETROIT',name+' colonne principale '+geom.mainWidth);
+      const style=await page.evaluate(()=>({
+        integral:document.documentElement.getAttribute('data-sde-citadel-integral'),
+        loaded:[...document.styleSheets].some(x=>String(x.href||'').includes('sde-maquettes-integrales.css')),
+        dark:getComputedStyle(document.body).backgroundColor,
+        newHero:!!document.querySelector('.sde-px-member-cover'),
+        newProfile:!!document.querySelector('.sde-px-profile-cover'),
+        newAgenda:!!document.querySelector('.sde-px-calendar-grid'),
+        newNews:!!document.querySelector('.sde-px-news-feed'),
+        newLearning:!!document.querySelector('.sde-px-progress-ring')
+      }));
+      requireOk(!!style.integral,'MAQUETTE_ABSENTE',name+' : aucune identité Citadelle sur le HTML compilé '+JSON.stringify(style));
+      requireOk(style.loaded,'CSS_FINAL_NON_CHARGE',name);
+      if(c.mode==='membre'){
+        requireOk(!(await page.locator('.sde-admin-switch').isVisible()),'ADMIN_LINK_VISIBLE',name+' : accès administration affiché à un membre');
+        for(const [k,v] of [['hero','newHero'],['profil','newProfile'],['agenda','newAgenda'],['actualites','newNews'],['parcours','newLearning']])
+          requireOk(style[v],'ECRAN_MANQUANT',name+' : '+k);
+      }
       const views=c.mode==='membre'?['profil','prieres','formations','notifications','outils']:['membres','programmes','projets','communication','outils'];
       for(const view of views){
         const link=page.locator('.sde-dash-side a[data-view="'+view+'"]');
         requireOk(await link.count()===1,'NAV_LIEN',name+'/'+view+' absent');
         if(await link.count()!==1)continue;
-        await link.click({timeout:4500});
+        const bottom=page.locator('.sde-private-bottom-nav a[data-view="'+view+'"]');
+        if(c.width<=760){
+          if(await bottom.count()===1)await bottom.click({timeout:4500});
+          else await page.evaluate(v=>{location.hash='#'+v;},view);
+        }else await link.click({timeout:4500});
+        await page.waitForFunction(section=>!document.querySelector('[data-section="'+section+'"]')?.hidden,view,{timeout:5000});
         const result=await page.evaluate(section=>({
           hash:location.hash,visible:[...document.querySelectorAll('[data-section]')].filter(x=>!x.hidden).map(x=>x.dataset.section),
           active:document.querySelector('.sde-dash-side a[data-view="'+section+'"]')?.getAttribute('aria-current'),
@@ -109,14 +133,15 @@ try{
       }
       if(c.mode==='membre'){
         requireOk(!requests.some(x=>x.path==='/api/tableau-de-bord'),'DONNEES_ADMIN',name+' : endpoint admin appelé par membre');
-        await page.locator('.sde-dash-side a[data-view="prieres"]').click();
+        if(c.width<=760)await page.locator('.sde-private-bottom-nav a[data-view="prieres"]').click();
+        else await page.locator('.sde-dash-side a[data-view="prieres"]').click();
         await page.locator('#priere-form textarea[name="sujet"]').fill('Demande fictive isolée');
         await page.locator('#priere-form button[type="submit"]').click();
         await page.waitForFunction(()=>document.querySelector('#priere-feedback')?.dataset.state==='success');
         requireOk(requests.some(x=>x.path==='/api/priere'&&x.method==='POST'),'FORMULAIRE',name+' : simulation prière absente');
       } else {
-        const finances=await page.locator('.sde-dash-side a[data-view="finances"]').isVisible();
-        const pastoral=await page.locator('.sde-dash-side a[data-view="pastoral"]').isVisible();
+        const finances=await page.locator('.sde-dash-side a[data-view="finances"]').evaluate(x=>!x.hidden);
+        const pastoral=await page.locator('.sde-dash-side a[data-view="pastoral"]').evaluate(x=>!x.hidden);
         requireOk(finances===(c.niveau>=2)&&pastoral===(c.niveau>=3),'ROLES',name+' : finances '+finances+' pastoral '+pastoral);
         if(c.niveau<2){
           await page.evaluate(()=>{location.hash='#finances'});
@@ -127,7 +152,8 @@ try{
           }));
           requireOk(forbidden.hidden===true&&forbidden.home===false,'ACCES_ANCRE',name+' '+JSON.stringify(forbidden));
         } else {
-          await page.locator('.sde-dash-side a[data-view="finances"]').click();
+          if(c.width<=760)await page.evaluate(()=>{location.hash='#finances'});
+          else await page.locator('.sde-dash-side a[data-view="finances"]').click();
           requireOk(await page.locator('[data-section="finances"]').isVisible(),'FINANCES_ADMIN',name+' : navigation finances');
         }
       }
