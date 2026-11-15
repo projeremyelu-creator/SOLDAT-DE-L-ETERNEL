@@ -46,13 +46,15 @@
       const drawer = document.querySelector(".sde-shell-quick");
       const fallback = document.querySelector(".sde-initiative-lead .enveloppe, .sde-intro, #parcours-sde .sde-parcours-inner");
       const target = drawer || fallback;
-      if (target && !button.isConnected) {
+      if (target && button.parentElement !== target) {
         target.appendChild(button);
-        button.classList.toggle("sde-install-in-drawer", Boolean(drawer));
       }
+      button.classList.toggle("sde-install-in-drawer", Boolean(drawer));
     };
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", insert, {once:true});
-    else insert();
+    // Le menu commun peut être monté au DOMContentLoaded après cet événement :
+    // déplacer l'action vers « Plus » même si elle a d'abord été montée en repli.
+    document.addEventListener("DOMContentLoaded", insert, {once:true});
+    insert();
   });
   window.addEventListener("appinstalled", () => {
     installEvent = null;
