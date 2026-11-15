@@ -717,6 +717,7 @@ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table .fu-chi
 /* Recette mobile du 15 novembre 2026 — correctifs issus des écrans réels.
    Ces règles restent en dernier pour protéger la lisibilité contre les
    anciennes palettes encore chargées par certains modules historiques. */
+html body.sde23-native[data-sde-page="prieres"] .sde-media-anchor{display:none!important}
 html body.sde23-native[data-sde-page="prieres"] .sde-section-jumps{
   box-sizing:border-box!important;
   width:min(calc(100% - 24px),1120px)!important;
