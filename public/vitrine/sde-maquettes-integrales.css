@@ -601,3 +601,29 @@ html[data-sde-citadel-integral] body.sde-direct-member #main .sde-ref-headline{
    background-size:cover,auto 300px,cover,cover!important;
  }
 }
+
+
+/* Blason issu de la maquette d'origine : seule l'identité visuelle de la marque
+   change, jamais la photographie personnelle enregistrée du membre. */
+html[data-sde-citadel-integral] body .sde-shell-brand>img,
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-logo>img{
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  object-fit:contain!important;
+  background:transparent!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side-caption::before{
+  background-image:url("/vitrine/illus/blason-maquette-sde.webp")!important;
+  background-size:contain!important;
+  background-repeat:no-repeat!important;
+  filter:drop-shadow(0 3px 10px rgba(248,199,92,.35))!important;
+}
+@media(max-width:760px){
+  html[data-sde-citadel-integral] body.sde-premium-home .sde-shell-brand-title b{
+    font-size:.7rem!important;letter-spacing:.02em!important;
+  }
+  html[data-sde-citadel-integral] body.sde-premium-home .sde-shell-brand-title small{
+    font-size:.58rem!important;line-height:1.2!important;
+  }
+}
