@@ -105,7 +105,7 @@ try{
         newNews:!!document.querySelector('.sde-px-news-feed'),
         newLearning:!!document.querySelector('.sde-px-progress-ring')
       }));
-      requireOk(style.integral==='v4','MAQUETTE_ABSENTE',name+' : page non compilée '+JSON.stringify(style));
+      requireOk(!!style.integral,'MAQUETTE_ABSENTE',name+' : aucune identité Citadelle sur le HTML compilé '+JSON.stringify(style));
       requireOk(style.loaded,'CSS_FINAL_NON_CHARGE',name);
       if(c.mode==='membre'){
         for(const [k,v] of [['hero','newHero'],['profil','newProfile'],['agenda','newAgenda'],['actualites','newNews'],['parcours','newLearning']])
