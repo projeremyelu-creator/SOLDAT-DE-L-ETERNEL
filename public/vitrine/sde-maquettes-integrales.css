@@ -627,3 +627,70 @@ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side-caption::before{
     font-size:.58rem!important;line-height:1.2!important;
   }
 }
+
+
+/* Finition photographique des maquettes : fondre les bords de la vignette
+   de guerrier découpée depuis la capture originale. Ne déplace aucun bloc. */
+html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+ background-image:
+   linear-gradient(90deg,rgba(5,10,32,.88) 0%,rgba(14,11,44,.38) 42%,rgba(12,9,43,.22) 65%,rgba(5,11,36,.88) 100%),
+   radial-gradient(ellipse at 62% 24%,rgba(241,166,92,.81) 0%,rgba(149,80,112,.46) 38%,rgba(35,27,83,.81) 75%,rgba(7,13,43,.93) 100%),
+   url("/vitrine/illus/citadelle-celeste-cinema.avif")!important;
+ background-size:cover,cover,cover!important;
+ background-position:center,center,center!important;
+ background-repeat:no-repeat,no-repeat,no-repeat!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero::after{
+ content:""!important;
+ display:block!important;
+ position:absolute!important;
+ inset:auto!important;
+ left:calc(56% - 283px)!important;
+ top:calc(48% - 278px)!important;
+ width:506px!important;
+ height:580px!important;
+ border:0!important;
+ pointer-events:none!important;
+ z-index:1!important;
+ background-image:url("/vitrine/illus/guerrier-reference-sde.webp")!important;
+ background-position:center!important;
+ background-size:100% 100%!important;
+ background-repeat:no-repeat!important;
+ -webkit-mask-image:radial-gradient(ellipse at 50% 50%,#000 43%,rgba(0,0,0,.92) 52%,transparent 76%)!important;
+ mask-image:radial-gradient(ellipse at 50% 50%,#000 43%,rgba(0,0,0,.92) 52%,transparent 76%)!important;
+}
+@media(min-width:761px) and (max-width:1100px){
+ html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero::after{
+   left:calc(56% - 244px)!important;
+   top:calc(49% - 245px)!important;
+   width:435px!important;
+   height:500px!important;
+ }
+}
+@media(max-width:760px){
+ html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+   background-image:
+     linear-gradient(90deg,rgba(5,12,39,.9),rgba(9,11,43,.7) 46%,rgba(7,14,40,.62)),
+     radial-gradient(ellipse at 65% 19%,rgba(244,169,91,.7),rgba(74,39,91,.62) 58%,rgba(7,12,42,.96)),
+     url("/vitrine/illus/citadelle-celeste-cinema.avif")!important;
+   background-size:cover,cover,cover!important;
+   background-position:center,center,center!important;
+   background-repeat:no-repeat,no-repeat,no-repeat!important;
+ }
+ html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero::after{
+   left:calc(87% - 228px)!important;
+   top:calc(11% - 33px)!important;
+   width:296px!important;
+   height:340px!important;
+   -webkit-mask-image:radial-gradient(ellipse at center,#000 35%,rgba(0,0,0,.82) 52%,transparent 77%)!important;
+   mask-image:radial-gradient(ellipse at center,#000 35%,rgba(0,0,0,.82) 52%,transparent 77%)!important;
+ }
+}
+@media(max-width:390px){
+ html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero::after{
+   left:calc(87% - 228px)!important;
+   top:calc(11% - 33px)!important;
+   width:262px!important;
+   height:300px!important;
+ }
+}
