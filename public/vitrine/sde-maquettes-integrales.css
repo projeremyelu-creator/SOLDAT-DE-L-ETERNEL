@@ -1232,3 +1232,63 @@ html[data-sde-citadel-integral] body.sde-pixel-temple.sde-subpage main#contenu .
  }
  html[data-sde-citadel-integral] body.sde-pixel-temple.sde-subpage main#contenu nav.sde-section-jumps a:last-child{border-bottom:0!important;}
 }
+
+
+/* SDE-2026-TEMPLE-FORM-CONTRAST
+   Temple Vivant : contraste explicite pour les formulaires et textes
+   sur les cartes ivoire. Ne change ni champs, ni soumissions, ni rôles. */
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-section {
+  background:#faf5f1!important;
+  color:#302438!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-split>div :is(h2,h3,p,.sde-initiative-note,strong) {
+  color:#302438!important;
+  -webkit-text-fill-color:#302438!important;
+  text-shadow:none!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-form {
+  background:#fffaf7!important;
+  color:#302438!important;
+  border:1px solid #d3c2d0!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-form :is(h3,label,p,strong,small,.sde-consent,.sde-privacy-note) {
+  color:#302438!important;
+  -webkit-text-fill-color:#302438!important;
+  opacity:1!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-form :is(input:not([type="checkbox"]),select,textarea) {
+  background:#ffffff!important;
+  color:#221b2b!important;
+  -webkit-text-fill-color:#221b2b!important;
+  border:1px solid #877488!important;
+  opacity:1!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-form :is(input,textarea)::placeholder {
+  color:#5a4e5c!important;
+  -webkit-text-fill-color:#5a4e5c!important;
+  opacity:1!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-form a {
+  color:#482b65!important;
+  -webkit-text-fill-color:#482b65!important;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-form button.sde-form-submit {
+  background:#4b2d65!important;
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  border:1px solid #4b2d65!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-form .sde-form-feedback {
+  color:#302438!important;
+  -webkit-text-fill-color:#302438!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-form .sde-form-feedback[data-state="ok"] {
+  color:#175632!important;
+  -webkit-text-fill-color:#175632!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-form .sde-form-feedback[data-state="error"] {
+  color:#8d2332!important;
+  -webkit-text-fill-color:#8d2332!important;
+}
