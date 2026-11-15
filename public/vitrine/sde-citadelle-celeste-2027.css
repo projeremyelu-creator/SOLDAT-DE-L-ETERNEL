@@ -682,3 +682,172 @@ html[data-sde-citadel-integral] body.sde-2027-reference nav.sde-citadelle-quickn
     min-height:44px!important;
   }
 }
+
+/* Garde-fous finaux de la recette mobile : ce bloc doit rester le dernier. */
+html body.sde23-native[data-sde-page="prieres"] .sde-section-jumps{box-sizing:border-box!important;width:min(calc(100% - 24px),1120px)!important;max-width:1120px!important;margin:14px auto 22px!important}
+html body.sde-direct #main .annonce.passee{opacity:1!important;background:#142641!important;border-color:rgba(231,196,119,.42)!important}
+html body.sde-direct #main .annonce.passee :is(h3,.annonce-t,.hint,span){color:#f7eddb!important;-webkit-text-fill-color:#f7eddb!important;opacity:1!important}
+html body.sde-direct #main .annonce.passee .chip{background:#273653!important;border-color:#d4b76f!important}
+html body.sde-direct #sde-plus-panel.sde-plus-panel{background:#faf7f0!important;color:#0d1b38!important;-webkit-text-fill-color:#0d1b38!important}
+html body.sde-direct #sde-plus-panel.sde-plus-panel>h2{color:#0d1b38!important;-webkit-text-fill-color:#0d1b38!important}
+html body.sde-direct #sde-plus-panel.sde-plus-panel>.sde-plus-note{color:#3d4d64!important;-webkit-text-fill-color:#3d4d64!important;opacity:1!important}
+html body.sde-direct #sde-plus-panel .sde-plus-card{background:#111f31!important;border-color:rgba(217,167,46,.48)!important;color:#f8eddf!important;-webkit-text-fill-color:#f8eddf!important}
+html body.sde-direct #sde-plus-panel .sde-plus-card :is(h3,p,strong,small){color:inherit!important;-webkit-text-fill-color:inherit!important;opacity:1!important}
+html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table .fu-chip{background:#efe2ff!important;border-color:#c7a6e7!important;color:#35224e!important;-webkit-text-fill-color:#35224e!important;opacity:1!important}
+@media(max-width:720px){
+ html body.sde23-native[data-sde-page="prieres"] .sde-section-jumps{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;padding:8px!important;overflow:visible!important}
+ html body.sde23-native[data-sde-page="prieres"] .sde-section-jumps>a{box-sizing:border-box!important;width:100%!important;min-width:0!important;min-height:52px!important;padding:9px 8px!important;white-space:normal!important;text-align:center!important;line-height:1.25!important}
+ html body.sde-reference .sde-private-motion-row{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important}
+ html body.sde-reference .sde-ambiance-ctl{position:static!important;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important}
+ html[data-sde-palette] body.sde-reference[data-sde-module="annuaire"] .ops-panel{padding-inline:10px!important}
+ html[data-sde-palette] body.sde-reference[data-sde-module="annuaire"] .ops-panel .ops-filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important}
+ html[data-sde-palette] body.sde-reference[data-sde-module="annuaire"] .ops-panel .ops-filters label:first-child{grid-column:1/-1!important}
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody tr{padding:12px!important;gap:0 10px!important}
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody td{padding:6px 0 8px!important;font-size:.84rem!important}
+ html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody td:nth-child(5) small{display:none!important}
+ html body.sde-direct #main .chiffres{align-items:stretch!important;margin-bottom:12px!important}
+ html body.sde-direct #main .chiffre{min-height:0!important;padding:16px!important}
+ html body.sde-direct #main .chiffre b{font-size:2.05rem!important}
+ html body.sde-direct #main .chiffre-spark{height:24px!important;margin-top:6px!important}
+ html body.sde-direct #sde-plus-panel.sde-plus-panel{min-height:0!important;padding:22px 14px 96px!important}
+ html body.sde-direct #sde-plus-panel .sde-plus-grid{margin-top:16px!important}
+ html body.sde-direct #sde-plus-panel .sde-plus-card{padding:16px!important}
+}
+
+/* Recette mobile du 15 novembre 2026 — correctifs issus des écrans réels.
+   Ces règles restent en dernier pour protéger la lisibilité contre les
+   anciennes palettes encore chargées par certains modules historiques. */
+html body.sde23-native[data-sde-page="prieres"] .sde-section-jumps{
+  box-sizing:border-box!important;
+  width:min(calc(100% - 24px),1120px)!important;
+  max-width:1120px!important;
+  margin:14px auto 22px!important;
+}
+
+html body.sde-direct #main .annonce.passee{
+  opacity:1!important;
+  background:#142641!important;
+  border-color:rgba(231,196,119,.42)!important;
+}
+html body.sde-direct #main .annonce.passee :is(h3,.annonce-t,.hint,span){
+  color:#f7eddb!important;
+  -webkit-text-fill-color:#f7eddb!important;
+  opacity:1!important;
+}
+html body.sde-direct #main .annonce.passee .chip{
+  background:#273653!important;
+  border-color:#d4b76f!important;
+}
+
+html body.sde-direct #sde-plus-panel.sde-plus-panel{
+  background:#faf7f0!important;
+  color:#0d1b38!important;
+  -webkit-text-fill-color:#0d1b38!important;
+}
+html body.sde-direct #sde-plus-panel.sde-plus-panel > h2{
+  color:#0d1b38!important;
+  -webkit-text-fill-color:#0d1b38!important;
+}
+html body.sde-direct #sde-plus-panel.sde-plus-panel > .sde-plus-note{
+  color:#3d4d64!important;
+  -webkit-text-fill-color:#3d4d64!important;
+  opacity:1!important;
+}
+html body.sde-direct #sde-plus-panel .sde-plus-card{
+  background:#111f31!important;
+  border-color:rgba(217,167,46,.48)!important;
+  color:#f8eddf!important;
+  -webkit-text-fill-color:#f8eddf!important;
+}
+html body.sde-direct #sde-plus-panel .sde-plus-card :is(h3,p,strong,small){
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  opacity:1!important;
+}
+
+html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table .fu-chip{
+  background:#efe2ff!important;
+  border-color:#c7a6e7!important;
+  color:#35224e!important;
+  -webkit-text-fill-color:#35224e!important;
+  opacity:1!important;
+}
+
+@media(max-width:720px){
+  html body.sde23-native[data-sde-page="prieres"] .sde-section-jumps{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+    padding:8px!important;
+    overflow:visible!important;
+  }
+  html body.sde23-native[data-sde-page="prieres"] .sde-section-jumps > a{
+    box-sizing:border-box!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:52px!important;
+    padding:9px 8px!important;
+    white-space:normal!important;
+    text-align:center!important;
+    line-height:1.25!important;
+  }
+
+  html body.sde-reference .sde-private-motion-row{
+    position:absolute!important;
+    width:1px!important;
+    height:1px!important;
+    overflow:hidden!important;
+    clip-path:inset(50%)!important;
+  }
+  html body.sde-reference .sde-ambiance-ctl{
+    position:static!important;
+    width:44px!important;
+    height:44px!important;
+    min-width:44px!important;
+    min-height:44px!important;
+  }
+
+  html[data-sde-palette] body.sde-reference[data-sde-module="annuaire"] .ops-panel{
+    padding-inline:10px!important;
+  }
+  html[data-sde-palette] body.sde-reference[data-sde-module="annuaire"] .ops-panel .ops-filters{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:8px!important;
+  }
+  html[data-sde-palette] body.sde-reference[data-sde-module="annuaire"] .ops-panel .ops-filters label:first-child{
+    grid-column:1/-1!important;
+  }
+  html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody tr{
+    padding:12px!important;
+    gap:0 10px!important;
+  }
+  html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody td{
+    padding:6px 0 8px!important;
+    font-size:.84rem!important;
+  }
+  html[data-sde-palette] body.sde-reference .ops-panel .ops-annuaire-table tbody td:nth-child(5) small{
+    display:none!important;
+  }
+
+  html body.sde-direct #main .chiffres{
+    align-items:stretch!important;
+    margin-bottom:12px!important;
+  }
+  html body.sde-direct #main .chiffre{
+    min-height:0!important;
+    padding:16px!important;
+  }
+  html body.sde-direct #main .chiffre b{font-size:2.05rem!important}
+  html body.sde-direct #main .chiffre-spark{height:24px!important;margin-top:6px!important}
+
+  html body.sde-direct #sde-plus-panel.sde-plus-panel{
+    min-height:0!important;
+    padding:22px 14px 96px!important;
+  }
+  html body.sde-direct #sde-plus-panel .sde-plus-grid{
+    margin-top:16px!important;
+  }
+  html body.sde-direct #sde-plus-panel .sde-plus-card{
+    padding:16px!important;
+  }
+}
