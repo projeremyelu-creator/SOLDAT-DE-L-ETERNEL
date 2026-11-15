@@ -719,7 +719,7 @@ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-p
 }
 
 
-/* Navigation de la maquette de référence : 7 rubriques et CTA Portail doré.
+/* Navigation de la maquette de référence : 6 rubriques et CTA Portail doré.
    La navigation mobile conserve sa barre basse et son panneau Plus. */
 @media(min-width:1121px){
  html[data-sde-citadel-integral] body.sde-premium-home.sde-shell-mounted .sde-shell-portal{
