@@ -153,9 +153,9 @@ test("Navigation publique SDE : même header, footer et tiroir à cinq catégori
   assert.ok(header,"header unique monté");
   assert.equal(d.querySelectorAll("header.site-header").length,1);
   assert.equal(d.querySelectorAll("footer.site-footer").length,1);
-  assert.equal(header.querySelectorAll(".sde-shell-mega > a").length,7);
+  assert.equal(header.querySelectorAll(".sde-shell-mega > a").length,6);
   const headings=[...header.querySelectorAll(".sde-shell-mega > a")].map(x=>x.textContent);
-  assert.deepEqual(headings,["Accueil","Le Mouvement","Programmes","Nos 5 Pôles","Missions","Ressources","Soutenir"]);
+  assert.deepEqual(headings,["Accueil","Le Mouvement","Programmes","Nos 5 Pôles","Missions","Soutenir"]);
   assert.ok(header.querySelector('.sde-shell-mega > a[href="/soutenir"]'));
   assert.ok(header.querySelector('.sde-shell-portal[href="/portail"]'));
   const nav=d.querySelector(".sde-shell-bottom");
