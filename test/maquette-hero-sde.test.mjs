@@ -17,7 +17,8 @@ test('Maquette SDE : Hero immersif et fiche TPA unique, routes réelles préserv
  assert.equal(d.querySelector('.sde-tpa-hero-card time')?.getAttribute('datetime'),tpa.debut);
  assert.equal(d.querySelector('.sde-shell-event-register')?.getAttribute('href'),tpa.inscription);
  assert.equal(d.querySelector('#sde-tpa-calendar')?.getAttribute('target'),'_blank');
- assert.ok(d.querySelector('.ap-hero .ap-actions a[href="/contact#rejoindre"]'));
+ assert.ok(d.querySelector('.ap-hero .ap-actions a[href="/mouvement"]'));
+ assert.ok(d.querySelector('a[href="/contact#rejoindre"]'),"Le parcours d’adhésion reste disponible");
  assert.ok(d.querySelector('a[href="/portail"]'));
  assert.equal(d.querySelectorAll('.sde-pole-talents').length,5);
  assert.equal(d.querySelectorAll('.sde-pole-officiel-lien img').length,5);

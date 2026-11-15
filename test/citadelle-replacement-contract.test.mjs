@@ -76,7 +76,8 @@ test("La Citadelle Céleste v3 est compilée comme unique charte finale de toute
   const home = read("public/vitrine/portail.html");
    assert.ok(home.includes("SOLDATS DE L’ÉTERNEL"));
    assert.ok(home.includes("Mouvement S.D.E. · Ézéchiel 37"));
-   assert.ok(home.includes("Un peuple réveillé, formé, équipé et envoyé pour impacter les nations."));
+   assert.ok(home.includes("Mouvement Prophético-Apostolique<br>Soldats de l’Éternel, S.D.E · Abidjan"));
+   assert.ok(home.includes('<section class="sde-pixel-showcase"'),"La couverture est présente dans le HTML initial");
    assert.equal((home.match(/class="sde-ref-hub-links"/g)||[]).length,1);
    assert.equal((home.match(/class="sde-ref-program-strip"/g)||[]).length,1);
   const css = read("public/vitrine/sde-citadelle-celeste-2027.css");
