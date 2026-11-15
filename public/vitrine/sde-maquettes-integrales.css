@@ -450,4 +450,22 @@ html[data-sde-citadel-integral] body.sde-direct-member #main .sde-ref-member-sho
 @media(prefers-reduced-motion:reduce){
  html[data-sde-citadel-integral] body :is(.sde-px-action,.sde-px-day,.sde-ref-hub-links>a){animation:none!important;transition:none!important;transform:none!important}
 }
+
+/* Titres fidèles : ivoire puis or, sans doublonner le H1 accessible. */
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero #titre-accueil .sde-px-title-first{
+ display:block!important;color:#fff8ee!important;-webkit-text-fill-color:#fff8ee!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero #titre-accueil .sde-px-title-gold{
+ display:block!important;color:#f8c256!important;-webkit-text-fill-color:#f8c256!important;
+}
+.sde-px-parcours-preview{
+ display:flex;align-items:center;justify-content:center;min-height:46px;
+ padding:9px 14px;border:1px solid rgba(240,205,132,.46);
+ border-radius:11px;background:linear-gradient(115deg,#322077,#151b4b);
+ font:800 .8rem/1.35 var(--px-body);color:#f8e4af;text-decoration:none;margin:12px 0;
+}
+.sde-px-parcours-preview:hover,.sde-px-parcours-preview:focus-visible{
+ background:linear-gradient(115deg,#4d2895,#28226e);color:#fff0be;
+}
+.sde-px-parcours .sde-px-progress{margin:0}
 /* Fin de la couche de référence intégrale. */
