@@ -694,3 +694,26 @@ html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-her
    height:300px!important;
  }
 }
+
+
+/* Finition du second personnage : le fondu gauche du priant est peint sur une
+   couche distincte, au lieu d'une photographie rectangulaire sur le banner. */
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-px-member-cover{
+  background-image:linear-gradient(90deg,rgba(7,11,38,.93),rgba(16,10,52,.82) 57%,rgba(52,26,75,.51)),linear-gradient(120deg,#0a153c,#2b1448 62%,#b26b62)!important;
+  background-size:cover,cover!important;
+  background-position:center,center!important;
+  background-repeat:no-repeat,no-repeat!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-px-member-cover::after{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  right:0!important;top:0!important;
+  width:min(370px,48%)!important;
+  height:100%!important;
+  z-index:-1!important;
+  pointer-events:none!important;
+  background:url("/vitrine/illus/priere-reference-sde.webp") center center/cover no-repeat!important;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.65) 26%,#000 57%)!important;
+  mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.65) 26%,#000 57%)!important;
+}
