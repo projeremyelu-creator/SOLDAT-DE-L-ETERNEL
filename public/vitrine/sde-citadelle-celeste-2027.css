@@ -61,7 +61,7 @@ html body:not(.sde-reference):not(.sde-direct):not(.sde-reference-login) :is(.ap
 }
 html body:not(.sde-reference):not(.sde-direct):not(.sde-reference-login) :is(.ap-panel,.ap-next,.ap-upcoming,.ap-mission,.sde-initiative-card,.sde-premium-pillar) :is(h2,h3,strong,p,span,small){
  color:inherit!important;
- -webkit-text-fill-color:inherit!important;
+ -webkit-text-fill-color:currentColor!important;
 }
 
 /* Accueil public : le visuel Citadelle approuvé reste intact dans son cadre. */
@@ -125,17 +125,6 @@ html body.sde-reference :is(.ops-kpis,.stats) > :nth-child(odd){
 html body.sde-reference :is(.ops-panel button,.ref-small-action,.sde-plus-button){
  border-radius:10px!important;
 }
-html body.sde-reference .ref-command.sde-command-center::before{
- content:"";
- display:block;
- width:100%;
- aspect-ratio:16/5;
- margin:0 0 18px;
- border:1px solid var(--sde-final-line);
- border-radius:18px;
- background:url('/vitrine/maquettes/command-center-sde.png') center/cover no-repeat;
- box-shadow:var(--sde-final-shadow);
-}
 
 /* Temple Vivant : pages et modules spirituels. */
 html body[data-sde-page="prieres"]{
@@ -174,14 +163,12 @@ html body.sde-reference[data-sde-module="prieres"] .ops-panel{
  html body.sde-premium-home .ap-hero::after{inset:20% -10% 4% 30%!important;opacity:.72!important}
  html body.sde-premium-home .ap-hero::before{background:linear-gradient(180deg,#071226 0%,rgba(7,18,38,.92) 52%,rgba(7,18,38,.45))!important}
  html body[data-sde-page="prieres"] .sde-intro{padding-right:24px!important;background-position:62% center!important}
- html body.sde-reference .ref-command.sde-command-center::before{aspect-ratio:16/7}
 }
 @media(max-width:600px){
  html body.sde-premium-home .ap-hero{min-height:720px!important}
  html body.sde-premium-home .ap-hero::after{inset:42% -20% 2% -20%!important;background-size:contain!important;opacity:.58!important}
  html body[data-sde-page="prieres"] .sde-intro{min-height:590px!important;padding:110px 22px 70px!important;background-position:68% center!important}
- html body.sde-reference .ref-command.sde-command-center::before{aspect-ratio:4/3;background-position:center}
-}
+ }
 
 html { background: var(--sde-citadel-navy); scroll-behavior: smooth; }
 body { font-family: var(--sde-citadel-sans); background: var(--sde-citadel-navy); color: var(--sde-citadel-ivory); }
@@ -1071,7 +1058,7 @@ html body:not(.sde-reference):not(.sde-direct):not(.sde-reference-login) :is(.ap
 }
 html body:not(.sde-reference):not(.sde-direct):not(.sde-reference-login) :is(.ap-panel,.ap-next,.ap-upcoming,.ap-mission,.sde-initiative-card,.sde-premium-pillar) :is(h2,h3,strong,p,span,small){
  color:inherit!important;
- -webkit-text-fill-color:inherit!important;
+ -webkit-text-fill-color:currentColor!important;
 }
 
 /* Accueil public : le visuel Citadelle approuvé reste intact dans son cadre. */
@@ -1135,17 +1122,6 @@ html body.sde-reference :is(.ops-kpis,.stats) > :nth-child(odd){
 html body.sde-reference :is(.ops-panel button,.ref-small-action,.sde-plus-button){
  border-radius:10px!important;
 }
-html body.sde-reference .ref-command.sde-command-center::before{
- content:"";
- display:block;
- width:100%;
- aspect-ratio:16/5;
- margin:0 0 18px;
- border:1px solid var(--sde-final-line);
- border-radius:18px;
- background:url('/vitrine/maquettes/command-center-sde.png') center/cover no-repeat;
- box-shadow:var(--sde-final-shadow);
-}
 
 /* Temple Vivant : pages et modules spirituels. */
 html body[data-sde-page="prieres"]{
@@ -1184,14 +1160,12 @@ html body.sde-reference[data-sde-module="prieres"] .ops-panel{
  html body.sde-premium-home .ap-hero::after{inset:20% -10% 4% 30%!important;opacity:.72!important}
  html body.sde-premium-home .ap-hero::before{background:linear-gradient(180deg,#071226 0%,rgba(7,18,38,.92) 52%,rgba(7,18,38,.45))!important}
  html body[data-sde-page="prieres"] .sde-intro{padding-right:24px!important;background-position:62% center!important}
- html body.sde-reference .ref-command.sde-command-center::before{aspect-ratio:16/7}
 }
 @media(max-width:600px){
  html body.sde-premium-home .ap-hero{min-height:720px!important}
  html body.sde-premium-home .ap-hero::after{inset:42% -20% 2% -20%!important;background-size:contain!important;opacity:.58!important}
  html body[data-sde-page="prieres"] .sde-intro{min-height:590px!important;padding:110px 22px 70px!important;background-position:68% center!important}
- html body.sde-reference .ref-command.sde-command-center::before{aspect-ratio:4/3;background-position:center}
-}
+ }
 
 html { background: var(--sde-citadel-navy); scroll-behavior: smooth; }
 body { font-family: var(--sde-citadel-sans); background: var(--sde-citadel-navy); color: var(--sde-citadel-ivory); }

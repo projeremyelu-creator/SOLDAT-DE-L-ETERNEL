@@ -357,3 +357,18 @@ test("logo officiel SDE flamme rouge et or commun au site public et aux écrans 
  assert.ok(js.includes('return /^[a-zA-Z0-9_-]{8,80}$/.test(id)?"/_blob/"'),"La photo du membre demeure personnelle");
  assert.ok(css.includes('@media(max-width:760px)'),"Logo responsive sur téléphone");
 });
+
+test("le commandement ne présente pas une capture de démonstration comme tableau de bord", () => {
+ const css = read("public/vitrine/sde-citadelle-celeste-2027.css");
+ assert.equal(css.includes("url('/vitrine/maquettes/command-center-sde.png')"), false,
+  "Les chiffres et contrôles d'exemple de la maquette ne doivent pas apparaître dans l'espace réel.");
+ assert.ok(existsSync("public/vitrine/maquettes/command-center-sde.png"),
+  "La référence approuvée doit rester conservée sans modification.");
+});
+
+test("les cartes ivoire utilisent leur couleur de texte et non le remplissage clair hérité", () => {
+ const css=read("public/vitrine/sde-citadelle-celeste-2027.css");
+ const rules=[...css.matchAll(/[^{}]*:is\(\.ap-panel,\.ap-next,\.ap-upcoming,\.ap-mission,\.sde-initiative-card,\.sde-premium-pillar\) :is\(h2,h3,strong,p,span,small\)\{([^}]*)\}/g)];
+ assert.ok(rules.length>0);
+ for(const rule of rules)assert.match(rule[1],/-webkit-text-fill-color:currentColor!important/);
+});
