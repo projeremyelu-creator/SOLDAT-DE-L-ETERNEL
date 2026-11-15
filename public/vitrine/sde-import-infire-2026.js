@@ -164,7 +164,7 @@ async function upload(){
   else errors++;
  }
  state.running=false;$("arreter").hidden=true;$("arreter").disabled=false;
- $("droits").disabled=false;render();
+ $("droits").disabled=false;$("publier").disabled=!state.files.length||!$("droits").checked;
  const suffix=state.stop?" (interrompu volontairement)":"";
  status(num(success)+" nouveaux médias publiés ; "+num(skipped)+" déjà présents ; "+num(errors)+" échec(s)."+suffix,errors>0);
  if(errors===0&&(!state.stop))$("confirmation").hidden=false;
