@@ -62,10 +62,10 @@
   const row=make("div","sde-shell-head-inner");
   const brand=link("/","","sde-shell-brand");brand.setAttribute("aria-label","SDE — Retour à l’accueil");
   const img=document.createElement("img");img.src="/vitrine/logo-sde.webp";img.alt="";img.width=42;img.height=42;
-  const title=make("span","sde-shell-brand-title");title.append(make("b","", "S.D.E"),make("small","","Soldats de l’Éternel"));brand.append(img,title);
+  const title=make("span","sde-shell-brand-title");title.append(make("b","", "S.D.E"),make("small","","Discipline · Unité · Impact"));brand.append(img,title);
   const nav=make("nav","sde-shell-mega");nav.setAttribute("aria-label","Navigation principale");
   // Une navigation fidèle à la maquette. Les détails restent accessibles dans le tiroir Plus.
-  for(const [href,label] of [["/","Accueil"],["/mouvement","Le Mouvement"],["/programmes","Programmes"],["/mouvement#poles","Nos 5 Pôles"],["/missions-humanitaires","Missions"],["/mediatheque","Ressources"],["/soutenir","Soutenir"]]){
+  for(const [href,label] of [["/","Accueil"],["/mouvement","Le Mouvement"],["/programmes","Programmes"],["/#poles-accueil","Nos 5 Pôles"],["/missions-humanitaires","Missions"],["/soutenir","Soutenir"]]){
     nav.append(link(href,label,"sde-citadel-top-link"));
   }
   const actions=make("div","sde-shell-head-actions");
