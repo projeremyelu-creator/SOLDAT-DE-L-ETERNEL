@@ -125,7 +125,8 @@ test("Référence V4 : source graphique publique et privée réellement chargée
  assert.match(js,/querySelectorAll\("\.chiffres \.chiffre"\)/);
  assert.match(js,/if\(!value\|\|value==="—"\)continue/);
  assert.match(js,/querySelector\("#sde-personal-card"\)/);
- for(const heading of ["Accueil","Le Mouvement","Programmes","Nos 5 Pôles","Missions","Ressources","Soutenir"])assert.ok(publicNav.includes(',"'+heading+'"]'),heading);
+ for(const heading of ["Accueil","Le Mouvement","Programmes","Nos 5 Pôles","Missions","Soutenir"])assert.ok(publicNav.includes(',"'+heading+'"]'),heading);
+ assert.ok(publicNav.includes('title:"Médias & Ressources"'),"Ressources accessibles dans le tiroir Plus");
  assert.match(privateNav,/\["engagements","Missions","missions"\]/);
  assert.doesNotMatch(js,/4328|\b521\b|67%/);
 });
