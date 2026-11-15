@@ -626,7 +626,7 @@ try{
      const compact=header.locator('.sde-shell-rubriques');
      const overlay=page.locator('#sde-shell-overlay');
      const expected=['Le Mouvement','Programmes & Agenda','Missions & Impact','Médias & Ressources','S’engager'];
-     const expectedLinks=['Accueil','Vision','Agenda','Ressources','Rejoindre','Soutenir'];
+     const expectedLinks=['Accueil','Le Mouvement','Programmes','Nos 5 Pôles','Missions','Ressources','Soutenir'];
      if(await compact.isVisible()){
       await compact.click({timeout:4000});
       if(!(await overlay.isVisible())||(await compact.getAttribute('aria-expanded'))!=='true')
