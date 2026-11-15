@@ -614,7 +614,7 @@ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-logo>img{
   background:transparent!important;
 }
 html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side-caption::before{
-  background-image:url("/vitrine/illus/blason-maquette-sde.webp")!important;
+  background-image:url("/vitrine/logo-sde.webp")!important;
   background-size:contain!important;
   background-repeat:no-repeat!important;
   filter:drop-shadow(0 3px 10px rgba(248,199,92,.35))!important;
@@ -838,4 +838,37 @@ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-d
  html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article strong{
    font-size:clamp(1.2rem,5.3vw,1.5rem)!important;
  }
+}
+
+
+/* Logo officiel SDE : flamme rouge, lettrage SDE et couronne dorée.
+   Version optimisée du logo transparent, commune au public et au privé.
+   Les photos des membres ne sont pas ciblées. */
+html[data-sde-citadel-integral] body .sde-shell-brand > img,
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-logo > img{
+  display:block!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  border:0!important;
+  border-radius:0!important;
+  flex:none!important;
+  filter:drop-shadow(0 2px 7px rgba(235,164,44,.2));
+}
+html[data-sde-citadel-integral] body.sde-premium-home .sde-shell-brand > img{
+  width:46px!important;
+  height:46px!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-logo > img{
+  width:44px!important;
+  height:44px!important;
+}
+@media(max-width:760px){
+  html[data-sde-citadel-integral] body.sde-premium-home .sde-shell-brand > img{
+    width:38px!important;height:38px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-tableau .sde-dash-logo > img{
+    width:38px!important;height:38px!important;
+  }
 }
