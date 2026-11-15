@@ -872,3 +872,148 @@ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-logo > img{
     width:38px!important;height:38px!important;
   }
 }
+
+/* ===== Reproduction réelle de trois univers, maquettes originales intactes ===== */
+html body.sde-pixel-citadel{background:#f8f3e9!important;color:#18232d!important}
+html body.sde-pixel-citadel .site-header{background:#061725!important;box-shadow:0 4px 23px #07122199!important}
+html body.sde-pixel-citadel .site-brand b{font:700 1.5rem Georgia,serif!important;color:#fff2df!important}
+html body.sde-pixel-citadel .site-brand small{font:italic .78rem Georgia,serif!important;color:#e7c17b!important}
+html body.sde-pixel-citadel .site-menu>a{font-size:.85rem!important;font-weight:700!important}
+html body.sde-pixel-citadel .site-portal-cta{background:linear-gradient(135deg,#f9db94,#ca983f)!important;color:#111f2b!important;border-radius:9px!important}
+html body.sde-pixel-citadel .sde-versets-slot{display:none!important}
+html body.sde-pixel-citadel .ap-main{background:#f8f3e9!important}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live.sde-pixel-citadel .ap-hero{background:#071a2c!important;min-height:525px!important;padding:24px 22px 112px!important;isolation:isolate!important;overflow:hidden!important}
+html body.sde-pixel-citadel .ap-hero::after{display:none!important;content:none!important}
+html body.sde-pixel-citadel .ap-hero::before{inset:0!important;content:""!important;display:block!important;background:linear-gradient(90deg,#071a2cc7 0%,#071a2c48 62%,transparent)!important;z-index:0!important}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live.sde-pixel-citadel .ap-hero .ap-hero-bg{position:absolute!important;inset:0!important;z-index:-1!important;opacity:1!important;background:url("/vitrine/maquettes/citadelle-celeste-sde.png") 65% 19% / 294% auto no-repeat!important;filter:none!important;transform:none!important}
+html body.sde-pixel-citadel .ap-hero-inner{display:flex!important;align-items:center!important;min-height:380px!important;max-width:1200px!important;padding:0!important;margin:auto!important}
+html body.sde-pixel-citadel .ap-hero-copy{width:min(680px,65%)!important;max-width:680px!important;padding:15px 0!important;text-align:center!important;margin:0!important}
+html body.sde-pixel-citadel .ap-hero-copy :is(.ap-eyebrow,.sde-vision-wordmark,.sde-ref-foundation,.ap-verset,.ap-devise,.sde-citadel-film){display:none!important}
+html body.sde-pixel-citadel .ap-hero-copy .sde-citadelle-foundation{font-size:.73rem!important;color:#ffe2a2!important;letter-spacing:.14em!important;margin-bottom:12px!important}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live.sde-pixel-citadel .ap-hero h1#titre-accueil{font:500 clamp(2.8rem,4.45vw,4.4rem)/1.03 Georgia,serif!important;letter-spacing:.025em!important;color:#fff7e9!important;-webkit-text-fill-color:#fff7e9!important;text-align:center!important;text-shadow:0 4px 15px #07101abb!important;margin:0 0 18px!important}
+html body.sde-pixel-citadel .ap-hero h1 span{color:#eac370!important;-webkit-text-fill-color:#eac370!important}
+html body.sde-pixel-citadel .ap-hero .sde-citadel-tagline{font-size:1rem!important;line-height:1.45!important;color:#fff7e9!important;-webkit-text-fill-color:#fff7e9!important;text-align:center!important;margin:0 auto 15px!important;text-shadow:0 3px 8px #0009}
+html body.sde-pixel-citadel .ap-hero .ap-actions{display:flex!important;justify-content:center!important;gap:12px!important;flex-wrap:wrap!important}
+html body.sde-pixel-citadel .ap-hero .ap-actions .ap-btn{min-height:45px!important;padding:12px 18px!important;border-radius:8px!important;font-size:.86rem!important}
+html body.sde-pixel-citadel .ap-hero .ap-actions .sde23-cta-index{display:none!important}
+html body.sde-pixel-citadel .ap-hero .ap-actions .ap-btn-ghost{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#081a2a99!important;border:1px solid #f6e5c4!important}
+html body.sde-pixel-citadel .ap-hero :is(.sde-ref-hub-links,.sde-ref-program-strip){display:none!important}
+html body.sde-pixel-citadel .sde-pixel-showcase{max-width:1320px;margin:-110px auto 0!important;padding:0 24px 22px!important;position:relative;z-index:5;color:#18212b}
+.sde-pixel-features{display:grid;grid-template-columns:1fr 1.58fr 1fr;gap:14px}
+html body.sde-pixel-citadel .sde-pixel-feature{position:relative;overflow:hidden;min-width:0;min-height:196px;padding:20px 23px;border:1px solid #e9deca;border-radius:12px;background:linear-gradient(140deg,#fffefa,#f4f0e6);box-shadow:0 9px 20px #30220e22}
+html body.sde-pixel-citadel .sde-pixel-feature h2{font:700 1.3rem Georgia,serif!important;color:#161f2a!important;margin:0 0 14px!important}
+html body.sde-pixel-citadel .sde-pixel-feature p{font-size:.85rem!important;line-height:1.45!important;color:#292c2d!important;margin:5px 0}
+html body.sde-pixel-citadel .sde-pixel-feature a{font-size:.8rem!important;color:#755717!important;font-weight:700!important}
+html body.sde-pixel-citadel .sde-pixel-feature ul{list-style:none;padding:0;margin:0}
+html body.sde-pixel-citadel .sde-pixel-feature li{font-size:.84rem;padding:0 0 8px 23px;position:relative}
+.sde-pixel-feature li::before{content:"✓";position:absolute;left:0;color:#236543;font-weight:900}
+html body.sde-pixel-citadel .sde-pixel-feature-event{background:linear-gradient(90deg,#fffbf4 0%,#fffaf1 58%,#e2cbaa 100%)}
+.sde-pixel-feature-event::after{content:"";position:absolute;inset:0 0 0 69%;background:linear-gradient(90deg,#fffbf4,transparent 45%),url("/vitrine/photos/intercession-vignette.webp") center/cover no-repeat}
+.sde-pixel-feature-event>div{max-width:73%;position:relative;z-index:1}
+html body.sde-pixel-citadel .sde-pixel-feature-event .sde-pixel-eyebrow{font-size:.77rem;font-weight:800;color:#2b2f35}
+html body.sde-pixel-citadel .sde-pixel-feature-event h2{font-size:1.57rem!important;margin:10px 0 6px!important}
+html body.sde-pixel-citadel .sde-pixel-feature-event .sde-pixel-green-cta{background:#365932!important;color:white!important;-webkit-text-fill-color:#fff!important;padding:10px 12px;border-radius:7px;display:inline-block;margin-top:12px;text-decoration:none}
+html body.sde-pixel-citadel .sde-pixel-poles-title{text-align:center!important;font:700 clamp(1.3rem,2vw,1.8rem) Georgia,serif!important;color:#18212b!important;margin:20px auto 14px!important}
+.sde-pixel-poles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
+.sde-pixel-poles a{min-height:112px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;border:1px solid #eae1d3;border-radius:12px;background:#fffaf3;color:#15202e!important;text-decoration:none!important}
+.sde-pixel-poles img{width:44px;height:44px;object-fit:contain}
+.sde-pixel-poles strong{font-size:.82rem!important;line-height:1.18}
+.sde-pixel-poles small{font-size:.68rem;color:#2a6241;border-bottom:2px solid #2a6241;padding:0 8px 4px}
+.sde-pixel-panels{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.sde-pixel-panels section{min-height:144px;border-radius:10px;padding:16px 24px;display:flex;flex-direction:column;justify-content:center}
+html body.sde-pixel-citadel .sde-pixel-panels h2{font:600 1.5rem Georgia,serif!important;margin:0 0 7px!important}
+.sde-pixel-panels p{font-size:.84rem;line-height:1.35;margin:0 0 8px}
+.sde-pixel-panels a{align-self:flex-start;font-size:.8rem;padding:8px 13px;border:1px solid #ddaf55;border-radius:7px;text-decoration:none!important}
+.sde-pixel-prayer-panel{background:linear-gradient(90deg,#11251fcd,#133729dc),url("/vitrine/photos/intercession-vignette.webp") center/cover;color:white}
+.sde-pixel-prayer-panel :is(h2,p,a){color:white!important}
+.sde-pixel-support-panel{background:#fff7e8;color:#172335;border:1px solid #e6d8c3}
+.sde-pixel-support-panel a{color:#192026!important;background:#e5b963}
+/* Command Center : dashboard HTML existant, toutes les API restent branchées. */
+html body.sde-pixel-command{background:#061522!important;color:#f3eddc!important}
+html body.sde-pixel-command .sde-dash-header{background:#071725!important;border-color:#b9915e44!important}
+html body.sde-pixel-command .sde-dash-shell{max-width:1560px!important;display:grid!important;grid-template-columns:240px minmax(0,1fr)!important;gap:0!important;background:#081b29!important}
+html body.sde-pixel-command .sde-dash-side{background:linear-gradient(#0a2032,#0b1c2d 65%,#173527)!important;border-right:1px solid #ab955f55!important;padding:24px 12px!important}
+html body.sde-pixel-command .sde-dash-side nav a{color:#f9efe0!important;-webkit-text-fill-color:#f9efe0!important;padding:13px 12px!important;border-radius:8px!important}
+html body.sde-pixel-command .sde-dash-side nav a[aria-current="page"]{background:#214c3c!important;border-left:3px solid #d8b568!important}
+html body.sde-pixel-command .sde-dash-main{background:linear-gradient(135deg,#0c1c2d,#071b27)!important;color:#f4ecdf!important;padding:30px 30px 55px!important;min-width:0!important}
+html body.sde-pixel-command .sde-dash-heading{border-bottom:1px solid #d3b97755!important;padding-bottom:20px!important;margin-bottom:18px!important}
+html body.sde-pixel-command .sde-dash-heading h1{font:600 clamp(1.8rem,2.7vw,2.5rem) Georgia,serif!important;color:#fff5e3!important}
+html body.sde-pixel-command .sde-dash-heading p{color:#d6dfdc!important}
+html body.sde-pixel-command .sde-dash-metrics{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}
+html body.sde-pixel-command .sde-dash-metrics article{background:linear-gradient(140deg,#1c4034,#0c2b31)!important;border:1px solid #c5a15f55!important;color:#fff0d8!important;border-radius:12px!important;padding:18px 15px!important;min-height:113px}
+html body.sde-pixel-command .sde-dash-metrics article:nth-child(even){background:linear-gradient(140deg,#173a4b,#0b2638)!important}
+html body.sde-pixel-command .sde-dash-metrics article strong{font:700 2.2rem Georgia,serif!important;color:#fff3dd!important;-webkit-text-fill-color:#fff3dd!important}
+html body.sde-pixel-command .sde-dash-metrics article span{color:#e7dfd4!important;font-size:.8rem!important}
+html body.sde-pixel-command .sde-dash-two,html body.sde-pixel-command .sde-pixel-command-secondary{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:13px!important;margin-top:15px!important}
+html body.sde-pixel-command .sde-dash-two>.sde-panel:first-child{grid-column:span 2!important}
+html body.sde-pixel-command .sde-panel{background:linear-gradient(145deg,#12313c,#091e2c)!important;border:1px solid #d3b26c55!important;border-radius:12px!important;color:#efe8d9!important;padding:19px!important;min-width:0!important}
+html body.sde-pixel-command .sde-panel h2{font:600 1.25rem Georgia,serif!important;color:#ffe2a0!important;border-bottom:1px solid #d7b46b55;padding-bottom:9px}
+html body.sde-pixel-command .sde-panel :is(p,li){color:#e5e9e4!important}
+html body.sde-pixel-command .sde-panel a{color:#f4cf7f!important;-webkit-text-fill-color:#f4cf7f!important}
+html body.sde-pixel-command .sde-dash-alert{color:#f6deaa!important;background:#102d36!important}
+html body.sde-pixel-command [hidden]{display:none!important}
+/* Temple Vivant : le grand portrait de prière est cadré dans l'image originale. */
+html body.sde-pixel-temple .site-header{background:#fffaf6!important}
+html body.sde-pixel-temple .site-header :is(.site-brand b,.site-menu a){color:#3b2853!important;-webkit-text-fill-color:#3b2853!important}
+html body.sde-pixel-temple .site-portal-cta{background:#42215c!important;color:white!important;-webkit-text-fill-color:white!important}
+html body.sde-pixel-temple .infire-takeover{display:none!important}
+html body.sde-pixel-temple .sde-intro{position:relative!important;overflow:hidden!important;isolation:isolate!important;min-height:450px!important;padding:45px clamp(25px,7vw,115px)!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;background:#3e2340!important;color:white!important}
+html body.sde-pixel-temple .sde-intro::before{content:"";position:absolute;inset:0 0 0 33%;z-index:-2;background:url("/vitrine/maquettes/temple-vivant-sde.png") 58% 20% / 290% auto no-repeat}
+html body.sde-pixel-temple .sde-intro::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#2b1a37 0%,#2b1a37cb 38%,transparent 75%)!important}
+html body.sde-pixel-temple .sde-intro .sde-kicker{color:#edd198!important;font-size:.73rem!important;letter-spacing:.14em!important}
+html body.sde-pixel-temple .sde-intro h1{font:500 clamp(2.8rem,5.4vw,5.1rem)/1 Georgia,serif!important;color:#fff3e8!important;-webkit-text-fill-color:#fff3e8!important;max-width:520px!important;margin:0 0 13px!important}
+html body.sde-pixel-temple .sde-intro .sde-pixel-prayer-subtitle{font:italic 500 clamp(1.4rem,2.4vw,2.1rem) Georgia,serif!important;color:#fff3e8!important;margin:0 0 12px!important}
+html body.sde-pixel-temple .sde-intro>p:not(.sde-kicker){max-width:450px!important;line-height:1.55!important;color:#fff7ef!important;font-size:.93rem!important}
+html body.sde-pixel-temple .sde-pixel-prayer-cta{display:inline-flex;align-items:center;gap:9px;border-radius:25px;padding:13px 20px;background:linear-gradient(120deg,#ffe3a4,#d3a766)!important;color:#251b2b!important;-webkit-text-fill-color:#251b2b!important;font-weight:800;text-decoration:none!important}
+html body.sde-pixel-temple .sde-intro .sde-crumbs{display:none!important}
+html body.sde-pixel-temple .sde-section-jumps{position:relative;z-index:3;max-width:1230px;margin:-25px auto 14px!important;background:#fffaf6!important;box-shadow:0 10px 24px #2d1c2a2b!important;border-radius:20px;display:flex!important;justify-content:space-around!important}
+html body.sde-pixel-temple .sde-section-jumps a{flex:1;color:#3c2254!important;-webkit-text-fill-color:#3c2254!important;padding:15px!important;min-height:55px;text-align:center;border-right:1px solid #eadfe5;font-weight:700!important;background:transparent!important}
+html body.sde-pixel-temple .sde-section-jumps a:last-child{border:0}
+html body.sde-pixel-temple .sde-section-jumps a:first-child{display:none!important}
+html body.sde-pixel-temple .sde-initiative-section{background:#faf5f1!important}
+html body.sde-pixel-temple .sde-initiative-card{background:#fffaf7!important;border:1px solid #e5d9dc!important;border-radius:13px!important;box-shadow:0 8px 20px #2b18251c!important}
+html body.sde-pixel-temple .sde-form-submit{background:#4b2d65!important;color:#fff!important}
+@media(max-width:980px){.sde-pixel-features{grid-template-columns:1fr 1.4fr}.sde-pixel-features>.sde-pixel-feature:last-child{grid-column:1/-1}html body.sde-pixel-command .sde-dash-metrics{grid-template-columns:repeat(2,1fr)!important}}
+@media(max-width:720px){
+html body.sde-pixel-citadel .ap-hero{min-height:450px!important;padding:12px 12px 42px!important}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live.sde-pixel-citadel .ap-hero .ap-hero-bg{background-size:510% auto!important;background-position:68% 16%!important}
+html body.sde-pixel-citadel .ap-hero::before{background:linear-gradient(180deg,#08192ab3,#08192ad9)!important}
+html body.sde-pixel-citadel .ap-hero-inner{min-height:410px!important}
+html body.sde-pixel-citadel .ap-hero-copy{width:100%!important;max-width:100%!important}
+html body.sde-unifie.sde-premium-home.sde-2027-reference.sde-citadelle-live.sde-pixel-citadel .ap-hero h1#titre-accueil{font-size:clamp(2.1rem,7.7vw,3.4rem)!important}
+html body.sde-pixel-citadel .sde-pixel-showcase{margin:-20px auto 0!important;padding:0 12px 12px!important}
+.sde-pixel-features{grid-template-columns:1fr!important}
+.sde-pixel-features>.sde-pixel-feature:last-child{grid-column:auto}
+html body.sde-pixel-citadel .sde-pixel-feature{min-height:auto!important;padding:15px!important}
+.sde-pixel-poles{gap:5px!important}
+.sde-pixel-poles a{min-height:88px;padding:7px 2px}
+.sde-pixel-poles img{width:28px;height:28px}
+.sde-pixel-poles strong{font-size:.63rem!important}
+.sde-pixel-panels{grid-template-columns:1fr}
+html body.sde-pixel-command .sde-dash-shell{display:block!important}
+html body.sde-pixel-command .sde-dash-side{position:fixed!important;z-index:100!important;bottom:0!important;top:auto!important;left:0!important;right:0!important;width:100%!important;padding:7px 6px calc(7px + env(safe-area-inset-bottom))!important;background:#081b2b!important;border:0!important;border-top:1px solid #d6b77966!important}
+html body.sde-pixel-command .sde-dash-side :is(.sde-dash-side-caption,.sde-dash-side-footer){display:none!important}
+html body.sde-pixel-command .sde-dash-side nav{display:flex!important;gap:4px!important;justify-content:space-around!important}
+html body.sde-pixel-command .sde-dash-side nav a{flex:1;text-align:center;font-size:.68rem!important;min-height:45px;line-height:1.15;padding:8px 3px!important}
+html body.sde-pixel-command .sde-dash-side nav a:nth-child(n+4):not(:last-child){display:none!important}
+html body.sde-pixel-command .sde-dash-main{padding:16px 12px calc(95px + env(safe-area-inset-bottom))!important}
+html body.sde-pixel-command .sde-dash-metrics{grid-template-columns:repeat(2,1fr)!important;gap:8px!important}
+html body.sde-pixel-command .sde-dash-two,html body.sde-pixel-command .sde-pixel-command-secondary{grid-template-columns:1fr!important}
+html body.sde-pixel-command .sde-dash-two>.sde-panel:first-child{grid-column:auto!important}
+html body.sde-pixel-temple .sde-intro{min-height:480px!important;padding:44px 22px 48px!important}
+html body.sde-pixel-temple .sde-intro::before{inset:0;background-size:490% auto;background-position:69% 20%;opacity:.65}
+html body.sde-pixel-temple .sde-intro::after{background:linear-gradient(90deg,#2b1a37dd,#2b1a3777)!important}
+html body.sde-pixel-temple .sde-intro h1{font-size:clamp(2.6rem,8vw,3.7rem)!important}
+html body.sde-pixel-temple .sde-section-jumps{margin:-16px 10px 12px!important;gap:0;padding:5px!important}
+html body.sde-pixel-temple .sde-section-jumps a{font-size:.7rem!important;padding:7px 4px!important}
+}
+@media(prefers-reduced-motion:reduce){html body.sde-pixel-citadel *,html body.sde-pixel-command *,html body.sde-pixel-temple *{animation:none!important;transition:none!important}}
+
+/* Consolidation après tous les anciens styles : les cinq colonnes sont les
+ * mêmes sur la maquette et sur une largeur d'écran adaptée. */
+html body.sde-pixel-citadel .sde-pixel-poles{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important}
+html body.sde-pixel-citadel .sde-pixel-panels{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+@media(max-width:720px){
+ html body.sde-pixel-citadel .sde-pixel-panels{grid-template-columns:1fr!important}
+ html body.sde-pixel-citadel .sde-pixel-poles{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important}
+}

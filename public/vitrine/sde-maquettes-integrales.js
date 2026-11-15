@@ -432,3 +432,32 @@
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});
  else start();
 })();
+
+
+
+/* Dernière passe fonctionnelle : les scripts métier montent d'abord, puis
+ * nous fixons les mots de la couverture sur le H1 déjà existant. Aucun
+ * accès aux données privées, aucune création de KPI. */
+(() => {
+ function appliquerCouverture(){
+  if(!document.body.classList.contains("sde-pixel-citadel"))return;
+  const h=document.querySelector(".ap-hero #titre-accueil");
+  if(!h)return;
+  function setTitle(){
+   if(h.textContent.includes("UN PEUPLE ALIGNÉ")&&h.textContent.includes("DU ROYAUME"))return;
+   const span=document.createElement("span");
+   span.textContent="DU ROYAUME";
+   h.replaceChildren(document.createTextNode("UN PEUPLE ALIGNÉ"),document.createElement("br"),document.createTextNode("POUR L’IMPACT"),document.createElement("br"),span);
+   h.setAttribute("aria-label","Un peuple aligné pour l’impact du Royaume");
+  }
+  setTitle();
+  new MutationObserver(()=>setTitle()).observe(h,{subtree:true,childList:true,characterData:true});
+  const tagline=document.querySelector(".ap-hero .sde-citadel-tagline");
+  if(tagline){
+   tagline.replaceChildren(document.createTextNode("Mouvement Prophético-Apostolique"),document.createElement("br"),document.createTextNode("Soldats de l’Éternel, S.D.E · Abidjan"));
+  }
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",appliquerCouverture,{once:true});
+ else appliquerCouverture();
+ window.addEventListener("load",appliquerCouverture,{once:true});
+})();
