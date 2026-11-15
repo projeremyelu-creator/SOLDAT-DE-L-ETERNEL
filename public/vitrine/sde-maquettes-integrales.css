@@ -766,3 +766,76 @@ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-p
    display:none!important;
  }
 }
+
+
+/* Quatre indicateurs membre comme la maquette, sans données de démonstration :
+   matricule, présences, prières, modules réellement validés. */
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:10px!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article{
+  position:relative!important;
+  padding:17px 12px 13px!important;
+  min-height:110px!important;
+  overflow:hidden!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article:nth-child(1){
+  background:linear-gradient(135deg,#3c1b8c,#16195b)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article:nth-child(2){
+  background:linear-gradient(135deg,#383052,#171d4e)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article:nth-child(3){
+  background:linear-gradient(135deg,#482061,#1c124d)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article:nth-child(4){
+  background:linear-gradient(135deg,#183e4e,#12194c)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article::before{
+  position:absolute!important;
+  left:auto!important;right:11px!important;top:11px!important;bottom:auto!important;
+  width:32px!important;height:32px!important;
+  border:1px solid rgba(255,220,150,.43);
+  border-radius:10px;
+  background:rgba(8,12,40,.34);
+  display:grid;place-items:center;
+  color:#ffe39a!important;
+  font:800 1.25rem/1 var(--px-body);
+  pointer-events:none;
+}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article:nth-child(1)::before{content:"♙"}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article:nth-child(2)::before{content:"▦"}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article:nth-child(3)::before{content:"♧"}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article:nth-child(4)::before{content:"✓"}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article span{
+  display:block!important;
+  padding-right:39px!important;
+  min-height:32px!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article strong{
+  font-size:clamp(1.25rem,2vw,1.75rem)!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+}
+@media(max-width:760px){
+ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics{
+   grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ }
+ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article{
+   min-height:118px!important;
+ }
+}
+@media(max-width:410px){
+ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article::before{
+   left:auto!important;right:7px!important;top:9px!important;bottom:auto!important;width:26px!important;height:26px!important;font-size:1rem;
+ }
+ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article span{
+   padding-right:28px!important;min-height:28px!important;
+ }
+ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article strong{
+   font-size:clamp(1.2rem,5.3vw,1.5rem)!important;
+ }
+}
