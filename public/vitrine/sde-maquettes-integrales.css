@@ -1190,3 +1190,45 @@ html[data-sde-citadel-integral] body.sde-pixel-citadel main#contenu .sde-pixel-f
   background-repeat:no-repeat!important;
   filter:none!important;opacity:1!important;
 }
+
+
+
+/* Temple Vivant — reproduction de l'en-tête ivoire, de la prière photographique
+   et des accès superposés aux formulaires existants ; source PNG intacte. */
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-subpage header.site-header{
+  background:#fffaf6!important;background-image:none!important;
+  color:#33214c!important;border-bottom:1px solid #ece0e4!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-subpage header.site-header :is(
+ .site-brand,.site-brand b,.site-brand small,.site-menu a,.site-burger){
+ color:#3b234f!important;-webkit-text-fill-color:#3b234f!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-subpage header.site-header .site-portal-cta{
+ background:#44235b!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-subpage main#contenu .sde-intro::before{
+ background-image:url("/vitrine/maquettes/temple-vivant-sde.png")!important;
+ opacity:.98!important;filter:none!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-subpage main#contenu .sde-intro::after{
+ background:linear-gradient(90deg,rgba(42,19,48,.83),rgba(44,24,47,.42) 65%,rgba(44,24,47,.10))!important;
+}
+@media(max-width:720px){
+ html[data-sde-citadel-integral] body.sde-pixel-temple.sde-subpage main#contenu .sde-intro h1{
+  max-width:310px!important;font-size:clamp(2.25rem,8.5vw,3.5rem)!important;
+  line-height:1.06!important;
+ }
+ html[data-sde-citadel-integral] body.sde-pixel-temple.sde-subpage main#contenu nav.sde-section-jumps{
+  display:grid!important;grid-template-columns:1fr!important;
+  margin:-16px 12px 14px!important;gap:0!important;padding:8px 14px!important;
+  border-radius:17px!important;
+ }
+ html[data-sde-citadel-integral] body.sde-pixel-temple.sde-subpage main#contenu nav.sde-section-jumps a{
+  display:flex!important;justify-content:flex-start!important;align-items:center!important;
+  min-height:50px!important;font-size:.9rem!important;
+  width:100%!important;flex:0 0 auto!important;padding:9px 12px!important;
+  text-align:left!important;border-right:0!important;
+  border-bottom:1px solid #e8dde2!important;
+ }
+ html[data-sde-citadel-integral] body.sde-pixel-temple.sde-subpage main#contenu nav.sde-section-jumps a:last-child{border-bottom:0!important;}
+}
