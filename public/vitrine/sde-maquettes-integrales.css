@@ -485,3 +485,37 @@ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero #titre-accueil 
  .sde-px-mobile-shortnav>a:hover,.sde-px-mobile-shortnav>a:focus-visible{background:#49258c}
 }
 /* Fin de la couche de référence intégrale. */
+
+
+/* Recette réelle du 15 novembre : une seule couverture Soldat à l'écran.
+   Garder les titres historiques dans l'arbre accessible, mais pas deux hero superposés. */
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-main::before {
+  display:none!important;content:none!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-main > .sde-dash-overline,
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-main > .sde-dash-heading,
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] #sde-status[data-state="success"] {
+  position:absolute!important;
+  width:1px!important;height:1px!important;
+  padding:0!important;margin:-1px!important;
+  overflow:hidden!important;clip:rect(0,0,0,0)!important;
+  clip-path:inset(50%)!important;white-space:nowrap!important;
+  border:0!important;
+}
+.sde-px-userbar{display:flex;align-items:center;gap:10px;min-width:0;padding:0 12px}
+.sde-px-userbar-photo{
+  display:block;width:43px;height:43px;border-radius:50%;object-fit:cover;
+  border:2px solid #f9d678;box-shadow:0 4px 13px rgba(0,0,0,.4);
+}
+.sde-px-userbar-copy{display:grid;gap:2px;max-width:210px}
+.sde-px-userbar-copy strong{color:#fff2df;font:800 .82rem/1.2 var(--px-body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sde-px-userbar-copy small{color:#e8cca0;font:600 .66rem/1.2 var(--px-body)}
+.sde-px-userbar-news{
+  display:flex;align-items:center;justify-content:center;
+  width:41px;height:41px;flex:none;border:1px solid rgba(228,197,129,.45);
+  border-radius:10px;background:rgba(24,23,75,.56);color:#fff1d2;
+  text-decoration:none;font:700 1.15rem var(--px-body)
+}
+.sde-px-userbar-news:hover{background:#51309a}
+@media(max-width:1150px){.sde-px-userbar-copy{max-width:125px}}
+@media(max-width:760px){.sde-px-userbar{display:none!important}}
