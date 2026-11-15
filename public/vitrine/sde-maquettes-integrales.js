@@ -48,7 +48,8 @@
    const body=document.body;
    if(!body.classList.contains("sde-2027-reference")||!body.classList.contains("sde-premium-home"))return;
    const hero=$(".ap-hero");
-   if(!hero||$(".sde-px-missionline"))return;
+   if(!hero)return;
+   if(!$(".sde-px-missionline")){
    const band=el("div","sde-px-missionline");
    band.append(el("span","sde-px-rule"),el("span","","Notre Devise & Notre Mission"),el("span","sde-px-rule"));
    const steps=el("strong","","Rassembler · Former · Réveiller · Restaurer · Équiper · Envoyer");
@@ -56,6 +57,7 @@
    box.setAttribute("aria-label","Six axes de mission SDE");
    box.append(band,steps);
    hero.insertAdjacentElement("afterend",box);
+   }
    const heading=$("#titre-accueil",hero);
    if(heading&&!heading.dataset.pxTitle){
      heading.dataset.pxTitle="2026";

@@ -526,3 +526,14 @@ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] #sde-s
 html[data-sde-citadel-integral] body.sde-tableau [hidden]{
   display:none!important;
 }
+
+
+/* Réserve de hauteur au premier rendu tablette (évite le passage 60px -> 66px
+   lorsque la navigation commune remplace l'ancien en-tête). */
+@media(min-width:700px) and (max-width:1024px){
+ html[data-sde-citadel-integral] body.sde-premium-home .site-header,
+ html[data-sde-citadel-integral] body.sde-premium-home .sde-shell-header,
+ html[data-sde-citadel-integral] body.sde-premium-home .site-header-inner{
+  min-height:66px!important;
+ }
+}
