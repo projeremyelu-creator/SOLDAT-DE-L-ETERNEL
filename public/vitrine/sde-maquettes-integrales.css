@@ -537,3 +537,67 @@ html[data-sde-citadel-integral] body.sde-tableau [hidden]{
   min-height:66px!important;
  }
 }
+
+
+/* --------------------------------------------------------------------------
+   Fidélité illustration maquette du 14 novembre : PERSONNAGES distincts
+   Images reconstruites exclusivement depuis la capture fournie par le mouvement.
+   Les photographies réelles restent dans la médiathèque (albums inchangés).
+   Cadrage adaptatif sans nouveau script ni décalage de mise en page.
+   -------------------------------------------------------------------------- */
+html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+  background-color:#101138!important;
+  background-image:
+    linear-gradient(90deg,rgba(5,10,32,.92) 0%,rgba(14,11,44,.47) 40%,rgba(12,9,43,.25) 63%,rgba(5,11,36,.86) 100%),
+    url("/vitrine/illus/guerrier-reference-sde.webp"),
+    radial-gradient(ellipse at 63% 22%,rgba(242,161,88,.82) 0%,rgba(156,82,103,.5) 36%,rgba(52,25,87,.72) 74%,rgba(7,13,43,.92) 100%),
+    url("/vitrine/illus/citadelle-celeste-cinema.avif")!important;
+  background-repeat:no-repeat,no-repeat,no-repeat,no-repeat!important;
+  background-size:cover,auto 580px,cover,cover!important;
+  background-position:center,56% 48%,center,center!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-px-member-cover{
+  background-color:#090d32!important;
+  background-image:
+    linear-gradient(90deg,rgba(7,11,38,.92) 0%,rgba(8,12,42,.67) 47%,rgba(9,11,45,.22) 100%),
+    url("/vitrine/illus/priere-reference-sde.webp"),
+    linear-gradient(110deg,#0a153c,#2b1448 62%,#b26b62)!important;
+  background-repeat:no-repeat,no-repeat,no-repeat!important;
+  background-size:cover,auto 185px,cover!important;
+  background-position:center,right center,center!important;
+}
+html[data-sde-citadel-integral] body.sde-direct-member #main .sde-ref-headline{
+  background-image:
+    linear-gradient(90deg,rgba(7,11,37,.91),rgba(12,10,48,.29)),
+    url("/vitrine/illus/priere-reference-sde.webp"),
+    linear-gradient(130deg,#101a48,#432167)!important;
+  background-size:cover,auto 100%,cover!important;
+  background-position:center,right center,center!important;
+}
+@media (min-width:761px) and (max-width:1100px){
+ html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+   background-size:cover,auto 500px,cover,cover!important;
+   background-position:center,56% 49%,center,center!important;
+ }
+}
+@media (max-width:760px){
+ html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+   background-image:
+     linear-gradient(90deg,rgba(5,12,39,.92),rgba(9,11,43,.65) 46%,rgba(7,14,40,.6)),
+     url("/vitrine/illus/guerrier-reference-sde.webp"),
+     radial-gradient(ellipse at 65% 19%,rgba(244,169,91,.73),rgba(74,39,91,.61) 58%,rgba(7,12,42,.96)),
+     url("/vitrine/illus/citadelle-celeste-cinema.avif")!important;
+   background-repeat:no-repeat,no-repeat,no-repeat,no-repeat!important;
+   background-size:cover,auto 340px,cover,cover!important;
+   background-position:center,87% 11%,center,center!important;
+ }
+ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-px-member-cover{
+   background-size:cover,auto 175px,cover!important;
+   background-position:center,right center,center!important;
+ }
+}
+@media (max-width:390px){
+ html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+   background-size:cover,auto 300px,cover,cover!important;
+ }
+}
