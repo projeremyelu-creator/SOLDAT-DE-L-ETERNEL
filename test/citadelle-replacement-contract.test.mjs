@@ -267,3 +267,23 @@ test("La couverture cinématique est l'image finale sur les écrans mobiles et t
  assert.doesNotMatch(final,/hero-sde-(?:640|1280)\.webp/);
  assert.ok(existsSync("public/vitrine/illus/citadelle-celeste-cinema.avif"));
 });
+
+test("les écrans du 14 novembre sont compilés en dernier et consomment les API protégées existantes", () => {
+ const build=read("scripts/build-experience.mjs");
+ const css=read("public/vitrine/sde-maquettes-integrales.css");
+ const js=read("public/vitrine/sde-maquettes-integrales.js");
+ assert.doesNotThrow(()=>new Function(js),"La syntaxe JS de la maquette doit être valide");
+ assert.ok(build.includes("integralStylePath+'?v='+revision"),"CSS intégral absent du build");
+ assert.ok(build.includes("integralScriptPath+'?v='+revision"),"JS intégral absent du build");
+ for(const fragment of ["sde-px-member-cover","sde-px-profile-cover","sde-px-calendar-grid","sde-px-news-card","sde-px-progress-ring","@media(max-width:760px)"]) {
+  assert.ok(css.includes(fragment),fragment+" manque à la maquette");
+ }
+ for(const api of ["/api/moi","/api/mon-espace","/api/mon-parcours-academy","/api/actualites","/api/mon-historique"]) {
+  assert.ok(js.includes(api),"API de lecture autorisée absente : "+api);
+ }
+ for(const view of ["agenda","actualites","parcours","profil"]) {
+  assert.ok(js.includes(view),"Écran incomplet : "+view);
+ }
+ assert.equal(/(?:membres actifs|apprenants|sujets d’intercession)\s*[:=]\s*\d+/i.test(js),false,"Les faux KPI sont interdits.");
+ assert.ok(js.includes('if(!auth?.connecte)return'),"Les données privées ne se chargent qu'après vérification de session.");
+});
