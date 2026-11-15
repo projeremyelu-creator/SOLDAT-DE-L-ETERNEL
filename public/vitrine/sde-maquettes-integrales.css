@@ -1047,3 +1047,131 @@ html[data-sde-citadel-integral] body.sde-unifie.sde-premium-home.sde-2027-refere
   background-size:510% auto!important;
  }
 }
+
+
+
+/* SDE • RECADRAGE DE PRÉCISION - la maquette PNG n'est jamais modifiée.
+   Le calque dédié peint la ville AU-DESSUS des anciennes photographies.
+   Les contrôles, données, liens et modules métier restent intacts. */
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero{
+  position:relative!important;isolation:isolate!important;
+  height:auto!important;min-height:430px!important;
+  padding:0 18px 56px!important;
+  background:#061827!important;background-image:none!important;
+  overflow:hidden!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero::before,
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero::after{
+  content:none!important;display:none!important;background:none!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-hero-bg{
+  opacity:0!important;visibility:hidden!important;background-image:none!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .sde-pixel-city-layer{
+  display:block!important;visibility:visible!important;
+  position:absolute!important;inset:0!important;z-index:1!important;
+  width:100%!important;height:100%!important;
+  background-image:
+     linear-gradient(90deg,rgba(7,23,39,.56) 0%,rgba(7,23,39,.21) 52%,rgba(7,23,39,.10) 100%),
+     url("/vitrine/maquettes/citadelle-celeste-sde.png")!important;
+  background-size:cover,294% auto!important;
+  background-position:center,65% 19%!important;
+  background-repeat:no-repeat!important;
+  opacity:1!important;transform:none!important;filter:none!important;
+  pointer-events:none!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-hero-inner{
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  min-height:345px!important;max-width:1210px!important;
+  width:100%!important;margin:0 auto!important;padding:18px 0 0!important;
+  position:relative!important;z-index:3!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-hero-copy{
+  position:relative!important;z-index:4!important;
+  width:min(630px,62%)!important;max-width:630px!important;
+  margin:0!important;padding:15px 0!important;text-align:center!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-hero-copy :is(
+ .ap-eyebrow,.sde-vision-wordmark,.sde-citadelle-foundation,.sde-ref-foundation,
+ .ap-devise,.ap-verset,.sde-citadel-film){
+  display:none!important;visibility:hidden!important;position:static!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero :is(
+  nav.sde-ref-hub-links,nav.sde-ref-program-strip){
+  display:none!important;visibility:hidden!important;position:static!important;
+  height:0!important;min-height:0!important;max-height:0!important;
+  margin:0!important;padding:0!important;overflow:hidden!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero h1#titre-accueil{
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(2.65rem,4.2vw,4.1rem)!important;
+  font-weight:500!important;line-height:1.04!important;
+  text-align:center!important;margin:0 auto 16px!important;
+  letter-spacing:.012em!important;max-width:none!important;
+  color:#fff8ed!important;-webkit-text-fill-color:#fff8ed!important;
+  text-shadow:0 2px 15px #051422a3!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero h1#titre-accueil span{
+ color:#edc66c!important;-webkit-text-fill-color:#edc66c!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .sde-citadel-tagline{
+  color:#fff5e7!important;-webkit-text-fill-color:#fff5e7!important;
+  margin:0 auto 17px!important;max-width:560px!important;
+  text-align:center!important;font-size:.95rem!important;
+  line-height:1.42!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-actions{
+  display:flex!important;justify-content:center!important;gap:12px!important;
+  position:relative!important;z-index:4!important;margin:0!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-actions .ap-btn{
+  min-height:43px!important;margin:0!important;padding:12px 17px!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  border-radius:8px!important;font-size:.81rem!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-actions .sde23-cta-index{display:none!important}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu .sde-pixel-showcase{
+  display:block!important;visibility:visible!important;
+  position:relative!important;z-index:7!important;
+  max-width:1250px!important;margin:-72px auto 0!important;
+  padding:0 18px 20px!important;
+  background:transparent!important;
+}
+html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu>.sde-px-mission-hero{
+ display:none!important;visibility:hidden!important;
+}
+@media(max-width:720px){
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel .site-header .site-access-top{
+  display:none!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero{
+  min-height:425px!important;padding:0 14px 34px!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .sde-pixel-city-layer{
+  background-image:linear-gradient(180deg,#061a2b9c,#061a2b55 60%,#061a2bce),url("/vitrine/maquettes/citadelle-celeste-sde.png")!important;
+  background-size:cover,510% auto!important;background-position:center,55% 19%!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-hero-inner{
+  min-height:385px!important;padding:12px 0 0!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-hero-copy{
+  width:100%!important;max-width:100%!important;padding:0!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero h1#titre-accueil{
+  font-size:clamp(2.15rem,8.4vw,3.5rem)!important;
+  line-height:1.08!important;margin:0 auto 15px!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .sde-citadel-tagline{
+  font-size:.81rem!important;margin:0 auto 18px!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-actions{
+  gap:8px!important;flex-wrap:wrap!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-actions .ap-btn{
+  flex:0 1 auto!important;min-height:43px!important;padding:10px 12px!important;
+  font-size:.73rem!important;
+ }
+ html[data-sde-citadel-integral] body.sde-premium-home.sde-2027-reference.sde-pixel-citadel main#contenu .sde-pixel-showcase{
+  margin:-9px auto 0!important;padding:0 12px 20px!important;
+ }
+}
