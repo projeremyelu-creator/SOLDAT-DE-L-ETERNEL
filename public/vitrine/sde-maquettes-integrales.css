@@ -519,3 +519,10 @@ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] #sde-s
 .sde-px-userbar-news:hover{background:#51309a}
 @media(max-width:1150px){.sde-px-userbar-copy{max-width:125px}}
 @media(max-width:760px){.sde-px-userbar{display:none!important}}
+
+
+/* Sécurité d'affichage : les styles premium ne doivent jamais forcer un élément
+   [hidden] à réapparaître, notamment Administration/Finances selon le rôle. */
+html[data-sde-citadel-integral] body.sde-tableau [hidden]{
+  display:none!important;
+}
