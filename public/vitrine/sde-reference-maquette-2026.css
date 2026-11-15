@@ -491,3 +491,17 @@ html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-cards>*:nth-child
   }
 }
 /* SDE MAQUETTE 14 NOV — FIN DE CASCADE */
+
+/* SDE RECETTE MOBILE 15 NOV — RESTAURER LA COUVERTURE CINÉMATIQUE */
+/* Le cadrage desktop de la maquette conserve sa photographie officielle.
+   Sur téléphone et tablette (360/390/768), la couverture doit servir
+   l'illustration cinématique optimisée, distincte des albums médias.
+   Règle volontairement placée après le dernier calque de la maquette. */
+@media(max-width:860px){
+  html[data-sde-citadel-integral] body.sde-2027-reference.sde-premium-home .ap-hero{
+    background-image:linear-gradient(90deg,rgba(6,14,42,.91),rgba(11,17,52,.42)),url("/vitrine/illus/citadelle-celeste-cinema.avif")!important;
+    background-position:center,center center!important;
+    background-repeat:no-repeat,no-repeat!important;
+    background-size:cover,cover!important;
+  }
+}

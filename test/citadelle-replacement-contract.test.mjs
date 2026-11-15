@@ -255,3 +255,15 @@ test("la maquette du 14 novembre garde le design responsive sur les deux espaces
   const worker = read("src/worker.js");
   assert.ok(worker.includes("REGLES"), "Les contrôles d'accès serveur doivent être conservés.");
 });
+
+test("La couverture cinématique est l'image finale sur les écrans mobiles et tablettes",()=>{
+ const css=read("public/vitrine/sde-reference-maquette-2026.css");
+ const cut=css.lastIndexOf("/* SDE RECETTE MOBILE 15 NOV — RESTAURER LA COUVERTURE CINÉMATIQUE */");
+ assert.ok(cut>0,"Le correctif de priorité CSS mobile doit être présent en dernier.");
+ const final=css.slice(cut);
+ assert.match(final,/@media\(max-width:860px\)/);
+ assert.match(final,/body\.sde-2027-reference\.sde-premium-home \.ap-hero/);
+ assert.match(final,/background-image:[^;]*citadelle-celeste-cinema\.avif/);
+ assert.doesNotMatch(final,/hero-sde-(?:640|1280)\.webp/);
+ assert.ok(existsSync("public/vitrine/illus/citadelle-celeste-cinema.avif"));
+});
