@@ -65,7 +65,7 @@
   const title=make("span","sde-shell-brand-title");title.append(make("b","", "S.D.E"),make("small","","Soldats de l’Éternel"));brand.append(img,title);
   const nav=make("nav","sde-shell-mega");nav.setAttribute("aria-label","Navigation principale");
   // Une navigation fidèle à la maquette. Les détails restent accessibles dans le tiroir Plus.
-  for(const [href,label] of [["/","Accueil"],["/mouvement","Vision"],["/programmes#agenda","Agenda"],["/mediatheque","Ressources"],["/contact#rejoindre","Rejoindre"],["/soutenir","Soutenir"]]){
+  for(const [href,label] of [["/","Accueil"],["/mouvement","Le Mouvement"],["/programmes","Programmes"],["/mouvement#poles","Nos 5 Pôles"],["/missions-humanitaires","Missions"],["/mediatheque","Ressources"],["/soutenir","Soutenir"]]){
     nav.append(link(href,label,"sde-citadel-top-link"));
   }
   const actions=make("div","sde-shell-head-actions");
@@ -82,7 +82,7 @@
   const pageAction=pageActions[location.pathname];
   const contextCTA=pageAction?link(pageAction[1],pageAction[0],"sde-shell-context-cta"):null;
   const search=link("/rechercher","","sde-shell-search");search.setAttribute("aria-label","Rechercher");search.append(icon("recherche"));
-  const portal=link("/portail","","sde-shell-portal");portal.setAttribute("aria-label","Ouvrir mon Portail S.D.E");portal.append(icon("portail"),make("span","sde-shell-portal-label","Mon Portail S.D.E"));
+  const portal=link("/portail","","sde-shell-portal");portal.setAttribute("aria-label","Ouvrir mon Portail S.D.E");portal.append(icon("portail"),make("span","sde-shell-portal-label","Portail"));
   const rubriques=make("button","sde-shell-rubriques","Rubriques");
   rubriques.type="button";rubriques.setAttribute("aria-controls","sde-shell-overlay");
   rubriques.setAttribute("aria-expanded","false");rubriques.setAttribute("aria-label","Ouvrir le menu SDE");rubriques.prepend(icon("hamburger"));
