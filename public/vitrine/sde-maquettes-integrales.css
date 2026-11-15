@@ -796,8 +796,8 @@ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-d
 }
 html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article::before{
   position:absolute!important;
-  right:11px;top:11px;
-  width:32px;height:32px;
+  left:auto!important;right:11px!important;top:11px!important;bottom:auto!important;
+  width:32px!important;height:32px!important;
   border:1px solid rgba(255,220,150,.43);
   border-radius:10px;
   background:rgba(8,12,40,.34);
@@ -830,7 +830,7 @@ html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-d
 }
 @media(max-width:410px){
  html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article::before{
-   right:7px;top:9px;width:26px;height:26px;font-size:1rem;
+   left:auto!important;right:7px!important;top:9px!important;bottom:auto!important;width:26px!important;height:26px!important;font-size:1rem;
  }
  html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="membre"] .sde-dash-metrics article span{
    padding-right:28px!important;min-height:28px!important;
