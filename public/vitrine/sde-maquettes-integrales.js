@@ -322,7 +322,24 @@
    function show(type){
      feed.replaceChildren();
      const chosen=type==="tout"?records:records.filter(x=>x.type===type||(type==="mission"&&/mission|humanitaire/i.test(x.categorie||x.titre||"")));
-     if(!chosen.length){feed.append(el("p","sde-px-empty","Aucune publication disponible pour cette rubrique."));}
+     if(!chosen.length){
+       const note=el("p","sde-px-empty","Aucune publication récente disponible pour cette rubrique.");
+       feed.append(note);
+       if(type==="tout"){
+         for(const [title,detail,href,photo] of [
+           ["IN FIRE — Archives du mouvement","Retrouvez les images et programmes publiés de 2024 à 2026.","/album-infire","/vitrine/illus/infire-banniere.webp"],
+           ["Soldiers Academy","Parcourez les enseignements et les formations disponibles.","/academy","/vitrine/illus/livre-academy.webp"]
+         ]){
+           const card=el("article","sde-px-news-card sde-px-resource");
+           const visual=el("div","sde-px-news-image");
+           visual.style.backgroundImage="linear-gradient(180deg,rgba(7,13,42,.03),rgba(10,10,45,.5)),url('"+photo+"')";
+           visual.append(el("span","sde-px-news-tag","Ressource SDE"));
+           const content=el("div","sde-px-news-content");
+           content.append(el("h3","",title),el("p","",detail),link("Découvrir →",href,"sde-px-aux-link"));
+           card.append(visual,content);feed.append(card);
+         }
+       }
+     }
      for(const item of chosen.slice(0,20)){
        const article=el("article","sde-px-news-card");
        const cover=el("div","sde-px-news-image "+(item.type==="annonce"?"is-annonce":"is-evenement"));
@@ -334,7 +351,7 @@
        if(item.lieu||item.heure)content.append(el("small","",[item.heure,item.lieu].filter(Boolean).join(" · ")));
        const foot=el("div","sde-px-news-foot");
        foot.append(el("time","",labelDate(item.date,{day:"numeric",month:"short",year:"numeric"})));
-       foot.append(link("En savoir plus",item.type==="evenement"?"/programmes":"/actualites","sde-px-aux-link"));
+       foot.append(link("En savoir plus",item.type==="evenement"?"/programmes":"/communaute","sde-px-aux-link"));
        content.append(foot);article.append(cover,content);feed.append(article);
      }
    }
