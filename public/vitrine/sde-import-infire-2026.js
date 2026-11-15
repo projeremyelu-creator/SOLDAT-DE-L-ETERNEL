@@ -77,6 +77,25 @@ function planned(manifest){
  if(new Set(items.map(x=>x.path)).size!==8)throw Error("Fichiers dupliqués dans le manifeste.");
  return items;
 }
+// États observés dans la médiathèque publique, jamais des valeurs de la maquette.
+const expectedInFire=new Set([
+ "infire-2026-01.webp","infire-2026-02.webp","infire-2026-03.webp","infire-2026-04.webp",
+ "infire-2026-video-01.mp4","infire-2026-video-02.mp4","infire-2026-video-03.mp4"
+]);
+const expectedTenues="tenues-sde-membres-2026.webp";
+function publicationStatus(items){
+ const list=Array.isArray(items)?items:[];
+ const namesInFire=new Set(list.filter(x=>x?.visibilite==="public"&&x.categorie==="IN FIRE"&&expectedInFire.has(x.nom)).map(x=>x.nom));
+ const tenues=list.some(x=>x?.visibilite==="public"&&x.categorie==="Tenues SDE"&&x.nom===expectedTenues);
+ const done=namesInFire.size+Number(tenues);
+ const box=$("etat-publication");
+ if(box){
+  box.hidden=false;
+  box.textContent="Publications réellement visibles : "+namesInFire.size+"/7 médias IN FIRE 2026, "+Number(tenues)+"/1 photo Tenues SDE — total "+done+"/8.";
+ }
+ state.existing=list;
+ return {done,infire:namesInFire.size,tenues:Number(tenues)};
+}
 function render(){
  const list=$("liste");list.replaceChildren();
  for(const x of state.files){
@@ -148,6 +167,7 @@ async function upload(){
   if(!me.connecte||Number(me.niveau)<2)throw Error("Session administrateur expirée.");
   const data=await request("/api/medias");
   existing=Array.isArray(data.medias)?data.medias:[];
+  publicationStatus(existing);
   state.limit=data.espace||state.limit;
   if(!state.limit)throw Error("Impossible de vérifier l'espace de stockage.");
  }catch(e){state.running=false;$("publier").disabled=false;$("arreter").hidden=true;$("droits").disabled=false;status(e.message,true);return;}
@@ -167,7 +187,11 @@ async function upload(){
  $("droits").disabled=false;$("publier").disabled=!state.files.length||!$("droits").checked;
  const suffix=state.stop?" (interrompu volontairement)":"";
  status(num(success)+" nouveaux médias publiés ; "+num(skipped)+" déjà présents ; "+num(errors)+" échec(s)."+suffix,errors>0);
- if(errors===0&&(!state.stop))$("confirmation").hidden=false;
+ // Vérifier après transfert que les huit fichiers sont effectivement publics.
+ const verified=await request("/api/medias").then(data=>publicationStatus(data.medias)).catch(()=>null);
+ if(errors===0&&!state.stop&&verified?.done===8)$("confirmation").hidden=false;
+ else if(!verified)status("Import terminé : impossible de confirmer la liste publique. Actualisez la page pour vérifier.",true);
+ else if(!state.stop&&verified.done<8)status("Import terminé, mais "+(8-verified.done)+" média(s) attendu(s) restent à publier. Réessayez uniquement les fichiers manquants.",true);
 }
 async function start(){
  try{
@@ -175,6 +199,7 @@ async function start(){
   if(!me.connecte||Number(me.niveau)<2)throw Error("Accès réservé aux administrateurs connectés.");
   const data=await request("/api/medias");
   state.limit=data.espace||null;
+  publicationStatus(data.medias);
   if(!state.limit)throw Error("Quota de la médiathèque indisponible.");
   $("connecte").hidden=false;
   status("Connecté à la médiathèque SDE. Vous pouvez sélectionner l'archive.");
