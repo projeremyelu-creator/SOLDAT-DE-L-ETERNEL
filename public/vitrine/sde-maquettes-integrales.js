@@ -201,6 +201,9 @@
    set("px-fact-adhesion",m.adhesion?labelDate(m.adhesion,{month:"short",year:"numeric"}):"—");
    const h=$("#sde-px-member-greeting");
    if(h)h.textContent="Bienvenue, "+toName(m,compte);
+   const barName=$("#sde-px-userbar-name"),barPhoto=$("#sde-px-userbar-photo");
+   if(barName)barName.textContent=toName(m,compte);
+   if(barPhoto)setPhoto(barPhoto,m);
  }
  function makeCalendar(){
    const section=el("section","sde-px-screen sde-px-calendar");
@@ -371,6 +374,21 @@
    if(document.body.dataset.dashboard!=="membre")return;
    const main=$(".sde-dash-main"),side=$(".sde-dash-side");
    if(!main||$("#sde-px-calendar-grid"))return;
+   const header=$(".sde-dash-header-inner");
+   if(header&&!$("#sde-px-userbar")){
+     const bar=el("div","sde-px-userbar");bar.id="sde-px-userbar";
+     const avatar=el("img","sde-px-userbar-photo");avatar.id="sde-px-userbar-photo";
+     setPhoto(avatar,{});
+     const copy=el("div","sde-px-userbar-copy");
+     copy.append(el("strong","","Mon compte SDE"),el("small","","Espace membre sécurisé"));
+     copy.firstChild.id="sde-px-userbar-name";
+     const news=link("✉","#actualites","sde-px-userbar-news");
+     news.dataset.view="actualites";news.setAttribute("aria-label","Consulter les actualités");
+     bar.append(avatar,copy,news);
+     const nav=header.querySelector("nav");
+     if(nav)header.insertBefore(bar,nav);
+     else header.append(bar);
+   }
    subNav(side,"agenda","Événements & Agenda","▦");
    subNav(side,"actualites","Fil d’actualités","☷");
    subNav(side,"parcours","Mon tableau de bord","▤");
