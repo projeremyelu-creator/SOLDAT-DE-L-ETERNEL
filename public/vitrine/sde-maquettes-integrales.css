@@ -468,4 +468,20 @@ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero #titre-accueil 
  background:linear-gradient(115deg,#4d2895,#28226e);color:#fff0be;
 }
 .sde-px-parcours .sde-px-progress{margin:0}
+
+.sde-px-mobile-shortnav{display:none}
+@media(max-width:760px){
+ .sde-px-mobile-shortnav{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;
+  margin:0 0 12px;
+ }
+ .sde-px-mobile-shortnav>a{
+  display:flex;align-items:center;justify-content:center;min-height:44px;
+  padding:6px 3px;border-radius:10px;text-decoration:none;
+  font:700 clamp(.62rem,2.6vw,.76rem) var(--px-body);
+  color:#ffedd1;background:linear-gradient(110deg,#252171,#291458);
+  border:1px solid rgba(227,190,115,.36);text-align:center;
+ }
+ .sde-px-mobile-shortnav>a:hover,.sde-px-mobile-shortnav>a:focus-visible{background:#49258c}
+}
 /* Fin de la couche de référence intégrale. */
