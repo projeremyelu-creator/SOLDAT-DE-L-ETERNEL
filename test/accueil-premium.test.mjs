@@ -99,8 +99,7 @@ test('Accueil SDE 2+3 : le thème officiel remplace réellement les anciennes fe
  const feuilles=[...html.matchAll(/<link rel="stylesheet" href="([^\"]+)"/g)].map(m=>m[1]);
  assert.ok(feuilles.some(f=>f.includes('sde-citadelle-reference-v4.css')),'socle Citadelle V4 conservé');
  assert.ok(feuilles.some(f=>f.includes('sde-reference-maquette-2026.css')),'socle maquette 14 novembre conservé');
-  assert.ok(feuilles.some(f=>f.includes('sde-maquettes-integrales.css')),'les huit vues intégrales restent la base des déclinaisons');
-  assert.ok(feuilles.at(-1).includes('sde-declinaisons-fonctionnelles-2027.css'),'les nouveaux espaces fonctionnels forment la couche visuelle finale');
+  assert.ok(feuilles.at(-1).includes('sde-maquettes-integrales.css'),'la charte intégrale reste la dernière couche graphique');
  assert.ok(feuilles.includes('/vitrine/sde-accueil-premium.css?v=405b772b7a5d')||feuilles.some(f=>f.includes('sde-accueil-premium.css')),'structure de l\'accueil conservée');
  for(const ancien of ['sde-fusion.css','sde-v5-complet.css','sde-six-maquettes-2027.css','sde-maquette-hero.css','accueil-maquette.css'])
    assert.ok(!feuilles.some(f=>f.includes(ancien)),'ancienne feuille encore chargée : '+ancien);

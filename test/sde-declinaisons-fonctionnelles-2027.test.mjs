@@ -6,7 +6,8 @@ const read=x=>readFileSync(x,"utf8");
 test("Les déclinaisons fonctionnelles sont chargées après le thème de référence",()=>{
  const s=read("scripts/build-experience.mjs");
  assert.ok(s.includes("sde-declinaisons-fonctionnelles-2027.css"));
- assert.ok(s.indexOf("const declinationsStylePath")>s.indexOf("const integralScriptPath"));
+ assert.ok(s.includes("SDE-DECLINAISONS-COMPILEES-2027"));
+ assert.ok(!s.includes("const declinationsStylePath"),"pas de CSS externe supplémentaire");
  const css=read("public/vitrine/sde-declinaisons-fonctionnelles-2027.css");
  for(const t of ["sde-2027-campus-hero","sde-2027-workspace-admin","sde-2027-workspace-member","@media(max-width:700px)"])assert.ok(css.includes(t),t);
 });
