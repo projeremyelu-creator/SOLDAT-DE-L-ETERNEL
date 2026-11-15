@@ -331,3 +331,29 @@ test("le bandeau des six missions réserve sa place avant le premier rendu table
  assert.ok(js.includes('if(!$(".sde-px-missionline"))'),"Le JS doit rester idempotent et ne pas décaler le contenu");
  assert.ok(css.includes("Réserve de hauteur au premier rendu tablette"),"Le header doit réserver sa hauteur avant le paint");
 });
+
+
+test("logo officiel SDE flamme rouge et or commun au site public et aux écrans privés",()=>{
+ const logo=readFileSync("public/vitrine/logo-sde.webp");
+ assert.equal(logo.toString("ascii",0,4),"RIFF","Logo officiel WebP valide");
+ assert.equal(logo.toString("ascii",8,12),"WEBP","Logo officiel WebP valide");
+ assert.ok(logo.byteLength>5000,"Logo optimisé présent");
+ const js=read("public/vitrine/sde-maquettes-integrales.js");
+ const css=read("public/vitrine/sde-maquettes-integrales.css");
+ const shell=read("public/vitrine/sde-shell-public.js");
+ assert.ok(js.includes('img.src="/vitrine/logo-sde.webp"'),"Image officielle dans les en-têtes");
+ assert.ok(js.includes('img.dataset.sdeOfficialLogo="true"'),"Montage de marque idempotent");
+ assert.ok(shell.includes('img.src="/vitrine/logo-sde.webp"'),"En-tête du site public");
+ assert.ok(shell.includes('<img src="/vitrine/logo-sde.webp"'),"Pied de page du site public");
+ assert.ok(css.includes('background-image:url("/vitrine/logo-sde.webp")!important'),"Logo officiel dans la barre latérale privée");
+ assert.ok(!js.includes("blason-maquette-sde.webp"),"L’ancien blason ne doit plus remplacer le logo");
+ assert.ok(!css.includes("blason-maquette-sde.webp"),"Le blason de la maquette ne doit plus être visible");
+ for(const file of [
+   "public/vitrine/tableau-membre.html",
+   "public/vitrine/tableau-administration.html",
+   "public/vitrine/connexion-unifiee.html",
+   "public/vitrine/espace-membre.html"
+ ])assert.ok(read(file).includes('src="/vitrine/logo-sde.webp"'),file+" utilise le logo officiel");
+ assert.ok(js.includes('return /^[a-zA-Z0-9_-]{8,80}$/.test(id)?"/_blob/"'),"La photo du membre demeure personnelle");
+ assert.ok(css.includes('@media(max-width:760px)'),"Logo responsive sur téléphone");
+});

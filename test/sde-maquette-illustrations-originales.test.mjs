@@ -7,10 +7,10 @@ const js=readFileSync("public/vitrine/sde-maquettes-integrales.js","utf8");
 const assets=[
   "public/vitrine/illus/guerrier-reference-sde.webp",
   "public/vitrine/illus/priere-reference-sde.webp",
-  "public/vitrine/illus/blason-maquette-sde.webp"
+  "public/vitrine/logo-sde.webp"
 ];
 
-test("trois illustrations de la maquette sont de vrais WebP autonomes",()=>{
+test("deux illustrations et le logo officiel SDE sont des WebP autonomes",()=>{
   for(const path of assets){
     assert.ok(existsSync(path),path);
     const buf=readFileSync(path);
@@ -20,7 +20,7 @@ test("trois illustrations de la maquette sont de vrais WebP autonomes",()=>{
   }
 });
 test("les photographies des albums restent intactes tandis que les habillages utilisent les illustrations de référence",()=>{
-  for(const name of ["guerrier-reference-sde.webp","priere-reference-sde.webp","blason-maquette-sde.webp"]){
+  for(const name of ["guerrier-reference-sde.webp","priere-reference-sde.webp","logo-sde.webp"]){
     assert.ok(css.includes(name)||js.includes(name),name);
   }
   const last=css.lastIndexOf("Fidélité illustration maquette du 14 novembre");

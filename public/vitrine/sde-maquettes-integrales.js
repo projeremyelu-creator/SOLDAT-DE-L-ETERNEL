@@ -420,11 +420,12 @@
    if(head&&!$(".sde-px-admin-kicker",head))head.prepend(el("span","sde-px-admin-kicker","SDE DIGITAL · POSTE DE COMMANDEMENT"));
  }
  function mountReferenceBranding(){
-   // Blason extrait de la maquette officielle : l'identité du membre n'est pas remplacée.
+   // Logo officiel rouge et or SDE, déjà conservé dans la médiathèque.
+   // Les photos personnelles et les portraits des membres ne sont jamais modifiés.
    for(const img of document.querySelectorAll(".sde-shell-brand img, .sde-dash-logo img")){
-     if(img.dataset.sdeShieldReference)continue;
-     img.src="/vitrine/illus/blason-maquette-sde.webp";
-     img.dataset.sdeShieldReference="true";
+     if(img.dataset.sdeOfficialLogo)continue;
+     img.src="/vitrine/logo-sde.webp";
+     img.dataset.sdeOfficialLogo="true";
    }
  }
  function start(){mountReferenceBranding();publicAccueil();mountMember();mountAdmin();}
