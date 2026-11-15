@@ -245,6 +245,12 @@
    const stat=$(".sde-dash-metrics",section);
    if(stat){stat.before(cover);cover.before(welcome);}
    else section.prepend(welcome,cover);
+   const mobileNav=el("nav","sde-px-mobile-shortnav");
+   mobileNav.setAttribute("aria-label","Raccourcis des maquettes SDE");
+   for(const [title,view] of [["Profil","profil"],["Agenda","agenda"],["Actualités","actualites"],["Parcours","parcours"]]){
+     const a=link(title,"#"+view);a.dataset.view=view;mobileNav.append(a);
+   }
+   cover.after(mobileNav);
    const row=el("div","sde-px-dashboard-row");
    row.append(makeQuickGrid(),makeEventPanel());
    const existing=$(".sdu-member-universe",section)||$(".sde-dash-two",section);
