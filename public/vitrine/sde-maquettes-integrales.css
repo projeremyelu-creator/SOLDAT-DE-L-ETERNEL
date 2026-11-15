@@ -1433,8 +1433,8 @@ html body.sde-shell-mounted .sde-intro #sde-install-public{
     gap:6px!important;overflow-x:auto!important;scrollbar-width:thin!important;
   }
   html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-filters button{
-    white-space:nowrap!important;min-height:43px!important;
-    padding:8px 11px!important;font-size:.8rem!important;
+    white-space:nowrap!important;min-height:46px!important;
+    padding:9px 11px!important;font-size:.8rem!important;
   }
   html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-search-label{
     display:grid!important;gap:7px!important;margin:10px 0!important;

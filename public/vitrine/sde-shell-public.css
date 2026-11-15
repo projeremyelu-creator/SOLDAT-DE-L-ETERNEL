@@ -2246,3 +2246,14 @@ html body[data-sde-page="programmes"] #agenda-liste > .programme[data-sde-archiv
    min-height:44px!important;
  }
 }
+
+/* SDE CITADELLE — STABILITÉ PRE-MONTAGE DESKTOP (CLS 2026-11-15)
+   Le relevé Lighthouse montre un déplacement commun de +9px du main et du
+   verset sur /mouvement à 1280px, après le montage du header partagé.
+   Réserver les mêmes 66px avant le montage évite le saut de toute la page. */
+@media(min-width:1101px){
+  html body.sde-unifie[data-sde-page="mouvement"]:not(.sde-shell-mounted)>header.site-header:not(.sde-shell-header),
+  html body.sde-unifie[data-sde-page="mouvement"]:not(.sde-shell-mounted)>header.site-header:not(.sde-shell-header) .site-header-inner{
+    height:66px!important;min-height:66px!important;max-height:66px!important;
+  }
+}

@@ -27,3 +27,12 @@ test('Le bouton d’installation est disponible dans Plus et les données de con
  assert.match(pwa,/button\.remove\(\)/);
  assert.doesNotMatch(pwa,/SDE_QA_(ADMIN|MEMBER)_PASSWORD/);
 });
+
+
+test('Régression audit 360/390 : filtres tactiles et stabilité du header pré-montage',()=>{
+ const css=read('public/vitrine/sde-maquettes-integrales.css');
+ const shell=read('public/vitrine/sde-shell-public.css');
+ assert.match(css,/\.sdu-filters button\{[\s\S]*?min-height:46px!important/);
+ assert.ok(shell.includes('STABILITÉ PRE-MONTAGE DESKTOP'));
+ assert.ok(shell.includes('height:66px!important;min-height:66px!important;max-height:66px!important'));
+});
