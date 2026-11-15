@@ -112,7 +112,7 @@ try{
         for(const [k,v] of [['hero','newHero'],['profil','newProfile'],['agenda','newAgenda'],['actualites','newNews'],['parcours','newLearning']])
           requireOk(style[v],'ECRAN_MANQUANT',name+' : '+k);
       }
-      const views=c.mode==='membre'?['profil','prieres','formations','notifications','outils']:['membres','programmes','projets','communication','outils'];
+      const views=c.mode==='membre'?['profil','agenda','actualites','parcours','prieres','formations','notifications','outils']:['membres','programmes','projets','communication','outils'];
       for(const view of views){
         const link=page.locator('.sde-dash-side a[data-view="'+view+'"]');
         requireOk(await link.count()===1,'NAV_LIEN',name+'/'+view+' absent');
@@ -130,6 +130,30 @@ try{
         }),view);
         requireOk(result.hash==='#'+view&&result.visible.length===1&&result.visible[0]===view&&result.active==='page','NAVIGATION',name+'/'+view+' '+JSON.stringify(result));
         requireOk(result.focus==='espace-principal','FOCUS',name+'/'+view+' focus '+result.focus);
+
+        // Vérifier les quatre vues reproduites d'après les panneaux inférieurs de la
+        // maquette officielle, au-delà du seul tableau de bord d'accueil.
+        if(c.mode==='membre'&&['profil','agenda','actualites','parcours'].includes(view)){
+          const selector={
+            profil:'.sde-px-profile-cover',
+            agenda:'.sde-px-calendar-grid',
+            actualites:'.sde-px-news-feed',
+            parcours:'.sde-px-progress-ring'
+          }[view];
+          const snapshot=await page.evaluate(sel=>{
+            const target=document.querySelector(sel);
+            return {
+              visible:!!target&&target.getBoundingClientRect().width>0,
+              width:document.documentElement.scrollWidth,
+              viewport:window.innerWidth
+            };
+          },selector);
+          requireOk(snapshot.visible,'VUE_INVISIBLE',name+'/'+view+' '+JSON.stringify(snapshot));
+          requireOk(snapshot.width<=snapshot.viewport+2,'DEBORDEMENT_VUE',name+'/'+view+' '+JSON.stringify(snapshot));
+          if(c.width===390||c.width===1440){
+            await page.screenshot({path:out+'/vue-'+view+'-'+c.width+'.png',fullPage:true,animations:'disabled'});
+          }
+        }
       }
       if(c.mode==='membre'){
         requireOk(!requests.some(x=>x.path==='/api/tableau-de-bord'),'DONNEES_ADMIN',name+' : endpoint admin appelé par membre');
