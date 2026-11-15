@@ -3,6 +3,9 @@ on:
   pull_request:
     paths:
       - 'scripts/audit-prive-isole.mjs'
+      - 'scripts/build-experience.mjs'
+      - 'public/vitrine/sde-maquettes-integrales.js'
+      - 'public/vitrine/sde-maquettes-integrales.css'
       - '.github/workflows/audit-espaces-prives-isoles.yml'
       - 'public/vitrine/tableau-membre.html'
       - 'public/vitrine/tableau-administration.html'
@@ -22,6 +25,9 @@ on:
     branches: [main]
     paths:
       - 'scripts/audit-prive-isole.mjs'
+      - 'scripts/build-experience.mjs'
+      - 'public/vitrine/sde-maquettes-integrales.js'
+      - 'public/vitrine/sde-maquettes-integrales.css'
       - '.github/workflows/audit-espaces-prives-isoles.yml'
       - 'public/vitrine/tableau-membre.html'
       - 'public/vitrine/tableau-administration.html'
@@ -61,6 +67,8 @@ jobs:
           else
             npx playwright install --with-deps chromium
           fi
+      - name: Compiler les vrais gabarits et la dernière couche graphique
+        run: npm run build:experience
       - name: Auditer le membre et les trois niveaux de direction sans réseau de production
         run: node scripts/audit-prive-isole.mjs
       - name: Auditer la véritable coque /mon-espace et /administration, sessions fictives
