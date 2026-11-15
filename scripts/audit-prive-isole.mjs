@@ -108,6 +108,7 @@ try{
       requireOk(!!style.integral,'MAQUETTE_ABSENTE',name+' : aucune identité Citadelle sur le HTML compilé '+JSON.stringify(style));
       requireOk(style.loaded,'CSS_FINAL_NON_CHARGE',name);
       if(c.mode==='membre'){
+        requireOk(!(await page.locator('.sde-admin-switch').isVisible()),'ADMIN_LINK_VISIBLE',name+' : accès administration affiché à un membre');
         for(const [k,v] of [['hero','newHero'],['profil','newProfile'],['agenda','newAgenda'],['actualites','newNews'],['parcours','newLearning']])
           requireOk(style[v],'ECRAN_MANQUANT',name+' : '+k);
       }
