@@ -36,3 +36,14 @@ test('Régression audit 360/390 : filtres tactiles et stabilité du header pré-
  assert.ok(shell.includes('STABILITÉ PRE-MONTAGE DESKTOP'));
  assert.ok(shell.includes('height:66px!important;min-height:66px!important;max-height:66px!important'));
 });
+
+
+test('Mouvement : pas de bandeau TPA et de citation répétée avant le hero, mais les textes d’origine sont conservés',()=>{
+ const shell=read('public/vitrine/sde-shell-public.css');
+ const mouvement=read('public/vitrine/mouvement.html');
+ assert.match(shell,/body\.sde-unifie\[data-sde-page="mouvement"\] #sde-event-root/);
+ assert.match(shell,/body\.sde-unifie\[data-sde-page="mouvement"\] \.sde-versets-slot/);
+ assert.match(mouvement,/id="sde-event-root"/);
+ assert.match(mouvement,/Exode 33:14/);
+ assert.match(shell,/height:72px!important;min-height:72px!important;max-height:72px!important/);
+});

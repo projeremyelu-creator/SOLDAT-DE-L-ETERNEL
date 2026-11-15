@@ -2257,3 +2257,24 @@ html body[data-sde-page="programmes"] #agenda-liste > .programme[data-sde-archiv
     height:66px!important;min-height:66px!important;max-height:66px!important;
   }
 }
+
+/* Mouvement : éviter la répétition des bandeaux TPA et verset.
+   Le bloc TPA et la citation Exode 33:14 restent disponibles respectivement
+   dans /programmes et dans le contenu éditorial de /mouvement.
+   En supprimant ces deux couches pré-header de la page institutionnelle,
+   le navigateur ne décale plus le contenu au montage du shell partagé. */
+html body.sde-unifie[data-sde-page="mouvement"] #sde-event-root,
+html body.sde-unifie[data-sde-page="mouvement"] .infire-takeover,
+html body.sde-unifie[data-sde-page="mouvement"] .sde-versets-slot,
+html body.sde-unifie[data-sde-page="mouvement"] .sde-versets{
+ display:none!important;visibility:hidden!important;
+ height:0!important;min-height:0!important;max-height:0!important;
+ margin:0!important;padding:0!important;border:0!important;
+}
+/* Coque de navigation stable avant et après montage, sur ordinateur. */
+@media(min-width:1101px){
+ html body.sde-unifie[data-sde-page="mouvement"]:not(.sde-shell-mounted)>header.site-header:not(.sde-shell-header),
+ html body.sde-unifie[data-sde-page="mouvement"]:not(.sde-shell-mounted)>header.site-header:not(.sde-shell-header) .site-header-inner{
+  height:72px!important;min-height:72px!important;max-height:72px!important;
+ }
+}
