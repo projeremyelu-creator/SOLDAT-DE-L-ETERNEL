@@ -80,7 +80,8 @@ test("Responsive PC/tablette/mobile, contraste, mouvement réduit et navigation 
  const links=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(x=>x[1]);
  assert.ok(links.some(link=>/^\/vitrine\/sde-accueil-officiel-2027\.css\?v=[a-zA-Z0-9]+$/.test(link)),"charte officielle conservée");
  assert.ok(links.some(link=>/^\/vitrine\/sde-citadelle-reference-v4\.css\?v=[a-zA-Z0-9-]+$/.test(link)),"charte Citadelle V4 conservée comme base");
- assert.match(links.at(-1),/^\/vitrine\/sde-reference-maquette-2026\.css\?v=[a-zA-Z0-9-]+$/,"nouvelle maquette chargée en dernier avec versionnement automatique");
+ assert.ok(links.some(link=>/^\/vitrine\/sde-reference-maquette-2026\.css\?v=[a-zA-Z0-9-]+$/.test(link)),"charte de référence 2026 conservée en base");
+ assert.match(links.at(-1),/^\/vitrine\/sde-maquettes-integrales\.css\?v=[a-zA-Z0-9-]+$/,"la reproduction intégrale doit être la dernière couche versionnée");
  for(const required of [
   "@media(max-width:1000px)","@media(max-width:650px)","@media(max-width:800px)","@media(max-width:365px)",
   "@media(prefers-reduced-motion:reduce)","grid-template-columns:repeat(3,minmax(0,1fr))",

@@ -27,7 +27,8 @@ test('Le thème est découvert directement, sans @import en cascade après les a
  assert.ok(premium>=0&&premium<accueil);
  assert.ok(link.includes(link.find(x=>x.includes('sde-shell-public.css'))),'navigation commune conservée');
  assert.ok(link.some(x=>x.includes('sde-citadelle-reference-v4.css')),'socle 2+3 responsive conservé');
- assert.ok(link.at(-1).includes('sde-reference-maquette-2026.css'),'nouvelle maquette responsive découverte en dernier');
+ assert.ok(link.some(x=>x.includes('sde-reference-maquette-2026.css')),'charte du 14 novembre conservée comme socle');
+ assert.ok(link.at(-1).includes('sde-maquettes-integrales.css'),'la couche intégrale responsive doit être chargée en dernier');
  for(const legacy of ['sde-maquette-hero.css','sde-six-maquettes-2027.css','sde-fusion.css'])assert.ok(!link.some(x=>x.includes(legacy)),'ancien style '+legacy);
  assert.doesNotMatch(html,/<style>[^<]*@import[^<]*sde-premium-public\.css/i);
  assert.ok(link.some(x=>x.includes('sde-citadelle-celeste-2027.css')),'composants visuels antérieurs couverts par la V4');

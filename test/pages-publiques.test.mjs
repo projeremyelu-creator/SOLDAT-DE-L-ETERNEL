@@ -13,7 +13,9 @@ test('Pages publiques : structure conservée et habillage unique 2+3 sans Fusion
   assert.ok(iP>=0&&iP<iFinal,n+' : fondations de page avant la nouvelle charte');
   const iMaquette=feuilles.findIndex(f=>f.includes('sde-reference-maquette-2026.css'));
   assert.ok(iFinal>=0&&iFinal<iMaquette,n+' : Citadelle V4 conservée en dessous de la nouvelle maquette');
-  assert.equal(iMaquette,feuilles.length-1,n+' : nouvelle charte de référence finale');
+  const iIntegrale=feuilles.findIndex(f=>f.includes('sde-maquettes-integrales.css'));
+  assert.ok(iMaquette>=0&&iMaquette<iIntegrale,n+' : maquette de référence sous la finition intégrale');
+  assert.equal(iIntegrale,feuilles.length-1,n+' : nouvelle charte intégrale finale');
   for(const ancien of ['sde-fusion.css','sde-v5-complet.css','sde-maquette.css','sde-six-maquettes-2027.css'])
     assert.ok(!feuilles.some(f=>f.includes(ancien)),n+' : ancien habillage '+ancien);
   assert.match(h,new RegExp(`<body[^>]*class="[^"]*sde-pages-premium[^"]*"[^>]*data-fam="${fam}"`),n+' : famille '+fam);

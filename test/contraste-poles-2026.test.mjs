@@ -21,7 +21,8 @@ test('Cinq pôles : une même carte ivoire et une correction de contraste ciblé
   const links=[...doc.querySelectorAll('head link[rel=stylesheet]')].map(x=>x.getAttribute('href'));
   assert.equal(links.filter(x=>x.includes('sde-fusion.css')).length,0,name+' : style Fusion retiré');
   assert.ok(links.some(x=>x.includes('sde-citadelle-reference-v4.css')),name+' : base 2+3 conservée');
-  assert.ok(links.at(-1).includes('sde-reference-maquette-2026.css'),name+' : maquette finale');
+  assert.ok(links.some(x=>x.includes('sde-reference-maquette-2026.css')),name+' : charte 2026 conservée');
+  assert.ok(links.at(-1).includes('sde-maquettes-integrales.css'),name+' : maquette intégrale finale');
   assert.ok(links.some(x=>x.includes('sde-shell-public.css')),name+' : navigation commune conservée');
  }
 });
