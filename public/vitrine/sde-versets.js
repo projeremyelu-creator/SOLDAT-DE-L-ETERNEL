@@ -46,6 +46,9 @@
   /* Méditation discrète : un seul verset à la fois, sans piste défilante ni DOM dupliqué.
      Les versets courts sont montrés en entier, un nouveau toutes les 7 secondes. */
   function installerBande() {
+    // La page Programmes et la page Mouvement contiennent déjà leurs repères bibliques.
+    // N'ajouter aucun bandeau différé qui déplacerait la maquette après peinture.
+    if (["programmes","mouvement"].includes(document.body?.dataset.sdePage)) return;
     if (document.querySelector(".sde-versets") || /^\/(mon-espace|administration|connexion)/.test(location.pathname)) return;
     const ancre = document.querySelector(".site-header") || document.querySelector("header.entete");
     if (!ancre) return;

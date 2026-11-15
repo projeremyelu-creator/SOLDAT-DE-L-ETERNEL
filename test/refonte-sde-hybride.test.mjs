@@ -117,3 +117,15 @@ test("Navigation mobile privée : cinq raccourcis et respect de l'authentificati
   assert.match(html,/sde-premium-dashboards\.css\?v=[a-zA-Z0-9-]+/);
  }
 });
+
+
+test("CLS : Programmes et Mouvement ne doublent pas le verset et gardent l'intro stable",()=>{
+ const css=read("public/vitrine/sde-declinaisons-fonctionnelles-2027.css");
+ const js=read("public/vitrine/sde-versets.js");
+ assert.ok(css.includes("SDE-2027-CAPTURE-CLS-UNIFIEE-20261115"));
+ assert.ok(css.includes('data-sde-page="mouvement"],[data-sde-page="programmes"'));
+ assert.ok(css.includes("min-height:0!important;height:auto!important"));
+ assert.ok(css.includes("height:72px!important;min-height:72px!important"));
+ assert.ok(js.includes('["programmes","mouvement"].includes(document.body?.dataset.sdePage)'));
+ assert.ok(js.includes("installerCompteur()"),"Conserver les mesures de visites autorisées");
+});
