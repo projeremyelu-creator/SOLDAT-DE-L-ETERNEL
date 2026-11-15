@@ -1809,6 +1809,12 @@ async function traiter(req, env, ctx) {
       // Ne pas altérer /mon-espace ni /administration (routes protégées).
       if (p === "/nous-rejoindre" && (req.method === "GET" || req.method === "HEAD"))
         return new Response(null, {status:301,headers:{location:url.origin+"/contact#rejoindre", "cache-control":"public, max-age=300"}});
+      // L'ancien lien des coachs doit rester authentifié, sans page publique.
+      if (p === "/academy-enseignants" && (req.method === "GET" || req.method === "HEAD"))
+        return new Response(null, {status:302, headers:{
+          location:url.origin+"/mon-espace/enseignants",
+          "cache-control":"private, no-store","x-robots-tag":"noindex, nofollow"
+        }});
       // Alias lisible pour l'onglet « Plus » : une adresse canonique unique.
       if (p === "/plus" && (req.method === "GET" || req.method === "HEAD"))
         return new Response(null, {status:301, headers:{location:url.origin+"/rubriques"+url.search, "cache-control":"public, max-age=300"}});

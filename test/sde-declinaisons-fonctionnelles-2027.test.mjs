@@ -13,7 +13,7 @@ test("Les déclinaisons fonctionnelles sont chargées après le thème de réfé
 });
 test("Academy publique : accès à de vraies rubriques et non à des données fictives",()=>{
  const html=read("public/vitrine/academy.html");
- for(const s of ['/academy-programme-24#cours','/academy-enseignants','/mon-espace/academy','/verifier-attestation'])assert.ok(html.includes('href="'+s+'"'));
+ for(const s of ['/academy-programme-24#cours','/mon-espace/enseignants','/mon-espace/academy','/verifier-attestation'])assert.ok(html.includes('href="'+s+'"'));
  assert.ok(html.includes('sde-2027-campus-tiles'));
  assert.ok(html.includes('Aucune statistique de démonstration'));
  assert.ok(html.includes('id="form-inscription-cours"'));
@@ -27,4 +27,15 @@ test("Espaces privés : même route, mêmes identifiants métiers, nouveaux lien
  assert.ok(admin.includes('sde-2027-workspace-admin'));
  assert.ok(member.includes('sde-2027-workspace-member'));
  assert.ok(member.includes('data-view="formations"'));
+});
+
+
+test("Studio Academy : aucun accès public direct et alias historique protégé",()=>{
+ const worker=read("src/worker.js");
+ const page=read("public/vitrine/academy.html");
+ assert.ok(worker.includes('p === "/academy-enseignants"'));
+ assert.ok(worker.includes('location:url.origin+"/mon-espace/enseignants"'));
+ assert.ok(worker.includes('"/mon-espace/enseignants","/administration/enseignants"'));
+ assert.ok(page.includes('href="/mon-espace/enseignants"'));
+ assert.ok(!page.includes('href="/academy-enseignants"'));
 });
