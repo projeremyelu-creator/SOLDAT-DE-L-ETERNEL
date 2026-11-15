@@ -121,6 +121,7 @@ try{
           if(await bottom.count()===1)await bottom.click({timeout:4500});
           else await page.evaluate(v=>{location.hash='#'+v;},view);
         }else await link.click({timeout:4500});
+        await page.waitForFunction(section=>!document.querySelector('[data-section="'+section+'"]')?.hidden,view,{timeout:5000});
         const result=await page.evaluate(section=>({
           hash:location.hash,visible:[...document.querySelectorAll('[data-section]')].filter(x=>!x.hidden).map(x=>x.dataset.section),
           active:document.querySelector('.sde-dash-side a[data-view="'+section+'"]')?.getAttribute('aria-current'),
@@ -138,8 +139,8 @@ try{
         await page.waitForFunction(()=>document.querySelector('#priere-feedback')?.dataset.state==='success');
         requireOk(requests.some(x=>x.path==='/api/priere'&&x.method==='POST'),'FORMULAIRE',name+' : simulation prière absente');
       } else {
-        const finances=await page.locator('.sde-dash-side a[data-view="finances"]').isVisible();
-        const pastoral=await page.locator('.sde-dash-side a[data-view="pastoral"]').isVisible();
+        const finances=await page.locator('.sde-dash-side a[data-view="finances"]').evaluate(x=>!x.hidden);
+        const pastoral=await page.locator('.sde-dash-side a[data-view="pastoral"]').evaluate(x=>!x.hidden);
         requireOk(finances===(c.niveau>=2)&&pastoral===(c.niveau>=3),'ROLES',name+' : finances '+finances+' pastoral '+pastoral);
         if(c.niveau<2){
           await page.evaluate(()=>{location.hash='#finances'});
