@@ -27,7 +27,7 @@ test("La capture officielle remplace les anciens panneaux sans doublon",()=>{
 
 test("Accueil Citadelle : deux actions, texte biblique, film et TPA 2026 vérifiés",()=>{
  const d=page(),hero=d.querySelector(".ap-hero");
-  assert.match(hero.querySelector("h1").textContent,/UN PEUPLE ALIGNÉ\s+POUR L’IMPACT\s+DU ROYAUME/i);
+  assert.match(hero.querySelector("h1").textContent,/UN PEUPLE ALIGNÉ\s*POUR L’IMPACT\s*DU ROYAUME/i);
   assert.match(hero.querySelector(".sde-vision-wordmark").textContent,/SOLDATS DE L’ÉTERNEL/i);
   assert.equal(d.querySelectorAll(".sde-pixel-showcase").length,1,"La couverture reste dans le HTML initial");
  assert.match(hero.querySelector(".sde-citadel-verse").textContent,/Exode 33:14/);
