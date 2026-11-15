@@ -57,7 +57,13 @@ jobs:
           node-version: '22.23.4'
       - name: Installer Chromium localement
         run: |
-          npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.0
+          # Installer d'abord exactement les dépendances applicatives verrouillées.
+          npm ci --ignore-scripts
+          # Isoler Playwright pour éviter une résolution/transformation du graphe
+          # npm de production lors de la recette navigateur.
+          mkdir -p /tmp/sde-playwright
+          npm install --prefix /tmp/sde-playwright --no-save --package-lock=false --ignore-scripts playwright@1.56.0
+          ln -s /tmp/sde-playwright/node_modules/playwright node_modules/playwright
           # Ubuntu 24.04 inclut Google Chrome. Éviter les dépôts APT lors des
           # indisponibilités DNS ; Playwright garde son installation classique
           # sur une image qui ne dispose pas de Chrome.
