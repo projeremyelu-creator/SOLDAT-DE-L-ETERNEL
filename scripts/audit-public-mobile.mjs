@@ -289,6 +289,7 @@ try{
       });
      })(),
      heroBgMobile:document.querySelector('.ap-hero')?getComputedStyle(document.querySelector('.ap-hero .sde-pixel-city-layer')||document.querySelector('.ap-hero .ap-hero-bg')||document.querySelector('.ap-hero')).backgroundImage:null,
+    heroInlineSource:document.querySelector('.ap-hero .sde-pixel-city-layer image')?.getAttribute('href')||null,
       legacyHeroPanelsVisible:[...document.querySelectorAll('.ap-hero .sde-ref-hub-links,.ap-hero .sde-ref-program-strip')].filter(el=>{const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'&&el.getBoundingClientRect().height>5}).map(el=>el.className),
      posterImageSource:document.querySelector('.ap-poster-media img')?.currentSrc||null,
      poleCardsContrast:(()=>{
@@ -803,7 +804,7 @@ try{
     const insuffisants=ratios.filter(x=>x.ratio===null||x.ratio<4.5);
     if(ratios.length<5||insuffisants.length)
      issue(c.name,'contraste des cartes de l’accueil inférieur à 4,5:1 : '+JSON.stringify(insuffisants.slice(0,4)),true);
-    if(c.width<=860&&(!String(row.heroBgMobile||'').includes('citadelle-celeste-sde.png')||String(row.heroBgMobile||'').includes('hero-sde-1280.webp')))
+    if(c.width<=860&&(!(String(row.heroBgMobile||'').includes('citadelle-celeste-sde.png')||String(row.heroInlineSource||'').includes('citadelle-celeste-sde.png'))||String(row.heroBgMobile||'').includes('hero-sde-1280.webp')))
      issue(c.name,'la référence Citadelle PNG originale doit être visible sans charger une ancienne photographie d’album : '+row.heroBgMobile,true);
     if(row.legacyHeroPanelsVisible?.length)issue(c.name,'Anciens panneaux encore superposés au hero Citadelle : '+row.legacyHeroPanelsVisible.join(','),true);
     if(c.width<=860&&row.posterImageSource!==null)

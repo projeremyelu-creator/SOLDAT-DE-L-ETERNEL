@@ -27,8 +27,7 @@
   window.addEventListener("beforeinstallprompt", event => {
     event.preventDefault();
     installEvent = event;
-    const main = document.querySelector(".sde-initiative-lead .enveloppe, .sde-intro, #parcours-sde .sde-parcours-inner");
-    if (!main || document.getElementById("sde-install-public")) return;
+    if (document.getElementById("sde-install-public")) return;
     const button = document.createElement("button");
     button.type = "button";
     button.id = "sde-install-public";
@@ -41,7 +40,19 @@
       installEvent = null;
       button.remove();
     });
-    main.appendChild(button);
+    // Préserver le bouton PWA sans casser la couverture de la page.
+    // Navigation SDE: le bouton prend place dans le tiroir « Plus ».
+    const insert = () => {
+      const drawer = document.querySelector(".sde-shell-quick");
+      const fallback = document.querySelector(".sde-initiative-lead .enveloppe, .sde-intro, #parcours-sde .sde-parcours-inner");
+      const target = drawer || fallback;
+      if (target && !button.isConnected) {
+        target.appendChild(button);
+        button.classList.toggle("sde-install-in-drawer", Boolean(drawer));
+      }
+    };
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", insert, {once:true});
+    else insert();
   });
   window.addEventListener("appinstalled", () => {
     installEvent = null;

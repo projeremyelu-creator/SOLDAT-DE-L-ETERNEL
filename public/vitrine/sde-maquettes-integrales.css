@@ -1292,3 +1292,185 @@ html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#con
   color:#8d2332!important;
   -webkit-text-fill-color:#8d2332!important;
 }
+
+
+
+/* SDE PIXEL RECETTE — 15 NOVEMBRE 2026
+   Ajustements ciblés relevés sur les captures 390px fournies par le propriétaire.
+   Conserve les trois maquettes PNG originales, comptes et modules métiers.
+   Citadelle: recadrage non destructif de la photo dans un SVG inline.
+   Les objets d'interface déjà dessinés sur le PNG restent hors du viewBox. */
+html[data-sde-citadel-integral] body.sde-pixel-citadel main#contenu section#accueil.ap-hero .sde-pixel-city-layer{
+  position:absolute!important;inset:0!important;z-index:1!important;
+  display:block!important;width:100%!important;height:100%!important;
+  overflow:hidden!important;opacity:1!important;visibility:visible!important;
+  background:none!important;background-image:none!important;
+  transform:none!important;filter:none!important;pointer-events:none!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-citadel main#contenu section#accueil.ap-hero .sde-pixel-city-layer image{
+  opacity:1!important;visibility:visible!important;
+}
+/* L'accueil ne doit pas réintroduire la capture entière sous le recadrage. */
+html[data-sde-citadel-integral] body.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-hero-bg{
+  display:none!important;visibility:hidden!important;background:none!important;
+}
+@media(max-width:720px){
+  html[data-sde-citadel-integral] body.sde-pixel-citadel main#contenu section#accueil.ap-hero{
+    min-height:520px!important;padding:0 14px 55px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-hero-inner{
+    min-height:470px!important;justify-content:center!important;padding-top:10px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-hero-copy{
+    width:100%!important;max-width:340px!important;margin:0 auto!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel main#contenu section#accueil.ap-hero h1#titre-accueil{
+    font-size:clamp(1.8rem,7.2vw,2.4rem)!important;line-height:1.09!important;
+    letter-spacing:.009em!important;max-width:335px!important;
+    margin:0 auto 13px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel main#contenu section#accueil.ap-hero .sde-citadel-tagline{
+    font-size:clamp(.78rem,2.9vw,.88rem)!important;
+    line-height:1.4!important;max-width:320px!important;margin:0 auto 17px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-actions{
+    display:flex!important;flex-direction:column!important;
+    align-items:stretch!important;justify-content:center!important;
+    width:min(78%,292px)!important;margin:0 auto!important;gap:9px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel main#contenu section#accueil.ap-hero .ap-actions .ap-btn{
+    box-sizing:border-box!important;width:100%!important;min-height:43px!important;
+    padding:9px 12px!important;border-radius:8px!important;
+    text-align:center!important;font-size:.77rem!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel main#contenu .sde-pixel-showcase{
+    margin:-24px auto 0!important;
+  }
+}
+/* Sous-pages de la Citadelle : les actions secondaires ne doivent plus
+   occuper la couverture, mais restent accessibles via leurs liens. */
+html[data-sde-citadel-integral] body.sde-shell-mounted.sde-subpage[data-sde-page="programmes"] main#contenu>.sde-intro,
+html[data-sde-citadel-integral] body.sde-shell-mounted.sde-subpage[data-sde-page="mouvement"] main#contenu>.sde-intro{
+  min-height:0!important;height:auto!important;
+  padding:32px clamp(18px,4.5vw,48px) 29px!important;
+  border-radius:0 0 20px 20px!important;
+  display:flex!important;flex-direction:column!important;
+  align-items:center!important;justify-content:center!important;
+  gap:10px!important;text-align:center!important;
+}
+html[data-sde-citadel-integral] body.sde-shell-mounted.sde-subpage[data-sde-page="programmes"] main#contenu>.sde-intro h1,
+html[data-sde-citadel-integral] body.sde-shell-mounted.sde-subpage[data-sde-page="mouvement"] main#contenu>.sde-intro h1{
+  margin:0!important;font-size:clamp(1.65rem,4vw,3rem)!important;
+  line-height:1.15!important;max-width:900px!important;
+}
+html[data-sde-citadel-integral] body.sde-shell-mounted.sde-subpage main#contenu>.sde-intro .sde-page-actions{
+  display:flex!important;flex-wrap:wrap!important;gap:9px!important;
+  align-items:center!important;justify-content:center!important;
+  margin:8px auto 0!important;width:auto!important;
+}
+html[data-sde-citadel-integral] body.sde-shell-mounted.sde-subpage main#contenu>.sde-intro .sde-page-actions a{
+  display:inline-flex!important;flex:0 1 auto!important;max-width:100%!important;
+  width:auto!important;min-height:44px!important;
+  padding:9px 13px!important;margin:0!important;
+  font-size:.77rem!important;line-height:1.25!important;
+  border-radius:8px!important;white-space:normal!important;
+}
+html[data-sde-citadel-integral] body.sde-shell-mounted[data-sde-page="programmes"] main#contenu #agenda .tete-section{
+  min-height:0!important;max-height:none!important;
+  padding:23px 19px!important;
+}
+html[data-sde-citadel-integral] body.sde-shell-mounted[data-sde-page="programmes"] main#contenu #agenda .tete-section h2{
+  font-size:clamp(1.4rem,4.2vw,2.25rem)!important;
+}
+html[data-sde-citadel-integral] body.sde-shell-mounted[data-sde-page="programmes"] main#contenu .pg-tabs{
+  max-width:100%!important;overflow-x:auto!important;overscroll-behavior-x:contain!important;
+}
+/* Le contrôle PWA reste disponible dans le tiroir Plus, jamais au milieu du hero. */
+html body.sde-shell-mounted .sde-shell-drawer #sde-install-public{
+  display:flex!important;justify-content:center!important;align-items:center!important;
+  width:100%!important;min-height:44px!important;
+  padding:9px 12px!important;margin:5px 0!important;
+  border-radius:9px!important;white-space:normal!important;
+  font-size:.85rem!important;line-height:1.25!important;
+}
+html body.sde-shell-mounted .sde-intro #sde-install-public{
+  width:auto!important;max-width:210px!important;
+  min-height:40px!important;padding:8px 11px!important;
+  margin:7px auto 0!important;font-size:.75rem!important;
+}
+/* Huit accès SDE : supprimer les immenses panneaux vides et conserver
+   les photographies d'albums dans leur propre module. */
+@media(max-width:720px){
+  html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-grid{
+    grid-template-columns:1fr!important;gap:11px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-grid .sdu-card{
+    display:grid!important;grid-template-columns:minmax(100px,34%) minmax(0,1fr)!important;
+    flex-direction:row!important;align-items:stretch!important;
+    min-height:156px!important;height:auto!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-grid .sdu-card .sdu-art{
+    width:100%!important;height:100%!important;min-height:156px!important;
+    max-height:220px!important;background-size:cover!important;
+    background-position:center!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-grid .sdu-card .sdu-card-copy{
+    display:flex!important;flex-direction:column!important;min-width:0!important;
+    padding:12px 13px!important;justify-content:center!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-grid .sdu-card :is(.sdu-title,.sdu-card-link){
+    font-size:.87rem!important;line-height:1.28!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-grid .sdu-card .sdu-card-copy p{
+    font-size:.79rem!important;line-height:1.38!important;
+    margin:4px 0 8px!important;flex:0 0 auto!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-grid .sdu-card .sdu-card-symbol{
+    font-size:1.05rem!important;margin:0 0 3px!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-filters{
+    display:flex!important;flex-wrap:nowrap!important;
+    gap:6px!important;overflow-x:auto!important;scrollbar-width:thin!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-filters button{
+    white-space:nowrap!important;min-height:43px!important;
+    padding:8px 11px!important;font-size:.8rem!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-search-label{
+    display:grid!important;gap:7px!important;margin:10px 0!important;
+  }
+  html[data-sde-citadel-integral] body.sde-pixel-citadel .sde-universe .sdu-search-label input{
+    box-sizing:border-box!important;width:100%!important;min-width:0!important;
+    min-height:45px!important;font-size:16px!important;
+    color:#f9f3e8!important;background:#18243b!important;
+  }
+}
+/* Notes légales Temple Vivant : l'audit mobile lisait une couleur sombre
+   sur un fond bleu hérité. Les paragraphes reçoivent leur vrai fond ivoire. */
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-form .sde-privacy-note{
+  display:block!important;padding:12px 14px!important;
+  background:#fffaf7!important;color:#302438!important;
+  -webkit-text-fill-color:#302438!important;
+  border:1px solid #d7c9d5!important;border-radius:9px!important;
+}
+html[data-sde-citadel-integral] body.sde-pixel-temple.sde-shell-mounted main#contenu .sde-initiative-form .sde-privacy-note a{
+  color:#482b65!important;-webkit-text-fill-color:#482b65!important;
+  text-decoration:underline!important;
+}
+/* Carte internationale : éviter la découpe du titre dans sa carte */
+html[data-sde-citadel-integral] body.sde-shell-mounted[data-sde-page="mouvement"] main#contenu #presence .tete-section h2{
+  margin-inline:auto!important;max-width:100%!important;
+  font-size:clamp(1.5rem,4vw,2.4rem)!important;
+}
+html[data-sde-citadel-integral] body.sde-shell-mounted[data-sde-page="mouvement"] main#contenu #presence .carte-monde{
+  box-sizing:border-box!important;width:100%!important;min-width:0!important;
+  overflow:hidden!important;border-radius:14px!important;
+}
+html[data-sde-citadel-integral] body.sde-shell-mounted[data-sde-page="mouvement"] main#contenu #presence .carte-monde svg{
+  display:block!important;max-width:100%!important;height:auto!important;
+}
+@media(max-width:720px){
+  html body.sde-shell-mounted .sde-shell-bottom{z-index:240!important}
+  html body.sde-shell-mounted{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))!important}
+  html body.sde-shell-mounted main#contenu{padding-bottom:22px!important}
+}
