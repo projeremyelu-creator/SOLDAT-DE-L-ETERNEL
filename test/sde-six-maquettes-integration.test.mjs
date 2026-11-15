@@ -12,10 +12,11 @@ test("Public 01 · Citadelle : vision 2027, Exode 33:14 et deux accès réels",(
  try{
   const hero=doc.querySelector(".ap-hero");
   assert.ok(hero);
-  assert.match(hero.querySelector("h1")?.textContent||"",/SOLDATS DE L’ÉTERNEL/i);
+  assert.match(hero.querySelector("h1")?.textContent||"",/UN PEUPLE ALIGNÉ[\s\S]*DU ROYAUME/i);
+  assert.match(hero.querySelector(".sde-vision-wordmark")?.textContent||"",/SOLDATS DE L’ÉTERNEL/i);
   assert.match(hero.querySelector(".sde-citadel-verse")?.textContent||"",/Exode 33:14/);
   const actions=[...hero.querySelectorAll(".sde-citadel-actions a")];
-  assert.deepEqual(actions.map(a=>a.getAttribute("href")),["/contact#rejoindre","/mouvement"]);
+  assert.deepEqual(actions.map(a=>a.getAttribute("href")),["/mouvement","/mouvement#film"]);
   assert.ok(hero.querySelector(".sde-tpa-hero-card"),"le rendez-vous TPA n'est pas supprimé");
   assert.match(read("public/vitrine/sde-six-maquettes-2027.css"),/prefers-reduced-motion/);
  }finally{dom.window.close();}
