@@ -320,3 +320,14 @@ test("les écrans privés injectés utilisent une vraie session et réagissent a
  assert.notEqual(d.querySelector("#sde-px-month-name")?.textContent,before,"Le calendrier change réellement de mois.");
  dom.window.close();
 });
+
+
+test("le bandeau des six missions réserve sa place avant le premier rendu tablette",()=>{
+ const html=read("public/vitrine/portail.html");
+ const js=read("public/vitrine/sde-maquettes-integrales.js");
+ const css=read("public/vitrine/sde-maquettes-integrales.css");
+ assert.ok(html.includes('<section class="sde-px-mission-hero"'),"Le bandeau doit être statique dans le HTML, pas inséré tardivement");
+ assert.ok(html.includes("Rassembler · Former · Réveiller · Restaurer · Équiper · Envoyer"),"Les six étapes sont présentes et accessibles");
+ assert.ok(js.includes('if(!$(".sde-px-missionline"))'),"Le JS doit rester idempotent et ne pas décaler le contenu");
+ assert.ok(css.includes("Réserve de hauteur au premier rendu tablette"),"Le header doit réserver sa hauteur avant le paint");
+});
