@@ -17,7 +17,7 @@ test("Navigation commune : même en-tête et menu sur accueil, contact et soutie
    assert.equal(c.doc.querySelectorAll(".sde-shell-header").length,1,name);
    assert.equal(c.doc.querySelectorAll(".sde-shell-footer").length,1,name);
    assert.equal(c.doc.querySelectorAll(".sde-shell-bottom").length,1,name);
-   assert.deepEqual([...c.doc.querySelectorAll(".sde-shell-mega > a")].map(x=>x.textContent),["Accueil","Vision","Agenda","Ressources","Rejoindre","Soutenir"]);
+   assert.deepEqual([...c.doc.querySelectorAll(".sde-shell-mega > a")].map(x=>x.textContent),["Accueil","Le Mouvement","Programmes","Nos 5 Pôles","Missions","Ressources","Soutenir"]);
    assert.ok(c.doc.querySelector('.sde-shell-mega > a[href="/soutenir"]'),name);
    assert.equal(c.doc.querySelectorAll(".sde-shell-drawer-group").length,5,name+" : cinq catégories dans le tiroir Plus");
    assert.ok(c.doc.querySelector('.sde-shell-head-actions>a[href="/portail"]'),name);
