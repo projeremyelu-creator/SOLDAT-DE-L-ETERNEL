@@ -1,0 +1,453 @@
+/* SDE DIGITAL — REPRODUCTION FONCTIONNELLE DES 7 ÉCRANS (14-15 NOV. 2026).
+   Couche de finition après les CSS historiques : aucun contrôle d'accès modifié.
+   1 Site public PC  2 Public mobile  3 Portail PC  4 Portail mobile
+   5 Profil membre  6 Calendrier  7 Actualités  8 Parcours personnel.
+   Toutes les données internes proviennent de la session existante (pas de KPIs simulés).
+*/
+:root {
+ --px-night:#070b2c;
+ --px-midnight:#0b1341;
+ --px-blue:#151f65;
+ --px-purple:#5e22bf;
+ --px-royal:#3d1b98;
+ --px-gold:#f4bf4e;
+ --px-gold-light:#ffe18c;
+ --px-ivory:#fcf2df;
+ --px-card:#111a4b;
+ --px-line:rgba(229,202,149,.38);
+ --px-white:#fff8ed;
+ --px-soft:#cfd4ee;
+ --px-title:"Cinzel",Georgia,serif;
+ --px-body:"Plus Jakarta Sans",system-ui,sans-serif;
+}
+/* PUBLIC PC — grille 2 colonnes sur fond dramatique.
+   Le sujet photographique est conservé via la médiathèque officielle du dépôt. */
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero {
+ background-image:linear-gradient(90deg,rgba(4,9,32,.82),rgba(8,12,44,.25) 52%,rgba(8,9,34,.78)),url("/vitrine/photos/hero-sde-1280.webp")!important;
+ background-position:50% center,center center!important;
+ min-height:590px!important;
+ box-shadow:inset 0 -15px 40px rgba(9,6,31,.5)!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner {
+ grid-template-columns:minmax(0,1fr) minmax(240px,285px)!important;
+ gap:clamp(12px,2vw,32px)!important;max-width:1330px!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-copy {
+ text-align:left!important;max-width:620px!important;min-width:0!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-copy h1#titre-accueil {
+ font:700 clamp(3.1rem,5.2vw,5.4rem)/1.03 var(--px-title)!important;
+ text-shadow:0 4px 21px rgba(4,8,31,.78)!important;max-width:570px!important;
+ letter-spacing:-.02em!important;color:#fff8e7!important;
+ -webkit-text-fill-color:#fff8e7!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-citadel-verse {
+ border-left:4px solid #f3c253!important;background:rgba(9,13,44,.35)!important;
+ max-width:460px!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-hub-links>a {
+ min-height:74px!important;
+ background:linear-gradient(125deg,rgba(12,15,48,.96),rgba(33,19,68,.91))!important;
+ border:1px solid rgba(247,214,148,.5)!important;
+ box-shadow:inset 0 1px rgba(255,255,255,.12),0 10px 25px rgba(1,2,20,.45)!important;
+ border-radius:13px!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-hub-links>a:hover {
+ transform:translateY(-3px)!important;
+ border-color:var(--px-gold)!important;
+ background:linear-gradient(110deg,#242061,#391b64)!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-icon {
+ font-size:1.65rem!important;color:var(--px-gold-light)!important;flex:none!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip {
+ background:linear-gradient(100deg,#250961,#231052 45%,#111b5b)!important;
+ box-shadow:0 17px 34px rgba(6,5,28,.52)!important;
+ overflow:hidden!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip>a:hover {
+ background:rgba(126,53,184,.22)!important;
+}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip :is(strong,.sde-ref-program-icon) {
+ color:#ffe497!important;-webkit-text-fill-color:#ffe497!important;
+}
+.sde-px-mission-hero{
+ min-height:125px;
+ padding:56px 16px 26px;
+ background:linear-gradient(180deg,#181047,#f2e9e6);
+ color:#15143b;text-align:center;
+}
+.sde-px-missionline{display:flex;gap:12px;align-items:center;justify-content:center;margin-bottom:8px;color:#16153c;font:800 .77rem var(--px-body)}
+.sde-px-rule{width:min(10vw,82px);height:1px;background:linear-gradient(90deg,transparent,#eab95e,transparent)}
+.sde-px-mission-hero>strong{display:block;font:700 clamp(.95rem,2vw,1.55rem)/1.35 var(--px-title);color:#141234;letter-spacing:-.03em}
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-btn-gold,
+html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-btn-ghost {
+ box-shadow:0 9px 28px #04062170!important;
+}
+/* ESPACE PRIVÉ : header, panneau latéral et surface sombre fidèles à la capture. */
+html[data-sde-citadel-integral] body.sde-tableau{
+ color:var(--px-white)!important;
+ background:radial-gradient(ellipse at 80% 9%,#39135d 0%,#161344 36%,#060d2a 76%)!important;
+ font-family:var(--px-body)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-header{
+ background:linear-gradient(115deg,#081134,#101c53 72%,#121340)!important;
+ box-shadow:0 2px 23px rgba(3,3,22,.35)!important;min-height:74px!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-header-inner{min-height:75px!important}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-logo strong{font-family:var(--px-title)!important;color:#f7d98c!important}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-shell{
+ max-width:1550px!important;grid-template-columns:245px minmax(0,1fr)!important;
+ background:transparent!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side{
+ background:linear-gradient(180deg,#0c174d,#0a1243 65%,#050b2b)!important;
+ min-width:0!important;
+ border-right:1px solid rgba(207,201,255,.2)!important;
+ padding:24px 12px!important;
+ box-shadow:inset -13px 0 26px rgba(1,6,27,.22)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side-caption{
+ text-align:center!important;
+ padding:68px 5px 14px!important;
+ margin:0 0 12px!important;
+ position:relative!important;
+ font:700 1.08rem/1.5 var(--px-body)!important;
+ color:#f7d580!important;-webkit-text-fill-color:#f7d580!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side-caption::before{
+ content:""!important;position:absolute!important;
+ width:66px;height:66px;left:calc(50% - 33px);top:-6px;
+ background:url("/vitrine/logo-sde.webp") center/contain no-repeat;
+ filter:drop-shadow(0 4px 12px rgba(246,197,93,.33));
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side nav{
+ display:flex!important;flex-direction:column!important;gap:5px!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side nav a{
+ min-height:42px!important;
+ display:flex!important;align-items:center!important;
+ padding:10px 12px!important;
+ border:0!important;border-radius:9px!important;
+ font:700 .83rem/1.25 var(--px-body)!important;
+ color:#f1eaf7!important;-webkit-text-fill-color:#f1eaf7!important;
+ text-decoration:none!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side nav a:hover{
+ background:rgba(120,52,178,.32)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side nav a[aria-current="page"]{
+ background:linear-gradient(105deg,#3420a1,#7c22e2)!important;
+ border:1px solid #b782ef!important;box-shadow:0 6px 17px #3e168a73!important;
+ color:white!important;-webkit-text-fill-color:white!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-signout{
+ background:linear-gradient(100deg,#38104c,#711b54)!important;border:1px solid #ad487d!important;
+ color:#ffbad4!important;border-radius:10px!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-main{
+ min-width:0!important;padding:22px clamp(16px,2.7vw,40px) 62px!important;
+ color:var(--px-white)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-heading{
+ padding:6px 0 24px!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-heading h1{
+ color:#fff2d4!important;-webkit-text-fill-color:#fff2d4!important;font:700 clamp(1.4rem,2.5vw,2.3rem)/1.2 var(--px-title)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-heading p{color:#e8d7f0!important;-webkit-text-fill-color:#e8d7f0!important}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-role{
+ border-radius:99px!important;background:#522398!important;color:#ffedb3!important;
+ -webkit-text-fill-color:#ffedb3!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-alert[data-state="success"]{
+ opacity:.85!important;color:#c4decf!important;
+}
+/* Vue du membre : hero paysage avec bandeau, trois indicateurs existants plus un module. */
+html[data-sde-citadel-integral] body.sde-tableau .sde-px-member-cover{
+ position:relative;isolation:isolate;
+ display:flex;min-height:182px;gap:5px;
+ align-items:center;justify-content:center;flex-direction:column;text-align:center;
+ border:1px solid rgba(246,210,146,.48);border-radius:16px;overflow:hidden;
+ background:linear-gradient(90deg,rgba(3,12,40,.68),rgba(5,8,37,.22)),url("/vitrine/photos/intercession.jpg") 65% 40%/cover no-repeat;
+ box-shadow:0 10px 29px #03082070;
+ margin:2px 0 15px;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-px-member-cover::before{
+ content:"";position:absolute;inset:0;z-index:-1;
+ background:linear-gradient(90deg,rgba(7,16,51,.9),rgba(8,14,53,.39) 70%);
+}
+.sde-px-cover-kicker{font:800 .7rem/1.5 var(--px-body);letter-spacing:.34em;color:#f3dfcc}
+.sde-px-member-cover h2{
+ margin:4px 0!important;font:700 clamp(1.55rem,2.8vw,2.55rem)/1.16 var(--px-title)!important;
+ color:#fbe1a1!important;text-shadow:0 2px 15px #07102f!important;
+}
+.sde-px-member-cover p{margin:0!important;color:#f7d18a!important;font-size:.94rem!important}
+.sde-px-welcome{display:flex;gap:9px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:2px 0 13px}
+.sde-px-welcome-kicker{font:700 .68rem var(--px-body);letter-spacing:.12em;color:#c2b5db}
+.sde-px-greeting{font:700 .9rem var(--px-body);color:#f8ecdf}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-metrics{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;
+ margin:0 0 15px!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-metrics article{
+ border:1px solid rgba(197,175,250,.32)!important;border-radius:14px!important;
+ min-width:0!important;min-height:102px!important;padding:14px 12px!important;
+ background:linear-gradient(132deg,#25146d,#121b51)!important;
+ box-shadow:0 8px 18px rgba(0,1,20,.25)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-metrics article:nth-child(2){
+ background:linear-gradient(132deg,#382448,#091d3b)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-metrics article:nth-child(3){
+ background:linear-gradient(132deg,#36104f,#1a104d)!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-metrics article strong{
+ display:block!important;font:800 clamp(1.4rem,2.6vw,2.2rem)/1.12 var(--px-body)!important;
+ color:#fff5e7!important;-webkit-text-fill-color:#fff5e7!important;margin:7px 0!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-metrics article span{color:#eadcd5!important;-webkit-text-fill-color:#eadcd5!important;font-size:.74rem!important}
+html[data-sde-citadel-integral] body.sde-tableau .sde-dash-metrics article small{color:#c0b7da!important;-webkit-text-fill-color:#c0b7da!important;font-size:.67rem!important}
+.sde-px-dashboard-row{display:grid;grid-template-columns:1fr 1.12fr;gap:13px;align-items:stretch;margin-bottom:20px}
+.sde-px-quick,.sde-px-deadlines{
+ min-width:0;padding:14px;border:1px solid rgba(169,154,249,.3);border-radius:15px;
+ background:linear-gradient(145deg,#121b4d,#0b1742);
+ box-shadow:0 10px 25px #02082154;
+}
+.sde-px-quick>h2,.sde-px-deadlines h2{
+ margin:0 0 12px!important;color:#fff7e7!important;
+ font:800 clamp(.92rem,1.4vw,1.16rem)/1.3 var(--px-body)!important;
+}
+.sde-px-quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.sde-px-action{
+ display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:85px;
+ gap:4px;text-align:center;padding:11px 7px;min-width:0;text-decoration:none;
+ background:linear-gradient(150deg,#2f236b,#151a54);
+ border:1px solid rgba(192,169,253,.35);border-radius:12px;
+ color:#fff2e9;font:700 .73rem/1.25 var(--px-body);
+}
+.sde-px-action:hover,.sde-px-action:focus-visible{background:linear-gradient(145deg,#4e2693,#242477);transform:translateY(-2px)}
+.sde-px-action-icon{font-size:1.65rem;color:#f7d774}
+.sde-px-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sde-px-panel-head h2{margin-bottom:11px!important}
+.sde-px-inline-link{font:600 .74rem var(--px-body);color:#f7e9d2;text-decoration:none;white-space:nowrap}
+.sde-px-deadline-list{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.sde-px-deadline{display:flex;align-items:center;gap:11px;min-width:0;border-bottom:1px solid rgba(255,255,255,.12);padding:4px 0 10px}
+.sde-px-date-square,.sde-px-event-badge{
+ display:flex;flex:none;width:50px;min-height:52px;justify-content:center;align-items:center;flex-direction:column;
+ border-radius:10px;background:linear-gradient(130deg,#5932c8,#2d1468);color:#fff3ff;
+ box-shadow:0 5px 12px #05062b7c;
+}
+.sde-px-date-square strong,.sde-px-event-badge strong{font:800 1.37rem var(--px-body);line-height:1.1}
+.sde-px-date-square small,.sde-px-event-badge small{font:700 .65rem var(--px-body)}
+.sde-px-date-copy{min-width:0;display:grid;gap:4px}
+.sde-px-date-copy strong{color:#fff7e9;font:.82rem/1.3 var(--px-body)}
+.sde-px-date-copy small{color:#cacde2;font:.69rem/1.4 var(--px-body)}
+.sde-px-empty{margin:12px 0!important;color:#c6bfd6!important;-webkit-text-fill-color:#c6bfd6!important;font-size:.89rem!important}
+.sde-px-legacy{border:1px solid rgba(221,180,123,.3);border-radius:13px;margin:18px 0;padding:6px 12px;background:rgba(21,25,63,.5)}
+.sde-px-legacy summary{cursor:pointer;font:700 .83rem/1.4 var(--px-body);padding:11px;color:#ebdaae}
+/* PROFIL MEMBRE — photo dorée, bannière violette, menu ivoire. */
+.sde-px-profile-cover{
+ width:min(100%,720px);margin:0 auto 18px;padding:12px 14px 16px;
+ position:relative;overflow:hidden;
+ background:linear-gradient(150deg,rgba(10,13,54,.83),rgba(34,5,76,.78)),url("/vitrine/illus/citadelle-celeste-cinema.avif") center/cover;
+ border:1px solid rgba(240,200,131,.46);border-radius:17px;
+ color:white;text-align:center;box-shadow:0 20px 42px #02051d61;
+}
+.sde-px-profile-top{display:flex;align-items:center;gap:17px;margin-bottom:10px;color:#fff;font:700 1rem var(--px-body)}
+.sde-px-back{color:#fff3d6;text-decoration:none;font:700 1.4rem var(--px-body);min-width:44px;min-height:44px;display:inline-flex;align-items:center}
+.sde-px-avatar{
+ display:block;width:120px;height:120px;border-radius:50%;object-fit:cover;
+ background:#102048;outline:3px solid #ffd366;outline-offset:3px;
+ box-shadow:0 12px 25px #04021c8a;margin:10px auto 16px;
+}
+.sde-px-profile-name{margin:5px auto!important;max-width:550px;color:#fff!important;font:800 clamp(1.12rem,2.4vw,1.65rem)/1.4 var(--px-body)!important}
+.sde-px-role{display:table;margin:10px auto 8px;background:linear-gradient(100deg,#3114a0,#812bdb);border:1px solid #a45eea;border-radius:10px;padding:5px 21px;font:700 .83rem var(--px-body)}
+.sde-px-profile-meta{margin:5px auto;color:#f3e4ec;font:600 .83rem var(--px-body)}
+.sde-px-active{display:table;margin:8px auto 14px;background:#0d774e;padding:5px 14px;border-radius:8px;color:white;font:700 .76rem var(--px-body)}
+.sde-px-profile-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.sde-px-profile-facts>div{background:linear-gradient(135deg,#202b59,#131e46);padding:12px 5px;border-radius:11px;border:1px solid #586389;min-width:0}
+.sde-px-profile-facts small{display:block;color:#e3dbe6;font:.7rem var(--px-body)}
+.sde-px-profile-facts strong{display:block;color:#fff;font:800 .9rem/1.4 var(--px-body);overflow-wrap:anywhere}
+.sde-px-profile-menu{display:grid;border-radius:12px;overflow:hidden;margin-top:11px}
+.sde-px-profile-menu-item{
+ display:grid;grid-template-columns:36px 1fr 24px;align-items:center;gap:12px;
+ min-height:54px;padding:12px 14px;text-decoration:none;text-align:left;
+ background:linear-gradient(110deg,#fff,#e8eafb);color:#111633;border-bottom:1px solid #c5c8d7;
+}
+.sde-px-profile-menu-item:hover{background:#f1e4ff}
+.sde-px-profile-menu-item>span:first-child{font-size:1.3rem}
+.sde-px-profile-menu-item strong{font:800 .9rem var(--px-body)}
+.sde-px-profile-menu-item>span:last-child{font:800 1.5rem var(--px-body);text-align:right}
+/* ÉCRANS AGENDA ET ACTUALITÉS — calendrier et fil filtrable. */
+.sde-px-screen{
+ width:min(100%,880px);margin:0 auto 22px;padding:16px;
+ background:linear-gradient(145deg,#0c143d,#090f30);
+ border:1px solid rgba(232,204,143,.45);border-radius:17px;
+ box-shadow:0 16px 34px #02051d54;min-height:450px;
+}
+.sde-px-screen[hidden]{display:none!important}
+.sde-px-screen-head{display:flex;align-items:center;gap:13px;margin-bottom:14px}
+.sde-px-screen-head h2{font:800 clamp(1.1rem,2vw,1.5rem)/1.2 var(--px-body)!important;color:#fff7e9!important;margin:0!important}
+.sde-px-monthbar{display:flex;justify-content:space-between;align-items:center;gap:16px;border-radius:13px;background:linear-gradient(110deg,#18214d,#0d153b);padding:6px 10px;margin-bottom:14px;color:#fff}
+.sde-px-monthbar strong{font:800 1rem var(--px-body)}
+.sde-px-monthbtn{min-width:44px;min-height:44px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font:700 1.65rem var(--px-body);cursor:pointer}
+.sde-px-monthbtn:hover{background:#42328c}
+.sde-px-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-bottom:18px}
+.sde-px-daylabel{text-align:center;color:#dedaf3;font:700 .73rem var(--px-body);padding:9px 0}
+.sde-px-emptyday{min-height:40px}
+.sde-px-day{min-height:40px;display:flex;align-items:center;justify-content:center;border:0;border-radius:9px;background:transparent;color:#fff;font:700 .83rem var(--px-body);cursor:pointer}
+.sde-px-day:hover,.sde-px-day:focus-visible{background:#30236d}
+.sde-px-day.has-event{background:#4924a8;color:#fff0a8}
+.sde-px-day.is-today{outline:2px solid var(--px-gold);outline-offset:-2px}
+.sde-px-day.is-selected{background:var(--px-gold);color:#171039}
+.sde-px-event-list{display:grid;gap:9px}
+.sde-px-calendar-event{display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,#f8f6ff,#dde1f2);color:#12183a;border-radius:11px;padding:10px 13px;min-height:70px}
+.sde-px-event-copy{min-width:0}
+.sde-px-event-copy h3{font:800 .9rem var(--px-body)!important;color:#0b133a!important;margin:0!important}
+.sde-px-event-copy p{font:.8rem var(--px-body)!important;color:#33395b!important;margin:3px 0 0!important}
+.sde-px-aux-link{display:inline-flex;align-items:center;color:#e3c479;text-decoration:underline;text-underline-offset:3px;font:700 .77rem/1.5 var(--px-body);min-height:32px}
+.sde-px-news-tabs{display:flex;gap:9px;overflow-x:auto;margin:5px 0 14px;padding-bottom:4px}
+.sde-px-news-filter{flex:none;min-height:37px;border-radius:99px;border:1px solid #5b588b;background:#252454;color:#f3eaff;padding:7px 16px;font:700 .76rem var(--px-body);cursor:pointer}
+.sde-px-news-filter[aria-pressed="true"]{background:#fff;color:#111632;border-color:#fff}
+.sde-px-news-feed{display:grid;gap:14px}
+.sde-px-news-card{overflow:hidden;border:1px solid #7e70ba;border-radius:14px;background:linear-gradient(120deg,#0d1849,#151044)}
+.sde-px-news-image{
+ min-height:145px;display:flex;align-items:flex-end;padding:12px;
+ background:linear-gradient(180deg,rgba(7,13,42,.03),rgba(10,10,45,.5)),url("/vitrine/illus/infire-banniere.webp") center/cover;
+}
+.sde-px-news-image.is-evenement{background-image:linear-gradient(180deg,rgba(7,13,42,.03),rgba(10,10,45,.5)),url("/vitrine/photos/communion-vignette.webp")}
+.sde-px-news-tag{display:inline-flex;padding:4px 10px;border-radius:99px;background:#511ea9;color:#ffeed4;font:700 .7rem var(--px-body)}
+.sde-px-news-content{padding:14px 18px;color:#fff}
+.sde-px-news-content h3{color:#fff2db!important;font:800 1.02rem var(--px-body)!important;margin:0 0 8px!important}
+.sde-px-news-content p{font:.86rem/1.5 var(--px-body)!important;color:#e2daef!important}
+.sde-px-news-content small{color:#d4cde6}
+.sde-px-news-foot{display:flex;justify-content:space-between;align-items:center;gap:9px;margin-top:14px;border-top:1px solid #6f609466;padding-top:8px}
+.sde-px-news-foot time{font:700 .73rem var(--px-body);color:#d8d0e6}
+/* TABLEAU PERSONNEL — grand anneau, statistiques, prochaine étape. */
+.sde-px-progress{
+ border:1px solid #6755a0;border-radius:16px;overflow:hidden;
+ padding:17px;background:radial-gradient(ellipse at 80% 5%,#321569,#101746 60%);
+ margin:16px 0;
+}
+.sde-px-kicker{font:700 .68rem var(--px-body);color:#ebbf83;letter-spacing:.17em;margin-bottom:5px!important}
+.sde-px-progress>h2{font:800 clamp(1.2rem,2vw,1.6rem) var(--px-body)!important;margin:0 0 12px!important;color:#fff0dd!important}
+.sde-px-progress-panel{
+ display:flex;align-items:center;gap:18px;padding:16px 18px;
+ border:1px solid #9282cf;border-radius:14px;
+ background:linear-gradient(120deg,#1c1b62,#2c1b6c,#171e54);
+}
+.sde-px-progress-ring{
+ --pct:0;
+ width:112px;aspect-ratio:1;flex:none;
+ background:conic-gradient(#f3c23c calc(var(--pct) * 1%),#e2eefc calc(var(--pct) * 1%) calc(var(--pct) * 1% + 6%),rgba(216,199,149,.26) 0);
+ border-radius:50%;display:grid;place-items:center;position:relative;
+}
+.sde-px-progress-ring::before{content:"";position:absolute;inset:12px;border-radius:50%;background:#11164c}
+.sde-px-progress-ring>strong{position:relative;color:#fff;font:800 1.35rem var(--px-body)}
+.sde-px-progress-copy{flex:1;min-width:0}
+.sde-px-progress-copy h3{color:#f8f0e8!important;font:800 1.03rem var(--px-body)!important;margin:0 0 7px!important}
+.sde-px-progress-label{color:#fff!important;font:.8rem var(--px-body)!important;margin:0 0 12px!important}
+.sde-px-progress-bar{width:100%;max-width:330px;height:10px;overflow:hidden;border-radius:10px;accent-color:#f6cf68}
+.sde-px-progress-continue{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:9px 13px;background:linear-gradient(180deg,#ffe58d,#eeaf2d);border-radius:11px;color:#13163d;font:800 .75rem var(--px-body);text-decoration:none}
+.sde-px-learning-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-top:14px}
+.sde-px-learning-stat{display:flex;align-items:center;flex-direction:column;justify-content:center;min-height:112px;text-align:center;gap:3px;border:1px solid #8a714c;background:linear-gradient(135deg,#40342e,#1c214b);border-radius:12px;padding:10px}
+.sde-px-stat-icon{font-size:1.6rem;color:#fce08e}
+.sde-px-learning-stat strong{font:800 1.3rem var(--px-body);color:white}
+.sde-px-learning-stat small{font:600 .72rem var(--px-body);color:#eee0e1}
+.sde-px-next{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;background:linear-gradient(120deg,#fff,#e9eaf9);border-radius:12px;padding:14px 17px;margin-top:14px;color:#101332}
+.sde-px-next h3{grid-column:1/-1;color:#111632!important;font:800 1.01rem var(--px-body)!important;margin:0!important}
+.sde-px-next-label{color:#1f2452!important;font:700 .79rem var(--px-body)!important;margin:0!important}
+.sde-px-play{min-width:42px;min-height:42px;border-radius:50%;background:#14185a;color:white;text-decoration:none;display:grid;place-items:center}
+/* ADMINISTRATION : préservation des compteurs réels et des contrôles de rôle. */
+html[data-sde-citadel-integral] body.sde-tableau[data-dashboard="administration"] .sde-dash-main::before{
+ background:linear-gradient(90deg,#081231d9,#1b114880),url("/vitrine/illus/citadelle-celeste-cinema.avif") center/cover!important;
+ border:1px solid #9e8751;border-radius:17px;
+}
+.sde-px-admin-kicker{font:800 .68rem var(--px-body);color:#e8c070;letter-spacing:.2em}
+html[data-sde-citadel-integral] body.sde-tableau :is(.sde-panel,.sdu-member-universe){
+ color:#f3ebf3!important;background:linear-gradient(145deg,#151a53,#1a1245)!important;
+ border:1px solid rgba(237,202,142,.35)!important;border-radius:15px!important;
+}
+html[data-sde-citadel-integral] body.sde-tableau .sde-panel :is(h2,h3,p,small){color:#f4eaf2!important;-webkit-text-fill-color:#f4eaf2!important}
+html[data-sde-citadel-integral] body.sde-tableau .sde-panel a{color:#ffe29b}
+html[data-sde-citadel-integral] body.sde-tableau .sde-panel :is(input,textarea,select){background:#fff;color:#17203d}
+html[data-sde-citadel-integral] body.sde-tableau :is(.sde-dash-items li,.sde-profile>div){color:#1b2446!important}
+/* Le portail de gestion historique conserve son vrai routeur et ses droits. */
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-command,
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-member-shortcuts{
+ border-radius:16px!important;background:linear-gradient(140deg,#11194a,#1d114b)!important;
+ border:1px solid rgba(246,205,127,.35)!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-headline{
+ background:linear-gradient(90deg,#081132db,#110d3b44),url("/vitrine/photos/intercession-vignette.webp") 70% center/cover!important;
+}
+html[data-sde-citadel-integral] body.sde-direct #main .sde-ref-cards>*{
+ background:linear-gradient(135deg,#1b2161,#2b134c)!important;border:1px solid #71649a!important;
+}
+html[data-sde-citadel-integral] body.sde-direct-member #main .sde-ref-member-shortcuts-grid>*{
+ border-radius:12px!important;background:linear-gradient(145deg,#241e68,#121b50)!important;
+}
+/* MOBILE / TABLETTE : titres lisibles, barre basse non superposée, 0 débordement. */
+@media(max-width:1100px){
+ .sde-px-dashboard-row{grid-template-columns:1fr}
+ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-shell{grid-template-columns:215px minmax(0,1fr)!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner{grid-template-columns:minmax(0,1fr) 230px!important}
+}
+@media(max-width:760px){
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero{
+   min-height:0!important;padding:32px 14px 124px!important;
+   background-image:linear-gradient(90deg,#070f30e8,#0e154d54),url("/vitrine/photos/hero-sde-640.webp")!important;
+   background-size:cover!important;background-position:57% center!important;
+ }
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-inner{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:20px!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-copy{text-align:left!important;max-width:100%!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-copy h1#titre-accueil{
+   font-size:clamp(2.2rem,10vw,3.75rem)!important;max-width:540px!important;
+ }
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-hub-links{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-program-strip{
+   grid-template-columns:repeat(2,minmax(0,1fr))!important;
+   margin:15px auto -80px!important;
+ }
+ .sde-px-mission-hero{padding-top:53px}
+ .sde-px-mission-hero>strong{font-size:clamp(.9rem,3.4vw,1.3rem)}
+ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-shell{display:block!important}
+ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side{
+   position:static!important;width:100%!important;display:block!important;padding:9px 11px!important;
+ }
+ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side-caption{
+   padding:4px 8px 4px 54px!important;margin-bottom:2px!important;text-align:left!important;min-height:44px!important;display:flex;align-items:center!important;
+ }
+ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side-caption::before{
+   width:38px;height:38px;left:7px;top:5px;
+ }
+ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-side nav{display:none!important}
+ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-main{padding:12px 12px 110px!important}
+ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-header-inner{min-height:62px!important}
+ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .sde-px-dashboard-row{grid-template-columns:1fr;gap:12px}
+ .sde-px-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sde-px-progress-panel{flex-wrap:wrap}
+ .sde-px-learning-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sde-px-progress-ring{width:98px}
+ .sde-px-screen{padding:12px}
+}
+@media(max-width:410px){
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .ap-hero-copy h1#titre-accueil{font-size:clamp(2.1rem,9vw,2.65rem)!important}
+ html[data-sde-citadel-integral] body.sde-2027-reference .ap-hero .sde-ref-hub-links>a{padding:9px!important;gap:6px!important}
+ html[data-sde-citadel-integral] body.sde-tableau .sde-dash-metrics article{min-height:92px!important;padding:11px 9px!important}
+ .sde-px-member-cover h2{font-size:1.4rem!important}
+ .sde-px-member-cover p{font-size:.75rem!important}
+ .sde-px-profile-facts{gap:5px}
+ .sde-px-profile-facts>div{padding:8px 3px}
+ .sde-px-profile-facts strong{font-size:.72rem}
+ .sde-px-progress-ring{width:84px}
+ .sde-px-progress-continue{width:100%}
+ .sde-px-calendar-grid{gap:2px}
+ .sde-px-day{min-height:38px}
+}
+@media(prefers-reduced-motion:reduce){
+ html[data-sde-citadel-integral] body :is(.sde-px-action,.sde-px-day,.sde-ref-hub-links>a){animation:none!important;transition:none!important;transform:none!important}
+}
+/* Fin de la couche de référence intégrale. */
