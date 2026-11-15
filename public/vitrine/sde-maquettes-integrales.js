@@ -57,7 +57,12 @@
    box.append(band,steps);
    hero.insertAdjacentElement("afterend",box);
    const heading=$("#titre-accueil",hero);
-   if(heading&&!heading.dataset.pxTitle)heading.dataset.pxTitle="2026";
+   if(heading&&!heading.dataset.pxTitle){
+     heading.dataset.pxTitle="2026";
+     const first=el("span","sde-px-title-first","SOLDATS");
+     const second=el("span","sde-px-title-gold","DE L’ÉTERNEL");
+     heading.replaceChildren(first,document.createTextNode(" "),second);
+   }
  }
  function makeQuickGrid(){
    const wrap=el("section","sde-px-quick");
