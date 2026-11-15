@@ -244,8 +244,16 @@
    row.append(makeQuickGrid(),makeEventPanel());
    const existing=$(".sdu-member-universe",section)||$(".sde-dash-two",section);
    existing?existing.before(row):section.append(row);
-   const progress=makeProgress();
-   row.after(progress);
+   const sectionProgress=el("section","sde-px-screen sde-px-parcours");
+   sectionProgress.dataset.section="parcours";sectionProgress.hidden=true;
+   sectionProgress.setAttribute("aria-label","Mon tableau de bord personnel");
+   const progressHeading=el("div","sde-px-screen-head");
+   progressHeading.append(link("←","#accueil","sde-px-back"),el("h2","","Mon Tableau de Bord"));
+   sectionProgress.append(progressHeading,makeProgress());
+   section.after(sectionProgress);
+   const preview=el("a","sde-px-parcours-preview","📊  Voir mon tableau de bord personnel et ma progression →");
+   preview.href="#parcours";preview.dataset.view="parcours";
+   row.after(preview);
    for(const selector of [".sdu-member-universe",".sde-dash-two"]){
      const old=$(selector,section);
      if(old&&!old.closest("details")){
@@ -337,6 +345,7 @@
    if(!main||$("#sde-px-calendar-grid"))return;
    subNav(side,"agenda","Événements & Agenda","▦");
    subNav(side,"actualites","Fil d’actualités","☷");
+   subNav(side,"parcours","Mon tableau de bord","▤");
    makeMemberCover();makeProfile();
    main.append(makeCalendar(),makeNews());
    // Après connexion, seul le compte authentifié peut alimenter ces nouveaux écrans.
