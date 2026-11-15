@@ -261,6 +261,7 @@ test("les écrans du 14 novembre sont compilés en dernier et consomment les API
  const build=read("scripts/build-experience.mjs");
  const css=read("public/vitrine/sde-maquettes-integrales.css");
  const js=read("public/vitrine/sde-maquettes-integrales.js");
+ assert.doesNotThrow(()=>new Function(js),"La syntaxe JS de la maquette doit être valide");
  assert.ok(build.includes("integralStylePath+'?v='+revision"),"CSS intégral absent du build");
  assert.ok(build.includes("integralScriptPath+'?v='+revision"),"JS intégral absent du build");
  for(const fragment of ["sde-px-member-cover","sde-px-profile-cover","sde-px-calendar-grid","sde-px-news-card","sde-px-progress-ring","@media(max-width:760px)"]) {
