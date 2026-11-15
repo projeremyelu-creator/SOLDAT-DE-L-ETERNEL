@@ -145,6 +145,8 @@
    const complete=Number(data?.modulesFaits);
    const rate=typeof data?.pourcentage==="number"?data.pourcentage:
      total>0?Math.round(complete/total*100):null;
+   const modulesMetric=$("#m-modules-valides");
+   if(modulesMetric)modulesMetric.textContent=Number.isFinite(complete)&&complete>=0?String(complete):"—";
    const ring=$("#sde-px-ring"),meter=$("#sde-px-meter"),l=$(".sde-px-progress-label");
    if(ring){ring.style.setProperty("--pct",rate===null?0:Math.min(100,Math.max(0,rate)));$("strong",ring).textContent=rate===null?"—":rate+"%";}
    if(meter)meter.value=rate===null?0:Math.min(100,Math.max(0,rate));
