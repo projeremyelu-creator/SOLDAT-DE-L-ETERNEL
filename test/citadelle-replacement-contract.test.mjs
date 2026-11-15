@@ -1,4 +1,5 @@
 import test from "node:test";
+import {JSDOM} from "jsdom";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -286,4 +287,36 @@ test("les écrans du 14 novembre sont compilés en dernier et consomment les API
  }
  assert.equal(/(?:membres actifs|apprenants|sujets d’intercession)\s*[:=]\s*\d+/i.test(js),false,"Les faux KPI sont interdits.");
  assert.ok(js.includes('if(!auth?.connecte)return'),"Les données privées ne se chargent qu'après vérification de session.");
+});
+
+
+test("les écrans privés injectés utilisent une vraie session et réagissent au calendrier", async () => {
+ const dom=new JSDOM(read("public/vitrine/tableau-membre.html"),{
+  url:"https://app.mouvement-sde.org/mon-espace",runScripts:"outside-only"
+ });
+ const w=dom.window;
+ w.fetch=async url=>{
+  const path=String(url);
+  const data=path==="/api/moi"?{connecte:true,niveau:0,nom:"Soldat de test"}:
+   path==="/api/mon-espace"?{membre:{nom:"Exemple",prenoms:"A",matricule:"SDE-TEST",fonction:"Soldat",statut:"Actif",pole:"REV"}}:
+   path==="/api/mon-parcours-academy"?{formations:1,modulesFaits:4,modulesTotal:8,pourcentage:50,parcours:[]}:
+   path==="/api/actualites"?{annonces:[{type:"annonce",titre:"Communiqué officiel",contenu:"Information disponible",date:"2026-11-14"}],
+    evenements:[{type:"evenement",titre:"TPA",date:"2026-12-18",heure:"20h00"}]}:
+   path==="/api/mon-historique"?{presences:[{etat:"P"}]}:{};
+  return {ok:true,json:async()=>data};
+ };
+ w.eval(read("public/vitrine/sde-maquettes-integrales.js"));
+ w.document.dispatchEvent(new w.Event("DOMContentLoaded"));
+ await new Promise(resolve=>setTimeout(resolve,35));
+ const d=w.document;
+ assert.ok(d.querySelector('[data-section="agenda"] .sde-px-calendar-grid'));
+ assert.ok(d.querySelector('[data-section="actualites"] .sde-px-news-filter'));
+ assert.ok(d.querySelector('[data-section="parcours"] .sde-px-progress-ring'));
+ assert.equal(d.querySelector("#sde-px-ring strong")?.textContent,"50%");
+ assert.equal(d.querySelector("#sde-px-profile-name")?.textContent,"A Exemple");
+ assert.ok(d.querySelectorAll(".sde-px-news-card").length>0);
+ const before=d.querySelector("#sde-px-month-name")?.textContent;
+ d.querySelector('[data-month="1"]')?.click();
+ assert.notEqual(d.querySelector("#sde-px-month-name")?.textContent,before,"Le calendrier change réellement de mois.");
+ dom.window.close();
 });
