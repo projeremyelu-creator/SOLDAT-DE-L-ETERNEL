@@ -71,13 +71,36 @@ function init(items){
  heading.append(node("p","",page==="/mediatheque"?"Parcourez les ressources rendues publiques par les responsables du mouvement.":"Les nouveaux médias validés par l'administration apparaissent automatiquement ici."));
  content.append(heading);
  const grid=node("div","sde-public-media-grid");
- for(const m of list.slice(0,page==="/mediatheque"?100:24))grid.append(card(m));
+ const shown=list.slice(0,page==="/mediatheque"?100:24);
+ for(const m of shown)grid.append(card(m));
  content.append(grid);
  if(page!=="/mediatheque"){
   const all=node("a","sde-public-media-all","Voir toute la médiathèque SDE");
   all.href="/mediatheque";content.append(all);
  }
  section.append(content);
+ // L'album IN FIRE possède trois onglets annuels : les publications du Studio
+ // restent dans l'édition correspondante, sans se mélanger aux photos 2024/2025.
+ if(page==="/album-infire"){
+  const cards=[...grid.children];
+  const tabs=[...document.querySelectorAll(".tab[data-year]")];
+  const update=()=>{
+   const year=String(tabs.find(t=>t.getAttribute("aria-selected")==="true")?.dataset.year||"2025");
+   let count=0;
+   shown.forEach((media,i)=>{
+    const declared=((media.titre||"")+" "+(media.description||"")).match(/\b20(?:24|25|26)\b/g)||[];
+    const match=declared.includes(year);
+    cards[i].style.display=match?"":"none";
+    if(match)count++;
+   });
+   section.style.display=count?"":"none";
+   section.setAttribute("aria-hidden",String(count===0));
+   const h=section.querySelector("#publications-ajoutees-titre");
+   if(h)h.textContent="Médias IN FIRE "+year+" · Publications";
+  };
+  tabs.forEach(tab=>tab.addEventListener("click",()=>queueMicrotask(update)));
+  update();
+ }
  if(page==="/mediatheque"){
   const target=document.getElementById("sde-published-content")||container;
   target.append(section);
