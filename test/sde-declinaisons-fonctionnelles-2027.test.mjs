@@ -1,0 +1,29 @@
+import {test} from "node:test";
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+const read=x=>readFileSync(x,"utf8");
+
+test("Les déclinaisons fonctionnelles sont chargées après le thème de référence",()=>{
+ const s=read("scripts/build-experience.mjs");
+ assert.ok(s.includes("sde-declinaisons-fonctionnelles-2027.css"));
+ assert.ok(s.indexOf("const declinationsStylePath")>s.indexOf("const integralScriptPath"));
+ const css=read("public/vitrine/sde-declinaisons-fonctionnelles-2027.css");
+ for(const t of ["sde-2027-campus-hero","sde-2027-workspace-admin","sde-2027-workspace-member","@media(max-width:700px)"])assert.ok(css.includes(t),t);
+});
+test("Academy publique : accès à de vraies rubriques et non à des données fictives",()=>{
+ const html=read("public/vitrine/academy.html");
+ for(const s of ['/academy-programme-24#cours','/academy-enseignants','/mon-espace/academy','/verifier-attestation'])assert.ok(html.includes('href="'+s+'"'));
+ assert.ok(html.includes('sde-2027-campus-tiles'));
+ assert.ok(html.includes('Aucune statistique de démonstration'));
+ assert.ok(html.includes('id="form-inscription-cours"'));
+ assert.ok(html.includes('id="formulaire"'));
+});
+test("Espaces privés : même route, mêmes identifiants métiers, nouveaux liens de navigation",()=>{
+ const admin=read("public/vitrine/tableau-administration.html");
+ const member=read("public/vitrine/tableau-membre.html");
+ for(const el of ['id="a-membres"','id="a-evenements"','id="liste-agenda"','data-section="finances"'])assert.ok(admin.includes(el),el);
+ for(const el of ['id="m-matricule"','id="m-modules-valides"','id="profil-form"','id="priere-form"'])assert.ok(member.includes(el),el);
+ assert.ok(admin.includes('sde-2027-workspace-admin'));
+ assert.ok(member.includes('sde-2027-workspace-member'));
+ assert.ok(member.includes('data-view="formations"'));
+});

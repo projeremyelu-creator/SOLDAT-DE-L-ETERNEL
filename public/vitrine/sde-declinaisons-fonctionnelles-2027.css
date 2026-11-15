@@ -1,0 +1,91 @@
+/* SDE Digital — Déclinaisons fonctionnelles 2027
+   Citadelle Céleste · Temple Vivant · Command Center
+   Dernière couche : respecte les modules, API, images et rôles existants.
+   Les données ne sont pas reproduites depuis les maquettes : elles restent réelles. */
+:root{--sde27-nuit:#08192b;--sde27-bleu:#13283c;--sde27-ivoire:#fff8ed;--sde27-or:#e8be69;--sde27-violet:#432651;--sde27-vert:#173e36}
+html body.sde-v5-academy-public .sde-2027-campus{isolation:isolate;max-width:1320px;margin:0 auto 22px;color:var(--sde27-ivoire);font-family:"Plus Jakarta Sans",system-ui,sans-serif}
+.sde-2027-campus *,.sde-2027-workspace *{box-sizing:border-box}
+.sde-2027-campus-hero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.18fr) minmax(225px,.82fr);align-items:center;min-height:340px;gap:18px;padding:clamp(24px,4vw,48px);background:radial-gradient(circle at 78% 26%,#55355b55,transparent 50%),linear-gradient(110deg,#0a2035 8%,#13273c 53%,#3b2443);border:1px solid #c89d5a85;border-radius:20px 20px 0 0;box-shadow:0 20px 40px #090d2340}
+.sde-2027-campus-copy{position:relative;z-index:2;min-width:0}
+.sde-2027-campus-kicker{display:block;color:#f4d18b;font:800 .69rem "Plus Jakarta Sans",sans-serif;letter-spacing:.13em;line-height:1.5;text-transform:uppercase}
+html body.sde-v5-academy-public .sde-2027-campus h1{font:600 clamp(2.35rem,5.2vw,4.2rem)/1.09 Cinzel,Georgia,serif;color:#fff4df!important;-webkit-text-fill-color:#fff4df!important;margin:11px 0 5px!important}
+html body.sde-v5-academy-public .sde-2027-campus h1 em{font-style:normal;color:#f4ce77!important;-webkit-text-fill-color:#f4ce77!important}
+.sde-2027-campus-motto{color:#f3cb78!important;font:italic 1.18rem Georgia,serif!important;margin:0 0 18px!important}
+.sde-2027-campus-desc{max-width:560px;color:#f4ecdf!important;font-size:.94rem!important;line-height:1.7!important;margin:0 0 20px!important}
+.sde-2027-campus-art{align-self:stretch;position:relative;min-height:240px;display:flex;align-items:center;justify-content:center}
+.sde-2027-campus-art:before{content:"";position:absolute;inset:2%;border-radius:50%;background:radial-gradient(circle,#deb76a52 0%,#8e5fa536 36%,transparent 69%);filter:blur(10px)}
+.sde-2027-campus-art img{position:relative;display:block;width:100%;max-width:410px;max-height:320px;height:100%;object-fit:contain;filter:drop-shadow(0 18px 20px #0008)}
+.sde-2027-campus-actions{display:flex;flex-wrap:wrap;gap:10px}
+.sde-2027-button{display:inline-flex;min-height:46px;max-width:100%;align-items:center;justify-content:center;gap:14px;padding:10px 17px;text-align:center;text-decoration:none!important;font:800 .81rem "Plus Jakarta Sans",sans-serif!important;border-radius:10px;line-height:1.25!important;transition:transform .16s}
+.sde-2027-button-gold{background:linear-gradient(135deg,#ffe39e,#e3ad4d)!important;color:#101b2b!important;-webkit-text-fill-color:#101b2b!important;border:1px solid #ffdb87}
+.sde-2027-button-outline{background:#091b2b99!important;color:#fff9e9!important;-webkit-text-fill-color:#fff9e9!important;border:1px solid #e6c88b8c}
+.sde-2027-button:is(:hover,:focus-visible){transform:translateY(-2px)}
+.sde-2027-campus-tiles{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;background:#c7baba82;border:1px solid #e5d9ca;border-radius:0 0 16px 16px;overflow:hidden;box-shadow:0 12px 26px #141a2a32}
+.sde-2027-campus-tiles a{display:flex;min-width:0;min-height:142px;align-items:center;justify-content:center;flex-direction:column;gap:6px;padding:14px 9px;text-align:center;background:linear-gradient(145deg,#fffbf7,#eee7e6)!important;color:#231d37!important;-webkit-text-fill-color:#231d37!important;text-decoration:none!important}
+.sde-2027-campus-tiles a>span{font-size:1.55rem;color:#a57723!important;-webkit-text-fill-color:#a57723!important}
+.sde-2027-campus-tiles a strong{font-size:.8rem;line-height:1.27}
+.sde-2027-campus-tiles a small{font-size:.67rem;line-height:1.4;color:#52465b!important;-webkit-text-fill-color:#52465b!important}
+.sde-2027-campus-tiles a:hover{background:#fff0cc!important}
+.sde-2027-campus-notice{font-size:.76rem!important;line-height:1.5!important;color:#e8d9bd!important;margin:10px 0!important}
+html body.sde-v5-academy-public .sa-premium-preview:has(+ *){margin-top:10px}
+html body.sde-v5-academy-public:has(.sde-2027-campus) .sa-premium-preview .sa-premium-head{display:none!important}
+html body.sde-v5-academy-public:has(.sde-2027-campus) .sa-premium-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+html body.sde-v5-academy-public:has(.sde-2027-campus) .sa-premium-card{border-radius:14px!important;border:1px solid #d7bb78!important;background:linear-gradient(150deg,#15283c,#382443)!important;box-shadow:0 10px 24px #0a142530}
+html body.sde-v5-academy-public:has(.sde-2027-campus) .sa-premium-card summary{min-height:66px!important;color:#f2ddac!important}
+html body.sde-v5-academy-public:has(.sde-2027-campus) .sa-premium-card .sa-premium-card-body p{color:#f1e6db!important}
+html body.sde-v5-academy-public:has(.sde-2027-campus) .niveaux{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+html body.sde-v5-academy-public:has(.sde-2027-campus) .niveau-carte{min-width:0!important;border-radius:15px!important;border-color:#c2a062!important}
+html body.sde-v5-academy-public:has(.sde-2027-campus) :is(.sa-premium-card,.niveau-carte,.form-carte){overflow-wrap:anywhere}
+html body.sde-tableau .sde-2027-workspace{margin:0 0 18px;border:1px solid #bf9b665c;border-radius:16px;overflow:hidden;background:linear-gradient(125deg,#122f40,#102438 52%,#241c38);color:#fff6e7;box-shadow:0 14px 35px #030c204d}
+html body.sde-tableau .sde-2027-workspace-hero{padding:21px clamp(15px,2.5vw,29px);position:relative;overflow:hidden}
+html body.sde-tableau .sde-2027-workspace-hero:after{content:"";position:absolute;right:0;top:0;width:42%;height:100%;background:radial-gradient(ellipse at 80% 60%,#b08b5e44,transparent 70%);pointer-events:none}
+html body.sde-tableau .sde-2027-workspace h2{font:600 clamp(1.55rem,3vw,2.45rem) Cinzel,Georgia,serif!important;color:#fff0ce!important;-webkit-text-fill-color:#fff0ce!important;margin:8px 0 9px!important}
+html body.sde-tableau .sde-2027-workspace-hero p{font-size:.86rem!important;line-height:1.5!important;margin:0 0 15px!important;color:#e8e6dd!important;-webkit-text-fill-color:#e8e6dd!important}
+html body.sde-tableau .sde-2027-workspace-links{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;padding:11px;background:#071523b8}
+html body.sde-tableau .sde-2027-workspace-links a{min-width:0;min-height:80px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;padding:10px 6px;background:linear-gradient(145deg,#143b36,#102b3a)!important;color:#f6e8c9!important;-webkit-text-fill-color:#f6e8c9!important;border:1px solid #c8ac7659;border-radius:11px;text-decoration:none!important;text-align:center}
+html body.sde-tableau .sde-2027-workspace-links a:nth-child(even){background:linear-gradient(135deg,#183149,#10253a)!important}
+html body.sde-tableau .sde-2027-workspace-links a>span{font-size:1.45rem;line-height:1;color:#efd080!important;-webkit-text-fill-color:#efd080!important}
+html body.sde-tableau .sde-2027-workspace-links a strong{font-size:.71rem;line-height:1.3}
+html body.sde-tableau .sde-2027-workspace-links a:is(:hover,:focus-visible){border-color:#ffdd83;background:#1c4838!important}
+html body.sde-tableau .sde-2027-workspace-member .sde-2027-workspace-hero{background:linear-gradient(90deg,#292046e0,#1a2638c0),url("/vitrine/maquettes/citadelle-celeste-sde.png") 70% 45% / 380% auto no-repeat}
+html body.sde-tableau .sde-2027-workspace-admin .sde-2027-workspace-hero{background:linear-gradient(110deg,#092138db,#143a35)}
+html body.sde-tableau .sde-dash-metrics article{min-width:0!important}
+html body.sde-tableau .sde-dash-metrics strong{font-variant-numeric:tabular-nums!important}
+html body.sde-tableau .sde-2027-workspace :is(a,button):focus-visible,
+html body.sde-v5-academy-public .sde-2027-campus a:focus-visible{outline:3px solid #f5d58d!important;outline-offset:3px!important}
+html body.sde-unifie[data-sde-page="mediatheque"] main#contenu,
+html body.sde-unifie[data-sde-page="soldiers-tv"] main#contenu{background:linear-gradient(160deg,#071b32,#20142f 62%,#0e243b)!important}
+html body.sde-unifie[data-sde-page="mediatheque"] main#contenu h1,
+html body.sde-unifie[data-sde-page="soldiers-tv"] main#contenu h1{font-family:Cinzel,Georgia,serif!important;color:#fff2da!important}
+html body.sde-unifie[data-sde-page="mediatheque"] .sde-public-media-card,
+html body.sde-unifie[data-sde-page="soldiers-tv"] .sdu-media-tile{border-radius:15px!important;overflow:hidden!important;border:1px solid #d1af6e70!important;box-shadow:0 12px 30px #040c1f44}
+html body.sde-unifie[data-sde-page="soutenir"] .hub-hero{background:linear-gradient(100deg,#14283f,#102f2c)!important;border:1px solid #e8c06e84!important;border-radius:15px!important}
+html body.sde-unifie[data-sde-page="soutenir"] main#contenu .hub-hero h1{font-family:Cinzel,Georgia,serif!important;color:#fff6e6!important}
+html body.sde-unifie[data-sde-page="missions-humanitaires"] main#contenu h1{font-family:Cinzel,Georgia,serif!important}
+html body #academyDynLove,html body .love-school{--sde27-violet:#65375d}
+@media(max-width:1050px){
+ .sde-2027-campus-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+ html body.sde-tableau .sde-2027-workspace-links{grid-template-columns:repeat(3,minmax(0,1fr))}
+ html body.sde-v5-academy-public:has(.sde-2027-campus) .sa-premium-grid{grid-template-columns:1fr!important}
+}
+@media(max-width:700px){
+ .sde-2027-campus-hero{display:flex;flex-direction:column-reverse;min-height:0;padding:18px 17px 26px;gap:0}
+ .sde-2027-campus-art{width:100%;height:155px;min-height:155px;max-height:155px}
+ .sde-2027-campus-art img{max-height:160px}
+ .sde-2027-campus-copy{text-align:center}
+ html body.sde-v5-academy-public .sde-2027-campus h1{font-size:clamp(2rem,8vw,3rem)!important;margin:6px 0!important}
+ .sde-2027-campus-desc{font-size:.82rem!important;line-height:1.55!important;margin-bottom:15px!important}
+ .sde-2027-campus-actions{display:flex;flex-direction:column}
+ .sde-2027-button{width:100%;min-height:44px;font-size:.78rem!important}
+ .sde-2027-campus-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sde-2027-campus-tiles a{min-height:113px;padding:12px 7px}
+ .sde-2027-campus-tiles a strong{font-size:.76rem}
+ .sde-2027-campus-tiles a small{font-size:.64rem}
+ html body.sde-v5-academy-public:has(.sde-2027-campus) .niveaux{grid-template-columns:1fr!important}
+ html body.sde-tableau .sde-2027-workspace-hero{padding:17px 13px}
+ html body.sde-tableau .sde-2027-workspace-links{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:9px}
+ html body.sde-tableau .sde-2027-workspace-links a{min-height:84px}
+ html body.sde-tableau .sde-2027-workspace h2{font-size:1.45rem!important}
+ html body.sde-tableau .sde-2027-workspace-hero p{font-size:.78rem!important}
+}
+@media(prefers-reduced-motion:reduce){.sde-2027-button{transition:none!important}}

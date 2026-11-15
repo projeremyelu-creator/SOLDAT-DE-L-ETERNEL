@@ -31,6 +31,7 @@ const screenshotStylePath = '/vitrine/sde-reference-maquette-2026.css';
 const screenshotScriptPath = '/vitrine/sde-reference-maquette-2026.js';
 const integralStylePath = '/vitrine/sde-maquettes-integrales.css';
 const integralScriptPath = '/vitrine/sde-maquettes-integrales.js';
+const declinationsStylePath = '/vitrine/sde-declinaisons-fonctionnelles-2027.css';
 function installerCitadelleFinale(html){
  if (!/<html\b/i.test(html) || !/(<\/head>|<body\b)/i.test(html)) return html;
  html=html.replace(/<link\b[^>]*href=["']\/vitrine\/sde-citadelle-celeste-2027\.css[^"']*["'][^>]*>\s*/gi,'');
@@ -48,7 +49,8 @@ function installerCitadelleFinale(html){
  '<link rel="stylesheet" href="'+screenshotStylePath+'?v='+revision+'">\n'+
  '<script defer src="'+screenshotScriptPath+'?v='+revision+'"></script>\n'+
  '<link rel="stylesheet" href="'+integralStylePath+'?v='+revision+'">\n'+
- '<script defer src="'+integralScriptPath+'?v='+revision+'"></script>\n';
+ '<script defer src="'+integralScriptPath+'?v='+revision+'"></script>\n'+
+  '<link rel="stylesheet" href="'+declinationsStylePath+'?v='+revision+'">\n';
  // L'application native utilise un <head> implicite et contient un <\/head> DANS une
  // chaîne JavaScript de sauvegarde hors-ligne. Ne jamais insérer le thème dans
  // cette chaîne : construire un véritable head juste avant le splash initial.
