@@ -1,0 +1,19 @@
+/* Médias IN FIRE 2026 publiés par les responsables : vidéos lisibles mobile */
+.sde-infire-album #gallery .sde-infire-live-video video{
+ display:block;width:100%;aspect-ratio:9/16;max-height:420px;object-fit:contain;
+ background:#090e24;border:0
+}
+.sde-infire-album #gallery .sde-infire-live-video figcaption{
+ align-items:flex-start;flex-direction:column;gap:4px
+}
+.sde-infire-album #gallery .sde-infire-live-photo img{
+ width:100%;height:260px;object-fit:cover
+}
+.sde-infire-album .tab[aria-selected="true"]{box-shadow:0 0 0 2px rgba(245,219,150,.25)}
+@media(max-width:560px){
+ .sde-infire-album #gallery .sde-infire-live-video video{max-height:460px}
+ .sde-infire-album #gallery .sde-infire-live-photo img{height:310px}
+}
+@media(prefers-reduced-motion:reduce){
+ .sde-infire-album #gallery .item *{scroll-behavior:auto;transition:none}
+}
