@@ -39,3 +39,14 @@ test("Studio Academy : aucun accès public direct et alias historique protégé"
  assert.ok(page.includes('href="/mon-espace/enseignants"'));
  assert.ok(!page.includes('href="/academy-enseignants"'));
 });
+
+
+test("Page mouvement desktop : réserve stable avant le montage du header commun",()=>{
+ const style=read("public/vitrine/sde-declinaisons-fonctionnelles-2027.css");
+ const page=read("public/vitrine/mouvement.html");
+ assert.ok(style.includes("SDE-2027-MOUVEMENT-PREPAINT-CLS"));
+ assert.ok(style.includes("header#haut.site-header"));
+ assert.ok(style.includes("height:66px!important;min-height:66px!important;max-height:66px!important"));
+ assert.ok(style.includes('data-sde-page="mouvement"] > .infire-takeover'));
+ assert.ok(page.includes('id="haut"'));
+});

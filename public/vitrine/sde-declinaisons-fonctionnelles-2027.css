@@ -89,3 +89,24 @@ html body #academyDynLove,html body .love-school{--sde27-violet:#65375d}
  html body.sde-tableau .sde-2027-workspace-hero p{font-size:.78rem!important}
 }
 @media(prefers-reduced-motion:reduce){.sde-2027-button{transition:none!important}}
+
+
+/* SDE-2027-MOUVEMENT-PREPAINT-CLS
+   Le header historique est remplacé au chargement par le header partagé.
+   Réserver le même espace (66px) avant/après évite le décalage vertical
+   mesuré dans l'audit réel desktop. Les données et la navigation restent intactes. */
+html[data-sde-citadel-integral] body.sde-unifie.sde-subpage[data-sde-page="mouvement"] > .infire-takeover,
+html[data-sde-citadel-integral] body.sde-unifie.sde-subpage[data-sde-page="mouvement"] > .sde-versets-slot{
+ display:none!important;visibility:hidden!important;height:0!important;margin:0!important;padding:0!important;
+}
+@media(min-width:1101px){
+ html[data-sde-citadel-integral] body.sde-unifie.sde-subpage[data-sde-page="mouvement"]:not(.sde-shell-mounted) > header#haut.site-header{
+  display:block!important;height:66px!important;min-height:66px!important;max-height:66px!important;
+  box-sizing:border-box!important;border:0!important;margin:0!important;padding:0!important;
+  overflow:hidden!important;
+ }
+ html[data-sde-citadel-integral] body.sde-unifie.sde-subpage[data-sde-page="mouvement"]:not(.sde-shell-mounted) > header#haut.site-header .site-header-inner{
+  height:66px!important;min-height:66px!important;max-height:66px!important;
+  box-sizing:border-box!important;margin:0 auto!important;padding-top:0!important;padding-bottom:0!important;
+ }
+}
