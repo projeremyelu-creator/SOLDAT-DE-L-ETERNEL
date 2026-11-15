@@ -261,7 +261,8 @@ test('Pages Squads et Empreinte : thème hub, privées, sans script en ligne ni 
   const feuilles=[...h.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
   assert.ok(!feuilles.some(f=>f.includes('sde-fusion.css')),page+' : ancien CSS Fusion absent');
   assert.ok(feuilles.some(f=>f.includes('sde-citadelle-reference-v4.css')),page+' : socle SDE 2+3 présent');
-   assert.ok(feuilles.at(-1).includes('sde-reference-maquette-2026.css'),page+' : dernière charte de référence');
+   assert.ok(feuilles.some(f=>f.includes('sde-reference-maquette-2026.css')),page+' : charte de référence conservée');
+   assert.ok(feuilles.at(-1).includes('sde-maquettes-integrales.css'),page+' : dernier habillage intégral');
   assert.ok(h.includes(`/vitrine/${script}`));
   assert.doesNotMatch(h,/<script(?![^>]*\bsrc=)[^>]*>/,page+' : aucun script en ligne (CSP)');
   assert.doesNotMatch(h,/\son(click|load|error|submit)=/i);
