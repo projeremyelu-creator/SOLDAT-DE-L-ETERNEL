@@ -268,13 +268,13 @@
    const preview=el("a","sde-px-parcours-preview","📊  Voir mon tableau de bord personnel et ma progression →");
    preview.href="#parcours";preview.dataset.view="parcours";
    row.after(preview);
-   for(const selector of [".sdu-member-universe",".sde-dash-two"]){
-     const old=$(selector,section);
-     if(old&&!old.closest("details")){
-       const details=el("details","sde-px-legacy");
-       const summary=el("summary","","Explorer les autres services SDE");
-       old.before(details);details.append(summary,old);
-     }
+   const legacy=[".sdu-member-universe",".sde-dash-two"]
+     .map(selector=>$(selector,section)).filter(node=>node&&!node.closest("details"));
+   if(legacy.length){
+     const details=el("details","sde-px-legacy");
+     details.append(el("summary","","Explorer les autres services SDE"));
+     legacy[0].before(details);
+     for(const node of legacy)details.append(node);
    }
  }
  function renderCalendar(items){
