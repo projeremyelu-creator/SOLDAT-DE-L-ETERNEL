@@ -28,12 +28,24 @@ main{max-width:1160px;margin:auto;padding:34px 24px 80px}.toolbar{display:flex;a
 <link rel="stylesheet" href="/vitrine/sde-shell-public.css?v=405b772b7a5d">
 <script defer src="/vitrine/sde-shell-public.js?v=405b772b7a5d"></script>
 <script defer src="/vitrine/sde-public-media.js?v=405b772b7a5d"></script>
-<script defer src="/vitrine/sde-public-media.js?v=405b772b7a5d"></script>
 <script id="sde-webpage-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://mouvement-sde.org/album-infire#page","url":"https://mouvement-sde.org/album-infire","name":"Album IN FIRE 2024, 2025 et 2026 | Soldats de l'Éternel","description":"Photographies des éditions IN FIRE 2024, 2025 et 2026 du Mouvement Soldats de l'Éternel.","inLanguage":"fr-CI","isPartOf":{"@id":"https://mouvement-sde.org/#website"},"about":{"@id":"https://mouvement-sde.org/#organisation"},"publisher":{"@id":"https://mouvement-sde.org/#organisation"}}</script>
 <link rel="stylesheet" href="/vitrine/sde-citadelle-celeste-2027.css?v=refonte-3-univers-20261115">
 <link rel="stylesheet" href="/vitrine/infire-2026-publications.css?v=20261115">
+<style id="sde-infire-clarte">
+/* Complément Citadelle : contrastes et logo en version HTML autonome.
+   Ne change aucune photographie ni la logique des albums. */
+html body.sde-infire-album .hero h1{color:#fff8ed!important;-webkit-text-fill-color:#fff8ed!important;text-shadow:0 2px 10px #070e2b77!important}
+html body.sde-infire-album .hero h1 span{color:#f7cf78!important;-webkit-text-fill-color:#f7cf78!important}
+html body.sde-infire-album .hero .eyebrow{color:#f7cf78!important;-webkit-text-fill-color:#f7cf78!important}
+html body.sde-infire-album .hero p{color:#eaedf8!important;-webkit-text-fill-color:#eaedf8!important}
+html body.sde-infire-album main .archive-note,html body.sde-infire-album main #count{color:#293951!important;-webkit-text-fill-color:#293951!important;line-height:1.55}
+html body.sde-infire-album > header .brand{display:flex!important;align-items:center!important;gap:10px;color:#f7cf78!important;-webkit-text-fill-color:#f7cf78!important}
+html body.sde-infire-album > header .nav nav a{color:#fff8ed!important;-webkit-text-fill-color:#fff8ed!important}
+html body.sde-infire-album .item figcaption{color:#fff8ed!important;-webkit-text-fill-color:#fff8ed!important}
+@media(max-width:560px){html body.sde-infire-album > header .nav{padding:12px 16px!important;gap:10px!important}}
+</style>
 </head>
-<body class="sde23-native sde-infire-album"><header><div class="nav"><a class="brand" href="/">S.D.E. — MOUVEMENT</a><nav aria-label="Navigation principale"><a href="/">Accueil</a><a href="/programmes">Programmes</a><a href="/ressources">Ressources</a></nav></div></header>
+<body class="sde23-native sde-infire-album"><header><div class="nav"><a class="brand" href="/"><img src="/vitrine/logo-sde.webp" width="38" height="38" alt="" decoding="async">S.D.E. — MOUVEMENT</a><nav aria-label="Navigation principale"><a href="/">Accueil</a><a href="/programmes">Programmes</a><a href="/ressources">Ressources</a></nav></div></header>
 <section class="hero"><div class="inner"><div class="eyebrow">Mouvement Prophético-Apostolique Soldat De l'Éternel</div><h1>IN <span>FIRE</span> · En images</h1><p>Revivez nos moments de louange, de prière, de ministère et de communion fraternelle à travers les éditions IN FIRE.</p></div></section>
 <main><div class="toolbar"><div class="tabs" role="tablist" aria-label="Éditions IN FIRE"><button class="tab" type="button" role="tab" data-year="2024" aria-selected="false">IN FIRE 2024</button><button class="tab" type="button" role="tab" data-year="2025" aria-selected="true">IN FIRE 2025</button><button class="tab" type="button" role="tab" data-year="2026" aria-selected="false">IN FIRE 2026</button></div><div id="count" class="count" aria-live="polite"></div></div><p class="archive-note" role="note">Le classement des photographies par édition est provisoire et sera confirmé à partir des archives officielles.</p><div id="gallery" class="gallery"></div><p id="empty" class="empty hidden">Les photographies de cette édition ne sont pas encore disponibles dans l'album. Vous pouvez consulter les autres éditions.</p></main>
 <footer>© 2026 Mouvement Soldat De l'Éternel · Discipline · Unité · Impact</footer>
