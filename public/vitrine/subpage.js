@@ -61,7 +61,9 @@
         if(found)select.value=found.value;
       }
       const b=site.banniere||{};
-      if(b.texte&&!$(".site-banniere")){
+      // L'annonce admin demeure accessible sur Contact, mais ne doit pas
+      // être recréée ici au-dessus de l'agenda officiel TPA de Programmes.
+      if(page==="rejoindre"&&b.texte&&!$(".site-banniere")){
         const el=document.createElement(b.lien?"a":"p");
         el.className="site-banniere";el.textContent=b.texte;if(b.lien)el.href=b.lien;
         el.style.cssText="display:block;text-align:center;padding:.6rem 1rem;background:#D4AF37;color:#0b1530;font-weight:600;text-decoration:none";

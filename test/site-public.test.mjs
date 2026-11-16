@@ -82,3 +82,15 @@ test("La bannière éditoriale reste configurable sans doubler l'en-tête Progra
  assert.match(bannierePourPage("contact",b),/TRAVERSEE PROPHETIQUE/);
  assert.equal(bannierePourPage("contact",{texte:"",lien:""}),"");
 });
+
+test("hydration cliente : pas de seconde bannière sur Programmes, annonce conservée sur Contact",async()=>{
+ const site={programmes:[],banniere:{texte:"TRAVERSEE PROPHETIQUE ANNUELLE - TPA",lien:"/programmes#tpa-2026"}};
+ const programmes=page("programmes",site);
+ const contact=page("rejoindre",site);
+ await attendre();
+ assert.equal(programmes.window.document.querySelectorAll(".site-banniere").length,0,
+   "La page Programmes ne doit pas recréer une annonce en tête");
+ assert.equal(contact.window.document.querySelectorAll(".site-banniere").length,1,
+   "Le contenu éditorial reste publié sur Contact");
+ assert.match(contact.window.document.querySelector(".site-banniere")?.textContent||"",/TRAVERSEE PROPHETIQUE/);
+});
