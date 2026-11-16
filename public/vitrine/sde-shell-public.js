@@ -222,7 +222,8 @@
  function start(){
   initTpaClock();
   if(document.body.classList.contains("sde-reference-login")||/^\/(mon-espace|administration)(\/|$)/.test(location.pathname))return;
-  const old=document.querySelector("header.site-header,header.sde-hub-head,header.entete") || (location.pathname==="/album-infire"?document.querySelector("body > header"):null);
+  const albumRoute=/^\/(?:album-infire\/?|vitrine\/album-infire\.html)$/.test(location.pathname);
+  const old=document.querySelector("header.site-header,header.sde-hub-head,header.entete") || (albumRoute?document.querySelector("body > header"):null);
   if(!old||document.querySelector(".sde-shell-header"))return;
   old.replaceWith(header());
   const oldFoot=document.querySelector("footer.site-footer,footer.hub-footer") || document.querySelector("body > footer, footer");
