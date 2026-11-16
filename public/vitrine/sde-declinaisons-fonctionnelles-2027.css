@@ -166,3 +166,21 @@ html[data-sde-citadel-integral] body.sde-unifie[data-sde-page="programmes"] > .i
  min-height:0!important;max-height:0!important;height:0!important;
  margin:0!important;padding:0!important;border:0!important;
 }
+
+/* Soldiers TV — contraste contrôlé de la navigation et des titres sur ivoire (16 novembre 2026) */
+html body.sdu-tv-page main#contenu .sdu-tv-subnav a:not([aria-current="page"]){
+ color:#f6e9d2!important;-webkit-text-fill-color:#f6e9d2!important;
+}
+html body.sdu-tv-page main#contenu .sdu-tv-subnav a[aria-current="page"]{
+ color:#102038!important;-webkit-text-fill-color:#102038!important;
+}
+html body.sdu-tv-page main#contenu section#a-la-une .sdu-heading h2{
+ color:#14233b!important;-webkit-text-fill-color:#14233b!important;
+ font-family:Cinzel,Georgia,serif!important;
+}
+html body.sdu-tv-page main#contenu section#a-la-une .sdu-heading p{
+ color:#293951!important;-webkit-text-fill-color:#293951!important;
+}
+html body.sdu-tv-page main#contenu section#a-la-une .sdu-heading .sdu-eyebrow{
+ color:#805713!important;-webkit-text-fill-color:#805713!important;
+}
