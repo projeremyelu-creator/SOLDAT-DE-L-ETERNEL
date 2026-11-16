@@ -184,3 +184,20 @@ html body.sdu-tv-page main#contenu section#a-la-une .sdu-heading p{
 html body.sdu-tv-page main#contenu section#a-la-une .sdu-heading .sdu-eyebrow{
  color:#805713!important;-webkit-text-fill-color:#805713!important;
 }
+
+/* Soldiers TV — onglets mobiles sans chevauchement (audit Chromium 390 px) */
+html body.sdu-tv-page main#contenu nav.sdu-tv-subnav{
+ display:flex!important;flex-wrap:nowrap!important;align-items:center!important;
+ gap:8px!important;width:100%!important;max-width:100%!important;
+ box-sizing:border-box!important;overflow-x:auto!important;overflow-y:hidden!important;
+ scrollbar-width:thin!important;overscroll-behavior-inline:contain!important;
+ -webkit-overflow-scrolling:touch!important;padding:9px 12px!important;
+}
+html body.sdu-tv-page main#contenu nav.sdu-tv-subnav a{
+ box-sizing:border-box!important;flex:0 0 auto!important;
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ width:auto!important;min-width:max-content!important;max-width:none!important;
+ min-height:44px!important;padding:10px 12px!important;
+ line-height:1.25!important;white-space:nowrap!important;
+ overflow:visible!important;font-size:.78rem!important;text-overflow:clip!important;
+}
