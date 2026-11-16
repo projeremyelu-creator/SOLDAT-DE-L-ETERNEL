@@ -201,3 +201,17 @@ html body.sdu-tv-page main#contenu nav.sdu-tv-subnav a{
  line-height:1.25!important;white-space:nowrap!important;
  overflow:visible!important;font-size:.78rem!important;text-overflow:clip!important;
 }
+
+
+/* Anti-CLS — Agenda 768px : réserver les lignes Cinzel/Cormorant avant le chargement webfont. */
+@media(min-width:701px) and (max-width:800px){
+ html[data-sde-citadel-integral] body.sde-unifie[data-sde-page="programmes"] #agenda .tete-section .surtitre{
+  line-height:19px!important;min-height:19px!important;
+ }
+ html[data-sde-citadel-integral] body.sde-unifie[data-sde-page="programmes"] #agenda .tete-section h2#titre-agenda{
+  line-height:45px!important;min-height:45px!important;
+ }
+ html[data-sde-citadel-integral] body.sde-unifie[data-sde-page="programmes"] #agenda .tete-section p.chapo{
+  line-height:26px!important;min-height:26px!important;
+ }
+}
