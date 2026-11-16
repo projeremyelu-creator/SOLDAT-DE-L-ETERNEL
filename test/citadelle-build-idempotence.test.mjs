@@ -121,3 +121,20 @@ test('Soldiers TV — textes sur ivoire et onglets sur bleu nuit contrastés',()
  }
  assert.ok(contrast('#f6e9d2','#08152e')>=4.5,'Les onglets non actifs doivent être lisibles');
 });
+
+
+test('Test CLS tablette Programmes — même hauteur avant et après remplacement du header',()=>{
+ const css=readFileSync('public/vitrine/sde-shell-public.css','utf8');
+ const marker='/* CLS tablette Programmes — réserver 66 px avant le remplacement du header. */';
+ const suite=css.slice(css.lastIndexOf(marker));
+ assert.ok(suite.startsWith(marker),'La correction tablette doit rester en dernière couche CSS');
+ const ancien=suite.match(/>header\.site-header:not\(\.sde-shell-header\)\{([^}]+)\}/)?.[1];
+ const inner=suite.match(/>header\.site-header \.site-header-inner\{([^}]+)\}/)?.[1];
+ assert.ok(ancien&&inner,'La coque d’attente doit réserver sa géométrie');
+ for(const [texte,hauteur] of [[ancien,66],[inner,65]]){
+   for(const propriete of ['height','min-height','max-height']){
+     assert.ok(texte.includes(propriete+':'+hauteur+'px!important'),
+       'Préserver '+propriete+' = '+hauteur+'px à 768px');
+   }
+ }
+});
