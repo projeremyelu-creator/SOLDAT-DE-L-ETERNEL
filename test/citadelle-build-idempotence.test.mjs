@@ -100,6 +100,6 @@ test('Galerie IN FIRE — même navigation et photos originales sur toutes ses U
  assert.ok(album.includes('/vitrine/logo-sde.webp'),'Le vrai logo officiel est conservé');
  assert.ok(album.split('/vitrine/albums/infire/2025/').length-1>=20,
    'Les 10 photographies et leurs vignettes doivent rester intactes');
- assert.equal(album.split('sde-public-media.js?v=405b772b7a5d').length-1,1,
+ assert.equal(album.split('sde-public-media.js').length-1,1,
    'Ne pas charger deux fois le script de médiathèque');
 });
