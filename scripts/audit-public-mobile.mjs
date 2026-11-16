@@ -351,6 +351,9 @@ try{
     });
     report.notes.push({page:c.name,bannerProbe});
     console.log('SDE_PROGRAMMES_BANNER '+c.name+' '+JSON.stringify(bannerProbe));
+    if(bannerProbe.children.some(x=>x?.className?.split(/\\s+/).includes('site-banniere'))){
+     issue(c.name,'Un bandeau éditorial supplémentaire surplombe l’en-tête unique de la page Programmes',true);
+    }
    }
    if(c.path==='/mouvement'){
     // Recette visible de l'ordre doctrinal et des couleurs réellement calculées.

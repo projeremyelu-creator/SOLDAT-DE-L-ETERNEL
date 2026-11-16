@@ -2,7 +2,7 @@ import {readFileSync} from "node:fs";
 import {createRequire} from "node:module";
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {assainirSite} from "../src/worker.js";
+import {assainirSite,bannierePourPage} from "../src/worker.js";
 const require=createRequire(import.meta.url);
 
 test("assainirSite filtre les champs et refuse les liens dangereux", () => {
@@ -73,4 +73,12 @@ test("affichage serveur : cartes et bannière sont échappées et complètes", a
   assert.match(h, /Participer/);
   assert.equal(htmlBanniere({ texte: "", lien: "" }), "");
   assert.match(htmlBanniere({ texte: "Info <i>", lien: "/x" }), /href="\/x"[^>]*>Info &lt;i&gt;<\/a>/);
+});
+
+test("La bannière éditoriale reste configurable sans doubler l'en-tête Programmes",()=>{
+ const b={texte:"TRAVERSEE PROPHETIQUE ANNUELLE - TPA",lien:"/programmes#tpa-2026"};
+ assert.equal(bannierePourPage("programmes",b),"","Aucun second bandeau au-dessus de l'agenda TPA");
+ assert.match(bannierePourPage("contact",b),/site-banniere/,"Annonce toujours disponible sur Contact");
+ assert.match(bannierePourPage("contact",b),/TRAVERSEE PROPHETIQUE/);
+ assert.equal(bannierePourPage("contact",{texte:"",lien:""}),"");
 });

@@ -915,6 +915,12 @@ export function htmlBanniere(b) {
   const style = "display:block;text-align:center;padding:.6rem 1rem;background:#D4AF37;color:#0b1530;font-weight:600;text-decoration:none";
   return b.lien ? `<a class="site-banniere" href="${ech(b.lien)}" style="${style}">${ech(b.texte)}</a>` : `<p class="site-banniere" style="${style};margin:0">${ech(b.texte)}</p>`;
 }
+// L'agenda Programmes possède déjà son programme phare TPA. Ne pas empiler
+// une seconde annonce administrable au-dessus de l'en-tête unique.
+// Le document en base et l'affichage de la bannière sur Contact restent intacts.
+export function bannierePourPage(page, banniere) {
+  return page === "programmes" ? "" : htmlBanniere(banniere);
+}
 async function injecterSite(reponse, env, page) {
   try {
     if (typeof HTMLRewriter === "undefined" || !(reponse.headers.get("content-type") || "").includes("text/html")) return reponse;
@@ -922,7 +928,7 @@ async function injecterSite(reponse, env, page) {
     const aRien = !site.contact.email && !site.contact.telephone && !site.programmes.length && !site.banniere.texte;
     if (aRien) return reponse;
     let r = new HTMLRewriter();
-    const banniere = htmlBanniere(site.banniere);
+    const banniere = bannierePourPage(page, site.banniere);
     if (banniere) r = r.on("body", { element(e) { e.prepend(banniere, { html: true }); } });
     if (site.contact.email) r = r.on("#c-mail", { element(e) { e.setInnerContent(site.contact.email); } });
     if (site.contact.telephone) r = r.on("#c-tel", { element(e) { e.setInnerContent(site.contact.telephone); } });
