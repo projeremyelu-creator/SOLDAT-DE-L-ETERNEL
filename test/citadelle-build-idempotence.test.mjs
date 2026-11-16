@@ -89,3 +89,18 @@ test('Carte TPA — ne pas incruster un bouton provenant de la capture composite
  assert.ok(!rule.includes('/vitrine/maquettes/citadelle-celeste-sde.png'),
    'La capture globale (avec boutons dessinés) ne doit pas être recyclée comme photo');
 });
+
+
+test('Galerie IN FIRE — même navigation et photos originales sur toutes ses URL',()=>{
+ const shell=readFileSync('public/vitrine/sde-shell-public.js','utf8');
+ const album=readFileSync('public/vitrine/album-infire.html','utf8');
+ assert.ok(shell.includes('const albumRoute='),'La galerie autonome doit installer le shell commun');
+ assert.ok(shell.includes(String.raw`vitrine\\/album-infire\\.html`),
+   'La route HTML directe ne doit plus conserver le menu historique');
+ assert.ok(album.includes('id="sde-infire-clarte"'),'Le contraste de la couverture est protégé');
+ assert.ok(album.includes('/vitrine/logo-sde.webp'),'Le vrai logo officiel est conservé');
+ assert.ok((album.match(/\\/vitrine\\/albums\\/infire\\/2025\\//g)||[]).length>=20,
+   'Les 10 photographies et leurs vignettes doivent rester intactes');
+ assert.equal((album.match(/sde-public-media\\.js\\?v=405b772b7a5d/g)||[]).length,1,
+   'Ne pas charger deux fois le script de médiathèque');
+});
