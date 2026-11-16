@@ -337,6 +337,21 @@ try{
    });
    const row={...c,status:response?.status()||0,url:page.url(),...view,pageErrors};
    report.checks.push(row);
+   if(c.path==='/programmes'){
+    // Diagnostic en lecture seule de la bannière réellement visible au-dessus
+    // du header; sans inspecter les comptes, cookies ou formulaires.
+    const bannerProbe=await page.evaluate(()=>{
+     const label=e=>e?{tag:e.tagName.toLowerCase(),id:e.id||'',className:typeof e.className==='string'?e.className.slice(0,120):'',text:(e.textContent||'').trim().replace(/\\s+/g,' ').slice(0,120),height:Math.round(e.getBoundingClientRect().height),top:Math.round(e.getBoundingClientRect().top),display:getComputedStyle(e).display,color:getComputedStyle(e).color,bg:getComputedStyle(e).backgroundColor,position:getComputedStyle(e).position}:null;
+     const top=document.elementFromPoint(Math.min(100,innerWidth/2),18);
+     const head=document.querySelector('header.site-header,header.sde-shell-header');
+     const evt=document.querySelector('#sde-event-root');
+     const topChain=[];for(let el=top,i=0;el&&i<5;el=el.parentElement,i++)topChain.push(label(el));
+     const candidates=[...document.querySelectorAll('body>*')].slice(0,13).map(label);
+     return {htmlFlag:document.documentElement.getAttribute('data-sde-citadel-integral'),bodyClass:document.body.className,topChain,header:label(head),event:label(evt),children:candidates};
+    });
+    report.notes.push({page:c.name,bannerProbe});
+    console.log('SDE_PROGRAMMES_BANNER '+c.name+' '+JSON.stringify(bannerProbe));
+   }
    if(c.path==='/mouvement'){
     // Recette visible de l'ordre doctrinal et des couleurs réellement calculées.
     // Aucun accès privé, aucune écriture et aucun secret de membre.
