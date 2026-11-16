@@ -213,6 +213,32 @@ try{
      }
     }
    }
+   if(c.name==='galerie-infire-390'){
+    const galleryQA=await page.evaluate(()=>({
+     shell:!!document.querySelector('header.sde-shell-header'),
+     logo:!!document.querySelector('header.sde-shell-header .sde-shell-brand img'),
+     legacyBottom:!!document.querySelector('nav.sde-standalone-bottom'),
+     photos:document.querySelectorAll('#gallery figure.item img').length
+    }));
+    report.notes.push({test:'infire-navigation-et-photos',page:c.name,...galleryQA});
+    if(!galleryQA.shell||!galleryQA.logo||galleryQA.legacyBottom||galleryQA.photos!==10)
+     issue(c.name,'La galerie doit réutiliser le header et la barre mobile communs, avec ses dix photographies.',true);
+   }
+   if(c.name==='soldiers-tv-390'){
+    const tabsQA=await page.evaluate(()=>{
+     const nav=document.querySelector('nav.sdu-tv-subnav');
+     const links=[...(nav?.querySelectorAll('a')||[])].map(el=>{
+      const r=el.getBoundingClientRect();
+      return {left:r.left,right:r.right,width:r.width,scroll:el.scrollWidth,client:el.clientWidth};
+     });
+     return {exists:!!nav,links:links.length,scrollable:!!nav&&nav.scrollWidth>nav.clientWidth,
+      overlap:links.some((el,i)=>i>0&&el.left<links[i-1].right-1),
+      clippedText:links.some(el=>el.scroll>el.client+2)};
+    });
+    report.notes.push({test:'soldiers-tv-onglets',page:c.name,...tabsQA});
+    if(!tabsQA.exists||tabsQA.links<5||tabsQA.overlap||tabsQA.clippedText)
+     issue(c.name,'Les onglets Soldiers TV doivent défiler sans chevauchement ni libellé tronqué.',true);
+   }
    if(c.path==='/'){
     const images=await page.locator('.sde-pole-officiel-lien img, img.sde-event-poster, .ap-poster-media img').all();
     for(const img of images){
