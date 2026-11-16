@@ -78,3 +78,14 @@ test('Academy — note de confidentialité lisible sur le fond ivoire',()=>{
  const ratio=(Math.max(a,b)+.05)/(Math.min(a,b)+.05);
  assert.ok(ratio>=4.5,'La note doit atteindre WCAG AA sur ivoire, ratio='+ratio.toFixed(2));
 });
+
+
+test('Carte TPA — ne pas incruster un bouton provenant de la capture composite',()=>{
+ const css=readFileSync('public/vitrine/sde-maquettes-integrales.css','utf8');
+ const rule=css.match(/html\[data-sde-citadel-integral\] body\.sde-pixel-citadel main#contenu \.sde-pixel-feature-event::after\{[^}]+\}/)?.[0];
+ assert.ok(rule,'L’illustration indépendante de la carte TPA doit être définie');
+ assert.ok(rule.includes('/vitrine/photos/intercession-vignette.webp'),
+   'La photographie originale sans texte ni faux CTA doit être utilisée');
+ assert.ok(!rule.includes('/vitrine/maquettes/citadelle-celeste-sde.png'),
+   'La capture globale (avec boutons dessinés) ne doit pas être recyclée comme photo');
+});
