@@ -32,15 +32,23 @@ const screenshotScriptPath = '/vitrine/sde-reference-maquette-2026.js';
 const integralStylePath = '/vitrine/sde-maquettes-integrales.css';
 const integralScriptPath = '/vitrine/sde-maquettes-integrales.js';
 function installerCitadelleFinale(html){
- if (!/<html\b/i.test(html) || !/(<\/head>|<body\b)/i.test(html)) return html;
+ const nativeHead = /^\s*<!doctype html>\s*<html[^>]*>\s*<meta/i.test(html) && html.includes('<div class="sde-splash"');
+ if (!/<html\b/i.test(html) || (!/(<\/head>|<body\b)/i.test(html) && !nativeHead)) return html;
  html=html.replace(/<link\b[^>]*href=["']\/vitrine\/sde-citadelle-celeste-2027\.css[^"']*["'][^>]*>\s*/gi,'');
  html=html.replace(/<script\b[^>]*src=["']\/vitrine\/sde-citadelle-celeste-2027\.js[^"']*["'][^>]*>\s*<\/script>\s*/gi,'');
  html=html.replace(/<link\b[^>]*href=["']\/vitrine\/sde-reference-maquette-2026\.css[^"']*["'][^>]*>\s*/gi,'');
  html=html.replace(/<script\b[^>]*src=["']\/vitrine\/sde-reference-maquette-2026\.js[^"']*["'][^>]*>\s*<\/script>\s*/gi,'');
- html=html.replace(/<html\b/i,'<html data-sde-citadel-integral="v4"');
- const links='<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>\n'+
- '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'+
- '<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">\n'+
+ // Réinjections de build : remplacer les calques V4 et intégral précédents
+ // au lieu de les empiler sur les mêmes pages, en préservant les scripts métier.
+ html=html.replace(/<link\b[^>]*href=["']\/vitrine\/sde-citadelle-reference-v4\.css[^"']*["'][^>]*>\s*/gi,'');
+ html=html.replace(/<script\b[^>]*src=["']\/vitrine\/sde-citadelle-reference-v4\.js[^"']*["'][^>]*>\s*<\/script>\s*/gi,'');
+ html=html.replace(/<link\b[^>]*href=["']\/vitrine\/sde-maquettes-integrales\.css[^"']*["'][^>]*>\s*/gi,'');
+ html=html.replace(/<script\b[^>]*src=["']\/vitrine\/sde-maquettes-integrales\.js[^"']*["'][^>]*>\s*<\/script>\s*/gi,'');
+ html=html.replace(/<link\b[^>]*data-sde-citadel-fonts=["']2027["'][^>]*>\s*/gi,'');
+ html=html.replace(/<html\b[^>]*>/i,tag=>tag.replace(/\s+data-sde-citadel-integral=(?:"[^"]*"|'[^']*')/gi,'').replace(/>$/,' data-sde-citadel-integral="v4">'));
+ const links='<link data-sde-citadel-fonts="2027" rel="preconnect" href="https://fonts.googleapis.com" crossorigin>\n'+
+ '<link data-sde-citadel-fonts="2027" rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'+
+ '<link data-sde-citadel-fonts="2027" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">\n'+
  '<link rel="stylesheet" href="'+citadelStylePath+'?v='+revision+'">\n'+
  '<script defer src="'+citadelScriptPath+'?v='+revision+'"></script>\n'+
  '<link rel="stylesheet" href="'+referenceStylePath+'?v='+revision+'">\n'+
@@ -52,14 +60,21 @@ function installerCitadelleFinale(html){
  // L'application native utilise un <head> implicite et contient un <\/head> DANS une
  // chaîne JavaScript de sauvegarde hors-ligne. Ne jamais insérer le thème dans
  // cette chaîne : construire un véritable head juste avant le splash initial.
- if (/^\s*<!doctype html>\s*<html[^>]*>\s*<meta/i.test(html) && html.includes('<div class="sde-splash"')) {
+ if (nativeHead) {
    html=html.replace(/(<html\b[^>]*>)/i,'$1\n<head>');
    // Charger les styles après la dernière feuille privée mais AVANT le script
    // de palette, sans interrompre le gabarit HTML stocké dans le JS métier.
    html=html.replace('<script>/* Palette des espaces privés',links+'<script>/* Palette des espaces privés');
    return html.replace(/(?=<div class="sde-splash")/,'</head>\n<body>\n');
  }
- if (html.includes('</head>')) return html.replace('</head>',links+'</head>');
+ if (html.includes('</head>')) {
+   // L'application native conserve le montage avant le script de palette
+   // même après une deuxième compilation.
+   if(html.includes('<script>/* Palette des espaces privés')){
+     return html.replace('<script>/* Palette des espaces privés',links+'<script>/* Palette des espaces privés');
+   }
+   return html.replace('</head>',links+'</head>');
+ }
  return html.replace(/<body\b/i,links+'<body');
 }
 
@@ -69,9 +84,9 @@ const integralCSSFile='public/vitrine/sde-maquettes-integrales.css';
 const declinationCSSFile='public/vitrine/sde-declinaisons-fonctionnelles-2027.css';
 const declinationMarker='/* SDE-DECLINAISONS-COMPILEES-2027 */';
 const integralCSSOriginal=readFileSync(integralCSSFile,'utf8');
-if(!integralCSSOriginal.includes(declinationMarker)){
- writeFileSync(integralCSSFile,integralCSSOriginal+'\n\n'+declinationMarker+'\n'+readFileSync(declinationCSSFile,'utf8'));
-}
+const integralCSSBase=integralCSSOriginal.split(declinationMarker)[0].trimEnd();
+const integralCSSCompiled=integralCSSBase+'\n\n'+declinationMarker+'\n'+readFileSync(declinationCSSFile,'utf8');
+if(integralCSSCompiled!==integralCSSOriginal)writeFileSync(integralCSSFile,integralCSSCompiled);
 versionnerHtml('public');
 // Les pages publiques et privées sont publiées depuis le même répertoire Cloudflare.
 function integrerToutesPages(dossier){
