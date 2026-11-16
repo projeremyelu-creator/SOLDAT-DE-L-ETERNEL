@@ -49,13 +49,16 @@ test('Déclinaisons — le build remplace les anciennes versions compilées',()=
  assert.ok(buildSource.includes('if(integralCSSCompiled!==integralCSSOriginal)'));
 });
 
-test('Programmes — un seul en-tête, sans ancien bandeau TPA empilé',()=>{
+test('Programmes — bandeau TPA disponible sans JS, non affiché au-dessus de la navigation',()=>{
  const page=readFileSync('public/vitrine/programmes.html','utf8');
- assert.equal(page.includes('id="sde-event-root"'),false,
-   'Le doublon TPA ne doit pas être réinjecté au-dessus de la navigation');
- assert.equal(page.includes('class="infire-takeover"'),false,
-   'Aucun bandeau héritage au-dessus du header');
- assert.ok(page.includes('id="tpa-2026"'),'La fiche TPA reste dans le calendrier');
- assert.ok(page.includes('href="/programmes#tpa-2026"'),'Le lien vers la TPA reste présent');
- assert.ok(page.includes('id="agenda"'),'La page conserve l’agenda');
+ const css=readFileSync('public/vitrine/sde-declinaisons-fonctionnelles-2027.css','utf8');
+ assert.equal((page.match(/id="sde-event-root"/g)||[]).length,1,
+   'Un seul conteneur TPA conservé pour le rendu React et le contenu sans JS');
+ assert.ok(page.includes('class="infire-takeover"'));
+ assert.ok(page.includes('datetime="2026-12-18T20:00:00Z"'),
+   'La date officielle doit être disponible dès le HTML');
+ assert.ok(css.includes('body.sde-unifie[data-sde-page="programmes"] > #sde-event-root'));
+ assert.ok(css.includes('display:none!important'));
+ assert.ok(page.includes('id="tpa-2026"'));
+ assert.ok(page.includes('id="agenda"'));
 });

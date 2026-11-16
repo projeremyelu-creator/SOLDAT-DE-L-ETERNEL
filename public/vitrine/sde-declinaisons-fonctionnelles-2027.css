@@ -154,3 +154,15 @@ html[data-sde-citadel-integral] body.sde-unifie.sde-subpage:is([data-sde-page="m
   padding-top:0!important;padding-bottom:0!important;
  }
 }
+
+
+/* Refonte SDE — Programmes : un seul en-tête visible, sans bandeau
+   historique au-dessus. Garder le contenu TPA dans le DOM : les outils
+   React et la date accessible sans JS dépendent du nœud #sde-event-root.
+   La fiche /programmes#tpa-2026 demeure accessible dans l'agenda. */
+html[data-sde-citadel-integral] body.sde-unifie[data-sde-page="programmes"] > #sde-event-root,
+html[data-sde-citadel-integral] body.sde-unifie[data-sde-page="programmes"] > .infire-takeover{
+ display:none!important;visibility:hidden!important;
+ min-height:0!important;max-height:0!important;height:0!important;
+ margin:0!important;padding:0!important;border:0!important;
+}
