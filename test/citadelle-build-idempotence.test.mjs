@@ -94,7 +94,7 @@ test('Carte TPA — ne pas incruster un bouton provenant de la capture composite
 test('Galerie IN FIRE — même navigation et photos originales sur toutes ses URL',()=>{
  const shell=readFileSync('public/vitrine/sde-shell-public.js','utf8');
  const album=readFileSync('public/vitrine/album-infire.html','utf8');
- assert.ok(shell.includes('const albumRoute=') && shell.includes('vitrine'),
+ assert.ok(shell.includes('const albumRoute=') && shell.includes('"/vitrine/album-infire"') && shell.includes('"/vitrine/album-infire.html"'),
    'La galerie autonome doit installer le shell commun sur la route HTML directe');
  assert.ok(album.includes('id="sde-infire-clarte"'),'Le contraste de la couverture est protégé');
  assert.ok(album.includes('/vitrine/logo-sde.webp'),'Le vrai logo officiel est conservé');
