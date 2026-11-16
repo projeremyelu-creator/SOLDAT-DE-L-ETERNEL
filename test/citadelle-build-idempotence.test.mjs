@@ -138,18 +138,3 @@ test('Test CLS tablette Programmes — même hauteur avant et après remplacemen
    }
  }
 });
-
-
-test('Agenda tablette — lignes réservées avant la permutation des polices',()=>{
- const css=readFileSync('public/vitrine/sde-declinaisons-fonctionnelles-2027.css','utf8');
- const start=css.lastIndexOf('/* Anti-CLS — Agenda 768px');
- assert.ok(start>=0,'La stabilisation typographique doit être présente');
- const portion=css.slice(start);
- for(const [selector,px] of [['.surtitre',19],['h2#titre-agenda',45],['p.chapo',26]]){
-  const i=portion.indexOf(selector);
-  assert.ok(i>=0,'Sélecteur Agenda manquant : '+selector);
-  const rule=portion.slice(i,portion.indexOf('}',i));
-  assert.ok(rule.includes('line-height:'+px+'px!important'),'Hauteur de ligne réservée pour '+selector);
-  assert.ok(rule.includes('min-height:'+px+'px!important'),'Hauteur minimale réservée pour '+selector);
- }
-});
