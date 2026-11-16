@@ -48,3 +48,14 @@ test('Déclinaisons — le build remplace les anciennes versions compilées',()=
  assert.ok(buildSource.includes("readFileSync(declinationCSSFile,'utf8')"));
  assert.ok(buildSource.includes('if(integralCSSCompiled!==integralCSSOriginal)'));
 });
+
+test('Programmes — un seul en-tête, sans ancien bandeau TPA empilé',()=>{
+ const page=readFileSync('public/vitrine/programmes.html','utf8');
+ assert.equal(page.includes('id="sde-event-root"'),false,
+   'Le doublon TPA ne doit pas être réinjecté au-dessus de la navigation');
+ assert.equal(page.includes('class="infire-takeover"'),false,
+   'Aucun bandeau héritage au-dessus du header');
+ assert.ok(page.includes('id="tpa-2026"'),'La fiche TPA reste dans le calendrier');
+ assert.ok(page.includes('href="/programmes#tpa-2026"'),'Le lien vers la TPA reste présent');
+ assert.ok(page.includes('id="agenda"'),'La page conserve l’agenda');
+});
