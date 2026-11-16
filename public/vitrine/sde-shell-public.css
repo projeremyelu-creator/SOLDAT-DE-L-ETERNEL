@@ -2278,3 +2278,18 @@ html body.sde-unifie[data-sde-page="mouvement"] .sde-versets{
   height:72px!important;min-height:72px!important;max-height:72px!important;
  }
 }
+
+
+/* CLS tablette Programmes — réserver 66 px avant le remplacement du header. */
+@media (min-width:701px) and (max-width:800px){
+  html body.sde-unifie[data-sde-page="programmes"]:not(.sde-shell-mounted)>header.site-header:not(.sde-shell-header){
+    box-sizing:border-box!important;
+    height:66px!important;min-height:66px!important;max-height:66px!important;
+    padding-block:0!important;margin-block:0!important;overflow:hidden!important;
+  }
+  html body.sde-unifie[data-sde-page="programmes"]:not(.sde-shell-mounted)>header.site-header .site-header-inner{
+    box-sizing:border-box!important;
+    height:65px!important;min-height:65px!important;max-height:65px!important;
+    flex-wrap:nowrap!important;overflow:hidden!important;
+  }
+}
