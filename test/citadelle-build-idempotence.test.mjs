@@ -62,3 +62,19 @@ test('Programmes — bandeau TPA disponible sans JS, non affiché au-dessus de l
  assert.ok(page.includes('id="tpa-2026"'));
  assert.ok(page.includes('id="agenda"'));
 });
+
+test('Academy — note de confidentialité lisible sur le fond ivoire',()=>{
+ const source=readFileSync('public/vitrine/sde-declinaisons-fonctionnelles-2027.css','utf8');
+ const rule=source.match(/\.sde-2027-campus-notice\{[^}]+\}/)?.[0];
+ assert.ok(rule,'La note de confidentialité garde une règle dédiée');
+ const fg=rule.match(/(?:^|;)color:(#[0-9a-fA-F]{6})!important/)?.[1];
+ assert.ok(fg,'Couleur calculable de la note');
+ const luminance=(hex)=>{
+  const colors=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);
+  const [r,g,b]=colors.map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
+  return r*.2126+g*.7152+b*.0722;
+ };
+ const a=luminance(fg),b=luminance('#f7f4ed');
+ const ratio=(Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+ assert.ok(ratio>=4.5,'La note doit atteindre WCAG AA sur ivoire, ratio='+ratio.toFixed(2));
+});

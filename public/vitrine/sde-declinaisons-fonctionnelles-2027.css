@@ -26,7 +26,7 @@ html body.sde-v5-academy-public .sde-2027-campus h1 em{font-style:normal;color:#
 .sde-2027-campus-tiles a strong{font-size:.8rem;line-height:1.27}
 .sde-2027-campus-tiles a small{font-size:.67rem;line-height:1.4;color:#52465b!important;-webkit-text-fill-color:#52465b!important}
 .sde-2027-campus-tiles a:hover{background:#fff0cc!important}
-.sde-2027-campus-notice{font-size:.76rem!important;line-height:1.5!important;color:#e8d9bd!important;margin:10px 0!important}
+.sde-2027-campus-notice{font-size:.82rem!important;line-height:1.55!important;color:#29354a!important;-webkit-text-fill-color:#29354a!important;margin:10px 0!important}
 html body.sde-v5-academy-public .sa-premium-preview:has(+ *){margin-top:10px}
 html body.sde-v5-academy-public:has(.sde-2027-campus) .sa-premium-preview .sa-premium-head{display:none!important}
 html body.sde-v5-academy-public:has(.sde-2027-campus) .sa-premium-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
