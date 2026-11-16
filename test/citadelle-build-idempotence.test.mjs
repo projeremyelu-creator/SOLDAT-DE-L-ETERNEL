@@ -153,3 +153,14 @@ test('Programmes tablette — en-tête stable à 66 px avant et après le montag
  for(const declaration of ['height:65px!important','min-height:65px!important','max-height:65px!important'])
   assert.ok(inner.includes(declaration),'La hauteur interne avant montage correspond au shell');
 });
+
+
+test('Programmes tablette — boutons fixes malgré le chargement des polices',()=>{
+ const css=readFileSync('public/vitrine/sde-declinaisons-fonctionnelles-2027.css','utf8');
+ const marker='/* Programmes tablette — éviter le déplacement horizontal des CTA';
+ assert.ok(css.includes(marker),'Les largeurs stables à 768px doivent être appliquées');
+ const scope=css.slice(css.indexOf(marker));
+ for(const width of ['width:355px!important','width:198px!important','width:148px!important'])
+  assert.ok(scope.includes(width),'Dimension réservée manquante : '+width);
+ assert.ok(scope.includes('flex-wrap:nowrap!important'),'Empêcher un passage à la ligne à 768px');
+});
