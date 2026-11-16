@@ -103,3 +103,20 @@ test('Galerie IN FIRE — même navigation et photos originales sur toutes ses U
  assert.equal(album.split('sde-public-media.js').length-1,1,
    'Ne pas charger deux fois le script de médiathèque');
 });
+
+
+test('Soldiers TV — textes sur ivoire et onglets sur bleu nuit contrastés',()=>{
+ const css=readFileSync('public/vitrine/sde-declinaisons-fonctionnelles-2027.css','utf8');
+ assert.ok(css.includes('Soldiers TV — contraste contrôlé'));
+ const lum=hex=>{
+  const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255)
+   .map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
+  return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2];
+ };
+ const contrast=(a,b)=>(Math.max(lum(a),lum(b))+.05)/(Math.min(lum(a),lum(b))+.05);
+ for(const fg of ['#14233b','#293951','#805713']){
+  assert.ok(contrast(fg,'#faf7f0')>=4.5,'Le titre, le paragraphe et le surtitre doivent être lisibles');
+  assert.ok(css.includes(fg),'Le contraste ivoire doit être conservé dans la charte');
+ }
+ assert.ok(contrast('#f6e9d2','#08152e')>=4.5,'Les onglets non actifs doivent être lisibles');
+});
