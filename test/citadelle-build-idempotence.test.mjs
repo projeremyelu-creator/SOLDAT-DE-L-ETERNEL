@@ -138,3 +138,18 @@ test('Test CLS tablette Programmes — même hauteur avant et après remplacemen
    }
  }
 });
+
+
+test('Programmes tablette — en-tête stable à 66 px avant et après le montage',()=>{
+ const css=readFileSync('public/vitrine/sde-shell-public.css','utf8');
+ // La réservation finale pour 701–800 px prévaut sur les anciennes variantes.
+ const scope=css.slice(css.indexOf('/* Réserves a'));
+ const pattern=/@media\(min-width:701px\) and \(max-width:800px\)\{\s*html body\.sde-unifie\[data-sde-page="programmes"\]:not\(\.sde-shell-mounted\)>header\.site-header:not\(\.sde-shell-header\)\{([^}]+)\}\s*html body\.sde-unifie\[data-sde-page="programmes"\]:not\(\.sde-shell-mounted\)>header\.site-header \.site-header-inner\{([^}]+)\}/g;
+ const matches=[...scope.matchAll(pattern)];
+ assert.ok(matches.length>=1,'Le CSS de réservation tablette doit être présent');
+ const [outer,inner]=matches.at(-1).slice(1);
+ for(const declaration of ['height:66px!important','min-height:66px!important','max-height:66px!important'])
+  assert.ok(outer.includes(declaration),'La hauteur externe avant montage correspond au shell');
+ for(const declaration of ['height:65px!important','min-height:65px!important','max-height:65px!important'])
+  assert.ok(inner.includes(declaration),'La hauteur interne avant montage correspond au shell');
+});
