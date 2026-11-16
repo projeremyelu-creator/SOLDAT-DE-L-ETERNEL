@@ -80,16 +80,17 @@ test('Academy — note de confidentialité lisible sur le fond ivoire',()=>{
 });
 
 
-test('Carte TPA — ne pas incruster un bouton provenant de la capture composite',()=>{
+test('Carte TPA — conserver la photo approuvée et cacher le bouton dessiné',()=>{
  const css=readFileSync('public/vitrine/sde-maquettes-integrales.css','utf8');
  const rule=css.match(/html\[data-sde-citadel-integral\] body\.sde-pixel-citadel main#contenu \.sde-pixel-feature-event::after\{[^}]+\}/)?.[0];
- assert.ok(rule,'L’illustration indépendante de la carte TPA doit être définie');
- assert.ok(rule.includes('/vitrine/photos/intercession-vignette.webp'),
-   'La photographie originale sans texte ni faux CTA doit être utilisée');
- assert.ok(!rule.includes('/vitrine/maquettes/citadelle-celeste-sde.png'),
-   'La capture globale (avec boutons dessinés) ne doit pas être recyclée comme photo');
+ assert.ok(rule,'L’illustration originale de la carte TPA doit rester identifiée');
+ assert.ok(rule.includes('/vitrine/maquettes/citadelle-celeste-sde.png'),
+   'La photo de la maquette originale doit rester dans la carte');
+ assert.ok(rule.includes('mask-image:linear-gradient(to bottom'),
+   'Le faux bouton pré-dessiné doit être masqué en bas, sans changer la photo');
+ assert.ok(!rule.includes('/vitrine/photos/intercession-vignette.webp'),
+   'Ne pas remplacer le visuel approuvé par une photographie étrangère');
 });
-
 
 test('Galerie IN FIRE — même navigation et photos originales sur toutes ses URL',()=>{
  const shell=readFileSync('public/vitrine/sde-shell-public.js','utf8');
