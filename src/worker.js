@@ -1931,8 +1931,6 @@ async function traiter(req, env, ctx) {
         }
         if (p === "/connexion") {
           const u = await utilisateur(req, env);
-      const grades = await gradesApi(req, env, u, p);
-      if (grades) return grades;
           if (u.connecte) {
             const retour = url.searchParams.get("retour");
             const dest = retour === "/mon-espace" ? "/mon-espace" : u.niveau >= 1 ? "/administration" : "/mon-espace";
@@ -2095,6 +2093,8 @@ async function traiter(req, env, ctx) {
     if(telechargementPublic&&req.method==="GET")return telechargerRessourcePublique(env,telechargementPublic[1]);
     try {
       const u = await utilisateur(req, env);
+      const grades = await gradesApi(req, env, u, p);
+      if (grades) return grades;
       // Un cookie invalide ou expiré ne permet pas d'échapper au plafond anonyme.
       if (avecSession && !u.connecte && await rateLimitGlobal(env, ipGlobal))
         return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);
