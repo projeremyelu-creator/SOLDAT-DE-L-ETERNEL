@@ -5,6 +5,7 @@ import {memberQrApi} from "./member-qr.js";
 import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {memberAcademySummary} from "./member-academy-summary.js";
+import {gradesApi} from "./grades-api.js";
 import {soldiersAcademyApi,verifierAttestation} from "./sde-academy-api.js";
 import {mediaLoveAutorise} from "./love-school-acces.js";
 import {mediaAcademyAutorise} from "./soldiers-academy-acces.js";
@@ -1930,6 +1931,8 @@ async function traiter(req, env, ctx) {
         }
         if (p === "/connexion") {
           const u = await utilisateur(req, env);
+      const grades = await gradesApi(req, env, u, p);
+      if (grades) return grades;
           if (u.connecte) {
             const retour = url.searchParams.get("retour");
             const dest = retour === "/mon-espace" ? "/mon-espace" : u.niveau >= 1 ? "/administration" : "/mon-espace";
