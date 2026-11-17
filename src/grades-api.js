@@ -86,7 +86,6 @@ async function academyLevel(env,accountId){
   }catch{return 0;}
 }
 async function isDirectoire(env,u){
-  if(roleLevel(u)>=3)return true; // le propriétaire peut superviser le dispositif sans changer son rôle
   return !!(await env.DB.prepare("SELECT account_id FROM sde_grade_directoire WHERE account_id=?").bind(String(u.id)).first());
 }
 async function totals(env,ref){
