@@ -5,6 +5,7 @@ import {memberQrApi} from "./member-qr.js";
 import {memberContributions} from "./member-contributions.js";
 import {dashboardMetrics,dashboardAttendance} from "./dashboard-metrics.js";
 import {memberAcademySummary} from "./member-academy-summary.js";
+import {gradesApi} from "./grades-api.js";
 import {soldiersAcademyApi,verifierAttestation} from "./sde-academy-api.js";
 import {mediaLoveAutorise} from "./love-school-acces.js";
 import {mediaAcademyAutorise} from "./soldiers-academy-acces.js";
@@ -2092,6 +2093,8 @@ async function traiter(req, env, ctx) {
     if(telechargementPublic&&req.method==="GET")return telechargerRessourcePublique(env,telechargementPublic[1]);
     try {
       const u = await utilisateur(req, env);
+      const grades = await gradesApi(req, env, u, p);
+      if (grades) return grades;
       // Un cookie invalide ou expiré ne permet pas d'échapper au plafond anonyme.
       if (avecSession && !u.connecte && await rateLimitGlobal(env, ipGlobal))
         return erreur("rate_limited", "Trop de requêtes. Réessayez dans quelques minutes.", 429);

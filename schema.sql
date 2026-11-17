@@ -17,3 +17,34 @@ CREATE TABLE IF NOT EXISTS meta (cle TEXT PRIMARY KEY, val TEXT);
 CREATE INDEX IF NOT EXISTS docs_id ON docs(id);
 CREATE INDEX IF NOT EXISTS sessions_expire ON sessions(expire);
 CREATE INDEX IF NOT EXISTS ia_conso_cle ON ia_conso(cle);
+
+-- SDE — Grades et Distinctions (tables isolées, sans modification des tables métier).
+CREATE TABLE IF NOT EXISTS sde_grade_progress (
+  member_ref TEXT PRIMARY KEY, account_id TEXT NOT NULL, matricule TEXT,
+  grade_code TEXT NOT NULL DEFAULT 'recrue_iii', grade_since INTEGER NOT NULL,
+  points_total INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS sde_grade_points (
+  id TEXT PRIMARY KEY, member_ref TEXT NOT NULL, account_id TEXT NOT NULL,
+  category TEXT NOT NULL, activity_code TEXT NOT NULL, points INTEGER NOT NULL,
+  description TEXT NOT NULL, evidence_ref TEXT, submitted_by TEXT NOT NULL,
+  validated_by TEXT, status TEXT NOT NULL DEFAULT 'pending', period_key TEXT NOT NULL,
+  idempotency_key TEXT NOT NULL UNIQUE, created_at INTEGER NOT NULL, reviewed_at INTEGER
+);
+CREATE INDEX IF NOT EXISTS idx_sde_grade_points_member ON sde_grade_points(member_ref,status,created_at);
+CREATE INDEX IF NOT EXISTS idx_sde_grade_points_period ON sde_grade_points(member_ref,category,period_key,status);
+CREATE TABLE IF NOT EXISTS sde_grade_promotions (
+  id TEXT PRIMARY KEY, member_ref TEXT NOT NULL, account_id TEXT NOT NULL,
+  from_grade TEXT NOT NULL, to_grade TEXT NOT NULL, points_snapshot INTEGER NOT NULL,
+  academy_level INTEGER NOT NULL DEFAULT 0, grade_since_snapshot INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending', submitted_at INTEGER NOT NULL,
+  reviewed_by TEXT, decision_reason TEXT, decision_at INTEGER
+);
+CREATE INDEX IF NOT EXISTS idx_sde_grade_promotions_status ON sde_grade_promotions(status,submitted_at);
+CREATE TABLE IF NOT EXISTS sde_grade_directoire (
+  account_id TEXT PRIMARY KEY, added_by TEXT NOT NULL, added_at INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS sde_grade_awards (
+  id TEXT PRIMARY KEY, member_ref TEXT NOT NULL, account_id TEXT NOT NULL,
+  distinction_code TEXT NOT NULL, reason TEXT NOT NULL, awarded_by TEXT NOT NULL, awarded_at INTEGER NOT NULL
+);
