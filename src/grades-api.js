@@ -176,7 +176,7 @@ export async function gradesApi(req,env,u,path){
     }
     if(path==="/api/grades/directoire"&&req.method==="GET"){
       if(!(await isDirectoire(env,u)))return err("Accès réservé au Directoire.",403);
-      const rows=(await env.DB.prepare("SELECT p.*,g.nom AS member_name,c.matricule AS account_matricule FROM sde_grade_promotions p LEFT JOIN comptes c ON c.id=p.account_id LEFT JOIN docs d ON d.id=p.member_ref AND d.parent='membres' LEFT JOIN comptes g ON g.id=p.account_id ORDER BY CASE p.status WHEN 'pending' THEN 0 ELSE 1 END,p.submitted_at DESC LIMIT 200").all()).results||[];
+      const rows=(await env.DB.prepare("SELECT p.*,g.nom AS member_name,c.matricule AS account_matricule FROM sde_grade_promotions p LEFT JOIN comptes c ON c.id=p.account_id LEFT JOIN comptes g ON g.id=p.account_id ORDER BY CASE p.status WHEN 'pending' THEN 0 ELSE 1 END,p.submitted_at DESC LIMIT 200").all()).results||[];
       const clean=rows.map(r=>({...r,memberName:txt(r.member_name,120)||"Membre SDE",matricule:txt(r.account_matricule,40)}));
       return json({ok:true,promotions:clean});
     }
@@ -191,7 +191,9 @@ export async function gradesApi(req,env,u,path){
       if(choice==="approve"){
         const g=GRADES.find(x=>x.code===row.to_grade);
         if(!g)return err("Grade cible inconnu.",409);
-        const total=await totals(env,row.member_ref),days=Math.floor((now()-Number(row.grade_since_snapshot))/86400000),level=await academyLevel(env,row.account_id);
+        const progress=await env.DB.prepare("SELECT grade_code,grade_since FROM sde_grade_progress WHERE member_ref=?").bind(row.member_ref).first();
+        if(!progress||progress.grade_code!==row.from_grade||Number(progress.grade_since)!==Number(row.grade_since_snapshot))return err("Le grade ou l'ancienneté du membre a changé depuis la demande. Réexamen nécessaire.",409);
+        const total=await totals(env,row.member_ref),days=Math.floor((now()-Number(progress.grade_since))/86400000),level=await academyLevel(env,row.account_id);
         if(total<g.points||days<g.days||level<g.academy)return err("Les conditions ont changé depuis la demande. Réexamen nécessaire.",409);
         const updated=await env.DB.prepare("UPDATE sde_grade_promotions SET status='approved',reviewed_by=?,decision_reason=?,decision_at=? WHERE id=? AND status='pending'").bind(String(u.id),reason,now(),id).run();
         if(!updated.meta?.changes)return err("Dossier déjà traité.",409);
