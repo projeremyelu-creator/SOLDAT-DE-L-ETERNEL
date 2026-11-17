@@ -64,6 +64,17 @@ test("Points : preuve obligatoire, attribution en attente et validation sans aut
   assert.equal(duplicate.status,409);
 });
 
+test("Un membre peut soumettre uniquement sa propre contribution, en attente de validation",async()=>{
+  const w=world(),member=w.account("m1"),other=w.account("m2");
+  const own=await call(w.env,member,"/api/grades/points","POST",{category:"ish",activity:"humanitarian_mission",description:"Participation à une mission solidaire",evidenceRef:"rapport:ISH-2026-01",idempotencyKey:"member-own-1"});
+  assert.equal(own.status,201);
+  assert.equal(own.data.status,"pending");
+  assert.equal((await call(w.env,member,"/api/grades/me")).data.profile.totalPoints,0);
+  const impersonation=await call(w.env,member,"/api/grades/points","POST",{accountId:other.id,category:"ish",activity:"humanitarian_mission",description:"Tentative de soumission pour autrui",evidenceRef:"rapport:ISH-2026-02",idempotencyKey:"member-other-1"});
+  assert.equal(impersonation.status,403);
+  const otherProfile=await call(w.env,other,"/api/grades/me");
+  assert.equal(otherProfile.data.profile.totalPoints,0);
+});
 test("Promotion : seuils et ancienneté contrôlés, décision réservée au Directoire",async()=>{
   const w=world(),member=w.account("m1"),owner=w.account("owner","proprietaire"),directoire=w.account("dir");
   await call(w.env,member,"/api/grades/me");
