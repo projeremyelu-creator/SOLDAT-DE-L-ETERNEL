@@ -125,11 +125,13 @@ export async function gradesApi(req,env,u,path){
     if(path==="/api/grades/me"&&req.method==="GET")
       return json({ok:true,profile:await profile(env,u)});
     if(path==="/api/grades/points"&&req.method==="POST"){
-      if(roleLevel(u)<1)return err("Soumission réservée aux responsables de pôle habilités.",403);
-      const b=await req.json(),accountId=txt(b.accountId,160),category=txt(b.category,40),activity=txt(b.activity,80);
+      const b=await req.json(),category=txt(b.category,40),activity=txt(b.activity,80);
       const cat=CATEGORIES[category],points=cat?.activities?.[activity];
       const evidenceRef=txt(b.evidenceRef,500);
-      if(!accountId||!Number.isInteger(points)||evidenceRef.length<3)return err("Membre, catégorie, activité et preuve justificative obligatoires.");
+      const self=roleLevel(u)<1;
+      const accountId=self?String(u.id):txt(b.accountId,160)||String(u.id);
+      if(!Number.isInteger(points)||evidenceRef.length<3)return err("Catégorie, activité et preuve justificative obligatoires.");
+      if(self&&b.accountId&&String(b.accountId)!==String(u.id))return err("Un membre ne peut soumettre une contribution que pour son propre compte.",403);
       const account=await env.DB.prepare("SELECT id,membreId,matricule FROM comptes WHERE id=?").bind(accountId).first();
       if(!account)return err("Compte membre introuvable.",404);
       const ref=String(account.membreId||account.id),t=now(),key=txt(b.idempotencyKey,100)||crypto.randomUUID();
