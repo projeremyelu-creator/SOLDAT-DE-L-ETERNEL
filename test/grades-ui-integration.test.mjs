@@ -16,6 +16,6 @@ test("SDE Grades : intégration visuelle dans les deux espaces",async()=>{
  assert.match(member,/sde-grade-history/);assert.match(member,/data-grade-promotion/);assert.match(member,/data-grade-contribution/);assert.match(member,/data-grade-category/);
  assert.match(admin,/sde-grade-promotions/);assert.match(admin,/sde-grade-queue/);
  assert.match(js,/\/api\/grades\/me/);assert.match(js,/\/api\/grades\/directoire/);
- assert.match(js,/data-grade-contribution/);assert.match(js,/api\\("\/api\/grades\/points"/);assert.match(js,/api\\("\/api\/grades\/catalog"/);assert.match(css,/sde-grades-hero/);
+ assert.match(js,/data-grade-contribution/);assert.ok(js.includes('api("/api/grades/points"'));assert.ok(js.includes('api("/api/grades/catalog"'));assert.match(css,/sde-grades-hero/);
  assert.match(worker,/gradesApi\(req, env, u, p\)/);
 });
