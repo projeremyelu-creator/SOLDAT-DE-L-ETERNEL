@@ -129,7 +129,8 @@ export async function gradesApi(req,env,u,path){
       if(roleLevel(u)<1)return err("Soumission réservée aux responsables de pôle habilités.",403);
       const b=await req.json(),accountId=txt(b.accountId,160),category=txt(b.category,40),activity=txt(b.activity,80);
       const cat=CATEGORIES[category],points=cat?.activities?.[activity];
-      if(!accountId||!Number.isInteger(points))return err("Membre, catégorie ou activité invalide.");
+      const evidenceRef=txt(b.evidenceRef,500);
+      if(!accountId||!Number.isInteger(points)||evidenceRef.length<3)return err("Membre, catégorie, activité et preuve justificative obligatoires.");
       const account=await env.DB.prepare("SELECT id,membreId,matricule FROM comptes WHERE id=?").bind(accountId).first();
       if(!account)return err("Compte membre introuvable.",404);
       const ref=String(account.membreId||account.id),t=now(),key=txt(b.idempotencyKey,100)||crypto.randomUUID();
@@ -138,7 +139,7 @@ export async function gradesApi(req,env,u,path){
         .bind(ref,account.id,account.matricule||null,t,t,t).run();
       const id=crypto.randomUUID();
       const result=await env.DB.prepare("INSERT OR IGNORE INTO sde_grade_points(id,member_ref,account_id,category,activity_code,points,description,evidence_ref,submitted_by,status,period_key,idempotency_key,created_at) VALUES(?,?,?,?,?,?,?,?,?,'pending',?,?,?)")
-        .bind(id,ref,account.id,category,activity,points,txt(b.description,500),txt(b.evidenceRef,500)||null,String(u.id),period,key,t).run();
+        .bind(id,ref,account.id,category,activity,points,txt(b.description,500),evidenceRef,String(u.id),period,key,t).run();
       if(result.meta?.changes===0)return err("Cette demande existe déjà ou n'a pas pu être enregistrée.",409);
       return json({ok:true,id,status:"pending",points,message:"Contribution transmise pour validation."},201);
     }
@@ -205,6 +206,7 @@ export async function gradesApi(req,env,u,path){
       if(roleLevel(u)<3)return err("Configuration réservée au propriétaire.",403);
       const b=await req.json(),ids=Array.isArray(b.accountIds)?[...new Set(b.accountIds.map(x=>txt(x,160)).filter(Boolean))]:null;
       if(!ids||ids.length>100)return err("Liste de comptes invalide.");
+      for(const id of ids){const exists=await env.DB.prepare("SELECT id FROM comptes WHERE id=?").bind(id).first();if(!exists)return err("Compte Directoire introuvable : "+id,404);}
       const statements=[env.DB.prepare("DELETE FROM sde_grade_directoire")];
       for(const id of ids)statements.push(env.DB.prepare("INSERT INTO sde_grade_directoire(account_id,added_by,added_at) VALUES(?,?,?)").bind(id,String(u.id),now()));
       await env.DB.batch(statements);
