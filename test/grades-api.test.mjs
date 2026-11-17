@@ -86,7 +86,7 @@ test("Promotion : seuils et ancienneté contrôlés, décision réservée au Dir
 
 test("Distinction : attribution réservée au Directoire et visible dans le parcours",async()=>{
   const w=world(),owner=w.account("owner","proprietaire"),member=w.account("m1");
-  await call(w.env,owner,"/api/grades/directoire/config","PUT",{accountIds:[]});
+  await call(w.env,owner,"/api/grades/directoire/config","PUT",{accountIds:[owner.id]});
   const denied=await call(w.env,member,"/api/grades/awards","POST",{accountId:member.id,distinction:"fidelite",reason:"Engagement fidèle et documenté durant la période."});
   assert.equal(denied.status,403);
   const awarded=await call(w.env,owner,"/api/grades/awards","POST",{accountId:member.id,distinction:"fidelite",reason:"Engagement fidèle et documenté durant la période."});
