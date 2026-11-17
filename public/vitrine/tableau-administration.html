@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="/vitrine/tableaux-de-bord.css?v=405b772b7a5d">
 <script defer src="/vitrine/tableaux-de-bord.js?v=405b772b7a5d"></script><link rel="stylesheet" href="/vitrine/sde-premium-dashboards.css?v=405b772b7a5d">
 <link rel="stylesheet" href="/vitrine/sde-citadelle-celeste-2027.css?v=refonte-3-univers-20261115">
-</head>
+<link rel="stylesheet" href="/vitrine/sde-grades.css?v=grades-20261117"><script defer src="/vitrine/sde-grades.js?v=grades-20261117"></script></head>
 <body class="sde23-native sde-unifie sde-tableau sde-pixel-command" data-dashboard="administration">
 <a class="skip" href="#espace-principal">Aller au poste de commandement</a>
 <header class="sde-dash-header"><div class="sde-dash-header-inner">
@@ -18,6 +18,7 @@
 <aside class="sde-dash-side"><p class="sde-dash-side-caption">Gouvernance du mouvement</p><nav aria-label="Rubriques d'administration">
 <a href="#accueil" data-view="accueil" aria-current="page">Tableau de bord</a>
 <a href="#membres" data-view="membres">Registre des membres</a>
+<a href="#grades" data-view="grades">Grades et distinctions</a>
 <a href="#programmes" data-view="programmes">Agenda et pointages</a>
 <a href="/administration/academy">Soldiers Academy · 24 cours</a>
 <a href="#projets" data-view="projets">Pôles et projets</a>
@@ -41,6 +42,7 @@
   </div>
   <nav class="sde-2027-workspace-links" aria-label="Accès opérationnels administrateur">
     <a href="#membres" data-view="membres"><span aria-hidden="true">♧</span><strong>Membres</strong></a>
+<a href="#grades" data-view="grades"><span aria-hidden="true">♜</span><strong>Grades & distinctions</strong></a>
     <a href="#programmes" data-view="programmes"><span aria-hidden="true">▦</span><strong>Agenda</strong></a>
     <a href="#projets" data-view="projets"><span aria-hidden="true">⚑</span><strong>Missions</strong></a>
     <a href="#communication" data-view="communication"><span aria-hidden="true">✉</span><strong>Communications</strong></a>
@@ -62,6 +64,7 @@
 <section class="sde-panel"><h2>◇ Soldiers Academy</h2><p>Superviser les formations, les sessions et les attestations.</p><div class="sde-panel-actions"><a href="/administration/academy">Gérer les sessions →</a></div></section>
 </div>
 </section>
+<section data-section="grades" hidden><div class="sde-grades" data-sde-grades data-mode="directoire"><div class="sde-grades-hero"><span class="sde-grades-kicker">Command Center · Gouvernance</span><h2>Grades et Distinctions</h2><p>Examinez les contributions, instruisez les dossiers de promotion et rendez les décisions du Directoire.</p></div><div class="sde-grades-grid"><article class="sde-grade-stat"><span>Principe</span><strong>Équité</strong></article><article class="sde-grade-stat"><span>Décision</span><strong>Collégiale</strong></article><article class="sde-grade-stat"><span>Traçabilité</span><strong>Historisée</strong></article></div><article class="sde-grade-panel"><h3>Dossiers de promotion</h3><p class="sde-grade-muted">Chaque décision exige un motif. Les conditions sont revérifiées au moment de l'approbation.</p><ul class="sde-grade-list sde-grade-promotions"><li>Chargement des dossiers…</li></ul></article><article class="sde-grade-panel"><h3>Contributions à valider</h3><p class="sde-grade-muted">Vérifiez les pièces justificatives dans le dossier source avant validation.</p><ul class="sde-grade-list sde-grade-queue"><li>Chargement des contributions…</li></ul><div class="sde-grade-actions"><button type="button" class="secondary" data-grade-refresh>Actualiser les dossiers</button></div><p class="sde-grade-feedback" role="status" aria-live="polite"></p></article></div></section>
 <section data-section="membres" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Registre central</p><h2>Membres et organisations</h2><p>Gérez les profils, les garnisons, les fonctions, le directoire et les autorisations depuis les outils administratifs du même site.</p><div class="sde-panel-actions"><a href="/administration/outils?module=membres">Ouvrir le registre →</a></div></div></section>
 <section data-section="programmes" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Rassemblements</p><h2>Agenda et pointages</h2><p>Planifiez les rencontres, gérez les présences et retrouvez les historiques.</p><div class="sde-panel-actions"><a href="/administration/outils?module=agenda">Gérer les rassemblements →</a><a href="/programmes">Voir le programme public ↗</a></div></div></section>
 <section data-section="projets" hidden><div class="sde-panel"><p class="sde-panel-eyebrow">Missions et départements</p><h2>Projets du mouvement</h2><p>Retrouvez les pôles, départements, initiatives, projets et rapports.</p><div class="sde-panel-actions"><a href="/administration/outils?module=projets">Ouvrir la gestion des projets →</a></div></div></section>
